@@ -10,7 +10,6 @@
 #            the GNU Lesser General Public License (LGPL).
 
 from codac import *
-from codac.unsupported import *
 import unittest
 
 def hex2Itv(lb, ub):

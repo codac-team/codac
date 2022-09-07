@@ -149,6 +149,28 @@ void export_IntervalVector(py::module& m)
     .def(py::init(&create_from_vector_of_intervals), "list"_a)
     //.def("__init__", &create_from_tuple, "list"_a)
 
+    .def(py::init([](py::array_t<double> b) // create for instance an IntervalVector from a NumPy array
+    {
+      // Request a buffer descriptor from Python
+      py::buffer_info info = b.request();
+
+      // Some sanity checks...
+      if(info.format != py::format_descriptor<double>::format())
+        throw std::runtime_error("Incompatible format: expected a double array");
+
+      if(info.ndim == 1 ||                            // e.g.: a=np.array([1,0,0])
+         (info.ndim == 2 && (int)info.shape[1] == 1)) // e.g.: a=np.array([[1],[0],[0]]) 
+      {
+        ibex::Vector m((int)info.shape[0], static_cast<double*>(info.ptr));
+        return IntervalVector(m);
+      }
+
+      else
+        throw std::runtime_error("Incompatible buffer dimension");
+
+      return IntervalVector(0);
+    }))
+
   // Python vector methods
 
     .def("__len__", &IntervalVector::size)
@@ -310,8 +332,8 @@ void export_IntervalVector(py::module& m)
   // bwd_mul overloading
   //bool (*bwd_mul_1) (const IntervalVector&, Interval&, IntervalVector&) = &ibex::bwd_mul;
   //bool (*bwd_mul_2) (const Interval&, IntervalVector&, IntervalVector&) = &ibex::bwd_mul;
-  m.def( "bwd_mul", (bool (*) (const IntervalVector&, Interval&, IntervalVector&)) &ibex::bwd_mul);
-  m.def( "bwd_mul", (bool (*) (const Interval&, IntervalVector&, IntervalVector&)) &ibex::bwd_mul);
+  m.def("bwd_mul", (bool (*) (const IntervalVector&, Interval&, IntervalVector&)) &ibex::bwd_mul);
+  m.def("bwd_mul", (bool (*) (const Interval&, IntervalVector&, IntervalVector&)) &ibex::bwd_mul);
 
   m.def("max", (IntervalVector(*) (const IntervalVector&, const IntervalVector&)) &max_IntevalVector);
 };

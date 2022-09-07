@@ -33,16 +33,16 @@ namespace codac2
     return *_it_tslice;
   }
 
-  const std::shared_ptr<AbstractSlice> AbstractSlice::prev_abstract_slice() const
+  const std::shared_ptr<AbstractSlice> AbstractSlice::prev_abstract_slice_ptr() const
   {
-    if(&(*_tubevector.first_abstract_slice()) == this)
+    if(&(*_tubevector.first_abstract_slice_ptr()) == this)
       return nullptr;
     return prev(_it_tslice)->slices().at(&_tubevector);
   }
 
-  const std::shared_ptr<AbstractSlice> AbstractSlice::next_abstract_slice() const
+  const std::shared_ptr<AbstractSlice> AbstractSlice::next_abstract_slice_ptr() const
   {
-    if(&(*_tubevector.last_abstract_slice()) == this)
+    if(&(*_tubevector.last_abstract_slice_ptr()) == this)
       return nullptr;
     return next(_it_tslice)->slices().at(&_tubevector);
   }

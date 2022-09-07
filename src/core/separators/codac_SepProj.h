@@ -225,40 +225,89 @@ typedef struct ImpactStatus_{
  * \ingroup seprator
  *
  * \brief Projection of a separator
+ * 
+ * Given \f$\mathbb{X}\subset\mathbb{R}^{n}\f$ and \f$\mathbb{Y}\subset\mathbb{R}^{p}\f$. If \f$\mathbb{Z}=\mathbb{X}\times\mathbb{Y}\f$, 
+ * then the projection of a subset \f$\mathbb{Z}_{1}\f$ of \f$\mathbb{Z}\f$ onto \f$\mathbb{X}\f$ (with respect to \f$\mathbb{Y}\f$) is defined as:
+ * 
+ * \f$ {proj}_{\mathbb{X}}(\mathbb{Z}_{1})=\left\{ \mathbf{x}\in\mathbb{X}\mid\exists\mathbf{y}\in\mathbb{Y},(\mathbf{x},\mathbf{y})\in\mathbb{Z}_{1}\right\}\f$
  *
- * This operator allows to contract a box [x] with respect to:
- *
- *    x_out : exists y in[y] |  c_out(x,y).
- *    x_in : for all y in[y] | c_in(x,y)
- *
- * where y is a vector of "parameters".
- * Note that the fix point propagation is not enable.
- * There is still a bug when calling repeatidly the separator
- * on the same initial box and reconstruct things.
+ * Given a separator \f$\mathcal{S}([\mathbf{x}],\left[\mathbf{y}\right])=\left\{ \mathcal{S}^{\text{in}}([\mathbf{x}],\left[\mathbf{y}\right]),\mathcal{S}^{\text{out}}([\mathbf{x}],\left[\mathbf{y}\right])\right\}\f$,
+ * the projection of \f$\mathcal{S}\f$ is defined by : 
+ * 
+ * \f${proj}_{\mathbf{x}}(\mathcal{S})([\textbf{x}])=\left\{ \bigcap_{\textbf{y}\in[\textbf{y}]}\partial_{\textbf{x}}\mathcal{S}^{in}([\textbf{x}],\mathbf{y}),\bigcup_{\textbf{y}\in[\textbf{y}]}\partial_{\textbf{x}}\mathcal{S}^{out}([\textbf{x}],\mathbf{y})\right\}\f$
+ * 
+ * The separator algorythm is inspired from the ibexlib ones 
+ * but performs the inner and outer contraction concurently.
+ * 
+ * See Ibexlib (CtcForAll and CtcExist)[http://www.ibex-lib.org/doc/contractor.html#exists-and-forall] 
+ * documentation for more details.
  */
 class SepProj : public Sep {
 
 public:
+    /**
+     * @brief Construct a new Sep Proj object
+     * 
+     * @param sep Separator to use for the projection. The input box dimension must be equal to dim([x]) + dim([y_init]).
+     *            given a two IntervalVector \f$[\mathbf{x}]\f$ and \f$[\mathbf{y}]\f$, the separator is called 
+     *            with a new box \f$[\mathbf{z}] = [\mathbf{y}] X [\mathbf{y}]\f$.
+     * @param y_init Initial box for the parameters 
+     * @param prec Bisection precision on the parameters (the contraction involves a
+	 *             bisection process on y)
+     */
     SepProj(Sep& sep, const IntervalVector& y_init, double prec);
+
+    /**
+    * @brief Construct a new Sep Proj object
+     * 
+     * @param sep Separator used for the projection. The input dimension must be equal to size(x) + size(y_init).
+     *            given a two IntervalVector \f$[\mathbf{x}]\f$ and \f$[\mathbf{y}]\f$, the separator is called 
+     *            with a new box \f$[\mathbf{z}] = [\mathbf{y}] X [\mathbf{y}]\f$.
+     * @param y_init Initial Interval for the parameters 
+     * @param prec Bisection precision on the parameters (the contraction involves a
+	 *             bisection process on y)
+     */
     SepProj(Sep& sep, const Interval& y_init, double prec);
+
+    /**
+     * @brief Destroy the Sep Proj object
+     * 
+     */
     ~SepProj();
 
+
+    /**
+     * @brief Separate method
+     * 
+     * @param x_in the n-dimensional box \f$[\mathbf{x}_{\textrm{in}}]\f$ to be inner-contracted
+     * @param x_out the n-dimensional box \f$[\mathbf{x}_{\textrm{out}}]\f$ to be outer-contracted
+     */
     void separate(IntervalVector &x_in, IntervalVector &x_out);
-    bool separate_fixPoint(IntervalVector& x_in, IntervalVector& x_out, IntervalVector &y);
-    bool process(IntervalVector &x_in, IntervalVector &x_out, IntervalVector &y, ImpactStatus &impact, bool use_point);
-    int nbx;
+
 protected:
 
     /**
-     * \brief The Contractor.
+     * @brief SepProj::process Separate cartesian product [x_in].[y] and [x_out].[y]
+     *              if an inner (or outer) contraction happends, the flags impact_cin is set to true
+     *              and the removed part of the box is stored in first_cin_boxes.
+     *
+     * @param x_in : projected inner box
+     * @param x_out : projected outer box
+     * @param y :  parameter box
+     * @param impact : used to trace contraction of the input box
+     * @param use_point: 
+     * @return true if x_in or x_out is empty.
+     */
+    bool process(IntervalVector &x_in, IntervalVector &x_out, IntervalVector &y, ImpactStatus &impact, bool use_point);
+    
+
+    bool separate_fixPoint(IntervalVector& x_in, IntervalVector& x_out, IntervalVector &y);
+
+    /**
+     * \brief The Separator.
      */
     Sep& sep;
 
-    /**
-     * vars[i]=true <=> the ith component is a variable ("x_k")
-     * Otherwise, the ith component is a parameter ("y_k")
-     */
-//    std::vector<bool> vars;
 
     /**
      * \brief Initial box of the parameters (can be set dynamically)
@@ -269,6 +318,13 @@ protected:
      * \brief precision
      */
     double prec;
+
+    /**
+     * @brief internal variable used to count the number of call of the SepProj::process method
+     * 
+     */
+    // int nbx;
+
 
     /**
       * \brief the outer contractor / inner contractor has an impact
@@ -297,6 +353,9 @@ private:
 
 
 };
+
+
+
 
 } // namespace pyibex
 

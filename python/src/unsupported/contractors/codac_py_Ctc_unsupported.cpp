@@ -32,11 +32,11 @@ void export_unsupported_ctc(py::module& m, py::class_<Ctc, pyCtc>& ctc){
 
 
 
-  // Export CtcQInterProjF
-  py::class_<CtcQInterProjF>(m, "CtcQInterProjF", ctc, DOC_CTCQINTERPROJF_TYPE)
-    .def(py::init<Array<Ctc>, int>(), py::keep_alive<1,2>(), "list"_a, "q"_a)
-    .def("contract", (void (Ctc::*) (IntervalVector&)) &CtcQInterProjF::contract)
-    ;
+  // // Export CtcQInterProjF
+  // py::class_<CtcQInterProjF>(m, "CtcQInterProjF", ctc, DOC_CTCQINTERPROJF_TYPE)
+  //   .def(py::init<Array<Ctc>, int>(), py::keep_alive<1,2>(), "list"_a, "q"_a)
+  //   .def("contract", (void (Ctc::*) (IntervalVector&)) &CtcQInterProjF::contract)
+  //   ;
 
 
   // Export CtcHull

@@ -129,9 +129,38 @@ namespace codac
   }
 
   // Extract methods
+  
+  void Paving::get_boxes(list<IntervalVector>& l_subpavings, SetValue val, SetValue neg_val) const
+  {
+    assert(!(val & neg_val) && "val and neg_val intersect");
+
+    if(neg_val != SetValue::DEFAULT && (m_value & neg_val) && !(m_value & val))
+    {
+      // The current node and its leaves do not contain solutions
+      // So we stop here
+    }
+
+    else
+    {
+      if(is_leaf())
+      {
+        if(m_value & val)
+          l_subpavings.push_back(box());
+      }
+
+      else
+      {
+        m_first_subpaving->get_boxes(l_subpavings, val, neg_val);
+        m_second_subpaving->get_boxes(l_subpavings, val, neg_val);
+      }
+    }
+  }
 
   void Paving::get_pavings_intersecting(SetValue val, const IntervalVector& box_to_intersect, vector<const Paving*>& v_subpavings, bool no_degenerated_intersection) const
   {
+    // todo: use the negation of val for a faster reading of the tree?
+    // See Paving::get_boxes
+
     assert(box_to_intersect.size() == 2);
     IntervalVector inter = box_to_intersect & m_box;
 

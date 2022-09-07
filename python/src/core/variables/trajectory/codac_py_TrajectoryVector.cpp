@@ -18,6 +18,7 @@
 #include "codac_type_caster.h"
 
 #include "codac_TrajectoryVector.h"
+#include "codac_TubeVector.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac_py_TrajectoryVector_docs.h"
 
@@ -26,6 +27,13 @@ using namespace codac;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
+
+TrajectoryVector* create_trajectoryvector_from_serialization(const string& binary_file_name)
+{
+  TrajectoryVector *traj;
+  TubeVector dump(binary_file_name, traj);
+  return traj;
+}
 
 TrajectoryVector* create_trajectoryvector_from_list(py::list& lst)
 {
@@ -101,6 +109,10 @@ void export_TrajectoryVector(py::module& m)
     .def(py::init(&create_trajectoryvector_from_arrays),
       TRAJECTORYVECTOR_TRAJECTORYVECTOR_LISTDOUBLE_LISTVECTOR,
       "list_t"_a, "list_x"_a)
+
+    .def(py::init(&create_trajectoryvector_from_serialization),
+      "todo",
+      "binary_file_name"_a)
 
     // Used instead of .def(py::init<initializer_list<Trajectory>>(),...
     .def(py::init(&create_trajectoryvector_from_list),

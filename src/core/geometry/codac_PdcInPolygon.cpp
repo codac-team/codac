@@ -17,12 +17,25 @@ namespace codac {
 
 PdcInPolygon::PdcInPolygon(vector< vector< vector<double> > > &points) : Pdc(2) {
     ax.resize(points.size()); ay.resize(points.size()); bx.resize(points.size()); by.resize(points.size());
-    for(int i=0; i< points.size(); i++)
+    for(size_t i=0; i< points.size(); i++)
     {
         ax[i] = points[i][0][0];
         ay[i] = points[i][0][1];
         bx[i] = points[i][1][0];
         by[i] = points[i][1][1];
+    }
+}
+
+PdcInPolygon::PdcInPolygon(vector< vector<double> > &vertices) : Pdc(2) {
+    size_t n_vertices = vertices.size();
+    
+    ax.resize(n_vertices); ay.resize(n_vertices); bx.resize(n_vertices); by.resize(n_vertices);
+    for(size_t i=0; i< n_vertices; i++)
+    {
+        ax[i] = vertices[i % n_vertices][0];
+        ay[i] = vertices[i % n_vertices][1];
+        bx[i] = vertices[(i+1) % n_vertices][0];
+        by[i] = vertices[(i+1) % n_vertices][1];
     }
 }
 
@@ -59,7 +72,7 @@ BoolInterval PdcInPolygon::test(const IntervalVector& x) {
     Interval my = Interval(x[1].mid());
 
     Interval theta = Interval(0);
-    for(unsigned int i = 0; i < ax.size(); i++) {
+    for(size_t i = 0; i < ax.size(); i++) {
         theta += argument(mx,my,ax[i],ay[i],bx[i],by[i]);
     }
     // if (theta.diam() > 2*M_PI) return ibex::MAYBE;

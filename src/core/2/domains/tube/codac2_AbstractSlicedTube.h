@@ -22,18 +22,18 @@ namespace codac2
   {
     public:
 
-      AbstractSlicedTube(TDomain& tdomain);
+      AbstractSlicedTube(const std::shared_ptr<TDomain>& tdomain);
 
-      virtual const std::shared_ptr<AbstractSlice>& first_abstract_slice() const = 0;
-      virtual const std::shared_ptr<AbstractSlice>& last_abstract_slice() const = 0;
+      virtual const std::shared_ptr<AbstractSlice>& first_abstract_slice_ptr() const = 0;
+      virtual const std::shared_ptr<AbstractSlice>& last_abstract_slice_ptr() const = 0;
 
-      TDomain& tdomain() const;
+      const std::shared_ptr<TDomain>& tdomain() const;
       Interval t0_tf() const;
 
 
     protected:
 
-      TDomain& _tdomain;
+      std::shared_ptr<TDomain> _tdomain;
   };
 } // namespace codac
 

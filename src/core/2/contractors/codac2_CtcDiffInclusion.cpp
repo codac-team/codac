@@ -259,8 +259,9 @@ namespace codac2
   void CtcDiffInclusion::contract(Tube<IParals>& x, const Tube<IParals>* u, TimePropag t_propa)
   {
     // Verifying that x and u share exactly the same tdomain and slicing:
+
     if (u!=NULL) {
-       assert(&x.tdomain() == &u->tdomain());
+       assert(x.tdomain() == u->tdomain());
     // Verifying that the provided tubes are consistent with the function
        assert((size_t)_f.nb_var() == x.size()+u->size());
     } else 
@@ -315,25 +316,25 @@ namespace codac2
     assert((size_t)_f.image_dim() == x.size());
 
     if (t_propa & TimePropag::FORWARD) {
-       std::shared_ptr<Slice<IParals>> sx = gate->next_slice();
+       std::shared_ptr<Slice<IParals>> sx = gate->next_slice_ptr();
        while (sx!=NULL) {
          if (!sx->is_gate() && !sx->tslice().t0_tf().is_unbounded()) {
              const std::shared_ptr<Slice<IParals>> su = 
                 (u == nullptr ? nullptr : std::static_pointer_cast<Slice<IParals>>(sx->tslice().slices().at(u)));
              contract(*sx,su,TimePropag::FORWARD);
          }
-         sx = sx->next_slice();
+         sx = sx->next_slice_ptr();
        }
     }
     if (t_propa & TimePropag::BACKWARD) {
-       std::shared_ptr<Slice<IParals>> sx = gate->prev_slice();
+       std::shared_ptr<Slice<IParals>> sx = gate->prev_slice_ptr();
        while (sx!=NULL) {
          if (!sx->is_gate() && !sx->tslice().t0_tf().is_unbounded()) {
              const std::shared_ptr<Slice<IParals>> su = 
 		(u == nullptr ? nullptr : std::static_pointer_cast<Slice<IParals>>(sx->tslice().slices().at(u)));
              contract(*sx,su,TimePropag::BACKWARD);
          }
-         sx = sx->prev_slice();
+         sx = sx->prev_slice_ptr();
        }
     }
   }
@@ -384,10 +385,10 @@ namespace codac2
       }
       frame &= approxIV;  /* ensure contractance */
       x.set(frame);
-      if (x.next_slice() && x.next_slice()->is_gate()) {
-         IParals end = x.next_slice()->codomain();
+      if (x.next_slice_ptr() && x.next_slice_ptr()->is_gate()) {
+         IParals end = x.next_slice_ptr()->codomain();
 	 end &= g_t1; /* ensure contractance */
-         x.next_slice()->set(end);
+         x.next_slice_ptr()->set(end);
       }
     }
 
@@ -419,10 +420,10 @@ namespace codac2
       }
       frame &= approxIV;  /* ensure contractance */
       x.set(frame);
-      if (x.prev_slice() && x.prev_slice()->is_gate()) {
-         IParals beg = x.prev_slice()->codomain();
+      if (x.prev_slice_ptr() && x.prev_slice_ptr()->is_gate()) {
+         IParals beg = x.prev_slice_ptr()->codomain();
 	 beg &= g_t0; /* ensure contractance */
-         x.prev_slice()->set(beg);
+         x.prev_slice_ptr()->set(beg);
       }
     }
   }

@@ -62,10 +62,20 @@ public:
      *
      * A polygon is defined as an union of segments given in a counter-clockwise order.
      * See the documentation for an example of usage.
-     *
+     *  
      * \param points list of segments representing the edges of the polygon in the format of ( ((a1_x, a1_y), (b1_x, b1_x)), ((a2_x, a2_y), (b2_x, b2_x)), ...)
      */
     PdcInPolygon(std::vector< std::vector< std::vector<double> > >& points);
+
+    /**
+     * \brief Create the predicate with the list of segments passed as argument.
+     *
+     * A polygon is defined as an union of segments given in a counter-clockwise order.
+     * See the documentation for an example of usage.
+     *
+     * \param vertices list of segments representing the edges of the polygon in the format of ( (a_x, a_y), (b_x, b_x), (c_x, c_y), ...)
+     */
+    PdcInPolygon(std::vector< std::vector<double> > &vertices); 
 
     /**
      * \brief Create the predicate with the list of segments passed as argument.
@@ -82,6 +92,9 @@ public:
 
 	/**
 	 * \brief Test the box.
+     * \param box to be tested
+     * 
+     * \return YES if the point is inside the close polygon, NO if outside, else MAYBE.
 	 */
 	virtual BoolInterval test(const IntervalVector& box);
 

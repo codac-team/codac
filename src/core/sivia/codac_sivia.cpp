@@ -2,7 +2,7 @@
  *  SIVIA
  * ----------------------------------------------------------------------------
  *  \date       2022
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Julien Damers
  *  \copyright  Copyright 2022 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
@@ -21,6 +21,8 @@ using namespace std;
 
 namespace codac
 {
+  static bool _vibes_initialized = false;
+
   vector<IntervalVector> box_diff(const IntervalVector& x0, const IntervalVector& x)
   {
     vector<IntervalVector> v;
@@ -30,17 +32,26 @@ namespace codac
     return v;
   }
 
-  map<SetValue,list<IntervalVector>> SIVIA(const IntervalVector& x0, Ctc& ctc, float precision,
+  map<SetValue,list<IntervalVector>> SIVIA(
+    const IntervalVector& x0, Ctc& ctc, float precision, bool regular_paving, 
     bool display_result, const string& fig_name, bool return_result, const SetColorMap& color_map)
   {
     assert(x0.size() >= 2);
 
     if(display_result)
     {
-      vibes::beginDrawing();
-      // will not be ended in case the init has been done outside this SIVIA function
+      if(!_vibes_initialized)
+      {
+        _vibes_initialized = true;
+        vibes::beginDrawing();
+        vibes::axisAuto();
+        // will not be ended in case the init has been done outside this SIVIA function
+      }
+
+      if(!fig_name.empty())
+        vibes::selectFigure(fig_name);
+
       vibes::drawBox(x0, vibesParams("figure", fig_name));
-      vibes::axisAuto();
     }
 
     map<SetValue,int> n_boxes;
@@ -61,9 +72,6 @@ namespace codac
 
       if(display_result)
       {
-        if(color_map.find(SetValue::IN) != color_map.end())
-          cm[SetValue::IN] = color_map.at(SetValue::IN);
-
         if(color_map.find(SetValue::OUT) != color_map.end())
           cm[SetValue::OUT] = color_map.at(SetValue::OUT);
 
@@ -82,45 +90,59 @@ namespace codac
 
       ctc.contract(x);
 
-      vector<IntervalVector> x_out_l = box_diff(x_before_ctc, x);
-      for(const auto& o : x_out_l)
-      {
-        if(display_result)
+      // Out values
+
+        vector<IntervalVector> x_out_l;
+
+        if(regular_paving)
         {
-          vibes::drawBox(o.subvector(0,1), cm.at(SetValue::OUT));
-          n_boxes[SetValue::OUT] ++;
-        }
-
-        if(return_result)
-          boxes[SetValue::OUT].push_front(o);
-      }
-
-      if(x.is_empty())
-        continue;
-
-      else
-      {
-        if(x.max_diam() < precision)
-        {
-          if(display_result)
-          {
-            vibes::drawBox(x.subvector(0,1), cm.at(SetValue::UNKNOWN));
-            n_boxes[SetValue::UNKNOWN] ++;
-          }
-
-          if(return_result)
-            boxes[SetValue::UNKNOWN].push_front(x);
+          if(x.is_empty())
+            x_out_l.push_back(x_before_ctc);
         }
 
         else
+          x_out_l = box_diff(x_before_ctc, x);
+
+        for(const auto& o : x_out_l)
         {
           if(display_result)
-            vibes::drawBox(x.subvector(0,1), "lightGray");
-          pair<IntervalVector,IntervalVector> p = bisector.bisect(x);
-          stack.push_back(p.first);
-          stack.push_back(p.second);
+          {
+            vibes::drawBox(o.subvector(0,1), cm.at(SetValue::OUT));
+            n_boxes[SetValue::OUT] ++;
+          }
+
+          if(return_result)
+            boxes[SetValue::OUT].push_front(o);
         }
-      }
+
+      // Remaining solutions
+
+        if(x.is_empty())
+          continue;
+
+        else
+        {
+          IntervalVector& x_remaining = regular_paving ? x_before_ctc : x;
+
+          if(x_remaining.max_diam() < precision)
+          {
+            if(display_result)
+            {
+              vibes::drawBox(x_remaining.subvector(0,1), cm.at(SetValue::UNKNOWN));
+              n_boxes[SetValue::UNKNOWN] ++;
+            }
+
+            if(return_result)
+              boxes[SetValue::UNKNOWN].push_front(x_remaining);
+          }
+
+          else
+          {
+            pair<IntervalVector,IntervalVector> p = bisector.bisect(x_remaining);
+            stack.push_back(p.first);
+            stack.push_back(p.second);
+          }
+        }
     }
 
     if(display_result)
@@ -134,21 +156,26 @@ namespace codac
     return boxes;
   }
 
-  map<SetValue,list<IntervalVector>> SIVIA(const IntervalVector& x0, ibex::Sep& sep, float precision,
+  map<SetValue,list<IntervalVector>> SIVIA(
+    const IntervalVector& x0, ibex::Sep& sep, float precision, bool regular_paving, 
     bool display_result, const string& fig_name, bool return_result, const SetColorMap& color_map)
   {
     assert(x0.size() >= 2);
 
     if(display_result)
     {
-      vibes::beginDrawing();
-      // will not be ended in case the init has been done outside this SIVIA function
+      if(!_vibes_initialized)
+      {
+        _vibes_initialized = true;
+        vibes::beginDrawing();
+        vibes::axisAuto();
+        // will not be ended in case the init has been done outside this SIVIA function
+      }
 
       if(!fig_name.empty())
         vibes::selectFigure(fig_name);
 
-      vibes::drawBox(x0);
-      vibes::axisAuto();
+      vibes::drawBox(x0, vibesParams("figure", fig_name));
     }
 
     map<SetValue,int> n_boxes;
@@ -192,56 +219,76 @@ namespace codac
 
       IntervalVector x = x_in & x_out;
 
-      vector<IntervalVector> x_in_l = box_diff(x_before_ctc, x_in);
-      for(const auto& i : x_in_l)
-      {
-        if(display_result)
+      // Out and In values
+
+        vector<IntervalVector> x_in_l, x_out_l;
+
+        if(regular_paving)
         {
-          vibes::drawBox(i, cm.at(SetValue::IN));
-          n_boxes[SetValue::IN] ++;
-        }
-
-        if(return_result)
-          boxes[SetValue::IN].push_front(i);
-      }
-
-      vector<IntervalVector> x_out_l = box_diff(x_before_ctc, x_out);
-      for(const auto& o : x_out_l)
-      {
-        if(display_result)
-        {
-          vibes::drawBox(o, cm.at(SetValue::OUT));
-          n_boxes[SetValue::OUT] ++;
-        }
-
-        if(return_result)
-          boxes[SetValue::OUT].push_front(o);
-      }
-
-      if(x.is_empty())
-        continue;
-
-      else
-      {
-        if(x.max_diam() < precision)
-        {
-          if(display_result)
-          {
-            vibes::drawBox(x.subvector(0,1), cm.at(SetValue::UNKNOWN));
-            n_boxes[SetValue::UNKNOWN] ++;
-          }
-
-          if(return_result)
-            boxes[SetValue::UNKNOWN].push_front(x);
+          if(x_in.is_empty())
+            x_in_l.push_back(x_before_ctc);
+          if(x_out.is_empty())
+            x_out_l.push_back(x_before_ctc);
         }
 
         else
         {
-          pair<IntervalVector,IntervalVector> p = bisector.bisect(x);
-          stack.push_back(p.first);
-          stack.push_back(p.second);
+          x_in_l = box_diff(x_before_ctc, x_in);
+          x_out_l = box_diff(x_before_ctc, x_out);
         }
-      }
+
+        for(const auto& i : x_in_l)
+        {
+          if(display_result)
+          {
+            vibes::drawBox(i, cm.at(SetValue::IN));
+            n_boxes[SetValue::IN] ++;
+          }
+
+          if(return_result)
+            boxes[SetValue::IN].push_front(i);
+        }
+
+        for(const auto& o : x_out_l)
+        {
+          if(display_result)
+          {
+            vibes::drawBox(o, cm.at(SetValue::OUT));
+            n_boxes[SetValue::OUT] ++;
+          }
+
+          if(return_result)
+            boxes[SetValue::OUT].push_front(o);
+        }
+
+      // Remaining values
+
+        if(x.is_empty())
+          continue;
+
+        else
+        {
+          IntervalVector& x_remaining = regular_paving ? x_before_ctc : x;
+
+          if(x_remaining.max_diam() < precision)
+          {
+            if(display_result)
+            {
+              vibes::drawBox(x_remaining.subvector(0,1), cm.at(SetValue::UNKNOWN));
+              n_boxes[SetValue::UNKNOWN] ++;
+            }
+
+            if(return_result)
+              boxes[SetValue::UNKNOWN].push_front(x_remaining);
+          }
+
+          else
+          {
+            pair<IntervalVector,IntervalVector> p = bisector.bisect(x_remaining);
+            stack.push_back(p.first);
+            stack.push_back(p.second);
+          }
+        }
     }
 
     if(display_result)

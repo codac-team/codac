@@ -28,14 +28,14 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_CtcHull.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_CtcTransform.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_CtcTransform.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_QInterProjF.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_QInterProjF.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepCtcPairProj.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepCtcPairProj.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepFixPoint.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepFixPoint.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepProj.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepProj.h
+    # ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_QInterProjF.cpp
+    # ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_QInterProjF.h
+    # ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepCtcPairProj.cpp
+    # ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepCtcPairProj.h
+    # ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepFixPoint.cpp
+    # ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepFixPoint.h
+    # ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepProj.cpp
+    # ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepProj.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepTransform.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepTransform.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepUnionBbox.cpp
@@ -49,16 +49,16 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/paving/codac_SepPaving.h
 
     # Geometry
-    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolarXY.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_CtcSegment.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_PdcInPolygon.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolygon.h
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepDiskExists.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolarXY.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_CtcSegment.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_PdcInPolygon.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolygon.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepDiskExists.cpp
+    # ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolarXY.h
+    # ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolarXY.cpp
+    # ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_CtcSegment.h
+    # ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_CtcSegment.cpp
+    # ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolygon.h
+    # ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_PdcInPolygon.h
+    # ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_PdcInPolygon.cpp
+    # ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolygon.cpp
     )
 
 ################################################################################

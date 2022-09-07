@@ -18,6 +18,7 @@
 #include <memory>
 
 #include "codac_Interval.h"
+#include "codac_predef_values.h"
 
 namespace codac2
 {
@@ -28,8 +29,7 @@ namespace codac2
   {
     public:
 
-      explicit TDomain();
-      explicit TDomain(const Interval& t0_tf, bool with_gates = false);
+      explicit TDomain(const Interval& t0_tf = Interval(-oo,oo), bool with_gates = false);
       explicit TDomain(const Interval& t0_tf, double dt, bool with_gates = false);
       const Interval t0_tf() const; // todo: keep this method?
       std::list<TSlice>::iterator iterator_tslice(double t);
@@ -47,6 +47,10 @@ namespace codac2
       template<typename U>
       friend class Tube;
   };
+
+  std::shared_ptr<TDomain> create_tdomain(const Interval& t0_tf = Interval(-oo,oo), bool with_gates = false);
+  std::shared_ptr<TDomain> create_tdomain(const Interval& t0_tf, double dt, bool with_gates = false);
+
 } // namespace codac
 
 #endif

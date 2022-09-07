@@ -22,7 +22,7 @@ using ibex::IntervalVector;
 namespace codac {
 
 /**
- * \ingroup iset
+ * \ingroup geometry
  *
  * \brief Separator for point in sector.
  * A sector is defined by its center, a distance and an angle (with uncertainty).
@@ -31,33 +31,46 @@ namespace codac {
 class SepPolarXY : public ibex::Sep {
 
 public:
-
+  /**
+   * @brief Construct a new SepPolarXY object
+   * 
+   * @param rho radius of the sector
+   * @param theta angle of the sector
+   */
 	SepPolarXY(Interval rho, Interval theta);
 
+  /**
+   * \brief \f$\mathcal{S}\big([\mathbf{x}_{\textrm{in}}],[\mathbf{x}_{\textrm{out}}]\big)\f$
+   *
+   * \param x_in the n-dimensional box \f$[\mathbf{x}_{\textrm{in}}]\f$ to be inner-contracted
+   * \param x_out the n-dimensional box \f$[\mathbf{x}_{\textrm{out}}]\f$ to be outer-contracted
+   */
   virtual void separate(IntervalVector& x_in, IntervalVector& x_out);
 
 protected:
 
+    /**
+     * @brief compute the inner contraction 
+     * 
+     * @param x_in inner box
+     */
     void contractIn(IntervalVector &x_in);
+
+    /**
+     * @brief compute the outer contraction
+     * 
+     * @param x_out  outer box
+     */
     void contractOut(IntervalVector &x_out);
 
 
+
     Interval rho, theta;
-    Interval rho_m, rho_p;
-    Interval theta_m, theta_p;
-    Interval cmpl;
+    // Interval rho_m, rho_p;
+    // Interval theta_m, theta_p;
+    // Interval cmpl;
     codac::CtcPolar ctc;
 };
-
-// class SepPolarXYT : public Sep{
-// public:
-// 	SepPolarXYT(const Interval& rho, const Interval& phi);
-// 	void separate(IntervalVector& x_in, IntervalVector& x_out);
-// private:
-// 	Interval rho;
-// 	Interval phi;
-// 	// SepPolarXY& sep;
-// };
 
 } // end namespace pyibex
 

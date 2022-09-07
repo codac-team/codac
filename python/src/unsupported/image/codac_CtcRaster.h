@@ -27,13 +27,13 @@ using codac::IntervalVector;
 using codac::Interval;
 
 
-class CtcRaster : public codac::Ctc, public GeoImage {
+class CtcRaster : public codac::Ctc, public from_pyibex::GeoImage {
 
   // Georeferenced image with integral image inclusion test
 public:
   CtcRaster(py::array_t<DATA_TYPE>  data, double x0, double y0, double dx, double dy, bool inner) :
   Ctc(2),
-  GeoImage(data, x0, y0, dx, dy), inner(inner)
+  from_pyibex::GeoImage(data, x0, y0, dx, dy), inner(inner)
   {
     // constructor
   }
@@ -51,7 +51,7 @@ public:
 //##############################################################################
 
 inline int CtcRaster::enclosed_pixels(PixelCoords& pixel_coords){
-  return GeoImage::enclosed_pixels(pixel_coords[0],pixel_coords[1],pixel_coords[2],pixel_coords[3]);
+  return from_pyibex::GeoImage::enclosed_pixels(pixel_coords[0],pixel_coords[1],pixel_coords[2],pixel_coords[3]);
 }
 
 

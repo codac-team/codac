@@ -36,7 +36,7 @@ The motion of the robot is described by the state equation :math:`\dot{\mathbf{x
 
 .. math::
 
-  u(t) = 3(\sin(t)^2)+\frac{t}{100}.
+  u(t) = 3\sin^2(t)+\frac{t}{100}.
 
 | Contrary to the previous lesson, we assume that we know the initial state :math:`\mathbf{x}_0=(0,0,2)^\intercal`. This is common in SLAM problems.
 | We also assume that the heading is continuously measured from :math:`t_0` to :math:`t_f` (for instance by using a compass) with a small error:

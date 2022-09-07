@@ -19,4 +19,6 @@ namespace codac
   const double oo = POS_INFINITY;
 }
 
+using codac::oo;
+
 #endif

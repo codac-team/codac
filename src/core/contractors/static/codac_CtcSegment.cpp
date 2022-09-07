@@ -29,6 +29,7 @@ CtcSegment::CtcSegment() : Ctc(6), X_with_params(0 /* unused */) {
 }
 
 void CtcSegment::init() {
+
   ibex::Variable x(2),a(2),b(2);
 
   ibex::Function *f = new ibex::Function(x,a,b,(b[0]-a[0])*(a[1]-x[1]) - (b[1]-a[1])*(a[0]-x[0]));
