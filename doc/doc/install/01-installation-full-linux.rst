@@ -14,11 +14,16 @@ A Debian package is available for the last release |version| of the library:
 
 .. code-block:: bash
 
-  sudo sh -c 'echo "deb [trusted=yes] https://www.ensta-bretagne.fr/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+  sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
   sudo apt update
   sudo apt install libcodac-dev
 
 Then, check your installation `with the instructions of this page <03-start-cpp-project.html>`_.
+
+.. warning::
+
+  | **URL changed**
+  | Please update :code:`/etc/apt/sources.list.d/ensta-bretagne.list` as above.
 
 .. note::
 
