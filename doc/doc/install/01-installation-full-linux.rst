@@ -22,7 +22,7 @@ Then, check your installation `with the instructions of this page <03-start-cpp-
 
 .. warning::
 
-  | **URL changed**
+  | **URL changed**:
   | Please update :code:`/etc/apt/sources.list.d/ensta-bretagne.list` as above.
 
 .. note::
