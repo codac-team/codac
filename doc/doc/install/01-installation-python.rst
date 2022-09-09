@@ -36,17 +36,17 @@ In case you want to use Codac only with Python, then the installation procedure 
 The :gbg:`✓` configurations are officially supported at the moment:
 
 +---------------+----------------+-----------------+-----------------+----------------+----------------+----------------+
-|Language       |Linux (amd64)   |Windows (x64)    |Windows (x86)    |macOS (arm64)  |macOS (x86_64)  |Online          |
+|Language       |Linux (amd64)   |Windows (x64)    |Windows (x86)    |macOS (arm64)   |macOS (x86_64)  |Online          |
 +===============+================+=================+=================+================+================+================+
-|Python 3.6     |:gbg:`✓`        |:gbg:`✓`         |:gbg:`✓`         |:gbg:`✓`        |:gbg:`✓`         ||online-py|_    |
+|Python 3.6     |:gbg:`✓`        |:gbg:`✓`         |:gbg:`✓`         |:gbg:`✓`        |:gbg:`✓`        ||online-py|_    |
 +---------------+----------------+-----------------+-----------------+----------------+----------------+                +
-|Python 3.7     |:gbg:`✓`        |:gbg:`✓`         |:gbg:`✓`         |:gbg:`✓`        |:gbg:`✓`         |                |
+|Python 3.7     |:gbg:`✓`        |:gbg:`✓`         |:gbg:`✓`         |:gbg:`✓`        |:gbg:`✓`        |                |
 +---------------+----------------+-----------------+-----------------+----------------+----------------+                +
-|Python 3.8     |:gbg:`✓`        |:gbg:`✓`         |:gbg:`✓`         |:gbg:`✓`        |:gbg:`✓`         |                |
+|Python 3.8     |:gbg:`✓`        |:gbg:`✓`         |:gbg:`✓`         |:gbg:`✓`        |:gbg:`✓`        |                |
 +---------------+----------------+-----------------+-----------------+----------------+----------------+                +
-|Python 3.9     |:gbg:`✓`        |:gbg:`✓`         |:gbg:`✓`         |:gbg:`✓`        |:gbg:`✓`         |                |
+|Python 3.9     |:gbg:`✓`        |:gbg:`✓`         |:gbg:`✓`         |:gbg:`✓`        |:gbg:`✓`        |                |
 +---------------+----------------+-----------------+-----------------+----------------+----------------+                +
-|Python 3.10    |:gbg:`✓`        |:gbg:`✓`         |:gbg:`✓`         |:gbg:`✓`        |:gbg:`✓`         |                |
+|Python 3.10    |:gbg:`✓`        |:gbg:`✓`         |:gbg:`✓`         |:gbg:`✓`        |:gbg:`✓`        |                |
 +---------------+----------------+-----------------+-----------------+----------------+----------------+----------------+
 
 If a configuration in this table does not work, please `contact us <https://github.com/codac-team/codac/issues>`_.
@@ -59,7 +59,7 @@ If a configuration in this table does not work, please `contact us <https://gith
 .. warning::
 
   | **macOS Big Sur and later (x86_64):**
-  | `Python wheels provided for Catalina or earlier may need to be installed with something similar to <https://stackoverflow.com/questions/64847996/force-usage-of-10-x-wheel-in-macos-big-sur>`: 
+  | `Python wheels provided for Catalina or earlier may need to be installed with something similar to <https://stackoverflow.com/questions/64847996/force-usage-of-10-x-wheel-in-macos-big-sur>`_: 
 
   .. code-block:: bash
 
