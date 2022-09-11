@@ -3,15 +3,17 @@
 # Source variables which are shared between install and uninstall.
 . $PSScriptRoot\sharedVars.ps1
 
-$pp = Get-PackageParameters
+$toolsDir = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 
-$root = "$env:ChocolateyPackageFolder\.."
+$pp = Get-PackageParameters
+$packageDir = Join-Path "$toolsDir" ".." -Resolve
+$root = "$packageDir\.."
 
 if (!$pp['url']) { 
 	$url = 'https://github.com/lebarsfa/codac/releases/download/codac-1/codac_x86_mingw8.zip'
-	$checksum = '7855B0393DF389855E126E712C51DAB8649F19BE0101579C753FBEDF108B0132'
+	$checksum = 'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE'
 	$url64 = 'https://github.com/lebarsfa/codac/releases/download/codac-1/codac_x64_mingw8.zip'
-	$checksum64 = '89C6BB0DE09BD86524947827B3ED88CBBDCAB63141AEE5F7FF273CFB416C0D22'
+	$checksum64 = 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'
 	$packageArgs = @{
 		packageName   = $env:ChocolateyPackageName
 		unzipLocation = "$root"
@@ -83,13 +85,13 @@ else
 
 if (!$pp['NoRegistry']) {
 	New-Item "$CMakeSystemRepositoryPath\$CMakePackageName" -ItemType directory -Force
-	New-ItemProperty -Name "CMakePackageDir" -PropertyType String -Value "$env:ChocolateyPackageFolder\share\$CMakePackageName\cmake" -Path "$CMakeSystemRepositoryPath\$CMakePackageName" -Force
+	New-ItemProperty -Name "CMakePackageDir" -PropertyType String -Value "$packageDir\share\$CMakePackageName\cmake" -Path "$CMakeSystemRepositoryPath\$CMakePackageName" -Force
 }
-#$pathtoadd = "$env:ChocolateyPackageFolder\bin"
+#$pathtoadd = "$packageDir\bin"
 #if (!($pp['NoPath']) -and !([environment]::GetEnvironmentVariable("Path","Machine") -match [regex]::escape($pathtoadd))) {
 #	$newpath = [environment]::GetEnvironmentVariable("Path","Machine") + ";$pathtoadd"
 #	[environment]::SetEnvironmentVariable("Path",$newpath,"Machine")
 #}
 
-#Install-BinFile -Name libcodac.a -Path "$env:ChocolateyPackageFolder\lib"
-#Install-BinFile -Name libcodac-rob.a -Path "$env:ChocolateyPackageFolder\lib"
+#Install-BinFile -Name libcodac.a -Path "$packageDir\lib"
+#Install-BinFile -Name libcodac-rob.a -Path "$packageDir\lib"
