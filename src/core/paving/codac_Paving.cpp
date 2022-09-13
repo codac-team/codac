@@ -128,6 +128,16 @@ namespace codac
     if(m_second_subpaving) m_second_subpaving->reset_flags();
   }
 
+  void Paving::reset_paving(SetValue value)
+  {
+    m_value = value;
+    if(m_first_subpaving)
+    {
+      delete m_first_subpaving; m_first_subpaving = nullptr;
+      delete m_second_subpaving; m_second_subpaving = nullptr;
+    }
+  }
+
   // Extract methods
   
   void Paving::get_boxes(list<IntervalVector>& l_subpavings, SetValue val, SetValue neg_val) const
