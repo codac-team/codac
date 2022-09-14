@@ -18,7 +18,14 @@
 #include "codac_Polygon.h"
 #include "codac_ConvexPolygon.h"
 #include "codac_ColorMap.h"
+#include "codac_ConvexPolygon.h"
 #include "vibes.h"
+
+namespace codac2
+{
+  template<class T>
+  class Tube;
+}
 
 namespace codac
 {
@@ -323,7 +330,8 @@ namespace codac
        * \param params VIBes parameters related to the polygons (none by default)
        */
       void draw_polygons(const std::vector<ConvexPolygon>& v_p, const ColorMap& color_map, const vibes::Params& params = vibes::Params());
-
+      void draw_polygon_tube(const codac2::Tube<ConvexPolygon>& x, const ColorMap& color_map, const vibes::Params& params = vibes::Params());
+  
       /**
        * \brief Draws a point
        *

@@ -49,11 +49,11 @@ TEST_CASE("Test codac2::tubes")
     CHECK(tdomain->iterator_tslice(5540.2)->t0_tf() == Interval(1,oo));
 
     CHECK(tdomain->nb_tubes() == 0);
-    Tube<IntervalVector> x(tdomain, 2); // adding a tubevector to the tdomain
+    Tube<IntervalVector> x(tdomain, IntervalVector(2)); // adding a tubevector to the tdomain
     CHECK(tdomain->nb_tubes() == 1);
 
     { // new scope
-      Tube<IntervalVector> v(tdomain, 3);
+      Tube<IntervalVector> v(tdomain, IntervalVector(3));
       CHECK(tdomain->nb_tubes() == 2);
     } // end of scope, auto removing the tube
     
@@ -145,7 +145,7 @@ TEST_CASE("Test codac2::tubes")
   {
     auto tdomain = create_tdomain();
     CHECK(tdomain->nb_tslices() == 1);
-    Tube<IntervalVector> x(tdomain, 1);
+    Tube<IntervalVector> x(tdomain, IntervalVector(1));
     x.set(Interval(4));
     x(Interval(0,1)) = IntervalVector({{1,2}});
     x(Interval(1,2)) = IntervalVector({{5,6}});
@@ -186,7 +186,7 @@ TEST_CASE("Test codac2::tubes")
   SECTION("Test basic Tube<IntervalVector>")
   {
     auto tdomain = create_tdomain(Interval(0,1), 0.1, false);
-    Tube<IntervalVector> x(tdomain, 3);
+    Tube<IntervalVector> x(tdomain, IntervalVector(3));
 
     CHECK(x.size() == 3);
     CHECK(x.tdomain() == tdomain);
@@ -257,7 +257,7 @@ TEST_CASE("Test codac2::tubes")
   SECTION("Test SliceVector")
   {
     auto tdomain = create_tdomain(Interval(0,1), 0.1);
-    Tube<IntervalVector> x(tdomain, 2);
+    Tube<IntervalVector> x(tdomain, IntervalVector(2));
     CHECK(x.nb_slices() == 12);
     CHECK(x.first_slice_ptr() == tdomain->iterator_tslice(-oo)->_slices.at(&x));
     CHECK(x.last_slice_ptr() == tdomain->iterator_tslice(oo)->_slices.at(&x));
@@ -292,7 +292,7 @@ TEST_CASE("Test codac2::tubes")
     auto tdomain = create_tdomain(Interval(0,10), 0.01, true); // last argument creates "gates" (degenerated slices at scalar timesteps)
     Tube<IntervalVector> x(tdomain,
       codac::TFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; cos(t)+sin(t/0.2)*[-0.1,0.1])"));
-    Tube<IntervalVector> u(tdomain, 2);
+    Tube<IntervalVector> u(tdomain, IntervalVector(2));
 
     CHECK(x.size() == 2);
     CHECK(u.size() == 2);
@@ -318,7 +318,7 @@ TEST_CASE("Test codac2::tubes")
   {
     /*{
       auto tdomain = create_tdomain(Interval(0,10), 1., false);
-      Tube<IntervalVector> x(2, tdomain);
+      Tube<IntervalVector> x(tdomain, IntervalVector(2));
 
       for(auto& sx : x)
       {
@@ -361,5 +361,25 @@ TEST_CASE("Test codac2::tubes")
     CHECK(x.tdomain()->t0_tf() == Interval(0,2));
     CHECK(x.size() == 3);
     CHECK(x.codomain()[1] == Interval(-1.5,1));
+  }
+
+  SECTION("Reverse iterator")
+  {
+    auto tdomain = create_tdomain(Interval(0,1), 0.5);
+    Tube<Interval> x(tdomain);
+
+    auto it1 = x.begin();
+    CHECK(it1->t0_tf() == Interval(-oo,0)); ++it1;
+    CHECK(it1->t0_tf() == Interval(0,0.5)); ++it1;
+    CHECK(it1->t0_tf() == Interval(0.5,1)); ++it1;
+    CHECK(it1->t0_tf() == Interval(1,oo)); ++it1;
+    CHECK(it1 == x.end());
+
+    auto it2 = x.rbegin();
+    CHECK(it2->t0_tf() == Interval(1,oo)); ++it2;
+    CHECK(it2->t0_tf() == Interval(0.5,1)); ++it2;
+    CHECK(it2->t0_tf() == Interval(0,0.5)); ++it2;
+    CHECK(it2->t0_tf() == Interval(-oo,0)); ++it2;
+    CHECK(it2 == x.rend());
   }
 }
