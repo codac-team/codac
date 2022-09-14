@@ -31,6 +31,10 @@ namespace codac
   const ConvexPolygon operator&(const ConvexPolygon& p1, const ConvexPolygon& p2);
   const ConvexPolygon operator&(const IntervalVector& p1, const ConvexPolygon& p2);
   const ConvexPolygon operator&(const ConvexPolygon& p1, const IntervalVector& p2);
+
+  const ConvexPolygon operator|(const ConvexPolygon& p1, const ConvexPolygon& p2);
+  const ConvexPolygon operator|(const IntervalVector& p1, const ConvexPolygon& p2);
+  const ConvexPolygon operator|(const ConvexPolygon& p1, const IntervalVector& p2);
 }
 
 #endif

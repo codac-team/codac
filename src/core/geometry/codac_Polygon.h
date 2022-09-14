@@ -28,7 +28,10 @@ namespace codac
 
         Polygon();
         Polygon(const Polygon& p);
+        explicit Polygon(const IntervalVector& box);
         Polygon(const std::vector<Vector>& v_floating_pts);
+
+        void set_empty();
 
       /// @}
       /// \name Accessing values
