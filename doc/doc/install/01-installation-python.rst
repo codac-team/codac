@@ -59,7 +59,7 @@ If a configuration in this table does not work, please `contact us <https://gith
 .. warning::
 
   | **macOS Big Sur and later (x86_64):**
-  | `Python wheels provided for Catalina or earlier may need to be installed with something similar to <https://stackoverflow.com/questions/64847996/force-usage-of-10-x-wheel-in-macos-big-sur>`: 
+  | `Python wheels provided for Catalina or earlier may need to be installed with something similar to <https://stackoverflow.com/questions/64847996/force-usage-of-10-x-wheel-in-macos-big-sur>`_: 
 
   .. code-block:: bash
 
