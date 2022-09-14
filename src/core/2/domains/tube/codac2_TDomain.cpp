@@ -111,6 +111,19 @@ namespace codac2
     return _tslices;
   }
 
+  void TDomain::delete_gates()
+  {
+    list<TSlice>::iterator it = _tslices.begin();
+    while(it != _tslices.end())
+    {
+      if(it->t0_tf().is_degenerated())
+        _tslices.erase(it++);
+
+      else
+        ++it;
+    }
+  }
+
   ostream& operator<<(ostream& os, const TDomain& x)
   {
     os << x.t0_tf()

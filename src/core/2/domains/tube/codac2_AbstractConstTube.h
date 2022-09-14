@@ -18,6 +18,7 @@
 #include "codac_Interval.h"
 #include "codac_IntervalVector.h"
 #include "codac_TrajectoryVector.h"
+#include "codac_BoolInterval.h"
 
 namespace codac2
 {
@@ -25,6 +26,7 @@ namespace codac2
   using codac::TrajectoryVector;
   using codac::Interval;
   using codac::IntervalVector;
+  using codac::BoolInterval;
 
   template<typename W, typename T>
   class AbstractConstTube
@@ -44,7 +46,7 @@ namespace codac2
       }
 
       virtual size_t size() const = 0;
-      virtual bool contains(const TrajectoryVector& value) const = 0;
+      virtual BoolInterval contains(const TrajectoryVector& value) const = 0;
       virtual Interval t0_tf() const = 0;
       virtual W codomain() const = 0;
       // virtual W operator()(double t) const = 0;

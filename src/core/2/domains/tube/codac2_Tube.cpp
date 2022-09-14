@@ -39,4 +39,14 @@ namespace codac2
         x_.set(s.codomain(), s.t0_tf());
     return x_;
   }
+
+  template <>
+  Tube<IntervalVector>::Tube(const std::shared_ptr<TDomain>& tdomain, const TFnc& f) :
+    Tube(tdomain, IntervalVector(f.image_dim()))
+  {
+    assert(f.nb_var() == 0 && "function's inputs must be limited to system variable");
+
+    for(auto& s : *this)
+      s.set(f.eval_vector(s.t0_tf()));
+  }
 } // namespace codac

@@ -36,7 +36,7 @@ namespace codac2
 
     for(auto& sx : x) // sx is a SliceVector of the TubeVector x
     {
-      if(sx.is_gate()) // the slace may be on a degenerated temporal domain, i.e. a gate
+      if(sx.is_gate()) // the slice may be on a degenerated temporal domain, i.e. a gate
         continue;
 
       // su is a SliceVector of the TubeVector u:
