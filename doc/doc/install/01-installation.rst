@@ -38,7 +38,7 @@ Codac is available in both C++17 and Python3. Note that you can also :ref:`use C
 The :gbg:`✓` configurations are officially supported at the moment:
 
 +---------------+----------------+-----------------+-----------------+----------------+----------------+----------------+
-|Language       |Linux (amd64)   |Windows (x64)    |Windows (x86)    |macOS (arm64)  |macOS (x86_64)  |Online          |
+|Language       |Linux (amd64)   |Windows (x64)    |Windows (x86)    |macOS (arm64)   |macOS (x86_64)  |Online          |
 +===============+================+=================+=================+================+================+================+
 |C++17          ||linux-cpp|_    ||win-cpp|_       ||win-cpp|_       ||macos-cpp|_    ||macos-cpp|_    |                |
 +---------------+----------------+-----------------+-----------------+----------------+----------------+----------------+
