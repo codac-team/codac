@@ -23,6 +23,7 @@ namespace codac
   // Definition
 
   Polygon::Polygon()
+    : Polygon(IntervalVector(2,Interval(-9999999999.,9999999999.))) // unbounded polygons are not supported yet
   {
 
   }
@@ -32,11 +33,24 @@ namespace codac
   {
 
   }
+
+  Polygon::Polygon(const IntervalVector& box)
+  {
+    assert(box.size() == 2);
+    assert(!box.is_empty());
+
+    ThickPoint::push(box, m_v_floating_pts);
+  }
   
   Polygon::Polygon(const vector<Vector>& v_floating_pts)
     : m_v_floating_pts(v_floating_pts)
   {
     
+  }
+
+  void Polygon::set_empty()
+  {
+    m_v_floating_pts.clear();
   }
 
 
@@ -81,12 +95,19 @@ namespace codac
   {
     IntervalVector box(2, Interval::EMPTY_SET);
     for(const auto& pt : m_v_floating_pts)
+    {
+      if(isinf(pt[0]) || isinf(pt[1]))
+        return IntervalVector(2); // todo: correct this, issue #87
       box |= pt;
+    }
     return box;
   }
 
   const ThickPoint Polygon::center() const
   {
+    if(is_empty())
+      return ThickPoint(); // undefined point
+
     IntervalVector center(2, 0.);
     for(const auto& pt : m_v_floating_pts)
       center += pt;
@@ -96,6 +117,9 @@ namespace codac
 
   const Interval Polygon::area() const
   {
+    if(is_empty())
+      return 0.;
+    
     Interval a(0.);
     size_t n = m_v_floating_pts.size();
 

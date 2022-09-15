@@ -17,13 +17,16 @@
 #include "codac_TFnc.h"
 #include "codac2_TSlice.h"
 #include "codac_Tube.h" // to be removed
+#include "codac_TubeVector.h" // to be removed
 #include "codac2_AbstractSlicedTube.h"
 #include "codac2_AbstractConstTube.h"
 #include "codac2_TDomain.h"
+#include "codac_ConvexPolygon.h"
 
 namespace codac2
 {
   using codac::TFnc;
+  using codac::BoolInterval;
 
   template<class T>
   class Slice;
@@ -38,26 +41,27 @@ namespace codac2
   {
     public:
 
-      explicit Tube(const std::shared_ptr<TDomain>& tdomain, size_t n = 1) :
-        Tube(tdomain, T(n))
+      explicit Tube(const std::shared_ptr<TDomain>& tdomain) :
+        Tube(tdomain, T())
       {
-        assert(n > 0);
-        for(std::list<TSlice>::iterator it = _tdomain->_tslices.begin();
-          it != _tdomain->_tslices.end(); ++it)
-        {
-          it->_slices.insert(
-            std::pair<const AbstractSlicedTube*,std::shared_ptr<Slice<T>>>(this,
-              std::make_shared<Slice<T>>(n, *this, it)));
-        }
+        
       }
 
       explicit Tube(const std::shared_ptr<TDomain>& tdomain, const TFnc& f) :
-        Tube(tdomain, (size_t)f.image_dim())
+        Tube(tdomain, T())
       {
         assert(f.nb_var() == 0 && "function's inputs must be limited to system variable");
+        if constexpr(std::is_same<T,Interval>::value)
+          assert(f.image_dim() == 1);
 
         for(auto& s : *this)
-          s.set(f.eval_vector(s.t0_tf()));
+        {
+          if constexpr(std::is_same<T,Interval>::value)
+            s.set(f.eval(s.t0_tf()));
+
+          else
+            s.set(f.eval_vector(s.t0_tf()));
+        }
       }
 
       explicit Tube(const std::shared_ptr<TDomain>& tdomain, const T& default_value) :
@@ -167,9 +171,19 @@ namespace codac2
         return false;
       }
 
-      bool contains(const TrajectoryVector& value) const
+      BoolInterval contains(const TrajectoryVector& x) const
       {
-        return true;
+        assert(x.tdomain() == tdomain()->t0_tf());
+
+        BoolInterval result = BoolInterval::YES;
+        for(const auto& s : *this)
+        {
+          BoolInterval b = s.contains(x);
+          if(b == BoolInterval::NO) return BoolInterval::NO;
+          else if(b == BoolInterval::MAYBE) result = BoolInterval::MAYBE; 
+        }
+
+        return result;
       }
 
       T codomain() const
@@ -217,6 +231,24 @@ namespace codac2
           s.set(codomain);
       }
 
+      void set(const T& codomain, double t)
+      {
+        assert((size_t)codomain.size() == size());
+        std::list<TSlice>::iterator it = _tdomain->sample(t);
+        std::static_pointer_cast<Slice<T>>(it->_slices.at(this))->set(codomain);
+      }
+
+      const Tube<T>& inflate(double rad)
+      {
+        for(auto& s : *this)
+          if(!s.is_gate())
+            s.inflate(rad);
+        for(auto& s : *this)
+          if(s.is_gate())
+            s.inflate(rad);
+        return *this;
+      }
+
       TubeComponent<T> operator[](size_t i)
       {
         assert(i >= 0 && i < size());
@@ -249,22 +281,48 @@ namespace codac2
 
         public:
           
-          iterator(const Tube& tube_vector, base_container::iterator it) : 
-            base_container::iterator(it), _tube_vector(tube_vector) { }
+          iterator(const Tube& x, base_container::iterator it) : 
+            base_container::iterator(it), _x(x) { }
 
           reference operator*()
           {
-            return static_cast<reference>(*((*this)->_slices.at(&_tube_vector)));
+            return static_cast<reference>(*((*this)->_slices.at(&_x)));
           }
 
         protected:
 
-          const Tube& _tube_vector;
+          const Tube& _x;
       };
 
       iterator begin() { return iterator(*this, _tdomain->_tslices.begin()); }
       iterator end()   { return iterator(*this, _tdomain->_tslices.end()); }
 
+      struct reverse_iterator : public base_container::reverse_iterator
+      {
+        using iterator_category = typename base_container::reverse_iterator::iterator_category;
+        using difference_type   = typename base_container::reverse_iterator::difference_type;
+
+        using value_type        = Slice<T>;
+        using pointer           = Slice<T>*;
+        using reference         = Slice<T>&;
+
+        public:
+          
+          reverse_iterator(const Tube& x, base_container::reverse_iterator it) : 
+            base_container::reverse_iterator(it), _x(x) { }
+
+          reference operator*()
+          {
+            return static_cast<reference>(*((*this)->_slices.at(&_x)));
+          }
+
+        protected:
+
+          const Tube& _x;
+      };
+
+      reverse_iterator rbegin() { return reverse_iterator(*this, _tdomain->_tslices.rbegin()); }
+      reverse_iterator rend()   { return reverse_iterator(*this, _tdomain->_tslices.rend()); }
 
       struct const_iterator : public base_container::const_iterator
       {
@@ -277,17 +335,17 @@ namespace codac2
 
         public:
           
-          const_iterator(const Tube& tube_vector, base_container::const_iterator it) : 
-            base_container::const_iterator(it), _tube_vector(tube_vector) { }
+          const_iterator(const Tube& x, base_container::const_iterator it) : 
+            base_container::const_iterator(it), _x(x) { }
 
           reference operator*() const
           {
-            return static_cast<reference>(*((*this)->_slices.at(&_tube_vector)));
+            return static_cast<reference>(*((*this)->_slices.at(&_x)));
           }
 
         protected:
 
-          const Tube& _tube_vector;
+          const Tube& _x;
       };
 
       const_iterator begin() const { return const_iterator(*this, _tdomain->_tslices.cbegin()); }

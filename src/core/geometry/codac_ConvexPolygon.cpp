@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include "codac_polygon_arithmetic.h"
 #include "codac_IntervalMatrix.h"
 #include "codac_ConvexPolygon.h"
 #include "codac_GrahamScan.h"
@@ -35,12 +36,8 @@ namespace codac
   }
 
   ConvexPolygon::ConvexPolygon(const IntervalVector& box)
-    : Polygon()
+    : Polygon(box)
   {
-    assert(box.size() == 2);
-    assert(!box.is_empty());
-
-    ThickPoint::push(box, m_v_floating_pts);
     m_v_floating_pts = GrahamScan::convex_hull(m_v_floating_pts);
   }
 
@@ -100,7 +97,7 @@ namespace codac
 
     for(const auto& pt : vertices())
     {
-      is_subset = is_subset && p.encloses(ThickPoint(pt));
+      is_subset = is_subset && p.contains(ThickPoint(pt));
       if(is_subset == NO)
         return NO;
     }
@@ -108,7 +105,30 @@ namespace codac
     return is_subset;
   }
 
+  const BoolInterval ConvexPolygon::is_subset(const IntervalVector& x) const
+  {
+    // todo: this could be optimized in the specific case of a box
+    return is_subset(ConvexPolygon(x));
+  }
+
+  const BoolInterval ConvexPolygon::is_superset(const ConvexPolygon& p) const
+  {
+    return p.is_subset(*this);
+  }
+
+  const BoolInterval ConvexPolygon::is_superset(const IntervalVector& x) const
+  {
+    // todo: this could be optimized in the specific case of a box
+    return is_superset(ConvexPolygon(x));
+  }
+
   const BoolInterval ConvexPolygon::encloses(const ThickPoint& p) const
+  {
+    cout << "encloses(): deprecated. Use contains() instead." << endl;
+    return contains(p);
+  }
+
+  const BoolInterval ConvexPolygon::contains(const ThickPoint& p) const
   {
     if(p.does_not_exist() || is_empty())
       return NO;
@@ -155,12 +175,25 @@ namespace codac
     return (a & 1) ? YES : NO;
   }
 
+  const BoolInterval ConvexPolygon::contains(const Vector& p) const
+  {
+    assert(p.size() == 2);
+    return contains(ThickPoint(p));
+  }
+  
+  BoolInterval ConvexPolygon::intersects(const IntervalVector& x) const
+  {
+    // todo: improve this algorithm
+    return fast_intersection(x).is_empty() ? NO : YES;
+  }
+
 
   // Setting values
 
   const ConvexPolygon& ConvexPolygon::inflate(double rad)
   {
     // todo
+    assert(false);
     return *this;
   }
 
@@ -287,9 +320,23 @@ namespace codac
     ThickPoint::push(reduced_x, v_x_vertices);
 
     for(const auto& vertex : v_x_vertices)
-      if(encloses(vertex) != NO)
+      if(contains(vertex) != NO)
         inter |= vertex.box();
 
     return inter;
+  }
+
+  const ConvexPolygon& ConvexPolygon::operator&=(const ConvexPolygon& x)
+  {
+    // todo: optimize this?
+    *this = *this & x;
+    return *this;
+  }
+
+  const ConvexPolygon& ConvexPolygon::operator|=(const ConvexPolygon& x)
+  {
+    // todo: optimize this?
+    *this = *this | x;
+    return *this;
   }
 }

@@ -216,6 +216,16 @@ namespace codac
 
   const ColorMap ColorMap::BLUE_TUBE = make_blue_tube();
   
+  ColorMap make_red_tube()
+  {
+    ColorMap map(InterpolMode::RGB);
+    map.add_color_point(make_rgb(169,55,0), 0.);
+    map.add_color_point(make_rgb(241,140,54), 1.);
+    return map;
+  }
+
+  const ColorMap ColorMap::RED_TUBE = make_red_tube();
+  
   ColorMap make_rainbow()
   {
     ColorMap map(InterpolMode::HSV);

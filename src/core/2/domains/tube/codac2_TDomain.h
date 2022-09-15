@@ -38,6 +38,7 @@ namespace codac2
       std::list<TSlice>::iterator sample(double t, bool allow_gate = true);
       friend std::ostream& operator<<(std::ostream& os, const TDomain& x);
       const std::list<TSlice>& tslices() const;
+      void delete_gates();
 
 
     protected:

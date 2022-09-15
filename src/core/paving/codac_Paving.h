@@ -147,6 +147,13 @@ namespace codac
        */
       void reset_flags() const;
 
+      /**
+       * \brief Same as building a new Paving object
+       *
+       * \param value integer of the set, `SetValue::UNKNOWN` by default
+       */
+      void reset_paving(SetValue value = SetValue::UNKNOWN);
+
       /// @}
       /// \name Extract methods
       /// @{
@@ -203,7 +210,7 @@ namespace codac
 
     protected:
 
-      mutable bool m_flag; //!< optional flag, can be used by search algorithms
+      mutable bool m_flag = false; //!< optional flag, can be used by search algorithms
       Paving *m_root = nullptr; //!< pointer to the root
       Paving *m_first_subpaving = nullptr, *m_second_subpaving = nullptr; //!< tree structure
   };
