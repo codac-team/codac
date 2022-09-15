@@ -51,19 +51,19 @@ namespace codac2
       void contract(std::vector<double>& v_t, std::vector<IntervalVector>& v_y, TubeVector& x, const Tube& u, std::vector<ConvexPolygon>& v_p_k, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
       void contract(std::vector<double>& v_t, std::vector<IntervalVector>& v_y, Tube& x1, Tube& x2, const Tube& u, std::vector<ConvexPolygon>& v_p_k, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
 */
-      codac::ConvexPolygon polygon_envelope(const codac::ConvexPolygon& p_k, double dt_k_kp1, const codac::Matrix& A, const codac::Vector& b, const codac::Interval& u_k);
+      
+
+    protected:
+
+      void ctc_fwd_gate(codac::ConvexPolygon& p_k, const codac::ConvexPolygon& p_km1, double dt_km1_k, const codac::Interval& u_km1);
+      void ctc_bwd_gate(codac::ConvexPolygon& p_k, const codac::ConvexPolygon& p_kp1, double dt_k_kp1, const codac::Interval& u_k);
+      codac::ConvexPolygon polygon_envelope(const codac::ConvexPolygon& p_k, double dt_k_kp1, const codac::Interval& u_k);
 
 
     protected:
 
-      void ctc_fwd_gate(codac::ConvexPolygon& p_k, const codac::ConvexPolygon& p_km1, double dt_km1_k, const codac::Matrix& A, const codac::Vector& b, const codac::Interval& u_km1);
-      void ctc_bwd_gate(codac::ConvexPolygon& p_k, const codac::ConvexPolygon& p_kp1, double dt_k_kp1, const codac::Matrix& A, const codac::Vector& b, const codac::Interval& u_k);
-
-
-    protected:
-
-      const codac::Matrix* m_A;
-      const codac::Vector* m_b;
+      const codac::Matrix& _A;
+      const codac::Vector& _b;
 
       const int m_polygon_max_edges = 15;
 

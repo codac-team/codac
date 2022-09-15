@@ -42,7 +42,7 @@ namespace codac2
   }
 
   CtcLinobs::CtcLinobs(const Matrix& A, const Vector& b)
-    : DynCtc(), m_A(new Matrix(A)), m_b(new Vector(b))
+    : DynCtc(), _A(A), _b(b)
   {
     assert(A.nb_cols() == 2 && A.nb_rows() == 2);
     assert(b.size() == 2);
@@ -50,8 +50,7 @@ namespace codac2
 
   CtcLinobs::~CtcLinobs()
   {
-    delete m_A;
-    delete m_b;
+
   }
 
   // Static members for contractor signature (mainly used for CN Exceptions)
@@ -151,19 +150,19 @@ namespace codac2
     if((t_propa & TimePropag::FORWARD) && x.next_slice_ptr())
     {
       ConvexPolygon output_gate = x.output_gate();
-      ctc_fwd_gate(output_gate, x.input_gate(), x.t0_tf().diam(), *m_A, *m_b, u.codomain());
+      ctc_fwd_gate(output_gate, x.input_gate(), x.t0_tf().diam(), _A, _b, u.codomain());
       x.next_slice_ptr()->set(output_gate);
     }
 
     if((t_propa & TimePropag::BACKWARD) && x.prev_slice_ptr())
     {
       ConvexPolygon input_gate = x.input_gate();
-      ctc_bwd_gate(input_gate, x.output_gate(), x.t0_tf().diam(), *m_A, *m_b, u.codomain());
+      ctc_bwd_gate(input_gate, x.output_gate(), x.t0_tf().diam(), _A, _b, u.codomain());
       x.prev_slice_ptr()->set(input_gate);
     }
 
     if(compute_envelope)
-      x.set(polygon_envelope(x.input_gate(), x.t0_tf().diam(), *m_A, *m_b, u.codomain()));
+      x.set(polygon_envelope(x.input_gate(), x.t0_tf().diam(), _A, _b, u.codomain()));
   }
 
   /*void CtcLinobs::contract(vector<double>& v_t, vector<IntervalVector>& v_y, Tube& x1, Tube& x2, const Tube& u, vector<ConvexPolygon>& v_p_k, TimePropag t_propa)
@@ -220,11 +219,11 @@ namespace codac2
 
           if(tkm1_tk.intersects(m_restricted_tdomain))
           {
-            ctc_fwd_gate(v_p_k[i], v_p_k[i-1], tkm1_tk.diam(), *m_A, *m_b, su->codomain());
+            ctc_fwd_gate(v_p_k[i], v_p_k[i-1], tkm1_tk.diam(), *_A, *_b, su->codomain());
 
             for(size_t j = 0 ; j < v_t.size() ; j++) // observations at uncertain times
               if(tkm1_tk.contains(v_t[j]))
-                ctc_fwd_gate(v_p_k[i], ConvexPolygon(v_y[j]), tkm1_tk.ub()-v_t[j], *m_A, *m_b, su->codomain());
+                ctc_fwd_gate(v_p_k[i], ConvexPolygon(v_y[j]), tkm1_tk.ub()-v_t[j], *_A, *_b, su->codomain());
             // todo: contraction of the observations
 
             IntervalVector ouputgate_box = v_p_k[i].box();
@@ -239,7 +238,7 @@ namespace codac2
 
             else
             {
-              IntervalVector envelope_box = polygon_envelope(v_p_k[i-1], tkm1_tk.diam(), *m_A, *m_b, su->codomain()).box();
+              IntervalVector envelope_box = polygon_envelope(v_p_k[i-1], tkm1_tk.diam(), *_A, *_b, su->codomain()).box();
               s1->set_envelope(envelope_box[0]);
               s2->set_envelope(envelope_box[1]);
             }
@@ -265,18 +264,18 @@ namespace codac2
 
           if(tk_kp1.intersects(m_restricted_tdomain))
           {
-            ctc_bwd_gate(v_p_k[i], v_p_k[i+1], tk_kp1.diam(), *m_A, *m_b, su->codomain());
+            ctc_bwd_gate(v_p_k[i], v_p_k[i+1], tk_kp1.diam(), *_A, *_b, su->codomain());
 
             for(size_t j = 0 ; j < v_t.size() ; j++) // observations at uncertain times
               if(tk_kp1.contains(v_t[j]))
-                ctc_bwd_gate(v_p_k[i], ConvexPolygon(v_y[j]), v_t[j]-tk_kp1.lb(), *m_A, *m_b, su->codomain());
+                ctc_bwd_gate(v_p_k[i], ConvexPolygon(v_y[j]), v_t[j]-tk_kp1.lb(), *_A, *_b, su->codomain());
             // todo: contraction of the observations
 
             IntervalVector polybox = v_p_k[i].box();
             s1->set_input_gate(polybox[0]);
             s2->set_input_gate(polybox[1]);
 
-            IntervalVector envelope_box = polygon_envelope(v_p_k[i], tk_kp1.diam(), *m_A, *m_b, su->codomain()).box();
+            IntervalVector envelope_box = polygon_envelope(v_p_k[i], tk_kp1.diam(), *_A, *_b, su->codomain()).box();
             s1->set_envelope(envelope_box[0]);
             s2->set_envelope(envelope_box[1]);
           }
@@ -288,22 +287,22 @@ namespace codac2
   }*/
 
   void CtcLinobs::ctc_fwd_gate(ConvexPolygon& p_k, const ConvexPolygon& p_km1,
-    double dt_km1_k, const Matrix& A, const Vector& b, const Interval& u_km1)
+    double dt_km1_k, const Interval& u_km1)
   {
-    p_k = p_k & (exp_At(A,dt_km1_k)*p_km1 + dt_km1_k*exp_At(A,Interval(0.,dt_km1_k))*(u_km1*b));
+    p_k = p_k & (exp_At(_A,dt_km1_k)*p_km1 + dt_km1_k*exp_At(_A,Interval(0.,dt_km1_k))*(u_km1*_b));
     p_k.simplify(m_polygon_max_edges);
   }
 
   void CtcLinobs::ctc_bwd_gate(ConvexPolygon& p_k, const ConvexPolygon& p_kp1,
-    double dt_k_kp1, const Matrix& A, const Vector& b, const Interval& u_k)
+    double dt_k_kp1, const Interval& u_k)
   {
-    p_k = p_k & (exp_At(-A,dt_k_kp1)*p_kp1 - dt_k_kp1*exp_At(-A,Interval(0.,dt_k_kp1))*(u_k*b));
+    p_k = p_k & (exp_At(-_A,dt_k_kp1)*p_kp1 - dt_k_kp1*exp_At(-_A,Interval(0.,dt_k_kp1))*(u_k*_b));
     p_k.simplify(m_polygon_max_edges);
   }
 
   ConvexPolygon CtcLinobs::polygon_envelope(const ConvexPolygon& p_k,
-    double dt_k_kp1, const Matrix& A, const Vector& b, const Interval& u_k)
+    double dt_k_kp1, const Interval& u_k)
   {
-    return exp_At(A,Interval(0.,dt_k_kp1))*p_k + Interval(0.,dt_k_kp1)*exp_At(A,Interval(0.,dt_k_kp1))*(u_k*b);
+    return exp_At(_A,Interval(0.,dt_k_kp1))*p_k + Interval(0.,dt_k_kp1)*exp_At(_A,Interval(0.,dt_k_kp1))*(u_k*_b);
   }
 }
