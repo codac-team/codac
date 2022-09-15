@@ -29,29 +29,13 @@ namespace codac2
   {
     public:
 
-      /**
-       * \brief Creates a contractor object \f$\mathcal{C}_\textrm{linobs}\f$
-       */
       CtcLinobs(const codac::Matrix& A, const codac::Vector& b); // /!\ auto evaluation of e^At not reliable
       ~CtcLinobs();
 
       void contract(std::vector<codac::Domain*>& v_domains);
-      //void contract(Tube& x1, Tube& x2, const Tube& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
       void contract(Tube<codac::ConvexPolygon>& x, const Tube<Interval>& u, codac::TimePropag t_propa = codac::TimePropag::FORWARD | codac::TimePropag::BACKWARD, bool compute_envelopes = true);
       void contract(Slice<codac::ConvexPolygon>& x, const Slice<codac::Interval>& u, codac::TimePropag t_propa = codac::TimePropag::FORWARD | codac::TimePropag::BACKWARD, bool compute_envelope = true);
   
-  /*void contract(TubeVector& x, const Tube& u, std::vector<ConvexPolygon>& v_p_k, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-
-      // todo: contraction of the observations
-      void contract(double& t, IntervalVector& y, TubeVector& x, const Tube& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-      void contract(double& t, IntervalVector& y, TubeVector& x, const Tube& u, std::vector<ConvexPolygon>& v_p_k, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-
-      // todo: contraction of the observations
-      void contract(std::vector<double>& v_t, std::vector<IntervalVector>& v_y, TubeVector& x, const Tube& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-      void contract(std::vector<double>& v_t, std::vector<IntervalVector>& v_y, TubeVector& x, const Tube& u, std::vector<ConvexPolygon>& v_p_k, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-      void contract(std::vector<double>& v_t, std::vector<IntervalVector>& v_y, Tube& x1, Tube& x2, const Tube& u, std::vector<ConvexPolygon>& v_p_k, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-*/
-      
 
     protected:
 
