@@ -213,6 +213,18 @@ namespace codac2
           _codomain &= prev_slice_ptr()->codomain() & next_slice_ptr()->codomain();
       }
 
+      void set_empty()
+      {
+        _codomain.set_empty();
+        if(!is_gate())
+        {
+          if(prev_slice_ptr()->is_gate())
+            prev_slice_ptr()->set_empty();
+          if(next_slice_ptr()->is_gate())
+            next_slice_ptr()->set_empty();
+        }
+      }
+
       void set_component(size_t i, const Interval& xi)
       {
         assert((size_t)codomain().size() == size());

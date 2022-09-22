@@ -94,6 +94,12 @@ namespace codac2
 
   void CtcLinobs::contract(Slice<ConvexPolygon>& x, const Slice<Interval>& u, TimePropag t_propa, bool compute_envelope)
   {
+    if(x.is_empty() || u.is_empty())
+    {
+      x.set_empty();
+      return;
+    }
+
     if(x.is_gate())
       return;
 
