@@ -295,10 +295,10 @@ Then you have two options: read the details about the features of Codac (domains
 
 .. sidebar:: International tutorial
 
-  .. Figure:: tutorial/img/logos/logo_icra.png
+  .. Figure:: tutorial/img/logos/logo_icra_2020.png
     :align: center
 
-  .. Figure:: tutorial/img/logos/logo_iros.png
+  .. Figure:: tutorial/img/logos/logo_iros_2020.png
     :align: center
 
   This tutorial has been proposed in the `IROS 2020 Conference <https://www.iros2020.org/3program/Tutorials.html>`_ and the `ICRA 2020 Conference <https://www.icra2020.org/program/workshops-and-tutorials>`_.

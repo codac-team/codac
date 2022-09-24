@@ -49,6 +49,7 @@ redirects = {
     "lie-symmetries": "use-cases/lie-symmetries/index.html",
     "sivia": "manual/11-separators/index.html",
     "installation": "install/01-installation.html",
+    "icra2023-tutorial": "tutorial/icra-2023.html",
 }
 
 breathe_projects = {

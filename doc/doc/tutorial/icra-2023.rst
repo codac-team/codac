@@ -1,4 +1,4 @@
-.. _sec-tuto-main-page:
+.. _sec-tuto-icra-2023:
 
 #############################################
 Tutorial: constraint programming for robotics
@@ -37,18 +37,15 @@ Tutorial: constraint programming for robotics
 .. |logo_youtube_small| image:: img/logos/logo_youtube.png
    :height: 15px
 
-.. .. centered:: Simon Rohou, Raphael Voges, Luc Jaulin, Benoît Desrochers
-.. .. centered:: **26th October -- 22th November**
+.. .. centered:: Simon Rohou, Aaronkumar Ehambram
+.. .. centered:: **May 29 2023 / June 2 2023**
 
 .. sidebar:: International tutorial
 
-  .. Figure:: img/logos/logo_icra_2020.png
+  .. Figure:: img/logos/logo_icra_2023.png
     :align: center
 
-  .. Figure:: img/logos/logo_iros_2020.png
-    :align: center
-
-  This tutorial has been proposed in the `IROS 2020 Conference <https://www.iros2020.org/3program/Tutorials.html>`_ and the `ICRA 2020 Conference <https://www.icra2020.org/program/workshops-and-tutorials>`_.
+  This tutorial is proposed in the `ICRA 2023 Conference <https://www.icra2023.org>`_ held in London.
 
 
 .. About the tutorial
@@ -313,16 +310,12 @@ Organizers and technical support
 --------------------------------
 
 .. hlist::
-  :columns: 3
+  :columns: 1
 
   * `Simon Rohou <http://simon-rohou.fr/research/>`_
-  * `Raphael Voges <https://raphael-voges.de/>`_
-  * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
-  * `Benoît Desrochers <http://www.ensta-bretagne.fr/desrochers>`_
-  * Julien Damers
-  * `Fabrice Le Bars <https://www.ensta-bretagne.fr/lebars/>`_
+  * Aaronkumar Ehambram
 
-For any question, do not hesitate to use the `MOOC platform of this tutorial <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_, so that other participants can reply or see posted answers.
+.. For any question, do not hesitate to use the `MOOC platform of this tutorial <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_, so that other participants can reply or see posted answers.
 
 .. We will also answer you on `the Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ for very short questions.
 
