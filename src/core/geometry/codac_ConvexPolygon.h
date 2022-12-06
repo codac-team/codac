@@ -35,13 +35,10 @@ namespace codac
       /// @{
 
         const BoolInterval is_subset(const ConvexPolygon& p) const;
-        const BoolInterval is_subset(const IntervalVector& x) const;
-        const BoolInterval is_superset(const ConvexPolygon& p) const;
-        const BoolInterval is_superset(const IntervalVector& x) const;
-        const BoolInterval encloses(const ThickPoint& p) const; // deprecated
+        bool is_unbounded() const;
         const BoolInterval contains(const ThickPoint& p) const;
-        const BoolInterval contains(const Vector& p) const;
-        BoolInterval intersects(const IntervalVector& x) const;
+        const BoolInterval encloses(const ThickPoint& p) const;
+        const BoolInterval intersects(const ConvexPolygon& p) const;
 
       /// @}
       /// \name Setting values

@@ -159,10 +159,7 @@ namespace codac
         vector<ThickEdge> v_box_edges;
         ThickEdge::push(x, v_box_edges);
         for(size_t i = 0 ; i < v_box_edges.size() ; i++)
-        {
-          assert(!does_not_exist() && !v_box_edges[i].does_not_exist());
           inter |= (*this & v_box_edges[i]).box();
-        }
         return inter;
       }
     }
@@ -173,7 +170,6 @@ namespace codac
 
   const ThickPoint ThickEdge::operator&(const ThickEdge& e) const
   {
-    assert(!does_not_exist() && !e.does_not_exist());
     const ThickPoint proj = proj_intersection(*this, e);
     return ThickPoint(proj[0] & box()[0] & e.box()[0], proj[1] & box()[1] & e.box()[1]);
   }

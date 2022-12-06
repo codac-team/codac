@@ -74,7 +74,7 @@ public:
      * The polygon boundary contractor is composed of a union of
      * contractor on segments (CtcSegment).
      * This contractor is minimal as an union of minimal contractors.
-     * See ibex::SepBoundaryCtc.
+     * See #ibex::SepBoundaryCtc.
      *
      * \param points list of segments representing the edges of the polygon in the format of ( ((a1_x, a1_y), (b1_x, b1_x)), ((a2_x, a2_y), (b2_x, b2_x)), ...)
      */
@@ -89,7 +89,7 @@ public:
      * The polygon boundary contractor is composed of a union of
      * contractor on segments (CtcSegment).
      * This contractor is minimal as an union of minimal contractors.
-     * See ibex::SepBoundaryCtc.
+     * See #ibex::SepBoundaryCtc.
      *
      * \param vertices list of vertices on the form (ax, ay), (bx, by), (cx, cy), ...
      */
@@ -104,7 +104,7 @@ public:
      * The polygon boundary contractor is composed of a union of
      * contractor on segments (CtcSegment).
      * This contractor is minimal as an union of minimal contractors.
-     * See ibex::SepBoundaryCtc.
+     * See #ibex::SepBoundaryCtc.
      *
      * \param ax list of x coordinate of the first point of each segment
      * \param ay list of y coordinate of the first point of each segment

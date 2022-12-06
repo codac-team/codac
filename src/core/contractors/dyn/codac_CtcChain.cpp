@@ -45,4 +45,24 @@ namespace codac
   {
     CtcLinobs::contract(x, v, a, t_propa);
   }
+
+  void CtcChain::contract(codac2::Tube<IntervalVector>& x, const codac2::Tube<Interval>& a, TimePropag t_propa)
+  {
+    assert(x.size() == 2 && codac2::TDomain::are_same(x.tdomain(),a.tdomain()));
+    codac::TubeVector _x = to_codac1(x);
+    codac::Tube _a = to_codac1(a);
+    contract(_x[0], _x[1], _a, t_propa);
+    x &= codac2::to_codac2(_x);
+  }
+
+  void CtcChain::contract(codac2::Tube<Interval>& x, codac2::Tube<Interval>& v, const codac2::Tube<Interval>& a, TimePropag t_propa)
+  {
+    assert(codac2::TDomain::are_same(x.tdomain(),v.tdomain()) && codac2::TDomain::are_same(x.tdomain(),a.tdomain()));
+    codac::Tube _x = to_codac1(x);
+    codac::Tube _v = to_codac1(v);
+    codac::Tube _a = to_codac1(a);
+    contract(_x, _v, _a, t_propa);
+    x &= codac2::to_codac2(_x);
+    v &= codac2::to_codac2(_v);
+  }
 }

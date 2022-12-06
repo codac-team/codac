@@ -95,8 +95,6 @@ namespace codac
 
         if(!intersection_pt.does_not_exist())
         {
-          assert(!e1.does_not_exist() && !e2.does_not_exist());
-          
           // If edges are possibly parallel:
           if(ThickEdge::parallel(e1, e2) != NO)
           {

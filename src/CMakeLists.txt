@@ -78,7 +78,7 @@ if((CMAKE_BUILD_TYPE MATCHES Debug) AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
 # programs in Release (otherwise it would be only added by Ibex if the program 
 # is built in Debug)...
 file(APPEND ${CODAC_CMAKE_CONFIG_FILE} "
-set(CMAKE_EXE_LINKER_FLAGS \"${CMAKE_EXE_LINKER_FLAGS} -pg\")
+set(CMAKE_EXE_LINKER_FLAGS \"${CMAKE_EXE_LINKER_FLAGS}\")
 ")
 endif()
 

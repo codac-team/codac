@@ -36,6 +36,7 @@ namespace codac2
       AbstractSlice(const AbstractSlicedTube& tubevector, const std::list<TSlice>::iterator& _it_tslice);
       virtual std::shared_ptr<AbstractSlice> duplicate() const = 0;
       virtual size_t size() const = 0;
+      virtual void set_unbounded() = 0;
 
       const Interval& t0_tf() const;
       const TSlice& tslice() const;

@@ -27,6 +27,7 @@ namespace codac2
       virtual const std::shared_ptr<AbstractSlice>& first_abstract_slice_ptr() const = 0;
       virtual const std::shared_ptr<AbstractSlice>& last_abstract_slice_ptr() const = 0;
 
+      std::shared_ptr<TDomain>& tdomain();
       const std::shared_ptr<TDomain>& tdomain() const;
       Interval t0_tf() const;
 

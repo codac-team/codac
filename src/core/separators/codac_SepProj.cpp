@@ -56,6 +56,8 @@ bool SepProj::process(IntervalVector& x_in, IntervalVector& x_out, IntervalVecto
     // Separate the product [x].[y]
     IntervalVector XinFull = cart_prod(x, y);
     IntervalVector XoutFull = cart_prod(x, y);
+    //IntervalVector _XinFull = cart_prod(x, y);
+    //IntervalVector _XoutFull = cart_prod(x, y);
 
     // IntervalVector XinFull0(XinFull);
     // IntervalVector XoutFull0(XoutFull);
@@ -79,7 +81,9 @@ bool SepProj::process(IntervalVector& x_in, IntervalVector& x_out, IntervalVecto
 
     // Handle error case
     if (XinFull.is_empty() && XoutFull.is_empty()){
-        cout << "Erreur !!!! line" << __LINE__  << "\n ";
+        cout << "Error: XinFull.is_empty() && XoutFull.is_empty()" << endl;
+        cout << "  found on codac_SepProj.cpp" << endl;
+        //cout << "  " << x << ", " << y << ", " << _XinFull << ", " << _XoutFull << endl;
         exit(-1);
     }
 
@@ -98,11 +102,11 @@ bool SepProj::process(IntervalVector& x_in, IntervalVector& x_out, IntervalVecto
         x_out.set_empty();
         if( use_point == false)
             impact.setCoutFlags(x_out, x);
-        y.set_empty();
+//        y.set_empty();
         return true;
     } else {
         x_out = XoutFull.subvector(0, x_out.size()-1);
-        y = XoutFull.subvector(x_out.size(), XoutFull.size()-1);
+//        y = XoutFull.subvector(x_out.size(), XoutFull.size()-1);
         if( use_point == false)
             impact.setCoutFlags(x_out, x);
     }

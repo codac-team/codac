@@ -10,6 +10,7 @@
  */
 
 #include "codac2_Tube.h"
+#include "codac_polygon_arithmetic.h"
 
 using namespace std;
 using namespace codac;
@@ -20,7 +21,7 @@ namespace codac2
   {
     codac::Tube x_(x.t0_tf());
     for(const auto& s : x)
-      if(!s.t0_tf().is_unbounded())
+      if(!s.t0_tf().is_unbounded()) // temporaly unbounded tslices not supported in codac1
         x_.set(s.codomain(), s.t0_tf());
     for(const auto& s : x) // setting gate (were overwritten)
       if(s.t0_tf().is_degenerated())
@@ -32,12 +33,61 @@ namespace codac2
   {
     codac::TubeVector x_(x.t0_tf(), x.size());
     for(const auto& s : x)
-      if(!s.t0_tf().is_unbounded())
+      if(!s.t0_tf().is_unbounded()) // temporaly unbounded tslices not supported in codac1
         x_.set(s.codomain(), s.t0_tf());
     for(const auto& s : x) // setting gate (were overwritten)
       if(s.t0_tf().is_degenerated())
         x_.set(s.codomain(), s.t0_tf());
     return x_;
+  }
+
+  codac::TubeVector to_codac1_poly(const Tube<ConvexPolygon>& x)
+  {
+    codac::TubeVector x_(x.t0_tf(), x.size());
+    for(const auto& s : x)
+      if(!s.t0_tf().is_unbounded()) // temporaly unbounded tslices not supported in codac1
+        x_.set(s.codomain().box(), s.t0_tf());
+    for(const auto& s : x) // setting gate (were overwritten)
+      if(s.t0_tf().is_degenerated())
+        x_.set(s.codomain().box(), s.t0_tf());
+    return x_;
+  }
+
+  codac2::Tube<Interval> to_codac2(const codac::Tube& x_)
+  {
+    auto tdomain = create_tdomain(x_.tdomain());
+    for(const codac::Slice *s = x_.first_slice() ; s != nullptr ; s=s->next_slice())
+      tdomain->sample(s->tdomain().lb(), true); // with gate
+    tdomain->sample(x_.tdomain().ub(), true); // with gate
+    codac2::Tube<Interval> x(tdomain, codac::Interval());
+    for(auto& s : x) // includes gates
+      s.set(x_(s.t0_tf()));
+    return x;
+  }
+
+  codac2::Tube<IntervalVector> to_codac2(const codac::TubeVector& x_)
+  {
+    auto tdomain = create_tdomain(x_[0].tdomain());
+    for(const codac::Slice *s = x_[0].first_slice() ; s != nullptr ; s=s->next_slice())
+      tdomain->sample(s->tdomain().lb(), true); // with gate
+    tdomain->sample(x_[0].tdomain().ub(), true); // with gate
+    codac2::Tube<IntervalVector> x(tdomain, codac::IntervalVector(x_.size()));
+    for(auto& s : x) // includes gates
+      s.set(x_(s.t0_tf()));
+    return x;
+  }
+
+  codac2::Tube<ConvexPolygon> to_codac2_poly(const codac::TubeVector& x_)
+  {
+    assert(x_.size() == 2);
+    auto tdomain = create_tdomain(x_[0].tdomain());
+    for(const codac::Slice *s = x_[0].first_slice() ; s != nullptr ; s=s->next_slice())
+      tdomain->sample(s->tdomain().lb(), true); // with gate
+    tdomain->sample(x_[0].tdomain().ub(), true); // with gate
+    codac2::Tube<ConvexPolygon> x(tdomain, ConvexPolygon());
+    for(auto& s : x) // includes gates
+      s.set(ConvexPolygon(x_(s.t0_tf())));
+    return x;
   }
 
   template <>

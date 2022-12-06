@@ -38,7 +38,7 @@ namespace codac2
 
       }
 
-      explicit AbstractConstTube(const T& x);
+      AbstractConstTube(const T& x);
 
       virtual ~AbstractConstTube()
       {

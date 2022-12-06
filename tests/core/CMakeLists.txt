@@ -26,7 +26,7 @@ list(APPEND SRC_TESTS ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
   #${CMAKE_CURRENT_SOURCE_DIR}/tests_integration.cpp
   #${CMAKE_CURRENT_SOURCE_DIR}/tests_operators.cpp
   #${CMAKE_CURRENT_SOURCE_DIR}/tests_geometry.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/tests_polygons.cpp
+  #${CMAKE_CURRENT_SOURCE_DIR}/tests_polygons.cpp
   #${CMAKE_CURRENT_SOURCE_DIR}/tests_serialization.cpp
   #${CMAKE_CURRENT_SOURCE_DIR}/tests_slices_structure.cpp
   #${CMAKE_CURRENT_SOURCE_DIR}/tests_trajectory.cpp

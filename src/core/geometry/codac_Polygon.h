@@ -28,9 +28,7 @@ namespace codac
 
         Polygon();
         Polygon(const Polygon& p);
-        explicit Polygon(const IntervalVector& box);
         Polygon(const std::vector<Vector>& v_floating_pts);
-
         void set_empty();
 
       /// @}
@@ -46,6 +44,7 @@ namespace codac
         const IntervalVector box() const;
         const ThickPoint center() const;
         const Interval area() const;
+        double volume() const;
 
       /// @}
       /// \name Tests

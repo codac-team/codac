@@ -10,11 +10,11 @@
 
 #include <iostream>
 #include <iomanip>
-#include "codac_polygon_arithmetic.h"
 #include "codac_IntervalMatrix.h"
 #include "codac_ConvexPolygon.h"
 #include "codac_GrahamScan.h"
 #include "codac_VIBesFig.h"
+#include "codac_polygon_arithmetic.h"
 
 using namespace std;
 using namespace ibex;
@@ -24,7 +24,7 @@ namespace codac
   // Definition
 
   ConvexPolygon::ConvexPolygon()
-    : Polygon()
+    : ConvexPolygon(IntervalVector(2,Interval(-9999.,9999.)))
   {
 
   }
@@ -36,8 +36,12 @@ namespace codac
   }
 
   ConvexPolygon::ConvexPolygon(const IntervalVector& box)
-    : Polygon(box)
+    : Polygon()
   {
+    assert(box.size() == 2);
+    assert(!box.is_empty());
+
+    ThickPoint::push(box, m_v_floating_pts);
     m_v_floating_pts = GrahamScan::convex_hull(m_v_floating_pts);
   }
 
@@ -104,28 +108,23 @@ namespace codac
 
     return is_subset;
   }
-
-  const BoolInterval ConvexPolygon::is_subset(const IntervalVector& x) const
+  
+  bool ConvexPolygon::is_unbounded() const
   {
-    // todo: this could be optimized in the specific case of a box
-    return is_subset(ConvexPolygon(x));
-  }
-
-  const BoolInterval ConvexPolygon::is_superset(const ConvexPolygon& p) const
-  {
-    return p.is_subset(*this);
-  }
-
-  const BoolInterval ConvexPolygon::is_superset(const IntervalVector& x) const
-  {
-    // todo: this could be optimized in the specific case of a box
-    return is_superset(ConvexPolygon(x));
+    return false; // todo
   }
 
   const BoolInterval ConvexPolygon::encloses(const ThickPoint& p) const
   {
     cout << "encloses(): deprecated. Use contains() instead." << endl;
     return contains(p);
+  }
+
+  const BoolInterval ConvexPolygon::intersects(const ConvexPolygon& p) const
+  {
+    // todo: optimize this
+    ConvexPolygon inter = *this & p;
+    return inter.is_empty() ? BoolInterval::NO : BoolInterval::MAYBE;
   }
 
   const BoolInterval ConvexPolygon::contains(const ThickPoint& p) const
@@ -136,9 +135,6 @@ namespace codac
     if(!p.box().intersects(box()))
       return NO; // fast test
 
-    if(box() == IntervalVector(2))
-      return YES; // fast test
-
     // Using the ray tracing method:
     //   A ray is defined from p to the right ; if it crosses
     //   'a' times one of the edges, and (a & 1), then p is inside
@@ -146,9 +142,7 @@ namespace codac
     vector<ThickEdge> v_edges = edges();
     int a = 0; // the crossing number counter
     size_t n = v_edges.size();
-
     const ThickEdge ray(p, ThickPoint(box()[0].ub()+1., p[1])); // horizontal edge to the right
-    assert(!v_edges[n-1].does_not_exist() && !ray.does_not_exist());
     ThickPoint prev_e = v_edges[n-1] & ray;
 
     // Loop through all edges of the polygon, looking for intersections
@@ -158,7 +152,6 @@ namespace codac
         continue;
 
       // Intersecting point
-      assert(!v_edges[i].does_not_exist() && !ray.does_not_exist());
       const ThickPoint e = v_edges[i] & ray;
       if(!e.does_not_exist()) // intersection to the left of p, not considered
       {
@@ -181,25 +174,12 @@ namespace codac
     return (a & 1) ? YES : NO;
   }
 
-  const BoolInterval ConvexPolygon::contains(const Vector& p) const
-  {
-    assert(p.size() == 2);
-    return contains(ThickPoint(p));
-  }
-  
-  BoolInterval ConvexPolygon::intersects(const IntervalVector& x) const
-  {
-    // todo: improve this algorithm
-    return fast_intersection(x).is_empty() ? NO : YES;
-  }
-
 
   // Setting values
 
   const ConvexPolygon& ConvexPolygon::inflate(double rad)
   {
     // todo
-    assert(false);
     return *this;
   }
 
@@ -237,6 +217,14 @@ namespace codac
           assert(!inter.is_unbounded());
           assert(e1 != e2);
           assert(!e1.does_not_exist() && !e2.does_not_exist());
+          if(inter.does_not_exist())
+          {
+            cout << "inter.does_not_exist():" << endl;
+            cout << "inter=" << inter << ", e1=" << e1 << ", e2=" << e2 << endl;
+            cout << box_limit << endl;
+            *this = ConvexPolygon(box_limit);
+            return *this;
+          }
           assert(!inter.does_not_exist());
 
           if(!box_limit.contains(inter.mid()))
@@ -311,9 +299,6 @@ namespace codac
     if(is_empty() || x.is_empty())
       return IntervalVector(2, Interval::EMPTY_SET);
 
-    if(box() == IntervalVector(2))
-      return x;
-
     IntervalVector reduced_x = x & box();
 
     if(reduced_x.is_empty())
@@ -323,10 +308,7 @@ namespace codac
 
     vector<ThickEdge> v_edges = edges();
     for(const auto& edge : v_edges)
-    {
-      assert(!edge.does_not_exist());
       inter |= edge & reduced_x;
-    }
 
     vector<ThickPoint> v_x_vertices;
     ThickPoint::push(reduced_x, v_x_vertices);

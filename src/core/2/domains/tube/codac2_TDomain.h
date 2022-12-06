@@ -29,16 +29,20 @@ namespace codac2
   {
     public:
 
-      explicit TDomain(const Interval& t0_tf = Interval(-oo,oo), bool with_gates = false);
+      explicit TDomain(const Interval& t0_tf);
       explicit TDomain(const Interval& t0_tf, double dt, bool with_gates = false);
       const Interval t0_tf() const; // todo: keep this method?
-      std::list<TSlice>::iterator iterator_tslice(double t);
+      std::list<TSlice>::iterator iterator_tslice(double t); // returns it on last slice if t==t_f, not end
       size_t nb_tslices() const;
       size_t nb_tubes() const;
-      std::list<TSlice>::iterator sample(double t, bool allow_gate = true);
+      bool all_gates_defined() const;
+      std::list<TSlice>::iterator sample(double t, bool with_gate = false);
+      void sample(const Interval& t0_tf, double dt, bool with_gates = false);
       friend std::ostream& operator<<(std::ostream& os, const TDomain& x);
       const std::list<TSlice>& tslices() const;
+      std::list<TSlice>& tslices();
       void delete_gates();
+      static bool are_same(const std::shared_ptr<TDomain>& tdom1, const std::shared_ptr<TDomain>& tdom2);
 
 
     protected:
@@ -49,7 +53,7 @@ namespace codac2
       friend class Tube;
   };
 
-  std::shared_ptr<TDomain> create_tdomain(const Interval& t0_tf = Interval(-oo,oo), bool with_gates = false);
+  std::shared_ptr<TDomain> create_tdomain(const Interval& t0_tf = Interval(-oo,oo));
   std::shared_ptr<TDomain> create_tdomain(const Interval& t0_tf, double dt, bool with_gates = false);
 
 } // namespace codac

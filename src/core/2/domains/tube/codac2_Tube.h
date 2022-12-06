@@ -33,6 +33,8 @@ namespace codac2
   template<class T>
   class TubeEvaluation;
   template<class T>
+  class ConstTubeEvaluation;
+  template<class T>
   class TubeComponent;
 
 
@@ -41,11 +43,11 @@ namespace codac2
   {
     public:
 
-      explicit Tube(const std::shared_ptr<TDomain>& tdomain) :
-        Tube(tdomain, T())
-      {
-        
-      }
+      // need to specify T (dim at least) explicit Tube(const std::shared_ptr<TDomain>& tdomain) :
+      // need to specify T (dim at least)   Tube(tdomain, T())
+      // need to specify T (dim at least) {
+      // need to specify T (dim at least)   
+      // need to specify T (dim at least) }
 
       explicit Tube(const std::shared_ptr<TDomain>& tdomain, const TFnc& f) :
         Tube(tdomain, T())
@@ -76,15 +78,14 @@ namespace codac2
         }
       }
 
-      explicit Tube(const Tube& x) :
+      Tube(const Tube<T>& x) :
         AbstractSlicedTube(x.tdomain())
       {
         for(std::list<TSlice>::iterator it = _tdomain->_tslices.begin();
           it != _tdomain->_tslices.end(); ++it)
         {
-          it->_slices.insert(
-            std::pair<const AbstractSlicedTube*,std::shared_ptr<Slice<T>>>(this,
-              std::make_shared<Slice<T>>(it->_slices.at(&x)->size(), *this, it)));
+          std::shared_ptr<Slice<T>> s_ptr = std::make_shared<Slice<T>>(x(it));
+          it->_slices.insert(std::pair<const AbstractSlicedTube*,std::shared_ptr<Slice<T>>>(this, s_ptr));
         }
       }
 
@@ -111,6 +112,14 @@ namespace codac2
       size_t nb_slices() const
       {
         return _tdomain->nb_tslices();
+      }
+
+      double volume() const
+      {
+        double volume = 0.;
+        for(const auto& s : *this)
+          volume += s.volume();
+        return volume;
       }
 
       virtual const std::shared_ptr<AbstractSlice>& first_abstract_slice_ptr() const
@@ -157,8 +166,13 @@ namespace codac2
 
       bool is_empty() const
       {
+        // Fast evaluation by considering gates first, then envelopes,
+        // which allows to quickly identify an empty set
         for(const auto& s : *this)
-          if(s.is_empty())
+          if(s.is_gate() && s.is_empty())
+            return true;
+        for(const auto& s : *this)
+          if(!s.is_gate() && s.is_empty())
             return true;
         return false;
       }
@@ -178,6 +192,7 @@ namespace codac2
         BoolInterval result = BoolInterval::YES;
         for(const auto& s : *this)
         {
+          if(s.is_gate()) continue;
           BoolInterval b = s.contains(x);
           if(b == BoolInterval::NO) return BoolInterval::NO;
           else if(b == BoolInterval::MAYBE) result = BoolInterval::MAYBE; 
@@ -195,9 +210,25 @@ namespace codac2
         return codomain;
       }
       
+      Slice<T>& operator()(const std::list<TSlice>::iterator& it)
+      {
+        return const_cast<Slice<T>&>(
+          static_cast<const Tube&>(*this).operator()(it));
+      }
+      
+      const Slice<T>& operator()(const std::list<TSlice>::iterator& it) const
+      {
+        return *std::static_pointer_cast<Slice<T>>(it->slices().at(this));
+      }
+      
       TubeEvaluation<T> operator()(double t)
       {
         return TubeEvaluation<T>(this, t);
+      }
+      
+      const TubeEvaluation<T> operator()(double t) const
+      {
+        return ConstTubeEvaluation<T>(this, t);
       }
       
       TubeEvaluation<T> operator()(const Interval& t)
@@ -205,13 +236,30 @@ namespace codac2
         return TubeEvaluation<T>(this, t);
       }
       
+      const TubeEvaluation<T> operator()(const Interval& t) const
+      {
+        return TubeEvaluation<T>(this, t);
+      }
+      
       T eval(double t) const
       {
-        return std::static_pointer_cast<Slice<T>>(_tdomain->iterator_tslice(t)->_slices.at(this))->codomain();
+        if(!tdomain()->t0_tf().contains(t))
+          return T(); // todo: case of dimension to specify?
+        std::list<TSlice>::iterator  it_t = _tdomain->iterator_tslice(t);
+        assert(it_t != _tdomain->_tslices.end());
+        T x = std::static_pointer_cast<Slice<T>>(it_t->_slices.at(this))->codomain();
+        if(!it_t->is_gate() && t==it_t->t0_tf().lb() && it_t!=_tdomain->_tslices.begin())
+          x &= std::static_pointer_cast<Slice<T>>((--it_t)->_slices.at(this))->codomain();
+        return x;
       }
       
       T eval(const Interval& t) const
       {
+        if(!tdomain()->t0_tf().is_superset(t))
+          return T(size()); // todo: case of dimension to specify?
+        if(t.is_degenerated())
+          return eval(t.lb());
+
         std::list<TSlice>::iterator it = _tdomain->iterator_tslice(t.lb());
         T codomain = std::static_pointer_cast<Slice<T>>(it->_slices.at(this))->codomain();
 
@@ -226,16 +274,22 @@ namespace codac2
 
       void set(const T& codomain)
       {
-        assert((size_t)codomain.size() == size());
+        if constexpr(!std::is_same<T,Interval>::value)
+          assert((size_t)codomain.size() == size());
         for(auto& s : *this)
-          s.set(codomain);
+          if(!s.is_gate())
+            s.set(codomain);
+        for(auto& s : *this)
+          if(s.is_gate())
+            s.set(codomain);
       }
 
       void set(const T& codomain, double t)
       {
-        assert((size_t)codomain.size() == size());
-        std::list<TSlice>::iterator it = _tdomain->sample(t);
-        std::static_pointer_cast<Slice<T>>(it->_slices.at(this))->set(codomain);
+        if constexpr(!std::is_same<T,Interval>::value)
+          assert((size_t)codomain.size() == size());
+        std::list<TSlice>::iterator it = _tdomain->sample(t,true);
+        (*this)(it).set(codomain);
       }
 
       const Tube<T>& inflate(double rad)
@@ -253,6 +307,42 @@ namespace codac2
       {
         assert(i >= 0 && i < size());
         return TubeComponent<T>(*this, i);
+      }
+
+      bool operator==(const Tube& x) const
+      {
+        if(!TDomain::are_same(tdomain(), x.tdomain()))
+          return false;
+
+        std::list<TSlice>::iterator it_this = _tdomain->_tslices.begin();
+        std::list<TSlice>::const_iterator it_x = x.tdomain()->tslices().cbegin();
+
+        while(it_this != _tdomain->tslices().end())
+        {
+          if(*std::static_pointer_cast<Slice<T>>(it_this->_slices.at(this)) != 
+            *std::static_pointer_cast<Slice<T>>(it_x->slices().at(&x)))
+            return false;
+          it_this++; it_x++;
+        }
+
+        return true;
+      }
+
+      Tube operator&=(const Tube& x)
+      {
+        assert(TDomain::are_same(tdomain(), x.tdomain()));
+        std::list<TSlice>::iterator it_this = _tdomain->_tslices.begin();
+        std::list<TSlice>::const_iterator it_x = x.tdomain()->tslices().cbegin();
+
+        while(it_this != _tdomain->tslices().end())
+        {
+          std::shared_ptr<Slice<T>> s = std::static_pointer_cast<Slice<T>>(it_this->_slices.at(this));
+          s->set(s->codomain() & std::static_pointer_cast<Slice<T>>(it_x->slices().at(&x))->codomain());
+          it_this++; it_x++;
+        }
+
+        assert(it_x == x.tdomain()->tslices().cend());
+        return *this;
       }
 
       friend std::ostream& operator<<(std::ostream& os, const Tube<T>& x)
@@ -352,8 +442,12 @@ namespace codac2
       const_iterator end() const   { return const_iterator(*this, _tdomain->_tslices.cend()); }
   };
 
-  codac::Tube to_codac1(const Tube<Interval>& x);
-  codac::TubeVector to_codac1(const Tube<IntervalVector>& x);
+  codac::Tube to_codac1(const codac2::Tube<Interval>& x);
+  codac::TubeVector to_codac1(const codac2::Tube<IntervalVector>& x);
+  codac::TubeVector to_codac1_poly(const codac2::Tube<codac::ConvexPolygon>& x);
+  codac2::Tube<Interval> to_codac2(const codac::Tube& x);
+  codac2::Tube<IntervalVector> to_codac2(const codac::TubeVector& x);
+  codac2::Tube<codac::ConvexPolygon> to_codac2_poly(const codac::TubeVector& x);
 
 
   #include "codac2_TubeEvaluation.h"
