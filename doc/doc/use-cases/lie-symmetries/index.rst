@@ -161,7 +161,7 @@ Related content
 .. _lie-pdf: http://julien-damers.fr/publis/lie_groups_applied_to_guaranteed_integration.pdf
 
 .. |thesis-pdf| replace:: **Download the thesis**
-.. _thesis-pdf: https://julien-damers.fr/phd/complete.pdf
+.. _thesis-pdf: https://julien-damers.fr/phd/Lie_Groups_applied_to_localisation_of_mobile_robots.pdf
 
 .. admonition:: Related publication
   

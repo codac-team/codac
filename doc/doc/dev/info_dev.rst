@@ -165,7 +165,7 @@ Get Pybind11 as submodule:
   git submodule init
   git submodule update
 
-Then, configure ``cmake`` with custom options and ``-DWITH_PYTHON=ON``:
+Then, configure ``cmake`` with your custom options ``<...>`` and ``-DWITH_PYTHON=ON``:
 
 .. code-block:: bash
   
@@ -175,10 +175,13 @@ This configuration generates header files containing docstrings for Python, base
 the content of XML files made by Doxygen. The documentation of any C++/Python function
 is then located in the C++ header files of the :file:`/src` directory.
 
-Finally, after the compilation:
+Note that you also have to configure IBEX with the ``-DCMAKE_CXX_FLAGS="-fPIC"`` flag.
+
+Finally, after the compilation of Codac (and IBEX):
 
 .. code-block:: bash
   
+  # from codac repository
   cd build/python/python_package
   python3 setup.py develop --user
 

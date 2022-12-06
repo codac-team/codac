@@ -432,7 +432,7 @@ Main related publications
 .. |desrochers-phd-year| replace:: 2018
 
 .. |damers-phd-title| replace:: Lie Groups applied to localisation of mobile robots
-.. _damers-phd-title: https://julien-damers.fr/phd/complete.pdf
+.. _damers-phd-title: https://julien-damers.fr/phd/Lie_Groups_applied_to_localisation_of_mobile_robots.pdf
 .. |damers-phd-authors| replace:: Damers
 .. |damers-phd-journal| replace:: PhD thesis
 .. |damers-phd-year| replace:: 2022
