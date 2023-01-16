@@ -22,6 +22,7 @@
 #include "codac2_AbstractSlice.h"
 #include "codac_BoolInterval.h"
 #include "codac_ConvexPolygon.h"
+#include "codac_DynCtc.h"
 
 #define EPSILON_CONTAINS ibex::next_float(0.) * 1000. //!< epsilon limit of the contains() algorithm
 
@@ -53,7 +54,13 @@ namespace codac2
       }
 
       Slice(const Slice& s) :
-        AbstractSlice(s._tubevector, s._it_tslice), _codomain(s._codomain)
+        Slice(s, s._tubevector)
+      {
+        
+      }
+
+      Slice(const Slice& s, const AbstractSlicedTube& tubevector) :
+        AbstractSlice(tubevector, s._it_tslice), _codomain(s._codomain)
       {
         
       }
@@ -240,10 +247,9 @@ namespace codac2
         }
       }
 
-      void set(const T& x)
+      void set(const T& x, bool propagate = true)
       {
-        if constexpr(!std::is_same<T,Interval>::value) // 'if' to be removed with virtual set classes
-        {
+        if constexpr(!std::is_same<T,Interval>::value) { // 'if' to be removed with virtual set classes
           assert((size_t)codomain().size() == size());
         }
 
@@ -251,8 +257,7 @@ namespace codac2
 
         if(prev_slice_ptr())
         {
-          if constexpr(!std::is_same<T,Interval>::value) // 'if' to be removed with virtual set classes
-          {
+          if constexpr(!std::is_same<T,Interval>::value) { // 'if' to be removed with virtual set classes
             assert((size_t)prev_slice_ptr()->codomain().size() == size());
           }
           if(is_gate())
@@ -263,8 +268,7 @@ namespace codac2
 
         if(next_slice_ptr())
         {
-          if constexpr(!std::is_same<T,Interval>::value) // 'if' to be removed with virtual set classes
-          {
+          if constexpr(!std::is_same<T,Interval>::value) { // 'if' to be removed with virtual set classes
             assert((size_t)next_slice_ptr()->codomain().size() == size());
           }
           if(is_gate())
@@ -272,12 +276,24 @@ namespace codac2
           else if(next_slice_ptr()->is_gate())
             next_slice_ptr()->_codomain &= _codomain;
         }
+
+        if(propagate && is_empty())
+          set_empty(true, codac::TimePropag::FORWARD | codac::TimePropag::BACKWARD);
       }
 
-      void set_empty()
+      void set_empty(bool propagate = true, codac::TimePropag t_propa = codac::TimePropag::FORWARD | codac::TimePropag::BACKWARD)
       {
         _codomain.set_empty();
-        if(!is_gate())
+
+        if(propagate)
+        {
+          if(t_propa & codac::TimePropag::BACKWARD && prev_slice_ptr())
+            prev_slice_ptr()->set_empty(true, codac::TimePropag::BACKWARD);
+          if(t_propa & codac::TimePropag::FORWARD && next_slice_ptr())
+            next_slice_ptr()->set_empty(true, codac::TimePropag::FORWARD);
+        }
+
+        else if(!is_gate())
         {
           if(prev_slice_ptr() && prev_slice_ptr()->is_gate())
             prev_slice_ptr()->set_empty();
@@ -288,10 +304,10 @@ namespace codac2
 
       void set_unbounded()
       {
-        if constexpr(std::is_same<T,IntervalVector>::value) // 'if' to be removed with virtual set classes
-          _codomain = T(size());
-        else
+        if constexpr(std::is_same<T,Interval>::value || std::is_same<T,codac::ConvexPolygon>::value) // 'if' to be removed with virtual set classes
           _codomain = T();
+        else
+          _codomain = T(size());
       }
 
       void set_component(size_t i, const Interval& xi)

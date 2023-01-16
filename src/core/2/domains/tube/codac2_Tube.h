@@ -50,11 +50,12 @@ namespace codac2
       // need to specify T (dim at least) }
 
       explicit Tube(const std::shared_ptr<TDomain>& tdomain, const TFnc& f) :
-        Tube(tdomain, T())
+        Tube(tdomain, (std::is_same<T,Interval>::value ? T() : T(f.image_dim())))
       {
         assert(f.nb_var() == 0 && "function's inputs must be limited to system variable");
-        if constexpr(std::is_same<T,Interval>::value)
+        if constexpr(std::is_same<T,Interval>::value) {
           assert(f.image_dim() == 1);
+        }
 
         for(auto& s : *this)
         {
@@ -63,6 +64,9 @@ namespace codac2
 
           else
             s.set(f.eval_vector(s.t0_tf()));
+
+          if(s.is_empty())
+            std::cout << "IS EMPTY: " << s << std::endl;
         }
       }
 
@@ -84,7 +88,7 @@ namespace codac2
         for(std::list<TSlice>::iterator it = _tdomain->_tslices.begin();
           it != _tdomain->_tslices.end(); ++it)
         {
-          std::shared_ptr<Slice<T>> s_ptr = std::make_shared<Slice<T>>(x(it));
+          std::shared_ptr<Slice<T>> s_ptr = std::make_shared<Slice<T>>(x(it), *this);
           it->_slices.insert(std::pair<const AbstractSlicedTube*,std::shared_ptr<Slice<T>>>(this, s_ptr));
         }
       }
@@ -93,6 +97,18 @@ namespace codac2
       {
         for(auto& s : _tdomain->_tslices)
           s._slices.erase(this);
+      }
+
+      Tube& operator=(const Tube& x)
+      {
+        if(_tdomain != x._tdomain)
+          throw std::exception(); // todo: better exception
+
+        for(auto it = _tdomain->_tslices.begin();
+          it != _tdomain->_tslices.end(); ++it)
+          (*this)(it).set(x(it).codomain());
+
+        return *this;
       }
       
       virtual Interval t0_tf() const
@@ -210,6 +226,12 @@ namespace codac2
         return codomain;
       }
       
+      // Remove this? (direct access with () )
+      std::shared_ptr<Slice<T>> slice_ptr(const std::list<TSlice>::iterator& it)
+      {
+        return std::static_pointer_cast<Slice<T>>(it->slices().at(this));
+      }
+      
       Slice<T>& operator()(const std::list<TSlice>::iterator& it)
       {
         return const_cast<Slice<T>&>(
@@ -244,7 +266,12 @@ namespace codac2
       T eval(double t) const
       {
         if(!tdomain()->t0_tf().contains(t))
-          return T(); // todo: case of dimension to specify?
+        {
+          if constexpr(std::is_same<T,Interval>::value || std::is_same<T,codac::ConvexPolygon>::value)
+            return T();
+          else
+            return T(size());
+        }
         std::list<TSlice>::iterator  it_t = _tdomain->iterator_tslice(t);
         assert(it_t != _tdomain->_tslices.end());
         T x = std::static_pointer_cast<Slice<T>>(it_t->_slices.at(this))->codomain();
@@ -256,15 +283,22 @@ namespace codac2
       T eval(const Interval& t) const
       {
         if(!tdomain()->t0_tf().is_superset(t))
-          return T(size()); // todo: case of dimension to specify?
+        {
+          if constexpr(std::is_same<T,Interval>::value || std::is_same<T,codac::ConvexPolygon>::value)
+            return T();
+          else
+            return T(size());
+        }
+
         if(t.is_degenerated())
           return eval(t.lb());
 
         std::list<TSlice>::iterator it = _tdomain->iterator_tslice(t.lb());
         T codomain = std::static_pointer_cast<Slice<T>>(it->_slices.at(this))->codomain();
 
-        while(it != _tdomain->iterator_tslice(t.ub()))
+        while(it != std::next(_tdomain->iterator_tslice(t.ub())))
         {
+          if(it->t0_tf().lb() == t.ub()) break;
           codomain |= std::static_pointer_cast<Slice<T>>(it->_slices.at(this))->codomain();
           it++;
         }
@@ -274,8 +308,9 @@ namespace codac2
 
       void set(const T& codomain)
       {
-        if constexpr(!std::is_same<T,Interval>::value)
+        if constexpr(!std::is_same<T,Interval>::value) {
           assert((size_t)codomain.size() == size());
+        }
         for(auto& s : *this)
           if(!s.is_gate())
             s.set(codomain);
@@ -286,8 +321,9 @@ namespace codac2
 
       void set(const T& codomain, double t)
       {
-        if constexpr(!std::is_same<T,Interval>::value)
+        if constexpr(!std::is_same<T,Interval>::value) {
           assert((size_t)codomain.size() == size());
+        }
         std::list<TSlice>::iterator it = _tdomain->sample(t,true);
         (*this)(it).set(codomain);
       }

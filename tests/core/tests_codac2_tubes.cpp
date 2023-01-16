@@ -166,6 +166,15 @@ TEST_CASE("Test codac2::tubes")
     CHECK(v[4]->t0_tf() == Interval(3,oo));
     CHECK(v[4]->codomain() == IntervalVector({{-oo,oo}}));
 
+    CHECK(tdomain->iterator_tslice(-1.)->t0_tf() == Interval(-oo,0));
+    CHECK(tdomain->iterator_tslice(0.)->t0_tf() == Interval(0,1));
+    CHECK(tdomain->iterator_tslice(0.01)->t0_tf() == Interval(0,1));
+    CHECK(tdomain->iterator_tslice(1)->t0_tf() == Interval(1,2));
+    CHECK(tdomain->iterator_tslice(2)->t0_tf() == Interval(2,3));
+    CHECK(tdomain->iterator_tslice(ibex::previous_float(3.))->t0_tf() == Interval(2,3));
+    CHECK(tdomain->iterator_tslice(3)->t0_tf() == Interval(3,oo));
+    CHECK(tdomain->iterator_tslice(ibex::next_float(3.))->t0_tf() == Interval(3,oo));
+
     CHECK(tdomain->nb_tslices() == 5); // with [-oo,0] and [3,oo]
     CHECK(static_cast<IntervalVector>(x(Interval(0,3))) == IntervalVector({{1,9}}));
     CHECK(static_cast<IntervalVector>(x(-1)) == IntervalVector(1));
@@ -386,7 +395,7 @@ TEST_CASE("Test codac2::tubes")
 
   SECTION("Test again 1")
   {
-    auto tdomain = create_tdomain(Interval(0,10), 0.01, true); // last argument creates "gates" (degenerated slices at scalar timesteps)
+    auto tdomain = create_tdomain(Interval(1,10), 0.01, true); // last argument creates "gates" (degenerated slices at scalar timesteps)
     Tube<IntervalVector> x(tdomain,
       codac::TFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; cos(t)+sin(t/0.2)*[-0.1,0.1])"));
     Tube<IntervalVector> u(tdomain, IntervalVector(2));
@@ -550,5 +559,51 @@ TEST_CASE("Test codac2::tubes")
     CHECK(x(std::next(it)).codomain() == Interval(-10,10));
     CHECK(x(std::next(std::next(it))).codomain() == Interval(-10,10));
     CHECK(x.codomain() == Interval(-10,10));
+  }
+
+  SECTION("Testing validity of copy of tubes")
+  {
+    auto tdomain = create_tdomain(Interval(0,5), 0.01, true);
+
+    Tube<Interval> y(tdomain, Interval(2.)), x1(tdomain, Interval(-1,1)), x2(tdomain, Interval(1));
+    Tube<Interval> cx1(x1), cx2(x2); // copy
+
+    for(std::list<codac2::TSlice>::iterator it = cx1.tdomain()->tslices().begin();
+      it != cx1.tdomain()->tslices().end(); ++it)
+    {
+      Interval ix1 = cx1(it).codomain(), ix2 = cx2(it).codomain();
+      ibex::bwd_add(y(it).codomain(), ix1, ix2);
+      cx1(it).set(ix1);
+      cx2(it).set(ix2);
+    }
+
+    CHECK(cx1.codomain() == Interval(1));
+    CHECK(cx2.codomain() == Interval(1));
+    CHECK(y.codomain() == Interval(2));
+  }
+
+  SECTION("Tube not empty if built from a Function")
+  {
+    auto tdomain = create_tdomain(Interval(0,5), 0.01, true);
+    Tube<Interval> aa1(tdomain, TFunction("5*sin(2*t)+t"));
+    CHECK(!aa1.is_empty());
+  }
+
+  SECTION("Testing tube evaluation")
+  {
+    auto tdomain = create_tdomain(Interval(0,5), 0.1, true);
+    Tube<Interval> a(tdomain, TFunction("10*cos(t)+t"));
+    codac::Tube a_codac1 = codac2::to_codac1(a);
+    //vibes::beginDrawing();
+    //codac::VIBesFigTube fig("Tube");
+    //fig.set_properties(100, 100, 600, 300);
+    //fig.add_tube(&a_codac1, "a_codac1", "blue[#7EC8FF88]");
+    //fig.draw_box({{1,2},a.eval(Interval(1,2))});
+    //fig.draw_box({{1,2},a_codac1(Interval(1,2))}, "red");
+    //fig.show();
+    //vibes::endDrawing();
+
+    CHECK(ApproxIntv(tdomain->iterator_tslice(2.)->t0_tf()) == Interval(1.900000000000001, 2.000000000000002));
+    CHECK(ApproxIntv(a.eval(Interval(1,2))) == Interval(-2.26146836547144, 7.216099682706644));
   }
 }
