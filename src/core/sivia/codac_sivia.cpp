@@ -40,6 +40,20 @@ namespace codac
 
     if(display_result)
     {
+      // Some values in the desired color map may not have been defined by the user
+      // We select default colors in this case
+
+        SetColorMap cm = DEFAULT_SET_COLOR_MAP;
+
+        if(display_result)
+        {
+          if(color_map.find(SetValue::OUT) != color_map.end())
+            cm[SetValue::OUT] = color_map.at(SetValue::OUT);
+
+          if(color_map.find(SetValue::UNKNOWN) != color_map.end())
+            cm[SetValue::UNKNOWN] = color_map.at(SetValue::UNKNOWN);
+        }
+
       if(!_vibes_initialized)
       {
         _vibes_initialized = true;
@@ -51,7 +65,9 @@ namespace codac
       if(!fig_name.empty())
         vibes::selectFigure(fig_name);
 
-      vibes::drawBox(x0, vibesParams("figure", fig_name));
+      vibes::drawBox(x0);
+      vibes::newGroup("boxes_out", cm.at(SetValue::OUT));
+      vibes::newGroup("boxes_unknown", cm.at(SetValue::UNKNOWN));
     }
 
     map<SetValue,int> n_boxes;
@@ -65,26 +81,13 @@ namespace codac
     deque<IntervalVector> stack = { x0 };
     int k = 0;
 
-    // Some values in the desired color map may not have been defined by the user
-    // We select default colors in this case
-
-      SetColorMap cm = DEFAULT_SET_COLOR_MAP;
-
-      if(display_result)
-      {
-        if(color_map.find(SetValue::OUT) != color_map.end())
-          cm[SetValue::OUT] = color_map.at(SetValue::OUT);
-
-        if(color_map.find(SetValue::UNKNOWN) != color_map.end())
-          cm[SetValue::UNKNOWN] = color_map.at(SetValue::UNKNOWN);
-      }
-
     clock_t t_start = clock();
     
     while(!stack.empty())
     {
       k++;
-      IntervalVector x = stack.front();
+      IntervalVector *xx = new IntervalVector(stack.front());
+      IntervalVector &x = *xx;
       stack.pop_front();
       IntervalVector x_before_ctc(x);
 
@@ -107,7 +110,7 @@ namespace codac
         {
           if(display_result)
           {
-            vibes::drawBox(o.subvector(0,1), cm.at(SetValue::OUT));
+            vibes::drawBox(o.subvector(0,1), vibesParams("group", "boxes_out"));
             n_boxes[SetValue::OUT] ++;
           }
 
@@ -128,7 +131,7 @@ namespace codac
           {
             if(display_result)
             {
-              vibes::drawBox(x_remaining.subvector(0,1), cm.at(SetValue::UNKNOWN));
+              vibes::drawBox(x_remaining.subvector(0,1), vibesParams("group", "boxes_unknown"));
               n_boxes[SetValue::UNKNOWN] ++;
             }
 
@@ -164,6 +167,23 @@ namespace codac
 
     if(display_result)
     {
+      // Some values in the desired color map may not have been defined by the user
+      // We select default colors in this case
+
+        SetColorMap cm = DEFAULT_SET_COLOR_MAP;
+
+        if(display_result)
+        {
+          if(color_map.find(SetValue::OUT) != color_map.end())
+            cm[SetValue::OUT] = color_map.at(SetValue::OUT);
+
+          if(color_map.find(SetValue::UNKNOWN) != color_map.end())
+            cm[SetValue::UNKNOWN] = color_map.at(SetValue::UNKNOWN);
+
+          if(color_map.find(SetValue::IN) != color_map.end())
+            cm[SetValue::IN] = color_map.at(SetValue::IN);
+        }
+
       if(!_vibes_initialized)
       {
         _vibes_initialized = true;
@@ -175,7 +195,10 @@ namespace codac
       if(!fig_name.empty())
         vibes::selectFigure(fig_name);
 
-      vibes::drawBox(x0, vibesParams("figure", fig_name));
+      vibes::drawBox(x0);
+      vibes::newGroup("boxes_out", cm.at(SetValue::OUT));
+      vibes::newGroup("boxes_unknown", cm.at(SetValue::UNKNOWN));
+      vibes::newGroup("boxes_in", cm.at(SetValue::IN));
     }
 
     map<SetValue,int> n_boxes;
@@ -188,23 +211,6 @@ namespace codac
     ibex::LargestFirst bisector(0.);
     deque<IntervalVector> stack = { x0 };
     int k = 0;
-
-    // Some values in the desired color map may not have been defined by the user
-    // We select default colors in this case
-    
-      SetColorMap cm = DEFAULT_SET_COLOR_MAP;
-
-      if(display_result)
-      {
-        if(color_map.find(SetValue::IN) != color_map.end())
-          cm[SetValue::IN] = color_map.at(SetValue::IN);
-
-        if(color_map.find(SetValue::OUT) != color_map.end())
-          cm[SetValue::OUT] = color_map.at(SetValue::OUT);
-
-        if(color_map.find(SetValue::UNKNOWN) != color_map.end())
-          cm[SetValue::UNKNOWN] = color_map.at(SetValue::UNKNOWN);
-      }
 
     clock_t t_start = clock();
 
@@ -241,7 +247,7 @@ namespace codac
         {
           if(display_result)
           {
-            vibes::drawBox(i, cm.at(SetValue::IN));
+            vibes::drawBox(i.subvector(0,1), vibesParams("group", "boxes_in"));
             n_boxes[SetValue::IN] ++;
           }
 
@@ -253,7 +259,7 @@ namespace codac
         {
           if(display_result)
           {
-            vibes::drawBox(o, cm.at(SetValue::OUT));
+            vibes::drawBox(o.subvector(0,1), vibesParams("group", "boxes_out"));
             n_boxes[SetValue::OUT] ++;
           }
 
@@ -274,7 +280,7 @@ namespace codac
           {
             if(display_result)
             {
-              vibes::drawBox(x_remaining.subvector(0,1), cm.at(SetValue::UNKNOWN));
+              vibes::drawBox(x_remaining.subvector(0,1), vibesParams("group", "boxes_unknown"));
               n_boxes[SetValue::UNKNOWN] ++;
             }
 
