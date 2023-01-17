@@ -54,7 +54,7 @@ namespace codac
       v_x_slices[i] = x[i].first_slice();
 
     contract(v_x_slices, x.size());
-    delete v_x_slices;
+    delete[] v_x_slices;
   }
 
   void CtcStatic::contract(Tube& x1)
@@ -66,7 +66,7 @@ namespace codac
     v_x_slices[0] = x1.first_slice();
 
     contract(v_x_slices, n);
-    delete v_x_slices;
+    delete[] v_x_slices;
   }
 
   void CtcStatic::contract(Tube& x1, Tube& x2)
@@ -79,7 +79,7 @@ namespace codac
     v_x_slices[1] = x2.first_slice();
 
     contract(v_x_slices, n);
-    delete v_x_slices;
+    delete[] v_x_slices;
   }
 
   void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3)
@@ -93,7 +93,7 @@ namespace codac
     v_x_slices[2] = x3.first_slice();
 
     contract(v_x_slices, n);
-    delete v_x_slices;
+    delete[] v_x_slices;
   }
 
   void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4)
@@ -108,7 +108,7 @@ namespace codac
     v_x_slices[3] = x4.first_slice();
 
     contract(v_x_slices, n);
-    delete v_x_slices;
+    delete[] v_x_slices;
   }
 
   void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5)
@@ -124,7 +124,7 @@ namespace codac
     v_x_slices[4] = x5.first_slice();
 
     contract(v_x_slices, n);
-    delete v_x_slices;
+    delete[] v_x_slices;
   }
 
   void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6)
@@ -141,7 +141,7 @@ namespace codac
     v_x_slices[5] = x6.first_slice();
 
     contract(v_x_slices, n);
-    delete v_x_slices;
+    delete[] v_x_slices;
   }
 
   void CtcStatic::contract(Slice **v_x_slices, int n)
