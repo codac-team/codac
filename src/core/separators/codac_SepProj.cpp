@@ -98,11 +98,11 @@ bool SepProj::process(IntervalVector& x_in, IntervalVector& x_out, IntervalVecto
         x_out.set_empty();
         if( use_point == false)
             impact.setCoutFlags(x_out, x);
-        y.set_empty();
+        //y.set_empty();
         return true;
     } else {
         x_out = XoutFull.subvector(0, x_out.size()-1);
-        y = XoutFull.subvector(x_out.size(), XoutFull.size()-1);
+        //y = XoutFull.subvector(x_out.size(), XoutFull.size()-1);
         if( use_point == false)
             impact.setCoutFlags(x_out, x);
     }
