@@ -105,7 +105,7 @@ For instance:
   mkdir build -p ; cd build ; cmake .. ; make     # cmake compilation
   ./codac_basics_01                               # running example
 
-Do not forget to launch the VIBes viewer before running your program.
+Do not forget to launch the `VIBes viewer <01-installation.html#graphical-tools>`_ before running your program.
 
 
 (for experts) Additional installation options
