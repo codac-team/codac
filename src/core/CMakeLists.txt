@@ -165,6 +165,10 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepFixPoint.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepProj.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepProj.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_CtcTransform.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_CtcTransform.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepTransform.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepTransform.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Tools.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Tools.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Eigen.cpp

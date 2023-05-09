@@ -26,8 +26,6 @@
     # Separators
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_CtcHull.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_CtcHull.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_CtcTransform.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_CtcTransform.h
     # ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_QInterProjF.cpp
     # ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_QInterProjF.h
     # ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepCtcPairProj.cpp
@@ -36,8 +34,6 @@
     # ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepFixPoint.h
     # ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepProj.cpp
     # ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepProj.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepTransform.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepTransform.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepUnionBbox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepUnionBbox.h
 

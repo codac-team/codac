@@ -29,6 +29,7 @@
 #include <codac_SepProj.h>
 #include <codac_SepFixPoint.h>
 #include <codac_QInterProjF.h>
+#include <codac_SepTransform.h>
 
 #include <ibex_SepUnion.h>
 #include <ibex_SepInter.h>
@@ -124,10 +125,10 @@ py::class_<ibex::Sep,pySep> export_Sep(py::module& m)
       "f"_a.noconvert())
     .def(py::init<Function&,const Interval&>(),
       SEPFUNCTION_SEPFUNCTION_FUNCTION_INTERVAL,
-      "f"_a.noconvert(), "y"_a.noconvert())
+      "f"_a.noconvert(), "y"_a)
     .def(py::init<Function&,const IntervalVector&>(),
       SEPFUNCTION_SEPFUNCTION_FUNCTION_INTERVALVECTOR,
-      "f"_a.noconvert(), "y"_a.noconvert())
+      "f"_a.noconvert(), "y"_a)
     .def("separate", &SepFunction::separate,
       SEPFUNCTION_VOID_SEPARATE_INTERVALVECTOR_INTERVALVECTOR,
       "x_in"_a.noconvert(), "x_out"_a.noconvert())
@@ -165,6 +166,11 @@ py::class_<ibex::Sep,pySep> export_Sep(py::module& m)
     .def_property("q", py::cpp_function(&SepQInterProjF::get_q), py::cpp_function(&SepQInterProjF::set_q))
   ;
 
+  // Export SepTransform
+  py::class_<SepTransform>(m, "SepTransform", sep, "todo")
+    .def(py::init<ibex::Sep&, ibex::Function&, ibex::Function& >(), py::keep_alive<1,2>(), py::keep_alive<1,3>(), py::keep_alive<1,4>())
+    .def("separate", &SepTransform::separate, py::call_guard<py::gil_scoped_release>())
+  ;
 
   // Export SepProj
   py::class_<SepProj>(m, "SepProj", sep, __DOC_SEP_SEPPROJ)
