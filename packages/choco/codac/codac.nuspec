@@ -27,17 +27,19 @@ Codac is a library providing tools for constraint programming over reals, trajec
 
 ## Package parameters
 The following package parameters can be set:
-- `/url:URL` - Will install the specified binary package, see versions from https://github.com/codac-team/codac/releases (the Windows `PATH` might need to be updated manually, etc.). By default, only the MinGW libraries compatible with the corresponding MinGW Chocolatey package dependency are installed. Use the standard parameter `choco install --ignore-dependencies ...` to avoid installing MinGW Chocolatey package dependency if needed.
-- `/NoPath` - Will not try to update Windows PATH.
+- `/url:URL` - Will install the specified binary package (e.g. built for Visual Studio), see versions from https://github.com/codac-team/codac/releases (the Windows `PATH` might need to be updated manually with e.g. `C:\ProgramData\chocolatey\lib\ibex\bin`, etc.). By default, only the MinGW libraries compatible with the corresponding MinGW Chocolatey package dependency are installed. Use the standard parameter `choco install --ignore-dependencies ...` to avoid installing the default MinGW and IBEX Chocolatey package dependencies if needed (you might want to install manually [IBEX](https://community.chocolatey.org/packages/ibex) package with the corresponding parameters, as well as the corresponding compiler and the Eigen package).
+- `/urlX:URL` - Same as above, with X in [1,99], except this will not disable the installation of the MinGW libraries compatible with the corresponding MinGW Chocolatey package dependency.
+- `/InstallDir:INSTALLDIR` - Installation directory.
+- `/NoPath` - Will not try to update Windows `PATH`.
 - `/NoRegistry` - Will not try to update Windows registry.
-To pass package parameters, use `--params "''"` (e.g. `choco install codac --params "'/NoPath /NoRegistry'"`), e.g.
+To pass package parameters, use `--params "''"` (e.g. `choco install codac --params "'/NoPath /NoRegistry'"`), and to install another binary package, try e.g.
 ```
-choco install -y -f --ignore-dependencies codac --params "'/url:https://github.com/codac-team/codac/releases/download/codac-2.8.9.20220812/codac_x86_vc15.zip'"
+choco install -y --ignore-dependencies codac --params "'/url:https://github.com/codac-team/codac/releases/download/codac-1.2.0/codac_x86_vc15.zip'"
 ```
     </description>
     <releaseNotes>https://github.com/codac-team/codac/releases</releaseNotes>
     <dependencies>
-      <dependency id="mingw" version="[8.1.0]" />
+      <dependency id="mingw" version="[11.2.0.07112021]" />
       <dependency id="eigen" version="3.3.4.20210818" />
       <dependency id="ibex" version="2.8.9.20220812" />
     </dependencies>
