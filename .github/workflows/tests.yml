@@ -56,7 +56,7 @@ jobs:
         bash scripts/dependencies/install_ibex.sh
 
         # CAPD
-        bash scripts/dependencies/install_capd.sh
+        # cancelled on 2023/05/09: bash scripts/dependencies/install_capd.sh
 
         # Environment variables
         export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/codac/build_install
@@ -76,7 +76,7 @@ jobs:
         # Without synthesis tree
 
         # Building lib + tests
-        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DTEST_EXAMPLES=ON ..
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=OFF -DTEST_EXAMPLES=ON ..
         ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
         make
         #make doc # todo
@@ -113,7 +113,7 @@ jobs:
         # With synthesis tree for all created tubes
   
         # Building lib + tests
-        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DTEST_EXAMPLES=ON ..
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=OFF -DTEST_EXAMPLES=ON ..
         ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
         make
         #make doc
