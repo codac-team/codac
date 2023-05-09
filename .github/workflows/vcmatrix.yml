@@ -45,13 +45,13 @@ jobs:
         python -c "import sys; print(sys.version)"
         echo ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
       if: matrix.cfg.py_v_maj!=''
+    - run: echo "VERBOSE=1" >> $GITHUB_ENV
+      shell: bash
     - run: |
         (New-Object System.Net.WebClient).DownloadFile("http://www.ensta-bretagne.fr/lebars/Share/windows_extra_tools.zip", "C:\Windows\Temp\windows_extra_tools.zip") 
         7z x C:\Windows\Temp\windows_extra_tools.zip -o"C:\Windows" -y
       shell: pwsh
       if: runner.os=='Windows'
-    - run: choco install -y -r --no-progress winflexbison patch
-      if: startsWith(matrix.cfg.runtime, 'vc')
     - run: choco install -y -r --no-progress eigen --version=3.4.0 ${{ matrix.cfg.choco_flags }}
       if: runner.os=='Windows'
     - run: choco install -y -r --no-progress doxygen.install graphviz & python -m pip install --upgrade pip & pip install --upgrade wheel setuptools & git clone --depth 1 -b v3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects
