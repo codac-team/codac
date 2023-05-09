@@ -46,6 +46,9 @@ namespace codac
         // will not be ended in case the init has been done outside this SIVIA function
       }
 
+      if(!fig_name.empty())
+        vibes::newFigure(fig_name);
+
       vibes::drawBox(x0, vibesParams("figure", fig_name));
       vibes::axisAuto();
     }
@@ -154,7 +157,7 @@ namespace codac
       }
 
       if(!fig_name.empty())
-        vibes::selectFigure(fig_name);
+        vibes::newFigure(fig_name);
 
       vibes::drawBox(x0);
       vibes::axisAuto();
