@@ -52,4 +52,4 @@ The logic to follow will then be similar to `Linux <01-installation-full-linux.h
 
   cmake --build . --config Release --target install
 
-See also `Information for developers <info_dev.html>`_.
+See also `Information for developers </dev/info_dev.html>`_.
