@@ -34,14 +34,14 @@ The following package parameters can be set:
 - `/NoRegistry` - Will not try to update Windows registry.
 To pass package parameters, use `--params "''"` (e.g. `choco install codac --params "'/NoPath /NoRegistry'"`), and to install another binary package, try e.g.
 ```
-choco install -y --ignore-dependencies codac --params "'/url:https://github.com/codac-team/codac/releases/download/codac-1.2.0/codac_x86_vc15.zip'"
+choco install -y --ignore-dependencies codac --params "'/url:https://github.com/codac-team/codac/releases/download/codac-1.2.2/codac_x86_vc15.zip'"
 ```
     </description>
     <releaseNotes>https://github.com/codac-team/codac/releases</releaseNotes>
     <dependencies>
       <dependency id="mingw" version="[11.2.0.07112021]" />
       <dependency id="eigen" version="3.3.4.20210818" />
-      <dependency id="ibex" version="2.8.9.20220812" />
+      <dependency id="ibex" version="2.8.9.20230510" />
     </dependencies>
   </metadata>
 </package>
