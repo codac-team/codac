@@ -66,7 +66,7 @@ jobs:
         cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
         cd ..
       shell: bash
-    - run: pip install *.whl ; python -c "import sys; print(sys.version)" ; python examples/tuto/01_getting_started/01_getting_started.py
+    - run: pip install *.whl ; python -c "import sys; print(sys.version)" ; python examples/tuto/01_getting_started/01_getting_started.py ; python -m unittest discover codac.tests
       shell: bash
       if: (runner.os=='macOS')&&(matrix.cfg.arch=='x86_64')
     - uses: xresloader/upload-to-github-release@v1
