@@ -51,6 +51,17 @@ namespace codac
        */
       TPlane(const Interval& tdomain);
 
+      TPlane(const TPlane& t);
+
+      TPlane(const TPlane* t, const Paving* p);
+
+      /**
+       * \brief TPlane destructor
+       */
+      ~TPlane();
+
+      TPlane& operator=(const TPlane& t);
+
       /**
        * \brief Computes the loops (detections and proofs) as a subpaving, from the tube of
        *        positions \f$[\mathbf{p}](\cdot)\f$ and the tube of velocities \f$[\mathbf{v}](\cdot)\f$.
@@ -193,8 +204,6 @@ namespace codac
        * \param extract_subsets if `true`, a set of ConnectedSubset objects will be computed from this Paving
        */
       void compute_detections(float precision, const TubeVector& p, const TubeVector& v, bool with_derivative, bool extract_subsets);
-
-      TPlane(const TPlane* t, const Paving* p);
 
       float m_precision = 0.; //!< precision of the SIVIA algorithm, used later on in traj_loops_summary()
       std::vector<ConnectedSubset> m_v_detected_loops; //!< set of loops detections
