@@ -194,9 +194,13 @@ namespace codac
        */
       void compute_detections(float precision, const TubeVector& p, const TubeVector& v, bool with_derivative, bool extract_subsets);
 
+      TPlane(const TPlane* t, const Paving* p);
+
       float m_precision = 0.; //!< precision of the SIVIA algorithm, used later on in traj_loops_summary()
       std::vector<ConnectedSubset> m_v_detected_loops; //!< set of loops detections
       std::vector<ConnectedSubset> m_v_proven_loops; //!< set of loops proofs
+    
+      TPlane *m_first_subtplane, *m_second_subtplane;
 
       static bool m_verbose;
   };
