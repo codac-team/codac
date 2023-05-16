@@ -19,6 +19,7 @@
 #include "codac_ConvexPolygon.h"
 #include "codac_ColorMap.h"
 #include "codac_ConvexPolygon.h"
+#include "codac_polygon_arithmetic.h"
 #include "vibes.h"
 
 namespace codac2

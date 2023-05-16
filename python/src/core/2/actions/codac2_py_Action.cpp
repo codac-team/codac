@@ -55,6 +55,9 @@ void export_Action(py::module& m)
     }))
   ;
 
+  // Automatic cast from lists to OctaSym
+  py::implicitly_convertible<py::list, OctaSym>();
+
   py::class_<Action> action(m, "Action", "todo");
 	action
 
