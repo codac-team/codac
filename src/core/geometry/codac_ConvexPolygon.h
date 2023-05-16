@@ -35,7 +35,10 @@ namespace codac
       /// @{
 
         const BoolInterval is_subset(const ConvexPolygon& p) const;
+        bool is_unbounded() const;
+        const BoolInterval contains(const ThickPoint& p) const;
         const BoolInterval encloses(const ThickPoint& p) const;
+        const BoolInterval intersects(const ConvexPolygon& p) const;
 
       /// @}
       /// \name Setting values
@@ -50,6 +53,8 @@ namespace codac
       /// @{
 
         const IntervalVector fast_intersection(const IntervalVector& x) const;
+        const ConvexPolygon& operator&=(const ConvexPolygon& x);
+        const ConvexPolygon& operator|=(const ConvexPolygon& x);
 
       /// @}
   };

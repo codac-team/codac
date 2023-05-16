@@ -22,6 +22,13 @@ namespace codac
     { SetValue::PENUMBRA, "#9C9C9C[white]" },
   });
 
+  SetColorMap LIE_SET_COLOR_MAP({
+    { SetValue::IN, "grey[white]" },
+    { SetValue::UNKNOWN, "#D55E00[#CC79A7]" },
+    { SetValue::OUT, "#009E73[#56B4E9]" },
+    { SetValue::PENUMBRA, "#9C9C9C[#E69F00]" },
+  });
+
   VIBesFigPaving::VIBesFigPaving(const string& fig_name, const Paving *paving)
     : VIBesFig(fig_name), m_paving(paving)
   {
@@ -34,7 +41,6 @@ namespace codac
 
   void VIBesFigPaving::set_color_map(const SetColorMap& color_map)
   {
-    // todo: deal with color maps defined with any kind of values
     if(color_map.find(SetValue::IN) != color_map.end())
       vibes::newGroup("val_in", color_map.at(SetValue::IN), vibesParams("figure", name()));
     if(color_map.find(SetValue::UNKNOWN) != color_map.end())

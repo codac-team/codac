@@ -40,7 +40,7 @@ namespace codac
     assert(a.size() == 2);
     IntervalVector union_result(2, Interval::EMPTY_SET);
 
-    for(const auto mj : m_map)
+    for(const auto& mj : m_map)
       union_result |= a & mj.subvector(0,1);
     a = union_result;
   }

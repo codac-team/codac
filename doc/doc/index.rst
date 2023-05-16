@@ -349,7 +349,7 @@ Contributors
   * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
   * `Gilles Chabert <https://web.imt-atlantique.fr/x-info/gchabe08/>`_
   * Auguste Bourgois
-  * Julien Damers
+  * `Julien Damers <http://julien-damers.fr/>`_
   * `Fabrice Le Bars <https://www.ensta-bretagne.fr/lebars/>`_
   * `Raphael Voges <https://raphael-voges.de/>`_
   * Quentin Brateau
@@ -364,6 +364,12 @@ Contributors
 
 Main related publications
 =========================
+
+.. |lie-title| replace:: Lie symmetries applied to interval integration
+.. _lie-title: https://julien-damers.fr/publis/lie_groups_applied_to_guaranteed_integration.pdf
+.. |lie-authors| replace:: Damers, Jaulin, Rohou
+.. |lie-journal| replace:: Automatica
+.. |lie-year| replace:: 2022
 
 .. |polar-title| replace:: A Minimal contractor for the Polar equation
 .. _polar-title: https://www.ensta-bretagne.fr/jaulin/paper_polar.pdf
@@ -425,9 +431,19 @@ Main related publications
 .. |desrochers-phd-journal| replace:: PhD thesis
 .. |desrochers-phd-year| replace:: 2018
 
+.. |damers-phd-title| replace:: Lie Groups applied to localisation of mobile robots
+.. _damers-phd-title: https://julien-damers.fr/phd/Lie_Groups_applied_to_localisation_of_mobile_robots.pdf
+.. |damers-phd-authors| replace:: Damers
+.. |damers-phd-journal| replace:: PhD thesis
+.. |damers-phd-year| replace:: 2022
+
+
+
 .. csv-table::
   :header: "Year", "Title (download paper)", "Authors", "Journal"
-
+  
+  |lie-year|,            |lie-title|_,            |lie-authors|,            |lie-journal|
+  |damers-phd-year|,     |damers-phd-title|_,     |damers-phd-authors|,     |damers-phd-journal|
   |bourgois-phd-year|,   |bourgois-phd-title|_,   |bourgois-phd-authors|,   |bourgois-phd-journal|
   |datasso-year|,        |datasso-title|_,        |datasso-authors|,        |datasso-journal|
   |voges-phd-year|,      |voges-phd-title|_,      |voges-phd-authors|,      |voges-phd-journal|

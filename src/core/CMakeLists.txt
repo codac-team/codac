@@ -112,6 +112,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCartProd.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCartProd.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCompo.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCN.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCN.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcDist.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcDist.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcFunction.h
@@ -175,6 +177,33 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Eigen.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/sivia/codac_sivia.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/sivia/codac_sivia.h
+
+                  # Files related to codac2
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractConstTube.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractSlice.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractSlice.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractSlicedTube.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractSlicedTube.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_Slice.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TDomain.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TDomain.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TSlice.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TSlice.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_Tube.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_Tube.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TubeComponent.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TubeEvaluation.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcLinobs.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcLinobs.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.h
+                  # Actions
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/codac2_Action.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/codac2_Action.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcAction.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcAction.h
                   )
 
 
@@ -202,7 +231,11 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn
                                           ${CMAKE_CURRENT_SOURCE_DIR}/cn
                                           ${CMAKE_CURRENT_SOURCE_DIR}/tools
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/sivia)
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/sivia
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/)
   target_link_libraries(codac PUBLIC Ibex::ibex)
   
 

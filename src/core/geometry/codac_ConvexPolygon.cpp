@@ -14,6 +14,7 @@
 #include "codac_ConvexPolygon.h"
 #include "codac_GrahamScan.h"
 #include "codac_VIBesFig.h"
+#include "codac_polygon_arithmetic.h"
 
 using namespace std;
 using namespace ibex;
@@ -23,7 +24,7 @@ namespace codac
   // Definition
 
   ConvexPolygon::ConvexPolygon()
-    : Polygon()
+    : ConvexPolygon(IntervalVector(2,Interval(-9999.,9999.)))
   {
 
   }
@@ -100,15 +101,33 @@ namespace codac
 
     for(const auto& pt : vertices())
     {
-      is_subset = is_subset && p.encloses(ThickPoint(pt));
+      is_subset = is_subset && p.contains(ThickPoint(pt));
       if(is_subset == NO)
         return NO;
     }
 
     return is_subset;
   }
+  
+  bool ConvexPolygon::is_unbounded() const
+  {
+    return false; // todo
+  }
 
   const BoolInterval ConvexPolygon::encloses(const ThickPoint& p) const
+  {
+    cout << "encloses(): deprecated. Use contains() instead." << endl;
+    return contains(p);
+  }
+
+  const BoolInterval ConvexPolygon::intersects(const ConvexPolygon& p) const
+  {
+    // todo: optimize this
+    ConvexPolygon inter = *this & p;
+    return inter.is_empty() ? BoolInterval::NO : BoolInterval::MAYBE;
+  }
+
+  const BoolInterval ConvexPolygon::contains(const ThickPoint& p) const
   {
     if(p.does_not_exist() || is_empty())
       return NO;
@@ -198,6 +217,14 @@ namespace codac
           assert(!inter.is_unbounded());
           assert(e1 != e2);
           assert(!e1.does_not_exist() && !e2.does_not_exist());
+          if(inter.does_not_exist())
+          {
+            cout << "inter.does_not_exist():" << endl;
+            cout << "inter=" << inter << ", e1=" << e1 << ", e2=" << e2 << endl;
+            cout << box_limit << endl;
+            *this = ConvexPolygon(box_limit);
+            return *this;
+          }
           assert(!inter.does_not_exist());
 
           if(!box_limit.contains(inter.mid()))
@@ -287,9 +314,23 @@ namespace codac
     ThickPoint::push(reduced_x, v_x_vertices);
 
     for(const auto& vertex : v_x_vertices)
-      if(encloses(vertex) != NO)
+      if(contains(vertex) != NO)
         inter |= vertex.box();
 
     return inter;
+  }
+
+  const ConvexPolygon& ConvexPolygon::operator&=(const ConvexPolygon& x)
+  {
+    // todo: optimize this?
+    *this = *this & x;
+    return *this;
+  }
+
+  const ConvexPolygon& ConvexPolygon::operator|=(const ConvexPolygon& x)
+  {
+    // todo: optimize this?
+    *this = *this | x;
+    return *this;
   }
 }

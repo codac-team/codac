@@ -12,6 +12,8 @@
 #ifndef __CODAC_PAVING_H__
 #define __CODAC_PAVING_H__
 
+#include <list>
+#include <vector>
 #include "codac_Set.h"
 #include "codac_ConnectedSubset.h"
 
@@ -149,9 +151,25 @@ namespace codac
        */
       void reset_flags() const;
 
+      /**
+       * \brief Same as building a new Paving object
+       *
+       * \param value integer of the set, `SetValue::UNKNOWN` by default
+       */
+      void reset_paving(SetValue value = SetValue::UNKNOWN);
+
       /// @}
       /// \name Extract methods
       /// @{
+
+      /**
+       * \brief Returns a set of boxes leaves of some value
+       *
+       * \param l_subpavings the set of returned objects
+       * \param val the value of the leaves (boxes of the paving) we are looking for
+       * \param neg_val the value for which we reject the leaves, optional argument used for faster execution along the tree 
+       */
+      void get_boxes(std::list<IntervalVector>& l_subpavings, SetValue val, SetValue neg_val = SetValue::DEFAULT) const;
 
       /**
        * \brief Returns a set of Paving leaves of some value and intersecting a given box
@@ -196,7 +214,7 @@ namespace codac
 
     protected:
 
-      mutable bool m_flag; //!< optional flag, can be used by search algorithms
+      mutable bool m_flag = false; //!< optional flag, can be used by search algorithms
       Paving *m_root = nullptr; //!< pointer to the root
       Paving *m_first_subpaving = nullptr, *m_second_subpaving = nullptr; //!< tree structure
   };

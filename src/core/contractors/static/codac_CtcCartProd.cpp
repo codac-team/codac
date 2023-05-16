@@ -27,6 +27,11 @@ namespace codac
       index += m_v[i].nb_var;
     }
   }
+  
+  CtcCartProd cart_prod(Ctc& c1, Ctc& c2)
+  {
+    return CtcCartProd(c1, c2);
+  }
 
   CtcCartProd cart_prod(const ibex::Array<Ctc>& array)
   {

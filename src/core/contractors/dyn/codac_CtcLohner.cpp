@@ -12,7 +12,7 @@
 
 #include <codac_CtcLohner.h>
 #include <Eigen/QR>
-#include <ibex.h>
+#include <ibex_Linear.h>
 #include <codac_Eigen.h>
 #include <codac_DomainsTypeException.h>
 

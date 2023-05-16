@@ -5,6 +5,9 @@
   cmake_minimum_required(VERSION 3.0.2)
   project(codac_brunov LANGUAGES CXX)
 
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Compilation options
 
   set(CMAKE_CXX_STANDARD 17)
@@ -46,6 +49,6 @@
 
 # Compilation
 
-  add_executable(${PROJECT_NAME} main.cpp)
+  add_executable(${PROJECT_NAME} main_debug.cpp)
   target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES} Ibex::ibex ${CODAC_LIBRARIES})

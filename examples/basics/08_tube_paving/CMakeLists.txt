@@ -5,6 +5,9 @@
   cmake_minimum_required(VERSION 3.0.2)
   project(codac_basics_08 LANGUAGES CXX)
 
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Adding IBEX
 
   # In case you installed IBEX in a local directory, you need 

@@ -39,6 +39,99 @@ Codac releases
 
 -----------------------------------------------------------------
 
+Codac release 1.2.0 (released `Jun 6, 2022 <https://github.com/codac-team/codac/releases/tag/v1.2.0>`_)
+=======================================================================================================
+
+`Commits since previous release 1.1.0 <https://github.com/codac-team/codac/compare/v1.1.0...v1.2.0>`_
+
+Features added
+--------------
+
+* :commit:`54b5f45d50f73fa4f2c0eb4ee937f1d3968fadb0`: added ``SepBox``
+* :commit:`0a4f3ad7861d9dba3fbd418e75e3d9d71d761d6c`: ``SepProj``, ``SepFixPoint``, ``SepCtcPairProj``, ``QInterProjF`` now in core
+
+Documentation
+-------------
+
+* :commit:`a5a483e84f5a8c3fb7eecda68cc1394adbd9c517`: string formatting for run-time ``Function`` definition 
+* :commit:`a5a483e84f5a8c3fb7eecda68cc1394adbd9c517`: string formatting for run-time ``Function`` definition 
+
+Python binding
+--------------
+
+* :commit:`7cbb1eb06ef35d6f75df06cd1b82d5017bfe0edc`: SepFixPoint documentation
+* :commit:`0aeb37f8fa6a93b60c588982c557dc1aa25471d8`: SepProj documentation
+* :commit:`490dd0d5b872e1d4186c15c7b02a98b8edab086b`: SepCtcPairProj documentation
+* :commit:`31727f5f889c121d4d9a7d1f48c99670ae034add`: QInterProjF documentation
+* :commit:`9000cc63169dd4937ac3a20726f5290882a8aaed`: constructor for creating an ``IntervalMatrix`` from NumPy objects 
+
+
+-----------------------------------------------------------------
+
+Codac release 1.1.0 (released `May 17, 2022 <https://github.com/codac-team/codac/releases/tag/v1.1.0>`_)
+========================================================================================================
+
+`Commits since previous release 1.0.0 <https://github.com/codac-team/codac/compare/v1.0.0...v1.1.0>`_
+
+Features added
+--------------
+
+* :commit:`b6f79a06aa0d3fe94072aba2168dfd523d1ef123`: added ``CtcCartProd``
+* :commit:`9382404ef967cdf77e20568a5c57e32fab9e9463`: added ``CtcBox``
+* :commit:`e014ae05c0f45f4bd357f3cd047e3fd475761428`: added ``SepFunction``
+
+Changes
+-------
+
+* :commit:`4357e3d50b192935a7da9a6f785e6ef7e11f9658`: improving SIVIA interface + compatibility with former pySIVIA
+
+Documentation
+-------------
+
+* :commit:`a9cefd2b9a90503c09eb765ee916e7e4077aa89b`: Lie symmetries page
+* :commit:`b534e48a71ac6657e0c6cdbb06738e2be547cbd0`: updated installation information
+* :commit:`f04180d7517d6169ebdcff42159357a5ea171f15`: how to build ``Trajectory`` from ``npz`` file
+* :commit:`cc350cb32e54b663c3a7e0ce71f76fcf194f2535`: codac-unsupported
+
+Python binding
+--------------
+
+* :commit:`eea406bb88e95f42c601d7643f1f81a08f900718`: now available for MacOS
+* :commit:`ad2b7fac70d72832057d2a2af13dd09d8ea0f898`: corrected bug in ``__invert__`` of a ``Sep``
+
+
+-----------------------------------------------------------------
+
+Codac release 1.0.0 (released `Apr 21, 2022 <https://github.com/codac-team/codac/releases/tag/v1.0.0>`_)
+========================================================================================================
+
+`Commits since previous release 0.1.14 <https://github.com/codac-team/codac/compare/v0.1.14...v1.0.0>`_
+
+Changes
+-------
+
+* :commit:`ad73493012207bacc191a9261058f2af4b4a61d4`: C++17
+
+Bugs fixed
+----------
+
+* :commit:`3c268eb9e0f93b21d1d81907bac23f64400d2cbc`: fix encoding problems on Windows with Python 3.10
+* :commit:`4e5d21637d17efe97175c7e026457cb8a62128e2`: updated pybind11 to v2.9.2 for Python 3.10 support
+* :commit:`03889ad182cf24d41a6c001a90e20bed15a0b1f2`: ``const`` for ``TFnc`` parameter in ``CtcPicard`` constructor
+
+Documentation
+-------------
+
+* :commit:`b1617459d2acc216fa5db854d7ba09affe279aff`: set-inversion and separators
+
+Python binding
+--------------
+
+* :commit:`5fcaebf959e4ab454818e6921d278fdf78ab38cc`: added ``__hash__`` for ``Interval``, ``IntervalVar``, ``IntervalVectorVar``
+
+
+-----------------------------------------------------------------
+
 Codac release 0.1.14 (released `Apr 14, 2022 <https://github.com/codac-team/codac/releases/tag/v0.1.14>`_)
 ==========================================================================================================
 

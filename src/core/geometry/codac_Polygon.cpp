@@ -38,6 +38,11 @@ namespace codac
   {
     
   }
+  
+  void Polygon::set_empty()
+  {
+    m_v_floating_pts.clear();
+  }
 
 
   // Accessing values
@@ -108,6 +113,11 @@ namespace codac
     }
 
     return 0.5*a;
+  }
+
+  double Polygon::volume() const
+  {
+    return area().ub();
   }
 
 

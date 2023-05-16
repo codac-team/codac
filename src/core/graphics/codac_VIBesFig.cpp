@@ -9,6 +9,7 @@
  */
 
 #include "codac_VIBesFig.h"
+#include "codac2_Tube.h"
 
 using namespace std;
 using namespace ibex;
@@ -277,6 +278,16 @@ namespace codac
   {
     for(int i = v_p.size()-1 ; i >= 0 ; i--) // we usually prefer to display last poylgons first, that may be larger
       draw_polygon(v_p[i], rgb2hex(color_map.color(i*1./(v_p.size()-1))));
+  }
+  
+  void VIBesFig::draw_polygon_tube(const codac2::Tube<ConvexPolygon>& x, const ColorMap& color_map, const vibes::Params& params)
+  {
+    int i = -1;
+    for(const auto& s : x)
+    {
+      if(!s.codomain().box().is_unbounded())
+        draw_polygon(s.codomain(), rgb2hex(color_map.color((++i)*1./(x.nb_slices()-1))));
+    }
   }
 
   void VIBesFig::draw_point(const ThickPoint& p, float size, const vibes::Params& params)

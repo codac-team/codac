@@ -43,18 +43,18 @@ using namespace pybind11::literals;
 
 void export_GeoImage(py::module& m)
 {
-  class_<GeoImage> geo_image(m, "GeoImage");
+  class_<from_pyibex::GeoImage> geo_image(m, "GeoImage");
   geo_image
       .def(init<py::array_t<DATA_TYPE> , double, double , double , double >(), __DOC_GEOIMAGE_CONSTRUCTOR,
            py::keep_alive<1,2>(), "img"_a, "x0"_a, "y0"_a, "dx"_a, "dy"_a)
-      .def("world_to_grid", &GeoImage::world_to_grid, __DOC_GEOIMAGE_WORLD_TO_GRID, "box"_a)
-      .def("grid_to_world", &GeoImage::grid_to_world, __DOC_GEOIMAGE_GRID_TO_WORLD, "pixel_coords"_a)
-      .def("pixelAt", &GeoImage::pixelAt, __DOC_GEOIMAGE_PIXELAT, "x"_a, "y"_a)
-      .def("enclosed_pixels", &GeoImage::enclosed_pixels, __DOC_GEOIMAGE_ENCLOSED_PIXELS,
+      .def("world_to_grid", &from_pyibex::GeoImage::world_to_grid, __DOC_GEOIMAGE_WORLD_TO_GRID, "box"_a)
+      .def("grid_to_world", &from_pyibex::GeoImage::grid_to_world, __DOC_GEOIMAGE_GRID_TO_WORLD, "pixel_coords"_a)
+      .def("pixelAt", &from_pyibex::GeoImage::pixelAt, __DOC_GEOIMAGE_PIXELAT, "x"_a, "y"_a)
+      .def("enclosed_pixels", &from_pyibex::GeoImage::enclosed_pixels, __DOC_GEOIMAGE_ENCLOSED_PIXELS,
                             "xmin"_a, "xmax"_a, "ymin"_a, "ymax"_a )
 //      .def("test", &GeoImage::test, __DOC_GEOIMAGE_TEST, "box"_a)
 
-      .def_property_readonly("boundingBox", [](GeoImage& self){return self.boundingBox;})
+      .def_property_readonly("boundingBox", [](from_pyibex::GeoImage& self){return self.boundingBox;})
       ;
 }
 
