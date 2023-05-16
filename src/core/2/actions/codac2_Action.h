@@ -27,7 +27,7 @@ namespace codac2
   {
     public:
 
-      OctaSym(std::initializer_list<int> s) : std::vector<int>(s) {}
+      OctaSym(const std::vector<int>& s) : std::vector<int>(s) {}
   };
 
   /**
