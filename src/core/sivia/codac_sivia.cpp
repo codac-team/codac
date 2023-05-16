@@ -62,11 +62,13 @@ namespace codac
       }
 
       if(!fig_name.empty())
-        vibes::selectFigure(fig_name);
+        vibes::newFigure(fig_name);
 
       vibes::drawBox(x0);
       vibes::newGroup("boxes_out", cm.at(SetValue::OUT));
       vibes::newGroup("boxes_unknown", cm.at(SetValue::UNKNOWN));
+      
+      vibes::drawBox(x0, vibesParams("figure", fig_name));
       vibes::axisAuto();
     }
 
@@ -191,7 +193,7 @@ namespace codac
       }
 
       if(!fig_name.empty())
-        vibes::selectFigure(fig_name);
+        vibes::newFigure(fig_name);
 
       vibes::drawBox(x0);
       vibes::newGroup("boxes_out", cm.at(SetValue::OUT));

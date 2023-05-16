@@ -87,7 +87,7 @@ void export_Interval(py::module& m)
     .def(py::init<Interval>(), "build a copy of an interval", "x"_a.noconvert())
     .def(py::init<double, double>(), "build the interval [lb,ub]", "lb"_a, "ub"_a)
     .def(py::init<double>(), "build singleton [x,x]", "x"_a)
-    //.def(py::init(&build_from_list))
+    .def(py::init(&build_from_list))
     //.def(py::init([](array<double, 2>& bounds) {return new Interval(bounds[0], bounds[1]);}))
     //.def(py::init([](array<int, 2>& bounds)    {return new Interval(bounds[0], bounds[1]);}))
     //.def(py::init([](pair<int, double>& bounds) {return new Interval(bounds.first, bounds.second);}))
@@ -293,4 +293,7 @@ void export_Interval(py::module& m)
   // sbool (*bwd_pow_2)(const Interval&, int , Interval&) = &ibex::bwd_pow;
 
   m.attr("oo") = POS_INFINITY;
+
+  // Automatic cast from lists to IntervalVectors (used for instance in SIVIA calls)
+  py::implicitly_convertible<py::list, Interval>();
 };

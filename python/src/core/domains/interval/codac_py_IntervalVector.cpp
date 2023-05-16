@@ -339,5 +339,4 @@ void export_IntervalVector(py::module& m)
 
   // Automatic cast from lists to IntervalVectors (used for instance in SIVIA calls)
   py::implicitly_convertible<py::list, IntervalVector>();
-
 };

@@ -203,7 +203,7 @@
 ################################################################################
 
   if(BUILD_TESTS)
-    include(CTest)
+    
     file(GLOB TESTS_FILES
       "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests/test_*.py"
       "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests/tests_from_pyibex/test_*.py"

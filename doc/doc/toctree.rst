@@ -41,6 +41,7 @@ Codac: constraint-programming for robotics
   :titlesonly:
 
   Lie symmetries for guaranteed integ. </use-cases/lie-symmetries/index>
+  Pose estimation with range-only obs. </use-cases/brunovsky/index>
 
 ..  /use-cases/set-inversion/index
 ..  /use-cases/loops/index

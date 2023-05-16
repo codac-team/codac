@@ -204,7 +204,7 @@ A contractor is an operator that *contracts* (reduces) a domain (a box, for inst
 When it is used together with other contractors, there may be interactions between the contractors: a contraction from one contractor may *activate* another one. It becomes necessary to call all the contractors several times in order to converge to the best contraction of the domains.
 
 This number of contracting iterations cannot be known in advance. It depends on the contractors at stake, their efficiency and their sequencing.
-One can implement a loop of contractions in order to process the contractors as long as their is a contraction on one of the domains. The iteration stops when a fixed point has been reached: when nothing can be contracted anymore.
+One can implement a loop of contractions in order to process the contractors as long as there is a contraction on one of the domains. The iteration stops when a fixed point has been reached: when nothing can be contracted anymore.
 
 Because a computer computes with floating point numbers, the fixed point will be reached in a finite number of steps.
 In practice, we may stop the iteration as soon as the contractions are not significant anymore.

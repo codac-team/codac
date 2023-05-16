@@ -1,6 +1,6 @@
 /*
- *  Catch v1.5.6
- *  Generated: 2016-06-09 19:20:41.460328
+ *  Catch v1.6.1
+ *  Generated: 2017-01-20 12:33:53.497767
  *  ----------------------------------------------------------
  *  This file has been merged from multiple headers. Please don't edit it directly
  *  Copyright (c) 2012 Two Blue Cubes Ltd. All rights reserved.
@@ -59,21 +59,6 @@
 
 // #included from: catch_common.h
 #define TWOBLUECUBES_CATCH_COMMON_H_INCLUDED
-
-#define INTERNAL_CATCH_UNIQUE_NAME_LINE2( name, line ) name##line
-#define INTERNAL_CATCH_UNIQUE_NAME_LINE( name, line ) INTERNAL_CATCH_UNIQUE_NAME_LINE2( name, line )
-#ifdef CATCH_CONFIG_COUNTER
-#  define INTERNAL_CATCH_UNIQUE_NAME( name ) INTERNAL_CATCH_UNIQUE_NAME_LINE( name, __COUNTER__ )
-#else
-#  define INTERNAL_CATCH_UNIQUE_NAME( name ) INTERNAL_CATCH_UNIQUE_NAME_LINE( name, __LINE__ )
-#endif
-
-#define INTERNAL_CATCH_STRINGIFY2( expr ) #expr
-#define INTERNAL_CATCH_STRINGIFY( expr ) INTERNAL_CATCH_STRINGIFY2( expr )
-
-#include <sstream>
-#include <stdexcept>
-#include <algorithm>
 
 // #included from: catch_compiler_capabilities.h
 #define TWOBLUECUBES_CATCH_COMPILER_CAPABILITIES_HPP_INCLUDED
@@ -181,6 +166,7 @@
 #if (_MSC_VER >= 1900 ) // (VC++ 13 (VS2015))
 #define CATCH_INTERNAL_CONFIG_CPP11_NOEXCEPT
 #define CATCH_INTERNAL_CONFIG_CPP11_GENERATED_METHODS
+#define CATCH_INTERNAL_CONFIG_CPP11_SHUFFLE
 #endif
 
 #endif // _MSC_VER
@@ -246,6 +232,9 @@
 #  if !defined(CATCH_INTERNAL_CONFIG_CPP11_UNIQUE_PTR)
 #    define CATCH_INTERNAL_CONFIG_CPP11_UNIQUE_PTR
 #  endif
+# if !defined(CATCH_INTERNAL_CONFIG_CPP11_SHUFFLE)
+#   define CATCH_INTERNAL_CONFIG_CPP11_SHUFFLE
+#  endif
 
 #endif // __cplusplus >= 201103L
 
@@ -268,17 +257,23 @@
 #if defined(CATCH_INTERNAL_CONFIG_VARIADIC_MACROS) && !defined(CATCH_CONFIG_NO_VARIADIC_MACROS) && !defined(CATCH_CONFIG_VARIADIC_MACROS)
 #   define CATCH_CONFIG_VARIADIC_MACROS
 #endif
-#if defined(CATCH_INTERNAL_CONFIG_CPP11_LONG_LONG) && !defined(CATCH_CONFIG_NO_LONG_LONG) && !defined(CATCH_CONFIG_CPP11_LONG_LONG) && !defined(CATCH_CONFIG_NO_CPP11)
+#if defined(CATCH_INTERNAL_CONFIG_CPP11_LONG_LONG) && !defined(CATCH_CONFIG_CPP11_NO_LONG_LONG) && !defined(CATCH_CONFIG_CPP11_LONG_LONG) && !defined(CATCH_CONFIG_NO_CPP11)
 #   define CATCH_CONFIG_CPP11_LONG_LONG
 #endif
-#if defined(CATCH_INTERNAL_CONFIG_CPP11_OVERRIDE) && !defined(CATCH_CONFIG_NO_OVERRIDE) && !defined(CATCH_CONFIG_CPP11_OVERRIDE) && !defined(CATCH_CONFIG_NO_CPP11)
+#if defined(CATCH_INTERNAL_CONFIG_CPP11_OVERRIDE) && !defined(CATCH_CONFIG_CPP11_NO_OVERRIDE) && !defined(CATCH_CONFIG_CPP11_OVERRIDE) && !defined(CATCH_CONFIG_NO_CPP11)
 #   define CATCH_CONFIG_CPP11_OVERRIDE
 #endif
-#if defined(CATCH_INTERNAL_CONFIG_CPP11_UNIQUE_PTR) && !defined(CATCH_CONFIG_NO_UNIQUE_PTR) && !defined(CATCH_CONFIG_CPP11_UNIQUE_PTR) && !defined(CATCH_CONFIG_NO_CPP11)
+#if defined(CATCH_INTERNAL_CONFIG_CPP11_UNIQUE_PTR) && !defined(CATCH_CONFIG_CPP11_NO_UNIQUE_PTR) && !defined(CATCH_CONFIG_CPP11_UNIQUE_PTR) && !defined(CATCH_CONFIG_NO_CPP11)
 #   define CATCH_CONFIG_CPP11_UNIQUE_PTR
 #endif
-#if defined(CATCH_INTERNAL_CONFIG_COUNTER) && !defined(CATCH_CONFIG_NO_COUNTER) && !defined(CATCH_CONFIG_COUNTER)
+// Use of __COUNTER__ is suppressed if __JETBRAINS_IDE__ is #defined (meaning we're being parsed by a JetBrains IDE for
+// analytics) because, at time of writing, __COUNTER__ is not properly handled by it.
+// This does not affect compilation
+#if defined(CATCH_INTERNAL_CONFIG_COUNTER) && !defined(CATCH_CONFIG_NO_COUNTER) && !defined(CATCH_CONFIG_COUNTER) && !defined(__JETBRAINS_IDE__)
 #   define CATCH_CONFIG_COUNTER
+#endif
+#if defined(CATCH_INTERNAL_CONFIG_CPP11_SHUFFLE) && !defined(CATCH_CONFIG_CPP11_NO_SHUFFLE) && !defined(CATCH_CONFIG_CPP11_SHUFFLE) && !defined(CATCH_CONFIG_NO_CPP11)
+#   define CATCH_CONFIG_CPP11_SHUFFLE
 #endif
 
 #if !defined(CATCH_INTERNAL_SUPPRESS_PARENTHESES_WARNINGS)
@@ -314,6 +309,21 @@
 #else
 #   define CATCH_AUTO_PTR( T ) std::auto_ptr<T>
 #endif
+
+#define INTERNAL_CATCH_UNIQUE_NAME_LINE2( name, line ) name##line
+#define INTERNAL_CATCH_UNIQUE_NAME_LINE( name, line ) INTERNAL_CATCH_UNIQUE_NAME_LINE2( name, line )
+#ifdef CATCH_CONFIG_COUNTER
+#  define INTERNAL_CATCH_UNIQUE_NAME( name ) INTERNAL_CATCH_UNIQUE_NAME_LINE( name, __COUNTER__ )
+#else
+#  define INTERNAL_CATCH_UNIQUE_NAME( name ) INTERNAL_CATCH_UNIQUE_NAME_LINE( name, __LINE__ )
+#endif
+
+#define INTERNAL_CATCH_STRINGIFY2( expr ) #expr
+#define INTERNAL_CATCH_STRINGIFY( expr ) INTERNAL_CATCH_STRINGIFY2( expr )
+
+#include <sstream>
+#include <stdexcept>
+#include <algorithm>
 
 namespace Catch {
 
@@ -404,9 +414,8 @@ namespace Catch {
     std::ostream& operator << ( std::ostream& os, SourceLineInfo const& info );
 
     // This is just here to avoid compiler warnings with macro constants and boolean literals
-    inline bool isTrue( bool value ){ return value; }
-    inline bool alwaysTrue() { return true; }
-    inline bool alwaysFalse() { return false; }
+    inline bool alwaysTrue( std::size_t = 0 ) { return true; }
+    inline bool alwaysFalse( std::size_t = 0 ) { return false; }
 
     void throwLogicError( std::string const& message, SourceLineInfo const& locationInfo );
 
@@ -669,7 +678,7 @@ struct NameAndDesc {
 
 void registerTestCase
     (   ITestCase* testCase,
-        char const* class_name,
+        char const* className,
         NameAndDesc const& nameAndDesc,
         SourceLineInfo const& lineInfo );
 
@@ -683,13 +692,13 @@ struct AutoReg {
     template<typename C>
     AutoReg
         (   void (C::*method)(),
-            char const* class_name,
+            char const* className,
             NameAndDesc const& nameAndDesc,
             SourceLineInfo const& lineInfo ) {
 
         registerTestCase
             (   new MethodTestCase<C>( method ),
-                class_name,
+                className,
                 nameAndDesc,
                 lineInfo );
     }
@@ -1998,11 +2007,19 @@ namespace Catch {
 #define TWOBLUECUBES_CATCH_PLATFORM_H_INCLUDED
 
 #if defined(__MAC_OS_X_VERSION_MIN_REQUIRED)
-#define CATCH_PLATFORM_MAC
+#  define CATCH_PLATFORM_MAC
 #elif  defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
-#define CATCH_PLATFORM_IPHONE
+#  define CATCH_PLATFORM_IPHONE
+#elif defined(linux) || defined(__linux) || defined(__linux__)
+#  define CATCH_PLATFORM_LINUX
 #elif defined(WIN32) || defined(__WIN32__) || defined(_WIN32) || defined(_MSC_VER)
-#define CATCH_PLATFORM_WINDOWS
+#  define CATCH_PLATFORM_WINDOWS
+#  if !defined(NOMINMAX) && !defined(CATCH_CONFIG_NO_NOMINMAX)
+#    define CATCH_DEFINES_NOMINMAX
+#  endif
+#  if !defined(WIN32_LEAN_AND_MEAN) && !defined(CATCH_CONFIG_NO_WIN32_LEAN_AND_MEAN)
+#    define CATCH_DEFINES_WIN32_LEAN_AND_MEAN
+#  endif
 #endif
 
 #include <string>
@@ -2019,25 +2036,36 @@ namespace Catch{
     // http://cocoawithlove.com/2008/03/break-into-debugger.html
     #ifdef DEBUG
         #if defined(__ppc64__) || defined(__ppc__)
-            #define CATCH_BREAK_INTO_DEBUGGER() \
-                if( Catch::isDebuggerActive() ) { \
+            #define CATCH_TRAP() \
                     __asm__("li r0, 20\nsc\nnop\nli r0, 37\nli r4, 2\nsc\nnop\n" \
-                    : : : "memory","r0","r3","r4" ); \
-                }
+                    : : : "memory","r0","r3","r4" )
         #else
-            #define CATCH_BREAK_INTO_DEBUGGER() if( Catch::isDebuggerActive() ) {__asm__("int $3\n" : : );}
+            #define CATCH_TRAP() _asm__("int $3\n" : : )
         #endif
     #endif
 
+#elif defined(CATCH_PLATFORM_LINUX)
+    // If we can use inline assembler, do it because this allows us to break
+    // directly at the location of the failing check instead of breaking inside
+    // raise() called from it, i.e. one stack frame below.
+    #if defined(__GNUC__) && (defined(__i386) || defined(__x86_64))
+        #define CATCH_TRAP() asm volatile ("int $3")
+    #else // Fall back to the generic way.
+        #include <signal.h>
+
+        #define CATCH_TRAP() raise(SIGTRAP)
+    #endif
 #elif defined(_MSC_VER)
-    #define CATCH_BREAK_INTO_DEBUGGER() if( Catch::isDebuggerActive() ) { __debugbreak(); }
+    #define CATCH_TRAP() __debugbreak()
 #elif defined(__MINGW32__)
     extern "C" __declspec(dllimport) void __stdcall DebugBreak();
-    #define CATCH_BREAK_INTO_DEBUGGER() if( Catch::isDebuggerActive() ) { DebugBreak(); }
+    #define CATCH_TRAP() DebugBreak()
 #endif
 
-#ifndef CATCH_BREAK_INTO_DEBUGGER
-#define CATCH_BREAK_INTO_DEBUGGER() Catch::alwaysTrue();
+#ifdef CATCH_TRAP
+    #define CATCH_BREAK_INTO_DEBUGGER() if( Catch::isDebuggerActive() ) { CATCH_TRAP(); }
+#else
+    #define CATCH_BREAK_INTO_DEBUGGER() Catch::alwaysTrue();
 #endif
 
 // #included from: catch_interfaces_runner.h
@@ -2073,7 +2101,7 @@ namespace Catch {
             __catchResult.useActiveException( Catch::ResultDisposition::Normal ); \
         } \
         INTERNAL_CATCH_REACT( __catchResult ) \
-    } while( Catch::isTrue( false && !!(expr) ) ) // expr here is never evaluated at runtime but it forces the compiler to give it a look
+    } while( Catch::alwaysFalse( sizeof(expr) ) ) // expr here is never evaluated at runtime but it forces the compiler to give it a look
 
 ///////////////////////////////////////////////////////////////////////////////
 #define INTERNAL_CATCH_IF( expr, resultDisposition, macroName ) \
@@ -2668,6 +2696,26 @@ namespace Detail {
             return !operator==( rhs, lhs );
         }
 
+        friend bool operator <= ( double lhs, Approx const& rhs )
+        {
+          return lhs < rhs.m_value || lhs == rhs;
+        }
+
+        friend bool operator <= ( Approx const& lhs, double rhs )
+        {
+          return lhs.m_value < rhs || lhs == rhs;
+        }
+
+        friend bool operator >= ( double lhs, Approx const& rhs )
+        {
+          return lhs > rhs.m_value || lhs == rhs;
+        }
+
+        friend bool operator >= ( Approx const& lhs, double rhs )
+        {
+          return lhs.m_value > rhs || lhs == rhs;
+        }
+
         Approx& epsilon( double newEpsilon ) {
             m_epsilon = newEpsilon;
             return *this;
@@ -2826,7 +2874,7 @@ namespace Catch {
         };
 
         TestCaseInfo(   std::string const& _name,
-                        std::string const& _class_name,
+                        std::string const& _className,
                         std::string const& _description,
                         std::set<std::string> const& _tags,
                         SourceLineInfo const& _lineInfo );
@@ -2841,7 +2889,7 @@ namespace Catch {
         bool expectedToFail() const;
 
         std::string name;
-        std::string class_name;
+        std::string className;
         std::string description;
         std::set<std::string> tags;
         std::set<std::string> lcaseTags;
@@ -2872,7 +2920,7 @@ namespace Catch {
     };
 
     TestCase makeTestCase(  ITestCase* testCase,
-                            std::string const& class_name,
+                            std::string const& className,
                             std::string const& name,
                             std::string const& description,
                             SourceLineInfo const& lineInfo );
@@ -2964,9 +3012,9 @@ namespace Catch {
                         std::string testCaseName = methodName.substr( 15 );
                         std::string name = Detail::getAnnotation( cls, "Name", testCaseName );
                         std::string desc = Detail::getAnnotation( cls, "Description", testCaseName );
-                        const char* class_name = class_getName( cls );
+                        const char* className = class_getName( cls );
 
-                        getMutableRegistryHub().registerTest( makeTestCase( new OcMethod( cls, selector ), class_name, name.c_str(), desc.c_str(), SourceLineInfo() ) );
+                        getMutableRegistryHub().registerTest( makeTestCase( new OcMethod( cls, selector ), className, name.c_str(), desc.c_str(), SourceLineInfo() ) );
                         noTestMethods++;
                     }
                 }
@@ -3223,10 +3271,11 @@ namespace Catch {
 
             bool matches( TestCaseInfo const& testCase ) const {
                 // All patterns in a filter must match for the filter to be a match
-                for( std::vector<Ptr<Pattern> >::const_iterator it = m_patterns.begin(), itEnd = m_patterns.end(); it != itEnd; ++it )
+                for( std::vector<Ptr<Pattern> >::const_iterator it = m_patterns.begin(), itEnd = m_patterns.end(); it != itEnd; ++it ) {
                     if( !(*it)->matches( testCase ) )
                         return false;
-                    return true;
+                }
+                return true;
             }
         };
 
@@ -3256,11 +3305,12 @@ namespace Catch {
 namespace Catch {
 
     class TestSpecParser {
-        enum Mode{ None, Name, QuotedName, Tag };
+        enum Mode{ None, Name, QuotedName, Tag, EscapedName };
         Mode m_mode;
         bool m_exclusion;
         std::size_t m_start, m_pos;
         std::string m_arg;
+        std::vector<std::size_t> m_escapeChars;
         TestSpec::Filter m_currentFilter;
         TestSpec m_testSpec;
         ITagAliasRegistry const* m_tagAliases;
@@ -3273,6 +3323,7 @@ namespace Catch {
             m_exclusion = false;
             m_start = std::string::npos;
             m_arg = m_tagAliases->expandAliases( arg );
+            m_escapeChars.clear();
             for( m_pos = 0; m_pos < m_arg.size(); ++m_pos )
                 visitChar( m_arg[m_pos] );
             if( m_mode == Name )
@@ -3291,6 +3342,7 @@ namespace Catch {
                 case '~': m_exclusion = true; return;
                 case '[': return startNewMode( Tag, ++m_pos );
                 case '"': return startNewMode( QuotedName, ++m_pos );
+                case '\\': return escape();
                 default: startNewMode( Name, m_pos ); break;
                 }
             }
@@ -3306,7 +3358,11 @@ namespace Catch {
                         addPattern<TestSpec::NamePattern>();
                     startNewMode( Tag, ++m_pos );
                 }
+                else if( c == '\\' )
+                    escape();
             }
+            else if( m_mode == EscapedName )
+                m_mode = Name;
             else if( m_mode == QuotedName && c == '"' )
                 addPattern<TestSpec::NamePattern>();
             else if( m_mode == Tag && c == ']' )
@@ -3316,10 +3372,17 @@ namespace Catch {
             m_mode = mode;
             m_start = start;
         }
+        void escape() {
+            m_mode = EscapedName;
+            m_escapeChars.push_back( m_pos );
+        }
         std::string subString() const { return m_arg.substr( m_start, m_pos - m_start ); }
         template<typename T>
         void addPattern() {
             std::string token = subString();
+            for( size_t i = 0; i < m_escapeChars.size(); ++i )
+                token = token.substr( 0, m_escapeChars[i] ) + token.substr( m_escapeChars[i]+1 );
+            m_escapeChars.clear();
             if( startsWith( token, "exclude:" ) ) {
                 m_exclusion = true;
                 token = token.substr( 8 );
@@ -3427,6 +3490,7 @@ namespace Catch {
 #include <streambuf>
 #include <ostream>
 #include <fstream>
+#include <memory>
 
 namespace Catch {
 
@@ -3994,9 +4058,12 @@ namespace Clara {
         inline void convertInto( std::string const& _source, std::string& _dest ) {
             _dest = _source;
         }
+        char toLowerCh(char c) {
+            return static_cast<char>( ::tolower( c ) );
+        }
         inline void convertInto( std::string const& _source, bool& _dest ) {
             std::string sourceLC = _source;
-            std::transform( sourceLC.begin(), sourceLC.end(), sourceLC.begin(), ::tolower );
+            std::transform( sourceLC.begin(), sourceLC.end(), sourceLC.begin(), toLowerCh );
             if( sourceLC == "y" || sourceLC == "1" || sourceLC == "true" || sourceLC == "yes" || sourceLC == "on" )
                 _dest = true;
             else if( sourceLC == "n" || sourceLC == "0" || sourceLC == "false" || sourceLC == "no" || sourceLC == "off" )
@@ -4719,8 +4786,11 @@ namespace Catch {
         std::string line;
         while( std::getline( f, line ) ) {
             line = trim(line);
-            if( !line.empty() && !startsWith( line, "#" ) )
-                addTestOrTags( config, "\"" + line + "\"," );
+            if( !line.empty() && !startsWith( line, "#" ) ) {
+                if( !startsWith( line, "\"" ) )
+                    line = "\"" + line + "\"";
+                addTestOrTags( config, line + "," );
+            }
         }
     }
 
@@ -5368,7 +5438,10 @@ namespace Catch {
                 ++it ) {
             matchedTests++;
             TestCaseInfo const& testCaseInfo = it->getTestCaseInfo();
-            Catch::cout() << testCaseInfo.name << std::endl;
+            if( startsWith( testCaseInfo.name, "#" ) )
+               Catch::cout() << "\"" << testCaseInfo.name << "\"" << std::endl;
+            else
+               Catch::cout() << testCaseInfo.name << std::endl;
         }
         return matchedTests;
     }
@@ -6447,18 +6520,14 @@ namespace Catch {
 #include <iostream>
 #include <algorithm>
 
-#ifdef CATCH_CPP14_OR_GREATER
-#include <random>
-#endif
-
 namespace Catch {
 
     struct RandomNumberGenerator {
-        typedef int result_type;
+        typedef std::ptrdiff_t result_type;
 
         result_type operator()( result_type n ) const { return std::rand() % n; }
 
-#ifdef CATCH_CPP14_OR_GREATER
+#ifdef CATCH_CONFIG_CPP11_SHUFFLE
         static constexpr result_type min() { return 0; }
         static constexpr result_type max() { return 1000000; }
         result_type operator()() const { return std::rand() % max(); }
@@ -6466,7 +6535,7 @@ namespace Catch {
         template<typename V>
         static void shuffle( V& vector ) {
             RandomNumberGenerator rng;
-#ifdef CATCH_CPP14_OR_GREATER
+#ifdef CATCH_CONFIG_CPP11_SHUFFLE
             std::shuffle( vector.begin(), vector.end(), rng );
 #else
             std::random_shuffle( vector.begin(), vector.end(), rng );
@@ -6589,16 +6658,16 @@ namespace Catch {
     };
 
     inline std::string extractClassName( std::string const& classOrQualifiedMethodName ) {
-        std::string class_name = classOrQualifiedMethodName;
-        if( startsWith( class_name, "&" ) )
+        std::string className = classOrQualifiedMethodName;
+        if( startsWith( className, "&" ) )
         {
-            std::size_t lastColons = class_name.rfind( "::" );
-            std::size_t penultimateColons = class_name.rfind( "::", lastColons-1 );
+            std::size_t lastColons = className.rfind( "::" );
+            std::size_t penultimateColons = className.rfind( "::", lastColons-1 );
             if( penultimateColons == std::string::npos )
                 penultimateColons = 1;
-            class_name = class_name.substr( penultimateColons, lastColons-penultimateColons );
+            className = className.substr( penultimateColons, lastColons-penultimateColons );
         }
-        return class_name;
+        return className;
     }
 
     void registerTestCase
@@ -6933,6 +7002,11 @@ namespace Catch {
         Context( Context const& );
         void operator=( Context const& );
 
+    public:
+        virtual ~Context() {
+            deleteAllValues( m_generatorsByTestName );
+        }
+
     public: // IContext
         virtual IResultCapture* getResultCapture() {
             return m_resultCapture;
@@ -7046,14 +7120,28 @@ namespace Catch {
 
 #if defined ( CATCH_CONFIG_COLOUR_WINDOWS ) /////////////////////////////////////////
 
-#ifndef NOMINMAX
-#define NOMINMAX
+// #included from: catch_windows_h_proxy.h
+
+#define TWOBLUECUBES_CATCH_WINDOWS_H_PROXY_H_INCLUDED
+
+#ifdef CATCH_DEFINES_NOMINMAX
+#  define NOMINMAX
+#endif
+#ifdef CATCH_DEFINES_WIN32_LEAN_AND_MEAN
+#  define WIN32_LEAN_AND_MEAN
 #endif
 
 #ifdef __AFXDLL
 #include <AfxWin.h>
 #else
 #include <windows.h>
+#endif
+
+#ifdef CATCH_DEFINES_NOMINMAX
+#  undef NOMINMAX
+#endif
+#ifdef CATCH_DEFINES_WIN32_LEAN_AND_MEAN
+#  undef WIN32_LEAN_AND_MEAN
 #endif
 
 namespace Catch {
@@ -7136,7 +7224,7 @@ namespace {
                 case Colour::White:     return setColour( "[0m" );
                 case Colour::Red:       return setColour( "[0;31m" );
                 case Colour::Green:     return setColour( "[0;32m" );
-                case Colour::Blue:      return setColour( "[0:34m" );
+                case Colour::Blue:      return setColour( "[0;34m" );
                 case Colour::Cyan:      return setColour( "[0;36m" );
                 case Colour::Yellow:    return setColour( "[0;33m" );
                 case Colour::Grey:      return setColour( "[1;30m" );
@@ -7393,7 +7481,7 @@ namespace Catch {
     }
 
     TestCase makeTestCase(  ITestCase* _testCase,
-                            std::string const& _class_name,
+                            std::string const& _className,
                             std::string const& _name,
                             std::string const& _descOrTags,
                             SourceLineInfo const& _lineInfo )
@@ -7433,7 +7521,7 @@ namespace Catch {
             tags.insert( "." );
         }
 
-        TestCaseInfo info( _name, _class_name, desc, tags, _lineInfo );
+        TestCaseInfo info( _name, _className, desc, tags, _lineInfo );
         return TestCase( _testCase, info );
     }
 
@@ -7453,12 +7541,12 @@ namespace Catch {
     }
 
     TestCaseInfo::TestCaseInfo( std::string const& _name,
-                                std::string const& _class_name,
+                                std::string const& _className,
                                 std::string const& _description,
                                 std::set<std::string> const& _tags,
                                 SourceLineInfo const& _lineInfo )
     :   name( _name ),
-        class_name( _class_name ),
+        className( _className ),
         description( _description ),
         lineInfo( _lineInfo ),
         properties( None )
@@ -7468,7 +7556,7 @@ namespace Catch {
 
     TestCaseInfo::TestCaseInfo( TestCaseInfo const& other )
     :   name( other.name ),
-        class_name( other.class_name ),
+        className( other.className ),
         description( other.description ),
         tags( other.tags ),
         lcaseTags( other.lcaseTags ),
@@ -7506,7 +7594,7 @@ namespace Catch {
     void TestCase::swap( TestCase& other ) {
         test.swap( other.test );
         name.swap( other.name );
-        class_name.swap( other.class_name );
+        className.swap( other.className );
         description.swap( other.description );
         tags.swap( other.tags );
         lcaseTags.swap( other.lcaseTags );
@@ -7522,7 +7610,7 @@ namespace Catch {
     bool TestCase::operator == ( TestCase const& other ) const {
         return  test.get() == other.test.get() &&
                 name == other.name &&
-                class_name == other.class_name;
+                className == other.className;
     }
 
     bool TestCase::operator < ( TestCase const& other ) const {
@@ -7571,7 +7659,7 @@ namespace Catch {
         return os;
     }
 
-    Version libraryVersion( 1, 5, 6, "", 0 );
+    Version libraryVersion( 1, 6, 1, "", 0 );
 
 }
 
@@ -7742,7 +7830,6 @@ namespace Catch
 #endif
 
 #ifdef CATCH_PLATFORM_WINDOWS
-#include <windows.h>
 #else
 #include <sys/time.h>
 #endif
@@ -7802,8 +7889,11 @@ namespace Catch {
     bool contains( std::string const& s, std::string const& infix ) {
         return s.find( infix ) != std::string::npos;
     }
+    char toLowerCh(char c) {
+        return static_cast<char>( ::tolower( c ) );
+    }
     void toLowerInPlace( std::string& s ) {
-        std::transform( s.begin(), s.end(), s.begin(), ::tolower );
+        std::transform( s.begin(), s.end(), s.begin(), toLowerCh );
     }
     std::string toLower( std::string const& s ) {
         std::string lc = s;
@@ -7979,6 +8069,33 @@ namespace Catch {
         }
     } // namespace Catch
 
+#elif defined(CATCH_PLATFORM_LINUX)
+    #include <fstream>
+    #include <string>
+
+    namespace Catch{
+        // The standard POSIX way of detecting a debugger is to attempt to
+        // ptrace() the process, but this needs to be done from a child and not
+        // this process itself to still allow attaching to this process later
+        // if wanted, so is rather heavy. Under Linux we have the PID of the
+        // "debugger" (which doesn't need to be gdb, of course, it could also
+        // be strace, for example) in /proc/$PID/status, so just get it from
+        // there instead.
+        bool isDebuggerActive(){
+            std::ifstream in("/proc/self/status");
+            for( std::string line; std::getline(in, line); ) {
+                static const int PREFIX_LEN = 11;
+                if( line.compare(0, PREFIX_LEN, "TracerPid:\t") == 0 ) {
+                    // We're traced if the PID is not 0 and no other PID starts
+                    // with 0 digit, so it's enough to check for just a single
+                    // character.
+                    return line.length() > PREFIX_LEN && line[PREFIX_LEN] != '0';
+                }
+            }
+
+            return false;
+        }
+    } // namespace Catch
 #elif defined(_MSC_VER)
     extern "C" __declspec(dllimport) int __stdcall IsDebuggerPresent();
     namespace Catch {
@@ -8335,7 +8452,7 @@ namespace Catch {
     }
     std::string ResultBuilder::reconstructExpression() const {
         if( m_exprComponents.op == "" )
-            return m_exprComponents.lhs.empty() ? m_assertionInfo.capturedExpression : m_exprComponents.op + m_exprComponents.lhs;
+            return m_exprComponents.lhs.empty() ? m_assertionInfo.capturedExpression : m_exprComponents.lhs;
         else if( m_exprComponents.op == "matches" )
             return m_exprComponents.lhs + " " + m_exprComponents.rhs;
         else if( m_exprComponents.op != "!" ) {
@@ -8951,9 +9068,10 @@ namespace Catch {
                         break;
 
                     default:
-                        // Escape control chars - based on contribution by @espenalb in PR #465
-                        if ( ( c < '\x09' ) || ( c > '\x0D' && c < '\x20') || c=='\x7F' )
-                            os << "&#x" << std::uppercase << std::hex << static_cast<int>( c );
+                        // Escape control chars - based on contribution by @espenalb in PR #465 and
+                        // by @mrpi PR #588
+                        if ( ( c >= 0 && c < '\x09' ) || ( c > '\x0D' && c < '\x20') || c=='\x7F' )
+                            os << "&#x" << std::uppercase << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>( c ) << ';';
                         else
                             os << c;
                 }
@@ -9008,13 +9126,20 @@ namespace Catch {
         :   m_tagIsOpen( false ),
             m_needsNewline( false ),
             m_os( &Catch::cout() )
-        {}
+        {
+            // We encode control characters, which requires
+            // XML 1.1
+            // see http://stackoverflow.com/questions/404107/why-are-control-characters-illegal-in-xml-1-0
+            *m_os << "<?xml version=\"1.1\" encoding=\"UTF-8\"?>\n";
+        }
 
         XmlWriter( std::ostream& os )
         :   m_tagIsOpen( false ),
             m_needsNewline( false ),
             m_os( &os )
-        {}
+        {
+            *m_os << "<?xml version=\"1.1\" encoding=\"UTF-8\"?>\n";
+        }
 
         ~XmlWriter() {
             while( !m_tags.empty() )
@@ -9148,6 +9273,7 @@ namespace Catch {
     public:
         XmlReporter( ReporterConfig const& _config )
         :   StreamingReporterBase( _config ),
+            m_xml(_config.stream()),
             m_sectionDepth( 0 )
         {
             m_reporterPrefs.shouldRedirectStdOut = true;
@@ -9167,7 +9293,6 @@ namespace Catch {
 
         virtual void testRunStarting( TestRunInfo const& testInfo ) CATCH_OVERRIDE {
             StreamingReporterBase::testRunStarting( testInfo );
-            m_xml.setStream( stream );
             m_xml.startElement( "Catch" );
             if( !m_config->name().empty() )
                 m_xml.writeAttribute( "name", m_config->name() );
@@ -9181,7 +9306,7 @@ namespace Catch {
 
         virtual void testCaseStarting( TestCaseInfo const& testInfo ) CATCH_OVERRIDE {
             StreamingReporterBase::testCaseStarting(testInfo);
-            m_xml.startElement( "TestCase" ).writeAttribute( "name", trim( testInfo.name ) );
+            m_xml.startElement( "TestCase" ).writeAttribute( "name", testInfo.name );
 
             if ( m_config->showDurations() == ShowDurations::Always )
                 m_testCaseTimer.start();
@@ -9243,7 +9368,7 @@ namespace Catch {
                         .writeText( assertionResult.getMessage() );
                     break;
                 case ResultWas::FatalErrorCondition:
-                    m_xml.scopedElement( "Fatal Error Condition" )
+                    m_xml.scopedElement( "FatalErrorCondition" )
                         .writeAttribute( "filename", assertionResult.getSourceInfo().file )
                         .writeAttribute( "line", assertionResult.getSourceInfo().line )
                         .writeText( assertionResult.getMessage() );
@@ -9331,6 +9456,35 @@ namespace Catch {
 
 namespace Catch {
 
+    namespace {
+        std::string getCurrentTimestamp() {
+            // Beware, this is not reentrant because of backward compatibility issues
+            // Also, UTC only, again because of backward compatibility (%z is C++11)
+            time_t rawtime;
+            std::time(&rawtime);
+            const size_t timeStampSize = sizeof("2017-01-16T17:06:45Z");
+
+#ifdef CATCH_PLATFORM_WINDOWS
+            std::tm timeInfo = {};
+            gmtime_s(&timeInfo, &rawtime);
+#else
+            std::tm* timeInfo;
+            timeInfo = std::gmtime(&rawtime);
+#endif
+
+            char timeStamp[timeStampSize];
+            const char * const fmt = "%Y-%m-%dT%H:%M:%SZ";
+
+#ifdef CATCH_PLATFORM_WINDOWS
+            std::strftime(timeStamp, timeStampSize, fmt, &timeInfo);
+#else
+            std::strftime(timeStamp, timeStampSize, fmt, timeInfo);
+#endif
+            return std::string(timeStamp);
+        }
+
+    }
+
     class JunitReporter : public CumulativeReporterBase {
     public:
         JunitReporter( ReporterConfig const& _config )
@@ -9395,7 +9549,7 @@ namespace Catch {
                 xml.writeAttribute( "time", "" );
             else
                 xml.writeAttribute( "time", suiteTime );
-            xml.writeAttribute( "timestamp", "tbd" ); // !TBD
+            xml.writeAttribute( "timestamp", getCurrentTimestamp() );
 
             // Write test cases
             for( TestGroupNode::ChildNodes::const_iterator
@@ -9416,16 +9570,16 @@ namespace Catch {
             assert( testCaseNode.children.size() == 1 );
             SectionNode const& rootSection = *testCaseNode.children.front();
 
-            std::string class_name = stats.testInfo.class_name;
+            std::string className = stats.testInfo.className;
 
-            if( class_name.empty() ) {
+            if( className.empty() ) {
                 if( rootSection.childSections.empty() )
-                    class_name = "global";
+                    className = "global";
             }
-            writeSection( class_name, "", rootSection );
+            writeSection( className, "", rootSection );
         }
 
-        void writeSection(  std::string const& class_name,
+        void writeSection(  std::string const& className,
                             std::string const& rootName,
                             SectionNode const& sectionNode ) {
             std::string name = trim( sectionNode.stats.sectionInfo.name );
@@ -9436,12 +9590,12 @@ namespace Catch {
                 !sectionNode.stdOut.empty() ||
                 !sectionNode.stdErr.empty() ) {
                 XmlWriter::ScopedElement e = xml.scopedElement( "testcase" );
-                if( class_name.empty() ) {
+                if( className.empty() ) {
                     xml.writeAttribute( "classname", name );
                     xml.writeAttribute( "name", "root" );
                 }
                 else {
-                    xml.writeAttribute( "classname", class_name );
+                    xml.writeAttribute( "classname", className );
                     xml.writeAttribute( "name", name );
                 }
                 xml.writeAttribute( "time", Catch::toString( sectionNode.stats.durationInSeconds ) );
@@ -9458,10 +9612,10 @@ namespace Catch {
                     itEnd = sectionNode.childSections.end();
                     it != itEnd;
                     ++it )
-                if( class_name.empty() )
+                if( className.empty() )
                     writeSection( name, "", **it );
                 else
-                    writeSection( class_name, name, **it );
+                    writeSection( className, name, **it );
         }
 
         void writeAssertions( SectionNode const& sectionNode ) {
@@ -10378,12 +10532,12 @@ int main (int argc, char * const argv[]) {
 #define CATCH_CHECKED_ELSE( expr ) INTERNAL_CATCH_ELSE( expr, Catch::ResultDisposition::ContinueOnFailure, "CATCH_CHECKED_ELSE" )
 #define CATCH_CHECK_NOFAIL( expr ) INTERNAL_CATCH_TEST( expr, Catch::ResultDisposition::ContinueOnFailure | Catch::ResultDisposition::SuppressFail, "CATCH_CHECK_NOFAIL" )
 
-#define CATCH_CHECK_THROWS( expr )  INTERNAL_CATCH_THROWS( expr, Catch::ResultDisposition::ContinueOnFailure, "CATCH_CHECK_THROWS" )
+#define CATCH_CHECK_THROWS( expr )  INTERNAL_CATCH_THROWS( expr, Catch::ResultDisposition::ContinueOnFailure, "", "CATCH_CHECK_THROWS" )
 #define CATCH_CHECK_THROWS_AS( expr, exceptionType ) INTERNAL_CATCH_THROWS_AS( expr, exceptionType, Catch::ResultDisposition::ContinueOnFailure, "CATCH_CHECK_THROWS_AS" )
 #define CATCH_CHECK_THROWS_WITH( expr, matcher ) INTERNAL_CATCH_THROWS( expr, Catch::ResultDisposition::ContinueOnFailure, matcher, "CATCH_CHECK_THROWS_WITH" )
 #define CATCH_CHECK_NOTHROW( expr ) INTERNAL_CATCH_NO_THROW( expr, Catch::ResultDisposition::ContinueOnFailure, "CATCH_CHECK_NOTHROW" )
 
-#define CHECK_THAT( arg, matcher ) INTERNAL_CHECK_THAT( arg, matcher, Catch::ResultDisposition::ContinueOnFailure, "CATCH_CHECK_THAT" )
+#define CATCH_CHECK_THAT( arg, matcher ) INTERNAL_CHECK_THAT( arg, matcher, Catch::ResultDisposition::ContinueOnFailure, "CATCH_CHECK_THAT" )
 #define CATCH_REQUIRE_THAT( arg, matcher ) INTERNAL_CHECK_THAT( arg, matcher, Catch::ResultDisposition::Normal, "CATCH_REQUIRE_THAT" )
 
 #define CATCH_INFO( msg ) INTERNAL_CATCH_INFO( msg, "CATCH_INFO" )
@@ -10394,7 +10548,7 @@ int main (int argc, char * const argv[]) {
 
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
     #define CATCH_TEST_CASE( ... ) INTERNAL_CATCH_TESTCASE( __VA_ARGS__ )
-    #define CATCH_TEST_CASE_METHOD( class_name, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, __VA_ARGS__ )
+    #define CATCH_TEST_CASE_METHOD( className, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( className, __VA_ARGS__ )
     #define CATCH_METHOD_AS_TEST_CASE( method, ... ) INTERNAL_CATCH_METHOD_AS_TEST_CASE( method, __VA_ARGS__ )
     #define CATCH_REGISTER_TEST_CASE( Function, ... ) INTERNAL_CATCH_REGISTER_TESTCASE( Function, __VA_ARGS__ )
     #define CATCH_SECTION( ... ) INTERNAL_CATCH_SECTION( __VA_ARGS__ )
@@ -10402,7 +10556,7 @@ int main (int argc, char * const argv[]) {
     #define CATCH_SUCCEED( ... ) INTERNAL_CATCH_MSG( Catch::ResultWas::Ok, Catch::ResultDisposition::ContinueOnFailure, "CATCH_SUCCEED", __VA_ARGS__ )
 #else
     #define CATCH_TEST_CASE( name, description ) INTERNAL_CATCH_TESTCASE( name, description )
-    #define CATCH_TEST_CASE_METHOD( class_name, name, description ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, name, description )
+    #define CATCH_TEST_CASE_METHOD( className, name, description ) INTERNAL_CATCH_TEST_CASE_METHOD( className, name, description )
     #define CATCH_METHOD_AS_TEST_CASE( method, name, description ) INTERNAL_CATCH_METHOD_AS_TEST_CASE( method, name, description )
     #define CATCH_REGISTER_TEST_CASE( function, name, description ) INTERNAL_CATCH_REGISTER_TESTCASE( function, name, description )
     #define CATCH_SECTION( name, description ) INTERNAL_CATCH_SECTION( name, description )
@@ -10419,10 +10573,10 @@ int main (int argc, char * const argv[]) {
 // "BDD-style" convenience wrappers
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
 #define CATCH_SCENARIO( ... ) CATCH_TEST_CASE( "Scenario: " __VA_ARGS__ )
-#define CATCH_SCENARIO_METHOD( class_name, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, "Scenario: " __VA_ARGS__ )
+#define CATCH_SCENARIO_METHOD( className, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " __VA_ARGS__ )
 #else
 #define CATCH_SCENARIO( name, tags ) CATCH_TEST_CASE( "Scenario: " name, tags )
-#define CATCH_SCENARIO_METHOD( class_name, name, tags ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, "Scenario: " name, tags )
+#define CATCH_SCENARIO_METHOD( className, name, tags ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " name, tags )
 #endif
 #define CATCH_GIVEN( desc )    CATCH_SECTION( std::string( "Given: ") + desc, "" )
 #define CATCH_WHEN( desc )     CATCH_SECTION( std::string( " When: ") + desc, "" )
@@ -10463,7 +10617,7 @@ int main (int argc, char * const argv[]) {
 
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
     #define TEST_CASE( ... ) INTERNAL_CATCH_TESTCASE( __VA_ARGS__ )
-    #define TEST_CASE_METHOD( class_name, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, __VA_ARGS__ )
+    #define TEST_CASE_METHOD( className, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( className, __VA_ARGS__ )
     #define METHOD_AS_TEST_CASE( method, ... ) INTERNAL_CATCH_METHOD_AS_TEST_CASE( method, __VA_ARGS__ )
     #define REGISTER_TEST_CASE( Function, ... ) INTERNAL_CATCH_REGISTER_TESTCASE( Function, __VA_ARGS__ )
     #define SECTION( ... ) INTERNAL_CATCH_SECTION( __VA_ARGS__ )
@@ -10471,7 +10625,7 @@ int main (int argc, char * const argv[]) {
     #define SUCCEED( ... ) INTERNAL_CATCH_MSG( Catch::ResultWas::Ok, Catch::ResultDisposition::ContinueOnFailure, "SUCCEED", __VA_ARGS__ )
 #else
     #define TEST_CASE( name, description ) INTERNAL_CATCH_TESTCASE( name, description )
-    #define TEST_CASE_METHOD( class_name, name, description ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, name, description )
+    #define TEST_CASE_METHOD( className, name, description ) INTERNAL_CATCH_TEST_CASE_METHOD( className, name, description )
     #define METHOD_AS_TEST_CASE( method, name, description ) INTERNAL_CATCH_METHOD_AS_TEST_CASE( method, name, description )
     #define REGISTER_TEST_CASE( method, name, description ) INTERNAL_CATCH_REGISTER_TESTCASE( method, name, description )
     #define SECTION( name, description ) INTERNAL_CATCH_SECTION( name, description )
@@ -10492,10 +10646,10 @@ int main (int argc, char * const argv[]) {
 // "BDD-style" convenience wrappers
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
 #define SCENARIO( ... ) TEST_CASE( "Scenario: " __VA_ARGS__ )
-#define SCENARIO_METHOD( class_name, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, "Scenario: " __VA_ARGS__ )
+#define SCENARIO_METHOD( className, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " __VA_ARGS__ )
 #else
 #define SCENARIO( name, tags ) TEST_CASE( "Scenario: " name, tags )
-#define SCENARIO_METHOD( class_name, name, tags ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, "Scenario: " name, tags )
+#define SCENARIO_METHOD( className, name, tags ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " name, tags )
 #endif
 #define GIVEN( desc )    SECTION( std::string("   Given: ") + desc, "" )
 #define WHEN( desc )     SECTION( std::string("    When: ") + desc, "" )

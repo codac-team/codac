@@ -14,11 +14,16 @@ A Debian package is available for the last release |version| of the library:
 
 .. code-block:: bash
 
-  sudo sh -c 'echo "deb [trusted=yes] https://www.ensta-bretagne.fr/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+  sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
   sudo apt update
   sudo apt install libcodac-dev
 
 Then, check your installation `with the instructions of this page <03-start-cpp-project.html>`_.
+
+.. warning::
+
+  | **URL changed**:
+  | Please update :code:`/etc/apt/sources.list.d/ensta-bretagne.list` as above.
 
 .. note::
 
@@ -29,6 +34,8 @@ Then, check your installation `with the instructions of this page <03-start-cpp-
     cmake . ; cmake --build . ; ./my_project
 
   and check that "My first tube:Tube [0, 10]" appears.
+
+  Similar archives exist also for all the supported configurations.
 
 
 Install from sources (latest development)
@@ -98,7 +105,7 @@ For instance:
   mkdir build -p ; cd build ; cmake .. ; make     # cmake compilation
   ./codac_basics_01                               # running example
 
-Do not forget to launch the VIBes viewer before running your program.
+Do not forget to launch the `VIBes viewer <01-installation.html#graphical-tools>`_ before running your program.
 
 
 (for experts) Additional installation options
