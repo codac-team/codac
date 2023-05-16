@@ -195,6 +195,11 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcLinobs.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.h
+                  # Actions
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/codac2_Action.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/codac2_Action.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcAction.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcAction.h
                   )
 
 
@@ -225,7 +230,8 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/sivia
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/)
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/)
   target_link_libraries(codac PUBLIC Ibex::ibex)
   
 

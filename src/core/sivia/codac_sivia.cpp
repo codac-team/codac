@@ -58,7 +58,6 @@ namespace codac
       {
         _vibes_initialized = true;
         vibes::beginDrawing();
-        vibes::axisAuto();
         // will not be ended in case the init has been done outside this SIVIA function
       }
 
@@ -68,6 +67,7 @@ namespace codac
       vibes::drawBox(x0);
       vibes::newGroup("boxes_out", cm.at(SetValue::OUT));
       vibes::newGroup("boxes_unknown", cm.at(SetValue::UNKNOWN));
+      vibes::axisAuto();
     }
 
     map<SetValue,int> n_boxes;
@@ -86,10 +86,9 @@ namespace codac
     while(!stack.empty())
     {
       k++;
-      IntervalVector *xx = new IntervalVector(stack.front());
-      IntervalVector &x = *xx;
+      IntervalVector x_before_ctc = stack.front();
       stack.pop_front();
-      IntervalVector x_before_ctc(x);
+      IntervalVector x(x_before_ctc);
 
       ctc.contract(x);
 
@@ -188,7 +187,6 @@ namespace codac
       {
         _vibes_initialized = true;
         vibes::beginDrawing();
-        vibes::axisAuto();
         // will not be ended in case the init has been done outside this SIVIA function
       }
 
@@ -199,6 +197,7 @@ namespace codac
       vibes::newGroup("boxes_out", cm.at(SetValue::OUT));
       vibes::newGroup("boxes_unknown", cm.at(SetValue::UNKNOWN));
       vibes::newGroup("boxes_in", cm.at(SetValue::IN));
+      vibes::axisAuto();
     }
 
     map<SetValue,int> n_boxes;
