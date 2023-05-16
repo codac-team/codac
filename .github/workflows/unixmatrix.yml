@@ -117,7 +117,7 @@ jobs:
       shell: bash
     - run: |
         mkdir -p codac_standalone/example ; cd codac_standalone
-        wget https://community.chocolatey.org/api/v2/package/eigen/3.4.0 --no-check-certificate -nv ; unzip -q 3.4.0 -d eigen ; rm -Rf 3.4.0 eigen/*.xml eigen/*.nuspec eigen/_* eigen/package eigen/tools       
+        wget https://community.chocolatey.org/api/v2/package/eigen/3.4.0 --no-check-certificate -nv ; unzip -q 3.4.0 -d eigen ; rm -Rf 3.4.0 eigen/*.xml eigen/*.nuspec eigen/_* eigen/package eigen/tools ; cd eigen/share/cmake ; if [ ${{ runner.os }} = macOS ]; then sed -i "" "s/\\/..\\/../\\/..\\/..\\/../" *.cmake ; else sed -i "s/\\/..\\/../\\/..\\/..\\/../" *.cmake ; fi ; cd .. ; mkdir eigen3 ; mv cmake eigen3/ ; cd ../..
         if [ ${{ runner.os }} = Windows ]; then cp -Rf /C/ProgramData/chocolatey/lib/ibex . ; rm -Rf ibex/tools ibex/ibex.*
         elif [ ${{ runner.os }} = Linux ]; then mkdir -p ibex/include ; mkdir -p ibex/lib ; mkdir -p ibex/share ; mkdir -p ibex/bin ; cp -Rf /usr/include/ibex* ibex/include/ ; cp -Rf /usr/lib/*ibex* ibex/lib/ ; cp -Rf /usr/share/*ibex* ibex/share/ ; cp -Rf /usr/share/pkgconfig ibex/share/ ; cp -Rf /usr/bin/ibex* ibex/bin/
         elif [ ${{ runner.os }} = macOS ]; then cp -Rf ../ibex .
