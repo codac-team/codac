@@ -166,4 +166,4 @@ Do not forget to launch the `VIBes viewer <01-installation.html#graphical-tools>
     export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
     export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/codac/build_install
 
-See also `Information for developers <info_dev.html>`_.
+See also `Information for developers </dev/info_dev.html>`_.

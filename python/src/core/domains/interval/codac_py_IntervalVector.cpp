@@ -39,7 +39,7 @@ IntervalVector* create_from_pylist(const vector<py::list>& lst)
   {
     if(lst[i].size() != 2)
     {
-      delete tmp;
+      delete[] tmp;
       throw invalid_argument("sub list must contain only two elements");
     }
 
