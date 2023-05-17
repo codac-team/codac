@@ -53,23 +53,19 @@ void export_Action(py::module& m)
         return OctaSym(s);
       }
     }))
+
+    .def("__call__", [](OctaSym& s,const codac::IntervalVector& x) { return s(x); }, 
+      "todo",
+      py::return_value_policy::reference_internal)
+
+    .def("__call__", [](OctaSym& s,codac::Ctc& ctc) { return s(ctc); }, 
+      "todo",
+      py::return_value_policy::reference_internal)
+
+    .def("invert", &OctaSym::invert,
+      "todo")
   ;
 
   // Automatic cast from lists to OctaSym
   py::implicitly_convertible<py::list, OctaSym>();
-
-  py::class_<Action> action(m, "Action", "todo");
-	action
-
-    .def(py::init<OctaSym>(), "todo", "s"_a)
-    .def(py::init<OctaSym,OctaSym>(), "todo", "s"_a, "_s"_a)
-    
-    .def("__call__", [](Action& s,const codac::IntervalVector& x) { return s(x); }, 
-      "todo",
-      py::return_value_policy::reference_internal)
-
-    .def("__call__", [](Action& s,codac::Ctc& ctc) { return s(ctc); }, 
-      "todo",
-      py::return_value_policy::reference_internal)
-  ;
 }

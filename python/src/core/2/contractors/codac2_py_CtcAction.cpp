@@ -30,9 +30,9 @@ void export_CtcAction(py::module& m, py::class_<Ctc, pyCtc>& ctc)
   py::class_<CtcAction> ctc_action(m, "CtcAction", ctc, "todo");
   ctc_action
 
-    .def(py::init<Ctc&,const Action&,const Action&>(),
+    .def(py::init<Ctc&,const OctaSym&>(),
       "todo",
-      "ctc"_a, "s"_a, "_s"_a)
+      "ctc"_a, "s"_a)
 
     .def("contract", &CtcAction::contract,
       "todo",

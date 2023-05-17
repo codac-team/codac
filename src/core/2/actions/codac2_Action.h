@@ -21,26 +21,10 @@ namespace codac2
   class CtcAction;
 
   /**
-   * \class OctaSym
-   */
-  class OctaSym : public std::vector<int>
-  {
-    public:
-
-      OctaSym(const std::vector<int>& s) : std::vector<int>(s) {}
-  };
-
-  /**
-   * \class CtcAction
+   * \class Action
    */
   class Action
   {
-    public:
-
-      Action(const OctaSym& s);
-      Action(const OctaSym& s, const OctaSym& _s);
-      codac::IntervalVector operator()(const codac::IntervalVector& x) const;
-      CtcAction operator()(codac::Ctc& ctc) const;
 
     protected:
 
@@ -48,8 +32,19 @@ namespace codac2
       {
         return (a > 0) ? 1 : ((a < 0) ? -1 : 0);
       }
+  };
 
-      const OctaSym _s, __s;
+  /**
+   * \class OctaSym
+   */
+  class OctaSym : public std::vector<int>, public Action
+  {
+    public:
+
+      OctaSym(const std::vector<int>& s);
+      CtcAction operator()(codac::Ctc& ctc) const;
+      codac::IntervalVector operator()(const codac::IntervalVector& x) const;
+      OctaSym invert() const;
   };
 }
 

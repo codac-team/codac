@@ -76,6 +76,7 @@ The ``SIVIA(..)`` function allows several parameters for specifying result outpu
     SIVIA(box,              # initial domain to be bisected
       sep,                  # related separator (or contractor if provided)
       0.21,                 # precision parameter (stopping condition)
+      regular_paving=False, # keep a regular paving (bisection rule)
       display_result=True,  # displaying boxes in a VIBes figure
       fig_name="SIVIA",     # name of the VIBes figure in case of display
       return_result=True,   # returning a map of lists of boxes
@@ -87,6 +88,7 @@ The ``SIVIA(..)`` function allows several parameters for specifying result outpu
     SIVIA(box,              // initial domain to be bisected
       sep,                  // related separator (or contractor if provided)
       0.21,                 // precision parameter (stopping condition)
+      false,                // keep a regular paving (bisection rule)
       true,                 // boolean for displaying boxes in a VIBes figure
       "SIVIA",              // name of the VIBes figure in case of display
       true,                 // boolean for returning a map of lists of boxes
