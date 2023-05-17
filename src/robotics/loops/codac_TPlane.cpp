@@ -17,9 +17,76 @@ using namespace ibex;
 namespace codac
 {
   TPlane::TPlane(const Interval& tdomain)
-    : Paving(IntervalVector(2, tdomain), SetValue::UNKNOWN)
+    : Paving(IntervalVector(2, tdomain), SetValue::UNKNOWN), m_precision(0), m_v_detected_loops(), m_v_proven_loops(), 
+      m_first_subtplane(nullptr), m_second_subtplane(nullptr)
   {
 
+  }
+  
+  TPlane::TPlane(const TPlane& t)
+    : Paving(t), m_precision(t.m_precision), m_v_detected_loops(t.m_v_detected_loops), m_v_proven_loops(t.m_v_proven_loops), 
+      m_first_subtplane(nullptr), m_second_subtplane(nullptr)
+  {
+    if(t.m_first_subtplane)
+    {
+      m_first_subtplane = new TPlane(t.m_first_subtplane->m_box[0]);
+      *m_first_subtplane = *t.m_first_subtplane;
+    }
+    if(t.m_second_subtplane)
+    {
+      m_second_subtplane = new TPlane(t.m_second_subtplane->m_box[0]);
+      *m_second_subtplane = *t.m_second_subtplane;
+    }
+  }
+
+  TPlane::TPlane(const TPlane* t, const Paving* p)
+    : Paving(*p), m_precision(t->m_precision), m_v_detected_loops(t->m_v_detected_loops), m_v_proven_loops(t->m_v_proven_loops), 
+      m_first_subtplane(nullptr), m_second_subtplane(nullptr)
+  {
+    m_verbose = t->m_verbose;
+    if(t->m_first_subtplane)
+    {
+      m_first_subtplane = new TPlane(t->m_first_subtplane->m_box[0]);
+      *m_first_subtplane = *t->m_first_subtplane;
+    }
+    if(t->m_second_subtplane)
+    {
+      m_second_subtplane = new TPlane(t->m_second_subtplane->m_box[0]);
+      *m_second_subtplane = *t->m_second_subtplane;
+    }
+  }
+
+  TPlane::~TPlane()
+  {
+    if(m_first_subtplane)
+    {
+      delete m_first_subtplane;
+    }
+    if(m_second_subtplane)
+    {
+      delete m_second_subtplane;
+    }
+  }
+  
+  TPlane& TPlane::operator=(const TPlane& t)
+  {
+    Paving::operator = (t);      
+    m_precision = t.m_precision;
+    m_v_detected_loops = t.m_v_detected_loops;
+    m_v_proven_loops = t.m_v_proven_loops;
+    m_first_subtplane = nullptr;
+    m_second_subtplane = nullptr;
+    if(t.m_first_subtplane)
+    {
+      m_first_subtplane = new TPlane(t.m_first_subtplane->m_box[0]);
+      *m_first_subtplane = *t.m_first_subtplane;
+    }
+    if(t.m_second_subtplane)
+    {
+      m_second_subtplane = new TPlane(t.m_second_subtplane->m_box[0]);
+      *m_second_subtplane = *t.m_second_subtplane;
+    }
+    return *this;
   }
 
   void TPlane::compute_loops(float precision, const TubeVector& p, const TubeVector& v)
@@ -58,8 +125,16 @@ namespace codac
 
     else if(!is_leaf())
     {
-      ((TPlane*)m_first_subpaving)->compute_detections(precision, p, v, with_derivative, false);
-      ((TPlane*)m_second_subpaving)->compute_detections(precision, p, v, with_derivative, false);
+      //((TPlane*)m_first_subpaving)->compute_detections(precision, p, v, with_derivative, false);
+      //((TPlane*)m_second_subpaving)->compute_detections(precision, p, v, with_derivative, false);
+      m_first_subtplane = new TPlane(this, m_first_subpaving);
+      m_first_subtplane->compute_detections(precision, p, v, with_derivative, false);
+      *m_first_subpaving = *m_first_subtplane;
+      delete m_first_subtplane; m_first_subtplane = nullptr;
+      m_second_subtplane = new TPlane(this, m_second_subpaving);
+      m_second_subtplane->compute_detections(precision, p, v, with_derivative, false);
+      *m_second_subpaving = *m_second_subtplane;
+      delete m_second_subtplane; m_second_subtplane = nullptr;
     }
 
     else
@@ -120,8 +195,16 @@ namespace codac
         else
         {
           bisect();
-          ((TPlane*)m_first_subpaving)->compute_detections(precision, p, v, with_derivative, false);
-          ((TPlane*)m_second_subpaving)->compute_detections(precision, p, v, with_derivative, false);
+          //((TPlane*)m_first_subpaving)->compute_detections(precision, p, v, with_derivative, false);
+          //((TPlane*)m_second_subpaving)->compute_detections(precision, p, v, with_derivative, false);
+          m_first_subtplane = new TPlane(this, m_first_subpaving);
+          m_first_subtplane->compute_detections(precision, p, v, with_derivative, false);
+          *m_first_subpaving = *m_first_subtplane;
+          delete m_first_subtplane; m_first_subtplane = nullptr;
+          m_second_subtplane = new TPlane(this, m_second_subpaving);
+          m_second_subtplane->compute_detections(precision, p, v, with_derivative, false);
+          *m_second_subpaving = *m_second_subtplane;
+          delete m_second_subtplane; m_second_subtplane = nullptr;
         }
     }
 

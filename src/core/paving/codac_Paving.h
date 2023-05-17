@@ -41,10 +41,14 @@ namespace codac
        */
       Paving(const IntervalVector& box, SetValue value = SetValue::UNKNOWN);
 
+      Paving(const Paving& p);
+
       /**
        * \brief Paving destructor
        */
       ~Paving();
+
+      Paving& operator=(const Paving& p);
 
       /// @}
       /// \name Binary tree structure

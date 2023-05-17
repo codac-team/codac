@@ -38,4 +38,4 @@ You will probably need to install those prerequisites (assuming you installed `H
 
   brew install eigen
 
-The logic to follow will then be similar to `Linux <01-installation-full-linux.html>`_. See also `Information for developers <info_dev.html>`_.
+The logic to follow will then be similar to `Linux <01-installation-full-linux.html>`_. See also `Information for developers </dev/info_dev.html>`_.
