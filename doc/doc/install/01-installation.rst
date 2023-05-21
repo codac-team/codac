@@ -52,7 +52,7 @@ The :gbg:`✓` configurations are officially supported at the moment:
 +---------------+----------------+-----------------+-----------------+----------------+----------------+                +
 |Python 3.10    ||linux-py|_     ||win-py|_        ||win-py|_        ||macos-py|_     ||macos-py|_     |                |
 +---------------+----------------+-----------------+-----------------+----------------+----------------+                +
-|Python 3.11    |                ||win-py|_        ||win-py|_        ||macos-py|_     ||macos-py|_     |                |
+|Python 3.11    ||linux-py|_     ||win-py|_        ||win-py|_        ||macos-py|_     ||macos-py|_     |                |
 +---------------+----------------+-----------------+-----------------+----------------+----------------+----------------+
 
 | **Click on the links in the table to access the related installation procedures.**
