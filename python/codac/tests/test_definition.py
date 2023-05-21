@@ -8,6 +8,8 @@
 # \license   This program is distributed under the terms of
 #            the GNU Lesser General Public License (LGPL).
 
+import os
+from tempfile import gettempdir
 import unittest
 from codac import *
 import codac as codac
@@ -24,7 +26,7 @@ class TestSlice(unittest.TestCase):
     #self.assertTrue(cos(self.tube).codomain() == cos(Interval(10.,11.)))
 
   def test_Serialize(self):
-    self.tube.serialize("/tmp/x.tube")
+    self.tube.serialize(os.path.join(gettempdir(), "x.tube"))
     
   def test_Slice_class(self):
   
