@@ -15,8 +15,8 @@ using namespace codac;
 
 namespace codac2
 {
-  CtcAction::CtcAction(Ctc& ctc, const Action& s, const Action& _s)
-   : Ctc(2), _ctc(ctc), _s(s), __s(_s)
+  CtcAction::CtcAction(Ctc& ctc, const OctaSym& s)
+   : Ctc(2), _ctc(ctc), _s(s), __s(s.invert())
   {
 
   }

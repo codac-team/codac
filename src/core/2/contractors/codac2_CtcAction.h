@@ -23,13 +23,13 @@ namespace codac2
   {
     public:
 
-      CtcAction(Ctc& ctc, const Action& s, const Action& _s);
+      CtcAction(Ctc& ctc, const OctaSym& s);
       void contract(codac::IntervalVector& x);
 
     protected:
 
       codac::Ctc& _ctc;
-      const Action _s, __s;
+      const OctaSym _s, __s;
   };
 }
 

@@ -1,5 +1,5 @@
 /** 
- *  Action class
+ *  OctaSym class
  * ----------------------------------------------------------------------------
  *  \date       2023
  *  \author     Simon Rohou, Luc Jaulin
@@ -16,27 +16,33 @@ using namespace codac;
 
 namespace codac2
 {
-  Action::Action(const OctaSym& s) : _s(s), __s(s)
+  OctaSym::OctaSym(const std::vector<int>& s) : std::vector<int>(s)
   {
-
+    for(const auto& i : s)
+    {
+      assert((size_t)abs(i) > 0 && (size_t)abs(i) <= size());
+    }
   }
 
-  Action::Action(const OctaSym& s, const OctaSym& _s) : _s(s), __s(_s)
+  IntervalVector OctaSym::operator()(const IntervalVector& x) const
   {
-
-  }
-
-  IntervalVector Action::operator()(const IntervalVector& x) const
-  {
-    assert((size_t)x.size() == _s.size());
-    IntervalVector xs(_s.size());
-    for(size_t i = 0 ; i < _s.size() ; i++)
-      xs[i] = sign(_s[i])*x[abs(_s[i])-1];
+    assert((size_t)x.size() == size());
+    IntervalVector xs(size());
+    for(size_t i = 0 ; i < size() ; i++)
+      xs[i] = sign((*this)[i])*x[abs((*this)[i])-1];
     return xs;
   }
 
-  CtcAction Action::operator()(Ctc& ctc) const
+  OctaSym OctaSym::invert() const
   {
-    return CtcAction(ctc, _s, __s);
+    vector<int> inv(size());
+    for(size_t i = 0 ; i < size() ; i++)
+      inv[abs((int)(*this)[i])-1] = (abs((int)i)+1)*((*this)[i] >= 0 ? 1. : -1.);
+    return OctaSym(inv);
+  }
+
+  CtcAction OctaSym::operator()(Ctc& ctc) const
+  {
+    return CtcAction(ctc, *this);
   }
 }
