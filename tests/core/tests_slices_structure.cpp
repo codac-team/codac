@@ -402,4 +402,16 @@ TEST_CASE("Tube slices structure")
     CHECK(tube.nb_slices() == 1);
     CHECK(tube[0].slice(0)->tdomain() == Interval(8.2,8.3));
   }
+
+  SECTION("truncate_tdomain, test 5")
+  {
+    TubeVector tube(Interval(0.,10.), 1., 2);
+    CHECK(tube.nb_slices() == 10);
+    tube.truncate_tdomain(Interval(3.,6.));
+    CHECK(tube.tdomain() == Interval(3.,6.));
+    CHECK(tube.nb_slices() == 3);
+    CHECK(tube[0].slice(0)->tdomain() == Interval(3.,4.));
+    CHECK(tube[0].slice(1)->tdomain() == Interval(4.,5.));
+    CHECK(tube[0].slice(2)->tdomain() == Interval(5.,6.));
+  }
 }
