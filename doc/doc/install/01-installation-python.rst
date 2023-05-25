@@ -48,7 +48,7 @@ The :gbg:`✓` configurations are officially supported at the moment:
 +---------------+----------------+-----------------+-----------------+----------------+----------------+                +
 |Python 3.10    |:gbg:`✓`        |:gbg:`✓`         |:gbg:`✓`         |:gbg:`✓`        |:gbg:`✓`        |                |
 +---------------+----------------+-----------------+-----------------+----------------+----------------+                +
-|Python 3.11    |                |:gbg:`✓`         |:gbg:`✓`         |:gbg:`✓`        |:gbg:`✓`        |                |
+|Python 3.11    |:gbg:`✓`        |:gbg:`✓`         |:gbg:`✓`         |:gbg:`✓`        |:gbg:`✓`        |                |
 +---------------+----------------+-----------------+-----------------+----------------+----------------+----------------+
 
 If a configuration in this table does not work, please `contact us <https://github.com/codac-team/codac/issues>`_.
@@ -56,7 +56,7 @@ If a configuration in this table does not work, please `contact us <https://gith
 .. warning::
 
   | **macOS Big Sur and later (arm64):**
-  | `Rosetta <https://support.apple.com/HT211861>`_ might be necessary to run `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ (not tested).
+  | `Rosetta <https://support.apple.com/HT211861>`_ might be necessary to run `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_.
 
 .. warning::
 
@@ -65,9 +65,10 @@ If a configuration in this table does not work, please `contact us <https://gith
 
   .. code-block:: bash
 
-    sudo pip3 install --platform macosx_10_9_x86_64 --only-binary=:all: --target=/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/site-packages codac
+    sudo pip3 install --upgrade vibes # Add here any other non-binary wheels dependencies...
+    sudo pip3 install --upgrade --nodeps --platform macosx_10_9_x86_64 --only-binary=:all: --target=/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/site-packages codac
 
-  Depending on the way Python was installed, the path to specify after ``--target`` may differ, *e.g.* if Python was installed from https://www.python.org/ftp/python/3.10.4/python-3.10.4-macos11.pkg, it may be ``/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages``. Otherwise, run ``python3 -m site`` to check the ``site-packages`` full path in ``sys.path list``.
+  Depending on the way Python was installed, the path to specify after ``--target`` may differ, *e.g.* if Python was installed from https://www.python.org/ftp/python/3.10.4/python-3.10.4-macos11.pkg, it may be ``/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages``. Otherwise, run ``python3 -m site`` to check the ``site-packages`` full path in ``sys.path list``. Also, the value ``10_9`` may need to be changed to ``10_14`` (or possibly another value) for some Python versions.
 
 .. note::
 

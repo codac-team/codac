@@ -46,7 +46,7 @@ In case you prefer the latest development version, Codac can be installed by com
 Requirements
 ^^^^^^^^^^^^
 
-Codac uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first. The last version of IBEX is maintained on `this unofficial development repository <https://github.com/lebarsfa/ibex-lib/tree/actions>`_:
+Codac uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first. The last version of IBEX is maintained on `this unofficial development repository <https://github.com/lebarsfa/ibex-lib/tree/master>`_:
 
 .. code-block:: bash
 
@@ -54,7 +54,7 @@ Codac uses several features of the `IBEX library <http://www.ibex-lib.org/doc/in
   sudo apt-get install -y g++ gcc flex bison cmake git libeigen3-dev
   
   # Download IBEX sources from GitHub
-  git clone -b actions https://github.com/lebarsfa/ibex-lib.git
+  git clone -b master https://github.com/lebarsfa/ibex-lib.git
   
   # Configure IBEX before installation
   cd ibex-lib
