@@ -1251,7 +1251,7 @@ namespace codac
       assert(tdomain().is_superset(t));
 
       // The first slice is the slice containing t.lb()
-      while(!m_first_slice->tdomain().contains(t.lb()) || !valid_tdomain(t & m_first_slice->tdomain()))
+      while(!m_first_slice->tdomain().contains(t.lb()) || (t & m_first_slice->tdomain()).is_degenerated())
       {
         Slice *s_next = m_first_slice->next_slice();
         delete m_first_slice;
@@ -1262,7 +1262,7 @@ namespace codac
 
       // After this iteration, the last slice will be the one containing t.ub()
       Slice *s_last = last_slice();
-      while(!s_last->tdomain().contains(t.ub()) || !valid_tdomain(t & s_last->tdomain()))
+      while(!s_last->tdomain().contains(t.ub()) || (t & s_last->tdomain()).is_degenerated())
       {
         Slice *s_prev = s_last->prev_slice();
         delete s_last;
