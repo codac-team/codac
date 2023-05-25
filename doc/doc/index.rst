@@ -359,7 +359,7 @@ Contributors
   * `Peter Franek <http://www.cs.cas.cz/~franek/>`_
   * `Gilles Trombettoni <https://www.lirmm.fr/~trombetton/>`_
   * Verlein Radwan
-  * `Mohamed Saad Ibn Seddik <https://msis.github.io/>`_
+  * Joris Tillet
 
 
 Main related publications
