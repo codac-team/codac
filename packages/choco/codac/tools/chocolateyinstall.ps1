@@ -17,9 +17,9 @@ $root = Join-Path $installDir "codac"
 New-Item -ItemType Directory -Force -Path $root | Out-Null
 
 if (!$pp['url']) { 
-	$url = 'https://github.com/lebarsfa/codac/releases/download/codac-1/codac_x86_mingw$MinGWMVer.zip'
+	$url = 'https://github.com/codac-team/codac/releases/download/v1/codac_x86_mingw11.zip'
 	$checksum = 'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE'
-	$url64 = 'https://github.com/lebarsfa/codac/releases/download/codac-1/codac_x64_mingw$MinGWMVer.zip'
+	$url64 = 'https://github.com/codac-team/codac/releases/download/v1/codac_x64_mingw11.zip'
 	$checksum64 = 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'
 	$packageArgs = @{
 		packageName   = $env:ChocolateyPackageName

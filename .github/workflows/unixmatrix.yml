@@ -137,7 +137,8 @@ jobs:
         cd packages/choco
         sed_param=s/\<version\>1\<\\/version\>/\<version\>${PACKAGE_VERSION}\<\\/version\>/
         sed -i "$sed_param" codac/codac.nuspec
-        sed_param=s/codac-1/codac-${PACKAGE_VERSION}/
+        sed_param=s/download\\/v1\\/codac/download\\/v${PACKAGE_VERSION}\\/codac/
+        sed -i "$sed_param" codac/codac.nuspec
         sed -i "$sed_param" codac/tools/chocolateyinstall.ps1
         mv -f codac codac.$PACKAGE_VERSION
         cd codac.$PACKAGE_VERSION
