@@ -26,12 +26,6 @@ namespace codac2
   class Action
   {
 
-    protected:
-
-      static codac::Interval sign(int a)
-      {
-        return (a > 0) ? 1 : ((a < 0) ? -1 : 0);
-      }
   };
 
   /**
@@ -45,7 +39,11 @@ namespace codac2
       CtcAction operator()(codac::Ctc& ctc) const;
       codac::IntervalVector operator()(const codac::IntervalVector& x) const;
       OctaSym invert() const;
+
+      friend std::ostream& operator<<(std::ostream& str, const OctaSym& s);
   };
+  
+  OctaSym operator*(const OctaSym& s1, const OctaSym& s2);
 }
 
 #endif

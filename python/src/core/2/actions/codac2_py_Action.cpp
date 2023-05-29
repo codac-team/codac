@@ -53,6 +53,8 @@ void export_Action(py::module& m)
         return OctaSym(s);
       }
     }))
+    
+    .def(py::self == py::self)
 
     .def("__call__", [](OctaSym& s,const codac::IntervalVector& x) { return s(x); }, 
       "todo",
@@ -64,6 +66,10 @@ void export_Action(py::module& m)
 
     .def("invert", &OctaSym::invert,
       "todo")
+
+    .def(py::self * py::self)
+
+    .def("__repr__", [](const OctaSym& s) { ostringstream str; str << s; return str.str(); })
   ;
 
   // Automatic cast from lists to OctaSym
