@@ -37,8 +37,8 @@ void export_Action(py::module& m)
       py::buffer_info info = s.request();
 
       // Some sanity checks...
-      if(info.format != py::format_descriptor<int>::format())
-        throw std::runtime_error("Incompatible format: expected a int array");
+      // TEMPORARILY REMOVED (not supported on Windows): if(info.format != py::format_descriptor<int>::format())
+      // TEMPORARILY REMOVED (not supported on Windows):   throw std::runtime_error("Incompatible format: expected a int array");
 
       //if(info.ndim == 1 ||                            // e.g.: a=np.array([1,0,0])
       //   (info.ndim == 2 && (int)info.shape[1] == 1)) // e.g.: a=np.array([[1],[0],[0]]) 
