@@ -206,9 +206,10 @@ namespace codac
        *
        * \param sort_by_size (optional) if `true` then the subsets will be
        *                     sort by the number of boxes they are made of
+       * \param val the value of the leaves defining the connected items
        * \return the set of connected subsets
        */
-      std::vector<ConnectedSubset> get_connected_subsets(bool sort_by_size = false) const;
+      std::vector<ConnectedSubset> get_connected_subsets(bool sort_by_size = false, SetValue val = SetValue::UNKNOWN | SetValue::IN) const;
 
       /// @}
 

@@ -237,12 +237,11 @@ namespace codac
   // todo:   return x1->get_items().size() > x2->get_items().size();
   // todo: }
 
-  vector<ConnectedSubset> Paving::get_connected_subsets(bool sort_by_size) const
+  vector<ConnectedSubset> Paving::get_connected_subsets(bool sort_by_size, SetValue val) const
   {
     reset_flags();
 
     const Paving *p;
-    SetValue val = SetValue::UNKNOWN | SetValue::IN;
     vector<ConnectedSubset> v_connected_subsets;
 
     while((p = get_first_leaf(val, true)))

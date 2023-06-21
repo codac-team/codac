@@ -31,5 +31,8 @@ void export_Set(py::module& m)
     .value("OUT", SetValue::OUT)
     .value("IN", SetValue::IN)
     .value("PENUMBRA", SetValue::PENUMBRA)
+
+    .def("__or__",  [](SetValue v1, SetValue v2) { return v1|v2; })
+    .def("__and__", [](SetValue v1, SetValue v2) { return v1&v2; })
   ;
 }

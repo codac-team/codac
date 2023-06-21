@@ -14,10 +14,9 @@
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
 
-#include "codac_Set.h"
-#include "codac_Paving.h"
+#include "codac_ConnectedSubset.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
-#include "codac_py_Paving_docs.h"
+#include "codac_py_ConnectedSubset_docs.h"
 
 using namespace std;
 using namespace codac;
@@ -25,14 +24,13 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-void export_Paving(py::module& m)
+void export_ConnectedSubset(py::module& m)
 {
-  py::class_<Paving> paving(m, "Paving", PAVING_MAIN);
-  paving
+  py::class_<ConnectedSubset> connectedsubset(m, "ConnectedSubset", CONNECTEDSUBSET_MAIN);
+  connectedsubset
 
-    .def("get_connected_subsets", &Paving::get_connected_subsets,
-      PAVING_VECTORCONNECTEDSUBSET_GET_CONNECTED_SUBSETS_BOOL_SETVALUE,
-      "sort_by_size"_a=false, "val"_a)
+    .def("get_boxes", &ConnectedSubset::get_boxes,
+      CONNECTEDSUBSET_VECTORINTERVALVECTOR_GET_BOXES)
 
   ;
 }

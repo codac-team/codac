@@ -78,9 +78,10 @@ void export_VIBesFigPaving(py::module& m);
 
 void export_geometry(py::module& m, py::class_<Ctc, pyCtc>& ctc, py::class_<ibex::Sep, pySep>& sep);
 
-
-void export_Paving(py::module& m);
 void export_Set(py::module& m);
+void export_Paving(py::module& m);
+void export_SIVIAPaving(py::module& m);
+void export_ConnectedSubset(py::module& m);
 
 void export_DataLoader(py::module& m);
 void export_TPlane(py::module& m);
@@ -144,7 +145,9 @@ PYBIND11_MODULE(core, m)
   export_geometry(m, ctc, sep);
 
   export_Paving(m);
+  export_SIVIAPaving(m);
   export_Set(m);
+  export_ConnectedSubset(m);
 
   export_DataLoader(m);
   export_TPlane(m);

@@ -97,7 +97,9 @@
       src/core/geometry/codac_py_geometry.cpp
       
       src/core/paving/codac_py_Paving.cpp
+      src/core/paving/codac_py_SIVIAPaving.cpp
       src/core/paving/codac_py_Set.cpp
+      src/core/paving/codac_py_ConnectedSubset.cpp
 
       src/core/sivia/codac_py_sivia.cpp
 
