@@ -14,6 +14,7 @@
 
 #include <functional>
 #include "codac_IntervalMatrix.h"
+#include "codac_Vector.h"
 #include "codac_Set.h"
 
 namespace codac
@@ -55,6 +56,14 @@ namespace codac
        * \return `true` in case of strict inclusion
        */
       bool is_strictly_included_in_paving() const;
+
+      /**
+       * \brief Tests if p is contained in the connected subset
+       *
+       * \param p vector to be tested
+       * \return `true` if p is inside this
+       */
+      bool contains(const Vector& p) const;
 
       /**
        * \brief Returns a const pointer to the paving structure
