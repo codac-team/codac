@@ -54,11 +54,11 @@
 
 # Compilation
 
-  add_executable(${PROJECT_NAME} main.cpp)
+  add_executable(${PROJECT_NAME} main_codac2.cpp)
   target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES} Ibex::ibex ${CODAC_LIBRARIES})
 
-  set(PROJECT_NAME ${PROJECT_NAME}_foreach_dt)
-  add_executable(${PROJECT_NAME} main_foreach_dt.cpp)
-  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES} Ibex::ibex ${CODAC_LIBRARIES})
+  #set(PROJECT_NAME ${PROJECT_NAME}_foreach_dt)
+  #add_executable(${PROJECT_NAME} main_foreach_dt.cpp)
+  #target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
+  #target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES} Ibex::ibex ${CODAC_LIBRARIES})

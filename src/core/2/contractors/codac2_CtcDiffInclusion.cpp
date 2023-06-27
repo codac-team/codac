@@ -270,7 +270,7 @@ namespace codac2
 
     for(auto& sx : x) // sx is a Slice<IParals> of the Tube<IParals> x
     {
-      if(sx.is_gate()) // the slace may be on a degenerated temporal domain, i.e. a gate
+      if(sx.is_gate()) // the slice may be on a degenerated temporal domain, i.e. a gate
         continue;
       if (sx.tslice().t0_tf().is_unbounded()) continue;
 

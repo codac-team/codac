@@ -20,12 +20,16 @@
 #include "codac_TrajectoryVector.h"
 #include "codac_Exception.h"
 #include "codac2_AbstractSlice.h"
+#include "codac_BoolInterval.h"
+
+#define EPSILON_CONTAINS ibex::next_float(0.) * 1000. //!< epsilon limit of the contains() algorithm
 
 namespace codac2
 {
   using codac::Interval;
   using codac::IntervalVector;
   using codac::TrajectoryVector;
+  using codac::BoolInterval;
 
   class AbstractSlicedTube;
   class TSlice;
@@ -98,9 +102,63 @@ namespace codac2
         return codomain().is_unbounded();
       }
 
-      bool contains(const TrajectoryVector& value) const
+      BoolInterval contains(const TrajectoryVector& x) const
       {
-        return true; // todo
+        assert(t0_tf().is_subset(x.tdomain()));
+
+        /*IntervalVector traj_tdomain = x(t0_tf());
+        // Using x(Interval(double)) for reliable evaluation:
+        IntervalVector traj_input = x(Interval(t0_tf().lb()));
+        IntervalVector traj_output = x(Interval(t0_tf().ub()));
+
+        if(_codomain.intersects(traj_tdomain) == BoolInterval::NO
+        || input_gate().intersects(traj_input) == BoolInterval::NO
+        || output_gate().intersects(traj_output) == BoolInterval::NO)
+          return BoolInterval::NO;
+
+        else
+        {
+          if(!input_gate().is_superset(traj_input) || !output_gate().is_superset(traj_output))
+            return BoolInterval::MAYBE;
+
+          else if(_codomain.is_superset(traj_tdomain))
+            return BoolInterval::YES;
+
+          else // too much pessimism for the trajectory evaluation on t0_tf()
+          {
+            // Bisections are performed to reach an accurate evaluation
+
+            std::list<Interval> s_subtdomains;
+            s_subtdomains.push_front(t0_tf());
+
+            while(!s_subtdomains.empty())
+            {
+              Interval t = s_subtdomains.front();
+              s_subtdomains.pop_front();
+
+              IntervalVector thinner_eval = x(t);
+
+              if(!_codomain.intersects(thinner_eval))
+              {
+                return BoolInterval::NO;
+              }
+
+              else if(!_codomain.is_superset(thinner_eval))
+              {
+                if(t.diam() < EPSILON_CONTAINS)
+                  return BoolInterval::MAYBE;
+
+                s_subtdomains.push_front(Interval(t.lb(), t.lb() + t.diam() / 2.));
+                s_subtdomains.push_front(Interval(t.lb() + t.diam() / 2., t.ub()));
+              }
+            }
+
+            return BoolInterval::YES;
+          }
+        }*/
+
+        // todo
+        return BoolInterval::YES;
       }
 
       const std::shared_ptr<Slice<T>> prev_slice_ptr() const
@@ -133,7 +191,7 @@ namespace codac2
       T input_gate() const
       {
         T gate = codomain();
-        if(prev_slice_ptr())
+        if(!is_gate() && prev_slice_ptr())
           gate &= prev_slice_ptr()->codomain();
         return gate;
       }
@@ -141,14 +199,15 @@ namespace codac2
       T output_gate() const
       {
         T gate = codomain();
-        if(next_slice_ptr())
+        if(!is_gate() && next_slice_ptr())
           gate &= next_slice_ptr()->codomain();
         return gate;
       }
 
       void set(const T& x)
       {
-        assert((size_t)codomain().size() == size());
+        if constexpr(!std::is_same<T,Interval>::value)
+          assert((size_t)codomain().size() == size());
         _codomain = x;
         if(is_gate())
           _codomain &= prev_slice_ptr()->codomain() & next_slice_ptr()->codomain();
@@ -160,6 +219,13 @@ namespace codac2
         _codomain[i] = xi;
         if(is_gate())
           _codomain[i] &= prev_slice_ptr()->codomain()[i] & next_slice_ptr()->codomain()[i];
+      }
+
+      const Slice<T>& inflate(double rad)
+      {
+        assert(rad >= 0. && "cannot inflate negative value");
+        _codomain.inflate(rad);
+        return *this;
       }
 
       friend std::ostream& operator<<(std::ostream& os, const Slice& x)
