@@ -47,7 +47,7 @@ namespace codac
     }
   }
 
-  void SIVIAPaving::compute(Ctc &ctc, float precision)
+  void SIVIAPaving::compute(Ctc& ctc, float precision)
   {
     assert(precision > 0.);
     assert(ctc.nb_var == box().size());
@@ -58,7 +58,7 @@ namespace codac
     if(result.is_empty())
       set_value(SetValue::OUT);
 
-    else if(result.max_diam() < precision)
+    else if(box().max_diam() < precision)
       set_value(SetValue::UNKNOWN);
 
     else
