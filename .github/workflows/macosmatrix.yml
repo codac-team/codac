@@ -51,7 +51,8 @@ jobs:
       shell: bash
     - run: brew install eigen
       if: runner.os=='macOS'
-    - run: brew install doxygen ; brew install graphviz ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects
+      # doxygen v1.9.7 causes issues...
+    - run: wget https://github.com/Homebrew/homebrew-core/raw/d2267b9f2ad247bc9c8273eb755b39566a474a70/Formula/doxygen.rb ; brew reinstall ./doxygen.rb ; brew pin doxygen ; brew install graphviz ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects
       if: runner.os=='macOS'
     - run: |
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20230510/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
@@ -66,7 +67,8 @@ jobs:
         cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
         cd ..
       shell: bash
-    - run: pip install *.whl ; python -c "import sys; print(sys.version)" ; python examples/tuto/01_getting_started/01_getting_started.py ; pip install numpy ; python -m unittest discover codac.tests
+      # numpy v1.25.0 causes issues...
+    - run: pip install *.whl ; python -c "import sys; print(sys.version)" ; python examples/tuto/01_getting_started/01_getting_started.py ; pip install "numpy<1.25" ; python -m unittest discover codac.tests
       shell: bash
       if: (runner.os=='macOS')&&(matrix.cfg.arch=='x86_64')
     - uses: xresloader/upload-to-github-release@v1
