@@ -479,10 +479,10 @@ namespace codac2
   };
 
   codac::Tube to_codac1(const codac2::Tube<Interval>& x);
-  codac::TubeVector to_codac1(const codac2::Tube<IntervalVector>& x);
+  codac::TubeVector to_codac1(const codac2::Tube<codac::IntervalVector>& x);
   codac::TubeVector to_codac1_poly(const codac2::Tube<codac::ConvexPolygon>& x);
   codac2::Tube<Interval> to_codac2(const codac::Tube& x);
-  codac2::Tube<IntervalVector> to_codac2(const codac::TubeVector& x);
+  codac2::Tube<codac::IntervalVector> to_codac2(const codac::TubeVector& x);
   codac2::Tube<codac::ConvexPolygon> to_codac2_poly(const codac::TubeVector& x);
 
 

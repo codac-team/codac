@@ -213,7 +213,7 @@ namespace codac
 
       /// @}
 
-    protected:
+    public:
 
       mutable bool m_flag = false; //!< optional flag, can be used by search algorithms
       Paving *m_root = nullptr; //!< pointer to the root

@@ -179,6 +179,9 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/sivia/codac_sivia.h
 
                   # Files related to codac2
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_Interval.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_IntervalMatrix.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_IntervalVector.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractConstTube.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractSlice.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractSlice.h
@@ -193,12 +196,15 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_Tube.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TubeComponent.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TubeEvaluation.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/paving/codac2_Paving.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcLinobs.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcLinobs.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/variables/codac2_Matrix.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/variables/codac2_Vector.h
                   # Actions
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/codac2_Action.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/codac2_Action.h
@@ -233,9 +239,12 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/tools
                                           ${CMAKE_CURRENT_SOURCE_DIR}/sivia
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/paving
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/)
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/variables/)
   target_link_libraries(codac PUBLIC Ibex::ibex)
   
 

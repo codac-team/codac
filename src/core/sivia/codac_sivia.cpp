@@ -32,8 +32,8 @@ namespace codac
     return v;
   }
 
-  map<SetValue,list<IntervalVector>> SIVIA(
-    const IntervalVector& x0, Ctc& ctc, float precision, bool regular_paving, 
+  map<SetValue,list<IntervalVector>> _SIVIA(
+    const IntervalVector& x0, const IntervalVector* y0, Ctc& ctc, float precision, bool regular_paving, 
     bool display_result, const string& fig_name, bool return_result, const SetColorMap& color_map)
   {
     assert(x0.size() >= 2);
@@ -64,11 +64,11 @@ namespace codac
       if(!fig_name.empty())
         vibes::newFigure(fig_name);
 
-      vibes::drawBox(x0);
+      vibes::drawBox(x0.subvector(0,1));
       vibes::newGroup("boxes_out", cm.at(SetValue::OUT));
       vibes::newGroup("boxes_unknown", cm.at(SetValue::UNKNOWN));
       
-      vibes::drawBox(x0, vibesParams("figure", fig_name));
+      vibes::drawBox(x0.subvector(0,1), vibesParams("figure", fig_name));
       vibes::axisAuto();
     }
 
@@ -80,7 +80,7 @@ namespace codac
     };
 
     ibex::LargestFirst bisector(0.);
-    deque<IntervalVector> stack = { x0 };
+    deque<IntervalVector> stack = { y0 ? cart_prod(x0,*y0) : x0 };
     int k = 0;
 
     clock_t t_start = clock();
@@ -128,7 +128,8 @@ namespace codac
         {
           IntervalVector& x_remaining = regular_paving ? x_before_ctc : x;
 
-          if(x_remaining.max_diam() < precision)
+          if((!y0 && x_remaining.max_diam() < precision) ||
+             ( y0 && x_remaining.subvector(0,x0.size()-1).max_diam() < precision))
           {
             if(display_result)
             {
@@ -142,9 +143,19 @@ namespace codac
 
           else
           {
-            pair<IntervalVector,IntervalVector> p = bisector.bisect(x_remaining);
-            stack.push_back(p.first);
-            stack.push_back(p.second);
+            if(y0)
+            {
+              pair<IntervalVector,IntervalVector> p = bisector.bisect(x_remaining.subvector(0,x0.size()-1));
+              stack.push_back(cart_prod(p.first,*y0));
+              stack.push_back(cart_prod(p.second,*y0));
+            }
+
+            else
+            {
+              pair<IntervalVector,IntervalVector> p = bisector.bisect(x_remaining);
+              stack.push_back(p.first);
+              stack.push_back(p.second);
+            }
           }
         }
     }
@@ -158,6 +169,20 @@ namespace codac
     }
 
     return boxes;
+  }
+
+  map<SetValue,list<IntervalVector>> SIVIA(
+    const IntervalVector& x0, const IntervalVector& y0, Ctc& ctc, float precision, bool regular_paving, 
+    bool display_result, const string& fig_name, bool return_result, const SetColorMap& color_map)
+  {
+    return _SIVIA(x0, &y0, ctc, precision, regular_paving, display_result, fig_name, return_result, color_map);
+  }
+
+  map<SetValue,list<IntervalVector>> SIVIA(
+    const IntervalVector& x0, Ctc& ctc, float precision, bool regular_paving, 
+    bool display_result, const string& fig_name, bool return_result, const SetColorMap& color_map)
+  {
+    return _SIVIA(x0, nullptr, ctc, precision, regular_paving, display_result, fig_name, return_result, color_map);
   }
 
   map<SetValue,list<IntervalVector>> SIVIA(
@@ -195,7 +220,7 @@ namespace codac
       if(!fig_name.empty())
         vibes::newFigure(fig_name);
 
-      vibes::drawBox(x0);
+      vibes::drawBox(x0.subvector(0,1));
       vibes::newGroup("boxes_out", cm.at(SetValue::OUT));
       vibes::newGroup("boxes_unknown", cm.at(SetValue::UNKNOWN));
       vibes::newGroup("boxes_in", cm.at(SetValue::IN));
