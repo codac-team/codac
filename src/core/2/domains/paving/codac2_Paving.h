@@ -75,10 +75,10 @@ namespace codac2
         return hull;
       }
 
-      std::list<std::reference_wrapper<const IntervalVector<N>>> boxes_list() const
+      std::list<std::reference_wrapper<const IntervalVector<N>>> boxes_list(const IntervalVector<N>& intersect = IntervalVector<2>()) const
       {
         std::list<std::reference_wrapper<const IntervalVector<N>>> l;
-        boxes_list_push(l);
+        boxes_list_push(l, intersect);
         return l;
       }
 
@@ -91,9 +91,9 @@ namespace codac2
 
     protected:
 
-      void boxes_list_push(std::list<std::reference_wrapper<const IntervalVector<N>>>& l) const
+      void boxes_list_push(std::list<std::reference_wrapper<const IntervalVector<N>>>& l, const IntervalVector<N>& intersect = IntervalVector<2>()) const
       {
-        if(is_leaf() && !_x.is_empty())
+        if(is_leaf() && !_x.is_empty() && _x.intersects(intersect))
           l.push_back(std::cref(_x));
         else
         {

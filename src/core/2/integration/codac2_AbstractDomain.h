@@ -27,7 +27,7 @@ namespace codac2
     public:
 
       AbstractDomain();
-      IntervalVector box() const;
+      codac::IntervalVector box() const;
 
     protected:
 

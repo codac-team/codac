@@ -13,6 +13,8 @@
 #define __CODAC2_INTERVAL_H__
 
 #include <codac_Interval.h>
+#include <Eigen/Core>
+#include <Eigen/Dense>
 
 namespace codac2
 {

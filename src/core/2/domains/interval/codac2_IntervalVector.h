@@ -77,9 +77,17 @@ namespace codac2
       bool is_empty() const
       {
         for(size_t i = 0 ; i < N ; i++)
-          if((*this)(i,0).is_empty())
+          if((*this)[i].is_empty())
             return true;
         return false;
+      }
+
+      bool intersects(const IntervalVector<N>& x) const
+      {
+        for(size_t i = 0 ; i < N ; i++)
+          if(!(*this)[i].intersects(x[i]))
+            return false;
+        return true;
       }
 
       std::pair<IntervalVector<N>,IntervalVector<N>> bisect(float ratio) const
