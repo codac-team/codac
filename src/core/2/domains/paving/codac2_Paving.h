@@ -19,24 +19,24 @@
 
 namespace codac2
 {
-  template<int N>
+  template<int N=Dynamic>
   class Paving : public std::enable_shared_from_this<Paving<N>>
   {
     public:
 
-      Paving()
-       : _x(IntervalVector<N>())
+      Paving(size_t n)
+       : _x(IntervalVector_<N>(n))
       {
 
       }
 
-      Paving(const IntervalVector<N>& x)
+      Paving(const IntervalVector_<N>& x)
        : _x(x)
       {
 
       }
 
-      const IntervalVector<N>& box() const
+      const IntervalVector_<N>& box() const
       {
         return _x;
       }
@@ -65,19 +65,19 @@ namespace codac2
         _right = std::make_shared<Paving>(p.second);
       }
 
-      IntervalVector<N> hull_box() const
+      IntervalVector_<N> hull_box() const
       {
         if(is_leaf())
           return _x;
-        auto hull = IntervalVector<N>::empty_set();
+        auto hull = IntervalVector_<N>::empty_set();
         if(_left) hull |= _left->hull_box();
         if(_right) hull |= _right->hull_box();
         return hull;
       }
 
-      std::list<std::reference_wrapper<const IntervalVector<N>>> boxes_list(const IntervalVector<N>& intersect = IntervalVector<2>()) const
+      std::list<std::reference_wrapper<const IntervalVector_<N>>> boxes_list(const IntervalVector_<N>& intersect = IntervalVector_<N>()) const
       {
-        std::list<std::reference_wrapper<const IntervalVector<N>>> l;
+        std::list<std::reference_wrapper<const IntervalVector_<N>>> l;
         boxes_list_push(l, intersect);
         return l;
       }
@@ -91,7 +91,7 @@ namespace codac2
 
     protected:
 
-      void boxes_list_push(std::list<std::reference_wrapper<const IntervalVector<N>>>& l, const IntervalVector<N>& intersect = IntervalVector<2>()) const
+      void boxes_list_push(std::list<std::reference_wrapper<const IntervalVector_<N>>>& l, const IntervalVector_<N>& intersect = IntervalVector_<N>()) const
       {
         if(is_leaf() && !_x.is_empty() && _x.intersects(intersect))
           l.push_back(std::cref(_x));
@@ -115,7 +115,7 @@ namespace codac2
 
     public: // todo
 
-      IntervalVector<N> _x;
+      IntervalVector_<N> _x;
       std::shared_ptr<Paving> _left = nullptr, _right = nullptr;
   };
 

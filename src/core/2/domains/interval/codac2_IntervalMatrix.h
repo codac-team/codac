@@ -20,7 +20,7 @@
 
 namespace codac2
 {
-  template<size_t NbRows,size_t NbCols>
+  template<int NbRows,int NbCols>
   class IntervalMatrix : public Eigen::Matrix<Interval,NbRows,NbCols>
   {
     public:

@@ -18,7 +18,7 @@
 
 namespace codac2
 {
-  template<size_t R,size_t C>
+  template<int R,int C>
   class Matrix : public Eigen::Matrix<double,R,C>
   {
     public:

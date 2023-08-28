@@ -20,36 +20,40 @@
 
 namespace codac2
 {
-  template<size_t N>
-  class Vector : public Eigen::Matrix<double,N,1>
+  using Eigen::Dynamic;
+
+  template<int N=Dynamic>
+  class Vector_ : public Eigen::Matrix<double,N,1>
   {
     public:
     
-      Vector()
+      Vector_()
       {
         
       }
 
-      Vector(double l) : Vector({ l })
+      Vector_(size_t n)
+        : Eigen::Matrix<double,N,1>(n)
       {
-      
+        assert(N == Dynamic || N == n);
       }
 
-      Vector(std::initializer_list<double> l)
+      Vector_(std::initializer_list<double> l) : Eigen::Matrix<double,N,1>(l.size())
       {
+        assert(N == l.size() || N == -1);
         size_t i = 0;
         for(double li : l)
           (*this)(i++,0) = li;
       }
     
       template<typename OtherDerived>
-      Vector(const Eigen::MatrixBase<OtherDerived>& other)
+      Vector_(const Eigen::MatrixBase<OtherDerived>& other)
           : Eigen::Matrix<double,N,1>(other)
       { }
 
-      // This method allows you to assign Eigen expressions to MyVectorType
+      // This method allows you to assign Eigen expressions to MyVector_Type
       template<typename OtherDerived>
-      Vector& operator=(const Eigen::MatrixBase<OtherDerived>& other)
+      Vector_& operator=(const Eigen::MatrixBase<OtherDerived>& other)
       {
         this->Eigen::Matrix<double,N,1>::operator=(other);
         return *this;
@@ -60,28 +64,52 @@ namespace codac2
         return Matrix<N,N>(Eigen::Matrix<double,N,N>(this->asDiagonal()));
       }
 
-      static Vector<N> zeros()
+      static Vector_<N> zeros()
       {
-        Vector<N> v;
+        Vector_<N> v;
         return v;
       }
   };
 
-  template<size_t N>
-  Matrix<N,N> diag(const Vector<N> v)
+  template<int N>
+  Matrix<N,N> diag(const Vector_<N> v)
   {
     return v.as_diag();
   }
 
-  template<size_t N>
-  Vector<N> to_codac2(const codac::Vector& x)
+  template<int N>
+  Vector_<N> to_codac2(const codac::Vector& x)
   {
     assert(x.size() == N);
-    Vector<N> x_;
+    Vector_<N> x_;
     for(size_t i = 0 ; i < N ; i++)
       x_[i] = x[i];
     return x_;
   }
+
+  class Vector : public Vector_<>
+  {
+    public:
+
+      explicit Vector(int n)
+        : Vector_<>(n)
+      { }
+
+      Vector(const Vector_<>& x)
+        : Vector_<>(x)
+      { }
+      
+      explicit Vector(std::initializer_list<double> l)
+        : Vector_<>(l)
+      { }
+      
+      template<int N>
+      explicit Vector(const Vector_<N>& v)
+        : Vector_<>(v)
+      {
+
+      }
+  };
 
 } // namespace codac
 

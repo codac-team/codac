@@ -16,8 +16,6 @@
 
 namespace codac2
 {
-  using codac::IntervalVector;
-
   /**
    * \class AbstractDomain
    * \brief ...

@@ -24,7 +24,6 @@
 namespace codac2
 {
   using codac::Interval;
-  using codac::IntervalVector;
   using codac::TrajectoryVector;
 
   class TSlice;
