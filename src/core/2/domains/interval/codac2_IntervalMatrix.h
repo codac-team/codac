@@ -21,7 +21,7 @@
 namespace codac2
 {
   template<int NbRows,int NbCols>
-  class IntervalMatrix : public Eigen::Matrix<Interval,NbRows,NbCols>
+  class IntervalMatrix_ : public Eigen::Matrix<Interval,NbRows,NbCols>
   {
     public:
 
