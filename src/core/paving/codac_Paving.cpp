@@ -21,9 +21,21 @@ namespace codac
   // Basics
   
   Paving::Paving(const IntervalVector& box, SetValue value)
-    : Set(box, value), m_root(this)
+    : Set(box, value), m_flag(false), m_root(this), m_first_subpaving(nullptr), m_second_subpaving(nullptr)
   {
 
+  }
+  
+  Paving::Paving(const Paving& p)
+    : Set(p), m_flag(p.m_flag), m_root(p.m_root), m_first_subpaving(nullptr), m_second_subpaving(nullptr)
+  {
+    if(p.m_first_subpaving)
+    {
+      m_first_subpaving = new Paving(p.m_first_subpaving->m_box, p.m_first_subpaving->m_value);
+      *m_first_subpaving = *p.m_first_subpaving;
+      m_second_subpaving = new Paving(p.m_second_subpaving->m_box, p.m_second_subpaving->m_value);
+      *m_second_subpaving = *p.m_second_subpaving;
+    }
   }
 
   Paving::~Paving()
@@ -33,6 +45,23 @@ namespace codac
       delete m_first_subpaving;
       delete m_second_subpaving;
     }
+  }
+  
+  Paving& Paving::operator=(const Paving& p)
+  {
+    Set::operator = (p);      
+    m_flag = p.m_flag; 
+    m_root = p.m_root;
+    m_first_subpaving = nullptr;
+    m_second_subpaving = nullptr;
+    if(p.m_first_subpaving)
+    {
+      m_first_subpaving = new Paving(p.m_first_subpaving->m_box, p.m_first_subpaving->m_value);
+      *m_first_subpaving = *p.m_first_subpaving;
+      m_second_subpaving = new Paving(p.m_second_subpaving->m_box, p.m_second_subpaving->m_value);
+      *m_second_subpaving = *p.m_second_subpaving;
+    }
+    return *this;
   }
 
   // Binary tree structure
@@ -208,12 +237,11 @@ namespace codac
   // todo:   return x1->get_items().size() > x2->get_items().size();
   // todo: }
 
-  vector<ConnectedSubset> Paving::get_connected_subsets(bool sort_by_size) const
+  vector<ConnectedSubset> Paving::get_connected_subsets(bool sort_by_size, SetValue val) const
   {
     reset_flags();
 
     const Paving *p;
-    SetValue val = SetValue::UNKNOWN | SetValue::IN;
     vector<ConnectedSubset> v_connected_subsets;
 
     while((p = get_first_leaf(val, true)))

@@ -14,6 +14,7 @@
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
 
+#include "codac_Set.h"
 #include "codac_Paving.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac_py_Paving_docs.h"
@@ -26,5 +27,12 @@ using namespace pybind11::literals;
 
 void export_Paving(py::module& m)
 {
-  py::class_<Paving> tplane(m, "Paving", PAVING_MAIN);
+  py::class_<Paving> paving(m, "Paving", PAVING_MAIN);
+  paving
+
+    .def("get_connected_subsets", &Paving::get_connected_subsets,
+      PAVING_VECTORCONNECTEDSUBSET_GET_CONNECTED_SUBSETS_BOOL_SETVALUE,
+      "sort_by_size"_a=false, "val"_a)
+
+  ;
 }

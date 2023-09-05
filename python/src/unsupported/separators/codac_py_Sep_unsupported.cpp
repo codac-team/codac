@@ -26,7 +26,6 @@ using namespace pybind11::literals;
 #include "ibex_Sep.h"
 
 #include "codac_QInterProjF.h"
-#include "codac_SepTransform.h"
 #include "codac_SepFixPoint.h"
 #include "codac_SepProj.h"
 #include "codac_SepCtcPairProj.h"
@@ -92,12 +91,6 @@ void export_unsupported_sep(py::module& m, py::class_<Sep, pySep>& sep){
   //         py::arg("sep"), py::arg("y_init"), py::arg("prec") )
   //   .def("separate", &SepCtcPairProj::separate, py::call_guard<py::gil_scoped_release>())
   // ;
-
-  // Export SepTransform
-  py::class_<SepTransform>(m, "SepTransform", sep)
-    .def(py::init<ibex::Sep&, ibex::Function&, ibex::Function& >(), py::keep_alive<1,2>(), py::keep_alive<1,3>(), py::keep_alive<1,4>())
-    .def("separate", &SepTransform::separate, py::call_guard<py::gil_scoped_release>())
-  ;
 
   // // Export SepFixPoint
   // py::class_<SepFixPoint>(m, "SepFixPoint", sep)

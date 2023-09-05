@@ -26,7 +26,7 @@ def pySIVIA(X0, ops, epsilon, figure_name='', draw_boxes=True, save_result=True,
   print('\nWarning: pySIVIA(..) is deprecated and has been replaced by SIVIA(..).')
   print('More information can be found with help(SIVIA).\n')
   print('Example of use:\n')
-  print('  SIVIA(x0, sep, 0.05, display_result=True, fig_name="SIVIA", return_result=True, color_map={SetValue.IN:"k[r]", SetValue.OUT:"k[b]", SetValue.UNKNOWN:"k[y]"})\n')
+  print('  SIVIA(x0, sep, 0.05, regular_paving=False, display_result=True, fig_name="SIVIA", return_result=True, color_map={SetValue.IN:"k[r]", SetValue.OUT:"k[b]", SetValue.UNKNOWN:"k[y]"})\n')
 
   cmap = {}
   if color_in:
@@ -36,4 +36,4 @@ def pySIVIA(X0, ops, epsilon, figure_name='', draw_boxes=True, save_result=True,
   if color_maybe:
     cmap[SetValue.UNKNOWN] = color_maybe
 
-  return SIVIA(X0, ops, epsilon, display_result=draw_boxes, fig_name=figure_name, return_result=save_result, color_map=cmap)
+  return SIVIA(X0, ops, epsilon, regular_paving=False, display_result=draw_boxes, fig_name=figure_name, return_result=save_result, color_map=cmap)

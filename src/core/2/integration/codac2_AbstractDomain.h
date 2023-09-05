@@ -16,8 +16,6 @@
 
 namespace codac2
 {
-  using codac::IntervalVector;
-
   /**
    * \class AbstractDomain
    * \brief ...
@@ -27,7 +25,7 @@ namespace codac2
     public:
 
       AbstractDomain();
-      IntervalVector box() const;
+      codac::IntervalVector box() const;
 
     protected:
 

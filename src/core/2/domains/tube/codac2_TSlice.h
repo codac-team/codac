@@ -35,7 +35,10 @@ namespace codac2
       explicit TSlice(const Interval& tdomain);
       TSlice(const TSlice& tslice, const Interval& tdomain); // performs a deep copy on slices
       const Interval& t0_tf() const;
+      bool is_gate() const;
       const std::map<const AbstractSlicedTube*,std::shared_ptr<AbstractSlice>>& slices() const;
+      bool operator==(const TSlice& x) const;
+      bool operator!=(const TSlice& x) const;
       friend std::ostream& operator<<(std::ostream& os, const TSlice& x);
 
     protected:

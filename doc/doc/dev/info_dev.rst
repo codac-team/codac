@@ -165,7 +165,7 @@ Get Pybind11 as submodule:
   git submodule init
   git submodule update
 
-Then, configure ``cmake`` with custom options and ``-DWITH_PYTHON=ON``:
+Then, configure ``cmake`` with your custom options ``<...>`` and ``-DWITH_PYTHON=ON``:
 
 .. code-block:: bash
   
@@ -175,10 +175,13 @@ This configuration generates header files containing docstrings for Python, base
 the content of XML files made by Doxygen. The documentation of any C++/Python function
 is then located in the C++ header files of the :file:`/src` directory.
 
-Finally, after the compilation:
+Note that you also have to configure IBEX with the ``-DCMAKE_CXX_FLAGS="-fPIC"`` flag.
+
+Finally, after the compilation of Codac (and IBEX):
 
 .. code-block:: bash
   
+  # from codac repository
   cd build/python/python_package
   python3 setup.py develop --user
 
@@ -214,3 +217,12 @@ Upload the *wheels* on PyPi:
 .. code-block:: bash
 
   python3 -m twine upload --repository pypi *
+
+.. rubric:: Testing with Docker
+
+In the :file:`codac` directory, test the Ubuntu configuration locally using Docker:
+
+.. code-block:: bash
+
+  chmod a+x scripts/docker/build_pybinding.sh
+  docker run --rm -v `pwd`:/io lebarsfa/manylinux2010_x86_64-for-codac /io/scripts/docker/build_pybinding.sh

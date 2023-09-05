@@ -22,7 +22,7 @@ int main()
 {
   /* =========== TRUTH =========== */
 
-    double dt = 0.003; // tubes timestep
+    double dt = 0.01; // tubes timestep
     Interval tdomain(0.,3.); // temporal domain
 
     // Unknown truth
@@ -53,7 +53,7 @@ int main()
 
     TubeVector u(u_truth, dt); // centered on analytical expression
     // Intermediate variables:
-    TubeVector v(tdomain, dt, 4), a(tdomain, dt, 4);
+    TubeVector v(tdomain, dt, 4), a(tdomain, dt, 2);
 
 
   /* =========== CREATING CONTRACTORS =========== */
@@ -66,7 +66,7 @@ int main()
                           v[2]-u[0] ; \
                           v[3]-u[1])"));
 
-      CtcFunction ctc_a(Function("a[4]", "x[4]", "u[2]",
+      CtcFunction ctc_a(Function("a[2]", "x[4]", "u[2]",
                         "(u[1]*cos(x[2])-x[3]*sin(x[2])*u[0]-a[0] ; \
                           u[1]*sin(x[2])+x[3]*cos(x[2])*u[0]-a[1])"));
 

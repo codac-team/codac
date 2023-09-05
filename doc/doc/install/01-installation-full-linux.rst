@@ -14,11 +14,16 @@ A Debian package is available for the last release |version| of the library:
 
 .. code-block:: bash
 
-  sudo sh -c 'echo "deb [trusted=yes] https://www.ensta-bretagne.fr/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+  sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
   sudo apt update
   sudo apt install libcodac-dev
 
 Then, check your installation `with the instructions of this page <03-start-cpp-project.html>`_.
+
+.. warning::
+
+  | **URL changed**:
+  | Please update :code:`/etc/apt/sources.list.d/ensta-bretagne.list` as above.
 
 .. note::
 
@@ -30,6 +35,8 @@ Then, check your installation `with the instructions of this page <03-start-cpp-
 
   and check that "My first tube:Tube [0, 10]" appears.
 
+  Similar archives exist also for all the supported configurations.
+
 
 Install from sources (latest development)
 -----------------------------------------
@@ -39,7 +46,7 @@ In case you prefer the latest development version, Codac can be installed by com
 Requirements
 ^^^^^^^^^^^^
 
-Codac uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first. The last version of IBEX is maintained on `this unofficial development repository <https://github.com/lebarsfa/ibex-lib/tree/actions>`_:
+Codac uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first. The last version of IBEX is maintained on `this unofficial development repository <https://github.com/lebarsfa/ibex-lib/tree/master>`_:
 
 .. code-block:: bash
 
@@ -47,7 +54,7 @@ Codac uses several features of the `IBEX library <http://www.ibex-lib.org/doc/in
   sudo apt-get install -y g++ gcc flex bison cmake git libeigen3-dev
   
   # Download IBEX sources from GitHub
-  git clone -b actions https://github.com/lebarsfa/ibex-lib.git
+  git clone -b master https://github.com/lebarsfa/ibex-lib.git
   
   # Configure IBEX before installation
   cd ibex-lib
@@ -98,7 +105,7 @@ For instance:
   mkdir build -p ; cd build ; cmake .. ; make     # cmake compilation
   ./codac_basics_01                               # running example
 
-Do not forget to launch the VIBes viewer before running your program.
+Do not forget to launch the `VIBes viewer <01-installation.html#graphical-tools>`_ before running your program.
 
 
 (for experts) Additional installation options
@@ -159,4 +166,4 @@ Do not forget to launch the VIBes viewer before running your program.
     export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
     export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/codac/build_install
 
-See also `Information for developers <info_dev.html>`_.
+See also `Information for developers </dev/info_dev.html>`_.

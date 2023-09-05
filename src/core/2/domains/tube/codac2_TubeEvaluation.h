@@ -17,50 +17,100 @@ class TubeEvaluation
 {
   public:
 
-    const TubeEvaluation& operator=(const T& x)
+    TubeEvaluation& operator=(const T& x)
     {
       // Sampling the tube only if affectation is performed
       // (i.e. this is not done in the constructor)
-      std::list<TSlice>::iterator it_lb = _tubevector->_tdomain->sample(_t.lb(), false);
-      std::list<TSlice>::iterator it_ub = _tubevector->_tdomain->sample(_t.ub(), _t.is_degenerated());
+      std::list<TSlice>::iterator it_lb = _tube->tdomain()->sample(_t.lb(), _t.is_degenerated());
+      std::list<TSlice>::iterator it_ub;
+      
+      if(!_t.is_degenerated())
+      {
+        it_ub = _tube->tdomain()->sample(_t.ub(), false);
+        it_ub--; // pointing to the tslice [..,_t.ub()]
+
+        if(it_lb->t0_tf().ub() == _t.lb())
+          it_lb++;
+      }
+
+      else
+        it_ub = it_lb;
 
       do
       {
-        std::static_pointer_cast<Slice<T>>(it_lb->_slices.at(_tubevector))->set(x);
-        it_lb++;
-      } while(it_lb != it_ub);
+        _tube->operator()(it_lb).set(x);
+      } while(it_lb != it_ub && (++it_lb) != _tube->tdomain()->tslices().end());
 
       return *this;
     }
 
-    explicit operator T()
+    explicit operator T() const
     {
-      return _tubevector->eval(_t);
+      return _tube->eval(_t);
     }
 
     friend std::ostream& operator<<(std::ostream& os, const TubeEvaluation<T>& x)
     {
-      os << x._tubevector->eval(x._t) << std::flush;
+      os << x._tube->eval(x._t) << std::flush;
       return os;
     }
     
 
   protected:
 
-    explicit TubeEvaluation(const Tube<T>* tubevector, double t) :
-      _t(Interval(t)), _tubevector(tubevector)
+    explicit TubeEvaluation(Tube<T> *tubevector, double t) :
+      _t(Interval(t)), _tube(tubevector)
     {
 
     }
 
-    explicit TubeEvaluation(const Tube<T>* tubevector, const Interval& t) :
-      _t(t), _tubevector(tubevector)
+    explicit TubeEvaluation(Tube<T> *tubevector, const Interval& t) :
+      _t(t), _tube(tubevector)
     {
 
     }
 
     const Interval _t;
-    const Tube<T>* _tubevector;
+    Tube<T>* _tube;
+    template<typename U>
+    friend class Tube;
+};
+
+template<class T>
+class ConstTubeEvaluation
+{
+  public:
+
+    explicit operator T() const
+    {
+      return _tube->eval(_t);
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const ConstTubeEvaluation<T>& x)
+    {
+      os << x._tube->eval(x._t) << std::flush;
+      return os;
+    }
+    
+
+  protected:
+
+    explicit ConstTubeEvaluation(const Tube<T> *tubevector, double t) :
+      _t(Interval(t)), _tube(tubevector)
+    {
+
+    }
+
+    explicit ConstTubeEvaluation(const Tube<T> *tubevector, const Interval& t) :
+      _t(t), _tube(tubevector)
+    {
+
+    }
+
+    const Interval _t;
+    const Tube<T>* _tube;
+    template<typename U>
+    friend class Tube;
 };
 
 #endif

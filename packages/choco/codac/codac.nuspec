@@ -21,15 +21,27 @@ Codac is a library providing tools for constraint programming over reals, trajec
 - Optionally, download and run https://github.com/ENSTABretagneRobotics/VIBES/releases/download/0.2.3/VIBes-0.2.3-win32.exe before running the project, and check that a tube appears in VIBes window.
 
 ## Troubleshooting
-- Check that all the packages and their dependencies were installed, if one failed (e.g. due to network-related errors) try to reinstall it using --force or try a previous version...
-- 32 bit versions of latest Qt Creator do not seem available, if needed use `choco install -y qtcreator --version=4.13.3 --x86 --force`
+- Check that all the packages and their dependencies were installed, if one failed (e.g. due to network-related errors) try to reinstall it using `--force` or try a previous version...
+- 32 bit versions of Qt Creator do not seem available any more, see https://github.com/AdmiringWorm/chocolatey-packages/issues/362.
 - If multiple compilers are already installed, Qt Creator might show multiple possibilities in the Configure Project panel, ensure you choose one compatible with https://chocolatey.org/packages/codac#dependencies.
+
+## Package parameters
+The following package parameters can be set:
+- `/url:URL` - Will install the specified binary package (e.g. built for Visual Studio), see versions from https://github.com/codac-team/codac/releases (the Windows `PATH` might need to be updated manually with e.g. `C:\ProgramData\chocolatey\lib\ibex\bin`, etc.). By default, only the MinGW libraries compatible with the corresponding MinGW Chocolatey package dependency are installed. Use the standard parameter `choco install --ignore-dependencies ...` to avoid installing the default MinGW and IBEX Chocolatey package dependencies if needed (you might want to install manually [IBEX](https://community.chocolatey.org/packages/ibex) package with the corresponding parameters, as well as the corresponding compiler and the Eigen package).
+- `/urlX:URL` - Same as above, with X in [1,99], except this will not disable the installation of the MinGW libraries compatible with the corresponding MinGW Chocolatey package dependency.
+- `/InstallDir:INSTALLDIR` - Installation directory.
+- `/NoPath` - Will not try to update Windows `PATH`.
+- `/NoRegistry` - Will not try to update Windows registry.
+To pass package parameters, use `--params "''"` (e.g. `choco install codac --params "'/NoPath /NoRegistry'"`), and to install another binary package, try e.g.
+```
+choco install -y --ignore-dependencies codac --params "'/url:https://github.com/codac-team/codac/releases/download/v1/codac_x64_vc17.zip'"
+```
     </description>
     <releaseNotes>https://github.com/codac-team/codac/releases</releaseNotes>
     <dependencies>
-      <dependency id="mingw" version="[8.1.0]" />
+      <dependency id="mingw" version="[11.2.0.07112021]" />
       <dependency id="eigen" version="3.3.4.20210818" />
-      <dependency id="ibex" version="2.8.9.20220413" />
+      <dependency id="ibex" version="2.8.9.20230510" />
     </dependencies>
   </metadata>
 </package>

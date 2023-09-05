@@ -10,14 +10,14 @@ jobs:
     name: CentOS Docker
     runs-on: ubuntu-latest
     steps: 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: true
         fetch-depth: 0
         clean: false
     - run: |
         chmod a+x scripts/docker/build_pybinding.sh
-        docker run --rm -v `pwd`:/io lebarsfa/manylinux2010_x86_64-ibex /io/scripts/docker/build_pybinding.sh
+        docker run --rm -v `pwd`:/io lebarsfa/manylinux2010_x86_64-for-codac /io/scripts/docker/build_pybinding.sh
         ls wheelhouse
     - uses: xresloader/upload-to-github-release@v1
       env:

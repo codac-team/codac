@@ -25,7 +25,6 @@ namespace codac2
   using codac::Trajectory;
   using codac::TrajectoryVector;
   using codac::Interval;
-  using codac::IntervalVector;
   using codac::BoolInterval;
 
   template<typename W, typename T>
@@ -38,7 +37,7 @@ namespace codac2
 
       }
 
-      explicit AbstractConstTube(const T& x);
+      AbstractConstTube(const T& x);
 
       virtual ~AbstractConstTube()
       {

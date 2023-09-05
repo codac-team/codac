@@ -116,7 +116,32 @@ namespace codac
     for(int i = 0 ; i < x.size() ; i++)
       contract(x[i], v[i], t_propa);
   }
+
+  void CtcDeriv::contract(codac2::Tube<Interval>& x, const codac2::Tube<Interval>& v, TimePropag t_propa)
+  {
+    Tube _x = codac2::to_codac1(x);
+    Tube _v = codac2::to_codac1(v);
+    contract(_x,_v,t_propa);
+    x &= codac2::to_codac2(_x);
+  }
+
+  void CtcDeriv::contract(codac2::Tube<IntervalVector>& xv, TimePropag t_propa)
+  {
+    Tube x = codac2::to_codac1(xv)[0];
+    Tube v = codac2::to_codac1(xv)[1];
+    contract(x,v,t_propa);
+    xv &= codac2::to_codac2(TubeVector({x,v}));
+  }
   
+  void CtcDeriv::contract(codac2::Tube<IntervalVector>& x, int i, codac2::Tube<IntervalVector>& v, int j, TimePropag t_propa)
+  {
+    TubeVector _x = codac2::to_codac1(x);
+    TubeVector _v = codac2::to_codac1(v);
+    contract(_x[i],_v[j],t_propa);
+    x &= codac2::to_codac2(_x);
+    v &= codac2::to_codac2(_v);
+  }
+
   void CtcDeriv::contract(Slice& x, const Slice& v, TimePropag t_propa)
   {
     assert(x.tdomain() == v.tdomain());

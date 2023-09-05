@@ -32,6 +32,9 @@ namespace codac2
       CtcLinobs(const codac::Matrix& A, const codac::Vector& b); // /!\ auto evaluation of e^At not reliable
       ~CtcLinobs();
 
+      // to be removed:
+      void contract(codac::TubeVector& x, const codac::Tube& u, codac::TimePropag t_propa);
+
       void contract(std::vector<codac::Domain*>& v_domains);
       void contract(Tube<codac::ConvexPolygon>& x, const Tube<Interval>& u, codac::TimePropag t_propa = codac::TimePropag::FORWARD | codac::TimePropag::BACKWARD, bool compute_envelopes = true);
       void contract(Slice<codac::ConvexPolygon>& x, const Slice<codac::Interval>& u, codac::TimePropag t_propa = codac::TimePropag::FORWARD | codac::TimePropag::BACKWARD, bool compute_envelope = true);
@@ -46,8 +49,8 @@ namespace codac2
 
     protected:
 
-      const codac::Matrix& _A;
-      const codac::Vector& _b;
+      const codac::Matrix _A;
+      const codac::Vector _b;
 
       const int m_polygon_max_edges = 15;
 

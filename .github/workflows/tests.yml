@@ -9,17 +9,18 @@ jobs:
  tests:
     runs-on: ${{ matrix.cfg.os }}
     strategy:
+        fail-fast: false
         matrix:
             cfg:
-            - { os: ubuntu-18.04, gcc_v: 8, py_v_maj: 3, py_v_min: 6, desc: 'Ubuntu 18.04 GCC 8 Python 3.6 tests' }
+            - { os: ubuntu-20.04, gcc_v: 8, py_v_maj: 3, py_v_min: 6, desc: 'Ubuntu 20.04 GCC 8 Python 3.6 tests' }
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: true
         fetch-depth: 0
         clean: false
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
     - run: |
@@ -55,7 +56,7 @@ jobs:
         bash scripts/dependencies/install_ibex.sh
 
         # CAPD
-        bash scripts/dependencies/install_capd.sh
+        # cancelled on 2023/05/09: bash scripts/dependencies/install_capd.sh
 
         # Environment variables
         export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/codac/build_install
@@ -75,7 +76,7 @@ jobs:
         # Without synthesis tree
 
         # Building lib + tests
-        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DTEST_EXAMPLES=ON ..
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=OFF -DTEST_EXAMPLES=ON ..
         ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
         make
         #make doc # todo
@@ -112,7 +113,7 @@ jobs:
         # With synthesis tree for all created tubes
   
         # Building lib + tests
-        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DTEST_EXAMPLES=ON ..
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=OFF -DTEST_EXAMPLES=ON ..
         ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
         make
         #make doc

@@ -36,6 +36,11 @@ namespace codac2
     return _t0_tf;
   }
   
+  bool TSlice::is_gate() const
+  {
+    return _t0_tf.is_degenerated();
+  }
+  
   void TSlice::set_tdomain(const Interval& tdomain)
   {
     assert(!tdomain.is_empty());
@@ -45,6 +50,16 @@ namespace codac2
   const map<const AbstractSlicedTube*,shared_ptr<AbstractSlice>>& TSlice::slices() const
   {
     return _slices;
+  }
+
+  bool TSlice::operator==(const TSlice& x) const
+  {
+    return _t0_tf == x._t0_tf;
+  }
+
+  bool TSlice::operator!=(const TSlice& x) const
+  {
+    return !operator==(x);
   }
 
   ostream& operator<<(ostream& os, const TSlice& x)

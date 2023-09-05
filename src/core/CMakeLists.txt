@@ -2,7 +2,8 @@
 #  Codac - cmake configuration file
 # ==================================================================
 
-  list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac_Function.h
+  list(APPEND CODAC1_SRC 
+                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac_Function.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac_TFnc.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac_TFnc.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac_TFunction.h
@@ -167,14 +168,21 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepFixPoint.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepProj.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepProj.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_CtcTransform.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_CtcTransform.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepTransform.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepTransform.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Tools.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Tools.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Eigen.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Eigen.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/sivia/codac_sivia.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/sivia/codac_sivia.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/sivia/codac_sivia.h)
 
-                  # Files related to codac2
+  list(APPEND CODAC2_SRC # Files related to codac2
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_Interval.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_IntervalMatrix.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_IntervalVector.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractConstTube.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractSlice.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractSlice.h
@@ -189,6 +197,7 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_Tube.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TubeComponent.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TubeEvaluation.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/paving/codac2_Paving.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcLinobs.cpp
@@ -199,7 +208,16 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_expIMat.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/variables/codac2_Matrix.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/variables/codac2_Vector.h
+                  # Actions
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/codac2_Action.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/codac2_Action.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcAction.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcAction.h
                   )
+
+  set(SRC ${CODAC1_SRC} ${CODAC2_SRC})
 
 
 ################################################################################
@@ -228,8 +246,12 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/tools
                                           ${CMAKE_CURRENT_SOURCE_DIR}/sivia
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/)
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/paving
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/variables/)
   target_link_libraries(codac PUBLIC Ibex::ibex)
   
 
@@ -239,9 +261,9 @@
   
 # Getting header files from sources
 
-  foreach(srcfile ${SRC})
+  foreach(srcfile ${CODAC1_SRC})
     if(srcfile MATCHES "\\.h$" OR srcfile MATCHES "\\.hpp$")
-      list(APPEND HDR ${srcfile})
+      list(APPEND CODAC_HDR ${srcfile})
       # Copying header files for other Codac libraries compiled in the same time
       file(COPY ${srcfile} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
     endif()
@@ -253,15 +275,39 @@
   file(WRITE ${CODAC_MAIN_HEADER} "/* This file is generated by CMake */\n\n")
   file(APPEND ${CODAC_MAIN_HEADER} "#ifndef __CODAC_H__\n#define __CODAC_H__\n\n")
   file(APPEND ${CODAC_MAIN_HEADER} "\n#include <codac-rob.h>\n") # todo: clean this organization
-  foreach(header_path ${HDR})
+  foreach(header_path ${CODAC_HDR})
     get_filename_component(header_name ${header_path} NAME)
     file(APPEND ${CODAC_MAIN_HEADER} "#include <${header_name}>\n")
   endforeach()
   file(APPEND ${CODAC_MAIN_HEADER} "\n#endif /* __CODAC_H__ */\n")
   file(COPY ${CODAC_MAIN_HEADER} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
+  
+# Getting header files from sources
+
+  foreach(srcfile ${CODAC2_SRC})
+    if(srcfile MATCHES "\\.h$" OR srcfile MATCHES "\\.hpp$")
+      list(APPEND CODAC2_HDR ${srcfile})
+      # Copying header files for other Codac libraries compiled in the same time
+      file(COPY ${srcfile} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
+    endif()
+  endforeach()
+
+# Generating a codac.h file
+
+  set(CODAC2_MAIN_HEADER ${CMAKE_CURRENT_BINARY_DIR}/codac2.h)
+  file(WRITE ${CODAC2_MAIN_HEADER} "/* This file is generated by CMake */\n\n")
+  file(APPEND ${CODAC2_MAIN_HEADER} "#ifndef __CODAC2_H__\n#define __CODAC2_H__\n\n")
+  foreach(header_path ${CODAC2_HDR})
+    get_filename_component(header_name ${header_path} NAME)
+    file(APPEND ${CODAC2_MAIN_HEADER} "#include <${header_name}>\n")
+  endforeach()
+  file(APPEND ${CODAC2_MAIN_HEADER} "\n#endif /* __CODAC_H__ */\n")
+  file(COPY ${CODAC2_MAIN_HEADER} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
 
 # Install files in system directories
 
   install(TARGETS codac DESTINATION ${CMAKE_INSTALL_LIBDIR})
-  install(FILES ${HDR} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/codac)
+  install(FILES ${CODAC_HDR} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/codac)
   install(FILES ${CODAC_MAIN_HEADER} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/codac)
+  install(FILES ${CODAC2_HDR} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/codac)
+  install(FILES ${CODAC2_MAIN_HEADER} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/codac)

@@ -302,34 +302,34 @@ TEST_CASE("Polygons (intersections)")
     ConvexPolygon p(v_p);
     IntervalVector x(2), box_inter(2);
 
-    CHECK(p.encloses(ThickPoint(7.,7.)) == YES);
-    CHECK(p.encloses(ThickPoint(2.,7.)) == YES);
-    CHECK(p.encloses(ThickPoint(10.,3.)) == YES);
-    CHECK(p.encloses(ThickPoint(11.,9.)) == YES);
-    CHECK(p.encloses(ThickPoint(13.5,9.)) == YES);
-    CHECK(p.encloses(ThickPoint(5.8,12.2)) == YES);
+    CHECK(p.contains(ThickPoint(7.,7.)) == YES);
+    CHECK(p.contains(ThickPoint(2.,7.)) == YES);
+    CHECK(p.contains(ThickPoint(10.,3.)) == YES);
+    CHECK(p.contains(ThickPoint(11.,9.)) == YES);
+    CHECK(p.contains(ThickPoint(13.5,9.)) == YES);
+    CHECK(p.contains(ThickPoint(5.8,12.2)) == YES);
 
-    CHECK(p.encloses(ThickPoint(1.,4.)) == MAYBE);
-    CHECK(p.encloses(ThickPoint(3.,10.)) == MAYBE);
-    CHECK(p.encloses(ThickPoint(8.,14.)) == MAYBE);
-    CHECK(p.encloses(ThickPoint(2.,8.)) == MAYBE);
-    CHECK(p.encloses(ThickPoint(2.5,9.)) == MAYBE);
-    CHECK(p.encloses(ThickPoint(5.5,12.5)) == MAYBE);
-    CHECK(p.encloses(ThickPoint(1.,5.)) == MAYBE);
-    CHECK(p.encloses(ThickPoint(1.,1.)) == MAYBE);
+    CHECK(p.contains(ThickPoint(1.,4.)) == MAYBE);
+    CHECK(p.contains(ThickPoint(3.,10.)) == MAYBE);
+    CHECK(p.contains(ThickPoint(8.,14.)) == MAYBE);
+    CHECK(p.contains(ThickPoint(2.,8.)) == MAYBE);
+    CHECK(p.contains(ThickPoint(2.5,9.)) == MAYBE);
+    CHECK(p.contains(ThickPoint(5.5,12.5)) == MAYBE);
+    CHECK(p.contains(ThickPoint(1.,5.)) == MAYBE);
+    CHECK(p.contains(ThickPoint(1.,1.)) == MAYBE);
 
-    CHECK(p.encloses(ThickPoint(10.,2.)) == NO);
-    CHECK(p.encloses(ThickPoint(0.0,0.0)) == NO);
-    CHECK(p.encloses(ThickPoint(0.0,0.9)) == NO);
-    CHECK(p.encloses(ThickPoint(0.9,0.0)) == NO);
-    CHECK(p.encloses(ThickPoint(0.9,0.9)) == NO);
-    CHECK(p.encloses(ThickPoint(0.5,1.)) == NO);
-    CHECK(p.encloses(ThickPoint(5.2,12.8)) == NO);
-    CHECK(p.encloses(ThickPoint(1.,14.)) == NO);
-    CHECK(p.encloses(ThickPoint(1.,13.5)) == NO);
-    CHECK(p.encloses(ThickPoint(14.,1.)) == NO);
-    CHECK(p.encloses(ThickPoint(14.,14.)) == NO);
-    CHECK(p.encloses(ThickPoint(5.,14.)) == NO);
+    CHECK(p.contains(ThickPoint(10.,2.)) == NO);
+    CHECK(p.contains(ThickPoint(0.0,0.0)) == NO);
+    CHECK(p.contains(ThickPoint(0.0,0.9)) == NO);
+    CHECK(p.contains(ThickPoint(0.9,0.0)) == NO);
+    CHECK(p.contains(ThickPoint(0.9,0.9)) == NO);
+    CHECK(p.contains(ThickPoint(0.5,1.)) == NO);
+    CHECK(p.contains(ThickPoint(5.2,12.8)) == NO);
+    CHECK(p.contains(ThickPoint(1.,14.)) == NO);
+    CHECK(p.contains(ThickPoint(1.,13.5)) == NO);
+    CHECK(p.contains(ThickPoint(14.,1.)) == NO);
+    CHECK(p.contains(ThickPoint(14.,14.)) == NO);
+    CHECK(p.contains(ThickPoint(5.,14.)) == NO);
 
     x[0] = Interval(0.,2.); x[1] = Interval(0.,2.);
     box_inter = p.fast_intersection(x);
@@ -434,7 +434,7 @@ TEST_CASE("Polygons from Slice")
     // not supported anymore ConvexPolygon p(v_p);
     // not supported anymore IntervalVector x(2), box_inter(2);
     // not supported anymore 
-    // not supported anymore CHECK(p.encloses(ThickPoint(3.5,8.)));
+    // not supported anymore CHECK(p.contains(ThickPoint(3.5,8.)));
     // not supported anymore 
     // not supported anymore x[0] = Interval(0.5,4.); x[1] = Interval(-1.,1.);
     // not supported anymore box_inter = p & x;

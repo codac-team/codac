@@ -39,7 +39,7 @@ IntervalVector* create_from_pylist(const vector<py::list>& lst)
   {
     if(lst[i].size() != 2)
     {
-      delete tmp;
+      delete[] tmp;
       throw invalid_argument("sub list must contain only two elements");
     }
 
@@ -336,4 +336,7 @@ void export_IntervalVector(py::module& m)
   m.def("bwd_mul", (bool (*) (const Interval&, IntervalVector&, IntervalVector&)) &ibex::bwd_mul);
 
   m.def("max", (IntervalVector(*) (const IntervalVector&, const IntervalVector&)) &max_IntevalVector);
+
+  // Automatic cast from lists to IntervalVectors (used for instance in SIVIA calls)
+  py::implicitly_convertible<py::list, IntervalVector>();
 };

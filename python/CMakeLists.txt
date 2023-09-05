@@ -97,7 +97,9 @@
       src/core/geometry/codac_py_geometry.cpp
       
       src/core/paving/codac_py_Paving.cpp
+      src/core/paving/codac_py_SIVIAPaving.cpp
       src/core/paving/codac_py_Set.cpp
+      src/core/paving/codac_py_ConnectedSubset.cpp
 
       src/core/sivia/codac_py_sivia.cpp
 
@@ -159,6 +161,29 @@
       COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:unsupported>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
     )
 
+  # Generating a library codac2.so containing the python binding:
+
+    pybind11_add_module(codac2 SHARED
+      codac_py_codac2.cpp
+      src/core/2/actions/codac2_py_Action.cpp
+      src/core/2/contractors/codac2_py_CtcAction.cpp
+    )
+
+    target_include_directories(codac2
+      PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
+      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
+      ${CMAKE_CURRENT_BINARY_DIR}/docstring
+    )
+
+    target_link_libraries(codac2
+      PRIVATE core codac core ${LIBS} core
+    )
+
+    # Copy the generated library in the package folder
+    add_custom_command(TARGET codac2 POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:codac2>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
+    )
+
 
   #pybind11_add_module(graphics SHARED
   #  codac_py_VIBesFig.cpp
@@ -180,7 +205,7 @@
 ################################################################################
 
   if(BUILD_TESTS)
-    include(CTest)
+    
     file(GLOB TESTS_FILES
       "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests/test_*.py"
       "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests/tests_from_pyibex/test_*.py"

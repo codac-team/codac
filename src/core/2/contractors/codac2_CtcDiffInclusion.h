@@ -33,41 +33,40 @@ namespace codac2
 
       CtcDiffInclusion(const TFunction& t);
 
-
       /** evaluate function on box + time interval
        */
-      const IntervalVector eval_function(const Interval &tim,
-                 const IntervalVector& cdom, const IntervalVector* u) const;
-      const IntervalVector eval_function(const Interval &tim,
-                 const IParals& cdom, const IntervalVector* u) const;
+      const codac::IntervalVector eval_function(const Interval &tim,
+                 const codac::IntervalVector& cdom, const codac::IntervalVector* u) const;
+      const codac::IntervalVector eval_function(const Interval &tim,
+                 const IParals& cdom, const codac::IntervalVector* u) const;
       /** evaluate function on box + time
        */
-      const IntervalVector eval_function(double tim,
-                 const IntervalVector& cdom, const IntervalVector* u) const;
-      const IntervalVector eval_function(double tim,
-                 const IParals& cdom, const IntervalVector* u) const;
+      const codac::IntervalVector eval_function(double tim,
+                 const codac::IntervalVector& cdom, const codac::IntervalVector* u) const;
+      const codac::IntervalVector eval_function(double tim,
+                 const IParals& cdom, const codac::IntervalVector* u) const;
       /** evaluate function on point + time
        */
-      const IntervalVector eval_function(double tim,
-                 const Vector& cdom, const IntervalVector* u) const;
+      const codac::IntervalVector eval_function(double tim,
+                 const Vector& cdom, const codac::IntervalVector* u) const;
 
       IntervalMatrix jacobian(const IParals& codom,
-                 const IntervalVector* u,
+                 const codac::IntervalVector* u,
                  const Interval& tdom,
-                 IntervalVector& tvec) const;
+                 codac::IntervalVector& tvec) const;
 
 
 
       IParals extend_box_basic(const IParals& frame,
                         const IParals& startIV,
-                        const IntervalVector* u,
+                        const codac::IntervalVector* u,
                         const Interval& tim,
                         double inflation_factor,
                         TimePropag t_propa,
                         int nb_tries) const;
 
       bool compute_step(const IParals& frame,
-                                const IntervalVector* u,
+                                const codac::IntervalVector* u,
                                 const IParals& actState,
                                 IParals& tauState,
                                 IParals& finState,

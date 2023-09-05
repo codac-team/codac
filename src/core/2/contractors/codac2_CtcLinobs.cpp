@@ -70,14 +70,24 @@ namespace codac2
     contract(v_domains[0]->tube_vector(), v_domains[1]->tube());*/
   }
 
+  void CtcLinobs::contract(codac::TubeVector& x, const codac::Tube& u, TimePropag t_propa)
+  {
+    auto tdomain = codac2::create_tdomain(x.tdomain(), x[0].slice(0)->tdomain().diam(), true);
+    Tube<ConvexPolygon> _x(tdomain, ConvexPolygon());
+    Tube<Interval> _u(tdomain, Interval());
+
+  }
+
   void CtcLinobs::contract(Tube<ConvexPolygon>& x, const Tube<Interval>& u, TimePropag t_propa, bool compute_envelopes)
   {
     assert(x.tdomain() == u.tdomain());
+    assert(x.tdomain()->all_gates_defined());
 
     if(t_propa & TimePropag::FORWARD)
       for(auto it = x.begin(); it != x.end(); ++it)
       {
         if((*it).is_gate()) continue;
+        if((*it).t0_tf().is_unbounded()) continue;
         const shared_ptr<Slice<Interval>> su = static_pointer_cast<Slice<Interval>>((*it).tslice().slices().at(&u));
         contract(*it, *su, TimePropag::FORWARD, compute_envelopes && !(t_propa & TimePropag::BACKWARD));
         // Envelopes are contracted in the bwd iteration if selected
@@ -87,6 +97,7 @@ namespace codac2
       for(auto it = x.rbegin(); it != x.rend(); ++it)
       {
         if((*it).is_gate()) continue;
+        if((*it).t0_tf().is_unbounded()) continue;
         const shared_ptr<Slice<Interval>> su = static_pointer_cast<Slice<Interval>>((*it).tslice().slices().at(&u));
         contract(*it, *su, TimePropag::BACKWARD, compute_envelopes);
       }
@@ -94,38 +105,50 @@ namespace codac2
 
   void CtcLinobs::contract(Slice<ConvexPolygon>& x, const Slice<Interval>& u, TimePropag t_propa, bool compute_envelope)
   {
+    if(x.is_empty() || u.is_empty())
+    {
+      x.set_empty();
+      return;
+    }
+
     if(x.is_gate())
       return;
 
-    if((t_propa & TimePropag::FORWARD) && x.next_slice_ptr())
+    auto next = x.next_slice_ptr();
+
+    if((t_propa & TimePropag::FORWARD) && next)
     {
-      ConvexPolygon output_gate = x.output_gate();
+      assert(next->is_gate());
+      ConvexPolygon output_gate = next->codomain();
       ctc_fwd_gate(output_gate, x.input_gate(), x.t0_tf().diam(), u.codomain());
-      x.next_slice_ptr()->set(output_gate);
+      next->set(output_gate);
     }
 
-    if((t_propa & TimePropag::BACKWARD) && x.prev_slice_ptr())
+    auto prev = x.prev_slice_ptr();
+
+    if((t_propa & TimePropag::BACKWARD) && prev)
     {
-      ConvexPolygon input_gate = x.input_gate();
+      assert(prev->is_gate());
+      ConvexPolygon input_gate = prev->codomain();
       ctc_bwd_gate(input_gate, x.output_gate(), x.t0_tf().diam(), u.codomain());
-      x.prev_slice_ptr()->set(input_gate);
+      prev->set(input_gate);
     }
 
     if(compute_envelope)
-      x.set(polygon_envelope(x.input_gate(), x.t0_tf().diam(), u.codomain()));
+      x.set(polygon_envelope(prev->codomain(), x.t0_tf().diam(), u.codomain()));
   }
   
   void CtcLinobs::ctc_fwd_gate(ConvexPolygon& p_k, const ConvexPolygon& p_km1,
     double dt_km1_k, const Interval& u_km1)
   {
-    p_k = p_k & (exp_At(_A,dt_km1_k)*p_km1 + dt_km1_k*exp_At(_A,Interval(0.,dt_km1_k))*(u_km1*_b));
+    p_k &= exp_At(_A,dt_km1_k)*p_km1 + dt_km1_k*exp_At(_A,Interval(0.,dt_km1_k))*(u_km1*_b);
     p_k.simplify(m_polygon_max_edges);
   }
 
   void CtcLinobs::ctc_bwd_gate(ConvexPolygon& p_k, const ConvexPolygon& p_kp1,
     double dt_k_kp1, const Interval& u_k)
   {
-    p_k = p_k & (exp_At(-_A,dt_k_kp1)*p_kp1 - dt_k_kp1*exp_At(-_A,Interval(0.,dt_k_kp1))*(u_k*_b));
+    p_k &= exp_At(-_A,dt_k_kp1)*p_kp1 - dt_k_kp1*exp_At(-_A,Interval(0.,dt_k_kp1))*(u_k*_b);
     p_k.simplify(m_polygon_max_edges);
   }
 

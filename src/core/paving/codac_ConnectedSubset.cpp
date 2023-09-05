@@ -36,6 +36,14 @@ namespace codac
     return box().is_strict_interior_subset(get_paving()->box());
   }
 
+  bool ConnectedSubset::contains(const Vector& p) const
+  {
+    for(const auto& subset_item : m_v_subset_items)
+      if(subset_item->box().contains(p))
+        return true;
+    return false;
+  }
+
   const Paving* ConnectedSubset::get_paving() const
   {
     assert(!m_v_subset_items.empty() && "no items in ConnectedSubset (empty items vector)");

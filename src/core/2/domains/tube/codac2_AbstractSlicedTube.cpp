@@ -21,6 +21,12 @@ namespace codac2
 
   }
 
+  shared_ptr<TDomain>& AbstractSlicedTube::tdomain()
+  {
+    return const_cast<shared_ptr<TDomain>&>(
+      static_cast<const AbstractSlicedTube&>(*this).tdomain());
+  }
+
   const shared_ptr<TDomain>& AbstractSlicedTube::tdomain() const
   {
     return _tdomain;

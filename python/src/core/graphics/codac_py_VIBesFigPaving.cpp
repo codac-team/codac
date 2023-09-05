@@ -32,7 +32,8 @@ void export_VIBesFigPaving(py::module& m)
 
   .def(py::init<const string&, const Paving*>(),
     VIBESFIGPAVING_CONSTPAVING_M_PAVING,
-    "fig_name"_a, "paving"_a)
+    "fig_name"_a, "paving"_a.noconvert(),
+    py::keep_alive<1,3>())
 
   .def("show", (void (VIBesFigPaving::*)())&VIBesFigPaving::show,
     VIBESFIGPAVING_VOID_SHOW)

@@ -26,16 +26,13 @@ Separators can be combined and involved in an algorithm for set-inversion such a
     f = Function('x', 'y', 'x*cos(x-y)+y')
 
     # Build the separator associated to the constraint f(x,y) < 0
-    sep = SepFunction(f, Interval(-oo,0))
-
-    # Setup the initial box
-    box = IntervalVector(2, [-10, 10])
+    sep = SepFunction(f, [-oo,0])
 
     # Graphics
     vibes.beginDrawing()
     vibes.newFigure("Set inversion")
     vibes.setFigureProperties({"x":100, "y":100, "width":500, "height":500})
-    SIVIA(box, sep, 0.21, fig_name="Set inversion")
+    SIVIA([[-10, 10],[-10, 10]], sep, 0.21, fig_name="Set inversion")
     vibes.endDrawing()
 
   .. code-tab:: c++
@@ -52,14 +49,11 @@ Separators can be combined and involved in an algorithm for set-inversion such a
       // Build the separator associated to the constraint f(x,y) < 0
       SepFunction sep(f, Interval(-oo,0));
 
-      // Setup the initial box
-      IntervalVector box(2, {-10, 10});
-
       // Graphics
       vibes::beginDrawing();
       vibes::newFigure("Set inversion");
       vibes::setFigureProperties(vibesParams("x",100, "y",100, "width",500, "height",500));
-      SIVIA(box, sep, 0.21, "Set inversion");
+      SIVIA({{-10,10},{-10,10}}, sep, 0.21, "Set inversion");
       vibes::endDrawing();
 
       return EXIT_SUCCESS;
@@ -82,6 +76,7 @@ The ``SIVIA(..)`` function allows several parameters for specifying result outpu
     SIVIA(box,              # initial domain to be bisected
       sep,                  # related separator (or contractor if provided)
       0.21,                 # precision parameter (stopping condition)
+      regular_paving=False, # keep a regular paving (bisection rule)
       display_result=True,  # displaying boxes in a VIBes figure
       fig_name="SIVIA",     # name of the VIBes figure in case of display
       return_result=True,   # returning a map of lists of boxes
@@ -93,6 +88,7 @@ The ``SIVIA(..)`` function allows several parameters for specifying result outpu
     SIVIA(box,              // initial domain to be bisected
       sep,                  // related separator (or contractor if provided)
       0.21,                 // precision parameter (stopping condition)
+      false,                // keep a regular paving (bisection rule)
       true,                 // boolean for displaying boxes in a VIBes figure
       "SIVIA",              // name of the VIBes figure in case of display
       true,                 // boolean for returning a map of lists of boxes
