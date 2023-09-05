@@ -77,7 +77,8 @@ namespace codac2
 
       void contract(Tube<IParals>& x, const Tube<IParals>* u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
       void contract_from_slice(Tube<IParals>& x, const Tube<IParals>* u, std::shared_ptr<Slice<IParals>>& gate, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-      void contract(Slice<IParals>& x, const std::shared_ptr<Slice<IParals>>& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      void contract(Slice<IParals>& x, const Slice<IParals>& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      void contract(Slice<IParals>& x, const std::shared_ptr<const IParals>& uDom, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
 
       const TFunction& f() const;
 

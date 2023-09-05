@@ -147,7 +147,7 @@
   
   # Note: place this tests block before the add_subdirectory(python),
   # otherwise python tests will not be taken into account. 
-  option(BUILD_TESTS "Build test" OFF)
+  option(BUILD_TESTS "Build test" TRUE)
   if(BUILD_TESTS)
     include(CTest)
     add_custom_target(check

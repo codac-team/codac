@@ -49,10 +49,34 @@ Interval quad_II(const Interval& x, const Interval& a);
 */
 IntervalMatrix quad_M(const IntervalMatrix& M, double a);
 
+/** 
+* compute [M](tau[M]+a I) with tau \in [0,1] 
+*/
+IntervalMatrix quad_Mtau(const IntervalMatrix& M, double a);
+
+
 /**
-*  returns [M]([M]+[A]) (optimal if [M] and [A] independant)
+*  returns [M]([M]+[A]) inter ([M]+[A])[M] (optimal if [M] and [A] independant)
 */
 IntervalMatrix quad_MM(const IntervalMatrix& M, const IntervalMatrix& A);
+/**
+*  returns [M](tau [M]+[A]) inter (tau [M]+[A])[M]
+*  (optimal if [M] and [A] independant)
+*/
+IntervalMatrix quad_MMtau(const IntervalMatrix& M, const IntervalMatrix& A);
+
+/*
+ * compute k1 A + k2 AB + k3 B
+ * if commute=true, AB=BA (intersection)
+ */
+IntervalMatrix quad_prod(const IntervalMatrix& A, const IntervalMatrix& B, double k1, double k2, double k3,bool commute);
+
+/*
+ * upper bound for the integral of the absolute value of linear intervalsi
+ * ( [I]+t[P] between 0 and delta )
+ */
+double integral_abs_linint(const Interval& I, const Interval& P, double delta);
+
 
 /** 2) power functions **/
 
@@ -66,7 +90,7 @@ IntervalMatrix square_IntervalMatrix (const IntervalMatrix& M);
 */
 IntervalMatrix power_IntervalMatrix (const IntervalMatrix& M, unsigned int n);
 /**
-* squaring (Id+M) : compute Phi(M,k) = [Id+M]^(2^l)-Id , k>=0
+* squaring (Id+M) : compute Phi(M,k) = [Id+M]^(2^k)-Id , k>=0
 *  Phi(M,l+1) = quad_M(Phi(M,l),2)    
 */
 void squaring_IntervalMatrix(IntervalMatrix& M, unsigned int l);
@@ -93,16 +117,19 @@ bool inv_Matrix(const Matrix& A, Matrix& Res);
 *    matrix inversion, crude Gaussian elimination using Rows
 *    returns empty if [M] may contains a singular matrix (finding a subset
 *    of M would be useful...)
+*    prec: compute first Ai  = mid(A)^1
+*    and solve Res = (Mi M)^(-1) Mi   using inv_IntervalMatrix
 */
-IntervalMatrix inv_IntervalMatrix(const IntervalMatrix& M);
-IntervalMatrix inv_IntervalMatrix2(const IntervalMatrix& M);
+IntervalMatrix inv_IntervalMatrix(const IntervalMatrix& M, bool prec=true);
 
-/** 2) Res :=  A^(-1)Res   ( empty if A contains a singular matrix) 
+/** 2) B :=  A^(-1)B   ( empty if A contains a singular matrix) 
 *   (still crude Gaussian elimination using Rows)
+*   prec: compute first Ai  = mid(A)^1
+*         then solve (Ai A)^(-1) (Ai Res)
+*         (generally (but not always) better if B is punctual)
 */
 void inv_IntervalMatrix(const IntervalMatrix& A, 
-        IntervalMatrix& B);
-
+        IntervalMatrix& B, bool prec=true);
 
 // Determination of a rank a set of vectors A, with Af the "maximal" set
 // of free vectors, and E = pseudo-inverse (A Et = id)
@@ -113,10 +140,6 @@ std::vector<int> construct_free_set(const IntervalMatrix &A,
 		IntervalMatrix &E, const IntervalMatrix *compM);
 
 /** C) Matrix exponential (minus Id) **/
-
-/* tuning constants */  
-extern double mnorm;
-extern int nbitbase;
 
 /** 1) Horner scheme **/
 
@@ -216,8 +239,10 @@ IntervalMatrix expI_SSHorner4(const IntervalMatrix& M,
 *                           1/8(6A+A²/9(...+A²/(k+2))))))) + ET2
 *     error term : nET2 = (k+5) NA^(k+1)/(2 (k+1)!(k+2-NA)(k+3))
 *  f) tauVexpA = { V_tau(A,2) | tau \in U } 
-*              = sum(0,k) (-n-2(1-tau))(tau A)^n/(2(n+1)!)
-*       = -Id/2 - U/2 (-Id+1/6 A([1,3]Id+ U/4([2,4]A+U/2 A²/5([3,5]Id +
+*              = sum(0,k) ((-2tau(n+1)+(n+2))(tau A)^n/(2(n+2)!)
+*       = 1/2(Id + U/2(-2Id+A+U/3(-4A+A²(Id-U/4(-6Id+A+U/5(-8A+A²( ... 
+*                                  +A²))))))) + ET2 ???
+*              -Id/2 - U/2 (-Id+1/6 A([1,3]Id+ U/4([2,4]A+U/2 A²/5([3,5]Id +
 *                 U/6([4,6]A + U A^2/7([5,7]Id + ... U A²/(k+2))))))) + ET2
 *  tauIexpA is needed only with slices, VexpA with non-autonomous eqdiff,
 *  tauVexpA with both
@@ -229,7 +254,7 @@ void global_exp_base(const IntervalMatrix& A,
           IntervalMatrix& IexpA,
           IntervalMatrix& tauIexpA,
           IntervalMatrix& VexpA,
-          IntervalMatrix& tauVexpA);
+          IntervalMatrix& tauVexpA, int l=0);
 
 /**
 *  Input : matrix M, time t, 
@@ -240,9 +265,12 @@ void global_exp_base(const IntervalMatrix& A,
 *     c) int_0^t exp(tau M) dtau  (IexpM)
 *     d) { 1/a int_0^(at) exp(tau M) dtau, a \in [0,1] }
 *                  (tauIexpM) (with_slices)
-*     e) int_0^t int_0^tau exp(theta M) dtheta (VexpM)  (with_time)
+*     e) int_0^t (tau-t/2) exp((t-tau) M) dtheta (VexpM)  (with_time)
 *     d) { VexpM(at)/a , a \in [0,1] } (tauVexpM) (with_time, with_slices)
 *     e) ub of int_0^t | exp(tau m) | dtau  (intAbsEM)
+*
+*     nbiterations : degree of iterations for global_exp_base (-1 : automatic)
+*     nbscalings : degree of scaling and squarings (-1 : automatic)
 */
 void global_exp(const IntervalMatrix& M,
           double tim, bool with_slices, bool with_time,
@@ -253,7 +281,8 @@ void global_exp(const IntervalMatrix& M,
           IntervalMatrix& tauIexpM,
           IntervalMatrix& VexpM,
           IntervalMatrix& tauVexpM,
-          Matrix& intAbsEM);
+          Matrix& intAbsEM,
+	  int nbiterations=-1, int nbscaling=-1);
 
 }
  

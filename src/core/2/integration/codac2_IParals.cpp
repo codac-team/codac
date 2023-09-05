@@ -89,13 +89,16 @@ namespace codac2 {
    /* ``component'' : interval of the bounding box 
      * (only const !!!) */
    const Interval& IParals::operator[](unsigned int i) const {
+       assert (this->dim>(int) i);
        return this->bbox()[i];
    }
    Vector IParals::mid() const {
+       assert (dim>0);
        return this->bbox().mid(); /* FIXME : better ? */
    }
 
    bool IParals::contains(const Vector& iv) const {
+       assert (dim>0);
        if (this->empty) return false;
        if (!this->bbox().contains(iv)) return false;
        for (unsigned int i=0;i<this->nbmat;i++) {
@@ -112,6 +115,7 @@ namespace codac2 {
        return this->rhs(i);
    }
    IntervalVector IParals::getPar(const IntervalMatrix& M) const {
+       assert (dim>0);
        IntervalVector Res = M*this->bbox();
        for (unsigned int i=0;i<this->nbmat;i++) {
            Res &= (M*this->mat(i))*this->rhs(i);
@@ -133,6 +137,7 @@ namespace codac2 {
    /*** modification ***/
 
    void IParals::clear() {
+        assert (dim>0);
         this->empty=false;
         for (unsigned int i=0;i<=this->nbmat;i++) (this->Vrhs[i]).clear();
    }
@@ -150,11 +155,13 @@ namespace codac2 {
    }
    IParals& IParals::inflate(double rad) {
         if (this->empty) return *this;
+        assert(dim>0);
         IntervalVector V(dim,rad);
         return (*this += V);
    }
    IParals& IParals::inflateBall(double rad) {
         if (this->empty) return *this;
+        assert(dim>0);
         for (unsigned int i=0;i<this->nbmat;i++) {
            for (int j=0;j<dim;j++) {
              double a = (rad/this->Imat(i)[j].norm2()).ub();
@@ -165,6 +172,7 @@ namespace codac2 {
         return *this;
    }
    void IParals::inflate_from_baseFast(const IParals& iv, double fact) {
+        assert(dim>0);
         assert(this->nbmat==iv.nbmat);
         for (unsigned int i=0;i<=this->nbmat;i++) {
             if (i<this->nbmat) assert(this->mats[i]==iv.mats[i]);
@@ -184,6 +192,7 @@ namespace codac2 {
 
    IParals& IParals::homothety(IntervalVector c, double delta) {
         if (this->empty) return *this;
+        assert(dim>0);
         IntervalVector nc = (1-delta)*c;
         for (unsigned int i=0;i<=this->nbmat;i++) {
 	     this->Vrhs[i] *= delta;
@@ -191,6 +200,13 @@ namespace codac2 {
         return (*this += nc);
    }
    IParals& IParals::operator=(const IntervalVector& x) {
+        if (dim==0) {
+	   this->dim = x.size();
+           this->empty = x.is_empty();
+           this->bbox() = x;
+           return *this;
+        }
+        assert (dim=x.size());
         if (x.is_empty()) { this->set_empty(); return *this; }
         this->empty=false;
         this->bbox() = x;
@@ -200,6 +216,7 @@ namespace codac2 {
         return *this;
    }
    IParals& IParals::assign(const IParals& iv) {
+        assert(this->dim>0 && this->dim == iv.size());
         if (iv.empty) { this->set_empty(); return *this; }
         this->empty=false;
         this->bbox() = iv.bbox();
@@ -219,6 +236,7 @@ namespace codac2 {
    /* add matrix 1 if does not exist */
    IParals& IParals::linMult(const IntervalMatrix& M,
 			const IntervalMatrix& IM) {
+        assert(dim>0);
         if (this->is_empty()) return *this;
         if (this->nbmat==0) { /* basic case, add one matrix */
           this->new_base(M,IM,this->bbox());
@@ -265,6 +283,7 @@ namespace codac2 {
    /**** intersections ******/
    
    IParals& IParals::operator&=(const IntervalVector& x) {
+        assert(dim>0 && x.size()==dim);
         if (this->empty) return *this;
         this->bbox() &= x;
         if (this->bbox().is_empty()) { 
@@ -280,11 +299,13 @@ namespace codac2 {
         return *this;
    }
    IParals operator&(const IParals& iv, const IntervalVector& x) {
+        assert(iv.size()==x.size());
         IParals res(iv);
         res &= x;
         return res;
    }
    IParals& IParals::meetFast(const IParals& iv) {
+        assert(dim==iv.size());
         assert(this->nbmat==iv.nbmat);
         if (this->empty) return *this;
         if (iv.empty) { this->set_empty(); return *this; }
@@ -303,6 +324,7 @@ namespace codac2 {
         return (*this);
    }
    IParals& IParals::meetKeep(const IParals& iv) {
+        assert(dim==iv.size());
         if (this->empty) return *this;
         if (iv.empty) { this->set_empty(); return *this; }
         if (iv.nbmat==0) { (*this) &= iv.bbox(); return *this; }
@@ -322,6 +344,7 @@ namespace codac2 {
        return *this;
    }
    IParals& IParals::meet(const IParals& iv, bool ctcG) {
+        assert(dim==iv.size());
         if (this->empty) return *this;
         if (iv.empty) { this->set_empty(); return *this; }
         if (iv.nbmat==0) { (*this) &= iv.bbox(); return *this; }
@@ -369,6 +392,7 @@ namespace codac2 {
         return this->meet(iv, true);
    }
    IParals operator&(const IParals& iv1, const IParals& iv2) {
+        assert(iv1.size()==iv2.size());
         IParals res(iv1);
         res.meet(iv2,false);
         return res;
@@ -491,6 +515,8 @@ namespace codac2 {
    /** union with a box 
     */
    IParals& IParals::operator|= (const IntervalVector& x) {
+       std::cout << "|=" << *this << " " << x << "\n";
+       assert(dim>0);
        if (x.is_empty()) return *this;
        if (this->empty) {
            return (*this = x);
@@ -502,6 +528,10 @@ namespace codac2 {
        return *this;
    }
    IParals& IParals::operator|= (const IParals& x) {
+       if (dim==0) {
+           return (*this = x);
+       }
+       assert(x.size()==dim);
        if (x.is_empty()) return *this;
        if (this->empty) {
            return (*this = x);
@@ -513,6 +543,7 @@ namespace codac2 {
        return *this;
    }
    IParals operator|(const IParals& iv, const IntervalVector& x) {
+       assert(iv.size()==x.size());
        IParals Res(iv);
        Res |= x;
        return Res;
@@ -520,6 +551,7 @@ namespace codac2 {
 
 
    IParals& IParals::operator+=(const IntervalVector& V) {
+        assert(dim>0);
         if (this->empty) return *this;
         for (unsigned int i=0;i<this->nbmat;i++) {
             this->rhs(i) += this->Imat(i)*V;
@@ -529,6 +561,7 @@ namespace codac2 {
 	/* simplification not needed : max C(x+v) = max Cx + max Cv */
    }
    IParals& IParals::operator-=(const IntervalVector& V) {
+        assert(dim>0);
         if (this->empty) return *this;
         for (unsigned int i=0;i<this->nbmat;i++) {
             this->rhs(i) -= this->Imat(i)*V;
@@ -538,11 +571,13 @@ namespace codac2 {
 	/* simplification not needed : max C(x+v) = max Cx + max Cv */
    }
    IParals operator+(const IParals& iv, const IntervalVector& V) {
+        assert(iv.size()==V.size());
         IParals res(iv);
         res += V;
         return res;
    }
    IParals operator-(const IParals& iv, const IntervalVector& V) {
+        assert(iv.size()==V.size());
         IParals res(iv);
         res -= V;
         return res;

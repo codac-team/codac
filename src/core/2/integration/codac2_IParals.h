@@ -45,6 +45,12 @@ namespace codac2
 
       /******************** CONSTRUCTORS *******************/
       /**
+       * empty constructor, without dimension (needed for e.g. tube
+         initialisation)
+         must be resized before use (see resize())
+       */
+      IParals();
+      /**
        * constructor from dimension (full domain, ID matrix)
        */
       IParals(int dim);
@@ -333,6 +339,8 @@ namespace codac2
 
 
 namespace codac2 {
+      inline IParals::IParals() :
+          dim(0), empty(true), nbmat(0), mats(), Vrhs(1) { };
       inline int IParals::get_dim() const { return this->dim; }
       inline int IParals::size() const { return this->get_dim(); }
       inline int IParals::get_nbmat() const { return this->nbmat; }
@@ -360,7 +368,7 @@ namespace codac2 {
 				const IntervalVector &V) {
 	       this->mats.push_back(
         std::make_shared<std::pair<IntervalMatrix,IntervalMatrix>>
-                        (std::pair(M,rM)));
+                        (std::pair<IntervalMatrix,IntervalMatrix>(M,rM)));
                this->Vrhs.push_back(V);
                this->nbmat++;
       }
@@ -371,7 +379,7 @@ namespace codac2 {
                assert(numM<this->nbmat);
 	       this->mats[numM] = 
         std::make_shared<std::pair<IntervalMatrix,IntervalMatrix>>
-                        (std::pair(M,rM));
+                        (std::pair<IntervalMatrix,IntervalMatrix>(M,rM));
                this->Vrhs[numM+1]=V;
       }
       inline void IParals::borrow_base(const IParals& iv, unsigned int n,
@@ -391,7 +399,7 @@ namespace codac2 {
           assert(n>=0 && n<nbmat);
 	  std::shared_ptr<std::pair<IntervalMatrix,IntervalMatrix>> nPtr 
 		= std::make_shared<std::pair<IntervalMatrix,IntervalMatrix>>
-		  (std::pair(M*this->mats[n]->first,
+		  (std::pair<IntervalMatrix,IntervalMatrix>(M*this->mats[n]->first,
 			     this->mats[n]->second*rM));
 	  this->mats[n] = nPtr;
       }
