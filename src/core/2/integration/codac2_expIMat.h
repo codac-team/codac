@@ -141,10 +141,6 @@ std::vector<int> construct_free_set(const IntervalMatrix &A,
 
 /** C) Matrix exponential (minus Id) **/
 
-/* tuning constants */  
-extern double mnorm;
-extern int nbitbase;
-
 /** 1) Horner scheme **/
 
 /**
@@ -272,6 +268,9 @@ void global_exp_base(const IntervalMatrix& A,
 *     e) int_0^t (tau-t/2) exp((t-tau) M) dtheta (VexpM)  (with_time)
 *     d) { VexpM(at)/a , a \in [0,1] } (tauVexpM) (with_time, with_slices)
 *     e) ub of int_0^t | exp(tau m) | dtau  (intAbsEM)
+*
+*     nbiterations : degree of iterations for global_exp_base (-1 : automatic)
+*     nbscalings : degree of scaling and squarings (-1 : automatic)
 */
 void global_exp(const IntervalMatrix& M,
           double tim, bool with_slices, bool with_time,
@@ -282,7 +281,8 @@ void global_exp(const IntervalMatrix& M,
           IntervalMatrix& tauIexpM,
           IntervalMatrix& VexpM,
           IntervalMatrix& tauVexpM,
-          Matrix& intAbsEM);
+          Matrix& intAbsEM,
+	  int nbiterations=-1, int nbscaling=-1);
 
 }
  

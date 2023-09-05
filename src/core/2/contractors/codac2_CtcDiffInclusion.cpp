@@ -258,11 +258,17 @@ namespace codac2
 
   void CtcDiffInclusion::contract(Tube<IParals>& x, const Tube<IParals>* u, TimePropag t_propa)
   {
+    bool sameslicing=false;
     // Verifying that x and u share exactly the same tdomain and slicing:
 
-    if (u!=NULL) {
-       assert(x.tdomain() == u->tdomain());
+    if (u!=nullptr) {
+       if (x.tdomain() == u->tdomain()) sameslicing=true;
+       else {
+//	   std::cout << x.tdomain()->t0_tf() << " " << u->tdomain()->t0_tf() << "\n";
+           assert(x.tdomain()->t0_tf().is_subset(u->tdomain()->t0_tf()));
+       }
     // Verifying that the provided tubes are consistent with the function
+//       std::cout << _f.nb_var() << " " << x.size() << " " << u->size() << "\n";
        assert((size_t)_f.nb_var() == x.size()+u->size());
     } else 
        assert((size_t)_f.nb_var() == x.size());
@@ -275,8 +281,15 @@ namespace codac2
       if (sx.tslice().t0_tf().is_unbounded()) continue;
 
       // su is a Slice<IParals> of the Tube<IParals> u:
-      const std::shared_ptr<Slice<IParals>> su = 
-        (u == nullptr ? nullptr : std::static_pointer_cast<Slice<IParals>>(sx.tslice().slices().at(u)));
+      const shared_ptr<const IParals> du = 
+        (u == nullptr ? nullptr : 
+            (sameslicing ?
+		std::make_shared<const IParals>(
+		std::static_pointer_cast<const Slice<IParals>>(sx.tslice().slices().at(u))->codomain()) : 
+                std::make_shared<const IParals>(u->eval(sx.tslice().t0_tf()))
+            )
+        );
+//    std::cout << "uslice : " << *du << "\n";
      // const shared_ptr<Slice<IParals>> su = (u==NULL ? NULL : &(sx.tslice().slices().at(u)));
 //      const double dt = sx.t0_tf().diam();
 
@@ -284,7 +297,7 @@ namespace codac2
        // sx.set(su.codomain());
 
       // ...
-      contract(sx,su,t_propa);
+      contract(sx,du,t_propa);
 
 /*
       if(t_propa & TimePropag::FORWARD)
@@ -306,9 +319,12 @@ namespace codac2
 
   void CtcDiffInclusion::contract_from_slice(Tube<IParals>& x, const Tube<IParals>* u, std::shared_ptr<Slice<IParals>>& gate, TimePropag t_propa)
   {
+    bool sameslicing=false;
     // Verifying that x and u share exactly the same tdomain and slicing:
-    if (u!=NULL) {
-       assert(&x.tdomain() == &u->tdomain());
+
+    if (u!=nullptr) {
+       if (x.tdomain() == u->tdomain()) sameslicing=true;
+       else assert(x.tdomain()->t0_tf().is_subset(u->tdomain()->t0_tf()));
     // Verifying that the provided tubes are consistent with the function
        assert((size_t)_f.nb_var() == x.size()+u->size());
     } else 
@@ -319,9 +335,15 @@ namespace codac2
        std::shared_ptr<Slice<IParals>> sx = gate->next_slice_ptr();
        while (sx!=NULL) {
          if (!sx->is_gate() && !sx->tslice().t0_tf().is_unbounded()) {
-             const std::shared_ptr<Slice<IParals>> su = 
-                (u == nullptr ? nullptr : std::static_pointer_cast<Slice<IParals>>(sx->tslice().slices().at(u)));
-             contract(*sx,su,TimePropag::FORWARD);
+            const shared_ptr<const IParals> du = 
+              (u == nullptr ? nullptr : 
+                (sameslicing ?
+    		std::make_shared<const IParals>(
+    		std::static_pointer_cast<const Slice<IParals>>(sx->tslice().slices().at(u))->codomain()) : 
+                    std::make_shared<const IParals>(u->eval(sx->tslice().t0_tf()))
+                )
+             );
+             contract(*sx,du,TimePropag::FORWARD);
          }
          sx = sx->next_slice_ptr();
        }
@@ -330,22 +352,34 @@ namespace codac2
        std::shared_ptr<Slice<IParals>> sx = gate->prev_slice_ptr();
        while (sx!=NULL) {
          if (!sx->is_gate() && !sx->tslice().t0_tf().is_unbounded()) {
-             const std::shared_ptr<Slice<IParals>> su = 
-		(u == nullptr ? nullptr : std::static_pointer_cast<Slice<IParals>>(sx->tslice().slices().at(u)));
-             contract(*sx,su,TimePropag::BACKWARD);
+            const shared_ptr<const IParals> du = 
+              (u == nullptr ? nullptr : 
+                (sameslicing ?
+    		std::make_shared<const IParals>(
+    		std::static_pointer_cast<const Slice<IParals>>(sx->tslice().slices().at(u))->codomain()) : 
+                    std::make_shared<const IParals>(u->eval(sx->tslice().t0_tf()))
+                )
+             );
+             contract(*sx,du,TimePropag::BACKWARD);
          }
          sx = sx->prev_slice_ptr();
        }
     }
   }
 
-  void CtcDiffInclusion::contract(Slice<IParals>& x, const std::shared_ptr<Slice<IParals>>& u, TimePropag t_propa)
+  void CtcDiffInclusion::contract(Slice<IParals>& x,
+           const Slice<IParals>& u, TimePropag t_propa) {
+     const shared_ptr<const IParals> du =
+         std::make_shared<const IParals>(u.codomain());
+     this->contract(x,du,t_propa);
+  }
+
+  void CtcDiffInclusion::contract(Slice<IParals>& x,
+           const std::shared_ptr<const IParals>& uDom, TimePropag t_propa)
   {
-    // Verifying that x and u share exactly the same tdomain
-    if (u!=NULL) {
-       assert(&x.tslice() == &u->tslice());
+    if (uDom!=nullptr) {
     // Verifying that the provided slices are consistent with the function
-       assert((size_t)_f.nb_var() == x.size()+u->size());
+       assert((size_t)_f.nb_var() == x.size()+uDom->size());
     } else 
        assert((size_t)_f.nb_var() == x.size());
     assert((size_t)_f.image_dim() == x.size());
@@ -356,7 +390,8 @@ namespace codac2
 
     // ...
     IParals frame = x.codomain();
-    const IntervalVector* uVect = (u==NULL ? NULL : &(u->codomain().box()));
+    const IntervalVector* uVect = (uDom==nullptr ? nullptr :
+		 &(uDom->box()));
     if((t_propa & TimePropag::FORWARD) && !(x.input_gate().is_unbounded()))
     {
       IParals approxIV(frame);

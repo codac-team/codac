@@ -45,6 +45,12 @@ namespace codac2
 
       /******************** CONSTRUCTORS *******************/
       /**
+       * empty constructor, without dimension (needed for e.g. tube
+         initialisation)
+         must be resized before use (see resize())
+       */
+      IParals();
+      /**
        * constructor from dimension (full domain, ID matrix)
        */
       IParals(int dim);
@@ -333,6 +339,8 @@ namespace codac2
 
 
 namespace codac2 {
+      inline IParals::IParals() :
+          dim(0), empty(true), nbmat(0), mats(), Vrhs(1) { };
       inline int IParals::get_dim() const { return this->dim; }
       inline int IParals::size() const { return this->get_dim(); }
       inline int IParals::get_nbmat() const { return this->nbmat; }

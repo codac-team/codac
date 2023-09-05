@@ -807,7 +807,7 @@ void constrain_tauEM(IntervalMatrix& tauExpM,
 inline IntervalMatrix prod_com(const IntervalMatrix &A, const IntervalMatrix &B) {
    IntervalMatrix M=(A*B);
    return (M&= (B*A));
-   return A*B;
+//   return A*B;
 }
 inline void prod_com_with(IntervalMatrix &A, const IntervalMatrix &B) {
    IntervalMatrix M=(B*A);
@@ -1208,8 +1208,8 @@ IntervalMatrix squaring_tauVexpM(const IntervalMatrix &M1,
 }
 
 
-double mnorm = 0.025;
-int nbitbase = 5;
+static const double mnorm = 0.025;
+static const int nbitbase = 5;
 void global_exp(const IntervalMatrix& M,
           double tim, bool with_slices, bool with_time,
           IntervalMatrix& expM,
@@ -1219,7 +1219,8 @@ void global_exp(const IntervalMatrix& M,
           IntervalMatrix& tauIexpM,
           IntervalMatrix& VexpM,
           IntervalMatrix& tauVexpM,
-          Matrix& intAbsEM)
+          Matrix& intAbsEM,
+	  int nbiterations, int nbscaling)
 {
      double a =1.0;
      int l=0;
@@ -1229,19 +1230,30 @@ void global_exp(const IntervalMatrix& M,
      IntervalMatrix MId (Id);
      Interval Unt(0.0,1.0);
 
-     while (a*objnorm>1) {
-       a = a/2.0;
-       l = l+1;
+     if (nbscaling==-1) {
+       while (a*objnorm>1) {
+         a = a/2.0;
+         l = l+1;
      //  if (l==2) break;
+       }
+     } else {
+       for (int j=0;j<nbscaling;j++) {
+         a = a/2.0;
+         l = l+1;
+       }
      }
-//     std::cout << "l : " << l << "\n";
+//     std::cout << "squaring : " << l << "   iterations : " << (l/2+nbitbase) << "\n";
      IntervalMatrix MS = a*tim*M;
-     global_exp_base(MS,l/2+nbitbase,with_slices,with_time,
+     global_exp_base(MS,(nbiterations==-1?l/2+nbitbase:nbiterations),
+	with_slices,with_time,
 	expM,invExpM,tauExpM,IexpM,tauIexpM, VexpM, tauVexpM,l);
      // global_exp_base gives tauIexpM/tau...
 
-     if (with_slices)
-        tauIexpM *= Unt;
+/* for tauIexpM, do we compute { 1/alpha \phi*_1(alpha M) } or
+   { phi*_1(alpha M) }. Let's consider the former, as the latter is
+   disappointing */
+/*     if (with_slices)
+        tauIexpM *= Unt; */ /*  decomment if the latter */
 
 
      intAbsEM = Matrix::zeros(dim,dim);
@@ -1313,8 +1325,15 @@ void global_exp(const IntervalMatrix& M,
          }
          if (with_slices) {
             IntervalMatrix tmpM5 = 
+		2*IexpM + 0.5*Unt*(Unt*(prod_com(tmpM1,tauIexpM)-IexpM)
+                                  +(expM-2*IexpM));
+            tauIexpM *= 2.0;
+            join_mat(dim,tauIexpM, tmpM5); 
+
+/*            IntervalMatrix tmpM5 = 
 		IexpM + 0.5*Unt*(expM-IexpM+prod_com(tmpM1,tauIexpM));
             join_mat(dim,tauIexpM, tmpM5); 
+*/
          }
          // IexpM
          IexpM = quad_prod(IexpM,expM,1.0,0.5,0.5,true);
@@ -1339,7 +1358,8 @@ void global_exp(const IntervalMatrix& M,
      // tauExpM = Id + Unt*tauExpM;
      // tauIexpM  = tau * delta * (Id+tauIexpM);
      if (with_slices) { // all returns are / alpha 
-        tauIexpM = tim*(Id+tauIexpM);
+        tauIexpM = tim*(Id+ Unt * tauIexpM); 
+        /* or tauIexpM = tim*(Id + tauIexpM); */
         if (with_time) {
 	   vtauexpbase(tauVexpM);
            tauVexpM *= (tim*tim);
