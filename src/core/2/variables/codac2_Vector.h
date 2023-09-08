@@ -32,12 +32,12 @@ namespace codac2
       Vector_(size_t n)
         : Matrix_<N,1>(n,1)
       {
-        assert(N == Dynamic || N == n);
+        assert(N == Dynamic || N == (int)n);
       }
 
       Vector_(std::initializer_list<double> l) : Matrix_<N,1>(l.size(),1)
       {
-        assert(N == l.size() || N == -1);
+        assert(N == (int)l.size() || N == -1);
         size_t i = 0;
         for(double li : l)
           (*this)(i++,0) = li;
@@ -99,7 +99,7 @@ namespace codac2
         : Vector_<>(n)
       { }
 
-      Vector(const Vector_<>& x)
+      Vector(const Vector& x)
         : Vector_<>(x)
       { }
       
@@ -108,11 +108,15 @@ namespace codac2
       { }
       
       template<int N>
-      explicit Vector(const Vector_<N>& v)
+      Vector(const Vector_<N>& v)
         : Vector_<>(v)
-      {
-
-      }
+      { }
+      
+      template<int N>
+      Vector(const Matrix_<N,1>& v)
+        : Vector_<>(v)
+      { }
+      
   };
 
 } // namespace codac

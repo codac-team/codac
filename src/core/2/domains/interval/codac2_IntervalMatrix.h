@@ -28,30 +28,31 @@ namespace codac2
     public:
 
       IntervalMatrix_()
-        : Eigen::Matrix<Interval,R,C>(R,C)
+        : Eigen::Matrix<Interval,R,C>()
       {
 
       }
 
-      IntervalMatrix_(size_t nb_rows, size_t nb_cols)
+      explicit IntervalMatrix_(size_t nb_rows, size_t nb_cols)
         : Eigen::Matrix<Interval,R,C>(nb_rows, nb_cols)
       {
-        assert(R == Dynamic || R == nb_rows);
-        assert(C == Dynamic || C == nb_cols);
+        assert(R == Dynamic || R == (int)nb_rows);
+        assert(C == Dynamic || C == (int)nb_cols);
       }
 
-      IntervalMatrix_(size_t nb_rows, size_t nb_cols, const Interval& x)
+      explicit IntervalMatrix_(size_t nb_rows, size_t nb_cols, const Interval& x)
         : IntervalMatrix_<R,C>(nb_rows, nb_cols)
       {
         for(size_t i = 0 ; i < size() ; i++)
           *(this->data()+i) = x;
       }
 
+      // This constructor allows you to construct IntervalMatrix_ from Eigen expressions
       template<typename OtherDerived>
       IntervalMatrix_(const Eigen::MatrixBase<OtherDerived>& other)
           : Eigen::Matrix<Interval,R,C>(other)
       { }
-
+ 
       // This method allows you to assign Eigen expressions to IntervalMatrix_
       template<typename OtherDerived>
       IntervalMatrix_& operator=(const Eigen::MatrixBase<OtherDerived>& other)
@@ -211,7 +212,7 @@ namespace codac2
         // Author: Gilles Chabert
 
         double d = min ? POS_INFINITY : -1; // -1 to be sure that even a 0-diameter interval can be selected
-        size_t selected_index = -1;
+        int selected_index = -1;
         bool unbounded = false;
         assert(!this->is_empty() && "Diameter of an empty IntervalVector is undefined");
 
@@ -244,7 +245,7 @@ namespace codac2
 
         // The unbounded intervals are not considered if we look for the minimal diameter
         // and some bounded intervals have been found (selected_index!=-1)
-        if(unbounded && (!min || selected_index==-1))
+        if(unbounded && (!min || selected_index == -1))
         {
           double pt = min ? NEG_INFINITY : POS_INFINITY; // keep the point less/most distant from +oo (we normalize if the lower bound is -oo)
           selected_index = i;
@@ -381,6 +382,23 @@ namespace codac2
         return *this;
       }
 
+      bool operator==(const IntervalMatrix_<R,C>& x) const
+      {
+        if(x.size() != this->size())
+          return false;
+        if(is_empty() || x.is_empty())
+          return is_empty() && x.is_empty();
+        for(size_t i = 0 ; i < this->size() ; i++)
+          if(*(this->data()+i) != *(x.data()+i))
+            return false;
+        return true;
+      }
+
+      bool operator!=(const IntervalMatrix_<R,C>& x) const
+      {
+        return !(*this == x);
+      }
+
       auto& operator&=(const IntervalMatrix_<R,C>& x)
       {
         if(!this->is_empty())
@@ -407,6 +425,18 @@ namespace codac2
         return *this;
       }
 
+      auto operator+(const IntervalMatrix_<R,C>& x)
+      {
+        auto y = *this;
+        return y += x;
+      }
+
+      auto operator-(const IntervalMatrix_<R,C>& x)
+      {
+        auto y = *this;
+        return y -= x;
+      }
+
       auto operator&(const IntervalMatrix_<R,C>& x)
       {
         auto y = *this;
@@ -431,6 +461,14 @@ namespace codac2
         return *this;
       }
   };
+
+  template<int R,int C>
+  auto operator-(const IntervalMatrix_<R,C>& x)
+  {
+    auto y = x;
+    y.init(0.);
+    return y -= x;
+  }
 
   class IntervalMatrix : public IntervalMatrix_<>
   {

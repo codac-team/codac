@@ -12,6 +12,7 @@
 #ifndef __CODAC2_INTERVALVECTOR_H__
 #define __CODAC2_INTERVALVECTOR_H__
 
+#include <type_traits>
 #include <codac_Interval.h>
 #include <codac_IntervalVector.h>
 #include <Eigen/Core>
@@ -36,20 +37,24 @@ namespace codac2
         : IntervalMatrix_<N,1>()
       { }
 
-      IntervalVector_(size_t n)
+      explicit IntervalVector_(size_t n)
         : IntervalMatrix_<N,1>(n,1)
       {
-        assert(N == Dynamic || N == n);
+        assert(N == Dynamic || N == (int)n);
       }
 
-      IntervalVector_(size_t n, const Interval& x)
+      explicit IntervalVector_(size_t n, const Interval& x)
         : IntervalMatrix_<N,1>(n,1,x)
       {
-        assert(N == Dynamic || N == n);
+        assert(N == Dynamic || N == (int)n);
       }
+
+      explicit IntervalVector_(const Interval& x)
+        : IntervalMatrix_<N,1>(1,1,x)
+      { }
       
       template<int M>
-      IntervalVector_(const Matrix_<M,1>& v)
+      explicit IntervalVector_(const Matrix_<M,1>& v)
         : IntervalMatrix_<N,1>(v.size(),1)
       {
         static_assert(N == M || N == -1 || M == -1);
@@ -57,13 +62,7 @@ namespace codac2
           (*this)[i] = v[i];
       }
       
-      //explicit IntervalVector_(const Interval& xi)
-      //  : IntervalMatrix_<N,1>()
-      //{
-      //  (*this)(0,0) = xi;
-      //}
-      
-      IntervalVector_(size_t n, double bounds[][2])
+      explicit IntervalVector_(size_t n, double bounds[][2])
         : IntervalMatrix_<N,1>(n,1)
       {
         for(size_t i = 0 ; i < n ; i++)
@@ -75,7 +74,7 @@ namespace codac2
         }
       }
       
-      IntervalVector_(double bounds[][2])
+      explicit IntervalVector_(double bounds[][2])
         : IntervalVector_(this->size(), bounds)
       {
         
@@ -84,7 +83,7 @@ namespace codac2
       IntervalVector_(std::initializer_list<Interval> l)
         : IntervalMatrix_<N,1>(l.size(),1)
       {
-        assert(l.size() == this->size());
+        assert(N == Dynamic || (int)l.size() == N);
         size_t i = 0;
         for(const auto& li : l)
           (*this)[i++] = li;
@@ -92,17 +91,18 @@ namespace codac2
       }
 
       template<int M>
-      IntervalVector_(const IntervalMatrix_<M,1>& x)
+      explicit IntervalVector_(const IntervalMatrix_<M,1>& x)
         : IntervalMatrix_<M,1>(x)
       {
         assert(M == Dynamic || M == N);
       }
 
+      // This constructor allows you to construct IntervalVector_ from Eigen expressions
       template<typename OtherDerived>
       IntervalVector_(const Eigen::MatrixBase<OtherDerived>& other)
           : IntervalMatrix_<N,1>(other)
       { }
-
+ 
       // This method allows you to assign Eigen expressions to IntervalVector_
       template<typename OtherDerived>
       IntervalVector_& operator=(const Eigen::MatrixBase<OtherDerived>& other)
@@ -111,9 +111,10 @@ namespace codac2
         return *this;
       }
 
-      static IntervalVector_<N> empty_set(size_t n = N)
+      static IntervalVector_<N> empty_set()
       {
-        IntervalVector_<N> x(n, Interval::empty_set());
+        IntervalVector_<N> x;
+        x.set_empty();
         return x;
       }
 
@@ -174,40 +175,6 @@ namespace codac2
     return x_;
   }
 
-  template<int N>
-  IntervalVector_<N+1> cart_prod(const IntervalVector_<N>& x1, const Interval& x2)
-  {
-    IntervalVector_<N+1> x;
-    x << x1,x2;
-    return x;
-  }
-
-  template<int N>
-  IntervalVector_<N+1> cart_prod(const Interval& x1, const IntervalVector_<N>& x2)
-  {
-    IntervalVector_<N+1> x;
-    x << x1,x2;
-    return x;
-  }
-
-  template<int N,int M>
-  IntervalVector_<N+M> cart_prod(const IntervalVector_<N>& x1, const IntervalVector_<M>& x2)
-  {
-    IntervalVector_<N+M> x;
-    x << x1,x2;
-    return x;
-  }
-
-  template<typename T1, typename T2, typename... Args>
-  auto cart_prod(const T1& x1, const T2& x2, const Args&... xi) // recursive variadic function
-  {
-    auto x_ = cart_prod(x1, x2);
-    if constexpr(sizeof...(xi) > 0)
-      return cart_prod(x_, xi...);
-    else
-      return x_;
-  }
-
   class IntervalVector : public IntervalVector_<>
   {
     public:
@@ -216,15 +183,57 @@ namespace codac2
         : IntervalVector_<>(n)
       { }
 
-      IntervalVector(const IntervalVector_<>& x)
+      explicit IntervalVector(size_t n, const Interval& x)
+        : IntervalVector_<>(n, x)
+      { }
+
+      explicit IntervalVector(const Interval& x)
+        : IntervalVector_<>({x})
+      { }
+
+      explicit IntervalVector(const IntervalVector_<>& x)
         : IntervalVector_<>(x)
       { }
       
       template<int N>
       explicit IntervalVector(const Vector_<N>& v)
         : IntervalVector_<>(v)
-      {
+      { }
+      
+      explicit IntervalVector(size_t n, double bounds[][2])
+        : IntervalVector_<>(n, bounds)
+      { }
+      
+      IntervalVector(std::initializer_list<Interval> l)
+        : IntervalVector_<>(l)
+      { }
 
+      // This constructor allows you to construct IntervalVector from Eigen expressions
+      template<typename OtherDerived>
+      IntervalVector(const Eigen::MatrixBase<OtherDerived>& other)
+          : IntervalVector_<>(other)
+      { }
+ 
+      // This method allows you to assign Eigen expressions to IntervalVector
+      template<typename OtherDerived>
+      IntervalVector& operator=(const Eigen::MatrixBase<OtherDerived>& other)
+      {
+        this->IntervalVector_<>::operator=(other);
+        return *this;
+      }
+  
+      void resize(size_t n)
+      {
+        // With resize of Eigen, the data is reallocated and all previous values are lost.
+        auto save = *this;
+        IntervalVector_<>::resize(n);
+        for(size_t i = 0 ; i < min(save.size(),n) ; i++)
+          (*this)[i] = save[i];
+      }
+
+      static IntervalVector empty_set(size_t n)
+      {
+        return IntervalVector(n, Interval::empty_set());
       }
   };
 

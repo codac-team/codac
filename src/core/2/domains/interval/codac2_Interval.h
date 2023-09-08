@@ -18,6 +18,8 @@
 
 namespace codac2
 {
+  const double oo = POS_INFINITY;
+
   using codac::Interval;
 
 } // namespace codac
@@ -35,7 +37,7 @@ namespace Eigen
       IsComplex = 0,
       IsInteger = 0,
       IsSigned = 1,
-      RequireInitialization = 0,
+      RequireInitialization = 1,
       ReadCost = 1,
       AddCost = 3,
       MulCost = 3

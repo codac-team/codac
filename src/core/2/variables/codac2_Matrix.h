@@ -34,8 +34,8 @@ namespace codac2
       Matrix_(size_t nb_rows, size_t nb_cols)
         : Eigen::Matrix<double,R,C>(nb_rows, nb_cols)
       {
-        assert(R == Dynamic || R == nb_rows);
-        assert(C == Dynamic || C == nb_cols);
+        assert(R == Dynamic || R == (int)nb_rows);
+        assert(C == Dynamic || C == (int)nb_cols);
       }
       
       template<typename OtherDerived>
