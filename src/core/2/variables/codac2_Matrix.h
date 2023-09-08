@@ -18,30 +18,39 @@
 
 namespace codac2
 {
+  using Eigen::Dynamic;
+
   template<int R,int C>
-  class Matrix : public Eigen::Matrix<double,R,C>
+  class Matrix_ : public Eigen::Matrix<double,R,C>
   {
     public:
     
-      Matrix()
+      Matrix_()
       {
         
       }
+    
+      Matrix_(size_t nb_rows, size_t nb_cols)
+        : Eigen::Matrix<double,R,C>(nb_rows, nb_cols)
+      {
+        assert(R == Dynamic || R == nb_rows);
+        assert(C == Dynamic || C == nb_cols);
+      }
       
       template<typename OtherDerived>
-      Matrix(const Eigen::MatrixBase<OtherDerived>& other)
+      Matrix_(const Eigen::MatrixBase<OtherDerived>& other)
           : Eigen::Matrix<double,R,C>(other)
       { }
 
-      // This method allows you to assign Eigen expressions to MyVectorType
+      // This method allows you to assign Eigen expressions to Matrix_
       template<typename OtherDerived>
-      Matrix& operator=(const Eigen::MatrixBase<OtherDerived>& other)
+      Matrix_& operator=(const Eigen::MatrixBase<OtherDerived>& other)
       {
         this->Eigen::Matrix<double,R,C>::operator=(other);
         return *this;
       }
 
-      static Matrix eye()
+      static Matrix_ eye()
       {
         return Eigen::Matrix<double,R,C>::Identity();
       }

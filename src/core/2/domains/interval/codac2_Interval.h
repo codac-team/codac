@@ -35,7 +35,7 @@ namespace Eigen
       IsComplex = 0,
       IsInteger = 0,
       IsSigned = 1,
-      RequireInitialization = 1,
+      RequireInitialization = 0,
       ReadCost = 1,
       AddCost = 3,
       MulCost = 3
@@ -49,7 +49,7 @@ namespace codac2
   inline const Interval& real(const Interval& x)  { return x; }
   inline Interval imag(const Interval&)           { return 0.; }
   inline Interval abs(const Interval& x)          { return ibex::abs(x); }
-  inline Interval abs2(const Interval& x)         { return x*x; }
+  inline Interval abs2(const Interval& x)         { return ibex::sqr(x); }
 
 } // namespace codac
 
