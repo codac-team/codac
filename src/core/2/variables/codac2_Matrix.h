@@ -26,6 +26,7 @@ namespace codac2
     public:
     
       Matrix_()
+        : Eigen::Matrix<double,R,C>()
       {
         
       }

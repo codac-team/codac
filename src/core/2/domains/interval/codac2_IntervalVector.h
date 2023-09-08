@@ -41,6 +41,12 @@ namespace codac2
       {
         assert(N == Dynamic || N == n);
       }
+
+      IntervalVector_(size_t n, const Interval& x)
+        : IntervalMatrix_<N,1>(n,1,x)
+      {
+        assert(N == Dynamic || N == n);
+      }
       
       template<int M>
       IntervalVector_(const Matrix_<M,1>& v)
@@ -57,6 +63,24 @@ namespace codac2
       //  (*this)(0,0) = xi;
       //}
       
+      IntervalVector_(size_t n, double bounds[][2])
+        : IntervalMatrix_<N,1>(n,1)
+      {
+        for(size_t i = 0 ; i < n ; i++)
+        {
+          if(bounds == 0) // in case the user called IntervalVector(n,0) and 0 is interpreted as NULL!
+            (*this)[i] = Interval::zero();
+          else
+            (*this)[i] = Interval(bounds[i][0],bounds[i][1]);
+        }
+      }
+      
+      IntervalVector_(double bounds[][2])
+        : IntervalVector_(this->size(), bounds)
+      {
+        
+      }
+      
       IntervalVector_(std::initializer_list<Interval> l)
         : IntervalMatrix_<N,1>(l.size(),1)
       {
@@ -64,6 +88,7 @@ namespace codac2
         size_t i = 0;
         for(const auto& li : l)
           (*this)[i++] = li;
+        // todo: use thias as faster? std::copy(l.begin(), l.end(), vec);
       }
 
       template<int M>
@@ -88,8 +113,7 @@ namespace codac2
 
       static IntervalVector_<N> empty_set(size_t n = N)
       {
-        IntervalVector_<N> x(n);
-        x.set_empty();
+        IntervalVector_<N> x(n, Interval::empty_set());
         return x;
       }
 

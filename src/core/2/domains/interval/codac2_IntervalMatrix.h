@@ -28,7 +28,7 @@ namespace codac2
     public:
 
       IntervalMatrix_()
-        : Eigen::Matrix<Interval,R,C>()
+        : Eigen::Matrix<Interval,R,C>(R,C)
       {
 
       }
@@ -38,6 +38,13 @@ namespace codac2
       {
         assert(R == Dynamic || R == nb_rows);
         assert(C == Dynamic || C == nb_cols);
+      }
+
+      IntervalMatrix_(size_t nb_rows, size_t nb_cols, const Interval& x)
+        : IntervalMatrix_<R,C>(nb_rows, nb_cols)
+      {
+        for(size_t i = 0 ; i < size() ; i++)
+          *(this->data()+i) = x;
       }
 
       template<typename OtherDerived>
@@ -66,12 +73,125 @@ namespace codac2
         return false;
       }
 
+      bool is_flat() const
+      {
+        if(is_empty()) return true;
+        for(size_t i = 0 ; i < size() ; i++)
+          if((this->data()+i)->is_degenerated()) // don't use diam() because of roundoff
+            return true;
+        return false;
+      }
+
+      bool is_unbounded() const
+      {
+        if(is_empty()) return false;
+        for(size_t i = 0 ; i < size() ; i++)
+          if((this->data()+i)->is_unbounded())
+            return true;
+        return false;
+      }
+
+      bool is_subset(const IntervalMatrix_<R,C>& x) const
+      {
+        if(is_empty()) return true;
+        if(x.is_empty()) return false;
+        for(size_t i = 0 ; i < size() ; i++)
+          if(!(this->data()+i)->is_subset(*(x.data()+i)))
+            return false;
+        return true;
+      }
+
+      bool is_strict_subset(const IntervalMatrix_<R,C>& x) const
+      {
+        if(x.is_empty()) return false;
+        if(is_empty()) return true;
+        bool one_dim_strict_subset = false;
+        for(size_t i = 0 ; i < size() ; i++)
+        {
+          if((this->data()+i)->is_strict_subset(*(x.data()+i)))
+            one_dim_strict_subset = true;
+          if(!(this->data()+i)->is_subset(*(x.data()+i)))
+            return false;
+        }
+        return one_dim_strict_subset;
+      }
+
+      bool is_superset(const IntervalMatrix_<R,C>& x) const
+      {
+        return x.is_subset(*this);
+      }
+
+      bool is_strict_superset(const IntervalMatrix_<R,C>& x) const
+      {
+        return x.is_strict_subset(*this);
+      }
+
+      bool contains(const Matrix_<R,C>& x) const
+      {
+        if(is_empty())
+          return false;
+        for(size_t i = 0 ; i < size() ; i++)
+          if(!(this->data()+i)->contains(*(x.data()+i)))
+            return false;
+        return true;
+      }
+
+      bool interior_contains(const IntervalMatrix_<R,C>& x) const
+      {
+        if(is_empty())
+          return false;
+        for(size_t i = 0 ; i < size() ; i++)
+          if(!(this->data()+i)->interior_contains(*(x.data()+i)))
+            return false;
+        return true;
+      }
+
       bool intersects(const IntervalMatrix_<R,C>& x) const
       {
+        if(is_empty() || x.is_empty())
+          return false;
         for(size_t i = 0 ; i < size() ; i++)
           if(!(this->data()+i)->intersects(*(x.data()+i)))
             return false;
         return true;
+      }
+
+      bool overlaps(const IntervalMatrix_<R,C>& x) const
+      {
+        if(is_empty() || x.is_empty())
+          return false;
+        for(size_t i = 0 ; i < size() ; i++)
+          if(!(this->data()+i)->overlaps(*(x.data()+i)))
+            return false;
+        return true;
+      }
+
+      bool is_disjoint(const IntervalMatrix_<R,C>& x) const
+      {
+        if(is_empty() || x.is_empty())
+          return true;
+        for(size_t i = 0 ; i < size() ; i++)
+          if((this->data()+i)->is_disjoint(*(x.data()+i)))
+            return true;
+        return false;
+      }
+
+      bool is_bisectable() const
+      {
+        for(size_t i = 0 ; i < size() ; i++)
+          if((this->data()+i)->is_bisectable())
+            return true;
+        return false;
+      }
+
+      double min_diam() const
+      {
+        return (this->data()+extr_diam_index(true))->diam();
+      }
+
+      double max_diam() const
+      {
+        return (this->data()+extr_diam_index(false))->diam();
       }
 
       size_t thinnest_diam_index() const
@@ -160,17 +280,21 @@ namespace codac2
         return selected_index;
       }
 
-      auto bisect(float ratio = 0.49) const
+      auto bisect(size_t i, float ratio = 0.49) const
       {
-        assert(Interval(0,1).interior_contains(ratio));
-        size_t i = largest_diam_index();
         assert((this->data()+i)->is_bisectable());
+        assert(Interval(0,1).interior_contains(ratio));
 
         auto p = std::make_pair(*this,*this);
         auto pi = (this->data()+i)->bisect(ratio);
         *(p.first.data()+i) = pi.first;
         *(p.second.data()+i) = pi.second;
         return p;
+      }
+
+      auto bisect_largest_dim(float ratio = 0.49) const
+      {
+        return bisect(largest_diam_index(), ratio);
       }
 
       double volume() const
@@ -190,7 +314,7 @@ namespace codac2
       Matrix_<R,C> lb() const
       {
         assert(!this->is_empty()); // todo: use nan instead of assert?
-        Matrix_<R,C> lb;
+        Matrix_<R,C> lb(this->rows(), this->cols());
         for(size_t i = 0 ; i < this->size() ; i++)
           *(lb.data()+i) = (this->data()+i)->lb();
         return lb;
@@ -199,7 +323,7 @@ namespace codac2
       Matrix_<R,C> ub() const
       {
         assert(!this->is_empty()); // todo: use nan instead of assert?
-        Matrix_<R,C> ub;
+        Matrix_<R,C> ub(this->rows(), this->cols());
         for(size_t i = 0 ; i < this->size() ; i++)
           *(ub.data()+i) = (this->data()+i)->ub();
         return ub;
@@ -208,22 +332,44 @@ namespace codac2
       Matrix_<R,C> mid() const
       {
         assert(!this->is_empty()); // todo: use nan instead of assert?
-        Matrix_<R,C> m;
+        Matrix_<R,C> mid(this->rows(), this->cols());
         for(size_t i = 0 ; i < this->size() ; i++)
-          *(m.data()+i) = (this->data()+i)->mid();
-        return m;
+          *(mid.data()+i) = (this->data()+i)->mid();
+        return mid;
+      }
+
+      Matrix_<R,C> rad() const
+      {
+        assert(!this->is_empty()); // todo: use nan instead of assert?
+        Matrix_<R,C> rad(this->rows(), this->cols());
+        for(size_t i = 0 ; i < this->size() ; i++)
+          *(rad.data()+i) = (this->data()+i)->rad();
+        return rad;
+      }
+
+      Matrix_<R,C> diam() const
+      {
+        assert(!this->is_empty()); // todo: use nan instead of assert?
+        Matrix_<R,C> diam(this->rows(), this->cols());
+        for(size_t i = 0 ; i < this->size() ; i++)
+          *(diam.data()+i) = (this->data()+i)->diam();
+        return diam;
+      }
+
+      void init(const Interval& x)
+      {
+        for(size_t i = 0 ; i < this->size() ; i++)
+          *(this->data()+i) = x;
       }
 
       void set_empty()
       {
-        for(size_t i = 0 ; i < this->size() ; i++)
-          (this->data()+i)->set_empty();
+        init(Interval::empty_set());
       }
 
       static IntervalMatrix_<R,C> empty_set(size_t nb_rows = R, size_t nb_cols = C)
       {
-        IntervalMatrix_<R,C> x(nb_rows, nb_cols);
-        x.set_empty();
+        IntervalMatrix_<R,C> x(nb_rows, nb_cols, Interval::empty_set());
         return x;
       }
 
@@ -259,6 +405,18 @@ namespace codac2
               *(this->data()+i) |= *(x.data()+i);
         }
         return *this;
+      }
+
+      auto operator&(const IntervalMatrix_<R,C>& x)
+      {
+        auto y = *this;
+        return y &= x;
+      }
+
+      auto operator|(const IntervalMatrix_<R,C>& x)
+      {
+        auto y = *this;
+        return y |= x;
       }
 
       auto& operator+=(const IntervalMatrix_<R,C>& x)
