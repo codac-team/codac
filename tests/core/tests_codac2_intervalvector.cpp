@@ -10,11 +10,11 @@ using namespace Detail;
 using namespace std;
 using namespace codac2;
 
+// Most of these tests come from the IBEX library (G. Chabert)
+// They have been revised to fit the codac2::IntervalVector class
 
-TEST_CASE("Test codac2::IntervalVector")
+TEST_CASE("Tests from IBEX IntervalVector")
 {
-  // These tests come from the IBEX library (G. Chabert)
-
   SECTION("cons01")
   {
     IntervalVector x(2);
@@ -341,7 +341,7 @@ TEST_CASE("Test codac2::IntervalVector")
 
   SECTION("is_unbounded02")
   {
-    double _x1[][2]={{0,1},{0,2},{NEG_INFINITY,0}};
+    double _x1[][2]={{0,1},{0,2},{-oo,0}};
     CHECK(IntervalVector(3,_x1).is_unbounded());
   }
 
@@ -479,78 +479,78 @@ TEST_CASE("Test codac2::IntervalVector")
 
   SECTION("extr_diam_index04")
   {
-    double _x1[][2]={{0,1},{0,2},{NEG_INFINITY,0}};
+    double _x1[][2]={{0,1},{0,2},{-oo,0}};
     IntervalVector x1(3,_x1);
     CHECK(x1.extr_diam_index(true)==0);
     CHECK(x1.extr_diam_index(false)==2);
     CHECK(x1.min_diam()==1);
-    CHECK(x1.max_diam()==POS_INFINITY);
+    CHECK(x1.max_diam()==oo);
   }
 
   SECTION("extr_diam_index05")
   {
-    double _x1[][2]={{NEG_INFINITY,0}};
+    double _x1[][2]={{-oo,0}};
     IntervalVector x1(1,_x1);
     CHECK(x1.extr_diam_index(true)==0);
     CHECK(x1.extr_diam_index(false)==0);
-    CHECK(x1.min_diam()==POS_INFINITY);
-    CHECK(x1.max_diam()==POS_INFINITY);
+    CHECK(x1.min_diam()==oo);
+    CHECK(x1.max_diam()==oo);
   }
 
   SECTION("extr_diam_index06")
   {
-    double _x1[][2]={{NEG_INFINITY,0},{0,1},{NEG_INFINITY,1},{1,3}};
+    double _x1[][2]={{-oo,0},{0,1},{-oo,1},{1,3}};
     IntervalVector x1(4,_x1);
     CHECK(x1.extr_diam_index(true)==1);
     CHECK(x1.extr_diam_index(false)==2);
     CHECK(x1.min_diam()==1);
-    CHECK(x1.max_diam()==POS_INFINITY);
+    CHECK(x1.max_diam()==oo);
   }
 
   SECTION("extr_diam_index07")
   {
-    double _x1[][2]={{NEG_INFINITY,0},{-2,POS_INFINITY},{NEG_INFINITY,1}};
+    double _x1[][2]={{-oo,0},{-2,oo},{-oo,1}};
     IntervalVector x1(3,_x1);
     CHECK(x1.extr_diam_index(true)==0);
     CHECK(x1.extr_diam_index(false)==1);
-    CHECK(x1.min_diam()==POS_INFINITY);
-    CHECK(x1.max_diam()==POS_INFINITY);
+    CHECK(x1.min_diam()==oo);
+    CHECK(x1.max_diam()==oo);
   }
 
   SECTION("extr_diam_index08")
   {
-    double _x1[][2]={{NEG_INFINITY,0},{NEG_INFINITY,1},{-2,POS_INFINITY}};
+    double _x1[][2]={{-oo,0},{-oo,1},{-2,oo}};
     IntervalVector x1(3,_x1);
     CHECK(x1.extr_diam_index(true)==0);
     CHECK(x1.extr_diam_index(false)==2);
-    CHECK(x1.min_diam()==POS_INFINITY);
-    CHECK(x1.max_diam()==POS_INFINITY);
+    CHECK(x1.min_diam()==oo);
+    CHECK(x1.max_diam()==oo);
   }
 
   SECTION("extr_diam_index09")
   {
-    double _x1[][2]={{-2,POS_INFINITY},{NEG_INFINITY,0},{NEG_INFINITY,1}};
+    double _x1[][2]={{-2,oo},{-oo,0},{-oo,1}};
     IntervalVector x1(3,_x1);
     CHECK(x1.extr_diam_index(true)==1);
     CHECK(x1.extr_diam_index(false)==0);
-    CHECK(x1.min_diam()==POS_INFINITY);
-    CHECK(x1.max_diam()==POS_INFINITY);
+    CHECK(x1.min_diam()==oo);
+    CHECK(x1.max_diam()==oo);
   }
 
   SECTION("extr_diam_index10")
   {
-    double _x1[][2]={{-2,POS_INFINITY},{NEG_INFINITY,1},{NEG_INFINITY,0}};
+    double _x1[][2]={{-2,oo},{-oo,1},{-oo,0}};
     IntervalVector x1(3,_x1);
     CHECK(x1.extr_diam_index(true)==2);
     CHECK(x1.extr_diam_index(false)==0);
-    CHECK(x1.min_diam()==POS_INFINITY);
-    CHECK(x1.max_diam()==POS_INFINITY);
+    CHECK(x1.min_diam()==oo);
+    CHECK(x1.max_diam()==oo);
   }
 
   SECTION("volume01")
   {
-    double _x1[][2]={{0,1},{0,POS_INFINITY}};
-    CHECK(IntervalVector(2,_x1).volume()==POS_INFINITY);
+    double _x1[][2]={{0,1},{0,oo}};
+    CHECK(IntervalVector(2,_x1).volume()==oo);
   }
 
   SECTION("volume02")
@@ -574,8 +574,8 @@ TEST_CASE("Test codac2::IntervalVector")
 
   SECTION("minus02")
   {
-    double _x1[][2]={{0,1},{0,POS_INFINITY}};
-    double _x2[][2]={{-1,0},{NEG_INFINITY,0}};
+    double _x1[][2]={{0,1},{0,oo}};
+    double _x2[][2]={{-1,0},{-oo,0}};
     CHECK(-IntervalVector(2,_x1)==IntervalVector(2,_x2));
   }
 
@@ -596,22 +596,22 @@ TEST_CASE("Test codac2::IntervalVector")
     IntervalVector e(IntervalVector::empty_set(3));
 
     CHECK(x1+x2==x3);
-    //CHECK(x1+e,e);
+    CHECK((x1+e)==e);
     CHECK((x1+e).is_empty());
-    //CHECK(IntervalVector(x1)+=e,e);
+    CHECK((IntervalVector(x1)+=e)==e);
     CHECK((IntervalVector(x1)+=e).is_empty());
 
-    //CHECK(e+x1,e);
+    CHECK((e+x1)==e);
     CHECK((e+x1).is_empty());
-    //CHECK(e+=x1,e);
+    CHECK((e+=x1)==e);
     CHECK((e+=x1).is_empty());
-    //CHECK(e+e,e);
+    CHECK((e+e)==e);
     CHECK((e+e).is_empty());
-    //CHECK(e+=e,e);
+    CHECK((e+=e)==e);
     CHECK((e+=e).is_empty());
 
     CHECK((IntervalVector(x1)+=x2)==x3);
-    //CHECK(IntervalVector(x1)+=e,e);
+    CHECK((IntervalVector(x1)+=e)==e);
     CHECK((IntervalVector(x1)+=e).is_empty());
 
     CHECK((IntervalVector(x2)+=x1)==x3);
@@ -629,18 +629,18 @@ TEST_CASE("Test codac2::IntervalVector")
 
     CHECK(x1-x2==x3);
     CHECK(x2-x1==-x3);
-    //CHECK(x1-e,e);
+    CHECK((x1-e)==e);
     CHECK((x1-e).is_empty());
-    //CHECK(IntervalVector(x1)-=e,e);
+    CHECK((IntervalVector(x1)-=e)==e);
     CHECK((IntervalVector(x1)-=e).is_empty());
 
-    //CHECK(e-x1,e);
+    CHECK((e-x1)==e);
     CHECK((e-x1).is_empty());
-    //CHECK(e-=x1,e);
+    CHECK((e-=x1)==e);
     CHECK((e-=x1).is_empty());
-    //CHECK(e-e,e);
+    CHECK((e-e)==e);
     CHECK((e-e).is_empty());
-    //CHECK(e-=e,e);
+    CHECK((e-=e)==e);
     CHECK((e-=e).is_empty());
 
     CHECK((IntervalVector(x1)-=x2)==x3);
@@ -648,422 +648,367 @@ TEST_CASE("Test codac2::IntervalVector")
   }
 }
 
-#if 0 
+bool test_diff(const IntervalVector& x, const IntervalVector& y, const std::list<IntervalVector>& expected, bool compactness = true)
+{
+  auto c = x.diff(y, compactness);
 
+  CHECK(!c.empty());
+  CHECK(c.size()==expected.size());
+  CHECK(c.front().size()==x.size());
 
+  auto it = c.begin();
+  while(it != c.end())
+  {
+    bool is_same = false;
+    for(const auto& ri : expected)
+      if(ri == *it)
+      {
+        is_same = true;
+        break;
+      }
 
-void TestIntervalVector::compl01() {
-  double _b[][2]={{0,1},{0,1}};
-  IntervalVector b(2,_b);
-  IntervalVector* c;
-  int n=b.complementary(c);
-
-  CHECK(n==4);
-  CHECK(c[0].size()==2);
-
-  CHECK(c[0][0]==Interval::neg_reals());
-  CHECK(c[0][1]==Interval::all_reals());
-
-  CHECK(c[1][0]==Interval(1,POS_INFINITY));
-  CHECK(c[1][1]==Interval::all_reals());
-
-  CHECK(c[2][0]==Interval(0,1));
-  CHECK(c[2][1]==Interval::neg_reals());
-
-  CHECK(c[3][0]==Interval(0,1));
-  CHECK(c[3][1]==Interval(1,POS_INFINITY));
-
-  delete[] c;
-}
-
-/**
- * complementary of an empty box = (-oo,oo)x...(-oo,oo)
- */
-void TestIntervalVector::compl02() {
-
-  IntervalVector* c;
-  int n=IntervalVector::empty_set(2).complementary(c);
-  CHECK(n==1);
-  CHECK(c[0].size()==2);
-
-  CHECK(c[0][0]==Interval::all_reals());
-  CHECK(c[0][1]==Interval::all_reals());
-
-  delete[] c;
-}
-
-bool TestIntervalVector::test_diff(int n, double _x[][2], double _y[][2], int m, double _z[][2], bool compactness, bool debug) {
-  IntervalVector x(n,_x);
-  IntervalVector y(n,_y);
-  IntervalMatrix mz(m,n,_z);
-  IntervalVector* c;
-  int nn=x.diff(y,c,compactness);
-  if (debug) {
-    cout << x << " diff " << y << " gives:" << endl;
-    for (int i=0; i<nn; i++) {
-      cout << c[i] << endl;
-    }
-    cout << "==================================\n";
+    if(is_same)
+      it = c.erase(it);
+    else
+      it++;
   }
-  if (nn!=m) return false;
-  for (int i=0; i<nn; i++) {
-    if (c[i]!=mz[i]) {
-      if (debug) cout << "i=" << i << c[i] << "!=" << mz[i] << endl;
-      delete[] c;
-      return false;
+
+  CHECK(c.empty()); // all complementary boxes have been checked
+  return c.empty();
+}
+
+TEST_CASE("Tests from IBEX IntervalVector::diff")
+{
+  SECTION("compl01")
+  {
+    double _b[][2]={{0,1},{0,1}};
+    IntervalVector b(2,_b);
+    auto c = b.complementary();
+
+    CHECK(c.size()==4);
+    CHECK(c.front().size()==2);
+
+    for(size_t i = 0 ; i < 4 ; i++)
+    {
+      if(c.front() == IntervalVector({Interval::neg_reals(),Interval::all_reals()})
+        || c.front() == IntervalVector({Interval(1,oo),Interval::all_reals()})
+        || c.front() == IntervalVector({Interval(0,1),Interval::neg_reals()})
+        || c.front() == IntervalVector({Interval(0,1),Interval(1,oo)}))
+        c.pop_front();
     }
+
+    CHECK(c.empty()); // all complementary boxes have been checked
   }
-  delete[] c;
-  return true;
+
+  SECTION("compl02")
+  {
+    // complementary of an empty box = (-oo,oo)x...(-oo,oo)
+    auto c = IntervalVector::empty_set(2).complementary();
+    CHECK(c.size()==1);
+    CHECK(c.front().size()==2);
+    CHECK(c.front()[0]==Interval::all_reals());
+    CHECK(c.front()[1]==Interval::all_reals());
+  }
+
+  SECTION("diff01")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, IntervalVector::empty_set(3), { {{-2,2},{-2,2},{-2,2}} }));
+  }
+
+  SECTION("diff02")
+  {
+    CHECK(test_diff(IntervalVector::empty_set(3), {{-2,2},{-2,2},{-2,2}}, { IntervalVector::empty_set(3) }));
+  }
+
+  SECTION("diff03")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-1,1},{3,4},{-1,1}}, { {{-2,2},{-2,2},{-2,2}} }));
+  }
+
+  SECTION("diff04")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-1,1},{-1,-1},{-1,1}}, { {{-2,2},{-2,2},{-2,2}} }));
+  }
+
+  SECTION("diff05")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-1,1},{-1,1},{-1,1}}, {
+        {{-2,-1},{-2,2},{-2,2}},
+        {{1,2},{-2,2},{-2,2}},
+        {{-1,1},{-2,-1},{-2,2}},
+        {{-1,1},{1,2},{-2,2}},
+        {{-1,1},{-1,1},{-2,-1}},
+        {{-1,1},{-1,1},{1,2}}
+    }));
+  }
+
+  SECTION("diff06")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-1,1},{-1,1},{-2,1}}, {
+        {{-2,-1},{-2,2},{-2,2}},
+        {{1,2},{-2,2},{-2,2}},
+        {{-1,1},{-2,-1},{-2,2}},
+        {{-1,1},{1,2},{-2,2}},
+        {{-1,1},{-1,1},{1,2}}
+    }));
+  }
+
+  SECTION("diff07")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-1,1},{-1,1},{-2,2}}, {
+      {{-2,-1},{-2,2},{-2,2}},
+      {{1,2},{-2,2},{-2,2}},
+      {{-1,1},{-2,-1},{-2,2}},
+      {{-1,1},{1,2},{-2,2}}
+    }));
+  }
+
+  SECTION("diff08")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-1,1},{-2,1},{-1,1}}, {
+      {{-2,-1},{-2,2},{-2,2}},
+      {{1,2},{-2,2},{-2,2}},
+      {{-1,1},{1,2},{-2,2}},
+      {{-1,1},{-2,1},{-2,-1}},
+      {{-1,1},{-2,1},{1,2}}
+    }));
+  }
+
+  SECTION("diff09")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-1,1},{-2,2},{-1,1}}, {
+      {{-2,-1},{-2,2},{-2,2}},
+      {{1,2},{-2,2},{-2,2}},
+      {{-1,1},{-2,2},{-2,-1}},
+      {{-1,1},{-2,2},{1,2}}
+    }));
+  }
+
+  SECTION("diff10")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-2,1},{-1,1},{-1,1}}, {
+      {{1,2},{-2,2},{-2,2}},
+      {{-2,1},{-2,-1},{-2,2}},
+      {{-2,1},{1,2},{-2,2}},
+      {{-2,1},{-1,1},{-2,-1}},
+      {{-2,1},{-1,1},{1,2}}
+    }));
+  }
+
+  SECTION("diff11")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-2,2},{-1,2},{-1,1}}, {
+      {{-2,2},{-2,-1},{-2,2}},
+      {{-2,2},{-1,2},{-2,-1}},
+      {{-2,2},{-1,2},{1,2}}
+    }));
+    
+  }
+
+  SECTION("diff12")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-1,1},{-2,1},{-2,1}}, {
+      {{-2,-1},{-2,2},{-2,2}},
+      {{1,2},{-2,2},{-2,2}},
+      {{-1,1},{1,2},{-2,2}},
+      {{-1,1},{-2,1},{1,2}}
+    })); 
+  }
+
+  SECTION("diff13")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-1,1},{-2,1},{-2,2}}, {
+      {{-2,-1},{-2,2},{-2,2}},
+      {{1,2},{-2,2},{-2,2}},
+      {{-1,1},{1,2},{-2,2}}
+    }));
+  }
+
+  SECTION("diff14")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-2,1},{-1,1},{-2,1}}, {
+      {{1,2},{-2,2},{-2,2}},
+      {{-2,1},{-2,-1},{-2,2}},
+      {{-2,1},{1,2},{-2,2}},
+      {{-2,1},{-1,1},{1,2}}
+    }));  
+  }
+
+  SECTION("diff15")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-2,1},{-1,1},{-2,2}}, {
+      {{1,2},{-2,2},{-2,2}},
+      {{-2,1},{-2,-1},{-2,2}},
+      {{-2,1},{1,2},{-2,2}}
+    }));
+  }
+
+  SECTION("diff16")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-2,1},{-2,1},{-1,1}}, {
+      {{1,2},{-2,2},{-2,2}},
+      {{-2,1},{1,2},{-2,2}},
+      {{-2,1},{-2,1},{-2,-1}},
+      {{-2,1},{-2,1},{1,2}}
+    }));
+  }
+
+  SECTION("diff17")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-2,1},{-2,2},{-1,1}}, {
+      {{1,2},{-2,2},{-2,2}},
+      {{-2,1},{-2,2},{-2,-1}},
+      {{-2,1},{-2,2},{1,2}}
+    }));
+  }
+
+  SECTION("diff18")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-2,1},{-2,1},{-2,1}}, {
+      {{1,2},{-2,2},{-2,2}},
+      {{-2,1},{1,2},{-2,2}},
+      {{-2,1},{-2,1},{1,2}}
+    }));
+  }
+
+  SECTION("diff19")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-2,1},{-2,1},{-2,2}}, {
+      {{1,2},{-2,2},{-2,2}},
+      {{-2,1},{1,2},{-2,2}}
+    }));
+  }
+
+  SECTION("diff20")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-2,1},{-2,2},{-2,1}}, {
+      {{1,2},{-2,2},{-2,2}},
+      {{-2,1},{-2,2},{1,2}}
+    }));
+  }
+
+  SECTION("diff21")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-2,2},{-2,1},{-2,1}}, {
+      {{-2,2},{1,2},{-2,2}},
+      {{-2,2},{-2,1},{1,2}}
+    }));
+  }
+
+  SECTION("diff22")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-2,1},{-2,2},{-2,2}}, {
+      {{1,2},{-2,2},{-2,2}}
+    }));
+  }
+
+  SECTION("diff23")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-2,2},{-2,2},{-2,1}}, {
+      {{-2,2},{-2,2},{1,2}}
+    }));
+  }
+
+  SECTION("diff24")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-2,2},{-2,1},{-2,2}}, {
+      {{-2,2},{1,2},{-2,2}}
+    }));
+  }
+
+  SECTION("diff25")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{-2,2},{-2,2},{-2,2}}, {
+      IntervalVector::empty_set(3)
+    }));
+  }
+
+  SECTION("diff30")
+  {
+    CHECK(test_diff({{0,0},{-2,2},{-2,2}}, {{0,0},{-1,1},{-1,1}}, {
+      {{0,0},{-2,-1},{-2,2}},
+      {{0,0},{1,2},{-2,2}},
+      {{0,0},{-1,1},{-2,-1}},
+      {{0,0},{-1,1},{1,2}}
+    }));
+  }
+
+  SECTION("diff31")
+  {
+    CHECK(test_diff({{0,0},{0,0},{-2,2}}, {{0,0},{0,0},{-1,1}}, {
+      {{0,0},{0,0},{-2,-1}},
+      {{0,0},{0,0},{1,2}}
+    }));
+  }
+
+  SECTION("diff32")
+  {
+    CHECK(test_diff({{0,0},{-2,2},{0,0}}, {{0,0},{-1,1},{0,0}}, {
+      {{0,0},{-2,-1},{0,0}},
+      {{0,0},{1,2},{0,0}}
+    }));
+  }
+
+  SECTION("diff33")
+  {
+    CHECK(test_diff({{-2,2},{0,0},{0,0}}, {{-1,1},{0,0},{0,0}}, {
+      {{-2,-1},{0,0},{0,0}},
+      {{1,2},{0,0},{0,0}}
+    }));
+  }
+
+  SECTION("diff34")
+  {
+    CHECK(test_diff({{0,0},{-2,2},{-2,2}}, {{-1,1},{-1,1},{-1,1}}, {
+      {{0,0},{-2,-1},{-2,2}},
+      {{0,0},{1,2},{-2,2}},
+      {{0,0},{-1,1},{-2,-1}},
+      {{0,0},{-1,1},{1,2}}
+    }));
+  }
+
+  SECTION("diff35")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{2,4},{-2,2},{-2,2}}, {
+      {{-2,2},{-2,2},{-2,2}}
+    }));
+  }
+
+  SECTION("diff36")
+  {
+    CHECK(test_diff({{-2,2},{-2,2},{-2,2}}, {{2,4},{-1,1},{-1,1}}, {
+      {{-2,2},{-2,2},{-2,2}}
+    }));
+  }
+
+  SECTION("diff37")
+  {
+    CHECK(test_diff({{-2,2},{-2,2}}, {{-2,2},{1,1}}, {
+      {{-2,2},{-2,1}},
+      {{-2,2},{1,2}}
+    }, false));
+  }
+
+  SECTION("diff38")
+  {
+    CHECK(test_diff({{-2,2},{1,1}}, {{0,2},{-2,2}}, {
+      {{-2,0},{1,1}}
+    }, false));
+  }
+
+  SECTION("issue228")
+  {
+    CHECK(test_diff({{-1,-1},{-1,1},{-1,1}}, {{0,2},{0,2},{0,2}}, {
+      {{-1,-1},{-1,1},{-1,1}}
+    }));
+  }
 }
 
 
-void TestIntervalVector::diff01() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  IntervalVector* c;
-  IntervalVector _x(3,x);
-  CHECK(_x.diff(IntervalVector::empty_set(3),c)==1);
-  CHECK(c[0]==_x);
-  delete[] c;
-}
+#if 0
 
-void TestIntervalVector::diff02() {
-  double y[][2]= {{-2,2},{-2,2},{-2,2}};
-  IntervalVector* c;
-  CHECK(IntervalVector::empty_set(3).diff(IntervalVector(3,y),c)==0);
-  delete[] c;
-}
+// Tests from IBEX that are not (yet) considered in Codac:
 
-void TestIntervalVector::diff03() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-1,1},{3,4},{-1,1}};
-  double z[][2]= {{-2,2},{-2,2},{-2,2}};
-  CHECK(test_diff(3,x,y,1,z));
-}
-
-void TestIntervalVector::diff04() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-1,1},{-1,-1},{-1,1}};
-  double z[][2]= {{-2,2},{-2,2},{-2,2}};
-  CHECK(test_diff(3,x,y,1,z));
-}
-
-void TestIntervalVector::diff05() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-1,1},{-1,1},{-1,1}};
-  double z[][2]= {{-2,-1},{-2,2},{-2,2},
-              {1,2},{-2,2},{-2,2},
-          {-1,1},{-2,-1},{-2,2},
-          {-1,1},{1,2},{-2,2},
-          {-1,1},{-1,1},{-2,-1},
-          {-1,1},{-1,1},{1,2}};
-  CHECK(test_diff(3,x,y,6,z));
-}
-
-void TestIntervalVector::diff06() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-1,1},{-1,1},{-2,1}};
-  double z[][2]= {{-2,-1},{-2,2},{-2,2},
-              {1,2},{-2,2},{-2,2},
-          {-1,1},{-2,-1},{-2,2},
-          {-1,1},{1,2},{-2,2},
-          {-1,1},{-1,1},{1,2}};
-  CHECK(test_diff(3,x,y,5,z));
-}
-
-void TestIntervalVector::diff07() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-1,1},{-1,1},{-2,2}};
-  double z[][2]= {{-2,-1},{-2,2},{-2,2},
-              {1,2},{-2,2},{-2,2},
-          {-1,1},{-2,-1},{-2,2},
-          {-1,1},{1,2},{-2,2}};
-  CHECK(test_diff(3,x,y,4,z));
-}
-
-void TestIntervalVector::diff08() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-1,1},{-2,1},{-1,1}};
-  double z[][2]= {{-2,-1},{-2,2},{-2,2},
-              {1,2},{-2,2},{-2,2},
-          {-1,1},{1,2},{-2,2},
-          {-1,1},{-2,1},{-2,-1},
-          {-1,1},{-2,1},{1,2}};
-  CHECK(test_diff(3,x,y,5,z));
-}
-
-void TestIntervalVector::diff09() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-1,1},{-2,2},{-1,1}};
-  double z[][2]= {{-2,-1},{-2,2},{-2,2},
-              {1,2},{-2,2},{-2,2},
-          {-1,1},{-2,2},{-2,-1},
-          {-1,1},{-2,2},{1,2}};
-  CHECK(test_diff(3,x,y,4,z));
-}
-
-void TestIntervalVector::diff10() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-2,1},{-1,1},{-1,1}};
-  double z[][2]= {{1,2},{-2,2},{-2,2},
-          {-2,1},{-2,-1},{-2,2},
-          {-2,1},{1,2},{-2,2},
-          {-2,1},{-1,1},{-2,-1},
-          {-2,1},{-1,1},{1,2}};
-  CHECK(test_diff(3,x,y,5,z));
-}
-
-void TestIntervalVector::diff11() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-2,2},{-1,2},{-1,1}};
-  double z[][2]= {{-2,2},{-2,-1},{-2,2},
-          {-2,2},{-1,2},{-2,-1},
-          {-2,2},{-1,2},{1,2}};
-  CHECK(test_diff(3,x,y,3,z));
-}
-
-void TestIntervalVector::diff12() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-1,1},{-2,1},{-2,1}};
-  double z[][2]= {{-2,-1},{-2,2},{-2,2},
-              {1,2},{-2,2},{-2,2},
-          {-1,1},{1,2},{-2,2},
-          {-1,1},{-2,1},{1,2}};
-  CHECK(test_diff(3,x,y,4,z));
-}
-
-void TestIntervalVector::diff13() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-1,1},{-2,1},{-2,2}};
-  double z[][2]= {{-2,-1},{-2,2},{-2,2},
-              {1,2},{-2,2},{-2,2},
-          {-1,1},{1,2},{-2,2}};
-  CHECK(test_diff(3,x,y,3,z));
-}
-
-void TestIntervalVector::diff14() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-2,1},{-1,1},{-2,1}};
-  double z[][2]= {{1,2},{-2,2},{-2,2},
-          {-2,1},{-2,-1},{-2,2},
-          {-2,1},{1,2},{-2,2},
-          {-2,1},{-1,1},{1,2}};
-  CHECK(test_diff(3,x,y,4,z));
-}
-
-void TestIntervalVector::diff15() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-2,1},{-1,1},{-2,2}};
-  double z[][2]= {{1,2},{-2,2},{-2,2},
-          {-2,1},{-2,-1},{-2,2},
-          {-2,1},{1,2},{-2,2}};
-  CHECK(test_diff(3,x,y,3,z));
-}
-
-void TestIntervalVector::diff16() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-2,1},{-2,1},{-1,1}};
-  double z[][2]= {{1,2},{-2,2},{-2,2},
-          {-2,1},{1,2},{-2,2},
-          {-2,1},{-2,1},{-2,-1},
-          {-2,1},{-2,1},{1,2}};
-  CHECK(test_diff(3,x,y,4,z));
-}
-
-void TestIntervalVector::diff17() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-2,1},{-2,2},{-1,1}};
-  double z[][2]= {{1,2},{-2,2},{-2,2},
-          {-2,1},{-2,2},{-2,-1},
-          {-2,1},{-2,2},{1,2}};
-  CHECK(test_diff(3,x,y,3,z));
-}
-
-void TestIntervalVector::diff18() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-2,1},{-2,1},{-2,1}};
-  double z[][2]= {{1,2},{-2,2},{-2,2},
-          {-2,1},{1,2},{-2,2},
-          {-2,1},{-2,1},{1,2}};
-  CHECK(test_diff(3,x,y,3,z));
-}
-
-void TestIntervalVector::diff19() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-2,1},{-2,1},{-2,2}};
-  double z[][2]= {{1,2},{-2,2},{-2,2},
-          {-2,1},{1,2},{-2,2}};
-  CHECK(test_diff(3,x,y,2,z));
-}
-
-void TestIntervalVector::diff20() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-2,1},{-2,2},{-2,1}};
-  double z[][2]= {{1,2},{-2,2},{-2,2},
-          {-2,1},{-2,2},{1,2}};
-  CHECK(test_diff(3,x,y,2,z));
-}
-
-void TestIntervalVector::diff21() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-2,2},{-2,1},{-2,1}};
-
-  double z[][2]= {{-2,2},{1,2},{-2,2},
-          {-2,2},{-2,1},{1,2}};
-  CHECK(test_diff(3,x,y,2,z));
-}
-
-void TestIntervalVector::diff22() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-2,1},{-2,2},{-2,2}};
-  double z[][2]= {{1,2},{-2,2},{-2,2}};
-  CHECK(test_diff(3,x,y,1,z));
-}
-
-void TestIntervalVector::diff23() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-2,2},{-2,2},{-2,1}};
-  double z[][2]= {{-2,2},{-2,2},{1,2}};
-  CHECK(test_diff(3,x,y,1,z));
-}
-
-void TestIntervalVector::diff24() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-2,2},{-2,1},{-2,2}};
-  double z[][2]= {{-2,2},{1,2},{-2,2}};
-  CHECK(test_diff(3,x,y,1,z));
-}
-
-void TestIntervalVector::diff25() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{-2,2},{-2,2},{-2,2}};
-  IntervalVector* c;
-  CHECK(IntervalVector(3,x).diff(IntervalVector(3,y),c)==0);
-  delete[] c;
-}
-
-void TestIntervalVector::diff26() {
-
-}
-
-void TestIntervalVector::diff27() {
-
-}
-
-void TestIntervalVector::diff28() {
-
-}
-
-void TestIntervalVector::diff29() {
-
-}
-
-
-void TestIntervalVector::diff30() {
-  double x[][2]= {{0,0},{-2,2},{-2,2}};
-  double y[][2]= {{0,0},{-1,1},{-1,1}};
-  double z[][2]= {{0,0},{-2,-1},{-2,2},
-              {0,0},{1,2},{-2,2},
-          {0,0},{-1,1},{-2,-1},
-          {0,0},{-1,1},{1,2}};
-  CHECK(test_diff(3,x,y,4,z));
-}
-
-void TestIntervalVector::diff31() {
-  double x[][2]= {{0,0},{0,0},{-2,2}};
-  double y[][2]= {{0,0},{0,0},{-1,1}};
-  double z[][2]= {{0,0},{0,0},{-2,-1},
-              {0,0},{0,0},{1,2}};
-  CHECK(test_diff(3,x,y,2,z));
-}
-
-void TestIntervalVector::diff32() {
-  double x[][2]= {{0,0},{-2,2},{0,0}};
-  double y[][2]= {{0,0},{-1,1},{0,0}};
-  double z[][2]= {{0,0},{-2,-1},{0,0},
-              {0,0},{1,2},{0,0}};
-  CHECK(test_diff(3,x,y,2,z));
-}
-
-void TestIntervalVector::diff33() {
-  double x[][2]= {{-2,2},{0,0},{0,0}};
-  double y[][2]= {{-1,1},{0,0},{0,0}};
-  double z[][2]= {{-2,-1},{0,0},{0,0},
-              {1,2},{0,0},{0,0}};
-  CHECK(test_diff(3,x,y,2,z));
-}
-
-void TestIntervalVector::diff34() {
-  double x[][2]= {{0,0},{-2,2},{-2,2}};
-  double y[][2]= {{-1,1},{-1,1},{-1,1}};
-  double z[][2]= {{0,0},{-2,-1},{-2,2},
-              {0,0},{1,2},{-2,2},
-          {0,0},{-1,1},{-2,-1},
-          {0,0},{-1,1},{1,2}};
-  CHECK(test_diff(3,x,y,4,z));
-}
-
-void TestIntervalVector::diff35() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{2,4},{-2,2},{-2,2}};
-  double z[][2]= {{-2,2},{-2,2},{-2,2}};
-  CHECK(test_diff(3,x,y,1,z));
-}
-
-void TestIntervalVector::diff36() {
-  double x[][2]= {{-2,2},{-2,2},{-2,2}};
-  double y[][2]= {{2,4},{-1,1},{-1,1}};
-  double z[][2]= {{-2,2},{-2,2},{-2,2}};
-  CHECK(test_diff(3,x,y,1,z));
-}
-
-void TestIntervalVector::diff37() {
-  double x[][2]= {{-2,2},{-2,2}};
-  double y[][2]= {{-2,2},{1,1}};
-  double z[][2]= {{-2,2},{-2,1},
-                  {-2,2},{1,2}};
-  CHECK(test_diff(2,x,y,2,z,false));
-}
-
-void TestIntervalVector::diff38() {
-  double x[][2]= {{-2,2},{1,1}};
-  double y[][2]= {{0,2},{-2,2}};
-  double z[][2]= {{-2,0},{1,1}};
-  CHECK(test_diff(2,x,y,1,z,false));
-}
-
-void TestIntervalVector::issue228() {
-  double x[][2]= {{-1,-1},{-1,1},{-1,1}};
-  double y[][2]= {{0,2},{0,2},{0,2}};
-  double z[][2]= {{-1,-1},{-1,1},{-1,1}};
-  CHECK(test_diff(3,x,y,1,z));
-}
-
-void TestIntervalVector::random01() {
-  double _b[][2]={{0,1},{0,1}};
-  IntervalVector b(2,_b);
-  IntervalVector r=b.random();
-
-  CHECK(r.size()==2);
-  CHECK(r.max_diam()==0);
-  CHECK(b.is_superset(r));
-}
-
-void TestIntervalVector::random02() {
-  double _b[][2]={{1,1},{2,2}};
-  IntervalVector b(2,_b);
-  IntervalVector r=b.random();
-
-  CHECK(b==r);
-}
-
-
-#endif
-
-
-
-
-/*
 void TestIntervalVector::is_relative_interior01() {
   double _x1[][2]={{1,1},{3,4}};
   double _x2[][2]={{1,1},{2,5}};
@@ -1109,7 +1054,7 @@ void TestIntervalVector::is_relative_interior05() {
 }
 
 void TestIntervalVector::sort_indices01() {
-  double _x[][2]={{0,2},{NEG_INFINITY,0},{0,1},{3,3},{-10,10}};
+  double _x[][2]={{0,2},{-oo,0},{0,1},{3,3},{-10,10}};
   IntervalVector x(5,_x);
   int tab[5];
   x.sort_indices(true,tab);
@@ -1121,7 +1066,7 @@ void TestIntervalVector::sort_indices01() {
 }
 
 void TestIntervalVector::sort_indices02() {
-  double _x[][2]={{0,2},{NEG_INFINITY,0},{0,1},{3,3},{-10,10}};
+  double _x[][2]={{0,2},{-oo,0},{0,1},{3,3},{-10,10}};
   IntervalVector x(5,_x);
   int tab[5];
   x.sort_indices(false,tab);
@@ -1131,7 +1076,6 @@ void TestIntervalVector::sort_indices02() {
   CHECK(tab[3]==2);
   CHECK(tab[4]==3);
 }
-
 
 void TestIntervalVector::rel_distance01() {
   IntervalVector box1(3);
@@ -1159,8 +1103,26 @@ void TestIntervalVector::perimeter01() {
 }
 
 void TestIntervalVector::perimeter02() {
-  double _x1[][2]={{0,1},{0,POS_INFINITY}};
-  CHECK(IntervalVector(2,_x1).perimeter()==POS_INFINITY);
+  double _x1[][2]={{0,1},{0,oo}};
+  CHECK(IntervalVector(2,_x1).perimeter()==oo);
 }
 
-*/
+void TestIntervalVector::random01() {
+  double _b[][2]={{0,1},{0,1}};
+  IntervalVector b(2,_b);
+  IntervalVector r=b.random();
+
+  CHECK(r.size()==2);
+  CHECK(r.max_diam()==0);
+  CHECK(b.is_superset(r));
+}
+
+void TestIntervalVector::random02() {
+  double _b[][2]={{1,1},{2,2}};
+  IntervalVector b(2,_b);
+  IntervalVector r=b.random();
+
+  CHECK(b==r);
+}
+
+#endif

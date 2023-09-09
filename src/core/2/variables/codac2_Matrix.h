@@ -56,6 +56,42 @@ namespace codac2
         return Eigen::Matrix<double,R,C>::Identity();
       }
 
+      auto operator+(const Matrix_<R,C>& x) const
+      {
+        auto y = *this;
+        return y += x;
+      }
+
+      auto operator-(const Matrix_<R,C>& x) const
+      {
+        auto y = *this;
+        return y -= x;
+      }
+
+      auto operator&(const Matrix_<R,C>& x) const
+      {
+        auto y = *this;
+        return y &= x;
+      }
+
+      auto operator|(const Matrix_<R,C>& x) const
+      {
+        auto y = *this;
+        return y |= x;
+      }
+
+      auto& operator+=(const Matrix_<R,C>& x)
+      {
+        (*this).noalias() += x;//.template cast<Interval>();
+        return *this;
+      }
+      
+      auto& operator-=(const Matrix_<R,C>& x)
+      {
+        (*this).noalias() -= x;//.template cast<Interval>();
+        return *this;
+      }
+
   };
 
 } // namespace codac

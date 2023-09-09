@@ -1,6 +1,11 @@
 /** 
  *  \file
  *  
+ *  This class reuses many of the functions developed for ibex::IntervalMatrix. 
+ *  The original IBEX code is revised in modern C++ and adapted to the template 
+ *  structure proposed in Codac, based on the Eigen library.
+ *  See ibex::IntervalMatrix (IBEX lib, author: G. Chabert)
+ *
  * ----------------------------------------------------------------------------
  *  \date       2023
  *  \author     Simon Rohou
@@ -50,7 +55,7 @@ namespace codac2
       // This constructor allows you to construct IntervalMatrix_ from Eigen expressions
       template<typename OtherDerived>
       IntervalMatrix_(const Eigen::MatrixBase<OtherDerived>& other)
-          : Eigen::Matrix<Interval,R,C>(other)
+          : Eigen::Matrix<Interval,R,C>(other.template cast<Interval>())
       { }
  
       // This method allows you to assign Eigen expressions to IntervalMatrix_
@@ -281,8 +286,9 @@ namespace codac2
         return selected_index;
       }
 
-      auto bisect(size_t i, float ratio = 0.49) const
+      auto bisect(float ratio = 0.49) const
       {
+        size_t i = largest_diam_index();
         assert((this->data()+i)->is_bisectable());
         assert(Interval(0,1).interior_contains(ratio));
 
@@ -291,11 +297,6 @@ namespace codac2
         *(p.first.data()+i) = pi.first;
         *(p.second.data()+i) = pi.second;
         return p;
-      }
-
-      auto bisect_largest_dim(float ratio = 0.49) const
-      {
-        return bisect(largest_diam_index(), ratio);
       }
 
       double volume() const
@@ -425,25 +426,25 @@ namespace codac2
         return *this;
       }
 
-      auto operator+(const IntervalMatrix_<R,C>& x)
+      auto operator+(const IntervalMatrix_<R,C>& x) const
       {
         auto y = *this;
         return y += x;
       }
 
-      auto operator-(const IntervalMatrix_<R,C>& x)
+      auto operator-(const IntervalMatrix_<R,C>& x) const
       {
         auto y = *this;
         return y -= x;
       }
 
-      auto operator&(const IntervalMatrix_<R,C>& x)
+      auto operator&(const IntervalMatrix_<R,C>& x) const
       {
         auto y = *this;
         return y &= x;
       }
 
-      auto operator|(const IntervalMatrix_<R,C>& x)
+      auto operator|(const IntervalMatrix_<R,C>& x) const
       {
         auto y = *this;
         return y |= x;
@@ -456,6 +457,18 @@ namespace codac2
       }
       
       auto& operator-=(const IntervalMatrix_<R,C>& x)
+      {
+        (*this).noalias() -= x;//.template cast<Interval>();
+        return *this;
+      }
+
+      auto& operator+=(const Matrix_<R,C>& x)
+      {
+        (*this).noalias() += x.template cast<Interval>();
+        return *this;
+      }
+      
+      auto& operator-=(const Matrix_<R,C>& x)
       {
         (*this).noalias() -= x;//.template cast<Interval>();
         return *this;

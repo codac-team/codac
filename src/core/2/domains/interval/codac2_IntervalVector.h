@@ -1,6 +1,11 @@
 /** 
  *  \file
  *  
+ *  This class reuses many of the functions developed for ibex::IntervalVector. 
+ *  The original IBEX code is revised in modern C++ and adapted to the template 
+ *  structure proposed in Codac, based on the Eigen library.
+ *  See ibex::IntervalVector (IBEX lib, author: G. Chabert)
+ * 
  * ----------------------------------------------------------------------------
  *  \date       2023
  *  \author     Simon Rohou
@@ -59,7 +64,7 @@ namespace codac2
       {
         static_assert(N == M || N == -1 || M == -1);
         for(size_t i = 0 ; i < IntervalMatrix_<N,1>::size() ; i++)
-          (*this)[i] = v[i];
+          (*this)[i] = Interval(v[i]);
       }
       
       explicit IntervalVector_(size_t n, double bounds[][2])
@@ -111,9 +116,9 @@ namespace codac2
         return *this;
       }
 
-      static IntervalVector_<N> empty_set()
+      static IntervalVector_<N> empty_set(size_t n = N)
       {
-        IntervalVector_<N> x;
+        IntervalVector_<N> x(n);
         x.set_empty();
         return x;
       }
@@ -153,6 +158,75 @@ namespace codac2
       {
         (*this).noalias() -= x;//.template cast<Interval>();
         return *this;
+      }
+
+      std::list<IntervalVector_<N>> complementary() const
+      {
+        return IntervalVector_<N>(this->size()).diff(*this);
+      }
+
+      std::list<IntervalVector_<N>> diff(const IntervalVector_<N>& y, bool compactness = true) const
+      {
+        // This code originates from the ibex-lib
+        // See: ibex_TemplateVector.h
+        // Author: Gilles Chabert
+        // It has been revised with modern C++ and templated types
+
+        const size_t n = this->size();
+        assert(y.size() == n);
+
+        if(y == *this)
+          return { IntervalVector_<N>::empty_set(n) };
+
+        IntervalVector_<N> x = *this;
+        IntervalVector_<N> z = x & y;
+
+        if(z.is_empty())
+          return { x };
+
+        else
+        {
+          // Check if in one dimension y is flat and x not,
+          // in which case the diff returns also x directly
+          if(compactness)
+            for(size_t i = 0 ; i < n ; i++)
+              if(z[i].is_degenerated() && !x[i].is_degenerated())
+                return { x };
+        }
+
+        std::list<IntervalVector_<N>> l;
+
+        for(size_t var = 0 ; var < n ; var++)
+        {
+          Interval c1, c2;
+          x[var].diff(y[var], c1, c2, compactness);
+
+          if(!c1.is_empty())
+          {
+            IntervalVector_<N> v(n);
+            for(size_t i = 0 ; i < var ; i++)
+              v[i] = x[i];
+            v[var] = c1;
+            for(size_t i = var+1 ; i < n ; i++)
+              v[i] = x[i];
+            l.push_back(v);
+
+            if(!c2.is_empty())
+            {
+              IntervalVector_<N> w(n);
+              for(size_t i = 0 ; i < var ; i++)
+                w[i] = x[i];
+              w[var] = c2;
+              for(size_t i = var+1 ; i<n ; i++)
+                w[i] = x[i];
+              l.push_back(w);
+            }
+
+            x[var] = z[var];
+          }
+        }
+
+        return l;
       }
   };
 
@@ -233,7 +307,7 @@ namespace codac2
 
       static IntervalVector empty_set(size_t n)
       {
-        return IntervalVector(n, Interval::empty_set());
+        return IntervalVector_<>::empty_set(n);
       }
   };
 
