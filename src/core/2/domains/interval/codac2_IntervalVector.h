@@ -68,17 +68,9 @@ namespace codac2
       }
       
       explicit IntervalVector_(size_t n, double bounds[][2])
-        : IntervalMatrix_<N,1>(n,1)
-      {
-        for(size_t i = 0 ; i < n ; i++)
-        {
-          if(bounds == 0) // in case the user called IntervalVector(n,0) and 0 is interpreted as NULL!
-            (*this)[i] = Interval::zero();
-          else
-            (*this)[i] = Interval(bounds[i][0],bounds[i][1]);
-        }
-      }
-      
+        : IntervalMatrix_<N,1>(n,1,bounds)
+      { }
+
       explicit IntervalVector_(double bounds[][2])
         : IntervalVector_(this->size(), bounds)
       {
@@ -118,9 +110,12 @@ namespace codac2
 
       static IntervalVector_<N> empty_set(size_t n = N)
       {
-        IntervalVector_<N> x(n);
-        x.set_empty();
-        return x;
+        return IntervalMatrix_<N,1>::empty_set(n,1);
+      }
+
+      void resize(size_t n)
+      {
+        this->IntervalMatrix_<N,1>::resize(n,1);
       }
 
       template<size_t N1,size_t N2>
@@ -298,16 +293,12 @@ namespace codac2
   
       void resize(size_t n)
       {
-        // With resize of Eigen, the data is reallocated and all previous values are lost.
-        auto save = *this;
-        IntervalVector_<>::resize(n);
-        for(size_t i = 0 ; i < min(save.size(),n) ; i++)
-          (*this)[i] = save[i];
+        this->IntervalVector_<>::resize(n);
       }
 
       static IntervalVector empty_set(size_t n)
       {
-        return IntervalVector_<>::empty_set(n);
+        return IntervalMatrix_<>::empty_set(n,1);
       }
   };
 

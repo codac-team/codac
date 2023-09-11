@@ -51,6 +51,42 @@ namespace codac2
         for(size_t i = 0 ; i < size() ; i++)
           *(this->data()+i) = x;
       }
+      
+      explicit IntervalMatrix_(size_t nb_rows, size_t nb_cols, double bounds[][2])
+        : IntervalMatrix_<R,C>(nb_rows, nb_cols)
+      {
+        size_t k = 0;
+        for(size_t i = 0 ; i < nb_rows ; i++)
+          for(size_t j = 0 ; j < nb_cols ; j++)
+          {
+            if(bounds == 0) // in case the user called IntervalVector(n,0) and 0 is interpreted as NULL!
+              (*this)(i,j) = Interval::zero();
+            else
+              (*this)(i,j) = Interval(bounds[k][0],bounds[k][1]);
+            k++;
+          }
+      }
+      
+      IntervalMatrix_(std::initializer_list<std::initializer_list<Interval>> l)
+        : IntervalMatrix_<R,C>()
+      {
+        assert(R == Dynamic || (int)l.size() == R);
+        int cols = -1;
+        for(const auto& ri : l) {
+          assert(cols == -1 || cols == (int)ri.size());
+          cols = (int)ri.size();
+        }
+        this->resize(l.size(),cols);
+        size_t i = 0;
+        for(const auto& ri : l)
+        {
+          size_t j = 0;
+          for(const auto& ci : ri)
+            (*this)(i,j++) = ci;
+          i++;
+        }
+        // todo: use thias as faster? std::copy(l.begin(), l.end(), vec);
+      }
 
       // This constructor allows you to construct IntervalMatrix_ from Eigen expressions
       template<typename OtherDerived>
@@ -71,12 +107,28 @@ namespace codac2
         return this->Eigen::Matrix<Interval,R,C>::size();
       }
 
+      void resize(size_t nb_rows, size_t nb_cols)
+      {
+        // With resize of Eigen, the data is reallocated and all previous values are lost.
+        auto copy = *this;
+        this->Eigen::Matrix<Interval,R,C>::resize(nb_rows, nb_cols);
+        for(size_t i = 0 ; i < min(copy.rows(),nb_rows) ; i++)
+          for(size_t j = 0 ; j < min(copy.cols(),nb_cols) ; j++)
+            (*this)(i,j) = copy(i,j);
+      }
+
       bool is_empty() const
       {
         for(size_t i = 0 ; i < size() ; i++)
           if((this->data()+i)->is_empty())
             return true;
         return false;
+      }
+
+      static IntervalMatrix_<R,C> empty_set(size_t nb_rows = R, size_t nb_cols = C)
+      {
+        IntervalMatrix_<R,C> x(nb_rows, nb_cols, Interval::empty_set());
+        return x;
       }
 
       bool is_flat() const
@@ -369,12 +421,6 @@ namespace codac2
         init(Interval::empty_set());
       }
 
-      static IntervalMatrix_<R,C> empty_set(size_t nb_rows = R, size_t nb_cols = C)
-      {
-        IntervalMatrix_<R,C> x(nb_rows, nb_cols, Interval::empty_set());
-        return x;
-      }
-
       auto& inflate(double r)
       {
         assert(r >= 0.);
@@ -385,7 +431,7 @@ namespace codac2
 
       bool operator==(const IntervalMatrix_<R,C>& x) const
       {
-        if(x.size() != this->size())
+        if(x.size() != this->size() || x.rows() != this->rows() || x.cols() != this->cols())
           return false;
         if(is_empty() || x.is_empty())
           return is_empty() && x.is_empty();
@@ -491,15 +537,31 @@ namespace codac2
         : IntervalMatrix_<>(nb_rows, nb_cols)
       { }
 
+
+      explicit IntervalMatrix(size_t nb_rows, size_t nb_cols, const Interval& x)
+        : IntervalMatrix_<>(nb_rows, nb_cols, x)
+      { }
+
+      explicit IntervalMatrix(size_t nb_rows, size_t nb_cols, double bounds[][2])
+        : IntervalMatrix_<>(nb_rows, nb_cols, bounds)
+      { }
+
       IntervalMatrix(const IntervalMatrix_<>& x)
         : IntervalMatrix_<>(x)
+      { }
+      
+      IntervalMatrix(std::initializer_list<std::initializer_list<Interval>> l)
+        : IntervalMatrix_<>(l)
       { }
       
       template<int R,int C>
       explicit IntervalMatrix(const Matrix_<R,C>& v)
         : IntervalMatrix_<>(v)
-      {
+      { }
 
+      static IntervalMatrix empty_set(size_t nb_rows, size_t nb_cols)
+      {
+        return IntervalMatrix_<>::empty_set(nb_rows,nb_cols);
       }
   };
 
