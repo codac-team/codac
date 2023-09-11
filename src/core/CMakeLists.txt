@@ -183,6 +183,7 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_Interval.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_IntervalMatrix.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_IntervalVector.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_cart_prod.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractConstTube.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractSlice.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractSlice.h
