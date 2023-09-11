@@ -49,7 +49,15 @@ namespace codac2
       {
         assert(M == Dynamic || M == N);
       }
-    
+
+      explicit Vector_(size_t n, double values[])
+        : Matrix_<N,1>(n,1,values)
+      { }
+
+      explicit Vector_(double values[])
+        : Matrix_<N,1>(N,1,values)
+      { }
+
       template<typename OtherDerived>
       Vector_(const Eigen::MatrixBase<OtherDerived>& other)
           : Matrix_<N,1>(other)
@@ -70,8 +78,15 @@ namespace codac2
 
       static Vector_<N> zeros()
       {
-        Vector_<N> v;
-        return v;
+        return Eigen::Matrix<double,N,1>::Zero();
+      }
+
+      // todo: place this in common inheritance with IntervalVector_
+      template<size_t N1,size_t N2>
+      Vector_<N2-N1+1> subvector() const
+      {
+        assert(N1 >= 0 && N1 < N && N2 >= 0 && N2 < N && N1 <= N2);
+        return this->template block<N2-N1+1,1>(N1,0);
       }
   };
 

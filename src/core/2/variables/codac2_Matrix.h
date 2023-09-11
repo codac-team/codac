@@ -38,6 +38,25 @@ namespace codac2
         assert(C == Dynamic || C == (int)nb_cols);
       }
       
+      explicit Matrix_(size_t nb_rows, size_t nb_cols, double values[])
+        : Matrix_<R,C>(nb_rows, nb_cols)
+      {
+        size_t k = 0;
+        for(size_t i = 0 ; i < nb_rows ; i++)
+          for(size_t j = 0 ; j < nb_cols ; j++)
+          {
+            if(values == 0) // in case the user called Matrix_(r,c,0) and 0 is interpreted as NULL!
+              (*this)(i,j) = 0.;
+            else
+              (*this)(i,j) = values[k];
+            k++;
+          }
+      }
+      
+      explicit Matrix_(double values[])
+        : Matrix_<R,C>(R, C, values)
+      { }
+      
       template<typename OtherDerived>
       Matrix_(const Eigen::MatrixBase<OtherDerived>& other)
           : Eigen::Matrix<double,R,C>(other)
@@ -90,6 +109,11 @@ namespace codac2
       {
         (*this).noalias() -= x;//.template cast<Interval>();
         return *this;
+      }
+
+      static Matrix_<R,C> zeros()
+      {
+        return Eigen::Matrix<double,R,C>::Zero();
       }
 
   };

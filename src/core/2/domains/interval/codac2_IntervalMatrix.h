@@ -59,13 +59,17 @@ namespace codac2
         for(size_t i = 0 ; i < nb_rows ; i++)
           for(size_t j = 0 ; j < nb_cols ; j++)
           {
-            if(bounds == 0) // in case the user called IntervalVector(n,0) and 0 is interpreted as NULL!
+            if(bounds == 0) // in case the user called IntervalMatrix_(r,c,0) and 0 is interpreted as NULL!
               (*this)(i,j) = Interval::zero();
             else
               (*this)(i,j) = Interval(bounds[k][0],bounds[k][1]);
             k++;
           }
       }
+      
+      explicit IntervalMatrix_(double bounds[][2])
+        : IntervalMatrix_<R,C>(R, C, bounds)
+      { }
       
       IntervalMatrix_(std::initializer_list<std::initializer_list<Interval>> l)
         : IntervalMatrix_<R,C>()

@@ -25,13 +25,13 @@ namespace codac2
   {
     public:
 
-      Paving(size_t n)
+      explicit Paving(size_t n)
        : _x(IntervalVector_<N>(n))
       {
 
       }
 
-      Paving(const IntervalVector_<N>& x)
+      explicit Paving(const IntervalVector_<N>& x)
        : _x(x)
       {
 
