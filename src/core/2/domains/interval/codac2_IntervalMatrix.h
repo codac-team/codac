@@ -128,8 +128,8 @@ namespace codac2
         // With resize of Eigen, the data is reallocated and all previous values are lost.
         auto copy = *this;
         this->Eigen::Matrix<Interval,R,C>::resize(nb_rows, nb_cols);
-        for(size_t i = 0 ; i < min(copy.rows(),nb_rows) ; i++)
-          for(size_t j = 0 ; j < min(copy.cols(),nb_cols) ; j++)
+        for(size_t i = 0 ; i < min((size_t)copy.rows(),nb_rows) ; i++)
+          for(size_t j = 0 ; j < min((size_t)copy.cols(),nb_cols) ; j++)
             (*this)(i,j) = copy(i,j);
       }
 
