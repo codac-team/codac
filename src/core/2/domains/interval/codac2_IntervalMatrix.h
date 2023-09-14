@@ -18,8 +18,7 @@
 #define __CODAC2_INTERVALMATRIX_H__
 
 #include <codac2_Interval.h>
-#include <Eigen/Core>
-#include <Eigen/Dense>
+#include <codac2_eigen.h>
 #include <ibex_LargestFirst.h>
 #include <codac2_Matrix.h>
 
@@ -34,9 +33,7 @@ namespace codac2
 
       IntervalMatrix_()
         : Eigen::Matrix<Interval,R,C>()
-      {
-
-      }
+      { }
 
       explicit IntervalMatrix_(size_t nb_rows, size_t nb_cols)
         : Eigen::Matrix<Interval,R,C>(nb_rows, nb_cols)
@@ -71,13 +68,28 @@ namespace codac2
         : IntervalMatrix_<R,C>(R, C, bounds)
       { }
       
+      explicit IntervalMatrix_(const Matrix_<R,C>& lb, const Matrix_<R,C>& ub)
+        : IntervalMatrix_<R,C>(R, C)
+      {
+        for(size_t i = 0 ; i < this->rows() ; i++)
+          for(size_t j = 0 ; j < this->cols() ; j++)
+              (*this)(i,j) = Interval(lb(i,j),ub(i,j));
+      }
+      
+      explicit IntervalMatrix_(const IntervalMatrix_<R,C>& x)
+        : IntervalMatrix_<R,C>(R, C)
+      {
+        for(size_t i = 0 ; i < size() ; i++)
+          *(this->data()+i) = *(x.data()+i);
+      }
+      
       IntervalMatrix_(std::initializer_list<std::initializer_list<Interval>> l)
         : IntervalMatrix_<R,C>()
       {
-        assert(R == Dynamic || (int)l.size() == R);
+        assert((R == Dynamic || (int)l.size() == R) && "ill-formed matrix");
         int cols = -1;
         for(const auto& ri : l) {
-          assert(cols == -1 || cols == (int)ri.size());
+          assert((cols == -1 || cols == (int)ri.size()) && "ill-formed matrix");
           cols = (int)ri.size();
         }
         this->resize(l.size(),cols);
@@ -433,6 +445,14 @@ namespace codac2
         return *this;
       }
 
+      auto& inflate(const Matrix_<R,C>& r)
+      {
+        assert(r.minCoeff() >= 0.);
+        for(size_t i = 0 ; i < this->size() ; i++)
+          (this->data()+i)->inflate(*(r.data()+i));
+        return *this;
+      }
+
       bool operator==(const IntervalMatrix_<R,C>& x) const
       {
         if(x.size() != this->size() || x.rows() != this->rows() || x.cols() != this->cols())
@@ -524,6 +544,23 @@ namespace codac2
         return *this;
       }
   };
+
+  template<int R,int C>
+  std::ostream& operator<<(std::ostream& os, const IntervalMatrix_<R,C>& x)
+  {
+    if(x.is_empty()) return os << "empty matrix";
+    os << "(";
+    for(size_t i = 0 ; i < x.rows() ; i++)
+    {
+      os << "(";
+      for(size_t j = 0 ; j < x.cols() ; j++)
+        os << x(i,j) << (j<x.cols()-1 ? " ; " : "");
+      os << ")";
+      if(i < x.rows()-1) os << std::endl;
+    }
+    os << ")";
+    return os;
+  }
 
   template<int R,int C>
   auto operator-(const IntervalMatrix_<R,C>& x)

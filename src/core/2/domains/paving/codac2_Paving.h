@@ -20,26 +20,32 @@
 
 namespace codac2
 {
-  template<int N=Dynamic>
-  class Paving : public std::enable_shared_from_this<Paving<N>>
+  template<class P,int N=Dynamic>
+  class PavingBase
   {
     public:
 
-      explicit Paving(size_t n)
-       : _x(IntervalVector_<N>(n))
-      {
-
-      }
-
-      explicit Paving(const IntervalVector_<N>& x)
+      explicit PavingBase(const IntervalVector_<N>& x)
        : _x(x)
       {
 
       }
 
+      virtual ~PavingBase() = default;
+
       const IntervalVector_<N>& box() const
       {
         return _x;
+      }
+
+      std::shared_ptr<P> left()
+      {
+        return _left;
+      }
+
+      std::shared_ptr<P> right()
+      {
+        return _right;
       }
 
       bool is_empty() const
@@ -66,13 +72,14 @@ namespace codac2
         return v;
       }
 
-      void bisect(float ratio = 0.49)
+      virtual void bisect(float ratio = 0.49)
       {
         assert(Interval(0.,1.).interior_contains(ratio));
         assert(is_leaf() && "only leaves can be bisected");
+        assert(_x.is_bisectable());
         auto p = _x.bisect(ratio);
-        _left = std::make_shared<Paving>(p.first);
-        _right = std::make_shared<Paving>(p.second);
+        _left = std::make_shared<P>(p.first);
+        _right = std::make_shared<P>(p.second);
       }
 
       IntervalVector_<N> hull_box() const
@@ -92,9 +99,9 @@ namespace codac2
         return l;
       }
 
-      std::list<Paving<N>*> leaves_list()
+      std::list<P*> leaves_list()
       {
-        std::list<Paving<N>*> l;
+        std::list<P*> l;
         leaves_list_push(l);
         return l;
       }
@@ -112,7 +119,7 @@ namespace codac2
         }
       }
 
-      void leaves_list_push(std::list<Paving<N>*>& l)
+      void leaves_list_push(std::list<P*>& l)
       {
         if(is_leaf() && !_x.is_empty())
           l.push_back(this);
@@ -126,8 +133,19 @@ namespace codac2
     public: // todo
 
       IntervalVector_<N> _x;
-      std::shared_ptr<Paving> _left = nullptr, _right = nullptr;
+      std::shared_ptr<P> _left = nullptr, _right = nullptr;
   };
+
+  template<int N>
+  class Paving : public PavingBase<Paving<N>,N>
+  {
+    public:
+
+      explicit Paving(size_t n)
+       : PavingBase<Paving<N>,N>(IntervalVector_<N>(n))
+      { }
+  };
+
 
 } // namespace codac
 

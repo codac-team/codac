@@ -180,9 +180,11 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/sivia/codac_sivia.h)
 
   list(APPEND CODAC2_SRC # Files related to codac2
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/3rd/codac2_eigen.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_Interval.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_IntervalMatrix.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_IntervalVector.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_cart_prod.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_cart_prod.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractConstTube.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractSlice.cpp
@@ -242,6 +244,7 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/cn
                                           ${CMAKE_CURRENT_SOURCE_DIR}/tools
                                           ${CMAKE_CURRENT_SOURCE_DIR}/sivia
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/3rd
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube

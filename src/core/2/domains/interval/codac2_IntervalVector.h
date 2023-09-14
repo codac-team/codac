@@ -17,14 +17,15 @@
 #ifndef __CODAC2_INTERVALVECTOR_H__
 #define __CODAC2_INTERVALVECTOR_H__
 
+#include <list>
 #include <type_traits>
 #include <codac_Interval.h>
 #include <codac_IntervalVector.h>
-#include <Eigen/Core>
-#include <Eigen/Dense>
 #include <ibex_LargestFirst.h>
 #include "codac2_Interval.h"
 #include "codac2_IntervalMatrix.h"
+#include "codac2_Vector.h"
+#include <codac2_eigen.h>
 
 namespace codac2
 {
@@ -55,7 +56,7 @@ namespace codac2
       }
 
       explicit IntervalVector_(const Interval& x)
-        : IntervalMatrix_<N,1>(1,1,x)
+        : IntervalMatrix_<N,1>(N,1,x)
       { }
       
       template<int M>
@@ -73,9 +74,11 @@ namespace codac2
 
       explicit IntervalVector_(double bounds[][2])
         : IntervalVector_(this->size(), bounds)
-      {
-        
-      }
+      { }
+      
+      explicit IntervalVector_(const Vector_<N>& lb, const Vector_<N>& ub)
+        : IntervalMatrix_<N,1>(lb, ub)
+      { }
       
       IntervalVector_(std::initializer_list<Interval> l)
         : IntervalMatrix_<N,1>(l.size(),1)
@@ -224,6 +227,17 @@ namespace codac2
         return l;
       }
   };
+
+  template<int N>
+  std::ostream& operator<<(std::ostream& os, const IntervalVector_<N>& x)
+  {
+    if(x.is_empty()) return os << "empty vector";
+    os << "(";
+    for(size_t i = 0 ; i < x.size() ; i++)
+      os << x[i] << (i<x.size()-1 ? " ; " : "");
+    os << ")";
+    return os;
+  }
 
   template<int N>
   codac::IntervalVector to_codac1(const IntervalVector_<N>& x)

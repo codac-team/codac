@@ -17,55 +17,32 @@
 
 namespace codac2
 {
-  IntervalVector cart_prod_dyn(const Interval& x1, const Interval& x2)
-  {
-    return IntervalVector({x1,x2});
-  }
-
-  auto cart_prod_static(const Interval& x1, const Interval& x2)
-  {
-    return IntervalVector_<2>({x1,x2});
-  }
-
-  auto cart_prod_dyn(const IntervalVector& x1, const Interval& x2)
-  {
-    IntervalVector x(x1.size()+1);
-    x << x1,x2;
-    return x;
-  }
+  IntervalVector cart_prod_dyn(const Interval& x1, const Interval& x2);
+  IntervalVector_<2> cart_prod_static(const Interval& x1, const Interval& x2);
+  IntervalVector cart_prod_dyn(const IntervalVector& x1, const Interval& x2);
 
   template<int N>
-  auto cart_prod_static(const IntervalVector_<N>& x1, const Interval& x2)
+  IntervalVector_<N+1> cart_prod_static(const IntervalVector_<N>& x1, const Interval& x2)
   {
     IntervalVector_<N+1> x;
     x << x1,x2;
     return x;
   }
 
-  auto cart_prod_dyn(const Interval& x1, const IntervalVector& x2)
-  {
-    IntervalVector x(x2.size()+1);
-    x << x1,x2;
-    return x;
-  }
+  IntervalVector cart_prod_dyn(const Interval& x1, const IntervalVector& x2);
 
   template<int N>
-  auto cart_prod_static(const Interval& x1, const IntervalVector_<N>& x2)
+  IntervalVector_<N+1> cart_prod_static(const Interval& x1, const IntervalVector_<N>& x2)
   {
     IntervalVector_<N+1> x;
     x << x1,x2;
     return x;
   }
 
-  auto cart_prod_dyn(const IntervalVector& x1, const IntervalVector& x2)
-  {
-    IntervalVector x(x1.size()+x2.size());
-    x << x1,x2;
-    return x;
-  }
+  IntervalVector cart_prod_dyn(const IntervalVector& x1, const IntervalVector& x2);
 
   template<int N,int M>
-  auto cart_prod_static(const IntervalVector_<N>& x1, const IntervalVector_<M>& x2)
+  IntervalVector_<N+M> cart_prod_static(const IntervalVector_<N>& x1, const IntervalVector_<M>& x2)
   {
     IntervalVector_<N+M> x;
     x << x1,x2;

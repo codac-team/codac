@@ -12,6 +12,7 @@
 #ifndef __CODAC2_VECTOR_H__
 #define __CODAC2_VECTOR_H__
 
+#include <ostream>
 #include <codac_Vector.h>
 #include <codac2_Matrix.h>
 
@@ -25,9 +26,7 @@ namespace codac2
     public:
     
       Vector_()
-      {
-        
-      }
+      { }
 
       Vector_(size_t n)
         : Matrix_<N,1>(n,1)
@@ -91,9 +90,28 @@ namespace codac2
   };
 
   template<int N>
+  std::ostream& operator<<(std::ostream& os, const Vector_<N>& x)
+  {
+    os << "(";
+    for(size_t i = 0 ; i < x.size() ; i++)
+      os << x[i] << (i<x.size()-1 ? " ; " : "");
+    os << ")";
+    return os;
+  }
+
+  template<int N>
   Matrix_<N,N> diag(const Vector_<N> v)
   {
     return v.as_diag();
+  }
+
+  template<int N>
+  codac::Vector to_codac1(const Vector_<N>& x)
+  {
+    ibex::Vector x_(x.size());
+    for(size_t i = 0 ; i < x.size() ; i++)
+      x_[i] = x[i];
+    return x_;
   }
 
   template<int N>
