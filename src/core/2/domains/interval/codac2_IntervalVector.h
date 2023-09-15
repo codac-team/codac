@@ -111,11 +111,6 @@ namespace codac2
         return *this;
       }
 
-      static IntervalVector_<N> empty_set(size_t n = N)
-      {
-        return IntervalMatrix_<N,1>::empty_set(n,1);
-      }
-
       void resize(size_t n)
       {
         this->IntervalMatrix_<N,1>::resize(n,1);

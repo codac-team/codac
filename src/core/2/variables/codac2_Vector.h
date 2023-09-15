@@ -34,6 +34,12 @@ namespace codac2
         assert(N == Dynamic || N == (int)n);
       }
 
+      Vector_(size_t n, double x)
+        : Matrix_<N,1>(n,1,x)
+      {
+        assert(N == Dynamic || N == (int)n);
+      }
+
       Vector_(std::initializer_list<double> l) : Matrix_<N,1>(l.size(),1)
       {
         assert(N == (int)l.size() || N == -1);
@@ -73,11 +79,6 @@ namespace codac2
       Matrix_<N,N> as_diag() const
       {
         return Matrix_<N,N>(Eigen::Matrix<double,N,N>(this->asDiagonal()));
-      }
-
-      static Vector_<N> zeros()
-      {
-        return Eigen::Matrix<double,N,1>::Zero();
       }
 
       // todo: place this in common inheritance with IntervalVector_

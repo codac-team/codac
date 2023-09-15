@@ -6,7 +6,7 @@ set(TESTS_NAME codac-tests-core)
 
 list(APPEND SRC_TESTS ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 
-  #${CMAKE_CURRENT_SOURCE_DIR}/tests_codac2_tubes.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests_codac2_tubes.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/tests_codac2_intervalvector.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/tests_codac2_intervalmatrix.cpp
 

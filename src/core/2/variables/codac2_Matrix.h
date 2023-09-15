@@ -34,6 +34,14 @@ namespace codac2
         assert(R == Dynamic || R == (int)nb_rows);
         assert(C == Dynamic || C == (int)nb_cols);
       }
+    
+      Matrix_(size_t nb_rows, size_t nb_cols, double x)
+        : Eigen::Matrix<double,R,C>(nb_rows, nb_cols)
+      {
+        assert(R == Dynamic || R == (int)nb_rows);
+        assert(C == Dynamic || C == (int)nb_cols);
+        init(x);
+      }
       
       explicit Matrix_(size_t nb_rows, size_t nb_cols, double values[])
         : Matrix_<R,C>(nb_rows, nb_cols)
@@ -86,6 +94,12 @@ namespace codac2
       {
         this->Eigen::Matrix<double,R,C>::operator=(other);
         return *this;
+      }
+
+      void init(double x)
+      {
+        for(size_t i = 0 ; i < this->size() ; i++)
+          *(this->data()+i) = x;
       }
 
       static Matrix_ eye()
@@ -142,6 +156,11 @@ namespace codac2
       static Matrix_<R,C> zeros()
       {
         return Eigen::Matrix<double,R,C>::Zero();
+      }
+
+      static Matrix_<R,C> ones()
+      {
+        return Eigen::Matrix<double,R,C>::Ones();
       }
   };
 
