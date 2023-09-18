@@ -63,6 +63,14 @@ namespace codac2
         : Matrix_<N,1>(N,1,values)
       { }
 
+      template<typename T>
+      explicit Vector_(const std::array<T,N>& array)
+        : Matrix_<N,1>(N,1)
+      {
+        for(size_t i = 0 ; i < N ; i++)
+          *(this->data()+i) = array[i];
+      }
+
       template<typename OtherDerived>
       Vector_(const Eigen::MatrixBase<OtherDerived>& other)
           : Matrix_<N,1>(other)
