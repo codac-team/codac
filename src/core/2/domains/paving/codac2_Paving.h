@@ -122,7 +122,7 @@ namespace codac2
       void leaves_list_push(std::list<P*>& l)
       {
         if(is_leaf() && !_x.is_empty())
-          l.push_back(this);
+          l.push_back(dynamic_cast<P*>(this));
         else
         {
           if(_left) _left->leaves_list_push(l);
@@ -143,6 +143,10 @@ namespace codac2
 
       explicit Paving(size_t n)
        : PavingBase<Paving<N>,N>(IntervalVector_<N>(n))
+      { }
+
+      explicit Paving(const IntervalVector_<N>& x)
+       : PavingBase<Paving<N>,N>(x)
       { }
   };
 
