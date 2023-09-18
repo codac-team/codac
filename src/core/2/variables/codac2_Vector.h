@@ -52,7 +52,7 @@ namespace codac2
       Vector_(const Matrix_<M,1>& x)
         : Matrix_<M,1>(x)
       {
-        assert(M == Dynamic || M == N);
+        static_assert(M == Dynamic || M == N);
       }
 
       explicit Vector_(size_t n, double values[])
@@ -63,11 +63,12 @@ namespace codac2
         : Matrix_<N,1>(N,1,values)
       { }
 
-      template<typename T>
-      explicit Vector_(const std::array<T,N>& array)
+      template<typename T,size_t M>
+      explicit Vector_(const std::array<T,M>& array)
         : Matrix_<N,1>(N,1)
       {
-        for(size_t i = 0 ; i < N ; i++)
+        static_assert(N == Dynamic || N == (int)M);
+        for(size_t i = 0 ; i < M ; i++)
           *(this->data()+i) = array[i];
       }
 
