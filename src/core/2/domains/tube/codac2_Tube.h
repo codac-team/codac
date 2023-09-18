@@ -43,11 +43,9 @@ namespace codac2
   {
     public:
 
-      // need to specify T (dim at least) explicit Tube(const std::shared_ptr<TDomain>& tdomain) :
-      // need to specify T (dim at least)   Tube(tdomain, T())
-      // need to specify T (dim at least) {
-      // need to specify T (dim at least)   
-      // need to specify T (dim at least) }
+      explicit Tube(const std::shared_ptr<TDomain>& tdomain) :
+        Tube(tdomain, T())
+      { }
 
       explicit Tube(const std::shared_ptr<TDomain>& tdomain, const TFnc& f) :
         Tube(tdomain, (std::is_same<T,Interval>::value ? T() : T(f.image_dim())))
@@ -267,7 +265,7 @@ namespace codac2
       {
         if(!tdomain()->t0_tf().contains(t))
         {
-          if constexpr(std::is_same<T,Interval>::value || std::is_same<T,codac::ConvexPolygon>::value)
+          if constexpr(!std::is_same<T,codac::IntervalVector>::value)
             return T();
           else
             return T(size());
@@ -284,7 +282,7 @@ namespace codac2
       {
         if(!tdomain()->t0_tf().is_superset(t))
         {
-          if constexpr(std::is_same<T,Interval>::value || std::is_same<T,codac::ConvexPolygon>::value)
+          if constexpr(!std::is_same<T,codac::IntervalVector>::value)
             return T();
           else
             return T(size());
@@ -308,7 +306,7 @@ namespace codac2
 
       void set(const T& codomain)
       {
-        if constexpr(!std::is_same<T,Interval>::value) {
+        if constexpr(std::is_same<T,codac::IntervalVector>::value) {
           assert((size_t)codomain.size() == size());
         }
         for(auto& s : *this)
@@ -321,7 +319,7 @@ namespace codac2
 
       void set(const T& codomain, double t)
       {
-        if constexpr(!std::is_same<T,Interval>::value) {
+        if constexpr(std::is_same<T,codac::IntervalVector>::value) {
           assert((size_t)codomain.size() == size());
         }
         std::list<TSlice>::iterator it = _tdomain->sample(t,true);
