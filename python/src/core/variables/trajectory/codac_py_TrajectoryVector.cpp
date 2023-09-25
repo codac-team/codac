@@ -273,6 +273,15 @@ void export_TrajectoryVector(py::module& m)
       TRAJECTORYVECTOR_TRAJECTORY_OPERATORB_INT,
       py::return_value_policy::reference_internal)
 
+    .def("getitem", [](TrajectoryVector& s, size_t index) -> Trajectory&
+      {
+        if(index >= static_cast<size_t>(s.size()))
+          throw py::index_error();
+        return s[static_cast<int>(index)];
+      },
+      TRAJECTORYVECTOR_TRAJECTORY_OPERATORB_INT,
+      py::return_value_policy::reference_internal)
+
     .def("__getitem__", [](const TrajectoryVector& s, py::slice slice) -> TrajectoryVector
       {
         size_t start, stop, step, slicelength;
@@ -289,7 +298,31 @@ void export_TrajectoryVector(py::module& m)
       },
       TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_SUBVECTOR_INT_INT)
 
+    .def("getitem", [](const TrajectoryVector& s, py::slice slice) -> TrajectoryVector
+      {
+        size_t start, stop, step, slicelength;
+
+        if(!slice.compute(s.size(), &start, &stop, &step, &slicelength))
+          throw py::error_already_set();
+
+        if(step != 1)
+          cout << "Warning slice step must be equal to 1\n";
+
+        // To respect the python convention, the stop index 
+        // is not included in slice
+        return s.subvector(start, start+slicelength-1);
+      },
+      TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_SUBVECTOR_INT_INT)
+
     .def("__setitem__", [](TrajectoryVector& s, size_t index, Trajectory& t)
+      {
+        if(index >= static_cast<size_t>(s.size()))
+          throw py::index_error();
+        s[static_cast<int>(index)] = t;
+      },
+      TRAJECTORYVECTOR_TRAJECTORY_OPERATORB_INT)
+
+    .def("setitem", [](TrajectoryVector& s, size_t index, Trajectory& t)
       {
         if(index >= static_cast<size_t>(s.size()))
           throw py::index_error();
