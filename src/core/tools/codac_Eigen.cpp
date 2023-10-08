@@ -15,7 +15,7 @@ Eigen::MatrixXd EigenHelpers::i2e(const Matrix &x) {
 Eigen::MatrixXd EigenHelpers::i2e(const Vector &x) {
   Eigen::MatrixXd m(x.size(), 1);
   for (int i = 0; i < x.size(); ++i) {
-    m(i, 1) = x[i];
+    m(i, 0) = x[i];
   }
   return m;
 }
