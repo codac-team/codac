@@ -10,15 +10,15 @@
 #            the GNU Lesser General Public License (LGPL).
 
 import unittest
-from codac import *
-from codac.unsupported import *
-import sys
 try:
   import numpy as np
   has_np = True
-except ImportError:
-  print("NUMPY NOT FOUND")
+except:
+  print("NUMPY UNAVAILABLE")
   has_np = False
+from codac import *
+from codac.unsupported import *
+import sys
 
 # Interval.__str__=lambda x: "("+str(x[0])+', '+str(x[1])+")"
 # Interval.__repr__=lambda x: "("+x[0]+', '+x[1]+")"
@@ -51,7 +51,7 @@ class TestGeoMapper(unittest.TestCase):
                      IntervalVector([[-5, -4], [4, 5]]))
 
 
-@unittest.skipUnless(has_np, "Numpy not found")
+@unittest.skipUnless(has_np, "Numpy unavailable")
 class TestImage(unittest.TestCase):
 
   def test_world_to_grid(self):
@@ -85,7 +85,7 @@ class TestImage(unittest.TestCase):
         # print(im.pixelAt(i,j), end=' ')
       # print('')
 
-@unittest.skipUnless(has_np, "Numpy not found")
+@unittest.skipUnless(has_np, "Numpy unavailable")
 class TestWorldToGrid(unittest.TestCase):
 
   def setUp(self):
@@ -142,7 +142,7 @@ class TestWorldToGrid(unittest.TestCase):
   #   X0 = IntervalVector([[-7, -6], [0,1]])
   #   self.assertEqual(self.im.test(X0), MAYBE)
 
-@unittest.skipUnless(has_np, "Numpy not found")
+@unittest.skipUnless(has_np, "Numpy unavailable")
 class TestCtcRaster(unittest.TestCase):
 
   def setUp(self):

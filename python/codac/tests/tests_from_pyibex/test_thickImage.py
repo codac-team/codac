@@ -10,17 +10,16 @@
 #            the GNU Lesser General Public License (LGPL).
 
 import unittest
-from codac import *
-from codac.unsupported import *
-
 try:
   import numpy as np
   has_np = True
-except ImportError:
-  print("NUMPY NOT FOUND")
+except:
+  print("NUMPY UNAVAILABLE")
   has_np = False
+from codac import *
+from codac.unsupported import *
 
-@unittest.skipUnless(has_np, "Numpy not found")
+@unittest.skipUnless(has_np, "Numpy unavailable")
 class TestThickImage(unittest.TestCase):
 
   def setUp(self):
