@@ -96,7 +96,15 @@ void export_thickInterval(py::module& m)
                             if (idx > self.size())   throw py::index_error();
                             return self[idx];
                           })
+      .def("getitem", [](ThickBox& self, size_t idx){
+                            if (idx > self.size())   throw py::index_error();
+                            return self[idx];
+                          })
       .def("__setitem__", [](ThickBox& self, size_t idx, ThickInterval& itv){
+                            if (idx > self.size())   throw py::index_error();
+                            self[idx]=itv;
+                          })
+      .def("setitem", [](ThickBox& self, size_t idx, ThickInterval& itv){
                             if (idx > self.size())   throw py::index_error();
                             self[idx]=itv;
                           })

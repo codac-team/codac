@@ -16,10 +16,12 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
+            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 12, desc: 'Windows Visual Studio 2022 x86 Python 3.12' }
             - { os: windows-2022, shell: cmd, arch: x86, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 11, desc: 'Windows Visual Studio 2022 x86 Python 3.11' }
             - { os: windows-2022, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 10, desc: 'Windows Visual Studio 2019 x86 Python 3.10' }
             - { os: windows-2022, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 9, desc: 'Windows Visual Studio 2019 x86 Python 3.9' }
             - { os: windows-2022, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 8, desc: 'Windows Visual Studio 2019 x86 Python 3.8' }
+            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 12, desc: 'Windows Visual Studio 2022 x64 Python 3.12' }
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 11, desc: 'Windows Visual Studio 2022 x64 Python 3.11' }
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 10, desc: 'Windows Visual Studio 2019 x64 Python 3.10' }
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 9, desc: 'Windows Visual Studio 2019 x64 Python 3.9' }
@@ -54,12 +56,12 @@ jobs:
       if: runner.os=='Windows'
     - run: choco install -y -r --no-progress eigen --version=3.4.0 ${{ matrix.cfg.choco_flags }}
       if: runner.os=='Windows'
-    - run: choco install -y -r --no-progress doxygen.install graphviz & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects
+    - run: choco install -y -r --no-progress doxygen.install --version=1.9.6 & choco install -y -r --no-progress graphviz & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects
       if: runner.os=='Windows'
     - run: |
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20230510/ibex.2.8.9.20230510.nupkg --no-check-certificate -nv
-        choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20230510 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20230510/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
-        del /f /q ibex.2.8.9.20230510.nupkg
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20231007/ibex.2.8.9.20231007.nupkg --no-check-certificate -nv
+        choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20231007 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20231007/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
+        del /f /q ibex.2.8.9.20231007.nupkg
     - run: |
         mkdir build ; cd build
         cmake -E env CXXFLAGS=" /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /wd4267 /wd4244 /wd4305 /wd4996" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=ON ..

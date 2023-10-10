@@ -9,9 +9,12 @@
 #            the GNU Lesser General Public License (LGPL).
 
 import unittest
+try:
+  import numpy as np
+except:
+  print("NUMPY UNAVAILABLE")
 from codac import *
 from codac.codac2 import *
-import numpy as np
 
 class TestActions(unittest.TestCase):
 

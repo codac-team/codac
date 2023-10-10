@@ -183,7 +183,22 @@ void export_IntervalVector(py::module& m)
       },
       py::return_value_policy::reference_internal)
 
+    .def("getitem", [](IntervalVector& s, size_t index) -> Interval&
+      {
+        if(index < 0 || index >= static_cast<size_t>(s.size()))
+          throw py::index_error();
+        return s[static_cast<int>(index)];
+      },
+      py::return_value_policy::reference_internal)
+
     .def("__setitem__", [](IntervalVector& s, size_t index, Interval& t)
+      {
+        if(index < 0 || index >= static_cast<size_t>(s.size()))
+          throw py::index_error();
+        s[static_cast<int>(index)] = t;
+      })
+
+    .def("setitem", [](IntervalVector& s, size_t index, Interval& t)
       {
         if(index < 0 || index >= static_cast<size_t>(s.size()))
           throw py::index_error();

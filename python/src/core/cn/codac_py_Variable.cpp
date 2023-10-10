@@ -63,6 +63,15 @@ void export_IntervalVectorVar(py::module& m)
       "todo",
       py::return_value_policy::reference_internal)
 
+    .def("getitem", [](IntervalVectorVar& s, size_t index) -> IntervalVar&
+      {
+        if(index >= static_cast<size_t>(s.size()))
+          throw py::index_error();
+        return s[static_cast<int>(index)];
+      },
+      "todo",
+      py::return_value_policy::reference_internal)
+
     .def("__eq__", [](const IntervalVectorVar& s1, const IntervalVectorVar& s2) { return reinterpret_cast<std::uintptr_t>(&s1) == reinterpret_cast<std::uintptr_t>(&s2); })
 
     .def("__hash__", [](const IntervalVectorVar& s1) { return reinterpret_cast<std::uintptr_t>(&s1); })
