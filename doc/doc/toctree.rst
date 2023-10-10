@@ -13,6 +13,7 @@ Codac: constraint-programming for robotics
   /install/01-installation
   /install/02-start-py-project
   /install/03-start-cpp-project
+  /install/04-start-matlab-project
 
 
 .. toctree::

@@ -42,6 +42,8 @@ jobs:
             - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw7, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 7.3.0 x86' }
             - { os: ubuntu-22.04, shell: bash, arch: amd64, runtime: jammy, cmake_flags: '-fPIC', desc: 'Ubuntu 22.04' }
             - { os: ubuntu-20.04, shell: bash, arch: amd64, runtime: focal, cmake_flags: '-fPIC', desc: 'Ubuntu 20.04' }
+            - { os: macos-13, shell: bash, arch: arm64, runtime: ventura, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Ventura arm64' }
+            - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', desc: 'macOS Ventura x86_64' }
             - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Monterey arm64' }
             - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', desc: 'macOS Monterey x86_64' }
             - { os: macos-11, shell: bash, arch: arm64, runtime: bigsur, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Big Sur arm64' }
@@ -83,23 +85,23 @@ jobs:
     - run: |
         choco install -y -r --no-progress checksum wget zip
         choco install -y -r --no-progress eigen --version=3.4.0 ${{ matrix.cfg.choco_flags }}
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20230510/ibex.2.8.9.20230510.nupkg --no-check-certificate -nv
-        choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20230510 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20230510/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
-        del /f /q ibex.2.8.9.20230510.nupkg
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20231007/ibex.2.8.9.20231007.nupkg --no-check-certificate -nv
+        choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20231007 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20231007/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
+        del /f /q ibex.2.8.9.20231007.nupkg
       if: runner.os=='Windows'
     - run: |
         # Replace these 2 lines by the next ones to test a specific binary package of IBEX.
         #sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
         #sudo apt-get -q update ; sudo apt-get -y install libibex-dev libeigen3-dev dpkg-dev || true
         sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev dpkg-dev || true
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20230510/libibex-dev-2.8.9.20230510-0${{ matrix.cfg.runtime }}0_${{ matrix.cfg.arch }}.deb --no-check-certificate -nv
-        sudo dpkg -i libibex-dev-2.8.9.20230510-0${{ matrix.cfg.runtime }}0_${{ matrix.cfg.arch }}.deb
-        rm -Rf libibex-dev-2.8.9.20230510-0${{ matrix.cfg.runtime }}0_${{ matrix.cfg.arch }}.deb
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20231007/libibex-dev-2.8.9.20231007-0${{ matrix.cfg.runtime }}0_${{ matrix.cfg.arch }}.deb --no-check-certificate -nv
+        sudo dpkg -i libibex-dev-2.8.9.20231007-0${{ matrix.cfg.runtime }}0_${{ matrix.cfg.arch }}.deb
+        rm -Rf libibex-dev-2.8.9.20231007-0${{ matrix.cfg.runtime }}0_${{ matrix.cfg.arch }}.deb
       shell: bash
       if: runner.os=='Linux'
     - run: |
         brew install eigen
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20230510/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20231007/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
         unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
         rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
         sudo cp -Rf ibex/* /usr/local/

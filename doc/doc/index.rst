@@ -227,7 +227,7 @@ The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a l
 .. figure:: img/rangeonly-nox0.png
 
 | *You just solved a non-linear state-estimation without knowledge about initial condition.*
-| See the full example on Github: `in C++ <https://github.com/codac-team/codac/blob/master/examples/tuto/01_getting_started/01_getting_started.cpp>`_ or `in Python <https://github.com/codac-team/codac/blob/master/examples/tuto/01_getting_started/01_getting_started.py>`_.
+| See the full example on Github: `in C++ <https://github.com/codac-team/codac/blob/master/examples/tuto/01_getting_started/01_getting_started.cpp>`_, `in Python <https://github.com/codac-team/codac/blob/master/examples/tuto/01_getting_started/01_getting_started.py>`__ or `in MATLAB <https://github.com/codac-team/codac/blob/master/examples/tuto/01_getting_started/a01_getting_started.m>`_.
 
 In the tutorial and in the examples folder of this library, you will find more advanced problems such as Simultaneous Localization And Mapping (SLAM), data association problems or delayed systems.
 

@@ -30,11 +30,7 @@ Start a Python project
 
   python3 myscript.py
 
-In order to visualize the tube, you need to launch the VIBes viewer independently. On Linux, you can for instance execute:
-
-.. code-block:: bash
-
-  VIBes-viewer
+In order to visualize the tube, you need to launch before the :ref:`VIBes viewer <sec-installation-graphics>` independently.
 
 If everything is well installed on your computer, you should see the following window appear:
 

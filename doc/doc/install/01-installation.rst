@@ -4,7 +4,7 @@
 Installing the Codac library
 ############################
 
-Codac is available in both C++17 and Python3. Note that you can also :ref:`use Codac online in Python <sec-py-project-online>`, without having to install the library on your machine.
+Codac is available in both C++17 and Python3 (:ref:`as well as MATLAB through its Python interface <sec-start-matlab-project>`). Note that you can also :ref:`use Codac online in Python <sec-py-project-online>`, without having to install the library on your machine.
 
 .. role:: gbg
 
