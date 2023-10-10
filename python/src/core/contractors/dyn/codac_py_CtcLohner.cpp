@@ -28,8 +28,8 @@ using namespace pybind11::literals;
 
 void export_CtcLohner(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc)
 {
-  py::class_<CtcLohner> ctc_picard(m, "CtcLohner", dyn_ctc, CTCLOHNER_MAIN);
-  ctc_picard
+  py::class_<CtcLohner> ctc_lohner(m, "CtcLohner", dyn_ctc, CTCLOHNER_MAIN);
+  ctc_lohner
 
     .def(py::init<const Function&,int,double>(),
       CTCLOHNER_CTCLOHNER_FUNCTION_INT_DOUBLE,

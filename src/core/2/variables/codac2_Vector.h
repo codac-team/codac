@@ -90,6 +90,11 @@ namespace codac2
         return Matrix_<N,N>(Eigen::Matrix<double,N,N>(this->asDiagonal()));
       }
 
+      Matrix_<1,N> transpose() const
+      {
+        return Matrix_<1,N>(Eigen::Matrix<double,N,1>::transpose());
+      }
+
       // todo: place this in common inheritance with IntervalVector_
       template<size_t N1,size_t N2>
       Vector_<N2-N1+1> subvector() const

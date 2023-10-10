@@ -129,6 +129,11 @@ namespace codac2
         return y -= x;
       }
 
+      auto operator-() const
+      {
+        return Eigen::Matrix<double,R,C>::operator-();
+      }
+
       auto operator&(const Matrix_<R,C>& x) const
       {
         auto y = *this;

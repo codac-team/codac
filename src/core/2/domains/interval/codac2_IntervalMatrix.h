@@ -149,6 +149,11 @@ namespace codac2
         return IntervalMatrix_<R,C>(nb_rows, nb_cols, Interval::empty_set());
       }
 
+      static IntervalMatrix_ eye()
+      {
+        return Eigen::Matrix<Interval,R,C>::Identity();
+      }
+
       bool is_flat() const
       {
         if(is_empty()) return true;
@@ -570,6 +575,12 @@ namespace codac2
     auto y = x;
     y.init(0.);
     return y -= x;
+  }
+
+  template<int R,int C>
+  auto operator*(double a, const IntervalMatrix_<R,C>& x)
+  {
+    return Interval(a)*x;
   }
 
   class IntervalMatrix : public IntervalMatrix_<>
