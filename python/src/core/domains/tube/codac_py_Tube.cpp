@@ -370,19 +370,43 @@ void export_Tube(py::module& m)
     .def("__ior__", [](Tube& s,const Interval& o) { return s |= o; },
       TUBE_CONSTTUBE_OPERATORUNIEQ_INTERVAL)
 
+    // For MATLAB compatibility.
+    .def("union_self", [](Tube& s,const Interval& o) { return s |= o; },
+      TUBE_CONSTTUBE_OPERATORUNIEQ_INTERVAL)
+
     .def("__ior__", [](Tube& s,const Trajectory& o) { return s |= o; },
+      TUBE_CONSTTUBE_OPERATORUNIEQ_TRAJECTORY)
+
+    // For MATLAB compatibility.
+    .def("union_self", [](Tube& s,const Trajectory& o) { return s |= o; },
       TUBE_CONSTTUBE_OPERATORUNIEQ_TRAJECTORY)
 
     .def("__ior__", [](Tube& s,const Tube& o) { return s |= o; },
       TUBE_CONSTTUBE_OPERATORUNIEQ_TUBE)
 
+    // For MATLAB compatibility.
+    .def("union_self", [](Tube& s,const Tube& o) { return s |= o; },
+      TUBE_CONSTTUBE_OPERATORUNIEQ_TUBE)
+
     .def("__iand__", [](Tube& s,const Interval& o) { return s &= o; },
+      TUBE_CONSTTUBE_OPERATORINTEQ_INTERVAL)
+
+    // For MATLAB compatibility.
+    .def("inter_self", [](Tube& s,const Interval& o) { return s &= o; },
       TUBE_CONSTTUBE_OPERATORINTEQ_INTERVAL)
 
     .def("__iand__", [](Tube& s,const Trajectory& o) { return s &= o; },
       TUBE_CONSTTUBE_OPERATORINTEQ_TRAJECTORY)
 
+    // For MATLAB compatibility.
+    .def("inter_self", [](Tube& s,const Trajectory& o) { return s &= o; },
+      TUBE_CONSTTUBE_OPERATORINTEQ_TRAJECTORY)
+
     .def("__iand__", [](Tube& s,const Tube& o) { return s &= o; },
+      TUBE_CONSTTUBE_OPERATORINTEQ_TUBE)
+
+    // For MATLAB compatibility.
+    .def("inter_self", [](Tube& s,const Tube& o) { return s &= o; },
       TUBE_CONSTTUBE_OPERATORINTEQ_TUBE)
 
   // String
@@ -493,21 +517,49 @@ void export_Tube(py::module& m)
     .def("__rtruediv__", [](const Tube& y, const TubeVector& x) { return x/y; })
 
     .def("__or__",       [](const Tube& x, const Tube& y) { return x|y; })
+    // For MATLAB compatibility.
+    .def("union",       [](const Tube& x, const Tube& y) { return x|y; })
     .def("__or__",       [](const Tube& x, double y) { return x|y; })
+    // For MATLAB compatibility.
+    .def("union",       [](const Tube& x, double y) { return x|y; })
     .def("__or__",       [](const Tube& x, const Interval& y) { return x|y; })
+    // For MATLAB compatibility.
+    .def("union",       [](const Tube& x, const Interval& y) { return x|y; })
     .def("__or__",       [](const Tube& x, const Trajectory& y) { return x|y; })
+    // For MATLAB compatibility.
+    .def("union",       [](const Tube& x, const Trajectory& y) { return x|y; })
 
     .def("__ror__",      [](const Tube& y, double x) { return x|y; })
+    // For MATLAB compatibility.
+    .def("union",      [](const Tube& y, double x) { return x|y; })
     .def("__ror__",      [](const Tube& y, const Interval& x) { return x|y; })
+    // For MATLAB compatibility.
+    .def("union",      [](const Tube& y, const Interval& x) { return x|y; })
     .def("__ror__",      [](const Tube& y, const Trajectory& x) { return x|y; })
+    // For MATLAB compatibility.
+    .def("union",      [](const Tube& y, const Trajectory& x) { return x|y; })
 
     .def("__and__",      [](const Tube& x, const Tube& y) { return x&y; })
+    // For MATLAB compatibility.
+    .def("inter",      [](const Tube& x, const Tube& y) { return x&y; })
     .def("__and__",      [](const Tube& x, double y) { return x&y; })
+    // For MATLAB compatibility.
+    .def("inter",      [](const Tube& x, double y) { return x&y; })
     .def("__and__",      [](const Tube& x, const Interval& y) { return x&y; })
+    // For MATLAB compatibility.
+    .def("inter",      [](const Tube& x, const Interval& y) { return x&y; })
     .def("__and__",      [](const Tube& x, const Trajectory& y) { return x&y; })
+    // For MATLAB compatibility.
+    .def("inter",      [](const Tube& x, const Trajectory& y) { return x&y; })
 
     .def("__rand__",     [](const Tube& y, double x) { return x&y; })
+    // For MATLAB compatibility.
+    .def("inter",     [](const Tube& y, double x) { return x&y; })
     .def("__rand__",     [](const Tube& y, const Interval& x) { return x&y; })
+    // For MATLAB compatibility.
+    .def("inter",     [](const Tube& y, const Interval& x) { return x&y; })
     .def("__rand__",     [](const Tube& y, const Trajectory& x) { return x&y; })
+    // For MATLAB compatibility.
+    .def("inter",     [](const Tube& y, const Trajectory& x) { return x&y; })
   ;
 }

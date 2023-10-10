@@ -134,7 +134,15 @@ void export_Interval(py::module& m)
     .def(py::self * py::self)
     .def(py::self / py::self)
     .def(py::self & py::self)
+    // For MATLAB compatibility.
+    //.def_static("inter", [](const Interval& x, const Interval& y) { return x&y; })
+    // For MATLAB compatibility.
+    .def("inter", [](const Interval& s, const Interval& y) { return s&y; })
     .def(py::self | py::self)
+    // For MATLAB compatibility.
+    //.def_static("union", [](const Interval& x, const Interval& y) { return x|y; })
+    // For MATLAB compatibility.
+    .def("union", [](const Interval& s, const Interval& y) { return s|y; })
 
     .def("__iadd__", [](Interval& x, Interval& o) { return x += o; })
     .def("__isub__", [](Interval& x, Interval& o) { return x -= o; })
@@ -143,7 +151,11 @@ void export_Interval(py::module& m)
     .def("__ifloordiv__", [](Interval& x, Interval& o) { return x /= o; })
 
     .def(py::self &= py::self)
+    // For MATLAB compatibility.
+    .def("inter_self", [](Interval& s, const Interval& a) { return s&=a; })
     .def(py::self |= py::self)
+    // For MATLAB compatibility.
+    .def("union_self", [](Interval& s, const Interval& a) { return s|=a; })
 
     .def(py::self + double())
     .def(py::self += double())
@@ -160,9 +172,25 @@ void export_Interval(py::module& m)
     .def(-py::self)
 
     .def("__abs__", [](const Interval& a) { return ibex::abs(a); })
+    // For MATLAB compatibility.
+    //.def_static("abs", [](const Interval& a) { return ibex::abs(a); })
+    // For MATLAB compatibility.
+    .def("abs", [](const Interval& s) { return ibex::abs(s); })
     .def("__pow__", [](const Interval& x, int n) { return ibex::pow(x, n); })
+    // For MATLAB compatibility.
+    //.def_static("pow", [](const Interval& x, int n) { return ibex::pow(x, n); })
+    // For MATLAB compatibility.
+    .def("pow", [](const Interval& s, int n) { return ibex::pow(s, n); })
     .def("__pow__", [](const Interval& x, double d) { return ibex::pow(x, d); })
-    .def("__pow__", [](const Interval &x, const Interval &y) { return ibex::pow(x, y); })
+    // For MATLAB compatibility.
+    //.def_static("pow", [](const Interval& x, double d) { return ibex::pow(x, d); })
+    // For MATLAB compatibility.
+    .def("pow", [](const Interval& s, double d) { return ibex::pow(s, d); })
+    .def("__pow__", [](const Interval& x, const Interval& y) { return ibex::pow(x, y); })
+    // For MATLAB compatibility.
+    //.def_static("pow", [](const Interval& x, const Interval& y) { return ibex::pow(x, y); })
+    // For MATLAB compatibility.
+    .def("pow", [](const Interval& s, const Interval& y) { return ibex::pow(s, y); })
 
     .def("lb", &Interval::lb, "return the upper bound")
     .def("ub", &Interval::ub, "return the lower bound")
@@ -212,8 +240,12 @@ void export_Interval(py::module& m)
 
     .def("bisect", &Interval::bisect, DOCS_INTERVAL_BISECT, py::arg("ratio")=0.5)
     .def("__get_item__", get_item, "x[0] returns the lb and x[1] returns ub")
+    // For MATLAB compatibility.
+    .def_static("get_item", [](Interval& x, size_t i) { return get_item(x, i); })
     .def("copy", &interval_copy, "return a new object which is the copy of x")
     .def("__hash__", [](const Interval& s1) { return reinterpret_cast<std::uintptr_t>(&s1); })
+    // For MATLAB compatibility.
+    .def("hash", [](const Interval& s1) { return reinterpret_cast<std::uintptr_t>(&s1); })
     //.def( "__pow__", pow__)
 
   // Constants
