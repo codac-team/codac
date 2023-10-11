@@ -29,7 +29,6 @@
 namespace codac2
 {
   using codac::Interval;
-  using codac::IntervalVector;
   using codac::TrajectoryVector;
   using codac::BoolInterval;
 
@@ -123,7 +122,7 @@ namespace codac2
 
       BoolInterval contains(const TrajectoryVector& x) const
       {
-        if constexpr(std::is_same<T,Interval>::value)
+        if constexpr(!std::is_same<T,codac::IntervalVector>::value)
         {
           assert(false && "not implemented");
           return BoolInterval::MAYBE;
@@ -304,10 +303,15 @@ namespace codac2
 
       void set_unbounded()
       {
-        if constexpr(std::is_same<T,Interval>::value || std::is_same<T,codac::ConvexPolygon>::value) // 'if' to be removed with virtual set classes
-          _codomain = T();
-        else
+        if constexpr(std::is_same<T,codac::IntervalVector>::value)
           _codomain = T(size());
+        else
+          _codomain = T();
+        
+        //if constexpr(std::is_same<T,Interval>::value || std::is_same<T,codac::ConvexPolygon>::value) // 'if' to be removed with virtual set classes
+        //  _codomain = T();
+        //else
+        //  _codomain = T(size());
       }
 
       void set_component(size_t i, const Interval& xi)

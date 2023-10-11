@@ -28,6 +28,7 @@ namespace codac
 
   const ConvexPolygon operator*(const IntervalMatrix& m, const ConvexPolygon& x);
 
+  std::vector<ThickPoint> inter_thickpoints(const ConvexPolygon& p1, const ConvexPolygon& p2);
   const ConvexPolygon operator&(const ConvexPolygon& p1, const ConvexPolygon& p2);
   const ConvexPolygon operator&(const IntervalVector& p1, const ConvexPolygon& p2);
   const ConvexPolygon operator&(const ConvexPolygon& p1, const IntervalVector& p2);

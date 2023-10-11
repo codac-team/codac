@@ -243,7 +243,7 @@ void export_ContractorNetwork(py::module& m)
 
     .def("contract", [](ContractorNetwork& cn, py::dict var_dom, bool verbose)
       {
-        cn.contract(pydict_to_unorderedmapdomains(var_dom), verbose);
+        return cn.contract(pydict_to_unorderedmapdomains(var_dom), verbose);
       },
       CONTRACTORNETWORK_DOUBLE_CONTRACT_UNORDEREDMAPDOMAINDOMAIN_BOOL,
       "var_dom"_a, "verbose"_a=false)

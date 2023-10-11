@@ -25,7 +25,6 @@ namespace codac2
   using codac::Trajectory;
   using codac::TrajectoryVector;
   using codac::Interval;
-  using codac::IntervalVector;
   using codac::BoolInterval;
 
   template<typename W, typename T>

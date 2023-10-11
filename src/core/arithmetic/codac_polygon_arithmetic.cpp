@@ -67,7 +67,7 @@ namespace codac
     return ConvexPolygon(v_result_thick_pts);
   }
   
-  const ConvexPolygon operator&(const ConvexPolygon& p1, const ConvexPolygon& p2)
+  vector<ThickPoint> inter_thickpoints(const ConvexPolygon& p1, const ConvexPolygon& p2)
   {
     vector<ThickPoint> v_pts;
 
@@ -116,7 +116,12 @@ namespace codac
         }
       }
 
-    return ConvexPolygon(v_pts);
+    return v_pts;
+  }
+
+  const ConvexPolygon operator&(const ConvexPolygon& p1, const ConvexPolygon& p2)
+  {
+    return ConvexPolygon(inter_thickpoints(p1,p2));
   }
 
   const ConvexPolygon operator&(const IntervalVector& p1, const ConvexPolygon& p2)

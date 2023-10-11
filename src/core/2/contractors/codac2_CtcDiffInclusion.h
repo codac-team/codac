@@ -31,8 +31,8 @@ namespace codac2
     public:
 
       CtcDiffInclusion(const TFunction& t);
-      void contract(codac2::Tube<IntervalVector>& x, const codac2::Tube<IntervalVector>& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-      void contract(Slice<IntervalVector>& x, const Slice<IntervalVector>& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      void contract(codac2::Tube<codac::IntervalVector>& x, const codac2::Tube<codac::IntervalVector>& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      void contract(Slice<codac::IntervalVector>& x, const Slice<codac::IntervalVector>& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
       const TFunction& f() const;
 
     protected:
