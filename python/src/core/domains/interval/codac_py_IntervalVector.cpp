@@ -260,7 +260,7 @@ void export_IntervalVector(py::module& m)
     .def(py::self |= py::self)
 
     .def("__add__",  [](IntervalVector& a, const Vector& x) { return a+x; })
-    .def("__iadd__", [](IntervalVector& a, const Vector& x) { return a+x; })
+    .def("__iadd__", [](IntervalVector& a, const Vector& x) { return a+=x; })
     .def("__radd__", [](IntervalVector& a, const Vector& x) { return a+x; })
 
     .def("__sub__",  [](IntervalVector& a, const Vector& x) { return a-x; })
