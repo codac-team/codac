@@ -531,13 +531,13 @@ void export_Tube(py::module& m)
 
     .def("__ror__",      [](const Tube& y, double x) { return x|y; })
     // For MATLAB compatibility.
-    .def("union",      [](const Tube& y, double x) { return x|y; })
+    .def("union",      [](double x, const Tube& y) { return x|y; })
     .def("__ror__",      [](const Tube& y, const Interval& x) { return x|y; })
     // For MATLAB compatibility.
-    .def("union",      [](const Tube& y, const Interval& x) { return x|y; })
+    .def("union",      [](const Interval& x, const Tube& y) { return x|y; })
     .def("__ror__",      [](const Tube& y, const Trajectory& x) { return x|y; })
     // For MATLAB compatibility.
-    .def("union",      [](const Tube& y, const Trajectory& x) { return x|y; })
+    .def("union",      [](const Trajectory& x, const Tube& y) { return x|y; })
 
     .def("__and__",      [](const Tube& x, const Tube& y) { return x&y; })
     // For MATLAB compatibility.
@@ -554,12 +554,12 @@ void export_Tube(py::module& m)
 
     .def("__rand__",     [](const Tube& y, double x) { return x&y; })
     // For MATLAB compatibility.
-    .def("inter",     [](const Tube& y, double x) { return x&y; })
+    .def("inter",     [](double x, const Tube& y) { return x&y; })
     .def("__rand__",     [](const Tube& y, const Interval& x) { return x&y; })
     // For MATLAB compatibility.
-    .def("inter",     [](const Tube& y, const Interval& x) { return x&y; })
+    .def("inter",     [](const Interval& x, const Tube& y) { return x&y; })
     .def("__rand__",     [](const Tube& y, const Trajectory& x) { return x&y; })
     // For MATLAB compatibility.
-    .def("inter",     [](const Tube& y, const Trajectory& x) { return x&y; })
+    .def("inter",     [](const Trajectory& x, const Tube& y) { return x&y; })
   ;
 }

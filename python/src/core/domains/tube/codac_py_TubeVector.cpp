@@ -603,10 +603,10 @@ void export_TubeVector(py::module& m)
 
     .def("__ror__",      [](const TubeVector& y, const IntervalVector& x) { return x|y; })
     // For MATLAB compatibility.
-    .def("union",      [](const TubeVector& y, const IntervalVector& x) { return x|y; })
+    .def("union",      [](const IntervalVector& x, const TubeVector& y) { return x|y; })
     .def("__ror__",      [](const TubeVector& y, const TrajectoryVector& x) { return x|y; })
     // For MATLAB compatibility.
-    .def("union",      [](const TubeVector& y, const TrajectoryVector& x) { return x|y; })
+    .def("union",      [](const TrajectoryVector& x, const TubeVector& y) { return x|y; })
 
     .def("__and__",      [](const TubeVector& x, const TubeVector& y) { return x&y; })
     // For MATLAB compatibility.
@@ -620,9 +620,9 @@ void export_TubeVector(py::module& m)
 
     .def("__rand__",     [](const TubeVector& y, const IntervalVector& x) { return x&y; })
     // For MATLAB compatibility.
-    .def("inter",     [](const TubeVector& y, const IntervalVector& x) { return x&y; })
+    .def("inter",     [](const IntervalVector& x, const TubeVector& y) { return x&y; })
     .def("__rand__",     [](const TubeVector& y, const TrajectoryVector& x) { return x&y; })
     // For MATLAB compatibility.
-    .def("inter",     [](const TubeVector& y, const TrajectoryVector& x) { return x&y; })
+    .def("inter",     [](const TrajectoryVector& x, const TubeVector& y) { return x&y; })
   ;
 }
