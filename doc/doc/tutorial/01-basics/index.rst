@@ -12,7 +12,11 @@ This will allow use to perform the state estimation of a static robot between so
 Start a new project
 -------------------
 
-Start a new project as explained in :ref:`sec-start-py-project` or :ref:`sec-start-cpp-project`.
+Start a new project as explained in:
+
+* :ref:`sec-start-py-project` 
+* or :ref:`sec-start-cpp-project`
+* or :ref:`sec-start-matlab-project`
 
 .. admonition:: Exercise
 
@@ -27,6 +31,10 @@ Start a new project as explained in :ref:`sec-start-py-project` or :ref:`sec-sta
     .. code-tab:: c++
 
       cout << x << endl;
+
+    .. code-tab:: MATLAB
+
+      x
 
   You should see the following output:
 
@@ -56,6 +64,12 @@ Start a new project as explained in :ref:`sec-start-py-project` or :ref:`sec-sta
       {
         // .. next questions will be here
       }
+
+    .. code-tab:: MATLAB
+
+      import py.codac.*
+
+      % .. next questions will be here
 
 
 Using intervals for handling uncertainties
