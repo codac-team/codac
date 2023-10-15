@@ -1,5 +1,5 @@
 % Codac - Examples
-% Dynamic range-only localization
+% Getting started: 2 minutes to Codac
 % ----------------------------------------------------------------------------
 
 import py.codac.*
@@ -87,5 +87,4 @@ endDrawing();
 
 
 % Checking if this example still works:
-if x.volume() < 5; check = true; else; check = false; end % todo: x.contains(x_truth)
-assert(check)
+assert(x.volume() < 5) % todo: x.contains(x_truth)

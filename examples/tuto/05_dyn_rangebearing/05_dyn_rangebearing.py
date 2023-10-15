@@ -1,5 +1,5 @@
 # Codac - Examples
-# Dynamic range-only localization
+# Dynamic range-bearing localization
 # ----------------------------------------------------------------------------
 
 from codac import *

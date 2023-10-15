@@ -243,7 +243,15 @@ void export_IntervalVector(py::module& m)
     .def(py::self - py::self)
     .def(py::self * py::self)
     .def(py::self & py::self)
+    // For MATLAB compatibility.
+    //.def_static("inter", [](const IntervalVector& x, const IntervalVector& y) { return x&y; })
+    // For MATLAB compatibility.
+    .def("inter", [](const IntervalVector& s, const IntervalVector& y) { return s&y; })
     .def(py::self | py::self)
+    // For MATLAB compatibility.
+    //.def_static("union", [](const IntervalVector& x, const IntervalVector& y) { return x|y; })
+    // For MATLAB compatibility.
+    .def("union", [](const IntervalVector& s, const IntervalVector& y) { return s|y; })
     .def(-py::self)
 
     .def(py::self += py::self)
@@ -257,10 +265,14 @@ void export_IntervalVector(py::module& m)
     .def("__rmul__", [](IntervalVector& a, const Interval& x) { return x*a; })
 
     .def(py::self &= py::self)
+    // For MATLAB compatibility.
+    .def("inter_self", [](IntervalVector& s, const IntervalVector& a) { return s&=a; })
     .def(py::self |= py::self)
+    // For MATLAB compatibility.
+    .def("union_self", [](IntervalVector& s, const IntervalVector& a) { return s|=a; })
 
     .def("__add__",  [](IntervalVector& a, const Vector& x) { return a+x; })
-    .def("__iadd__", [](IntervalVector& a, const Vector& x) { return a+x; })
+    .def("__iadd__", [](IntervalVector& a, const Vector& x) { return a+=x; })
     .def("__radd__", [](IntervalVector& a, const Vector& x) { return a+x; })
 
     .def("__sub__",  [](IntervalVector& a, const Vector& x) { return a-x; })
