@@ -32,7 +32,7 @@ Start a new project as explained in:
 
       cout << x << endl;
 
-    .. code-tab:: MATLAB
+    .. code-tab:: matlab
 
       x
 
@@ -65,7 +65,7 @@ Start a new project as explained in:
         // .. next questions will be here
       }
 
-    .. code-tab:: MATLAB
+    .. code-tab:: matlab
 
       import py.codac.*
 

@@ -53,7 +53,12 @@ In case you are willing to contribute to Codac, here are some information that m
                           This configuration generates header files containing docstrings for Python, based on
                           the content of XML files made by Doxygen. The documentation of any C++/Python function
                           is then located in the C++ header files of the :file:`/src` directory.
+  ----------------------  --------------------------------------------------------------------------------------
+  PYTHON_EXECUTABLE       (optional) Specifies the executable (and version) of Python. For instance:
 
+                          .. code-block:: bash
+
+                            cmake <other_cmake_options> -DPYTHON_EXECUTABLE=/usr/bin/python3.10 ..
   ======================  ======================================================================================
 
 

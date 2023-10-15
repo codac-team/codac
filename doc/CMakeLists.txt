@@ -82,7 +82,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mathjax_stmaryrd.js
     if(WIN32)
       set(SPHINX_EXECUTABLE "sphinx-build")
     else()
-      set(SPHINX_EXECUTABLE "python3" "-msphinx")
+      set(SPHINX_EXECUTABLE "python3.6" "-msphinx") # todo: replace python3.6 by python3
     endif()
 
     add_custom_target(doc
