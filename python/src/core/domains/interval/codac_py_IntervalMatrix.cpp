@@ -132,6 +132,8 @@ void export_IntervalMatrix(py::module& m)
   .def(py::self - py::self)
   .def(py::self * py::self)
   .def(py::self &= py::self)
+  // For MATLAB compatibility.
+  .def("inter_self", [](IntervalMatrix& s, const IntervalMatrix& a) { return s&=a; })
   .def(-py::self)
   .def(py::self += py::self)
   // todo: .def(py::self += other<Matrix>())
