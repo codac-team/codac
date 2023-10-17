@@ -245,7 +245,7 @@ Tubes can also be built from trajectories. In this example, we could have define
 
   Is the actual trajectory :math:`\mathbf{x}^*(\cdot)` enclosed in :math:`[\mathbf{x}](\cdot)` at any time?
 
-  **E.9.** Create a tube :math:`[y](\cdot)` for enclosing the trajectory of distances between the robot and the landmark.
+  **E.9.** Create a tube :math:`[y](\cdot)` for enclosing the actual trajectory :math:`y^{*}(\cdot)` of distances between the robot and the landmark. For now, we will not consider uncertainties on :math:`y^{*}(\cdot)`. Therefore, the tube :math:`[y](\cdot)` should enclose :math:`y^{*}(\cdot)` in a minimal way according to the discretization step ``dt``.
   Note that all the tubes of this lesson have to share the same ``tdomain`` and ``dt`` parameters.
 
 
