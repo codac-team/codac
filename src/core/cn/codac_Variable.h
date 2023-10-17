@@ -62,7 +62,7 @@ namespace codac
       IntervalVectorVar(int n)
         : IntervalVector(n)
       {
-
+        
       }
 
       /**

@@ -33,6 +33,7 @@ void export_IntervalVectorVar(py::module& m);
 
 py::class_<Ctc,pyCtc> export_Ctc(py::module& m);
 void export_CtcBox(py::module& m, py::class_<Ctc, pyCtc>& ctc);
+void export_CtcCN(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 void export_CtcCartProd(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 void export_CtcDist(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 void export_CtcFunction(py::module& m, py::class_<Ctc, pyCtc>& ctc);
@@ -100,6 +101,7 @@ PYBIND11_MODULE(core, m)
 
   py::class_<Ctc, pyCtc> ctc = export_Ctc(m);
   export_CtcBox(m, ctc);
+  export_CtcCN(m, ctc);
   export_CtcCartProd(m, ctc);
   export_CtcDist(m, ctc);
   export_CtcFunction(m, ctc);
