@@ -1,12 +1,33 @@
-.. _sec-tuto-01:
+.. _sec-tuto-jnrr23-01:
 
-Lesson A: Getting started with intervals and contractors
-========================================================
+Lesson JNRR-1: Getting started with intervals and contractors
+=============================================================
 
-Now that Codac has been installed on your computer or usable online, we will get used to intervals, constraints and networks of contractors.
-This will allow you to perform the state estimation of a static robot between some landmarks by the end of :ref:`Lesson B <sec-tuto-02>`.
+The goal of this first lesson is to install Codac on your computer (or use it online), and get used to intervals, constraints and networks of contractors.
+This will allow you to perform the state estimation of a static robot between some landmarks by the end of :ref:`Lesson JNRR-2 <sec-tuto-jnrr23-02>`.
 
 .. contents:: Content of this lesson
+
+
+Getting started
+---------------
+
+To get ready for the tutorial, you need to install the Codac library on your computer.
+Please follow the related page of the manual to see how to do it:
+
+.. toctree:: 
+  :maxdepth: 1
+
+  /install/01-installation
+
+Then, depending on your preference between C++ or Python (Matlab now available), you can run some *Hello World!* program to be sure everything is working well:
+
+.. toctree:: 
+  :maxdepth: 1
+
+  /install/02-start-py-project
+  /install/03-start-cpp-project
+  /install/04-start-matlab-project
 
 
 Start a new project
@@ -20,7 +41,7 @@ Start a new project as explained in:
 
 .. admonition:: Exercise
 
-  **A.0.** Check that it is displaying a tube in a graphical view and print the tube in the terminal using:
+  **1.0.** Check that it is displaying a tube in a graphical view and print the tube in the terminal using:
 
   .. tabs::
 
@@ -172,9 +193,9 @@ Codac is using C++/Python objects to represent intervals and boxes [#f1]_:
 
 .. admonition:: Exercise
 
-  **A.1.** Let us consider two intervals :math:`[x]=[8,10]` and :math:`[y]=[1,2]`. Without coding the operation, what would be the result of :math:`[x]/[y]` (:math:`[x]` divided by :math:`[y]`)? Remember that the result of this interval-division is also an interval enclosing all feasible divisions.
+  **1.1.** Let us consider two intervals :math:`[x]=[8,10]` and :math:`[y]=[1,2]`. Without coding the operation, what would be the result of :math:`[x]/[y]` (:math:`[x]` divided by :math:`[y]`)? Remember that the result of this interval-division is also an interval enclosing all feasible divisions.
 
-  **A.2.** In your new project, compute and print the following simple operations on intervals:
+  **1.2.** In your new project, compute and print the following simple operations on intervals:
   
   * :math:`[-2,4]\cdot[1,3]`
   * :math:`[8,10]/[-1,0]`
@@ -189,7 +210,7 @@ Codac is using C++/Python objects to represent intervals and boxes [#f1]_:
   | *For instance:* :math:`[-1,2]\sqcup[4,6]=[-1,6]`
   
 
-  **A.3.** Create a 2d box :math:`[\mathbf{y}]=[0,\pi]\times[-\pi/6,\pi/6]` and print the result of :math:`|[\mathbf{y}]|` with ``abs()``.
+  **1.3.** Create a 2d box :math:`[\mathbf{y}]=[0,\pi]\times[-\pi/6,\pi/6]` and print the result of :math:`|[\mathbf{y}]|` with ``abs()``.
 
 .. hint::
 
@@ -253,7 +274,7 @@ We can also define vector input variables and access their components in the fun
 
 .. admonition:: Exercise
 
-  **A.4.** For our robotic applications, we often need to define the distance function :math:`g`:
+  **1.4.** For our robotic applications, we often need to define the distance function :math:`g`:
   
   .. math::
 
@@ -271,7 +292,7 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
 
 .. admonition:: Exercise
 
-  **A.5.** Create a view with:
+  **1.5.** Create a view with:
 
   .. tabs::
     
@@ -297,7 +318,7 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
       fig.show(); // display all items of the figure
       vibes::endDrawing();
 
-  | **A.6.** Before the ``.show()`` method, draw the boxes :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]` with the ``fig.draw_box(..)`` method. The computed interval range :math:`[d]` can be displayed as a ring centered on :math:`\mathbf{x}=(0,0)`. The ring will contain the set of all positions that are :math:`d`-distant from :math:`\mathbf{x}=(0,0)`, with :math:`d\in[d]`.
+  | **1.6.** Before the ``.show()`` method, draw the boxes :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]` with the ``fig.draw_box(..)`` method. The computed interval range :math:`[d]` can be displayed as a ring centered on :math:`\mathbf{x}=(0,0)`. The ring will contain the set of all positions that are :math:`d`-distant from :math:`\mathbf{x}=(0,0)`, with :math:`d\in[d]`.
 
   To display each bound of the ring, you can use ``fig.draw_circle(x, y, rad)`` where ``x``, ``y``, ``rad`` are *double* values.
 
@@ -305,7 +326,7 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
 
     To access *double* bounds of an interval object ``x``, you can use the ``x.lb()``/``x.ub()`` methods for lower and upper bounds.
 
-  | **A.7.** Now, repeat the operation with :math:`[\mathbf{x}]=[-0.1,0.1]\times[-0.1,0.1]`. You can for instance use the ``.inflate(0.1)`` method on ``x``.
+  | **1.7.** Now, repeat the operation with :math:`[\mathbf{x}]=[-0.1,0.1]\times[-0.1,0.1]`. You can for instance use the ``.inflate(0.1)`` method on ``x``.
   | Is the result reliable, according to the sets :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]`? You may display the box :math:`([\mathbf{x}]+[\mathbf{b}])` to understand how the reliable interval distance is computed.
 
 
@@ -375,7 +396,7 @@ In Codac, the contractors are also defined by C++/Python objects and are prefixe
 
 .. admonition:: Exercise
 
-  **A.8.** Define a contractor :math:`\mathcal{C}_\textrm{dist}` related to the distance constraint between two 2d positions :math:`\mathbf{x}` and :math:`\mathbf{b}\in\mathbb{R}^2`. We will use the distance function previously defined, but in the form :math:`f(\mathbf{x},\mathbf{b},d)=0`.
+  **1.8.** Define a contractor :math:`\mathcal{C}_\textrm{dist}` related to the distance constraint between two 2d positions :math:`\mathbf{x}` and :math:`\mathbf{b}\in\mathbb{R}^2`. We will use the distance function previously defined, but in the form :math:`f(\mathbf{x},\mathbf{b},d)=0`.
 
 | The contractor is then simply added to a **Contractor Network** (CN) that will manage the constraints on the different variables for solving the problem.
 | For instance, we can use the previously defined :math:`\mathcal{C}_+` as:
@@ -413,7 +434,7 @@ Note that one contractor can be added several times in the CN. This is useful to
 
 .. admonition:: Exercise
 
-  | **A.9.** Define a Contractor Network to implement three distance constraints.
+  | **1.9.** Define a Contractor Network to implement three distance constraints.
   | Check the results with :math:`\mathcal{C}_\textrm{dist}([\mathbf{x}],[\mathbf{b}^i],[d])`, :math:`i\in\{1,2,3\}` and 
   
   * :math:`[d]=[7,8]`

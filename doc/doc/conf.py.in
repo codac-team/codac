@@ -50,6 +50,7 @@ redirects = {
     "sivia": "manual/11-separators/index.html",
     "installation": "install/01-installation.html",
     "brunovsky": "use-cases/brunovsky/index.html",
+    "jnrr": "tutorial-jnrr23/index.html",
 }
 
 breathe_projects = {
