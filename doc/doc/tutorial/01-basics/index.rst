@@ -1,5 +1,10 @@
 .. _sec-tuto-01:
 
+.. # define a hard line break for HTML
+.. |br| raw:: html
+
+   <br />
+
 Lesson A: Getting started with intervals and contractors
 ========================================================
 
@@ -169,21 +174,21 @@ Codac is using C++/Python objects to represent intervals and boxes [#f1]_:
 
   For full details about ``Interval`` and ``IntervalVector`` objects, please read the :ref:`sec-manual-intervals` page of the user manual.
 
-
 .. admonition:: Exercise
 
   **A.1.** Let us consider two intervals :math:`[x]=[8,10]` and :math:`[y]=[1,2]`. Without coding the operation, what would be the result of :math:`[x]/[y]` (:math:`[x]` divided by :math:`[y]`)? Remember that the result of this interval-division is also an interval enclosing all feasible divisions.
 
-  **A.2.** In your new project, compute and print the following simple operations on intervals:
+  **A.2.** In your new project, compute and print the following simple operations on intervals: |br|
+  :right-aligned-note:`Solutions are given below` |br|
   
-  * :math:`[-2,4]\cdot[1,3]`
-  * :math:`[8,10]/[-1,0]`
-  * :math:`[-2,4]\sqcup[6,7]` with operator ``|``
-  * :math:`\max([2,7],[1,9])`
-  * :math:`\max(\varnothing,[1,2])`
-  * :math:`\cos([-\infty,\infty])`
-  * :math:`[-1,4]^2` with function ``sqr()``
-  * :math:`([1,2]\cdot[-1,3]) + \max([1,3]\cap[6,7],[1,2])`
+  * :math:`[-2,4]\cdot[1,3]`                                  :right-aligned-note:`[-6,12]`
+  * :math:`[8,10]/[-1,0]`                                     :right-aligned-note:`[-∞,-8]`
+  * :math:`[-2,4]\sqcup[6,7]` with operator ``|``             :right-aligned-note:`[-2,7]`
+  * :math:`\max([2,7],[1,9])`                                 :right-aligned-note:`[2,9]`
+  * :math:`\max(\varnothing,[1,2])`                           :right-aligned-note:`∅`
+  * :math:`\cos([-\infty,\infty])`                            :right-aligned-note:`[-1,1]`
+  * :math:`[-1,4]^2` with function ``sqr()``                  :right-aligned-note:`[0,16]`
+  * :math:`([1,2]\cdot[-1,3]) + \max([1,6]\cap[5,7],[1,2])`   :right-aligned-note:`[3,12]`
 
   | Note that :math:`\sqcup` is the hull union (``|``), *i.e.*, :math:`[x]\sqcup[y] = [[x]\cup[y]]`.
   | *For instance:* :math:`[-1,2]\sqcup[4,6]=[-1,6]`
@@ -299,11 +304,11 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
 
   | **A.6.** Before the ``.show()`` method, draw the boxes :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]` with the ``fig.draw_box(..)`` method. The computed interval range :math:`[d]` can be displayed as a ring centered on :math:`\mathbf{x}=(0,0)`. The ring will contain the set of all positions that are :math:`d`-distant from :math:`\mathbf{x}=(0,0)`, with :math:`d\in[d]`.
 
-  To display each bound of the ring, you can use ``fig.draw_circle(x, y, rad)`` where ``x``, ``y``, ``rad`` are *double* values.
+  To display each bound of the ring, you can use ``fig.draw_circle(x, y, rad)`` where ``x``, ``y``, ``rad`` are real values.
 
   .. hint::
 
-    To access *double* bounds of an interval object ``x``, you can use the ``x.lb()``/``x.ub()`` methods for lower and upper bounds.
+    To access real bounds of an ``Interval`` object ``x``, you can use the ``x.lb()``/``x.ub()`` methods for lower and upper bounds. This also works with ``IntervalVector``, returning vector items.
 
   | **A.7.** Now, repeat the operation with :math:`[\mathbf{x}]=[-0.1,0.1]\times[-0.1,0.1]`. You can for instance use the ``.inflate(0.1)`` method on ``x``.
   | Is the result reliable, according to the sets :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]`? You may display the box :math:`([\mathbf{x}]+[\mathbf{b}])` to understand how the reliable interval distance is computed.

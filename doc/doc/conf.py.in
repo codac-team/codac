@@ -61,6 +61,8 @@ breathe_projects = {
 rst_prolog = """
 .. role:: underline
   :class: underline
+.. role:: right-aligned-note
+  :class: right-aligned-note
 """
 
 # GitHub repo
