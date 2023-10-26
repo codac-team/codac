@@ -10,14 +10,20 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mathjax_stmaryrd.js
 # Technical API documentation (Doxygen)
 
   if(WITH_PYTHON)
-
-    find_package(Doxygen)
+    
+    find_package(Doxygen 1.0.0...1.9.6)
 
     if(NOT DOXYGEN_FOUND)
 
       message(STATUS "Doxygen not found, not able to generate/install the API documentation.")
 
     else()
+
+      if(NOT DOXYGEN_DIR)
+        message(STATUS "Doxygen ${DOXYGEN_VERSION} found.")
+      else()
+        message(STATUS "Doxygen ${DOXYGEN_VERSION} found in ${DOXYGEN_DIR}.")
+      endif()
 
       # Includes CMake commands in config file:
       configure_file(api/Doxyfile.in api/Doxyfile)
