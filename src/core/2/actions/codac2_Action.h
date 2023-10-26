@@ -35,6 +35,7 @@ namespace codac2
   {
     public:
 
+      OctaSym(std::initializer_list<int> s);
       OctaSym(const std::vector<int>& s);
       CtcAction operator()(codac::Ctc& ctc) const;
       codac::IntervalVector operator()(const codac::IntervalVector& x) const;
