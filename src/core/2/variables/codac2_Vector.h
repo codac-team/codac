@@ -55,11 +55,11 @@ namespace codac2
         static_assert(M == Dynamic || M == N);
       }
 
-      explicit Vector_(size_t n, double values[])
+      explicit Vector_(size_t n, const double values[])
         : Matrix_<N,1>(n,1,values)
       { }
 
-      explicit Vector_(double values[])
+      explicit Vector_(const double values[])
         : Matrix_<N,1>(N,1,values)
       { }
 

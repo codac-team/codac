@@ -68,11 +68,11 @@ namespace codac2
           (*this)[i] = Interval(v[i]);
       }
       
-      explicit IntervalVector_(size_t n, double bounds[][2])
+      explicit IntervalVector_(size_t n, const double bounds[][2])
         : IntervalMatrix_<N,1>(n,1,bounds)
       { }
 
-      explicit IntervalVector_(double bounds[][2])
+      explicit IntervalVector_(const double bounds[][2])
         : IntervalVector_(this->size(), bounds)
       { }
       
@@ -278,7 +278,7 @@ namespace codac2
         : IntervalVector_<>(v)
       { }
       
-      explicit IntervalVector(size_t n, double bounds[][2])
+      explicit IntervalVector(size_t n, const double bounds[][2])
         : IntervalVector_<>(n, bounds)
       { }
       
