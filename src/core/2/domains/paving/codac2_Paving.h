@@ -106,6 +106,15 @@ namespace codac2
         return l;
       }
 
+      size_t nb_leaves() const
+      {
+        if(is_leaf())
+          return 1;
+        else
+          return (_left ? _left->nb_leaves() : 0) +
+            (_right ? _right->nb_leaves() : 0);
+      }
+
     protected:
 
       void boxes_list_push(std::list<std::reference_wrapper<const IntervalVector_<N>>>& l, const IntervalVector_<N>& intersect = IntervalVector_<N>()) const
