@@ -168,6 +168,8 @@
       codac_py_codac2.cpp
       src/core/2/actions/codac2_py_Action.cpp
       src/core/2/contractors/codac2_py_CtcAction.cpp
+      src/core/2/cn/codac2_py_ContractorNetwork.cpp
+      src/core/2/cn/codac2_py_Contractor.cpp
     )
 
     target_include_directories(codac2

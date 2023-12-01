@@ -22,13 +22,14 @@
 #include <codac2_eigen.h>
 #include <ibex_LargestFirst.h>
 #include <codac2_Matrix.h>
+#include <codac2_Domain.h>
 
 namespace codac2
 {
   using Eigen::Dynamic;
 
   template<int R=Dynamic,int C=Dynamic>
-  class IntervalMatrix_ : public Eigen::Matrix<Interval,R,C>
+  class IntervalMatrix_ : public Eigen::Matrix<Interval,R,C>, public Domain
   {
     public:
 
@@ -263,6 +264,14 @@ namespace codac2
           if((this->data()+i)->is_bisectable())
             return true;
         return false;
+      }
+
+      DomainVolume dom_volume() const
+      {
+        DomainVolume v(size());
+        for(size_t i = 0 ; i < size() ; i++)
+          v[i] = (this->data()+i)->diam();
+        return v;
       }
 
       double min_diam() const

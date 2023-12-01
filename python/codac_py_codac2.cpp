@@ -20,6 +20,8 @@ namespace py = pybind11;
 
 void export_Action(py::module& m);
 void export_CtcAction(py::module& m, py::class_<Ctc, pyCtc>& ctc);
+void export_ContractorNetwork_codac2(py::module& m);
+void export_Contractor_codac2(py::module& m);
 
 PYBIND11_MODULE(codac2, m)
 {
@@ -29,4 +31,6 @@ PYBIND11_MODULE(codac2, m)
 
   export_Action(m);
   export_CtcAction(m, ctc);
+  export_ContractorNetwork_codac2(m);
+  export_Contractor_codac2(m);
 }

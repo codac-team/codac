@@ -17,6 +17,7 @@
 #include <functional>
 #include "codac2_Interval.h"
 #include "codac2_IntervalVector.h"
+#include <codac2_Domain.h>
 
 namespace codac2
 {

@@ -162,7 +162,7 @@ namespace codac
 
     if(display_result)
     {
-      printf( "Computation time: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
+      printf( "Computation time: %.4fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
       cout << "  Contractions:   " << k << endl;
       cout << "  OUT boxes:      " << n_boxes[SetValue::OUT] << endl;
       cout << "  UNKNOWN boxes:  " << n_boxes[SetValue::UNKNOWN] << endl;
@@ -325,7 +325,7 @@ namespace codac
 
     if(display_result)
     {
-      printf( "Computation time: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
+      printf( "Computation time: %.4fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
       cout << "  Contractions:   " << k << endl;
       cout << "  IN boxes:       " << n_boxes[SetValue::IN] << endl;
       cout << "  OUT boxes:      " << n_boxes[SetValue::OUT] << endl;

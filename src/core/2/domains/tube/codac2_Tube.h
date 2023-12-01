@@ -22,6 +22,7 @@
 #include "codac2_AbstractConstTube.h"
 #include "codac2_TDomain.h"
 #include "codac_ConvexPolygon.h"
+#include <codac2_Domain.h>
 
 namespace codac2
 {

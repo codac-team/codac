@@ -181,6 +181,16 @@
 
   list(APPEND CODAC2_SRC # Files related to codac2
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/3rd/codac2_eigen.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_ContractorNetwork.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_ContractorNetwork.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_Contractor.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_Contractor.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_ContractorNode.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_ContractorNode.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_DomainNode.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_DomainNode.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_Var.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/codac2_Domain.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_Interval.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_IntervalMatrix.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_IntervalVector.h
@@ -245,7 +255,9 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/tools
                                           ${CMAKE_CURRENT_SOURCE_DIR}/sivia
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/3rd
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/cn
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/domains
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/paving

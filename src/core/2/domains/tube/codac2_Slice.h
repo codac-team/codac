@@ -23,6 +23,7 @@
 #include "codac_BoolInterval.h"
 #include "codac_ConvexPolygon.h"
 #include "codac_DynCtc.h"
+#include <codac2_Domain.h>
 
 #define EPSILON_CONTAINS ibex::next_float(0.) * 1000. //!< epsilon limit of the contains() algorithm
 
