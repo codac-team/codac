@@ -29,7 +29,7 @@ namespace codac2
   using Eigen::Dynamic;
 
   template<int R=Dynamic,int C=Dynamic>
-  class IntervalMatrix_ : public Eigen::Matrix<Interval,R,C>, public Domain
+  class IntervalMatrix_ : public Eigen::Matrix<Interval,R,C>, virtual public Domain
   {
     public:
 

@@ -17,20 +17,13 @@ namespace codac2
     public:
 
       virtual ~ContractorNodeBase() = default;
-      virtual constexpr size_t nb_args() const = 0;
+      virtual size_t nb_args() const = 0;
       virtual std::list<std::shared_ptr<DomainNodeBase>> call_contract() = 0;
       virtual Contractor* raw_ptr() const = 0;
       virtual void associate_domains(std::vector<std::shared_ptr<DomainNodeBase>>& cn_domains) = 0;
       virtual std::string contractor_class_name() const = 0;
-      void set_call_flag(bool flag = true);
-      bool to_be_called() const;
 
       friend std::ostream& operator<<(std::ostream& os, const ContractorNodeBase& d);
-
-    protected:
-
-      bool _to_be_called = false; // this is redundant with the presence of the node 
-      // in the CN stack, but avoids to search the node in the stack
   };
 
   template<typename C,typename... T>
@@ -51,7 +44,7 @@ namespace codac2
 
       }
 
-      constexpr size_t nb_args() const
+      size_t nb_args() const
       {
         return std::tuple_size<decltype(_x)>::value;
       }
@@ -61,7 +54,7 @@ namespace codac2
         return &(_ctc.get());
       }
 
-      void add_domain_if_contracted(const std::shared_ptr<DomainNodeBase>& d, std::list<std::shared_ptr<DomainNodeBase>>& l)
+      void process_domain_after_ctc(const std::shared_ptr<DomainNodeBase>& d, std::list<std::shared_ptr<DomainNodeBase>>& l)
       {
         if(d->has_been_contrated())
           l.push_back(d);
@@ -69,7 +62,6 @@ namespace codac2
 
       std::list<std::shared_ptr<DomainNodeBase>> call_contract()
       {
-        _to_be_called = false;
         std::list<std::shared_ptr<DomainNodeBase>> contracted_doms;
 
         std::apply(
@@ -81,7 +73,7 @@ namespace codac2
         std::apply(
           [this,&contracted_doms](auto &&... args)
           {
-            (add_domain_if_contracted(args,contracted_doms),...);
+            (process_domain_after_ctc(args,contracted_doms),...);
           }, _x);
 
         return contracted_doms;
@@ -96,7 +88,6 @@ namespace codac2
             d = std::dynamic_pointer_cast<D>(cn_xi);
             return;
           }
-
         cn_domains.push_back(d);
       }
       

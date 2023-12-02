@@ -15,11 +15,26 @@ namespace codac2
       return std::make_shared<ContractorNode<std::remove_reference<decltype(*this)>::type,T...>>(*this, a...); \
     } \
 
+  #define make_available_in_cn__templated(template_args) \
+    template<typename... T> \
+    std::shared_ptr<ContractorNodeBase> operator()(T&... a) \
+    { \
+      return std::make_shared<ContractorNode<template_args,T...>>(*this, a...); \
+    } \
+
   class Contractor
   {
     public:
       
       virtual ~Contractor() = default;
+  };
+
+  template<int N>
+  class ContractorOnBox : public Contractor
+  {
+    public:
+
+      virtual void contract(IntervalVector_<N>& x) = 0;
   };
 
   class Contractor1 : public Contractor

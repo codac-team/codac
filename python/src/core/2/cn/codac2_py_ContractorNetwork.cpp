@@ -39,6 +39,7 @@ void export_ContractorNetwork_codac2(py::module& m)
       "n"_a)
 
     .def("contract", &ContractorNetwork::contract,
-      "todo")
+      "todo",
+      "verbose"_a=true)
   ;
 }

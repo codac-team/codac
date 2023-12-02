@@ -22,7 +22,7 @@
 namespace codac2
 {
   template<class P,int N=Dynamic>
-  class PavingBase
+  class PavingBase : virtual public Domain
   {
     public:
 
@@ -115,6 +115,16 @@ namespace codac2
           return (_left ? _left->nb_leaves() : 0) +
             (_right ? _right->nb_leaves() : 0);
       }
+      
+      DomainVolume dom_volume() const
+      {
+        DomainVolume vol;
+        dom_volume_push(vol);
+        return vol;
+      }
+      
+      template<class P_,int N_>
+      friend std::ostream& operator<<(std::ostream& os, const PavingBase<P_,N_>& p);
 
     protected:
 
@@ -140,11 +150,29 @@ namespace codac2
         }
       }
 
+      void dom_volume_push(DomainVolume& vol) const
+      {
+        if(is_leaf())
+          vol.push_back(_x.volume());
+        else
+        {
+          if(_left) _left->dom_volume_push(vol);
+          if(_right) _right->dom_volume_push(vol);
+        }
+      }
+
     public: // todo
 
       IntervalVector_<N> _x;
       std::shared_ptr<P> _left = nullptr, _right = nullptr;
   };
+
+  template<class P_,int N_>
+  inline std::ostream& operator<<(std::ostream& os, const PavingBase<P_,N_>& p)
+  {
+    os << "Paving";
+    return os;
+  }
 
   template<int N>
   class Paving : public PavingBase<Paving<N>,N>

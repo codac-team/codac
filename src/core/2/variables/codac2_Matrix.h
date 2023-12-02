@@ -68,7 +68,7 @@ namespace codac2
         assert((R == Dynamic || (int)l.size() == R) && "ill-formed matrix");
         int cols = -1;
         for(const auto& ri : l) {
-          assert(cols == -1 || cols == (int)ri.size() && "ill-formed matrix");
+          assert((cols == -1 || cols == (int)ri.size()) && "ill-formed matrix");
           cols = (int)ri.size();
         }
         this->resize(l.size(),cols);
@@ -98,7 +98,7 @@ namespace codac2
 
       void init(double x)
       {
-        for(size_t i = 0 ; i < this->size() ; i++)
+        for(auto i = 0 ; i < this->size() ; i++)
           *(this->data()+i) = x;
       }
 
@@ -190,8 +190,8 @@ namespace codac2
   ibex::Matrix to_codac1(const Matrix_<R,C>& x)
   {
     ibex::Matrix x_(x.rows(), x.cols());
-    for(size_t i = 0 ; i < x.rows() ; i++)
-      for(size_t j = 0 ; j < x.cols() ; j++)
+    for(size_t i = 0 ; i < (size_t)x.rows() ; i++)
+      for(size_t j = 0 ; j < (size_t)x.cols() ; j++)
         x_[i][j] = x(i,j);
     return x_;
   }

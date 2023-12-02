@@ -6,6 +6,7 @@
 #include <memory>
 #include <functional>
 #include "codac2_Domain.h"
+#include "codac2_Var.h"
 
 namespace codac2
 {
@@ -23,6 +24,8 @@ namespace codac2
       virtual const std::vector<std::weak_ptr<ContractorNodeBase>>& contractors() const = 0;
       virtual void add_ctc(const std::shared_ptr<ContractorNodeBase>& ctc) = 0;
       virtual std::string domain_class_name() const = 0;
+      virtual void reset() = 0;
+      virtual bool is_var() const = 0;
 
       friend std::ostream& operator<<(std::ostream& os, const DomainNodeBase& d);
   };
@@ -33,6 +36,8 @@ namespace codac2
     using T = typename std::remove_const<T_>::type;
 
     public:
+
+      constexpr static bool _is_var = std::is_base_of<VarBase,T>::value;
 
       std::reference_wrapper<T> make_ref(T_& x)
       {
@@ -45,7 +50,7 @@ namespace codac2
           return std::ref(x);
       }
 
-      DomainNode(T_& x)
+      explicit DomainNode(T_& x)
         : _x(make_ref(x)), _volume(x.dom_volume())
       {
         if constexpr (std::is_const<T_>::value)
@@ -90,6 +95,17 @@ namespace codac2
       std::string domain_class_name() const
       {
         return typeid(T).name();
+      }
+
+      void reset()
+      {
+        if constexpr(_is_var)
+          _x.get().reset();
+      }
+
+      constexpr bool is_var() const
+      {
+        return _is_var;
       }
 
     protected:

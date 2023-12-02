@@ -14,6 +14,7 @@ namespace codac2
     public:
       
       virtual ~VarBase() = default;
+      VarBase& operator=(const VarBase& x) = delete;
   };
 
   template<typename T>
@@ -25,6 +26,26 @@ namespace codac2
       {
 
       }
+      
+      Var(const T& initial_value)
+        : _initial_value(initial_value)
+      {
+
+      }
+
+      void reset()
+      {
+        this->T::operator=(_initial_value);
+      }
+
+      void reset(const T& x)
+      {
+        this->T::operator=(x);
+      }
+
+    protected:
+
+      T _initial_value;
   };
 }
 

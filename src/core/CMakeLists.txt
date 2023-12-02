@@ -215,6 +215,9 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcLinobs.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcLinobs.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcPaver.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcInter.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcCN.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/variables/codac2_Matrix.h
