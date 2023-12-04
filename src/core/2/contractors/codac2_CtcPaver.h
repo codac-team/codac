@@ -21,9 +21,9 @@ namespace codac2
   {
     public:
 
-      static bool compare_paving(Paving<N>* first, Paving<N>* second)
+      static bool compare_paving(const std::weak_ptr<PavingNode<N>>& first, const std::weak_ptr<PavingNode<N>>& second)
       {
-        return first->box().volume() > second->box().volume();
+        return first.lock()->_x.volume() > second.lock()->_x.volume();
       }
 
       CtcPaver(ContractorOnBox<N>& ctc, size_t max_leaves)
@@ -34,15 +34,16 @@ namespace codac2
 
       void contract(Paving<N>& x)
       {
-        list<Paving<N>*> l_subpav = x.leaves_list();
+        auto l_subpav = x.leaves();
         size_t nb_leaves = l_subpav.size();
 
         while(!l_subpav.empty())
         {
           l_subpav.sort(compare_paving);
 
-          Paving<N>* q = l_subpav.front();
+          std::shared_ptr<PavingNode<N>> q = l_subpav.front().lock();
           l_subpav.pop_front();
+          assert(q.use_count() > 1);
 
           _ctc.contract(q->_x);
 
@@ -53,8 +54,8 @@ namespace codac2
           {
             q->bisect();
             nb_leaves++;
-            l_subpav.push_back(q->_left.get());
-            l_subpav.push_back(q->_right.get());
+            l_subpav.push_back(q->left());
+            l_subpav.push_back(q->right());
           }
         }
       }

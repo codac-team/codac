@@ -103,6 +103,12 @@ namespace codac2
           _x.get().reset();
       }
 
+      void reset(const T& x)
+      {
+        if constexpr(_is_var)
+          _x.get().reset(x);
+      }
+
       constexpr bool is_var() const
       {
         return _is_var;

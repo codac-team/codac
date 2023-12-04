@@ -29,7 +29,7 @@ namespace codac2
     _auto_fixpoint = !disable;
   }
 
-  void ContractorNetwork::contract(bool verbose)
+  double ContractorNetwork::contract(bool verbose)
   {
     if(verbose)
     {
@@ -45,7 +45,7 @@ namespace codac2
       shared_ptr<ContractorNodeBase> current_ctc = _stack.front();
       _stack.pop_front();
 
-      auto contracted_doms = current_ctc->call_contract();
+      auto contracted_doms = current_ctc->call_contract(false);
 
       for(auto& d : contracted_doms)
         for(auto& ci : d->contractors())
@@ -56,8 +56,10 @@ namespace codac2
         }
     }
     
+    double elapsed_time = (double)(clock()-t_start)/CLOCKS_PER_SEC;
     if(verbose)
-      std::cout << "  Constraint propagation time: " << (double)(clock() - t_start)/CLOCKS_PER_SEC << "s" << std::endl;
+      std::cout << "  Constraint propagation time: " << elapsed_time << "s" << std::endl;
+    return elapsed_time;
   }
   
   void ContractorNetwork::reset_all_vars()

@@ -28,13 +28,10 @@ namespace codac2
 
       void contract(Paving<N>& x, IntervalVector_<N>& y)
       {
-        IntervalVector_<N> y_ = IntervalVector_<N>::empty_set();
-        for(auto& li : x.leaves_list())
-        {
-          y_ |= li->_x & y;
-          //li->_x &= y;
-        }
-        y = y_;
+        auto y_ = y;
+        y.set_empty();
+        for(const auto& l : x.leaves())
+          y |= y_ & l.lock()->box();
       }
 
       make_available_in_cn__templated(CtcInter<N>)

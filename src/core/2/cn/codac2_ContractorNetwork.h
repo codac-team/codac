@@ -18,7 +18,7 @@ namespace codac2
       void add(const std::shared_ptr<ContractorNodeBase>& ctc);
       void add_ctc_to_stack(const std::shared_ptr<ContractorNodeBase>& ctc);
       void disable_auto_fixpoint(bool disable = true);
-      void contract(bool verbose = true);
+      double contract(bool verbose = true);
 
       void reset_all_vars();
 

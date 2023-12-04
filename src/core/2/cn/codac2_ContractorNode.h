@@ -18,7 +18,7 @@ namespace codac2
 
       virtual ~ContractorNodeBase() = default;
       virtual size_t nb_args() const = 0;
-      virtual std::list<std::shared_ptr<DomainNodeBase>> call_contract() = 0;
+      virtual std::list<std::shared_ptr<DomainNodeBase>> call_contract(bool verbose = false) = 0;
       virtual Contractor* raw_ptr() const = 0;
       virtual void associate_domains(std::vector<std::shared_ptr<DomainNodeBase>>& cn_domains) = 0;
       virtual std::string contractor_class_name() const = 0;
@@ -60,8 +60,10 @@ namespace codac2
           l.push_back(d);
       }
 
-      std::list<std::shared_ptr<DomainNodeBase>> call_contract()
+      std::list<std::shared_ptr<DomainNodeBase>> call_contract(bool verbose = false)
       {
+        if(verbose)
+          std::cout << "Calling " << contractor_class_name() << std::endl;
         std::list<std::shared_ptr<DomainNodeBase>> contracted_doms;
 
         std::apply(
