@@ -131,6 +131,16 @@ IntervalMatrix inv_IntervalMatrix(const IntervalMatrix& M, bool prec=true);
 void inv_IntervalMatrix(const IntervalMatrix& A, 
         IntervalMatrix& B, bool prec=true);
 
+/* "punctualize" a couple "matrix" - "inverse of matrix" :
+   starting from ([A],[Ai]) such that [A].[Ai] ~ Id, compute
+   [A'] <Aim>...
+   technique used : Am = [A].mid    Aim = [Ai].mid
+   then compute [A'] = (Am [Aim])^-1 Am
+   we use the algorithm of inv_IntervalMatrix with simplification
+   (assume Am [Aim] is almost Id */
+void punctualize_coupleMatrix(IntervalMatrix& A,
+        IntervalMatrix &Ai);
+
 // Determination of a rank a set of vectors A, with Af the "maximal" set
 // of free vectors, and E = pseudo-inverse (A Et = id)
 // if needed, we complete to get a square matrix with other vectors

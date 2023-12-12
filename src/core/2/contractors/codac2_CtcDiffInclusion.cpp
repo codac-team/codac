@@ -155,9 +155,14 @@ namespace codac2
 
        double tsteps = timeslice.diam();
 
+ 
        global_exp(jac,tsteps,true,time_dependent,
                 ExpM,invExpM,tauExpM,IExpM,tauIExpM,
                 VExpM,tauVExpM,IntAbs);
+//       std::cout << "jacobian : " << jac << "\n";
+//       std::cout << "ExpM : " << ExpM << "\n";
+//       std::cout << "IExpM : " << IExpM << "\n";
+//       std::cout << "IntAbs : " << IntAbs << "\n";
        /* other variables which needs to be kept */
        Vector cent_tdiff(dim);
        Vector fun_evalc(dim);
@@ -250,7 +255,10 @@ namespace codac2
         }
         for (int i=0;i<dim;i=i+1) (evolCenter[i]).inflate(vuncert[i]);
         finState = actState;
+//        std::cout << "evolCenter " << evolCenter << "\n";
+//        std::cout << "actState " << actState << "\n";
         finState.cmult_and_add(cent_tauState,ExpM,invExpM,evolCenter);
+ //       std::cout << "final after cmult_and_add " << finState << "\n";
         return true;
    }
 
@@ -419,12 +427,12 @@ namespace codac2
         nb_tries++;
       }
       frame &= approxIV;  /* ensure contractance */
-      x.set(frame);
       if (x.next_slice_ptr() && x.next_slice_ptr()->is_gate()) {
          IParals end = x.next_slice_ptr()->codomain();
 	 end &= g_t1; /* ensure contractance */
          x.next_slice_ptr()->set(end);
       }
+      x.set(frame); /* first the gate, then the frame... */
     }
 
     if((t_propa & TimePropag::BACKWARD) && (!x.output_gate().is_unbounded()))

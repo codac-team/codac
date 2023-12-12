@@ -24,6 +24,7 @@
 
 namespace codac2 {
 
+  bool IParals::display_inv=false;
 
   IParals::IParals(int dim) :
       dim(dim), empty(false), nbmat(0), mats(), Vrhs(1)
@@ -106,6 +107,23 @@ namespace codac2 {
        }
        return true;
    }
+   bool IParals::intersects(const IntervalVector& iv) const {
+       assert (dim>0);
+       if (this->empty) return false;
+       if (!this->bbox().intersects(iv)) return false;
+       for (unsigned int i=0;i<this->nbmat;i++) {
+          if (!this->rhs(i).intersects(this->Imat(i)*iv)) return false;
+       }
+       return true;
+   }
+   bool IParals::intersects(const IParals& ip) const {
+       assert (dim>0);
+       if (this->empty) return false;
+       if (!this->intersects(ip.bbox())) return false; 
+       if (!ip.intersects(this->bbox())) return false; 
+       return true;
+   }
+
    const IntervalMatrix& IParals::getMat(unsigned int i) const {
        assert (i>=0 && i<nbmat);
        return this->mat(i);
@@ -352,6 +370,7 @@ namespace codac2 {
         if (this->bbox().is_empty()) { this->set_empty(); return *this; }
         if (this->nbmat==0) {
            for (unsigned int i=0;i<iv.nbmat;i++) {
+//               std::cout << "borrow base meet nbmat=0\n";
                this->borrow_base(iv,i,iv.rhs(i));
 	   }
 	   this->simplify();
@@ -360,28 +379,44 @@ namespace codac2 {
         unsigned int nbcommun=0;
         for (unsigned int i=0;i<this->nbmat;i++) {
           this->rhs(i) &= this->Imat(i) * iv.bbox();
-          for (unsigned int j=0;j<iv.nbmat;j++) {
+          if (this->rhs(i).is_empty()) { this->set_empty(); return *this; }
+        }
+        bool useful[iv.nbmat];
+        int nbuseful=iv.nbmat;
+        int b=-1; /* last useful */
+        for (unsigned int j=0;j<iv.nbmat;j++) {
+          useful[j]=true;
+          IntervalVector checkuseful = iv.Imat(j)*this->bbox();
+          for (unsigned int i=0;i<this->nbmat;i++) {
              if (this->mats[i]==iv.mats[j]) {
 	        this->rhs(i) &= iv.rhs(j);
                 nbcommun++;
+                useful[j]=false;
+                nbuseful--;
+		break;
              }
-	     else
-	        this->rhs(i) &= (this->Imat(i)*iv.mat(j)) * iv.rhs(j);
+	     this->rhs(i) &= (this->Imat(i)*iv.mat(j)) * iv.rhs(j);
+             if (this->rhs(i).is_empty()) { this->set_empty(); return *this; }
+             checkuseful &= (iv.Imat(j)*this->mat(i))*this->rhs(i);
+	     if (checkuseful.is_subset(iv.rhs(j))) {
+                useful[j]=false;
+                nbuseful--;
+                break;
+             }
           }
-          if (this->rhs(i).is_empty()) { this->set_empty(); return *this; }
+          if (useful[j]) b=j;
        }
-        int b=iv.nbmat-1;
-        if (iv.nbmat==nbcommun || 
-		(this->nbmat==2 && (ctcG || this->mats[1]==iv.mats[b]))) {
+        if (b==-1 || iv.nbmat==nbcommun || 
+		(this->nbmat==2 && ctcG)) {
 	     this->simplify();
              return (*this);
         }
-        if (this->nbmat==1 && this->mats[0]==iv.mats[b]) b=0; /* iv.nbmat=2 ! */
 	IntervalVector newV = iv.rhs(b);
 	newV &= iv.Imat(b)*this->bbox();
         for (unsigned int i=0;i<this->nbmat;i++) {
 	   newV &= (iv.Imat(b)*this->mat(i)) * this->rhs(i);
         }
+//        std::cout << "borrow base meet other=0\n";
         this->borrow_base(iv,b,newV);
         if (newV.is_empty()) 
         this->simplify(); 
@@ -744,6 +779,19 @@ namespace codac2 {
        }
        return this->bbox().is_subset(iv.bbox());
    }
+   bool IParals::is_subset(const IParals& ip) const {
+       if (this->empty) return true;
+       if (ip.empty) return false;
+       if (!this->is_subset(ip.bbox())) return false;
+       for (unsigned int i=0;i<ip.nbmat;i++) {
+           IntervalVector r  = ip.Imat(i)*this->bbox();
+           for (unsigned int j=0;j<this->nbmat;j++) {
+               r &= (ip.Imat(i)*this->mat(j))*this->rhs(j);
+           }
+           if (!r.is_subset(ip.rhs(i))) return false;
+       }
+       return true;
+   }
   
 
    IParals& IParals::toPointMatrices() {
@@ -1035,7 +1083,11 @@ namespace codac2 {
        if (iv.empty || iv.nbmat==0) { return (str << iv.bbox()); }
        str << "IParals: box " << iv.bbox() << "\n";
        for (unsigned int i=0;i<iv.nbmat;i++) {
-            str << " /\\ " << iv.mat(i) << "\n     X " << iv.rhs(i);
+         if (!iv.display_inv) {
+              str << " /\\ " << iv.mat(i) << "\n     X " << iv.rhs(i);
+         } else {
+              str << " /\\ " << iv.Imat(i) << "\n  X  \\in " << iv.rhs(i);
+         }
        }
        str << "\n" << std::flush;
        return str;

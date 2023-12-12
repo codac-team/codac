@@ -322,6 +322,7 @@ IntervalMatrix inv_IntervalMatrix(const IntervalMatrix& M, bool prec) {
      return Res;
 }
 
+
 // 2) Res :=  A^(-1)Res   ( empty if A contains a singular matrix)
 
 // (still crude Gaussian elimination using Rows)
@@ -387,6 +388,44 @@ void inv_IntervalMatrix(const IntervalMatrix& A,
      for (int lin=0;lin<order;lin++) {
          Interval rem = 1.0/M_copy[lin][lin];
          Res[lin] *= rem;
+    } 
+}
+
+/* punctualize a couple "matrix" - "inverse of matrix" :
+   starting from ([A],[Ai]) such that [A].[Ai] ~ Id, compute
+   [A'] <Aim>...
+   technique used : Am = [A].mid    Aim = [Ai].mid
+   then compute [A'] = (Am [Aim])^-1 Am
+   we use the algorithm of inv_IntervalMatrix with simplification
+   (assume Am [Aim] is almost Id */
+void punctualize_coupleMatrix(IntervalMatrix& A,
+        IntervalMatrix &Ai) {
+     Ai = Ai.mid();
+     A = A.mid();
+     IntervalMatrix M_copy(A*Ai);
+     const int order = A.nb_rows();
+     assert(order == A.nb_cols());
+     for (int col=0;col<order;col++) {
+        int lin = col; /* we consider that the best line is always col 
+                          (the matrix is almost Id) */
+        assert (!M_copy[lin][col].contains(0.0));
+        for (int lin2=0;lin2<order;lin2++) {
+            if (lin2==lin) continue;
+            // transfer lines  to put M_copy[lin2][col] to 0
+            Interval fact = -M_copy[lin2][col]/M_copy[lin][col];
+            M_copy[lin2][col]=0;
+            for (int col2=col+1;col2<order;col2++) {
+                M_copy[lin2][col2] += fact*M_copy[lin][col2];
+            }
+            for (int col2=0;col2<order;col2++) {
+                A[lin2][col2] += fact*A[lin][col2];
+            }
+        }
+     }
+     // simplify to 1
+     for (int lin=0;lin<order;lin++) {
+         Interval rem = 1.0/M_copy[lin][lin];
+         A[lin] *= rem;
     } 
 }
 
@@ -890,7 +929,7 @@ void vtauexpbase(IntervalMatrix &M) {
 //                          1/8(6A+A²/9(...+A²*k/(k+2))))))) + nET2
 //    error term : nET2 = (k+5) NA^(k+1)/(2 (k+1)!(k+2-NA)(k+3))
 // f) tauVexpA = { (tau²phi_2(tau A) - 2^l *tau/2 phi_1(tau A) - 
-//                    (tau²-tau*2^l)/2 Id)/(tau²(2tau-3.2^l)) | tau \in U } 
+//                    (tau²-tau*2^l)/2 Id)/(tau²(2tau-3.2^l)/12) | tau \in U } 
 //             =  sum(0,k) tau(2tau-(n+2)*2^l)(tau A)^n/(2(n+2)!)
 //      = A + [0,1+1/(2-2^(1-l))]/3 A² (Id + [0,1+1/(3-2^(1-l)]/4 (A +
 //			+ A² [0,1+1/(4-2^(1-l))]/5 ...))...) + ET2

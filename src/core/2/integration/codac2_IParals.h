@@ -21,6 +21,7 @@
 #include "codac_IntervalMatrix.h"
 #include "codac_ConvexPolygon.h"
 #include "codac2_Tube.h"
+#include "codac2_expIMat.h"
 
 
 namespace codac2 
@@ -103,9 +104,15 @@ namespace codac2
        * ``middle'' (e.g. center of the bounding box ?
        */
       Vector mid() const;
-      /** contains point (approximate...)
+      /** contains point (approximate...) true = maybe
        */
       bool contains(const Vector& iv) const;
+
+      /** intersects (approximate) : true = maybe */
+      bool intersects(const IntervalVector& x) const;
+      /** intersects (approximate) : true = maybe */
+      bool intersects(const IParals& x) const;
+
       /** get i-th matrice (i<nbmat) */
       const IntervalMatrix& getMat(unsigned int i) const;
       /** get i-th vector, not modified */
@@ -258,6 +265,8 @@ namespace codac2
       /** comparison **/
       bool is_subset(const IntervalVector& V) const;
       bool is_subsetFast(const IParals& iv) const;
+      /** imprecise */
+      bool is_subset(const IParals& ip) const;
 
 
       /** replace the matrices with almost-points matrices */
@@ -299,6 +308,11 @@ namespace codac2
       /** display
        */
       friend std::ostream& operator<<(std::ostream& str, const IParals& iv);
+      /** determine it displays the direct (false) or inverse (true) matrices 
+          (default false)
+	  returns the ancient value
+       */
+       static bool set_display_inv(bool newVal); 
 
 
     private:
@@ -314,6 +328,7 @@ namespace codac2
 
       /** customizable fields */
       int debug_level = 3;
+      static bool display_inv;
 
       void new_base(const IntervalMatrix &M, 
 				const IntervalMatrix &rM, 
@@ -384,6 +399,8 @@ namespace codac2 {
       }
       inline void IParals::borrow_base(const IParals& iv, unsigned int n,
   			const IntervalVector &V) {
+//          std::cout << "Appel à borrow base, this : " << *this << 
+//               "  autre iparals : " << iv << "\n";
           if (this->nbmat<2) {
 	       this->mats.push_back(iv.mats[n]);
 	       this->Vrhs.push_back(V);
@@ -397,10 +414,12 @@ namespace codac2 {
 			(unsigned int n,const IntervalMatrix &M, 
 				const IntervalMatrix &rM) {
           assert(n>=0 && n<nbmat);
+          IntervalMatrix newM = M*this->mats[n]->first;
+          IntervalMatrix newMi = this->mats[n]->second*rM;
+          punctualize_coupleMatrix(newM,newMi);
 	  std::shared_ptr<std::pair<IntervalMatrix,IntervalMatrix>> nPtr 
 		= std::make_shared<std::pair<IntervalMatrix,IntervalMatrix>>
-		  (std::pair<IntervalMatrix,IntervalMatrix>(M*this->mats[n]->first,
-			     this->mats[n]->second*rM));
+		  (std::pair<IntervalMatrix,IntervalMatrix>(newM,newMi));
 	  this->mats[n] = nPtr;
       }
       inline void IParals::set_empty() {
@@ -408,6 +427,12 @@ namespace codac2 {
         for (unsigned int i=0;i<=this->nbmat;i++) (this->Vrhs[i]).set_empty();
       }
 
+      inline bool IParals::set_display_inv(bool newVal) {
+         bool old = IParals::display_inv;
+         IParals::display_inv=newVal;
+         return old;
+      }
+      bool set_display_inv(bool newVal);
       codac::TubeVector to_codac1(codac2::Tube<IParals>& tube);
 
 }
