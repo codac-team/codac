@@ -27,7 +27,7 @@ namespace codac2
    */
   class CtcLinobs : public codac::DynCtc
   {
-    public:
+    /*public:
 
       CtcLinobs(const codac::Matrix& A, const codac::Vector& b); // /!\ auto evaluation of e^At not reliable
       ~CtcLinobs();
@@ -56,7 +56,7 @@ namespace codac2
 
       static const std::string m_ctc_name; //!< class name (mainly used for CN Exceptions)
       static std::vector<std::string> m_str_expected_doms; //!< allowed domains signatures (mainly used for CN Exceptions)
-      friend class ContractorNetwork;
+      friend class ContractorNetwork;*/
   };
 }
 

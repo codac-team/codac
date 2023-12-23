@@ -15,8 +15,8 @@
 #include <list>
 #include <variant>
 #include <memory>
-#include "codac_Interval.h"
-#include "codac_IntervalVector.h"
+#include "codac2_Interval.h"
+#include "codac2_IntervalVector.h"
 #include "codac_TrajectoryVector.h"
 #include "codac_Exception.h"
 #include "codac2_AbstractSlice.h"
@@ -29,7 +29,6 @@
 
 namespace codac2
 {
-  using codac::Interval;
   using codac::TrajectoryVector;
   using codac::BoolInterval;
 
@@ -304,7 +303,7 @@ namespace codac2
 
       void set_unbounded()
       {
-        if constexpr(std::is_same<T,codac::IntervalVector>::value)
+        if constexpr(std::is_same<T,codac::IntervalVector>::value || std::is_same<T,codac2::IntervalVector>::value)
           _codomain = T(size());
         else
           _codomain = T();

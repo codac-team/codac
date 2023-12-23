@@ -16,8 +16,7 @@
 #include <memory>
 #include "codac_TFnc.h"
 #include "codac2_TSlice.h"
-#include "codac_Tube.h" // to be removed
-#include "codac_TubeVector.h" // to be removed
+#include "codac2_IntervalVector.h"
 #include "codac2_AbstractSlicedTube.h"
 #include "codac2_AbstractConstTube.h"
 #include "codac2_TDomain.h"
@@ -37,7 +36,6 @@ namespace codac2
   class ConstTubeEvaluation;
   template<class T>
   class TubeComponent;
-
 
   template<class T>
   class Tube : public AbstractSlicedTube, public AbstractConstTube<T,Tube<T>>
@@ -477,12 +475,12 @@ namespace codac2
       const_iterator end() const   { return const_iterator(*this, _tdomain->_tslices.cend()); }
   };
 
-  codac::Tube to_codac1(const codac2::Tube<Interval>& x);
-  codac::TubeVector to_codac1(const codac2::Tube<codac::IntervalVector>& x);
-  codac::TubeVector to_codac1_poly(const codac2::Tube<codac::ConvexPolygon>& x);
-  codac2::Tube<Interval> to_codac2(const codac::Tube& x);
-  codac2::Tube<codac::IntervalVector> to_codac2(const codac::TubeVector& x);
-  codac2::Tube<codac::ConvexPolygon> to_codac2_poly(const codac::TubeVector& x);
+  codac::Tube to_codac1(const Tube<Interval>& x);
+  codac::TubeVector to_codac1(const Tube<IntervalVector>& x);
+  codac::TubeVector to_codac1_poly(const Tube<codac::ConvexPolygon>& x);
+  Tube<Interval> to_codac2(const codac::Tube& x);
+  Tube<IntervalVector> to_codac2(const codac::TubeVector& x);
+  Tube<codac::ConvexPolygon> to_codac2_poly(const codac::TubeVector& x);
 
 
   #include "codac2_TubeEvaluation.h"

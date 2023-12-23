@@ -15,8 +15,8 @@
 #include <list>
 #include <memory>
 
-#include "codac_Interval.h"
-#include "codac_IntervalVector.h"
+#include "codac2_Interval.h"
+#include "codac2_IntervalVector.h"
 #include "codac_TrajectoryVector.h"
 #include "codac_BoolInterval.h"
 
@@ -24,7 +24,6 @@ namespace codac2
 {
   using codac::Trajectory;
   using codac::TrajectoryVector;
-  using codac::Interval;
   using codac::BoolInterval;
 
   template<typename W, typename T>
