@@ -191,6 +191,7 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_DomainNode.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_Var.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/codac2_Domain.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_Interval.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_Interval.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_IntervalMatrix.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_IntervalVector.h

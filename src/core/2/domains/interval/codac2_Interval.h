@@ -30,7 +30,6 @@ namespace codac2
       Interval(std::array<double,2> array);
       Interval(const Interval& x);
       Interval(const ibex::Interval& x);
-      Interval& operator=(const Interval& x);
   };
 
   /** \brief [x]^2 */

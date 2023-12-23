@@ -213,7 +213,7 @@ namespace codac2
   inline std::ostream& operator<<(std::ostream& os, const Paving<N_>& p)
   {
     size_t n = p.nb_leaves();
-    os << "Paving (" << n << " box" << (n > 1 ? "es)" : ")") << flush;
+    os << "Paving (" << n << " box" << (n > 1 ? "es)" : ")") << std::flush;
     return os;
   }
 

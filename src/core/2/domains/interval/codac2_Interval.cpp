@@ -58,12 +58,6 @@ namespace codac2
 
   }
 
-  Interval& Interval::operator=(const Interval& x)
-    : ibex::operator=(x)
-  {
-
-  }
-
   Interval sqr(const Interval& x)
   {
     return ibex::sqr(x);
@@ -136,7 +130,7 @@ namespace codac2
 
   Interval atan2(const Interval& y, const Interval& x)
   {
-    return ibex::atan2(x);
+    return ibex::atan2(y,x);
   }
 
   Interval cosh(const Interval& x)
