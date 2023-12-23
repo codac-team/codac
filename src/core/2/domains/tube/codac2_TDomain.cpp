@@ -34,7 +34,7 @@ namespace codac2
 
     for(double t = t0_tf.lb() ; t < t0_tf.ub()+dt ; t=t+dt)
     {
-      double t_next = min(t0_tf.ub(),t+dt);
+      double t_next = std::min(t0_tf.ub(),t+dt);
       if(with_gates)
         _tslices.push_back(TSlice(Interval(t)));
       _tslices.push_back(TSlice(Interval(t,t_next)));

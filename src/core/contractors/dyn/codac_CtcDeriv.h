@@ -70,9 +70,9 @@ namespace codac
        *                (forward or backward in time, both ways by default)
        */
       void contract(TubeVector& x, const TubeVector& v, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-      void contract(codac2::Tube<Interval>& x, const codac2::Tube<Interval>& v, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-      void contract(codac2::Tube<IntervalVector>& xv, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-      void contract(codac2::Tube<IntervalVector>& x, int i, codac2::Tube<IntervalVector>& v, int j, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      //void contract(codac2::Tube<Interval>& x, const codac2::Tube<Interval>& v, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      //void contract(codac2::Tube<IntervalVector>& xv, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      //void contract(codac2::Tube<IntervalVector>& x, int i, codac2::Tube<IntervalVector>& v, int j, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
 
       /**
        * \brief \f$\mathcal{C}_{\frac{d}{dt}}\big(\llbracket x\rrbracket(\cdot),\llbracket v\rrbracket(\cdot)\big)\f$:

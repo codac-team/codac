@@ -223,7 +223,7 @@ namespace codac2
       }
   };
 
-  template<int N>
+  template<int N=Dynamic>
   std::ostream& operator<<(std::ostream& os, const IntervalVector_<N>& x)
   {
     if(x.is_empty()) return os << "empty vector";
@@ -234,7 +234,7 @@ namespace codac2
     return os;
   }
 
-  template<int N>
+  template<int N=Dynamic>
   codac::IntervalVector to_codac1(const IntervalVector_<N>& x)
   {
     ibex::IntervalVector x_(x.size());
@@ -243,7 +243,7 @@ namespace codac2
     return x_;
   }
 
-  template<int N>
+  template<int N=Dynamic>
   IntervalVector_<N> to_codac2(const codac::IntervalVector& x)
   {
     assert(x.size() == N);

@@ -17,13 +17,11 @@
 #include <vector>
 #include <memory>
 
-#include "codac_Interval.h"
+#include "codac2_Interval.h"
 #include "codac2_Slice.h"
 
 namespace codac2
 {
-  using codac::Interval;
-
   class TDomain;
   class AbstractSlice;
   class AbstractSlicedTube;

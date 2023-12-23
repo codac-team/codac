@@ -26,7 +26,7 @@ namespace codac2
     return _f;
   }
 
-  void CtcDiffInclusion::contract(Tube<IntervalVector>& x, const Tube<IntervalVector>& u, TimePropag t_propa)
+  /*void CtcDiffInclusion::contract(Tube<IntervalVector>& x, const Tube<IntervalVector>& u, TimePropag t_propa)
   {
     // Verifying that x and u share exactly the same tdomain and slicing:
     assert(x.tdomain() == u.tdomain());
@@ -87,5 +87,5 @@ namespace codac2
       // Computations related to backward propagation
       // ...
     }
-  }
+  }*/
 }

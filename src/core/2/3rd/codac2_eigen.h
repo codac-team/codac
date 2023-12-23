@@ -40,8 +40,8 @@ namespace codac2
   inline const Interval& conj(const Interval& x)  { return x; }
   inline const Interval& real(const Interval& x)  { return x; }
   inline Interval imag(const Interval&)           { return 0.; }
-  inline Interval abs(const Interval& x)          { return ibex::abs(x); }
-  inline Interval abs2(const Interval& x)         { return ibex::sqr(x); }
+  inline Interval abs(const Interval& x)          { return codac2::abs(x); }
+  inline Interval abs2(const Interval& x)         { return codac2::sqr(x); }
 
 } // namespace codac
 

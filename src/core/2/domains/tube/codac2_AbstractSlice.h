@@ -15,15 +15,14 @@
 #include <list>
 #include <variant>
 #include <memory>
-#include "codac_Interval.h"
-#include "codac_IntervalVector.h"
+#include "codac2_Interval.h"
+#include "codac2_IntervalVector.h"
 #include "codac_TrajectoryVector.h"
 #include "codac_Exception.h"
 #include "codac2_AbstractSlicedTube.h"
 
 namespace codac2
 {
-  using codac::Interval;
   using codac::TrajectoryVector;
 
   class TSlice;

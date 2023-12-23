@@ -79,7 +79,7 @@ int main()
 
   /* =========== SIMULATING THE TRUTH =========== */
 
-    double dt = 0.1;
+    double dt = 0.01;
     TrajectoryVector x_truth = simu_truth(A, b, f_u, dt/10., tdomain);
 
 
@@ -95,7 +95,7 @@ int main()
 
   /* =========== CREATING OBSERVATIONS =========== */
 
-    int nb_obs = 8;
+    int nb_obs = 9;
     vector<double> v_t(nb_obs);
     vector<IntervalVector> v_obs(nb_obs);
 
@@ -109,6 +109,7 @@ int main()
       v_t[5] = 6.5;   v_obs[5] = Vector({1.844, 0.947});
       v_t[6] = 6.6;   v_obs[6] = Vector({1.937, 0.909});
       v_t[7] = 9.;    v_obs[7] = Vector({1.700,-1.121});
+      v_t[8] = 10.;    v_obs[8] = Vector({0.522271,-1.07707});
 
       for(auto& obs : v_obs)
         obs.inflate(0.01);
@@ -131,7 +132,7 @@ int main()
     CtcLinobs ctc_linobs(A, b/*, &exp*/);
     vector<ConvexPolygon> polygons_fwdbwd;
     clock_t t_start = clock();
-    ctc_linobs.contract(v_t, v_obs, x, u, polygons_fwdbwd, TimePropag::FORWARD | TimePropag::BACKWARD);
+    ctc_linobs.contract(v_t, v_obs, x, u, polygons_fwdbwd, /*TimePropag::FORWARD | */TimePropag::BACKWARD);
     printf("Time taken: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
 
 
@@ -139,11 +140,11 @@ int main()
 
     vibes::beginDrawing();
     VIBesFigMap fig_map("Map");
-    fig_map.set_properties(1450, 50, 600, 600);
+    fig_map.set_properties(1450, 50, 900, 900);
     fig_map.draw_polygons(polygons_fwdbwd, ColorMap::BLUE_TUBE);
     fig_map.add_trajectory(&x_truth, "x*", 0, 1, "black");
     fig_map.show(0.);
-    fig_map.axis_limits(-0.1,2.8,-0.1,0.1,true,0.1);
+    fig_map.axis_limits(-0.1,2.8,-1.45,1.45);
     fig_map.draw_boxes(v_obs, "red[red]");
     vibes::endDrawing();
 

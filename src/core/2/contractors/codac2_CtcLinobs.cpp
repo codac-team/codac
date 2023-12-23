@@ -20,11 +20,12 @@ using namespace codac;
 
 namespace codac2
 {
+  #if 0
   IntervalMatrix exp_At(const Matrix& A, const Interval& t) // computes e^At
   {
     assert(A.nb_rows() == 2 && A.nb_cols() == 2);
     IntervalMatrix A_exp(2, 2, Interval::EMPTY_SET);
-    vector<double> v_t({t.lb(), t.ub()});
+    /*vector<double> v_t({t.lb(), t.ub()});
 
     for(const auto& t : v_t)
     {
@@ -36,7 +37,7 @@ namespace codac2
 
       A_exp[0][0] |= eigen_A_exp(0,0); A_exp[0][1] |= eigen_A_exp(0,1);
       A_exp[1][0] |= eigen_A_exp(1,0); A_exp[1][1] |= eigen_A_exp(1,1);
-    }
+    }*/
     
     return A_exp;
   }
@@ -157,4 +158,5 @@ namespace codac2
   {
     return exp_At(_A,Interval(0.,dt_k_kp1))*p_k + Interval(0.,dt_k_kp1)*exp_At(_A,Interval(0.,dt_k_kp1))*(u_k*_b);
   }
+  #endif
 }
