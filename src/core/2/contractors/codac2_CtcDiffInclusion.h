@@ -108,20 +108,20 @@ using namespace ibex;
 
 namespace codac2
 {
-  templace<typename _TpP>
+  template<typename _TpP>
   CtcDiffInclusion<_TpP>::CtcDiffInclusion(const TFunction& f)
     : _f(f)
   {
 
   }
 
-  templace<typename _TpP>
+  template<typename _TpP>
   const TFunction& CtcDiffInclusion<_TpP>::f() const
   {
     return _f;
   }
 
-  templace<typename _TpP>
+  template<typename _TpP>
   const IntervalVector CtcDiffInclusion<_TpP>::eval_function(const Interval &tim,
                  const IntervalVector& cdom, const IntervalVector *u) const {
         if (u!=NULL) 
@@ -129,24 +129,24 @@ namespace codac2
           return _f.eval_vector(tim,cdom); 
 
   }
-  templace<typename _TpP>
+  template<typename _TpP>
   const IntervalVector CtcDiffInclusion<_TpP>::eval_function(const Interval &tim,
                  const _TpP& cdom, const IntervalVector* u) const {
      return this->eval_function(tim, cdom.box(),u);
   }
-  templace<typename _TpP>
+  template<typename _TpP>
   const IntervalVector CtcDiffInclusion<_TpP>::eval_function(double tim,
                  const IntervalVector& cdom, const IntervalVector* u) const {
         const Interval timI(tim);
         return this->eval_function(timI,cdom,u);
   }
-  templace<typename _TpP>
+  template<typename _TpP>
   const IntervalVector CtcDiffInclusion<_TpP>::eval_function(double tim,
                  const _TpP& cdom, const IntervalVector* u) const {
         const Interval timI(tim);
         return this->eval_function(timI,cdom.box(),u);
   }
-  templace<typename _TpP>
+  template<typename _TpP>
   const IntervalVector CtcDiffInclusion<_TpP>::eval_function(double tim,
                  const Vector& cdom, const IntervalVector* u) const {
         const Interval timI(tim);
@@ -156,7 +156,7 @@ namespace codac2
 
 
   // basic enclosing for evolution
-  templace<typename _TpP>
+  template<typename _TpP>
   _TpP CtcDiffInclusion<_TpP>::extend_box_basic(const _TpP& frame,
                         const _TpP& startIV, const IntervalVector* u,
                         const Interval& tim,
@@ -199,7 +199,7 @@ namespace codac2
   }
 
 
-  templace<typename _TpP>
+  template<typename _TpP>
   IntervalMatrix CtcDiffInclusion<_TpP>::jacobian(const _TpP& codom,
                  const IntervalVector* u,
                  const Interval& tdom,
@@ -225,7 +225,7 @@ namespace codac2
   }
 
 
-  templace<typename _TpP>
+  template<typename _TpP>
   bool CtcDiffInclusion<_TpP>::compute_step(const _TpP& frame,
  				const IntervalVector* u,
                                 const _TpP& actState,
@@ -306,12 +306,12 @@ namespace codac2
 
            /* next tauState, do NOT change the underlying matrices */
            _TpP ntauState(actState);
-           cout << "avant ctau" << ntauState << "\ncent " << cent_tauState <<
-                      "\ntauExpM " << tauExpM << "\ntauCent " << tauCent << "\n";
+//           cout << "avant ctau" << ntauState << "\ncent " << cent_tauState <<
+//                      "\ntauExpM " << tauExpM << "\ntauCent " << tauCent << "\n";
            ntauState.ctau_mult_and_add(cent_tauState,tauExpM,tauCent);
 
-           cout << "ntauState" << ntauState << "\ntauState " << tauState <<
-                      "\n";
+//           cout << "ntauState" << ntauState << "\ntauState " << tauState <<
+//                      "\n";
 
 
            ntauState &= frame;
@@ -369,7 +369,7 @@ namespace codac2
 
 
 
-  templace<typename _TpP>
+  template<typename _TpP>
   void CtcDiffInclusion<_TpP>::contract(Slice<_TpP>& x,
            const std::shared_ptr<const _TpP>& uDom, TimePropag t_propa)
   {
@@ -459,7 +459,7 @@ namespace codac2
     }
   }
 
-  templace<typename _TpP>
+  template<typename _TpP>
   void CtcDiffInclusion<_TpP>::contract_from_slice(Tube<_TpP>& x, const Tube<_TpP>* u, std::shared_ptr<Slice<_TpP>>& gate, TimePropag t_propa)
   {
     bool sameslicing=false;
@@ -510,7 +510,7 @@ namespace codac2
     }
   }
 
-  templace<typename _TpP>
+  template<typename _TpP>
   void CtcDiffInclusion<_TpP>::contract(Slice<_TpP>& x,
            const Slice<_TpP>& u, TimePropag t_propa) {
      const shared_ptr<const _TpP> du =
@@ -518,7 +518,7 @@ namespace codac2
      this->contract(x,du,t_propa);
   }
 
-  templace<typename _TpP>
+  template<typename _TpP>
   void CtcDiffInclusion<_TpP>::contract(Tube<_TpP>& x, const Tube<_TpP>* u, TimePropag t_propa)
   {
     bool sameslicing=false;
