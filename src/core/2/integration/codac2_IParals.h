@@ -39,6 +39,7 @@ namespace codac2
 
   IParals sum_tau(const IParals& iv, const IntervalVector& V,
 				 bool keep=false);
+  ConvexPolygon over_polygon(const IParals &ip, const Matrix& M);
 
   class IParals
   {
@@ -303,7 +304,7 @@ namespace codac2
       /** generate a ConvexPolygon which is an overapproximation of the
        * projection of the polyhedron (basic form)
        */
-      ConvexPolygon over_polygon(const Matrix& M) const;
+      friend ConvexPolygon over_polygon(const IParals &ip, const Matrix& M);
 
       /** display
        */
@@ -434,6 +435,7 @@ namespace codac2 {
       }
       bool set_display_inv(bool newVal);
       codac::TubeVector to_codac1(codac2::Tube<IParals>& tube);
+
 
 }
 

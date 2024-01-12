@@ -224,7 +224,7 @@ namespace codac2 {
            this->bbox() = x;
            return *this;
         }
-        assert (dim=x.size());
+        assert (dim==x.size());
         if (x.is_empty()) { this->set_empty(); return *this; }
         this->empty=false;
         this->bbox() = x;
@@ -550,7 +550,7 @@ namespace codac2 {
    /** union with a box 
     */
    IParals& IParals::operator|= (const IntervalVector& x) {
-       std::cout << "|=" << *this << " " << x << "\n";
+//       std::cout << "|=" << *this << " " << x << "\n";
        assert(dim>0);
        if (x.is_empty()) return *this;
        if (this->empty) {
@@ -1040,36 +1040,36 @@ namespace codac2 {
    /** generate a list of (2D) points, the convex hull of which is an
     * (over)-approximation of the projection of the polyhedron
     */
-   ConvexPolygon IParals::over_polygon(const Matrix& M) const {
+   ConvexPolygon over_polygon(const IParals &ip, const Matrix& M) {
         /* first we generate a projection of the parallelotope */
-        if (this->empty) return ConvexPolygon();
+        if (ip.empty) return ConvexPolygon();
         /* just the first polygon (not manage intersection) */
-        Vector V1(this->dim);
+        Vector V1(ip.dim);
         ConvexPolygon res;
         /* compute the projection for large dimension is a bit complex
            (but interesting), will do it dirty */
-        for (unsigned int k=0;k<=this->nbmat;k++) {
-          bool val[this->dim];
+        for (unsigned int k=0;k<=ip.nbmat;k++) {
+          bool val[ip.dim];
           std::vector<codac::ThickPoint> lpoints;
-          for (int i=0;i<this->dim;i++) {
+          for (int i=0;i<ip.dim;i++) {
              val[i]=false;
-             V1[i] = this->rhs(k)[i].lb(); 
+             V1[i] = ip.rhs(k)[i].lb(); 
           }
           while (true) {
-             if (k<this->nbmat) {
-	            lpoints.push_back(codac::ThickPoint(M*(this->mat(k)*V1)));
+             if (k<ip.nbmat) {
+	            lpoints.push_back(codac::ThickPoint(M*(ip.mat(k)*V1)));
              } else {
 	            lpoints.push_back(codac::ThickPoint(M*V1));
              }
-             int j=dim-1;
+             int j=ip.dim-1;
              while (j>=0 && val[j]==true) {
-                  V1[j]=this->rhs(k)[j].lb();
+                  V1[j]=ip.rhs(k)[j].lb();
                   val[j]=false; 
                   j--;
              }
              if (j<0) break;
              val[j]=true;
-             V1[j] = this->rhs(k)[j].ub(); 
+             V1[j] = ip.rhs(k)[j].ub(); 
           }
           ConvexPolygon a(lpoints);
           if (k==0) res=a; else res= res & a;
