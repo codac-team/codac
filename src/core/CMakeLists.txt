@@ -183,6 +183,7 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_Interval.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_IntervalMatrix.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_IntervalVector.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_cart_prod.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractConstTube.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractSlice.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_AbstractSlice.h
@@ -198,7 +199,6 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TubeComponent.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TubeEvaluation.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/paving/codac2_Paving.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcLinobs.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcLinobs.h
@@ -216,6 +216,13 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcAction.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcAction.h
                   )
+
+if(WITH_INTFLPL)
+  list(APPEND CODAC2_SRC # adding utility functions for intflpl::IntPoly
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_IntPoly.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_IntPoly.h
+  )
+endif()
 
   set(SRC ${CODAC1_SRC} ${CODAC2_SRC})
 

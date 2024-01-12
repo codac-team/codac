@@ -24,6 +24,7 @@
 
 namespace codac2 {
 
+  bool IParals::display_inv=false;
 
   IParals::IParals(int dim) :
       dim(dim), empty(false), nbmat(0), mats(), Vrhs(1)
@@ -106,6 +107,23 @@ namespace codac2 {
        }
        return true;
    }
+   bool IParals::intersects(const IntervalVector& iv) const {
+       assert (dim>0);
+       if (this->empty) return false;
+       if (!this->bbox().intersects(iv)) return false;
+       for (unsigned int i=0;i<this->nbmat;i++) {
+          if (!this->rhs(i).intersects(this->Imat(i)*iv)) return false;
+       }
+       return true;
+   }
+   bool IParals::intersects(const IParals& ip) const {
+       assert (dim>0);
+       if (this->empty) return false;
+       if (!this->intersects(ip.bbox())) return false; 
+       if (!ip.intersects(this->bbox())) return false; 
+       return true;
+   }
+
    const IntervalMatrix& IParals::getMat(unsigned int i) const {
        assert (i>=0 && i<nbmat);
        return this->mat(i);
@@ -206,7 +224,7 @@ namespace codac2 {
            this->bbox() = x;
            return *this;
         }
-        assert (dim=x.size());
+        assert (dim==x.size());
         if (x.is_empty()) { this->set_empty(); return *this; }
         this->empty=false;
         this->bbox() = x;
@@ -352,6 +370,7 @@ namespace codac2 {
         if (this->bbox().is_empty()) { this->set_empty(); return *this; }
         if (this->nbmat==0) {
            for (unsigned int i=0;i<iv.nbmat;i++) {
+//               std::cout << "borrow base meet nbmat=0\n";
                this->borrow_base(iv,i,iv.rhs(i));
 	   }
 	   this->simplify();
@@ -360,28 +379,44 @@ namespace codac2 {
         unsigned int nbcommun=0;
         for (unsigned int i=0;i<this->nbmat;i++) {
           this->rhs(i) &= this->Imat(i) * iv.bbox();
-          for (unsigned int j=0;j<iv.nbmat;j++) {
+          if (this->rhs(i).is_empty()) { this->set_empty(); return *this; }
+        }
+        bool useful[iv.nbmat];
+        int nbuseful=iv.nbmat;
+        int b=-1; /* last useful */
+        for (unsigned int j=0;j<iv.nbmat;j++) {
+          useful[j]=true;
+          IntervalVector checkuseful = iv.Imat(j)*this->bbox();
+          for (unsigned int i=0;i<this->nbmat;i++) {
              if (this->mats[i]==iv.mats[j]) {
 	        this->rhs(i) &= iv.rhs(j);
                 nbcommun++;
+                useful[j]=false;
+                nbuseful--;
+		break;
              }
-	     else
-	        this->rhs(i) &= (this->Imat(i)*iv.mat(j)) * iv.rhs(j);
+	     this->rhs(i) &= (this->Imat(i)*iv.mat(j)) * iv.rhs(j);
+             if (this->rhs(i).is_empty()) { this->set_empty(); return *this; }
+             checkuseful &= (iv.Imat(j)*this->mat(i))*this->rhs(i);
+	     if (checkuseful.is_subset(iv.rhs(j))) {
+                useful[j]=false;
+                nbuseful--;
+                break;
+             }
           }
-          if (this->rhs(i).is_empty()) { this->set_empty(); return *this; }
+          if (useful[j]) b=j;
        }
-        int b=iv.nbmat-1;
-        if (iv.nbmat==nbcommun || 
-		(this->nbmat==2 && (ctcG || this->mats[1]==iv.mats[b]))) {
+        if (b==-1 || iv.nbmat==nbcommun || 
+		(this->nbmat==2 && ctcG)) {
 	     this->simplify();
              return (*this);
         }
-        if (this->nbmat==1 && this->mats[0]==iv.mats[b]) b=0; /* iv.nbmat=2 ! */
 	IntervalVector newV = iv.rhs(b);
 	newV &= iv.Imat(b)*this->bbox();
         for (unsigned int i=0;i<this->nbmat;i++) {
 	   newV &= (iv.Imat(b)*this->mat(i)) * this->rhs(i);
         }
+//        std::cout << "borrow base meet other=0\n";
         this->borrow_base(iv,b,newV);
         if (newV.is_empty()) 
         this->simplify(); 
@@ -515,7 +550,7 @@ namespace codac2 {
    /** union with a box 
     */
    IParals& IParals::operator|= (const IntervalVector& x) {
-       std::cout << "|=" << *this << " " << x << "\n";
+//       std::cout << "|=" << *this << " " << x << "\n";
        assert(dim>0);
        if (x.is_empty()) return *this;
        if (this->empty) {
@@ -743,6 +778,19 @@ namespace codac2 {
            if (!this->rhs(i).is_subset(iv.rhs(i))) return false;
        }
        return this->bbox().is_subset(iv.bbox());
+   }
+   bool IParals::is_subset(const IParals& ip) const {
+       if (this->empty) return true;
+       if (ip.empty) return false;
+       if (!this->is_subset(ip.bbox())) return false;
+       for (unsigned int i=0;i<ip.nbmat;i++) {
+           IntervalVector r  = ip.Imat(i)*this->bbox();
+           for (unsigned int j=0;j<this->nbmat;j++) {
+               r &= (ip.Imat(i)*this->mat(j))*this->rhs(j);
+           }
+           if (!r.is_subset(ip.rhs(i))) return false;
+       }
+       return true;
    }
   
 
@@ -992,36 +1040,36 @@ namespace codac2 {
    /** generate a list of (2D) points, the convex hull of which is an
     * (over)-approximation of the projection of the polyhedron
     */
-   ConvexPolygon IParals::over_polygon(const Matrix& M) const {
+   ConvexPolygon over_polygon(const IParals &ip, const Matrix& M) {
         /* first we generate a projection of the parallelotope */
-        if (this->empty) return ConvexPolygon();
+        if (ip.empty) return ConvexPolygon();
         /* just the first polygon (not manage intersection) */
-        Vector V1(this->dim);
+        Vector V1(ip.dim);
         ConvexPolygon res;
         /* compute the projection for large dimension is a bit complex
            (but interesting), will do it dirty */
-        for (unsigned int k=0;k<=this->nbmat;k++) {
-          bool val[this->dim];
+        for (unsigned int k=0;k<=ip.nbmat;k++) {
+          bool val[ip.dim];
           std::vector<codac::ThickPoint> lpoints;
-          for (int i=0;i<this->dim;i++) {
+          for (int i=0;i<ip.dim;i++) {
              val[i]=false;
-             V1[i] = this->rhs(k)[i].lb(); 
+             V1[i] = ip.rhs(k)[i].lb(); 
           }
           while (true) {
-             if (k<this->nbmat) {
-	            lpoints.push_back(codac::ThickPoint(M*(this->mat(k)*V1)));
+             if (k<ip.nbmat) {
+	            lpoints.push_back(codac::ThickPoint(M*(ip.mat(k)*V1)));
              } else {
 	            lpoints.push_back(codac::ThickPoint(M*V1));
              }
-             int j=dim-1;
+             int j=ip.dim-1;
              while (j>=0 && val[j]==true) {
-                  V1[j]=this->rhs(k)[j].lb();
+                  V1[j]=ip.rhs(k)[j].lb();
                   val[j]=false; 
                   j--;
              }
              if (j<0) break;
              val[j]=true;
-             V1[j] = this->rhs(k)[j].ub(); 
+             V1[j] = ip.rhs(k)[j].ub(); 
           }
           ConvexPolygon a(lpoints);
           if (k==0) res=a; else res= res & a;
@@ -1035,7 +1083,11 @@ namespace codac2 {
        if (iv.empty || iv.nbmat==0) { return (str << iv.bbox()); }
        str << "IParals: box " << iv.bbox() << "\n";
        for (unsigned int i=0;i<iv.nbmat;i++) {
-            str << " /\\ " << iv.mat(i) << "\n     X " << iv.rhs(i);
+         if (!iv.display_inv) {
+              str << " /\\ " << iv.mat(i) << "\n     X " << iv.rhs(i);
+         } else {
+              str << " /\\ " << iv.Imat(i) << "\n  X  \\in " << iv.rhs(i);
+         }
        }
        str << "\n" << std::flush;
        return str;

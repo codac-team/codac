@@ -12,9 +12,6 @@
 #ifndef __CODAC2_VECTOR_H__
 #define __CODAC2_VECTOR_H__
 
-#include <unsupported/Eigen/MatrixFunctions>
-#include <Eigen/Core>
-#include <Eigen/Dense>
 #include <codac_Vector.h>
 #include <codac2_Matrix.h>
 
@@ -23,7 +20,7 @@ namespace codac2
   using Eigen::Dynamic;
 
   template<int N=Dynamic>
-  class Vector_ : public Eigen::Matrix<double,N,1>
+  class Vector_ : public Matrix_<N,1>
   {
     public:
     
@@ -33,25 +30,32 @@ namespace codac2
       }
 
       Vector_(size_t n)
-        : Eigen::Matrix<double,N,1>(n)
+        : Matrix_<N,1>(n,1)
       {
-        assert(N == Dynamic || N == n);
+        assert(N == Dynamic || N == (int)n);
       }
 
-      Vector_(std::initializer_list<double> l) : Eigen::Matrix<double,N,1>(l.size())
+      Vector_(std::initializer_list<double> l) : Matrix_<N,1>(l.size(),1)
       {
-        assert(N == l.size() || N == -1);
+        assert(N == (int)l.size() || N == -1);
         size_t i = 0;
         for(double li : l)
           (*this)(i++,0) = li;
       }
+
+      template<int M>
+      Vector_(const Matrix_<M,1>& x)
+        : Matrix_<M,1>(x)
+      {
+        assert(M == Dynamic || M == N);
+      }
     
       template<typename OtherDerived>
       Vector_(const Eigen::MatrixBase<OtherDerived>& other)
-          : Eigen::Matrix<double,N,1>(other)
+          : Matrix_<N,1>(other)
       { }
 
-      // This method allows you to assign Eigen expressions to MyVector_Type
+      // This method allows you to assign Eigen expressions to Vector_
       template<typename OtherDerived>
       Vector_& operator=(const Eigen::MatrixBase<OtherDerived>& other)
       {
@@ -59,9 +63,9 @@ namespace codac2
         return *this;
       }
 
-      Matrix<N,N> as_diag() const
+      Matrix_<N,N> as_diag() const
       {
-        return Matrix<N,N>(Eigen::Matrix<double,N,N>(this->asDiagonal()));
+        return Matrix_<N,N>(Eigen::Matrix<double,N,N>(this->asDiagonal()));
       }
 
       static Vector_<N> zeros()
@@ -72,7 +76,7 @@ namespace codac2
   };
 
   template<int N>
-  Matrix<N,N> diag(const Vector_<N> v)
+  Matrix_<N,N> diag(const Vector_<N> v)
   {
     return v.as_diag();
   }
@@ -95,7 +99,7 @@ namespace codac2
         : Vector_<>(n)
       { }
 
-      Vector(const Vector_<>& x)
+      Vector(const Vector& x)
         : Vector_<>(x)
       { }
       
@@ -104,11 +108,15 @@ namespace codac2
       { }
       
       template<int N>
-      explicit Vector(const Vector_<N>& v)
+      Vector(const Vector_<N>& v)
         : Vector_<>(v)
-      {
-
-      }
+      { }
+      
+      template<int N>
+      Vector(const Matrix_<N,1>& v)
+        : Vector_<>(v)
+      { }
+      
   };
 
 } // namespace codac

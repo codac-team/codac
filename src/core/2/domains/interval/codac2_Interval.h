@@ -18,6 +18,8 @@
 
 namespace codac2
 {
+  const double oo = POS_INFINITY;
+
   using codac::Interval;
 
 } // namespace codac
@@ -49,7 +51,7 @@ namespace codac2
   inline const Interval& real(const Interval& x)  { return x; }
   inline Interval imag(const Interval&)           { return 0.; }
   inline Interval abs(const Interval& x)          { return ibex::abs(x); }
-  inline Interval abs2(const Interval& x)         { return x*x; }
+  inline Interval abs2(const Interval& x)         { return ibex::sqr(x); }
 
 } // namespace codac
 

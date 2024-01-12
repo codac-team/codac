@@ -12,6 +12,7 @@
 #ifndef __CODAC2_PAVING_H__
 #define __CODAC2_PAVING_H__
 
+#include <list>
 #include <memory>
 #include <functional>
 #include "codac2_Interval.h"
@@ -39,6 +40,15 @@ namespace codac2
       const IntervalVector_<N>& box() const
       {
         return _x;
+      }
+
+      bool is_empty() const
+      {
+        if(is_leaf())
+          return _x.is_empty();
+
+        else
+          return (_left && _left->is_empty()) && (_right && _right->is_empty());
       }
 
       bool is_leaf() const

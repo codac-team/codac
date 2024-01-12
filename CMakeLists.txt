@@ -108,6 +108,18 @@
   add_definitions(${EIGEN3_DEFINITIONS})
   include_directories(${EIGEN3_INCLUDE_DIRS})
 
+################################################################################
+# Looking for intflpl
+################################################################################
+
+  option(WITH_INTFLPL "Using intfpl (floating-point polyhedra)" OFF)
+
+if(WITH_INTFLPL)
+  find_package(intflpl REQUIRED)
+  message(STATUS "Found intflpl version ${INTFLPL_VERSION}")
+  include_directories(${INTFLPL_INCLUDE_DIRS})
+endif()
+
 
 ################################################################################
 # Looking for CAPD (if needed)
