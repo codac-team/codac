@@ -6,15 +6,15 @@ using namespace codac;
 int main()
 {
   {
-    codac2::TDomain tdomain(Interval(0,10), 1., false);
-    codac2::Tube<IntervalVector> x(2, tdomain);
+    auto tdomain = codac2::create_tdomain(Interval(0,10), 1., false);
+    codac2::Tube<IntervalVector> x(tdomain, IntervalVector(2));
 
     for(auto& sx : x)
     {
       if(sx.t0_tf().contains(5.2))
       {
         cout << "sample" << endl;
-        tdomain.sample(5.2);
+        tdomain->sample(5.2);
       }
       cout << sx << endl;
     }

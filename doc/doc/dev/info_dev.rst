@@ -180,7 +180,7 @@ This configuration generates header files containing docstrings for Python, base
 the content of XML files made by Doxygen. The documentation of any C++/Python function
 is then located in the C++ header files of the :file:`/src` directory.
 
-Note that you also have to configure IBEX with the ``-DCMAKE_CXX_FLAGS="-fPIC"`` flag.
+Note that you also have to configure IBEX with the ``-DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC"`` flag.
 
 Finally, after the compilation of Codac (and IBEX):
 

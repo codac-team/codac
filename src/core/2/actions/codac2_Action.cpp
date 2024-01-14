@@ -26,13 +26,17 @@ namespace codac2
     return (a > 0) ? 1 : ((a < 0) ? -1 : 0);
   }
 
-  OctaSym::OctaSym(const std::vector<int>& s) : std::vector<int>(s)
+  OctaSym::OctaSym(const vector<int>& s) : vector<int>(s)
   {
     for(const auto& i : s)
     {
       assert((size_t)abs(i) > 0 && (size_t)abs(i) <= size());
     }
   }
+
+  OctaSym::OctaSym(initializer_list<int> s)
+   : OctaSym(vector<int>(s))
+  { }
 
   IntervalVector OctaSym::operator()(const IntervalVector& x) const
   {
@@ -64,7 +68,7 @@ namespace codac2
     return s3;
   }
   
-  std::ostream& operator<<(std::ostream& str, const OctaSym& s)
+  ostream& operator<<(ostream& str, const OctaSym& s)
   {
     str << "(";
     for(size_t i = 0 ; i < s.size() ; i++)

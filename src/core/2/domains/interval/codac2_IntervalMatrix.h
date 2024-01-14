@@ -51,7 +51,7 @@ namespace codac2
         init(x);
       }
       
-      explicit IntervalMatrix_(size_t nb_rows, size_t nb_cols, double bounds[][2])
+      explicit IntervalMatrix_(size_t nb_rows, size_t nb_cols, const double bounds[][2])
         : IntervalMatrix_<R,C>(nb_rows, nb_cols)
       {
         size_t k = 0;
@@ -67,7 +67,7 @@ namespace codac2
         assert(k == this->size());
       }
       
-      explicit IntervalMatrix_(double bounds[][2])
+      explicit IntervalMatrix_(const double bounds[][2])
         : IntervalMatrix_<R,C>(R, C, bounds)
       { }
       
@@ -596,7 +596,7 @@ namespace codac2
         : IntervalMatrix_<>(nb_rows, nb_cols, x)
       { }
 
-      explicit IntervalMatrix(size_t nb_rows, size_t nb_cols, double bounds[][2])
+      explicit IntervalMatrix(size_t nb_rows, size_t nb_cols, const double bounds[][2])
         : IntervalMatrix_<>(nb_rows, nb_cols, bounds)
       { }
 

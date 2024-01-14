@@ -50,6 +50,11 @@ namespace codac
     m_draw_tubes_backgrounds = enable;
   }
 
+  void VIBesFigMap::no_axis_limits()
+  {
+    _no_axis_limits = true;
+  }
+
   void VIBesFigMap::show()
   {
     typename map<const TubeVector*,FigMapTubeParams>::const_iterator it_tubes;
@@ -61,7 +66,8 @@ namespace codac
     for(it_trajs = m_map_trajs.begin(); it_trajs != m_map_trajs.end(); it_trajs++)
       m_view_box |= draw_trajectory(it_trajs->first);
 
-    axis_limits(m_view_box, true, 0.02);
+    if(!_no_axis_limits)
+      axis_limits(m_view_box, true, 0.02);
   }
 
   void VIBesFigMap::show(float robot_size)
@@ -710,7 +716,8 @@ namespace codac
     assert(pose.size() == 2 || pose.size() == 3);
     float robot_size = size == -1 ? m_robot_size : size;
     double robot_heading = pose.size() == 3 ? pose[2] : 0.;
-    axis_limits(m_view_box | pose.subvector(0,1), true);
+    if(!_no_axis_limits)
+      axis_limits(m_view_box | pose.subvector(0,1), true);
     //vibes::drawTank(pose[0], pose[1], robot_heading * 180. / M_PI, robot_size, "black[yellow]", params);
     vibes::drawAUV(pose[0], pose[1], robot_heading * 180. / M_PI, robot_size, "black[yellow]", params);
   }

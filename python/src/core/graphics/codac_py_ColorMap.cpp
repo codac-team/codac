@@ -32,5 +32,11 @@ void export_ColorMap(py::module& m)
 
     .def("is_opaque", &ColorMap::is_opaque,
       COLORMAP_BOOL_IS_OPAQUE)
+    
+    .def_property_readonly_static("HAXBY", [](py::object) { return ColorMap::HAXBY; })
+    .def_property_readonly_static("DEFAULT", [](py::object) { return ColorMap::DEFAULT; })
+    .def_property_readonly_static("BLUE_TUBE", [](py::object) { return ColorMap::BLUE_TUBE; })
+    .def_property_readonly_static("RED_TUBE", [](py::object) { return ColorMap::RED_TUBE; })
+    .def_property_readonly_static("RAINBOW", [](py::object) { return ColorMap::RAINBOW; })
   ;
 }

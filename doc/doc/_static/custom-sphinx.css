@@ -97,6 +97,17 @@
   }
 
 
+/* Right alignment + gray color (for right-align notes) */
+
+  .right-aligned-note
+  {
+    margin-right: 10px;
+    display: block;
+    float: right;
+    color: gray;
+  }
+
+
 /*  */
 
   .wy-table-responsive table td

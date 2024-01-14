@@ -19,7 +19,7 @@ namespace codac2
 {
   using Eigen::Dynamic;
 
-  template<int R,int C>
+  template<int R=Dynamic,int C=Dynamic>
   class Matrix_ : public Eigen::Matrix<double,R,C>
   {
     public:
@@ -28,14 +28,14 @@ namespace codac2
         : Eigen::Matrix<double,R,C>()
       { }
     
-      Matrix_(size_t nb_rows, size_t nb_cols)
+      Matrix_(int nb_rows, int nb_cols)
         : Eigen::Matrix<double,R,C>(nb_rows, nb_cols)
       {
         assert(R == Dynamic || R == (int)nb_rows);
         assert(C == Dynamic || C == (int)nb_cols);
       }
     
-      Matrix_(size_t nb_rows, size_t nb_cols, double x)
+      Matrix_(int nb_rows, int nb_cols, double x)
         : Eigen::Matrix<double,R,C>(nb_rows, nb_cols)
       {
         assert(R == Dynamic || R == (int)nb_rows);
@@ -43,12 +43,12 @@ namespace codac2
         init(x);
       }
       
-      explicit Matrix_(size_t nb_rows, size_t nb_cols, double values[])
+      explicit Matrix_(int nb_rows, int nb_cols, const double values[])
         : Matrix_<R,C>(nb_rows, nb_cols)
       {
-        size_t k = 0;
-        for(size_t i = 0 ; i < nb_rows ; i++)
-          for(size_t j = 0 ; j < nb_cols ; j++)
+        int k = 0;
+        for(int i = 0 ; i < nb_rows ; i++)
+          for(int j = 0 ; j < nb_cols ; j++)
           {
             if(values == 0) // in case the user called Matrix_(r,c,0) and 0 is interpreted as NULL!
               (*this)(i,j) = 0.;
@@ -58,7 +58,7 @@ namespace codac2
           }
       }
       
-      explicit Matrix_(double values[])
+      explicit Matrix_(const double values[])
         : Matrix_<R,C>(R, C, values)
       { }
 
@@ -184,6 +184,17 @@ namespace codac2
     os << ")";
     return os;
   }
+
+  #include "ibex_Matrix.h"
+  template<int R=Dynamic,int C=Dynamic>
+  ibex::Matrix to_codac1(const Matrix_<R,C>& x)
+  {
+    ibex::Matrix x_(x.rows(), x.cols());
+    for(size_t i = 0 ; i < x.rows() ; i++)
+      for(size_t j = 0 ; j < x.cols() ; j++)
+        x_[i][j] = x(i,j);
+    return x_;
+  }
   
   template<int R,int C>
   Matrix_<R,C> floor(const Matrix_<R,C>& x)
@@ -221,6 +232,36 @@ namespace codac2
     return f;
   }
 
+  class Matrix : public Matrix_<>
+  {
+    public:
+
+      explicit Matrix(size_t nb_rows, size_t nb_cols)
+        : Matrix_<>(nb_rows, nb_cols)
+      { }
+
+
+      explicit Matrix(size_t nb_rows, size_t nb_cols, double x)
+        : Matrix_<>(nb_rows, nb_cols, x)
+      { }
+
+      explicit Matrix(size_t nb_rows, size_t nb_cols, const double values[])
+        : Matrix_<>(nb_rows, nb_cols, values)
+      { }
+
+      Matrix(const Matrix_<>& x)
+        : Matrix_<>(x)
+      { }
+      
+      Matrix(std::initializer_list<std::initializer_list<double>> l)
+        : Matrix_<>(l)
+      { }
+      
+      template<int R,int C>
+      explicit Matrix(const Matrix_<R,C>& v)
+        : Matrix_<>(v)
+      { }
+  };
 } // namespace codac
 
 #endif

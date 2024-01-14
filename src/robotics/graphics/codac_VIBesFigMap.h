@@ -77,6 +77,8 @@ namespace codac
        */
       void enable_tubes_backgrounds(bool enable = true);
 
+      void no_axis_limits();
+
       /**
        * \brief Displays this figure
        */
@@ -559,6 +561,7 @@ namespace codac
       bool m_draw_tubes_backgrounds = true; //!< if `true`, will highlight tubes contractions
       bool m_smooth_drawing = false; //!< if `true`, a smooth rendering of tubes will be done
       float m_robot_size = 5.5; //!< if `0`, no robot display
+      bool _no_axis_limits = false;
 
       unsigned int m_tube_max_nb_disp_slices = TUBE_MAX_NB_DISPLAYED_SLICES; //!< limit for slices display
       unsigned int m_traj_max_nb_disp_points = TRAJ_MAX_NB_DISPLAYED_POINTS; //!< limit for traj points display
