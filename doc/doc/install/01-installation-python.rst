@@ -55,11 +55,6 @@ If a configuration in this table does not work, please `contact us <https://gith
 
 .. warning::
 
-  | **macOS Big Sur and later (arm64):**
-  | `Rosetta <https://support.apple.com/HT211861>`_ might be necessary to run `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_.
-
-.. warning::
-
   | **macOS Big Sur and later (x86_64):**
   | `Python wheels provided for Catalina or earlier may need to be installed with something similar to <https://stackoverflow.com/questions/64847996/force-usage-of-10-x-wheel-in-macos-big-sur>`_: 
 
