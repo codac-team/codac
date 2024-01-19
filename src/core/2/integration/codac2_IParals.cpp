@@ -571,6 +571,7 @@ namespace codac2 {
        if (this->empty) {
            return (*this = x);
        }
+       this->bbox() |= x.bbox();
        for (unsigned int i=1;i<this->nbmat;i++) {
           this->rhs(i) |= x.getPar(this->Imat(i));
        }
