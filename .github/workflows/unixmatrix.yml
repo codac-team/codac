@@ -77,7 +77,7 @@ jobs:
     - run: choco install -y -r --no-progress mingw --version=8.1.0 --force ${{ matrix.cfg.choco_flags }}
       if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw8')&&(matrix.cfg.arch=='x86')
     - run: choco install -y -r --no-progress mingw --version=11.2.0.07112021 --force ${{ matrix.cfg.choco_flags }}
-      if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw11')&&(matrix.cfg.arch=='x86')
+      if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw11')
     - run: echo C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin>>%GITHUB_PATH%
       if: startsWith(matrix.cfg.runtime, 'mingw')&&(matrix.cfg.arch=='x86')
     - run: echo C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin>>%GITHUB_PATH%
