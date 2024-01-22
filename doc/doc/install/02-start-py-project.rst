@@ -8,7 +8,7 @@ Start a Python project
    | You are using C++?
    | :ref:`sec-start-cpp-project`
 
-| Codac is ready to be used on your computer.
+| Now that :ref:`you have installed Codac <sec-installation-py>`, the library is ready to be used on your computer.
 | You can now import the ``codac`` package and start using it:
 
 .. code-block:: py
