@@ -91,7 +91,7 @@ else {
 
 if (!$pp['NoRegistry']) {
 	New-Item "$CMakeSystemRepositoryPath\$CMakePackageName" -ItemType directory -Force
-	New-ItemProperty -Name "CMakePackageDir" -PropertyType String -Value "$root\share\$CMakePackageName\cmake" -Path "$CMakeSystemRepositoryPath\$CMakePackageName" -Force
+	New-ItemProperty -Name "$CMakePackageName$CMakePackageVer" -PropertyType String -Value "$root\share\$CMakePackageName\cmake" -Path "$CMakeSystemRepositoryPath\$CMakePackageName" -Force
 }
 #$pathtoadd = "$root\bin"
 #if (!($pp['NoPath']) -and !([environment]::GetEnvironmentVariable("Path","Machine") -match [regex]::escape($pathtoadd))) {
@@ -155,7 +155,7 @@ for ($i = 1; $i -le 99; $i++) {
 
 		if (!$pp['NoRegistry']) {
 			New-Item "$CMakeSystemRepositoryPath\$CMakePackageName" -ItemType directory -Force
-			New-ItemProperty -Name "CMakePackageDir" -PropertyType String -Value "$root\share\$CMakePackageName\cmake" -Path "$CMakeSystemRepositoryPath\$CMakePackageName" -Force
+			New-ItemProperty -Name "$CMakePackageName$CMakePackageVer" -PropertyType String -Value "$root\share\$CMakePackageName\cmake" -Path "$CMakeSystemRepositoryPath\$CMakePackageName" -Force
 		}
 		#$pathtoadd = "$root\bin"
 		#if (!($pp['NoPath']) -and !([environment]::GetEnvironmentVariable("Path","Machine") -match [regex]::escape($pathtoadd))) {

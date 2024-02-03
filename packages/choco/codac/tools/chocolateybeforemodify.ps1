@@ -15,10 +15,12 @@ Write-Host "Codac is going to be uninstalled from '$installDir'"
 
 $root = Join-Path $installDir "codac"
 
-if (Test-Path $CMakeRegistryPath) {
-  if (Test-Path $CMakeSystemRepositoryPath\$CMakePackageName) {
-      Remove-Item "$CMakeSystemRepositoryPath\$CMakePackageName"
-  }
+try {
+    Get-ItemProperty -Path $CMakeSystemRepositoryPath\$CMakePackageName | Select-Object -ExpandProperty $CMakePackageName$CMakePackageVer -ErrorAction Stop | Out-Null
+    Remove-ItemProperty -Path $CMakeSystemRepositoryPath\$CMakePackageName -Name $CMakePackageName$CMakePackageVer
+}
+catch {
+
 }
 
 if (Test-Path $root) {
