@@ -37,13 +37,16 @@ if (!$pp['url']) {
 }
 else {
 	$url = $pp['url']
-	#$checksum = $pp['sha256']
+	$checksum = $pp['checksum']
 	$packageArgs = @{
 		packageName   = $env:ChocolateyPackageName
 		unzipLocation = Join-Path "$root" ".."
 		url           = $url
-		#checksum      = $checksum
-		#checksumType  = 'sha256'
+		url64bit      = $url
+		checksum      = $checksum
+		checksumType  = 'sha256'
+		checksum64    = $checksum
+		checksumType64= 'sha256'
 	}
 	Install-ChocolateyZipPackage @packageArgs
 
@@ -102,13 +105,16 @@ if (!$pp['NoRegistry']) {
 for ($i = 1; $i -le 99; $i++) {
 	if ($pp['url'+$i]) {
 		$url = $pp['url'+$i]
-		#$checksum = $pp['sha256']
+		$checksum = $pp['checksum'+$i]
 		$packageArgs = @{
 			packageName   = $env:ChocolateyPackageName
 			unzipLocation = Join-Path "$root" ".."
 			url           = $url
-			#checksum      = $checksum
-			#checksumType  = 'sha256'
+			url64bit      = $url
+			checksum      = $checksum
+			checksumType  = 'sha256'
+			checksum64    = $checksum
+			checksumType64= 'sha256'
 		}
 		Install-ChocolateyZipPackage @packageArgs
 
