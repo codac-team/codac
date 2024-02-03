@@ -10,7 +10,7 @@ jobs:
     name: Raspbian Buster pi Docker
     runs-on: ubuntu-latest
     steps: 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: true
         fetch-depth: 0

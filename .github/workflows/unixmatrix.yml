@@ -50,7 +50,7 @@ jobs:
             - { os: macos-11, shell: bash, arch: x86_64, runtime: bigsur, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', desc: 'macOS Big Sur x86_64' }
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: true
         fetch-depth: 0
