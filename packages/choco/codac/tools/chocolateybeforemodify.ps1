@@ -24,5 +24,7 @@ catch {
 }
 
 if (Test-Path $root) {
-    Remove-Item -Recurse -Force $root
+    if ((Resolve-Path $root).Path -notcontains (Resolve-Path $packageDir).Path) {
+        Remove-Item -Recurse -Force $root
+    }
 }
