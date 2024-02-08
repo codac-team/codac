@@ -28,24 +28,28 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
-            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2022 x64' }
-            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', choco_flags: '--x86', desc: 'Windows Visual Studio 2022 x86' }
-            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2019 x64' }
-            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A Win32', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', choco_flags: '--x86', desc: 'Windows Visual Studio 2019 x86' }
-            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 17" -T v141 -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2017 x64' }
-            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 17" -T v141 -A Win32', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', choco_flags: '--x86', desc: 'Windows Visual Studio 2017 x86' }
-            - { os: windows-2022, shell: cmd, arch: x64, runtime: mingw11, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 11.2.0 x64' }
-            - { os: windows-2022, shell: cmd, arch: x86, runtime: mingw11, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 11.2.0 x86' }
-            - { os: windows-2019, shell: cmd, arch: x64, runtime: mingw8, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 8.1.0 x64' }
-            - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw8, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 8.1.0 x86' }
-            - { os: windows-2019, shell: cmd, arch: x64, runtime: mingw7, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 7.3.0 x64' }
-            - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw7, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 7.3.0 x86' }
-            - { os: ubuntu-22.04, shell: bash, arch: amd64, runtime: jammy, cmake_flags: '-fPIC', desc: 'Ubuntu 22.04' }
-            - { os: ubuntu-20.04, shell: bash, arch: amd64, runtime: focal, cmake_flags: '-fPIC', desc: 'Ubuntu 20.04' }
-            - { os: macos-13, shell: bash, arch: arm64, runtime: ventura, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Ventura arm64' }
-            - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', desc: 'macOS Ventura x86_64' }
-            - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Monterey arm64' }
-            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', desc: 'macOS Monterey x86_64' }
+            - { os: windows-2022, shell: cmd, arch: x64, bitness: 64, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2022 x64' }
+            - { os: windows-2022, shell: cmd, arch: x86, bitness: 32, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', choco_flags: '--x86', desc: 'Windows Visual Studio 2022 x86' }
+            - { os: windows-2022, shell: cmd, arch: x64, bitness: 64, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2019 x64' }
+            - { os: windows-2022, shell: cmd, arch: x86, bitness: 32, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A Win32', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', choco_flags: '--x86', desc: 'Windows Visual Studio 2019 x86' }
+            - { os: windows-2022, shell: cmd, arch: x64, bitness: 64, runtime: vc15, cmake_params: '-G "Visual Studio 17" -T v141 -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2017 x64' }
+            - { os: windows-2022, shell: cmd, arch: x86, bitness: 32, runtime: vc15, cmake_params: '-G "Visual Studio 17" -T v141 -A Win32', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', choco_flags: '--x86', desc: 'Windows Visual Studio 2017 x86' }
+            - { os: windows-2022, shell: cmd, arch: x64, bitness: 64, runtime: mingw13, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 13.2.0 x64' }
+            - { os: windows-2022, shell: cmd, arch: x86, bitness: 32, runtime: mingw13, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 13.2.0 x86' }
+            - { os: windows-2022, shell: cmd, arch: x64, bitness: 64, runtime: mingw12, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 12.2.0 x64' }
+            - { os: windows-2022, shell: cmd, arch: x86, bitness: 32, runtime: mingw12, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 12.2.0 x86' }
+            - { os: windows-2022, shell: cmd, arch: x64, bitness: 64, runtime: mingw11, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 11.2.0 x64' }
+            - { os: windows-2022, shell: cmd, arch: x86, bitness: 32, runtime: mingw11, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 11.2.0 x86' }
+            - { os: windows-2019, shell: cmd, arch: x64, bitness: 64, runtime: mingw8, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 8.1.0 x64' }
+            - { os: windows-2019, shell: cmd, arch: x86, bitness: 32, runtime: mingw8, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 8.1.0 x86' }
+            - { os: windows-2019, shell: cmd, arch: x64, bitness: 64, runtime: mingw7, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 7.3.0 x64' }
+            - { os: windows-2019, shell: cmd, arch: x86, bitness: 32, runtime: mingw7, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 7.3.0 x86' }
+            - { os: ubuntu-22.04, shell: bash, arch: amd64, bitness: 64, runtime: jammy, cmake_flags: '-fPIC', desc: 'Ubuntu 22.04' }
+            - { os: ubuntu-20.04, shell: bash, arch: amd64, bitness: 64, runtime: focal, cmake_flags: '-fPIC', desc: 'Ubuntu 20.04' }
+            - { os: macos-13, shell: bash, arch: arm64, bitness: 64, runtime: ventura, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Ventura arm64' }
+            - { os: macos-13, shell: bash, arch: x86_64, bitness: 64, runtime: ventura, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', desc: 'macOS Ventura x86_64' }
+            - { os: macos-12, shell: bash, arch: arm64, bitness: 64, runtime: monterey, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Monterey arm64' }
+            - { os: macos-12, shell: bash, arch: x86_64, bitness: 64, runtime: monterey, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', desc: 'macOS Monterey x86_64' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v4
@@ -70,18 +74,46 @@ jobs:
     - run: echo "PACKAGE_VERSION=$SOFTWARE_VERSION-${DEBIAN_PACKAGE_REV}${{ matrix.cfg.runtime }}$PACKAGE_REV" >> $GITHUB_ENV
       shell: bash
       if: runner.os=='Linux'
-    - run: choco install -y -r --no-progress mingw --version=7.3.0 --force ${{ matrix.cfg.choco_flags }}
-      if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw7')
-    - run: choco install -y -r --no-progress mingw --version=8.1.0 --force ${{ matrix.cfg.choco_flags }}
-      if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw8')&&(matrix.cfg.arch=='x86')
-    - run: choco install -y -r --no-progress mingw --version=11.2.0.07112021 --force ${{ matrix.cfg.choco_flags }}
-      if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw11')
-    - run: echo C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin>>%GITHUB_PATH%
-      if: startsWith(matrix.cfg.runtime, 'mingw')&&(matrix.cfg.arch=='x86')
-    - run: echo C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin>>%GITHUB_PATH%
-      if: startsWith(matrix.cfg.runtime, 'mingw')&&(matrix.cfg.arch=='x64')
     - run: |
         choco install -y -r --no-progress checksum wget zip
+        rem Workaround to try solve some random package download failures...
+        wget https://www.ensta-bretagne.fr/packages/choco/winflexbison.2.4.9.20170215.nupkg --no-check-certificate -nv
+        wget https://www.ensta-bretagne.fr/packages/choco/patch.2.5.9.nupkg --no-check-certificate -nv
+        choco install -y -r --no-progress -s . winflexbison patch ${{ matrix.cfg.choco_flags }}
+        del /f /q winflexbison.2.4.9.20170215.nupkg patch.2.5.9.nupkg
+        7z x windows_server_core_prereq.zip -o"%SystemRoot%" -y & cd. & rem ksuser.dll already on windows-2016...?
+        wget http://www.ensta-bretagne.fr/lebars/Share/cmake_extra_tools.zip --no-check-certificate -nv
+        7z x cmake_extra_tools.zip -o"%SystemDrive%" -y
+        del /f /q cmake_extra_tools.zip
+        wget https://gist.github.com/lebarsfa/237841f9e5dad55ef192713b3b1b2f16/raw/04d77ced3457346c55f183ca12a10dbcb850e6d5/refreshenv.bashrc --no-check-certificate -nv
+        move /y refreshenv.bashrc %USERPROFILE%
+      if: runner.os=='Windows'
+    - run: |
+        choco install -y -r --no-progress mingw --version=7.3.0 --force ${{ matrix.cfg.choco_flags }}
+        %SystemDrive%\cmake_extra_tools\pathman /as C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw${{ matrix.cfg.bitness }}\bin & cd. & rem Non-zero exit code...?
+        echo export BASHMINGWPATH=/c/ProgramData/chocolatey/lib/mingw/tools/install/mingw${{ matrix.cfg.bitness }}/bin>>%USERPROFILE%\.bashrc
+      if: (matrix.cfg.runtime=='mingw7')
+    - run: |
+        choco install -y -r --no-progress mingw --version=8.1.0 --force ${{ matrix.cfg.choco_flags }}
+        %SystemDrive%\cmake_extra_tools\pathman /as C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw${{ matrix.cfg.bitness }}\bin & cd. & rem Non-zero exit code...?
+        echo export BASHMINGWPATH=/c/ProgramData/chocolatey/lib/mingw/tools/install/mingw${{ matrix.cfg.bitness }}/bin>>%USERPROFILE%\.bashrc
+      if: (matrix.cfg.runtime=='mingw8')
+    - run: |
+        choco install -y -r --no-progress mingw --version=11.2.0.07112021 --force ${{ matrix.cfg.choco_flags }}
+        %SystemDrive%\cmake_extra_tools\pathman /as C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw${{ matrix.cfg.bitness }}\bin & cd. & rem Non-zero exit code...?
+        echo export BASHMINGWPATH=/c/ProgramData/chocolatey/lib/mingw/tools/install/mingw${{ matrix.cfg.bitness }}/bin>>%USERPROFILE%\.bashrc
+      if: (matrix.cfg.runtime=='mingw11')
+    - run: |
+        choco install -y -r --no-progress mingw --version=12.2.0.03042023 --force ${{ matrix.cfg.choco_flags }}
+        %SystemDrive%\cmake_extra_tools\pathman /as C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw${{ matrix.cfg.bitness }}\bin & cd. & rem Non-zero exit code...?
+        echo export BASHMINGWPATH=/c/ProgramData/chocolatey/lib/mingw/tools/install/mingw${{ matrix.cfg.bitness }}/bin>>%USERPROFILE%\.bashrc
+      if: (matrix.cfg.runtime=='mingw12')
+    - run: |
+        choco install -y -r --no-progress mingw --version=13.2.0 --force ${{ matrix.cfg.choco_flags }}
+        %SystemDrive%\cmake_extra_tools\pathman /as C:\ProgramData\mingw64\mingw${{ matrix.cfg.bitness }}\bin & cd. & rem Non-zero exit code...?
+        echo export BASHMINGWPATH=/c/ProgramData/mingw64/mingw${{ matrix.cfg.bitness }}/bin>>%USERPROFILE%\.bashrc
+      if: (matrix.cfg.runtime=='mingw13')
+    - run: |
         choco install -y -r --no-progress eigen --version=3.4.0 ${{ matrix.cfg.choco_flags }}
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20231007/ibex.2.8.9.20231007.nupkg --no-check-certificate -nv
         choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20231007 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20231007/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
@@ -107,6 +139,7 @@ jobs:
 #    - run: git clone --depth 1 -b master https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../../ibex" .. ; cmake --build . --config Release --target install ; cd ../..
 #      shell: bash
     - run: |
+        if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         mkdir build ; cd build
         cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" ..
         cmake --build . --config Debug --target install
@@ -116,6 +149,7 @@ jobs:
         zip -q -r codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac
       shell: bash
     - run: |
+        if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         mkdir -p codac_standalone/example ; cd codac_standalone
         wget https://community.chocolatey.org/api/v2/package/eigen/3.4.0 --no-check-certificate -nv ; unzip -q 3.4.0 -d eigen ; rm -Rf 3.4.0 eigen/*.xml eigen/*.nuspec eigen/_* eigen/package eigen/tools ; cd eigen/share/cmake ; if [ ${{ runner.os }} = macOS ]; then sed -i "" "s/\\/..\\/../\\/..\\/..\\/../" *.cmake ; else sed -i "s/\\/..\\/../\\/..\\/..\\/../" *.cmake ; fi ; cd .. ; mkdir eigen3 ; mv cmake eigen3/ ; cd ../..
         if [ ${{ runner.os }} = Windows ]; then cp -Rf /C/ProgramData/chocolatey/lib/ibex . ; rm -Rf ibex/tools ibex/ibex.*
@@ -125,6 +159,7 @@ jobs:
         cp -Rf ../codac . ; cp -Rf ../tests/test_codac/* ./example/ ; cd .. ; zip -q -r codac_standalone_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_standalone
       shell: bash
     - run: |
+        if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         cd codac_standalone/example
         cmake ${{ matrix.cfg.cmake_params }} .
         cmake --build . --config Release
@@ -134,6 +169,7 @@ jobs:
       shell: bash
       if: (runner.os!='macOS')||(matrix.cfg.arch=='x86_64')
     - run: |
+        if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         cd packages/choco
         sed_param=s/\<version\>1\<\\/version\>/\<version\>${PACKAGE_VERSION}\<\\/version\>/
         sed -i "$sed_param" codac/codac.nuspec
@@ -165,7 +201,16 @@ jobs:
         cp -Rf codac/* /usr/local/
       shell: bash
       if: (runner.os=='macOS')&&(matrix.cfg.arch=='x86_64')
+    - uses: xresloader/upload-to-github-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        file: "*.zip;*.nupkg;*.deb"
+        overwrite: true
+        tag_name: autotagname-${{ github.sha }}
+      if: (github.event_name != 'pull_request')&&(github.ref_name == 'master')
     - run: |
+        if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         rm -Rf codac
         cd tests/test_codac
         cmake ${{ matrix.cfg.cmake_params }} .
@@ -175,11 +220,3 @@ jobs:
         cd ../..
       shell: bash
       if: (runner.os!='macOS')||(matrix.cfg.arch=='x86_64')
-    - uses: xresloader/upload-to-github-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        file: "*.zip;*.nupkg;*.deb"
-        overwrite: true
-        tag_name: autotagname-${{ github.sha }}
-      if: (github.event_name != 'pull_request')&&(github.ref_name == 'master')
