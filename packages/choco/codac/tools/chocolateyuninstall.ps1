@@ -15,6 +15,10 @@ Write-Host "Codac is going to be uninstalled from '$installDir'"
 
 $root = Join-Path $installDir "codac"
 
+$newpath = [environment]::GetEnvironmentVariable("Path","Machine")
+$newpath = ($newpath.Split(';') | Where-Object { $_ -ne "$root\bin" }) -join ';'
+[environment]::SetEnvironmentVariable("Path",$newpath,"Machine")
+
 try {
     Get-ItemProperty -Path $CMakeSystemRepositoryPath\$CMakePackageName | Select-Object -ExpandProperty $CMakePackageName$CMakePackageVer -ErrorAction Stop | Out-Null
     Remove-ItemProperty -Path $CMakeSystemRepositoryPath\$CMakePackageName -Name $CMakePackageName$CMakePackageVer
