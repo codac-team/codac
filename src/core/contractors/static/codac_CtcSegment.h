@@ -15,14 +15,14 @@
 #include "ibex_CtcFwdBwd.h"
 
 
+namespace codac {
+
+
 using ibex::Interval;
 using ibex::IntervalVector;
 using ibex::Ctc;
 using ibex::NumConstraint;
 using ibex::CtcFwdBwd;
-
-
-namespace codac {
 
 /**
  * \ingroup geometry
@@ -57,6 +57,8 @@ public:
    * [gch]: question: is it still optimal in this case??
    */
   CtcSegment();
+
+  CtcSegment(const CtcSegment& ctc);
 
   /**
    * \brief Contract a box.

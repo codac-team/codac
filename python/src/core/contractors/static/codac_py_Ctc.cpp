@@ -49,8 +49,11 @@ py::class_<Ctc,pyCtc> export_Ctc(py::module& m)
 
     .def("__or__", [](Ctc& c1, Ctc& c2)
       {
-        return new CtcUnion(c1, c2);
+        CtcUnion *cu = new CtcUnion(2);
+        cu->add_raw_ptr(&c1);
+        cu->add_raw_ptr(&c2);
         // todo: manage delete
+        return cu;
       },
       DOC_CTC_OR,
       py::return_value_policy::take_ownership,
@@ -77,9 +80,33 @@ py::class_<Ctc,pyCtc> export_Ctc(py::module& m)
   ;
 
   // Export CtcUnion
-  py::class_<CtcUnion>(m, "CtcUnion", ctc, DOC_CTCUNION_TYPE)
-    .def(py::init<ibex::Array<Ctc>>(), py::keep_alive<1,2>(), "list"_a)
+  py::class_<CtcUnion>(m, "CtcUnion", ctc, "todo")
+    .def(py::init([](Ctc& c1)
+      {
+        CtcUnion *cu = new CtcUnion(c1.nb_var);
+        cu->add_raw_ptr(&c1);
+        return cu;
+      }),
+      py::keep_alive<0,1>(), "c1"_a)
+    .def(py::init([](Ctc& c1, Ctc& c2)
+      {
+        CtcUnion *cu = new CtcUnion(c1.nb_var);
+        cu->add_raw_ptr(&c1);
+        cu->add_raw_ptr(&c2);
+        return cu;
+      }),
+      py::keep_alive<0,1>(), py::keep_alive<0,2>(), "c1"_a, "c2"_a)
+    .def(py::init([](Ctc& c1, Ctc& c2, Ctc& c3)
+      {
+        CtcUnion *cu = new CtcUnion(c1.nb_var);
+        cu->add_raw_ptr(&c1);
+        cu->add_raw_ptr(&c2);
+        cu->add_raw_ptr(&c3);
+        return cu;
+      }),
+      py::keep_alive<0,1>(), py::keep_alive<0,2>(), py::keep_alive<0,3>(), "c1"_a, "c2"_a, "c3"_a)
     .def("contract", (void (Ctc::*)(IntervalVector&)) &CtcUnion::contract)
+    .def("__ior__", [](CtcUnion& cu, Ctc& c) { return cu.add_raw_ptr(&c); })
     ;
 
   // Export CtcCompo
