@@ -33,12 +33,12 @@ jobs:
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 17" -T v141 -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 6, desc: 'Windows Visual Studio 2017 x64 Python 3.6' }
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: true
         fetch-depth: 0
         clean: false
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
         architecture: ${{ matrix.cfg.arch }}
