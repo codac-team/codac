@@ -113,6 +113,7 @@
 
       src/robotics/codac_py_DataLoader.cpp
       src/robotics/codac_py_TPlane.cpp
+      src/robotics/codac_py_Wall.cpp
     )
 
     target_include_directories(core

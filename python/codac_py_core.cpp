@@ -87,6 +87,7 @@ void export_ConnectedSubset(py::module& m);
 
 void export_DataLoader(py::module& m);
 void export_TPlane(py::module& m);
+void export_Wall(py::module& m);
 
 void export_sivia(py::module& m, py::class_<Ctc,pyCtc>& ctc, py::class_<ibex::Sep,pySep>& sep);
 
@@ -155,6 +156,7 @@ PYBIND11_MODULE(core, m)
 
   export_DataLoader(m);
   export_TPlane(m);
+  export_Wall(m);
 
   export_sivia(m, ctc, sep);
 
