@@ -14,7 +14,8 @@ using namespace std;
 namespace codac {
 
 CtcSegment::CtcSegment(double ax, double ay, double bx, double by) : Ctc(2),
-    X_with_params(2+4) {
+    X_with_params(2+4)
+{
 
     init();
 
@@ -22,6 +23,11 @@ CtcSegment::CtcSegment(double ax, double ay, double bx, double by) : Ctc(2),
     X_with_params[3] = Interval(ay);
     X_with_params[4] = Interval(bx);
     X_with_params[5] = Interval(by);
+}
+
+CtcSegment::CtcSegment(const CtcSegment& ctc) : CtcSegment(ctc.X_with_params[2].lb(),ctc.X_with_params[3].lb(),ctc.X_with_params[4].lb(),ctc.X_with_params[5].lb())
+{
+
 }
 
 CtcSegment::CtcSegment() : Ctc(6), X_with_params(0 /* unused */) {
