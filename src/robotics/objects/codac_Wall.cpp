@@ -8,6 +8,14 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#ifdef _MSC_VER
+// Enable additional features in math.h.
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif // _USE_MATH_DEFINES
+#include <math.h>
+#endif // _MSC_VER
+
 #include <iostream>
 #include "codac_Wall.h"
 #include "codac_predef_values.h"
