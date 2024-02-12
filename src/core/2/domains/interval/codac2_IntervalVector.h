@@ -25,7 +25,7 @@
 #include "codac2_Interval.h"
 #include "codac2_IntervalMatrix.h"
 #include "codac2_Vector.h"
-#include "codac2_IntervalVectorComponent.h"
+//#include "codac2_IntervalVectorComponent.h"
 #include <codac2_eigen.h>
 
 namespace codac2
