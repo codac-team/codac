@@ -25,6 +25,7 @@
 #include "codac2_Interval.h"
 #include "codac2_IntervalMatrix.h"
 #include "codac2_Vector.h"
+#include "codac2_IntervalVectorComponent.h"
 #include <codac2_eigen.h>
 
 namespace codac2
@@ -32,16 +33,29 @@ namespace codac2
   template<int N>
   class Vector_;
 
+  /*template<int N>
+  class IntervalVectorComponent_;
+
+  template<int N>
+  class IntervalVectorConstComponent_;*/
+
+  class IntervalVectorSubvector;
+  class IntervalVectorConstSubvector;
+
   using Eigen::Dynamic;
 
   template<int N=Dynamic>
   class IntervalVector_ : public IntervalMatrix_<N,1>
   {
     public:
+
+      //using VECTOR_ITEM = IntervalVectorComponent_<N>;
       
       IntervalVector_()
         : IntervalMatrix_<N,1>()
-      { }
+      {
+        // todo: restore this: static_assert(N != Dynamic);
+      }
 
       explicit IntervalVector_(size_t n)
         : IntervalMatrix_<N,1>(n,1)
@@ -55,16 +69,16 @@ namespace codac2
         assert(N == Dynamic || N == (int)n);
       }
 
-      explicit IntervalVector_(const Interval& x)
-        : IntervalMatrix_<N,1>(N,1,x)
-      { }
+      //explicit IntervalVector_(const Interval& x)
+      //  : IntervalMatrix_<N,1>(N,1,x)
+      //{ }
       
       template<int M>
-      explicit IntervalVector_(const Matrix_<M,1>& v)
-        : IntervalMatrix_<N,1>(v.size(),1)
+      explicit IntervalVector_(const Vector_<M>& v)
+        : IntervalVector_<N>(v.size())
       {
         static_assert(N == M || N == -1 || M == -1);
-        for(size_t i = 0 ; i < IntervalMatrix_<N,1>::size() ; i++)
+        for(size_t i = 0 ; i < (size_t)v.size() ; i++)
           (*this)[i] = Interval(v[i]);
       }
       
@@ -90,11 +104,13 @@ namespace codac2
         // todo: use thias as faster? std::copy(l.begin(), l.end(), vec);
       }
 
-      template<int M>
-      explicit IntervalVector_(const IntervalMatrix_<M,1>& x)
-        : IntervalMatrix_<M,1>(x)
+      template<int M=Dynamic>
+      IntervalVector_(const IntervalVector_<M>& x)
+        : IntervalVector_(x.size())
       {
-        assert(M == Dynamic || M == N);
+        static_assert(M == Dynamic || M == N);
+        for(size_t i = 0 ; i < x.size() ; i++)
+          (*this)[i] = x[i];
       }
 
       // This constructor allows you to construct IntervalVector_ from Eigen expressions
@@ -119,7 +135,7 @@ namespace codac2
       template<size_t N1,size_t N2>
       IntervalVector_<N2-N1+1> subvector() const
       {
-        assert(N1 >= 0 && N1 < N && N2 >= 0 && N2 < N && N1 <= N2);
+        static_assert(N1 >= 0 && N1 < N && N2 >= 0 && N2 < N && N1 <= N2);
         return this->template block<N2-N1+1,1>(N1,0);
       }
 
@@ -137,17 +153,17 @@ namespace codac2
       template<size_t I,int M>
       void put(const IntervalVector_<M>& x)
       {
-        assert(I >= 0 && I < N && M+I <= N);
+        static_assert(I >= 0 && I < N && M+I <= N);
         this->template block<M,1>(I,0) << x;
       }
 
-      auto& operator+=(const IntervalVector_<N>& x)
+      IntervalVector_<N>& operator+=(const IntervalVector_<N>& x)
       {
         (*this).noalias() += x;//.template cast<Interval>();
         return *this;
       }
       
-      auto& operator-=(const IntervalVector_<N>& x)
+      IntervalVector_<N>& operator-=(const IntervalVector_<N>& x)
       {
         (*this).noalias() -= x;//.template cast<Interval>();
         return *this;
@@ -221,6 +237,32 @@ namespace codac2
 
         return l;
       }
+
+    public:
+
+      /*IntervalVectorComponent_<N> operator[](size_t i)
+      {
+        return IntervalVectorComponent_<N>(*this, i);
+      }
+      
+      IntervalVectorConstComponent_<N> operator[](size_t i) const
+      {
+        return IntervalVectorConstComponent_<N>(*this, i);
+      }*/
+
+      /*Interval& i(size_t i)
+      {
+        return Eigen::Matrix<Interval,N,1>::operator[](i);
+      }
+
+      const Interval& i(size_t i) const
+      {
+        return Eigen::Matrix<Interval,N,1>::operator[](i);
+      }
+
+      friend IntervalVectorComponent_<N>;
+      friend IntervalVectorConstComponent_<N>;*/
+      friend IntervalVectorSubvector;
   };
 
   template<int N=Dynamic>
@@ -248,43 +290,32 @@ namespace codac2
   {
     assert(x.size() == N);
     IntervalVector_<N> x_(x.size());
-    for(size_t i = 0 ; i < x.size() ; i++)
+    for(size_t i = 0 ; i < (size_t)x.size() ; i++)
       x_[i] = x[i];
     return x_;
   }
 
-  class IntervalVector : public IntervalVector_<>
+  using IntervalVector = IntervalVector_<>;
+
+
+  /*class IntervalVector : public IntervalVector_<>
   {
     public:
 
-      explicit IntervalVector(size_t n)
-        : IntervalVector_<>(n)
-      { }
+      using VECTOR_ITEM = IntervalVectorComponent_;
 
-      explicit IntervalVector(size_t n, const Interval& x)
-        : IntervalVector_<>(n, x)
-      { }
-
-      explicit IntervalVector(const Interval& x)
-        : IntervalVector_<>({x})
-      { }
-
-      explicit IntervalVector(const IntervalVector_<>& x)
-        : IntervalVector_<>(x)
-      { }
+      explicit IntervalVector(size_t n);
+      explicit IntervalVector(size_t n, const Interval& x);
+      //explicit IntervalVector(const Interval& x);
+      explicit IntervalVector(const IntervalVector& x);
       
       template<int N>
       explicit IntervalVector(const Vector_<N>& v)
         : IntervalVector_<>(v)
       { }
       
-      explicit IntervalVector(size_t n, const double bounds[][2])
-        : IntervalVector_<>(n, bounds)
-      { }
-      
-      IntervalVector(std::initializer_list<Interval> l)
-        : IntervalVector_<>(l)
-      { }
+      explicit IntervalVector(size_t n, const double bounds[][2]);
+      IntervalVector(std::initializer_list<Interval> l);
 
       // This constructor allows you to construct IntervalVector from Eigen expressions
       template<typename OtherDerived>
@@ -299,17 +330,181 @@ namespace codac2
         this->IntervalVector_<>::operator=(other);
         return *this;
       }
-  
-      void resize(size_t n)
+
+      IntervalVectorComponent_ operator[](size_t i);
+      IntervalVectorSubvector operator[](std::array<size_t,2> i);
+      IntervalVectorConstComponent operator[](size_t i) const;
+      IntervalVectorConstSubvector operator[](std::array<size_t,2> i) const;
+      void resize(size_t n);
+      static IntervalVector empty_set(size_t n);
+
+      virtual void set_name(const std::string& name)
       {
-        this->IntervalVector_<>::resize(n);
+        #ifndef NDEBUG
+        Domain::set_name(name);
+        for(size_t i = 0 ; i < size() ; i++)
+          (*this)[i].set_name(name + "[" + std::to_string(i) + "]");
+        #endif
+      }
+  };*/
+
+ /* template<int N=Dynamic>
+  class IntervalVectorComponent_ : public Domain
+  {
+    public:
+
+      IntervalVectorComponent_(IntervalVector_<N>& x, size_t i)
+        : _x(x), _i(i)
+      {
+        set_name(x.name() + "[" + std::to_string(i) + "]");
       }
 
-      static IntervalVector empty_set(size_t n)
+      IntervalVectorComponent_<N>& operator=(const IntervalVectorComponent_<N>& xi)
       {
-        return IntervalMatrix_<>::empty_set(n,1);
+        _x.i(_i) = xi;
+        return *this;
       }
-  };
+
+      IntervalVectorComponent_<N>& operator=(const Interval& xi)
+      {
+        _x.i(_i) = xi;
+        return *this;
+      }
+
+      IntervalVectorComponent_<N>& operator&=(const Interval& xi)
+      {
+        _x.i(_i) &= xi;
+        return *this;
+      }
+
+      IntervalVectorComponent_<N>& operator|=(const Interval& xi)
+      {
+        _x.i(_i) |= xi;
+        return *this;
+      }
+
+      IntervalVectorComponent_<N>& operator+=(const Interval& xi)
+      {
+        _x.i(_i) += xi;
+        return *this;
+      }
+
+      IntervalVectorComponent_<N>& operator-=(const Interval& xi)
+      {
+        _x.i(_i) -= xi;
+        return *this;
+      }
+
+      IntervalVectorComponent_<N>& operator*=(const Interval& xi)
+      {
+        _x.i(_i) *= xi;
+        return *this;
+      }
+
+      IntervalVectorComponent_<N>& operator/=(const Interval& xi)
+      {
+        _x.i(_i) /= xi;
+        return *this;
+      }
+
+      template<typename T>
+      Interval operator+(const T& x) const
+      {
+        return operator const Interval&() + x;
+      }
+
+      template<typename T>
+      Interval operator-(const T& x) const
+      {
+        return operator const Interval&() - x;
+      }
+
+      Interval& operator()()
+      {
+        return _x.i(_i);
+      }
+
+      const Interval& operator()() const
+      {
+        return _x.i(_i);
+      }
+
+      operator Interval&()
+      {
+        return _x.i(_i);
+      }
+
+      operator const Interval&() const
+      {
+        return _x.i(_i);
+      }
+
+      IntervalVectorComponent_<N>& inflate(double r)
+      {
+        _x.i(_i).inflate(r);
+        return *this;
+      }
+
+      friend std::ostream& operator<<(std::ostream& os, const IntervalVectorComponent_<N>& p)
+      {
+        os << p.operator const Interval&();
+        return os;
+      }
+
+    //protected:
+
+      IntervalVector_<N>& _x;
+      const size_t _i;
+  };*/
+
+//  class IntervalVectorConstComponent : public Interval
+//  {
+//    public:
+//
+//      IntervalVectorConstComponent(const IntervalVector& x, size_t i);
+//      const Interval& operator()() const;
+//
+//    protected:
+//
+//      const IntervalVector& _x;
+//      const size_t _i;
+//  };
+
+//  class IntervalVectorSubvector : public IntervalVector
+//  {
+//    public:
+//
+//      explicit IntervalVectorSubvector(IntervalVector& x, const std::array<size_t,2>& i);
+//      //IntervalVectorSubvector(const IntervalVectorSubvector& xi) = delete;
+//
+//      IntervalVectorSubvector& operator=(const IntervalVectorSubvector& xi);
+//      const IntervalVectorSubvector& operator=(const IntervalVectorSubvector& xi) const;
+//      IntervalVectorSubvector& operator=(const IntervalVector& xi);
+//      const IntervalVectorSubvector& operator=(const IntervalVector& xi) const;
+//      IntervalVectorSubvector& operator&=(const IntervalVector& xi);
+//      IntervalVectorSubvector& operator|=(const IntervalVector& xi);
+//      IntervalVectorSubvector& operator+=(const IntervalVector& xi);
+//      IntervalVectorSubvector& operator-=(const IntervalVector& xi);
+//      IntervalVectorSubvector& operator*=(const IntervalVector& xi);
+//      IntervalVectorSubvector& operator/=(const IntervalVector& xi);
+//
+//    //protected:
+//
+//      IntervalVector& _x;
+//      const std::array<size_t,2> _i;
+//  };
+//
+//  class IntervalVectorConstSubvector : public IntervalVector
+//  {
+//    public:
+//
+//      explicit IntervalVectorConstSubvector(const IntervalVector& x, const std::array<size_t,2>& i);
+//
+//    protected:
+//
+//      const IntervalVector& _x;
+//      const std::array<size_t,2> _i;
+//  };
 
 } // namespace codac
 

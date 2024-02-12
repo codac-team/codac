@@ -96,9 +96,14 @@ namespace codac2
         return *this;
       }
 
+      constexpr size_t size() const
+      {
+        return this->Eigen::Matrix<double,R,C>::size();
+      }
+
       void init(double x)
       {
-        for(auto i = 0 ; i < this->size() ; i++)
+        for(size_t i = 0 ; i < this->size() ; i++)
           *(this->data()+i) = x;
       }
 
@@ -117,42 +122,30 @@ namespace codac2
         return Eigen::Matrix<double,R,C>::maxCoeff();
       }
 
-      auto operator+(const Matrix_<R,C>& x) const
+      Matrix_<R,C> operator+(const Matrix_<R,C>& x) const
       {
         auto y = *this;
         return y += x;
       }
 
-      auto operator-(const Matrix_<R,C>& x) const
+      Matrix_<R,C> operator-(const Matrix_<R,C>& x) const
       {
         auto y = *this;
         return y -= x;
       }
 
-      auto operator-() const
+      Matrix_<R,C> operator-() const
       {
         return Eigen::Matrix<double,R,C>::operator-();
       }
 
-      auto operator&(const Matrix_<R,C>& x) const
-      {
-        auto y = *this;
-        return y &= x;
-      }
-
-      auto operator|(const Matrix_<R,C>& x) const
-      {
-        auto y = *this;
-        return y |= x;
-      }
-
-      auto& operator+=(const Matrix_<R,C>& x)
+      Matrix_<R,C>& operator+=(const Matrix_<R,C>& x)
       {
         (*this).noalias() += x;//.template cast<Interval>();
         return *this;
       }
       
-      auto& operator-=(const Matrix_<R,C>& x)
+      Matrix_<R,C>& operator-=(const Matrix_<R,C>& x)
       {
         (*this).noalias() -= x;//.template cast<Interval>();
         return *this;
@@ -232,7 +225,9 @@ namespace codac2
     return f;
   }
 
-  class Matrix : public Matrix_<>
+  using Matrix = Matrix_<>;
+  
+  /*class Matrix : public Matrix_<>
   {
     public:
 
@@ -261,7 +256,7 @@ namespace codac2
       explicit Matrix(const Matrix_<R,C>& v)
         : Matrix_<>(v)
       { }
-  };
+  };*/
 } // namespace codac
 
 #endif

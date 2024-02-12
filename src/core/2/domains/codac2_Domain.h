@@ -12,35 +12,42 @@
 #ifndef __CODAC2_DOMAIN_H__
 #define __CODAC2_DOMAIN_H__
 
+#include <cstdio>
 #include <vector>
+#include <string>
 
 namespace codac2
-{  
-  class DomainVolume;
-
+{
   class Domain
   {
     public:
       
+      Domain& operator=(const Domain& x)
+      {
+        _name = x._name;
+        return *this;
+      }
+
       virtual ~Domain() = default;
-      virtual DomainVolume dom_volume() const = 0;
-  };
 
-  class DomainVolume : public std::vector<double>
-  {
-    public:
-
-      DomainVolume(size_t n = 0) : std::vector<double>(n)
+      std::string name() const
       {
-
+        try {
+          return _name.empty() ? "?" : _name;
+        }
+        catch(const std::exception& e) {
+          return "!";
+        };
       }
 
-      bool update(const Domain& x)
+      void set_name(const std::string& name) const
       {
-        DomainVolume _v = *this;
-        *this = x.dom_volume();
-        return _v != *this;
+        _name = name;
       }
+
+    protected:
+
+      mutable std::string _name;
   };
 
 } // namespace codac

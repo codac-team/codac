@@ -114,6 +114,12 @@ namespace codac2
           : Eigen::Matrix<Interval,R,C>(other.template cast<Interval>())
       { }
  
+      IntervalMatrix_& operator=(const IntervalMatrix_<R,C>& other)
+      {
+        this->Eigen::Matrix<Interval,R,C>::operator=(other);
+        return *this;
+      }
+ 
       // This method allows you to assign Eigen expressions to IntervalMatrix_
       template<typename OtherDerived>
       IntervalMatrix_& operator=(const Eigen::MatrixBase<OtherDerived>& other)
@@ -145,7 +151,7 @@ namespace codac2
         return false;
       }
 
-      static IntervalMatrix_<R,C> empty_set(size_t nb_rows = R, size_t nb_cols = C)
+      static auto empty_set(size_t nb_rows = R, size_t nb_cols = C)
       {
         return IntervalMatrix_<R,C>(nb_rows, nb_cols, Interval::empty_set());
       }
@@ -153,6 +159,11 @@ namespace codac2
       static IntervalMatrix_ eye()
       {
         return Eigen::Matrix<Interval,R,C>::Identity();
+      }
+
+      auto diagonal_matrix() const
+      {
+        return this->diagonal().asDiagonal();
       }
 
       bool is_flat() const
@@ -266,14 +277,6 @@ namespace codac2
         return false;
       }
 
-      DomainVolume dom_volume() const
-      {
-        DomainVolume v(size());
-        for(size_t i = 0 ; i < size() ; i++)
-          v[i] = (this->data()+i)->diam();
-        return v;
-      }
-
       double min_diam() const
       {
         return (this->data()+extr_diam_index(true))->diam();
@@ -370,7 +373,7 @@ namespace codac2
         return selected_index;
       }
 
-      auto bisect(float ratio = 0.49) const
+      std::pair<IntervalMatrix_<R,C>,IntervalMatrix_<R,C>> bisect(float ratio = 0.49) const
       {
         size_t i = largest_diam_index();
         assert((this->data()+i)->is_bisectable());
@@ -453,7 +456,7 @@ namespace codac2
         init(Interval::empty_set());
       }
 
-      auto& inflate(double r)
+      IntervalMatrix_<R,C>& inflate(double r)
       {
         assert(r >= 0.);
         for(size_t i = 0 ; i < this->size() ; i++)
@@ -461,7 +464,7 @@ namespace codac2
         return *this;
       }
 
-      auto& inflate(const Matrix_<R,C>& r)
+      IntervalMatrix_<R,C>& inflate(const Matrix_<R,C>& r)
       {
         assert(r.minCoeff() >= 0.);
         for(size_t i = 0 ; i < this->size() ; i++)
@@ -486,7 +489,7 @@ namespace codac2
         return !(*this == x);
       }
 
-      auto& operator&=(const IntervalMatrix_<R,C>& x)
+      IntervalMatrix_<R,C>& operator&=(const IntervalMatrix_<R,C>& x)
       {
         if(!this->is_empty())
         {
@@ -499,7 +502,7 @@ namespace codac2
         return *this;
       }
 
-      auto& operator|=(const IntervalMatrix_<R,C>& x)
+      IntervalMatrix_<R,C>& operator|=(const IntervalMatrix_<R,C>& x)
       {
         if(!x.is_empty())
         {
@@ -512,49 +515,49 @@ namespace codac2
         return *this;
       }
 
-      auto operator+(const IntervalMatrix_<R,C>& x) const
+      IntervalMatrix_<R,C> operator+(const IntervalMatrix_<R,C>& x) const
       {
         auto y = *this;
         return y += x;
       }
 
-      auto operator-(const IntervalMatrix_<R,C>& x) const
+      IntervalMatrix_<R,C> operator-(const IntervalMatrix_<R,C>& x) const
       {
         auto y = *this;
         return y -= x;
       }
 
-      auto operator&(const IntervalMatrix_<R,C>& x) const
+      IntervalMatrix_<R,C> operator&(const IntervalMatrix_<R,C>& x) const
       {
         auto y = *this;
         return y &= x;
       }
 
-      auto operator|(const IntervalMatrix_<R,C>& x) const
+      IntervalMatrix_<R,C> operator|(const IntervalMatrix_<R,C>& x) const
       {
         auto y = *this;
         return y |= x;
       }
 
-      auto& operator+=(const IntervalMatrix_<R,C>& x)
+      IntervalMatrix_<R,C>& operator+=(const IntervalMatrix_<R,C>& x)
       {
         (*this).noalias() += x;//.template cast<Interval>();
         return *this;
       }
       
-      auto& operator-=(const IntervalMatrix_<R,C>& x)
+      IntervalMatrix_<R,C>& operator-=(const IntervalMatrix_<R,C>& x)
       {
         (*this).noalias() -= x;//.template cast<Interval>();
         return *this;
       }
 
-      auto& operator+=(const Matrix_<R,C>& x)
+      IntervalMatrix_<R,C>& operator+=(const Matrix_<R,C>& x)
       {
         (*this).noalias() += x.template cast<Interval>();
         return *this;
       }
       
-      auto& operator-=(const Matrix_<R,C>& x)
+      IntervalMatrix_<R,C>& operator-=(const Matrix_<R,C>& x)
       {
         (*this).noalias() -= x;//.template cast<Interval>();
         return *this;
@@ -579,7 +582,7 @@ namespace codac2
   }
 
   template<int R,int C>
-  auto operator-(const IntervalMatrix_<R,C>& x)
+  IntervalMatrix_<R,C> operator-(const IntervalMatrix_<R,C>& x)
   {
     auto y = x;
     y.init(0.);
@@ -587,12 +590,14 @@ namespace codac2
   }
 
   template<int R,int C>
-  auto operator*(double a, const IntervalMatrix_<R,C>& x)
+  IntervalMatrix_<R,C> operator*(double a, const IntervalMatrix_<R,C>& x)
   {
     return Interval(a)*x;
   }
 
-  class IntervalMatrix : public IntervalMatrix_<>
+  using IntervalMatrix = IntervalMatrix_<>;
+
+  /*class IntervalMatrix : public IntervalMatrix_<>
   {
     public:
 
@@ -626,7 +631,7 @@ namespace codac2
       {
         return IntervalMatrix_<>::empty_set(nb_rows,nb_cols);
       }
-  };
+  };*/
 
 } // namespace codac
 

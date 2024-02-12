@@ -58,6 +58,21 @@ namespace codac2
 
   }
 
+  size_t Interval::size() const
+  {
+    return 1;
+  }
+
+  double Interval::volume() const
+  {
+    return ibex::Interval::diam();
+  }
+  
+  Interval operator""_i(long double x)
+  {
+    return Interval(x);
+  }
+
   Interval sqr(const Interval& x)
   {
     return ibex::sqr(x);
@@ -78,7 +93,7 @@ namespace codac2
     return ibex::pow(x,d);
   }
 
-  Interval pow(const Interval &x, const Interval &y)
+  Interval pow(const Interval& x, const Interval& y)
   {
     return ibex::pow(x,y);
   }
@@ -163,7 +178,7 @@ namespace codac2
     return ibex::atanh(x);
   }
 
-  Interval abs(const Interval &x)
+  Interval abs(const Interval& x)
   {
     return static_cast<Interval>(ibex::abs(static_cast<ibex::Interval>(x)));
   }

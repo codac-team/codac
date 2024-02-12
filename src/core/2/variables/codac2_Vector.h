@@ -24,6 +24,8 @@ namespace codac2
   class Vector_ : public Matrix_<N,1>
   {
     public:
+
+      using VECTOR_ITEM = double;
     
       Vector_()
       { }
@@ -102,6 +104,28 @@ namespace codac2
         assert(N1 >= 0 && N1 < N && N2 >= 0 && N2 < N && N1 <= N2);
         return this->template block<N2-N1+1,1>(N1,0);
       }
+
+    public:
+
+      double& operator[](size_t i)
+      {
+        return Eigen::Matrix<double,N,1>::operator[](i);
+      }
+      
+      double operator[](size_t i) const
+      {
+        return Eigen::Matrix<double,N,1>::operator[](i);
+      }
+
+      double& i(size_t i)
+      {
+        return Eigen::Matrix<double,N,1>::operator[](i);
+      }
+
+      const double& i(size_t i) const
+      {
+        return Eigen::Matrix<double,N,1>::operator[](i);
+      }
   };
 
   template<int N>
@@ -139,7 +163,9 @@ namespace codac2
     return x_;
   }
 
-  class Vector : public Vector_<>
+  using Vector = Vector_<>;
+
+  /*class Vector : public Vector_<>
   {
     public:
 
@@ -151,7 +177,7 @@ namespace codac2
         : Vector_<>(x)
       { }
       
-      explicit Vector(std::initializer_list<double> l)
+      Vector(std::initializer_list<double> l)
         : Vector_<>(l)
       { }
       
@@ -165,7 +191,7 @@ namespace codac2
         : Vector_<>(v)
       { }
       
-  };
+  };*/
 
 } // namespace codac
 

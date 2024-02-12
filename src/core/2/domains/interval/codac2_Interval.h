@@ -1,6 +1,11 @@
 /** 
  *  \file
  *  
+ *  This class reuses many of the functions developed for ibex::Interval. 
+ *  The original IBEX code is encapsulated in Codac for allowing inheritance 
+ *  to Codac classes and also for documentation and independency purposes.
+ *  See ibex::Interval (IBEX lib, author: G. Chabert)
+ *  
  * ----------------------------------------------------------------------------
  *  \date       2023
  *  \author     Simon Rohou
@@ -13,13 +18,14 @@
 #define __CODAC2_INTERVAL_H__
 
 #include <array>
+#include <codac2_Domain.h>
 #include <ibex_Interval.h>
 
 namespace codac2
 {
   const double oo = POS_INFINITY;
 
-  class Interval : public ibex::Interval
+  class Interval : public ibex::Interval, public Domain
   {
     public:
 
@@ -30,7 +36,11 @@ namespace codac2
       Interval(std::array<double,2> array);
       Interval(const Interval& x);
       Interval(const ibex::Interval& x);
+      double volume() const;
+      size_t size() const;
   };
+
+  Interval operator""_i(long double x);
 
   /** \brief [x]^2 */
   Interval sqr(const Interval& x);
@@ -45,7 +55,7 @@ namespace codac2
   Interval pow(const Interval& x, double d);
 
   /** \brief [x]^[y]. */
-  Interval pow(const Interval &x, const Interval &y);
+  Interval pow(const Interval& x, const Interval& y);
 
   /** \brief n^{th} root of [x]. */
   Interval root(const Interval& x, int n);
@@ -96,7 +106,7 @@ namespace codac2
   Interval atanh(const Interval& x);
 
   /** \brief \f$abs([x]) = \{|x|, x\in[x]\}.\f$. */
-  Interval abs(const Interval &x);
+  Interval abs(const Interval& x);
 
   /** \brief Maximum of two intervals.
    *
