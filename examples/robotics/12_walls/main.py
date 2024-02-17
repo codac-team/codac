@@ -16,11 +16,13 @@ import numpy as np
 
 # =================== Parameters, truth and data ===================
 
+beginDrawing()
+
 v_corners = [
-  [-4,6],[2.5,6],[2.5,-1],[4.5,-1],[4.5,4],
-  [11.5,6],[19,4],[19,-1],[25,-1],[25,-5],
-  [16.5,-5],[16.5,1],[14.5,1],[14.5,-5],[8.5,-5],
-  [8.5,1],[6.5,1],[6.5,-5],[3,-5],[-4,1]
+  [-4.5,6],[2.5,6.5],[2.8,-1.2],[4.5,-0.8],[4.8,4],
+  [11.5,6],[19,4],[19.5,-1],[25,-1.5],[24.5,-4.5],
+  [16.8,-5],[16.5,1.2],[14.7,1],[14.3,-5],[8.7,-4.5],
+  [8.5,1.2],[6.5,1],[6.3,-4.8],[3,-5],[-4,1]
 ]
 
 v_walls = [] # building walls from corners
@@ -73,6 +75,11 @@ for wi in v_walls:
   v_ctc_segm.append(CtcSegment(wi.c1[0],wi.c1[1],wi.c2[0],wi.c2[1]))
   ctc_walls |= v_ctc_segm[-1]
 
+fig = VIBesFigMap("Set inversion")
+SIVIA([[-5,26],[-8.5,8.5]], ctc_walls, 0.5, fig_name="Set inversion")
+fig.set_properties(50, 50, 900, 500)
+fig.axis_limits(-5,26,-8.5,8.5)
+
 # We also use the predefined contractors ctc::polar, ctc::eval, ctc::dist,  no need to build them
 
 # =============== Adding the contractors to a network ===============
@@ -80,7 +87,6 @@ for wi in v_walls:
 cn = ContractorNetwork() # creating a network
 cn.add(ctc_f, [v, x, u]) # adding the f contractor, that is common over [t0,tf]
 
-beginDrawing()
 fig = VIBesFigMap("Map")
 fig.set_properties(50, 50, 900, 500)
 fig.add_tube(x, "x", 0, 1)
