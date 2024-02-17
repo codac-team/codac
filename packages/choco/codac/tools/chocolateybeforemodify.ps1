@@ -20,8 +20,8 @@ $newpath = ($newpath.Split(';') | Where-Object { $_ -ne "$root\bin" }) -join ';'
 [environment]::SetEnvironmentVariable("Path",$newpath,"Machine")
 
 try {
-    Get-ItemProperty -Path $CMakeSystemRepositoryPath\$CMakePackageName | Select-Object -ExpandProperty $CMakePackageName$CMakePackageVer -ErrorAction Stop | Out-Null
-    Remove-ItemProperty -Path $CMakeSystemRepositoryPath\$CMakePackageName -Name $CMakePackageName$CMakePackageVer
+    Get-ItemProperty -Path $CMakeSystemRepositoryPath\$CMakePackageName | Select-Object -ExpandProperty "$CMakePackageName$CMakePackageVer`_$arch" -ErrorAction Stop | Out-Null
+    Remove-ItemProperty -Path $CMakeSystemRepositoryPath\$CMakePackageName -Name "$CMakePackageName$CMakePackageVer`_$arch"
 }
 catch {
 
