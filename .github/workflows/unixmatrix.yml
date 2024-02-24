@@ -114,7 +114,7 @@ jobs:
         echo export BASHMINGWPATH=/c/ProgramData/mingw64/mingw${{ matrix.cfg.bitness }}/bin>>%USERPROFILE%\.bashrc
       if: (matrix.cfg.runtime=='mingw13')
     - run: |
-        choco install -y -r --no-progress eigen --version=3.4.0 ${{ matrix.cfg.choco_flags }}
+        choco install -y -r --no-progress eigen --version=3.4.0.20240224 ${{ matrix.cfg.choco_flags }}
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20231007/ibex.2.8.9.20231007.nupkg --no-check-certificate -nv
         choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20231007 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20231007/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
         del /f /q ibex.2.8.9.20231007.nupkg
@@ -151,7 +151,7 @@ jobs:
     - run: |
         if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         mkdir -p codac_standalone/example ; cd codac_standalone
-        wget https://community.chocolatey.org/api/v2/package/eigen/3.4.0 --no-check-certificate -nv ; unzip -q 3.4.0 -d eigen ; rm -Rf 3.4.0 eigen/*.xml eigen/*.nuspec eigen/_* eigen/package eigen/tools ; cd eigen/share/cmake ; if [ ${{ runner.os }} = macOS ]; then sed -i "" "s/\\/..\\/../\\/..\\/..\\/../" *.cmake ; else sed -i "s/\\/..\\/../\\/..\\/..\\/../" *.cmake ; fi ; cd .. ; mkdir eigen3 ; mv cmake eigen3/ ; cd ../..
+        wget https://community.chocolatey.org/api/v2/package/eigen/3.4.0.20240224 --no-check-certificate -nv ; unzip -q 3.4.0.20240224 -d eigen ; rm -Rf 3.4.0.20240224 eigen/*.xml eigen/*.nuspec eigen/_* eigen/package eigen/tools
         if [ ${{ runner.os }} = Windows ]; then cp -Rf /C/ProgramData/chocolatey/lib/ibex . ; rm -Rf ibex/tools ibex/ibex.*
         elif [ ${{ runner.os }} = Linux ]; then mkdir -p ibex/include ; mkdir -p ibex/lib ; mkdir -p ibex/share ; mkdir -p ibex/bin ; cp -Rf /usr/include/ibex* ibex/include/ ; cp -Rf /usr/lib/*ibex* ibex/lib/ ; cp -Rf /usr/share/*ibex* ibex/share/ ; cp -Rf /usr/share/pkgconfig ibex/share/ ; cp -Rf /usr/bin/ibex* ibex/bin/
         elif [ ${{ runner.os }} = macOS ]; then cp -Rf ../ibex .
