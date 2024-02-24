@@ -177,7 +177,8 @@ TEST_CASE("Tests from IBEX IntervalVector")
 
   SECTION("subvector06")
   {
-    CHECK(IntervalVector::empty_set(3).subvector(1,2).is_empty());
+    IntervalVector x = IntervalVector::empty_set(3);
+    CHECK(x.subvector(1,2).is_empty());
   }
 
   SECTION("cart_prod01")
@@ -703,7 +704,8 @@ TEST_CASE("Tests from IBEX IntervalVector::diff")
   SECTION("compl02")
   {
     // complementary of an empty box = (-oo,oo)x...(-oo,oo)
-    auto c = IntervalVector::empty_set(2).complementary();
+    IntervalVector x = IntervalVector::empty_set(2);
+    auto c = x.complementary();
     CHECK(c.size()==1);
     CHECK(c.front().size()==2);
     CHECK(c.front()[0]==Interval::all_reals());

@@ -197,7 +197,7 @@ namespace codac2
     assert(dt >= 0.);
     assert(!t0_tf.is_degenerated());
     for(double t = t0_tf.lb() ; t < t0_tf.ub()+dt ; t=t+dt)
-      sample(min(t0_tf.ub(),t), with_gates);
+      sample(std::min(t0_tf.ub(),t), with_gates);
   }
 
   const list<TSlice>& TDomain::tslices() const

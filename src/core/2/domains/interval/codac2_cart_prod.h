@@ -62,7 +62,7 @@ namespace codac2
   template<typename T1, typename T2, typename... Args>
   IntervalVector cart_prod(const T1& x1, const T2& x2, const Args&... xi) // recursive variadic function
   {
-    IntervalVector x_ = cart_prod_dyn(IntervalVector(x1), IntervalVector(x2));
+    IntervalVector x_ = cart_prod_dyn(x1, x2);
     if constexpr(sizeof...(xi) > 0)
       return cart_prod(x_, xi...);
     else

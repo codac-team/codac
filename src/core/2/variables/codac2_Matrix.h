@@ -224,8 +224,6 @@ namespace codac2
       *(f.data()+i) = std::fabs(*(x.data()+i));
     return f;
   }
-
-  using Matrix = Matrix_<>;
   
   /*class Matrix : public Matrix_<>
   {
@@ -257,6 +255,9 @@ namespace codac2
         : Matrix_<>(v)
       { }
   };*/
+
+  using Matrix = Matrix_<>;
+  
 } // namespace codac
 
 #endif

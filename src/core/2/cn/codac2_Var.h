@@ -1,51 +1,91 @@
 #ifndef __CODAC2_VAR__
 #define __CODAC2_VAR__
 
-#include <iostream>
-#include <vector>
-#include <memory>
-#include <functional>
-#include "codac2_Domain.h"
+#include <initializer_list>
+#include <codac2_IntervalVector.h>
+#include <codac2_IntervalMatrix.h>
 
 namespace codac2
 {
   class VarBase
   {
     public:
-      
+
+      VarBase();
       virtual ~VarBase() = default;
-      VarBase& operator=(const VarBase& x) = delete;
   };
 
   template<typename T>
-  class Var : public T, public VarBase
+  class Var_ : public T, public VarBase
   {
     public:
-      
-      Var()
-      {
 
-      }
-      
-      Var(const T& initial_value)
-        : _initial_value(initial_value)
-      {
+      Var_(T&& x) : T(x), _reset_value(std::forward<T>(x))
+      { }
 
-      }
-
-      void reset()
+      Var_& operator=(const Var_<T>& v)
       {
-        this->T::operator=(_initial_value);
+        // This method may be used for DomainCaster
+        T::operator=(v);
+        // _reset_var is not updated
+        return *this;
       }
 
-      void reset(const T& x)
+      void set_value(const T& v)
       {
-        this->T::operator=(x);
+        T::operator=(v);
+      }
+
+      void reset_to_default_value()
+      {
+        T::operator=(_reset_value);
       }
 
     protected:
 
-      T _initial_value;
+      const T _reset_value;
+  };
+
+  template<typename T>
+  class Var : public Var_<T>
+  {
+    public:
+
+      Var() : Var_<T>(T())
+      { }
+
+      template<typename... Args>
+      Var(const Args&... x) : Var_<T>(T(x...))
+      { }
+  };
+
+  // Some template specializations are performed for specific arguments that cannot be deduced, 
+  // such as initializer_lists.
+
+  template<>
+  class Var<IntervalVector> : public Var_<IntervalVector>
+  {
+    public:
+
+      Var(std::initializer_list<Interval> l) : Var_<IntervalVector>(IntervalVector(l))
+      { }
+
+      template<typename... Args>
+      Var(const Args&... x) : Var_<IntervalVector>(IntervalVector(x...))
+      { }
+  };
+
+  template<>
+  class Var<IntervalMatrix> : public Var_<IntervalMatrix>
+  {
+    public:
+
+      Var(std::initializer_list<std::initializer_list<Interval>> l) : Var_<IntervalMatrix>(IntervalMatrix(l))
+      { }
+
+      template<typename... Args>
+      Var(const Args&... x) : Var_<IntervalMatrix>(IntervalMatrix(x...))
+      { }
   };
 }
 

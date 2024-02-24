@@ -19,6 +19,7 @@
 #include "codac2_IntervalVector.h"
 #include "codac2_AbstractSlicedTube.h"
 #include "codac2_AbstractConstTube.h"
+#include "codac2_TubeEvaluation.h"
 #include "codac2_TDomain.h"
 #include "codac_ConvexPolygon.h"
 #include <codac2_Domain.h>
@@ -30,15 +31,15 @@ namespace codac2
 
   template<class T>
   class Slice;
-  template<class T>
-  class TubeEvaluation;
+  //template<class T>
+  //class TubeEvaluation;
   template<class T>
   class ConstTubeEvaluation;
   template<class T>
   class TubeComponent;
 
   template<class T>
-  class Tube : public AbstractSlicedTube, public AbstractConstTube<T,Tube<T>>
+  class Tube : public AbstractSlicedTube, public AbstractConstTube<T,Tube<T>>, public Domain
   {
     public:
 
@@ -60,7 +61,7 @@ namespace codac2
             s.set(f.eval(s.t0_tf()));
 
           else
-            s.set(f.eval_vector(s.t0_tf()));
+            s.set(to_codac2(f.eval_vector(s.t0_tf())));
 
           if(s.is_empty())
             std::cout << "IS EMPTY: " << s << std::endl;
@@ -359,6 +360,12 @@ namespace codac2
         }
 
         return true;
+      }
+
+      bool operator!=(const Tube& x) const
+      {
+        return !operator==(x);
+        // todo: implement faster operator
       }
 
       Tube operator&=(const Tube& x)

@@ -20,7 +20,7 @@
 namespace codac2
 {
   using codac::TFunction;
-  using codac::TimePropag;
+  //using codac::TimePropag;
 
   /**
    * \class CtcDiffInclusion

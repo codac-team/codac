@@ -1,90 +1,51 @@
 #ifndef __CODAC2_DOMAINNODE__
 #define __CODAC2_DOMAINNODE__
 
-#include <iostream>
-#include <vector>
+#include <string>
 #include <memory>
-#include <functional>
-#include "codac2_Domain.h"
+#include <vector>
+
+#include "codac2_ContractorNode.h"
+#include "codac2_PropagationSpan.h"
 #include "codac2_Var.h"
+#include "codac2_isbaseof.h"
 
 namespace codac2
 {
-  class Contractor;
   class ContractorNodeBase;
 
   class DomainNodeBase
   {
     public:
 
+      DomainNodeBase() {}
       virtual ~DomainNodeBase() = default;
-      virtual void print() const = 0;
-      virtual const Domain* raw_ptr() const = 0;
-      virtual bool has_been_contrated() = 0;
       virtual const std::vector<std::weak_ptr<ContractorNodeBase>>& contractors() const = 0;
-      virtual void add_ctc(const std::shared_ptr<ContractorNodeBase>& ctc) = 0;
-      virtual std::string domain_class_name() const = 0;
-      virtual void reset() = 0;
+      virtual void reset_if_var() = 0;
+      virtual bool operator==(const std::shared_ptr<DomainNodeBase>& x) const = 0;
+      virtual std::string to_string() const = 0;
       virtual bool is_var() const = 0;
-
-      friend std::ostream& operator<<(std::ostream& os, const DomainNodeBase& d);
   };
 
-  template<typename T_>
+
+  template<typename T>
+  class PropagationSpan;
+
+  template<typename T>
+  class DomainCaster;
+
+  template<typename T>
   class DomainNode : public DomainNodeBase
   {
-    using T = typename std::remove_const<T_>::type;
-
     public:
 
-      constexpr static bool _is_var = std::is_base_of<VarBase,T>::value;
+      DomainNode(T&& x)
+        : _dom_cast(std::forward<T>(x))
+      { }
 
-      std::reference_wrapper<T> make_ref(T_& x)
+      operator typename DomainCaster<T>::OutputType&()
       {
-        if constexpr (std::is_const<T_>::value)
-        {
-          _local_dom = std::make_shared<T>(x);
-          return std::ref(*_local_dom);
-        }
-        else
-          return std::ref(x);
-      }
-
-      explicit DomainNode(T_& x)
-        : _x(make_ref(x)), _volume(x.dom_volume())
-      {
-        if constexpr (std::is_const<T_>::value)
-          _raw_ptr = &x;
-        else
-          _raw_ptr = &(_x.get());
-      }
-
-      T& get()
-      {
-        return _x.get();
-      }
-
-      void print() const
-      {
-        std::cout << _x.get() << std::flush;
-      }
-
-      const Domain* raw_ptr() const
-      {
-        return _raw_ptr;
-      }
-
-      bool has_been_contrated()
-      {
-        DomainVolume new_vol = _x.get().dom_volume();
-        bool contracted = new_vol != _volume;
-        _volume = new_vol;
-        return contracted;
-      }
-
-      const std::vector<std::weak_ptr<ContractorNodeBase>>& contractors() const
-      {
-        return _v_ctc;
+        return _dom_cast.operator typename DomainCaster<T>::OutputType&();
       }
 
       void add_ctc(const std::shared_ptr<ContractorNodeBase>& ctc)
@@ -92,35 +53,43 @@ namespace codac2
         _v_ctc.push_back(ctc);
       }
 
-      std::string domain_class_name() const
+      std::shared_ptr<PropagationSpanBase> update_and_propag()
       {
-        return typeid(T).name();
+        return _dom_cast.update_and_propag();
       }
 
-      void reset()
+      const std::vector<std::weak_ptr<ContractorNodeBase>>& contractors() const
       {
-        if constexpr(_is_var)
-          _x.get().reset();
+        return _v_ctc;
       }
 
-      void reset(const T& x)
+      bool operator==(const std::shared_ptr<DomainNodeBase>& x) const
       {
-        if constexpr(_is_var)
-          _x.get().reset(x);
+        if(typeid(DomainNode<T>) != typeid(*x))
+          return false;
+        return _dom_cast == std::dynamic_pointer_cast<DomainNode<T>>(x)->_dom_cast;
       }
 
-      constexpr bool is_var() const
+      /* todo C++20: constexpr*/ bool is_var() const
       {
-        return _is_var;
+        return is_base_of_any<Var,typename std::remove_reference<T>::type>::value;
+      }
+
+      void reset_if_var()
+      {
+        if /* todo C++20: constexpr and use is_var*/constexpr(is_base_of_any<Var,typename std::remove_reference<T>::type>::value)
+          _dom_cast.operator typename DomainCaster<T>::OutputType&().reset_to_default_value();
+      }
+
+      std::string to_string() const
+      {
+        return _dom_cast.to_string();
       }
 
     protected:
 
-      std::shared_ptr<T> _local_dom = nullptr;
-      std::reference_wrapper<T> _x;
-      DomainVolume _volume;
-      std::vector<std::weak_ptr<ContractorNodeBase>> _v_ctc; // is dynamic
-      const Domain *_raw_ptr; // used as a key
+      DomainCaster<T> _dom_cast;
+      std::vector<std::weak_ptr<ContractorNodeBase>> _v_ctc;
   };
 }
 

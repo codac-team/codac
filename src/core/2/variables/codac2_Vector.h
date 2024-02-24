@@ -163,8 +163,6 @@ namespace codac2
     return x_;
   }
 
-  using Vector = Vector_<>;
-
   /*class Vector : public Vector_<>
   {
     public:
@@ -192,6 +190,8 @@ namespace codac2
       { }
       
   };*/
+
+  using Vector = Vector_<>;
 
 } // namespace codac
 

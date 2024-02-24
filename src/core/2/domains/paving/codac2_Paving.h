@@ -21,31 +21,36 @@
 
 namespace codac2
 {
-  template<int N=Dynamic>
-  class Paving;
+  template<int N>
+  class Paving_;
 
   template<int N=Dynamic>
-  class PavingNode : public std::enable_shared_from_this<PavingNode<N>>
+  class PavingNode_ : public std::enable_shared_from_this<PavingNode_<N>>
   {
     public:
 
-      explicit PavingNode(Paving<N>& paving, const IntervalVector_<N>& x)
+      explicit PavingNode_(Paving_<N>& paving, const IntervalVector_<N>& x)
        : _paving(paving), _x(x)
       { }
 
-      virtual ~PavingNode() = default;
+      virtual ~PavingNode_() = default;
 
       const IntervalVector_<N>& box() const
       {
         return _x;
       }
 
-      std::shared_ptr<PavingNode<N>> left()
+      IntervalVector_<N>& box()
+      {
+        return _x;
+      }
+
+      std::shared_ptr<PavingNode_<N>> left()
       {
         return _left;
       }
 
-      std::shared_ptr<PavingNode<N>> right()
+      std::shared_ptr<PavingNode_<N>> right()
       {
         return _right;
       }
@@ -71,11 +76,11 @@ namespace codac2
         assert(_x.is_bisectable());
         auto p = _x.bisect(ratio);
 
-        _left = std::make_shared<PavingNode<N>>(_paving, p.first);
-        _right = std::make_shared<PavingNode<N>>(_paving, p.second);
+        _left = std::make_shared<PavingNode_<N>>(_paving, p.first);
+        _right = std::make_shared<PavingNode_<N>>(_paving, p.second);
 
         auto wp = this->weak_from_this();
-        _paving._leaves.remove_if([wp](std::weak_ptr<PavingNode<N>> p)
+        _paving._leaves.remove_if([wp](std::weak_ptr<PavingNode_<N>> p)
         {
           auto swp = wp.lock(), sp = p.lock();
           if(swp && sp) return swp == sp;
@@ -89,53 +94,88 @@ namespace codac2
     protected:
 
       template<int N_>
-      friend class Paving;
+      friend class Paving_;
 
-      void recurse__boxes_list(std::list<std::reference_wrapper<const IntervalVector_<N>>>& l, const IntervalVector_<N>& intersect = IntervalVector_<N>()) const
+      void recurse__boxes_list(std::list<std::reference_wrapper<const IntervalVector_<N>>>& l, const IntervalVector_<N>& intersect) const
       {
-        if(is_leaf() && !_x.is_empty() && _x.intersects(intersect))
+        if(is_leaf() && !_x.is_empty()/* && _x.intersects(intersect)*/) // todo
           l.push_back(std::cref(_x));
         else
         {
-          if(_left) _left->recurse__boxes_list(l);
-          if(_right) _right->recurse__boxes_list(l);
+          if(_left) _left->recurse__boxes_list(l, intersect);
+          if(_right) _right->recurse__boxes_list(l, intersect);
         }
       }
 
-    public: // todo
+      void recurse__contract(IntervalVector_<N>& x)
+      {
+        if(is_leaf())
+          x &= _x;
 
+        else if(!x.intersects(_x))
+          x.set_empty();
+
+        else
+        {
+          IntervalVector_<N>& x_left(x), x_right(x);
+          if(_left) _left->recurse__contract(x_left);
+          if(_right) _right->recurse__contract(x_right);
+          x = x_left | x_right;
+        }
+      }
+
+    protected:
+
+      Paving_<N>& _paving;
       IntervalVector_<N> _x;
-      //std::weak_ptr<PavingNode<N>> _parent = nullptr;
-      std::shared_ptr<PavingNode<N>> _left = nullptr, _right = nullptr;
-      Paving<N>& _paving;
+      //std::weak_ptr<PavingNode_<N>> _parent = nullptr;
+      std::shared_ptr<PavingNode_<N>> _left = nullptr, _right = nullptr;
   };
 
-  template<int N>
-  class Paving : public Domain
+  template<int N=Dynamic>
+  class Paving_ : public Domain
   {
     public:
 
-      explicit Paving(size_t n)
-       : Paving<N>(IntervalVector_<N>(n))
-      { }
+      explicit Paving_(size_t n = N)
+       : Paving_<N>(IntervalVector_<N>(n))
+      {
+        assert(n > 0);
+      }
 
-      explicit Paving(const IntervalVector_<N>& x)
-       : _tree(std::make_shared<PavingNode<N>>(*this, IntervalVector_<N>(x)))
+      explicit Paving_(const IntervalVector_<N>& x)
+       : _tree(std::make_shared<PavingNode_<N>>(*this, x))
       {
         _leaves.push_back(_tree->weak_from_this());
       }
 
-      Paving(const Paving<N>&) = delete;
-      Paving& operator=(const Paving<N>&) = delete;
+      Paving_(const Paving_<N>& x)
+        : _leaves(x._leaves), _tree(x._tree)
+      {
+
+      }
+
+      Paving_& operator=(const Paving_<N>& x)
+      {
+        _leaves = x._leaves;
+        _tree = x._tree;
+        return *this;
+      }
+
+      size_t size() const
+      {
+        return _tree->_x.size();
+      }
 
       size_t nb_leaves() const
       {
+        update_leaves();
         return _leaves.size();
       }
 
       IntervalVector_<N> hull_box() const
       {
-        IntervalVector_<N> hull = IntervalVector_<N>::empty_set();
+        IntervalVector_<N> hull = IntervalVector_<N>::empty_set(size());
         for(const auto& l : _leaves)
           hull |= l.lock()->box();
         return hull;
@@ -156,39 +196,51 @@ namespace codac2
           vol += l.lock()->box().volume();
         return vol;
       }
-      
-      DomainVolume dom_volume() const
+
+      void update_leaves() const
       {
-        DomainVolume vol;
-        for(const auto& l : _leaves)
-          vol.push_back(l.lock()->box().volume());
-        return vol;
+        _leaves.remove_if([](std::weak_ptr<PavingNode_<N>> p)
+        {
+          auto sp = p.lock();
+          return sp->box().is_empty();
+        });
       }
 
-      std::list<std::weak_ptr<PavingNode<N>>>& leaves()
+      std::list<std::weak_ptr<PavingNode_<N>>>& leaves()
       {
+        update_leaves();
         return _leaves;
       }
 
-      std::list<std::reference_wrapper<const IntervalVector_<N>>> boxes_list(const IntervalVector_<N>& intersect = IntervalVector_<N>()) const
+      std::list<std::reference_wrapper<const IntervalVector_<N>>> boxes_list() const
+      {
+        return boxes_list(IntervalVector_<N>(size()));
+      }
+
+      std::list<std::reference_wrapper<const IntervalVector_<N>>> boxes_list(const IntervalVector_<N>& intersect) const
       {
         std::list<std::reference_wrapper<const IntervalVector_<N>>> l;
         _tree->recurse__boxes_list(l, intersect);
         return l;
       }
 
+      void contract(IntervalVector_<N>& x)
+      {
+        _tree->recurse__contract(x);
+      }
+
       template<int N_>
-      friend class PavingNode;
+      friend class PavingNode_;
       
       template<int N_>
-      friend std::ostream& operator<<(std::ostream& os, const Paving<N_>& p);
+      friend std::ostream& operator<<(std::ostream& os, const Paving_<N_>& p);
 
 
     public: // todo
 
-      using leaves_container = std::list<std::weak_ptr<PavingNode<N>>>;
-      leaves_container _leaves;
-      std::shared_ptr<PavingNode<N>> _tree; // must be a shared_ptr to allow enable_shared_from_this
+      using leaves_container = std::list<std::weak_ptr<PavingNode_<N>>>;
+      mutable leaves_container _leaves;
+      std::shared_ptr<PavingNode_<N>> _tree; // must be a shared_ptr to allow enable_shared_from_this
 
     public:
 
@@ -209,14 +261,15 @@ namespace codac2
       auto end() const   { return const_iterator(_leaves.cend()); }
   };
 
-  template<int N_>
-  inline std::ostream& operator<<(std::ostream& os, const Paving<N_>& p)
+  template<int N_=Dynamic>
+  inline std::ostream& operator<<(std::ostream& os, const Paving_<N_>& p)
   {
     size_t n = p.nb_leaves();
-    os << "Paving (" << n << " box" << (n > 1 ? "es)" : ")") << std::flush;
+    os << "Paving (" << n << " box" << (n > 1 ? "es" : "") << ", hull=" << p.hull_box() << ")" << std::flush;
     return os;
   }
 
+  using Paving = Paving_<>;
 
 } // namespace codac
 

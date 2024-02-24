@@ -15,7 +15,7 @@
 #include <pybind11/functional.h>
 #include "codac_type_caster.h"
 
-#include "codac2_Contractor.h"
+#include "codac2_Ctc.h"
 
 using namespace std;
 using namespace codac;
@@ -26,7 +26,7 @@ using namespace pybind11::literals;
 
 void export_Contractor_codac2(py::module& m)
 {
-  py::class_<codac2::ContractorNodeBase,
+  /*py::class_<codac2::ContractorNodeBase,
     std::shared_ptr<ContractorNodeBase> // this is needed to handle shared_ptr with pybind11
   > n(m, "ContractorNodeBase", "todo");
 
@@ -49,5 +49,5 @@ void export_Contractor_codac2(py::module& m)
     .def("__call__", [](codac2::Contractor1& ctc,IntervalVector_<3>& x) { return ctc(x); }, 
       "todo",
       py::return_value_policy::reference_internal)
-  ;
+  ;*/
 }

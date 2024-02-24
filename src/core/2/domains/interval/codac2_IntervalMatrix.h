@@ -175,6 +175,14 @@ namespace codac2
         return false;
       }
 
+      bool is_degenerated() const
+      {
+        for(size_t i = 0 ; i < size() ; i++)
+          if(!(this->data()+i)->is_degenerated())
+            return false;
+        return true;
+      }
+
       bool is_unbounded() const
       {
         if(is_empty()) return false;
@@ -595,8 +603,6 @@ namespace codac2
     return Interval(a)*x;
   }
 
-  using IntervalMatrix = IntervalMatrix_<>;
-
   /*class IntervalMatrix : public IntervalMatrix_<>
   {
     public:
@@ -632,6 +638,8 @@ namespace codac2
         return IntervalMatrix_<>::empty_set(nb_rows,nb_cols);
       }
   };*/
+
+  using IntervalMatrix = IntervalMatrix_<>;
 
 } // namespace codac
 

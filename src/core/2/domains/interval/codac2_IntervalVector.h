@@ -295,8 +295,6 @@ namespace codac2
     return x_;
   }
 
-  using IntervalVector = IntervalVector_<>;
-
 
   /*class IntervalVector : public IntervalVector_<>
   {
@@ -505,6 +503,8 @@ namespace codac2
 //      const IntervalVector& _x;
 //      const std::array<size_t,2> _i;
 //  };
+
+  using IntervalVector = IntervalVector_<>;
 
 } // namespace codac
 

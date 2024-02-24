@@ -46,7 +46,7 @@ namespace codac2
         return *this;
       }
 
-      explicit operator T() const
+      operator T() const
       {
         return _tube->eval(_t);
       }
@@ -74,8 +74,8 @@ namespace codac2
 
       const Interval _t;
       Tube<T>* _tube;
-      template<typename U>
-      friend class Tube;
+
+      friend class Tube<T>;
   };
 
   template<class T>
@@ -111,8 +111,8 @@ namespace codac2
 
       const Interval _t;
       const Tube<T>* _tube;
-      template<typename U>
-      friend class Tube;
+      
+      friend class Tube<T>;
   };
 }
 

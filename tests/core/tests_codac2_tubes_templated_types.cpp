@@ -22,11 +22,11 @@ TEST_CASE("Test codac2::tubes templated")
     vector<const Slice<IntervalMatrix_<2,3>>*> v;
     for(const auto& s : a)
       v.push_back(&s);
-    CHECK(v[0]->t0_tf() == Interval(-codac2::oo,2.3));
+    CHECK(v[0]->t0_tf() == Interval(-oo,2.3));
     CHECK(v[0]->codomain() == (IntervalMatrix_<2,3>()));
     CHECK(v[1]->t0_tf() == Interval(2.3));
     CHECK(v[1]->codomain() == (IntervalMatrix_<2,3>({{1.,2.,3.},{4.,5.,6.}})));
-    CHECK(v[2]->t0_tf() == Interval(2.3,codac2::oo));
+    CHECK(v[2]->t0_tf() == Interval(2.3,oo));
     CHECK(v[2]->codomain() == (IntervalMatrix_<2,3>()));
   }
 }

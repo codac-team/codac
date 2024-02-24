@@ -26,7 +26,7 @@ using namespace pybind11::literals;
 
 void export_ContractorNetwork_codac2(py::module& m)
 {
-  py::class_<codac2::ContractorNetwork> cn(m, "ContractorNetwork2", "todo");
+  /*py::class_<codac2::ContractorNetwork> cn(m, "ContractorNetwork2", "todo");
   cn
 
   // Definition
@@ -41,5 +41,5 @@ void export_ContractorNetwork_codac2(py::module& m)
     .def("contract", &ContractorNetwork::contract,
       "todo",
       "verbose"_a=true)
-  ;
+  ;*/
 }

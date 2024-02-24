@@ -29,6 +29,8 @@ namespace codac2
   {
     public:
 
+      using DegeneratedType = double;
+
       Interval();
       Interval(double a);
       Interval(double a, double b);

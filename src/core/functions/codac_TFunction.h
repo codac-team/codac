@@ -71,7 +71,7 @@ namespace codac
       const IntervalVector eval_vector(const IntervalVector& x1, const IntervalVector& x2) const;
 
       template<typename FirstArg, typename... Args>
-      const IntervalVector eval_vector(const IntervalVector& x1, const IntervalVector& x2, FirstArg& xi, Args&... xs) // recursive variadic function
+      const IntervalVector eval_vector(const IntervalVector& x1, const IntervalVector& x2, const FirstArg& xi, const Args&... xs) // recursive variadic function
       {
         IntervalVector x_ = cart_prod(x1,x2,xi);
         if constexpr(sizeof...(xs) > 0)

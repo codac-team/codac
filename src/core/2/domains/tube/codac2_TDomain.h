@@ -18,7 +18,6 @@
 #include <memory>
 
 #include "codac2_Interval.h"
-#include "codac_predef_values.h"
 
 namespace codac2
 {

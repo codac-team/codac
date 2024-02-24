@@ -183,12 +183,13 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/3rd/codac2_eigen.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_ContractorNetwork.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_ContractorNetwork.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_Contractor.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_Contractor.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_ContractorNode.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_ContractorNode.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_DomainNode.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_DomainCaster.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_DomainCaster.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_DomainNode.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_PropagationSpan.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_PropagationSpan.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_Var.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/cn/codac2_Var.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/codac2_Domain.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/interval/codac2_Interval.cpp
@@ -212,13 +213,32 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TubeComponent.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TubeEvaluation.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/paving/codac2_Paving.h
+
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_arithmetic_ctc.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_arithmetic_ctc.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_Ctc.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcAction.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcAction.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcCN.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcCN.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDeriv.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDist.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDist.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcInter.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcInter.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcLinobs.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcLinobs.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcNoCross.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcNoCross.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcPaver.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcInter.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcCN.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcPolar.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcPolar.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcUnion.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_linear_ctc.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_linear_ctc.h
+
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/variables/codac2_Matrix.h
@@ -228,9 +248,13 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/codac2_Action.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcAction.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcAction.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/tools/codac2_isbaseof.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/tools/codac2_tuples.h
                   )
 
-  set(SRC ${CODAC1_SRC} ${CODAC2_SRC})
+  set(SRC ${CODAC1_SRC} 
+    ${CODAC2_SRC}
+    )
 
 
 ################################################################################
@@ -267,7 +291,8 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/paving
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/actions/
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/variables/)
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/variables/
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/tools/)
   target_link_libraries(codac PUBLIC Ibex::ibex)
   
 

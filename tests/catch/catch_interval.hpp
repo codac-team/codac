@@ -27,6 +27,7 @@
 #include "codac_ConvexPolygon.h"
 #include "codac_TubeVector.h"
 #include "codac_Slice.h"
+#include "codac2_IntervalVector.h"
 
 namespace Catch
 {
@@ -112,6 +113,32 @@ namespace Catch
         {
           return !operator ==(rhs, lhs);
         }
+
+        // Codac2 part
+
+          explicit ApproxIntvVector(codac2::IntervalVector value) :
+              m_value(codac2::to_codac1(value))
+          {}
+
+          friend bool operator ==(codac2::IntervalVector lhs, ApproxIntvVector const& rhs)
+          {
+            return operator ==(codac2::to_codac1(lhs), rhs);
+          }
+
+          friend bool operator ==(ApproxIntvVector const& lhs, codac2::IntervalVector rhs)
+          {
+            return operator ==(codac2::to_codac1(rhs), lhs);
+          }
+
+          friend bool operator !=(codac2::IntervalVector lhs, ApproxIntvVector const& rhs)
+          {
+            return !operator ==(codac2::to_codac1(lhs), rhs);
+          }
+
+          friend bool operator !=(ApproxIntvVector const& lhs, codac2::IntervalVector rhs)
+          {
+            return !operator ==(codac2::to_codac1(rhs), lhs);
+          }
 
         std::string toString() const
         {

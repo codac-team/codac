@@ -62,7 +62,7 @@ namespace codac
       template<typename C>
       CtcUnion& operator|=(const C& c)
       {
-        assert(c.nb_var == nb_var());
+        assert(c.nb_var == nb_var);
         _v_ctc.push_back(std::make_shared<C>(c));
         return *this;
       }
