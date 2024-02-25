@@ -2,7 +2,7 @@
 
 set -e -x
 
-wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20231007/ibex_x86_64_manylinux2010.zip --no-check-certificate -nv
+wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/ibex_x86_64_manylinux2010.zip --no-check-certificate -nv
 unzip -q ibex_x86_64_manylinux2010.zip
 rm -Rf ibex_x86_64_manylinux2010.zip
 sudo cp -Rf ibex/* /usr/local/
