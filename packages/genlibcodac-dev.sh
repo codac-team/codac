@@ -12,9 +12,12 @@ REV=$6
 
 #sudo apt-get -y install dpkg-dev
 
+mkdir -p $DIST/$ARCH
 cd $DIST/$ARCH
 mkdir -p libcodac-dev/usr
 cp -Rf ../../../codac/* libcodac-dev/usr/
+mkdir -p libcodac-dev/DEBIAN
+cp -Rf ../../deb/control libcodac-dev/DEBIAN/control
 sed_param=s/Version:\ .*/Version:\ ${VER}/  
 sed -i "$sed_param" libcodac-dev/DEBIAN/control
 sed_param=s/Architecture:\ .*/Architecture:\ ${ARCH}/
