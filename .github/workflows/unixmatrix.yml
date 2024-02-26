@@ -46,9 +46,11 @@ jobs:
             - { os: windows-2019, shell: cmd, arch: x86, bitness: 32, runtime: mingw7, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 7.3.0 x86' }
             - { os: ubuntu-22.04, shell: bash, arch: amd64, bitness: 64, runtime: jammy, cmake_flags: '-fPIC', desc: 'Ubuntu 22.04' }
             - { os: ubuntu-20.04, shell: bash, arch: amd64, bitness: 64, runtime: focal, cmake_flags: '-fPIC', desc: 'Ubuntu 20.04' }
-            - { os: macos-13, shell: bash, arch: arm64, bitness: 64, runtime: ventura, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Ventura arm64' }
+            - { os: macos-14, shell: bash, arch: arm64, bitness: 64, runtime: sonoma, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Sonoma arm64' }
+            - { os: macos-14, shell: bash, arch: x86_64, bitness: 64, runtime: sonoma, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', cross: true, desc: 'macOS Sonoma x86_64 (cross)' }
+            - { os: macos-13, shell: bash, arch: arm64, bitness: 64, runtime: ventura, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', cross: true, desc: 'macOS Ventura arm64 (cross)' }
             - { os: macos-13, shell: bash, arch: x86_64, bitness: 64, runtime: ventura, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', desc: 'macOS Ventura x86_64' }
-            - { os: macos-12, shell: bash, arch: arm64, bitness: 64, runtime: monterey, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Monterey arm64' }
+            - { os: macos-12, shell: bash, arch: arm64, bitness: 64, runtime: monterey, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', cross: true, desc: 'macOS Monterey arm64 (cross)' }
             - { os: macos-12, shell: bash, arch: x86_64, bitness: 64, runtime: monterey, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', desc: 'macOS Monterey x86_64' }
     name: ${{ matrix.cfg.desc }}
     steps: 
@@ -166,7 +168,7 @@ jobs:
         ./${{ matrix.cfg.test_config }}my_project
         cd ../..
       shell: bash
-      if: (runner.os!='macOS')||(matrix.cfg.arch=='x86_64')
+      if: matrix.cfg.cross!=true
     - run: |
         if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         cd packages/choco
@@ -197,9 +199,9 @@ jobs:
       shell: bash
       if: runner.os=='Linux'
     - run: |
-        cp -Rf codac/* /usr/local/
+        sudo cp -Rf codac/* /usr/local/
       shell: bash
-      if: (runner.os=='macOS')&&(matrix.cfg.arch=='x86_64')
+      if: runner.os=='macOS'
     - uses: xresloader/upload-to-github-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -218,4 +220,4 @@ jobs:
         ./${{ matrix.cfg.test_config }}my_project
         cd ../..
       shell: bash
-      if: (runner.os!='macOS')||(matrix.cfg.arch=='x86_64')
+      if: matrix.cfg.cross!=true
