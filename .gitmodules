@@ -1,3 +1,3 @@
 [submodule "python/pybind11"]
-	path = prev_versions/v1.5.2/python/pybind11
+	path = python/pybind11
 	url = https://github.com/pybind/pybind11
