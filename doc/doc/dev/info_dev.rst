@@ -231,3 +231,11 @@ In the :file:`codac` directory, test the Ubuntu configuration locally using Dock
 
   chmod a+x scripts/docker/build_pybinding.sh
   docker run --rm -v `pwd`:/io lebarsfa/manylinux2010_x86_64-for-codac /io/scripts/docker/build_pybinding.sh
+  
+.. rubric:: MATLAB compatibility
+
+Some operators or special functions need special attention:
+
+* Square bracket operator, see e.g. ``getitem`` (``__setitem__``) and ``setitem`` (``__getitem__``) in :commit:`65784a201dda9841194fb581e689247adab07ef7`.
+* ``inter`` (``py::self & py::self``, ``__and__``, ``__rand__``), ``union`` (``py::self | py::self``, ``__or__``, ``__ror__``), ``inter_self`` (``py::self &= py::self``, ``__iand__``), ``union_self`` (``py::self |= py::self``, ``__ior__``), ``abs`` (``__abs__``), ``pow`` (``__pow__``), ``get_item`` (``__get_item__``), ``hash`` (``__hash__``) in :commit:`54966a6be0ddd6fafe64bd90fe6401822ba49587` and :commit:`a4500627cafd21a45b1d15bcb37352746482d33a` (similarly: :commit:`50b138694a2f89bca1b7d6dbff190ac364082e68`).
+* See also the bottom of https://fr.mathworks.com/help/matlab/matlab_external/differences-between-matlab-python.html and `Start a MATLAB project <../install/04-start-matlab-project.html>`_.
