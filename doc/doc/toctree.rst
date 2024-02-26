@@ -37,6 +37,14 @@ Codac: constraint-programming for robotics
 
 
 .. toctree::
+  :caption: Set4MOST
+  :maxdepth: 2
+  :titlesonly:
+
+  Examples </tutorial-set4most/01-examples/index>
+
+
+.. toctree::
   :caption: Tutorial JNRR23
   :maxdepth: 2
   :titlesonly:
