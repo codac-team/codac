@@ -30,7 +30,7 @@ for PYBIN in /opt/python/cp3*/bin; do
     auditwheel repair "$whl" -w /io/wheelhouse/
   done
   
-  "${PYBIN}/python" -m pip install "numpy<1.23" # Recent versions of numpy require GCC >= 8.4...
+  "${PYBIN}/python" -m pip install numpy
   "${PYBIN}/python" -m pip install codac --no-deps --no-index -f /io/wheelhouse
   (cd "$HOME"; "${PYBIN}/python" -m unittest discover codac.tests)
   cd /io
