@@ -230,7 +230,7 @@ In the :file:`codac` directory, test the Ubuntu configuration locally using Dock
 .. code-block:: bash
 
   chmod a+x scripts/docker/build_pybinding.sh
-  docker run --rm -v `pwd`:/io lebarsfa/manylinux2010_x86_64-for-codac /io/scripts/docker/build_pybinding.sh
+  docker run --rm -v `pwd`:/io lebarsfa/manylinux2014_x86_64-for-codac /io/scripts/docker/build_pybinding.sh
   
 .. rubric:: MATLAB compatibility
 
