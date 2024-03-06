@@ -47,3 +47,10 @@ In order to visualize the tube, you need to launch before the :ref:`VIBes viewer
 If everything is well installed on your computer, you should see the following window appear:
 
 .. Figure:: img/helloworld.png
+
+.. warning::
+
+  Octave support is more limited than MATLAB at the moment (and only briefly tested on Ubuntu 22.04 for now). `Pythonic <https://gitlab.com/gnu-octave/octave-pythonic>`_ needs to be installed to be able to call Python code from Octave. It has currently some limitations (see https://wiki.octave.org/Pythonic) such as: 
+
+  * Missing `import` command. https://gist.github.com/lebarsfa/ebc19b143df77753842f920b4b680b84#file-import-m can be loaded in Octave as a workaround.
+  * Operators such as `+`, `-`, `*`, `/`, `==`, `!=`, etc. do not seem overloaded (see https://gitlab.com/gnu-octave/octave-pythonic/-/issues/129, note that these operators are supported by MATLAB, but some others might not be supported by MATLAB either, see the bottom of https://fr.mathworks.com/help/matlab/matlab_external/differences-between-matlab-python.html). The internal methods `__add__()`, `__sub__()`, `__neg__()`, `__mul__()`, `__truediv__()`, `__eq__()`, `__ne__()`, etc. can be used instead.
