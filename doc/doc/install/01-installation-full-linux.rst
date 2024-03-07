@@ -27,7 +27,7 @@ Then, check your installation `with the instructions of this page <03-start-cpp-
 
 .. note::
 
-  For a Raspberry Pi running Raspbian Buster, download and extract ``codac_standalone_armv6hf_buster.zip`` from `<https://github.com/codac-team/codac/releases/latest/>`_, then in the ``example`` folder run:
+  For a Raspberry Pi running Raspbian Buster 32 bit, download and extract ``codac_standalone_armv6hf_buster.zip`` from `<https://github.com/codac-team/codac/releases/latest/>`_, then in the ``example`` folder run:
 
   .. code-block:: bash
 
