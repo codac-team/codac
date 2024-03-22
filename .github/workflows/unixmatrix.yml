@@ -44,8 +44,8 @@ jobs:
             - { os: windows-2019, shell: cmd, arch: x86, bitness: 32, runtime: mingw8, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 8.1.0 x86' }
             - { os: windows-2019, shell: cmd, arch: x64, bitness: 64, runtime: mingw7, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 7.3.0 x64' }
             - { os: windows-2019, shell: cmd, arch: x86, bitness: 32, runtime: mingw7, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 7.3.0 x86' }
-            - { os: ubuntu-22.04, shell: bash, arch: amd64, bitness: 64, runtime: jammy, cmake_flags: '-fPIC', desc: 'Ubuntu 22.04' }
-            - { os: ubuntu-20.04, shell: bash, arch: amd64, bitness: 64, runtime: focal, cmake_flags: '-fPIC', desc: 'Ubuntu 20.04' }
+            - { os: ubuntu-22.04, shell: bash, arch: amd64, bitness: 64, runtime: jammy, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 22.04 amd64' }
+            - { os: ubuntu-20.04, shell: bash, arch: amd64, bitness: 64, runtime: focal, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 20.04 amd64' }
             - { os: macos-14, shell: bash, arch: arm64, bitness: 64, runtime: sonoma, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Sonoma arm64' }
             - { os: macos-14, shell: bash, arch: x86_64, bitness: 64, runtime: sonoma, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', cross: true, desc: 'macOS Sonoma x86_64 (cross)' }
             - { os: macos-13, shell: bash, arch: arm64, bitness: 64, runtime: ventura, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', cross: true, desc: 'macOS Ventura arm64 (cross)' }
@@ -75,7 +75,7 @@ jobs:
       if: runner.os=='Windows'
     - run: echo "PACKAGE_VERSION=$SOFTWARE_VERSION-${DEBIAN_PACKAGE_REV}${{ matrix.cfg.runtime }}$PACKAGE_REV" >> $GITHUB_ENV
       shell: bash
-      if: runner.os=='Linux'
+      if: matrix.cfg.deb==true
     - run: |
         choco install -y -r --no-progress checksum wget zip
         rem Workaround to try solve some random package download failures...
@@ -129,7 +129,7 @@ jobs:
         sudo dpkg -i libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_${{ matrix.cfg.arch }}.deb
         rm -Rf libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_${{ matrix.cfg.arch }}.deb
       shell: bash
-      if: runner.os=='Linux'
+      if: matrix.cfg.deb==true
     - run: |
         brew install eigen
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
@@ -154,8 +154,8 @@ jobs:
         mkdir -p codac_standalone/example ; cd codac_standalone
         wget https://community.chocolatey.org/api/v2/package/eigen/3.4.0.20240224 --no-check-certificate -nv ; unzip -q 3.4.0.20240224 -d eigen ; rm -Rf 3.4.0.20240224 eigen/*.xml eigen/*.nuspec eigen/_* eigen/package eigen/tools
         if [ ${{ runner.os }} = Windows ]; then cp -Rf /C/ProgramData/chocolatey/lib/ibex . ; rm -Rf ibex/tools ibex/ibex.*
-        elif [ ${{ runner.os }} = Linux ]; then mkdir -p ibex/include ; mkdir -p ibex/lib ; mkdir -p ibex/share ; mkdir -p ibex/bin ; cp -Rf /usr/include/ibex* ibex/include/ ; cp -Rf /usr/lib/*ibex* ibex/lib/ ; cp -Rf /usr/share/*ibex* ibex/share/ ; cp -Rf /usr/share/pkgconfig ibex/share/ ; cp -Rf /usr/bin/ibex* ibex/bin/
-        elif [ ${{ runner.os }} = macOS ]; then cp -Rf ../ibex .
+        elif [ ${{ matrix.cfg.deb }} = true ]; then mkdir -p ibex/include ; mkdir -p ibex/lib ; mkdir -p ibex/share ; mkdir -p ibex/bin ; cp -Rf /usr/include/ibex* ibex/include/ ; cp -Rf /usr/lib/*ibex* ibex/lib/ ; cp -Rf /usr/share/*ibex* ibex/share/ ; cp -Rf /usr/share/pkgconfig ibex/share/ ; cp -Rf /usr/bin/ibex* ibex/bin/
+        else cp -Rf ../ibex .
         fi       
         cp -Rf ../codac . ; cp -Rf ../tests/test_codac/* ./example/ ; cd .. ; zip -q -r codac_standalone_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_standalone
       shell: bash
@@ -170,7 +170,7 @@ jobs:
       shell: bash
       if: matrix.cfg.cross!=true
     - run: |
-        if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
+        source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH
         cd packages/choco
         sed_param=s/\<version\>1\<\\/version\>/\<version\>${PACKAGE_VERSION}\<\\/version\>/
         sed -i "$sed_param" codac/codac.nuspec
@@ -193,11 +193,11 @@ jobs:
     - run: |
         cd packages
         chmod +x ./genlibcodac-dev.sh
-        ./genlibcodac-dev.sh ubuntu ${{ matrix.cfg.runtime }} ${{ matrix.cfg.arch }} $SOFTWARE_VERSION $DEBIAN_PACKAGE_REV $PACKAGE_REV
+        ./genlibcodac-dev.sh $(lsb_release -is | tr [:upper:] [:lower:]) ${{ matrix.cfg.runtime }} $(dpkg --print-architecture) $SOFTWARE_VERSION $DEBIAN_PACKAGE_REV $PACKAGE_REV
         cd ..
-        sudo dpkg -i libcodac-dev-$PACKAGE_VERSION\_${{ matrix.cfg.arch }}.deb
+        sudo dpkg -i libcodac-dev-$PACKAGE_VERSION\_$(dpkg --print-architecture).deb
       shell: bash
-      if: runner.os=='Linux'
+      if: matrix.cfg.deb==true
     - run: |
         sudo cp -Rf codac/* /usr/local/
       shell: bash
