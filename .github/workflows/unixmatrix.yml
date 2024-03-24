@@ -143,7 +143,7 @@ jobs:
         if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         mkdir build ; cd build
         cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" ..
-        cmake --build . --config Debug --target install
+        cmake --build . -j 4 --config Debug --target install
         cd ..
         sed_param=s/PATH_SUFFIXES\ /PATHS\ \$\{CMAKE_CURRENT_LIST_FILE\}\\/..\\/..\\/..\\/..\\/\ PATH_SUFFIXES\ /
         if [ ${{ runner.os }} = Windows ]; then sed -i "$sed_param" codac/share/codac/cmake/*.cmake ; fi

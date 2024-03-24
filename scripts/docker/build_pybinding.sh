@@ -18,7 +18,7 @@ for PYBIN in /opt/python/cp3*/bin; do
   "${PYBIN}/python" -m pip install --upgrade pip
   mkdir -p build_dir && cd build_dir
   cmake -E env CXXFLAGS="-fPIC" CFLAGS="-fPIC" cmake -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=OFF -DWITH_PYTHON=ON ..
-  make -j2
+  make -j4
 
   make test ARGS="-V --output-on-failure"
   echo "start of Testing/Temporary/LastTest.log"
