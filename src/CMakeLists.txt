@@ -4,6 +4,11 @@
 
 add_subdirectory(core)
 #add_subdirectory(graphics)
+
+if(WITH_PYTHON)
+  add_subdirectory(sympy)
+endif()
+
 #add_subdirectory(unsupported)
 
 

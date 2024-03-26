@@ -13,6 +13,7 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include "codac2_Interval.h"
+#include "codac2_Interval_operations.h"
 
 namespace Eigen
 {
@@ -37,12 +38,14 @@ namespace Eigen
 
 namespace codac2
 {
-  inline const Interval& conj(const Interval& x)  { return x; }
-  inline const Interval& real(const Interval& x)  { return x; }
-  inline Interval imag(const Interval&)           { return 0.; }
-  //inline Interval abs(const Interval& x)          { return codac2::abs(x); }
-  inline Interval abs2(const Interval& x)         { return codac2::sqr(x); }
-
-} // namespace codac
+  using Eigen::Dynamic;
+  
+  inline const Interval& conj(const Interval& x) { return x; }
+  inline const Interval& real(const Interval& x) { return x; }
+  inline Interval imag(const Interval&)          { return 0.; }
+  //inline Interval abs(const Interval& x)         { return codac2::abs(x); }
+  inline Interval abs2(const Interval& x)        { return codac2::sqr(x); }
+  
+} // namespace codac2
 
 #endif

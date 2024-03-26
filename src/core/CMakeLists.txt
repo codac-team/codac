@@ -4,19 +4,38 @@
 
   list(APPEND CODAC_CORE_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/codac2_eigen.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/codac2_ibex.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/codac2_ibex.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/codac2_Domain.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_Interval.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_Interval.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_Interval_operations.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_Interval_operations.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalMatrix.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalMatrixTemplate.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalVector.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Approx.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_Matrix.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_MatrixTemplate.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_Vector.h
   )
 
 ################################################################################
 # Create the target for libcodac-core
 ################################################################################
 
+  #if(NOT CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  #endif()
+
   add_library(codac-core ${CODAC_CORE_SRC})
   target_include_directories(codac-core PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/domains
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools
+    ${CMAKE_CURRENT_SOURCE_DIR}/types
   )
   target_link_libraries(codac-core PUBLIC Ibex::ibex)
   

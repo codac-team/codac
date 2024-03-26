@@ -18,36 +18,32 @@
 
 namespace codac2
 {
+  template<typename T,typename V>
   class Domain
   {
     public:
-      
-      Domain& operator=(const Domain& x)
-      {
-        _name = x._name;
-        return *this;
-      }
 
-      virtual ~Domain() = default;
-
-      std::string name() const
-      {
-        try {
-          return _name.empty() ? "?" : _name;
-        }
-        catch(const std::exception& e) {
-          return "!";
-        };
-      }
-
-      void set_name(const std::string& name) const
-      {
-        _name = name;
-      }
-
-    protected:
-
-      mutable std::string _name;
+      virtual V lb() const = 0;
+      virtual V ub() const = 0;
+      virtual V mid() const = 0;
+      virtual V rad() const = 0;
+      virtual V diam() const = 0;
+      virtual double volume() const = 0;
+      virtual void set_empty() = 0;
+      virtual bool is_empty() const = 0;
+      virtual bool contains(const V& x) const = 0;
+      virtual bool interior_contains(const V& x) const = 0;
+      virtual bool is_unbounded() const = 0;
+      virtual bool is_degenerated() const = 0;
+      virtual bool intersects(const T &x) const = 0;
+      virtual bool is_disjoint(const T& x) const = 0;
+      virtual bool overlaps(const T &x) const = 0;
+      virtual bool is_subset(const T& x) const = 0;
+      virtual bool is_strict_subset(const T& x) const = 0;
+      virtual bool is_interior_subset(const T& x) const = 0;
+      virtual bool is_strict_interior_subset(const T& x) const = 0;
+      virtual bool is_superset(const T& x) const = 0;
+      virtual bool is_strict_superset(const T& x) const = 0;
   };
 
 } // namespace codac
