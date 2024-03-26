@@ -92,5 +92,9 @@ void export_VIBesFig(py::module& m)
     .def("draw_vehicle", (void (VIBesFig::*)(double,double,double,double,const string&,const vibes::Params &))&VIBesFig::draw_vehicle,
       VIBESFIG_VOID_DRAW_VEHICLE_DOUBLE_DOUBLE_DOUBLE_DOUBLE_STRING_VIBESPARAMS,
       "x"_a, "y"_a, "heading"_a, "size"_a, "color"_a="", "params"_a=vibes::Params())
+
+    .def("draw_line", (void (VIBesFig::*)(const std::vector<double>&,const std::vector<double>&,const string&,const vibes::Params &))&VIBesFig::draw_line,
+      "todo",
+      "v_x"_a, "v_y"_a, "color"_a="", "params"_a=vibes::Params())
   ;
 }

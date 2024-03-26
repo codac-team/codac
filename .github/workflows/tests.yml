@@ -15,12 +15,12 @@ jobs:
             - { os: ubuntu-20.04, gcc_v: 8, py_v_maj: 3, py_v_min: 6, desc: 'Ubuntu 20.04 GCC 8 Python 3.6 tests' }
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: true
         fetch-depth: 0
         clean: false
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
     - run: |

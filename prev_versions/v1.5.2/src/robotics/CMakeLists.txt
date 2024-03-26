@@ -6,6 +6,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_VIBesFigMap.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/objects/codac_Beacon.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/objects/codac_Beacon.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/objects/codac_Wall.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/objects/codac_Wall.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/loops/codac_TPlane.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/loops/codac_TPlane.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/data/codac_DataLoaderLissajous.cpp

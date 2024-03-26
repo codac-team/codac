@@ -59,7 +59,30 @@ py::class_<Ctc,pyCtc> export_Ctc(py::module& m)
       py::return_value_policy::take_ownership,
       py::keep_alive<0,1>(), py::keep_alive<0,2>())
 
+    // For MATLAB compatibility.
+    .def("union", [](Ctc& c1, Ctc& c2)
+      {
+        CtcUnion *cu = new CtcUnion(2);
+        cu->add_raw_ptr(&c1);
+        cu->add_raw_ptr(&c2);
+        // todo: manage delete
+        return cu;
+      },
+      DOC_CTC_OR,
+      py::return_value_policy::take_ownership,
+      py::keep_alive<0,1>(), py::keep_alive<0,2>())
+
     .def("__and__", [](Ctc& c1, Ctc& c2)
+      {
+        return new CtcCompo(c1, c2);
+        // todo: manage delete
+      },
+      DOC_CTC_AND,
+      py::return_value_policy::take_ownership,
+      py::keep_alive<0,1>(), py::keep_alive<0,2>())
+
+    // For MATLAB compatibility.
+    .def("inter", [](Ctc& c1, Ctc& c2)
       {
         return new CtcCompo(c1, c2);
         // todo: manage delete
@@ -81,6 +104,7 @@ py::class_<Ctc,pyCtc> export_Ctc(py::module& m)
 
   // Export CtcUnion
   py::class_<CtcUnion>(m, "CtcUnion", ctc, "todo")
+    .def(py::init<int>(), "nb_var"_a)
     .def(py::init([](Ctc& c1)
       {
         CtcUnion *cu = new CtcUnion(c1.nb_var);
@@ -106,7 +130,9 @@ py::class_<Ctc,pyCtc> export_Ctc(py::module& m)
       }),
       py::keep_alive<0,1>(), py::keep_alive<0,2>(), py::keep_alive<0,3>(), "c1"_a, "c2"_a, "c3"_a)
     .def("contract", (void (Ctc::*)(IntervalVector&)) &CtcUnion::contract)
-    .def("__ior__", [](CtcUnion& cu, Ctc& c) { return cu.add_raw_ptr(&c); })
+    .def("__ior__", [](CtcUnion& cu, Ctc& c) { return cu.add_raw_ptr(&c); }, py::keep_alive<1,2>(), py::return_value_policy::take_ownership)
+    // For MATLAB compatibility.
+    .def("union_self", [](CtcUnion& cu, Ctc& c) { return cu.add_raw_ptr(&c); }, py::keep_alive<1,2>(), py::return_value_policy::take_ownership)
     ;
 
   // Export CtcCompo
