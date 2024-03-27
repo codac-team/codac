@@ -121,7 +121,12 @@ namespace codac2
 
       Matrix_<N,N> as_diag() const
       {
-        return Eigen::Matrix<double,N,N>(this->asDiagonal());
+        Matrix diag(this->size(),this->size(),0.);
+        for(size_t i = 0 ; i < (size_t)this->size() ; i++)
+          diag(i,i) = (*this)[i];
+        return diag;
+
+        //return Eigen::Matrix<double,N,N>(this->asDiagonal());
       }
 
       static Vector_<N> zeros(size_t n = N)
@@ -150,11 +155,6 @@ namespace codac2
   }
 
   using Vector = Vector_<Dynamic>;
-
-  inline Matrix diag(const Vector& v)
-  {
-    return v.as_diag();
-  }
 
 } // namespace codac
 

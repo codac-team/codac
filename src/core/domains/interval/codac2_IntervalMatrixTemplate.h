@@ -31,7 +31,7 @@ namespace codac2
   using Eigen::Dynamic;
 
   template<typename S,typename V,int R=Dynamic,int C=Dynamic>
-  class IntervalMatrixTemplate_ : public MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>, public Domain<S,V>
+  class IntervalMatrixTemplate_ : public MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>, public DomainInterface<S,V>
   {
     public:
 

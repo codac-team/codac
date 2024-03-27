@@ -114,6 +114,12 @@ namespace codac2
         : IntervalVectorTemplate_<IntervalVector,Vector>(x)
       { }
 
+      explicit IntervalVector(const IntervalVector& x)
+        : IntervalVector(x.size())
+      {
+        *this = x;
+      }
+
       template<typename OtherDerived>
       IntervalVector(const Eigen::MatrixBase<OtherDerived>& other)
         : IntervalVectorTemplate_<IntervalVector,Vector>(other)
@@ -133,30 +139,16 @@ namespace codac2
 
       IntervalMatrix as_diag() const
       {
-        return IntervalVectorTemplate_<IntervalVector,Vector>::as_diag();
+        IntervalMatrix diag(size(),size(),0.);
+        for(size_t i = 0 ; i < (size_t)size() ; i++)
+          diag(i,i) = (*this)[i];
+        return diag;
       }
 
       template<typename OtherDerived>
-      IntervalVector operator+(const Eigen::MatrixBase<OtherDerived>& x)
+      IntervalVector operator+(const Eigen::MatrixBase<OtherDerived>& x) const
       {
         return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator+(x));
-      }
-
-      IntervalVector operator-()
-      {
-        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator-());
-      }
-
-      template<typename OtherDerived>
-      IntervalVector operator-(const Eigen::MatrixBase<OtherDerived>& x)
-      {
-        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator-(x));
-      }
-
-      template<typename OtherDerived>
-      IntervalVector operator*(const Eigen::MatrixBase<OtherDerived>& x)
-      {
-        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator*(x));
       }
 
       template<typename OtherDerived>
@@ -165,10 +157,27 @@ namespace codac2
         return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator+=(x));
       }
 
+      IntervalVector operator-() const
+      {
+        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator-());
+      }
+
+      template<typename OtherDerived>
+      IntervalVector operator-(const Eigen::MatrixBase<OtherDerived>& x) const
+      {
+        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator-(x));
+      }
+
       template<typename OtherDerived>
       IntervalVector operator-=(const Eigen::MatrixBase<OtherDerived>& x)
       {
         return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator-=(x));
+      }
+
+      template<typename OtherDerived>
+      IntervalVector operator*(const Eigen::MatrixBase<OtherDerived>& x) const
+      {
+        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator*(x));
       }
 
       template<typename OtherDerived>

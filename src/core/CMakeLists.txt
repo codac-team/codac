@@ -3,9 +3,20 @@
 # ==================================================================
 
   list(APPEND CODAC_CORE_SRC
+
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/codac2_eigen.h
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/codac2_ibex.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/codac2_ibex.h
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_BoxCtc.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CollectionCtc.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCenteredForm.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcFunction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcNotIn.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcUnion.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_DirectedCtc.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_DirectedCtc.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/codac2_Domain.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_Interval.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_Interval.h
@@ -14,7 +25,21 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalMatrix.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalMatrixTemplate.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalVector.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalVectorTemplate.h
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_Arg.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_ConstValue.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_Expr.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_Expr_operations.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_Function.h
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_Sep.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepFunction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepNot.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepUnion.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Approx.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_Matrix.h
     ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_MatrixTemplate.h
     ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_Vector.h
@@ -32,8 +57,11 @@
   add_library(codac-core ${CODAC_CORE_SRC})
   target_include_directories(codac-core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors
     ${CMAKE_CURRENT_SOURCE_DIR}/domains
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval
+    ${CMAKE_CURRENT_SOURCE_DIR}/function
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators
     ${CMAKE_CURRENT_SOURCE_DIR}/tools
     ${CMAKE_CURRENT_SOURCE_DIR}/types
   )

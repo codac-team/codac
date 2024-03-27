@@ -18,10 +18,23 @@
 
 namespace codac2
 {
-  template<typename T,typename V>
   class Domain
   {
     public:
+
+      virtual ~Domain() = default;
+  };
+
+  template<typename T,typename V>
+  class DomainInterface : public Domain
+  {
+    public:
+
+      DomainInterface()
+      { }
+
+      ~DomainInterface()
+      { }
 
       virtual V lb() const = 0;
       virtual V ub() const = 0;

@@ -3,7 +3,8 @@
 # ==================================================================
 
   list(APPEND CODAC_GRAPHICS_SRC
-    #${CMAKE_CURRENT_SOURCE_DIR}/3rd/codac2_eigen.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/vibes/vibes.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/vibes/vibes.h
   )
 
 ################################################################################
@@ -12,7 +13,7 @@
 
   add_library(codac-graphics ${CODAC_GRAPHICS_SRC})
   target_include_directories(codac-graphics PUBLIC
-    #${CMAKE_CURRENT_SOURCE_DIR}/domains
+    ${CMAKE_CURRENT_SOURCE_DIR}/vibes
   )
   target_link_libraries(codac-graphics PUBLIC Ibex::ibex)
   

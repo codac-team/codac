@@ -37,7 +37,7 @@ namespace codac2
    * \note This class currently wraps the Interval class of the IBEX library.
    *       See more: https://ibex-lib.readthedocs.io
    */
-  class Interval : protected ibex::Interval, public Domain<Interval,double>
+  class Interval : protected ibex::Interval, public DomainInterface<Interval,double>
   {
     public:
 

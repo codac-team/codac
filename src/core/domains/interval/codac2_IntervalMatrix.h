@@ -103,6 +103,12 @@ namespace codac2
       IntervalMatrix(const codac2::Matrix& lb, const codac2::Matrix& ub)
         : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(lb, ub)
       { }
+
+      explicit IntervalMatrix(const IntervalMatrix& x)
+        : IntervalMatrix(x.rows(),x.cols())
+      {
+        *this = x;
+      }
       
       template<typename OtherDerived>
       IntervalMatrix(const Eigen::MatrixBase<OtherDerived>& other)
@@ -110,26 +116,9 @@ namespace codac2
       { }
 
       template<typename OtherDerived>
-      IntervalMatrix operator+(const Eigen::MatrixBase<OtherDerived>& x)
+      IntervalMatrix operator+(const Eigen::MatrixBase<OtherDerived>& x) const
       {
         return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator+(x));
-      }
-
-      IntervalMatrix operator-()
-      {
-        return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator-());
-      }
-
-      template<typename OtherDerived>
-      IntervalMatrix operator-(const Eigen::MatrixBase<OtherDerived>& x)
-      {
-        return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator-(x));
-      }
-
-      template<typename OtherDerived>
-      IntervalMatrix operator*(const Eigen::MatrixBase<OtherDerived>& x)
-      {
-        return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator*(x));
       }
 
       template<typename OtherDerived>
@@ -138,10 +127,27 @@ namespace codac2
         return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator+=(x));
       }
 
+      IntervalMatrix operator-() const
+      {
+        return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator-());
+      }
+
+      template<typename OtherDerived>
+      IntervalMatrix operator-(const Eigen::MatrixBase<OtherDerived>& x) const
+      {
+        return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator-(x));
+      }
+
       template<typename OtherDerived>
       IntervalMatrix operator-=(const Eigen::MatrixBase<OtherDerived>& x)
       {
         return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator-=(x));
+      }
+
+      template<typename OtherDerived>
+      IntervalMatrix operator*(const Eigen::MatrixBase<OtherDerived>& x) const
+      {
+        return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator*(x));
       }
 
       template<typename OtherDerived>
