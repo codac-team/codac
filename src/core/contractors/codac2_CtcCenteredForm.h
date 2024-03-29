@@ -13,20 +13,20 @@
 #define __CODAC2_CTCCENTEREDFORM__
 
 #include <map>
-#include "codac2_CtcFunction.h"
+#include "codac2_CtcInverse.h"
 #include "codac2_Expr_operations.h"
 
 namespace codac2
 {
-  class CtcCenteredForm
+  class CtcCenteredForm : public Ctc
   {
     public:
 
       CtcCenteredForm(const Function<IntervalVector>& f, const Function<IntervalMatrix>& J, const IntervalVector& y)
-        : _ctc_f(CtcFunction<IntervalVector>(f,y))
+        : _ctc_f(CtcInverse<IntervalVector>(f,y))
       {
         ArgVector x(3), z(3), m(3);
-        _ctc_g = std::make_shared<CtcFunction<IntervalVector>>(
+        _ctc_g = std::make_shared<CtcInverse<IntervalVector>>(
           Function<IntervalVector>({x,z,m}, f(m)+J(z)*(x-m)), y);
       }
 
@@ -45,7 +45,7 @@ namespace codac2
         } while(!x.is_empty() && prev_x.volume()-x.volume() > _ratio*prev_x.volume());
       }
 
-      void set_fixed_point_ratio(double r)
+      void set_fixpt_ratio(double r)
       {
         _ratio = r;
       }
@@ -53,8 +53,8 @@ namespace codac2
     protected:
 
       double _ratio = 1.;
-      CtcFunction<IntervalVector> _ctc_f;
-      std::shared_ptr<CtcFunction<IntervalVector>> _ctc_g;
+      CtcInverse<IntervalVector> _ctc_f;
+      std::shared_ptr<CtcInverse<IntervalVector>> _ctc_g;
   };
 }
 

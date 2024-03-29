@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  CtcUnion class
+ *  CtcInter class
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -9,40 +9,31 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_CTCUNION__
-#define __CODAC2_CTCUNION__
+#ifndef __CODAC2_CTCINTER__
+#define __CODAC2_CTCINTER__
 
 #include "codac2_CtcWrapper.h"
 #include "codac2_CollectionCtc.h"
 
 namespace codac2
 {
-  class CtcUnion : public CollectionCtc, public Ctc_<IntervalVector>
+  class CtcInter : public CollectionCtc, public Ctc_<IntervalVector>
   {
     public:
 
       template<typename... C>
-      CtcUnion(const C&... c) : CollectionCtc(c...)
+      CtcInter(const C&... c) : CollectionCtc(c...)
       { }
 
       void contract(IntervalVector& x) const
       {
-        auto result = x;
-        result.set_empty();
-
         for(auto& ci : _v_ctc_ptrs)
-        {
-          auto saved_x = x;
-          ci->contract(saved_x);
-          result |= saved_x;
-        }
-
-        x = result;
+          ci->contract(x);
       }
 
       template<typename C, // C should be some Ctc class
         typename = typename std::enable_if<std::is_base_of<Ctc,C>::value>::type>
-      CtcUnion& operator|=(const C& c)
+      CtcInter& operator&=(const C& c)
       {
         add_shared_ptr(std::make_shared<C>(c));
         return *this;
@@ -51,9 +42,9 @@ namespace codac2
 
   template<typename C2, // C2 should be some Ctc class
     typename = typename std::enable_if<std::is_base_of<Ctc,C2>::value>::type>
-  inline CtcUnion operator|(const CtcUnion& c1, const C2& c2)
+  inline CtcInter operator&(const CtcInter& c1, const C2& c2)
   {
-    return CtcUnion(c1,c2);
+    return CtcInter(c1,c2);
   }
 }
 

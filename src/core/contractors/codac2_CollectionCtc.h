@@ -14,7 +14,7 @@
 
 #include <vector>
 #include <memory>
-#include "codac2_BoxCtc.h"
+#include "codac2_CtcWrapper.h"
 
 namespace codac2
 {
@@ -38,15 +38,15 @@ namespace codac2
         _v_ctc_ptrs.push_back(shrd_ptr.get());
       }
 
-      void add_raw_ptr(BoxCtc *c)
+      void add_raw_ptr(Ctc_<IntervalVector> *c)
       {
         _v_ctc_ptrs.push_back(c);
       }
 
     protected:
 
-      std::vector<std::shared_ptr<BoxCtc>> _v_ctc;
-      std::vector<BoxCtc*> _v_ctc_ptrs;
+      std::vector<std::shared_ptr<Ctc_<IntervalVector>>> _v_ctc;
+      std::vector<Ctc_<IntervalVector>*> _v_ctc_ptrs;
   };
 }
 

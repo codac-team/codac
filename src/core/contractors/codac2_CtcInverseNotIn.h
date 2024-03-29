@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  CtcNotIn class
+ *  CtcInverseNotIn class
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -9,26 +9,26 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_CTCNOTIN__
-#define __CODAC2_CTCNOTIN__
+#ifndef __CODAC2_CTCINVERSENOTIN__
+#define __CODAC2_CTCINVERSENOTIN__
 
 #include <map>
 #include "codac2_CtcUnion.h"
-#include "codac2_CtcFunction.h"
+#include "codac2_CtcInverse.h"
 
 namespace codac2
 {
   template<typename T>
-  class CtcNotIn : public BoxCtc
+  class CtcInverseNotIn : public Ctc_<IntervalVector>
   {
     public:
 
-      CtcNotIn(const Function<T>& f, const T& y)
+      CtcInverseNotIn(const Function<T>& f, const T& y)
       {
         _ctc_not_in = CtcUnion(); // empty initialization
 
         for(const auto& complem_y : y.complementary())
-          _ctc_not_in |= CtcFunctionOnBox(f, complem_y);
+          _ctc_not_in |= CtcInverse_IntervalVector(f, complem_y);
       }
 
       void contract(IntervalVector& x) const

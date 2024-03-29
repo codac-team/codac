@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  SepFunction class
+ *  SepInverse class
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -9,24 +9,28 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_SEPFUNCTION__
-#define __CODAC2_SEPFUNCTION__
+#ifndef __CODAC2_SEPINVERSE__
+#define __CODAC2_SEPINVERSE__
 
 #include <map>
 #include "codac2_Sep.h"
 #include "codac2_Function.h"
-#include "codac2_CtcFunction.h"
+#include "codac2_CtcInverse.h"
 #include "codac2_CtcNotIn.h"
 
 namespace codac2
 {
   template<typename T>
-  class SepFunction : public Sep
+  class SepInverse : public Sep
   {
     public:
 
-      SepFunction(const Function<T>& f, const T& y)
+      SepInverse(const Function<T>& f, const T& y)
         : _ctc_out(f,y), _ctc_in(f,y)
+      { }
+
+      SepInverse(const Function<T>& f, const Sep& sep_y)
+        : _ctc_out(f,SepCtcOut(sep_y)), _ctc_in(f,SepCtcIn(sep_y))
       { }
 
       BoxPair separate(const IntervalVector& x) const
@@ -39,8 +43,8 @@ namespace codac2
 
     protected:
 
-      const CtcFunctionOnBox<T> _ctc_out;
-      const CtcNotIn<T> _ctc_in;
+      const CtcInverse_IntervalVector<T> _ctc_out;
+      const CtcInverseNotIn<T> _ctc_in;
   };
 }
 

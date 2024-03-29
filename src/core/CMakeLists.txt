@@ -8,12 +8,14 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/codac2_ibex.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/codac2_ibex.h
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_BoxCtc.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CollectionCtc.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_Ctc.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCenteredForm.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcFunction.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcNotIn.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInter.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverse.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverseNotIn.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcUnion.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcWrapper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_DirectedCtc.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_DirectedCtc.h
 
@@ -33,10 +35,15 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_Expr_operations.h
     ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_Function.h
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_CollectionSep.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_Sep.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepFunction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInter.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepNot.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepUnion.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepWrapper.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Approx.h
 

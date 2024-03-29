@@ -14,6 +14,7 @@
 
 #include <map>
 #include "codac2_IntervalVector.h"
+#include "codac2_CtcInverse.h"
 
 namespace codac2
 {
@@ -28,6 +29,44 @@ namespace codac2
     public:
 
       virtual BoxPair separate(const IntervalVector& x) const = 0;
+  };
+  
+  class SepCtcIn : public Ctc_<IntervalVector>
+  {
+    public:
+
+      SepCtcIn(const Sep& s)
+        : _s(s)
+      { }
+
+      void contract(IntervalVector& x) const
+      {
+        auto x_sep = _s.separate(x);
+        x &= x_sep.in;
+      }
+
+    protected:
+
+      const Sep& _s;
+  };
+
+  class SepCtcOut : public Ctc_<IntervalVector>
+  {
+    public:
+
+      SepCtcOut(const Sep& s)
+        : _s(s)
+      { }
+
+      void contract(IntervalVector& x) const
+      {
+        auto x_sep = _s.separate(x);
+        x &= x_sep.out;
+      }
+
+    protected:
+
+      const Sep& _s;
   };
 }
 

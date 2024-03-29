@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  BoxCtc class
+ *  SepProj class
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -9,19 +9,24 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_BOXCTC__
-#define __CODAC2_BOXCTC__
+#ifndef __CODAC2_SEPPROJ_H__
+#define __CODAC2_SEPPROJ_H__
 
-#include <map>
-#include "codac2_IntervalVector.h"
+#include "codac2_Sep.h"
 
 namespace codac2
 {
-  class BoxCtc
+  class SepProj : public Sep
   {
     public:
 
-      virtual void contract(IntervalVector& x) const = 0;
+      SepProj(const Sep& s, const IntervalVector& y);
+      BoxPair separate(const IntervalVector& x, double eps) const;
+
+    protected:
+
+      const Sep& _s;
+      const IntervalVector _y;
   };
 }
 
