@@ -17,7 +17,7 @@
 
 namespace codac2
 {
-  class SepNot : public CollectionSep
+  class SepNot : public CollectionSep, public Sep
   {
     public:
 
@@ -33,7 +33,7 @@ namespace codac2
 
       virtual std::shared_ptr<Sep> copy() const
       {
-        return std::dynamic_pointer_cast<SepNot>(this->CollectionSep::copy());
+        return std::make_shared<SepNot>(*this);
       }
 
       BoxPair separate(const IntervalVector& x) const

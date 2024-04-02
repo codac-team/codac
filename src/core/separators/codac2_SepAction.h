@@ -17,7 +17,7 @@
 
 namespace codac2
 {
-  class SepAction : public CollectionSep
+  class SepAction : public CollectionSep, public Sep
   {
     public:
 

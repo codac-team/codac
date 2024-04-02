@@ -15,7 +15,7 @@ using namespace codac2;
 
 std::shared_ptr<Sep> SepInter::copy() const
 {
-  return std::dynamic_pointer_cast<SepInter>(this->CollectionSep::copy());
+  return std::make_shared<SepInter>(*this);
 }
 
 BoxPair SepInter::separate(const IntervalVector& x) const

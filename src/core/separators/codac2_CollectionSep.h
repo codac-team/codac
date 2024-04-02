@@ -17,7 +17,7 @@
 
 namespace codac2
 {
-  class CollectionSep : public Sep
+  class CollectionSep
   {
     public:
 
@@ -33,20 +33,10 @@ namespace codac2
         (add_shared_ptr(std::make_shared<S>(s)), ...);
       }
 
-      virtual std::shared_ptr<Sep> copy() const
+      CollectionSep(const CollectionSep& s)
       {
-        auto cp = std::make_shared<CollectionSep>();
-
-        for(const auto& si : _v_sep)
-          cp->add_shared_ptr(si->copy());
-
-        return cp;
-      }
-
-      virtual BoxPair separate(const IntervalVector& x) const
-      {
-        assert(false && "This virtual method should not be called");
-        return { x, x};
+        for(const auto& si : s._v_sep)
+          add_shared_ptr(si->copy());
       }
 
       template<typename T>
