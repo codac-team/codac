@@ -9,8 +9,9 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_CTC__
-#define __CODAC2_CTC__
+#pragma once
+
+#include <memory>
 
 namespace codac2
 {
@@ -18,8 +19,6 @@ namespace codac2
   {
     public:
 
-
+      virtual std::shared_ptr<Ctc> copy() const = 0;
   };
 }
-
-#endif

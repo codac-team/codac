@@ -9,37 +9,30 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_SEPINTER_H__
-#define __CODAC2_SEPINTER_H__
+#pragma once
 
 #include <memory>
 #include "codac2_Sep.h"
+#include "codac2_CollectionSep.h"
+#include "codac2_SepWrapper.h"
 
 namespace codac2
 {
-  class SepInter : public CollectionSep, public Sep
+  class SepInter : public CollectionSep
   {
     public:
 
       template<typename... S>
-      SepInter(const S&... s) : CollectionSep(s...)
+      SepInter(const S&... s)
+        : CollectionSep(s...)
       { }
 
-      BoxPair separate(const IntervalVector& x) const
-      {
-        auto x_in = x;
-        x_in.set_empty();
-        auto x_out = x;
+      //explicit SepInter(const SepInter& s)
+      //  : CollectionSep(s)
+      //{ }
 
-        for(auto& si : _v_sep_ptrs)
-        {
-          auto x_sep = si->separate(x);
-          x_out &= x_sep.out;
-          x_in |= x_sep.in;
-        }
-
-        return { x_in, x_out };
-      }
+      virtual std::shared_ptr<Sep> copy() const;
+      BoxPair separate(const IntervalVector& x) const;
 
       template<typename S>
       SepInter& operator&=(const S& s)
@@ -49,12 +42,26 @@ namespace codac2
       }
   };
 
-  template<typename S2, // S2 should be some Sep class
+  template<typename S1, // S1 should be some Sep class
+    typename = typename std::enable_if<std::is_base_of<Sep,S1>::value>::type,
+           typename S2, // S2 should be some Sep class
     typename = typename std::enable_if<std::is_base_of<Sep,S2>::value>::type>
-  inline SepInter operator&(const SepInter& s1, const S2& s2)
+  inline SepInter operator&(const S1& s1, const S2& s2)
   {
     return SepInter(s1,s2);
   }
-}
 
-#endif
+  template<typename S2, // S2 should be some Sep class
+    typename = typename std::enable_if<std::is_base_of<Sep,S2>::value>::type>
+  inline SepInter operator&(const IntervalVector& s1, const S2& s2)
+  {
+    return SepInter(SepWrapper_<IntervalVector>(s1),s2);
+  }
+
+  template<typename S1, // S1 should be some Sep class
+    typename = typename std::enable_if<std::is_base_of<Sep,S1>::value>::type>
+  inline SepInter operator&(const S1& s1, const IntervalVector& s2)
+  {
+    return SepInter(s1,SepWrapper_<IntervalVector>(s2));
+  }
+}

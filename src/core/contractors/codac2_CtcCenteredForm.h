@@ -9,8 +9,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_CTCCENTEREDFORM__
-#define __CODAC2_CTCCENTEREDFORM__
+#pragma once
 
 #include <map>
 #include "codac2_CtcInverse.h"
@@ -23,11 +22,24 @@ namespace codac2
     public:
 
       CtcCenteredForm(const Function<IntervalVector>& f, const Function<IntervalMatrix>& J, const IntervalVector& y)
-        : _ctc_f(CtcInverse<IntervalVector>(f,y))
+        : _ctc_f(CtcInverse<IntervalVector>(f,y)), _J(J)
       {
         ArgVector x(3), z(3), m(3);
         _ctc_g = std::make_shared<CtcInverse<IntervalVector>>(
           Function<IntervalVector>({x,z,m}, f(m)+J(z)*(x-m)), y);
+      }
+
+      CtcCenteredForm(const CtcInverse<IntervalVector>& ctc_f, const CtcInverse<IntervalVector>& ctc_g, double ratio)
+        : _ratio(ratio), _ctc_f(ctc_f), _ctc_g(std::make_shared<CtcInverse<IntervalVector>>(ctc_g))
+      { }
+
+      CtcCenteredForm(const CtcCenteredForm& c)
+        : _ratio(c.ratio), _ctc_f(c.tc_f), _ctc_g(*c.ctc_g)
+      { }
+
+      virtual std::shared_ptr<Ctc> copy() const
+      {
+        return std::make_shared<CtcCenteredForm>(*this)
       }
 
       void contract(IntervalVector& x) const
@@ -57,5 +69,3 @@ namespace codac2
       std::shared_ptr<CtcInverse<IntervalVector>> _ctc_g;
   };
 }
-
-#endif

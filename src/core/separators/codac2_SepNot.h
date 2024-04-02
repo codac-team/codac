@@ -9,32 +9,37 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_SEPNOT__
-#define __CODAC2_SEPNOT__
+#pragma once
 
+#include <type_traits>
 #include <map>
 #include "codac2_Sep.h"
 
 namespace codac2
 {
-  class SepNot : public Sep
+  class SepNot : public CollectionSep
   {
     public:
 
-      SepNot(const Sep& s)
-        : _s(s)
+      SepNot(const IntervalVector& s)
+        : CollectionSep(SepWrapper_<IntervalVector>(s))
       { }
+
+      template<typename S, // S should be some Sep class
+        typename = typename std::enable_if<std::is_base_of<Sep,S>::value>::type>
+      SepNot(const S& s)
+        : CollectionSep(s)
+      { }
+
+      virtual std::shared_ptr<Sep> copy() const
+      {
+        return std::dynamic_pointer_cast<SepNot>(this->CollectionSep::copy());
+      }
 
       BoxPair separate(const IntervalVector& x) const
       {
-        auto x_ = _s.separate(x);
-        return { x_.out , x_.in };
+        auto x_sep = _v_sep_ptrs.front()->separate(x);
+        return { x_sep.out , x_sep.in };
       }
-
-    protected:
-
-      const Sep& _s;
   };
 }
-
-#endif

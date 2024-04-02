@@ -10,8 +10,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_APPROX_H__
-#define __CODAC2_APPROX_H__
+#pragma once
 
 #include <limits>
 namespace codac2
@@ -64,6 +63,4 @@ namespace codac2
       const T _eps;
   };
   
-}  // namespace codac2
-
-#endif
+}

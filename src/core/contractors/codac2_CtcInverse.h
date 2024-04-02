@@ -9,8 +9,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_CTCINVERSE__
-#define __CODAC2_CTCINVERSE__
+#pragma once
 
 #include <map>
 #include "codac2_Function.h"
@@ -19,19 +18,28 @@
 
 namespace codac2
 {
-  template<typename T>
+  template<typename Y>
   class CtcInverse : public Ctc
   {
     public:
 
-      CtcInverse(const Function<T>& f, const T& y)
-        : _f(f), _ctc_y(std::make_shared<CtcWrapper_<T>>(y))
+      CtcInverse(const Function<Y>& f, const Y& y)
+        : _f(f), _ctc_y(std::make_shared<CtcWrapper_<Y>>(y))
       { }
 
       template<typename C>
-      CtcInverse(const Function<T>& f, const C& ctc_y)
+      CtcInverse(const Function<Y>& f, const C& ctc_y)
         : _f(f), _ctc_y(std::make_shared<C>(ctc_y))
       { }
+
+      CtcInverse(const CtcInverse<Y>& c)
+        : _f(c._f), _ctc_y(std::dynamic_pointer_cast<Ctc_<Y>>(c._ctc_y->copy()))
+      { }
+
+      virtual std::shared_ptr<Ctc> copy() const
+      {
+        return std::make_shared<CtcInverse<Y>>(*this);
+      }
 
       template<typename... X>
       void contract(X&... x) const
@@ -47,34 +55,46 @@ namespace codac2
         _f.intersect_from_args(v, x...);
       }
 
+      const Function<Y>& function() const
+      {
+        return _f;
+      }
+
     protected:
 
-      const Function<T> _f;
-      const std::shared_ptr<Ctc_<T>> _ctc_y;
+      const Function<Y> _f;
+      const std::shared_ptr<Ctc_<Y>> _ctc_y;
   };
 
-  template<typename T>
-  class CtcInverse_IntervalVector : public Ctc_<IntervalVector>, public CtcInverse<T>
+  template<typename Y,typename X>
+  class CtcInverse_ : public Ctc_<X>, public CtcInverse<Y>
   {
     public:
 
-      CtcInverse_IntervalVector(const Function<T>& f, const T& y)
-        : CtcInverse<T>(f,y)
+      CtcInverse_(const Function<Y>& f, const Y& y)
+        : CtcInverse<Y>(f,y)
       {
         assert(f.args().size() == 1);
       }
 
-      CtcInverse_IntervalVector(const Function<T>& f, const Ctc_<T>& ctc_y)
-        : CtcInverse<T>(f,ctc_y)
+      CtcInverse_(const Function<Y>& f, const Ctc_<X>& ctc_y)
+        : CtcInverse<Y>(f,ctc_y)
       {
         assert(f.args().size() == 1);
       }
 
-      void contract(IntervalVector& x) const
+      CtcInverse_(const CtcInverse_<Y,X>& c)
+        : CtcInverse<Y>(c)
+      { }
+
+      virtual std::shared_ptr<Ctc> copy() const
       {
-        CtcInverse<T>::contract(x);
+        return this->CtcInverse<Y>::copy();
+      }
+
+      void contract(X& x) const
+      {
+        CtcInverse<Y>::contract(x);
       }
   };
 }
-
-#endif

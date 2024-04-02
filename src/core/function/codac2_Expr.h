@@ -9,8 +9,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_EXPR__
-#define __CODAC2_EXPR__
+#pragma once
 
 #include <map>
 #include <memory>
@@ -171,5 +170,3 @@ namespace codac2
       const size_t _i;
   };
 }
-
-#endif

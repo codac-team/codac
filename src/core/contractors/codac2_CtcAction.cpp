@@ -1,0 +1,26 @@
+/** 
+ *  CtcAction class
+ * ----------------------------------------------------------------------------
+ *  \date       2024
+ *  \author     Simon Rohou
+ *  \copyright  Copyright 2024 Codac Team
+ *  \license    This program is distributed under the terms of
+ *              the GNU Lesser General Public License (LGPL).
+ */
+
+#include "codac2_CtcAction.h"
+
+using namespace std;
+using namespace codac2;
+
+std::shared_ptr<Ctc> CtcAction::copy() const
+{
+  return std::make_shared<CtcAction>(*_v_ctc_ptrs.front(), _s);
+}
+
+void CtcAction::contract(IntervalVector& x) const
+{
+  IntervalVector _x(_s(x));
+  _v_ctc_ptrs.front()->contract(_x);
+  x &= __s(_x);
+}

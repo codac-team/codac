@@ -9,52 +9,52 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_SEPUNION_H__
-#define __CODAC2_SEPUNION_H__
+#pragma once
 
 #include <memory>
 #include "codac2_Sep.h"
+#include "codac2_CollectionSep.h"
+#include "codac2_SepWrapper.h"
 
 namespace codac2
 {
-  class SepUnion : public CollectionSep, public Sep
+  class SepUnion : public CollectionSep
   {
     public:
 
       template<typename... S>
-      SepUnion(const S&... s) : CollectionSep(s...)
+      SepUnion(const S&... s)
+        : CollectionSep(s...)
       { }
 
-      BoxPair separate(const IntervalVector& x) const
-      {
-        auto x_in = x;
-        auto x_out = x;
-        x_out.set_empty();
+      //explicit SepUnion(const SepUnion& s)
+      //  : CollectionSep(s)
+      //{ }
 
-        for(auto& si : _v_sep_ptrs)
-        {
-          auto x_sep = si->separate(x);
-          x_out |= x_sep.out;
-          x_in &= x_sep.in;
-        }
-
-        return { x_in, x_out };
-      }
-
-      template<typename S>
-      SepUnion& operator|=(const S& s)
-      {
-        add_shared_ptr(std::make_shared<S>(s));
-        return *this;
-      }
+      virtual std::shared_ptr<Sep> copy() const;
+      BoxPair separate(const IntervalVector& x) const;
   };
 
-  template<typename S2, // S2 should be some Sep class
+  template<typename S1, // S1 should be some Sep class
+    typename = typename std::enable_if<std::is_base_of<Sep,S1>::value>::type,
+           typename S2, // S2 should be some Sep class
     typename = typename std::enable_if<std::is_base_of<Sep,S2>::value>::type>
-  inline SepUnion operator|(const SepUnion& s1, const S2& s2)
+  inline SepUnion operator|(const S1& s1, const S2& s2)
   {
     return SepUnion(s1,s2);
   }
-}
 
-#endif
+  template<typename S2, // S2 should be some Sep class
+    typename = typename std::enable_if<std::is_base_of<Sep,S2>::value>::type>
+  inline SepUnion operator|(const IntervalVector& s1, const S2& s2)
+  {
+    return SepUnion(SepWrapper_<IntervalVector>(s1),s2);
+  }
+
+  template<typename S1, // S1 should be some Sep class
+    typename = typename std::enable_if<std::is_base_of<Sep,S1>::value>::type>
+  inline SepUnion operator|(const S1& s1, const IntervalVector& s2)
+  {
+    return SepUnion(s1,SepWrapper_<IntervalVector>(s2));
+  }
+}

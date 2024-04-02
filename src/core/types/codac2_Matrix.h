@@ -10,8 +10,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_MATRIX_H__
-#define __CODAC2_MATRIX_H__
+#pragma once
 
 #include "codac2_MatrixTemplate.h"
 
@@ -52,20 +51,8 @@ namespace codac2
       Matrix_(const Eigen::MatrixBase<OtherDerived>& other)
           : MatrixTemplate_<Matrix_<R,C>,double,R,C>(other)
       { }
-
-      double min_coeff() const
-      {
-        return Eigen::Matrix<double,R,C>::minCoeff();
-      }
-
-      double max_coeff() const
-      {
-        return Eigen::Matrix<double,R,C>::maxCoeff();
-      }
   };
 
   using Matrix = Matrix_<Dynamic,Dynamic>;
   
-} // namespace codac
-
-#endif
+}

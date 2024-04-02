@@ -608,6 +608,13 @@ TEST_CASE("IntervalVector")
   CHECK_diff({{-1,-1},{-1,1},{-1,1}}, {{0,2},{0,2},{0,2}}, true,
     {{{-1,-1},{-1,1},{-1,1}}}
   );
+
+  {
+    IntervalVector a{Interval::empty(),{-1,1}};
+    IntervalVector b{{-1,1},Interval::empty()};
+    IntervalVector c = a | b;
+    CHECK(c.is_empty());
+  }
 }
 
 #if 0

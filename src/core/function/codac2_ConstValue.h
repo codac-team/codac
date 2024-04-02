@@ -9,8 +9,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_CONSTVALUE__
-#define __CODAC2_CONSTVALUE__
+#pragma once
 
 namespace codac2
 {
@@ -52,5 +51,3 @@ namespace codac2
     return std::make_shared<ConstValueExpr<typename Wrapper<T>::Domain>>(x);
   }
 }
-
-#endif

@@ -53,6 +53,12 @@ namespace codac2
       explicit IntervalVector_(const double bounds[][2])
         : IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>(bounds)
       { }
+
+      explicit IntervalVector_(const std::vector<Interval>& x)
+        : IntervalVector_(x.size(), &x[0])
+      {
+        assert(!x.empty());
+      }
       
       explicit IntervalVector_(const Vector_<N>& lb, const Vector_<N>& ub)
         : IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>(lb, ub)

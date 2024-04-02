@@ -10,8 +10,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_VECTOR_H__
-#define __CODAC2_VECTOR_H__
+#pragma once
 
 #include "codac2_Matrix.h"
 
@@ -45,6 +44,12 @@ namespace codac2
         : Matrix_<N,1>(N,1,values)
       {
         static_assert(N != Dynamic);
+      }
+
+      explicit Vector_(const std::vector<double>& x)
+        : Vector_(x.size(), &x[0])
+      {
+        assert(!x.empty());
       }
 
       template<int M>
@@ -129,6 +134,22 @@ namespace codac2
         //return Eigen::Matrix<double,N,N>(this->asDiagonal());
       }
 
+      size_t min_coeff_index() const
+      {
+        size_t r,c;
+        Eigen::Matrix<double,N,1>::minCoeff(&r,&c);
+        assert(c == 0);
+        return r;
+      }
+
+      size_t max_coeff_index() const
+      {
+        size_t r,c;
+        Eigen::Matrix<double,N,1>::maxCoeff(&r,&c);
+        assert(c == 0);
+        return r;
+      }
+
       static Vector_<N> zeros(size_t n = N)
       {
         assert(n > 0);
@@ -156,6 +177,4 @@ namespace codac2
 
   using Vector = Vector_<Dynamic>;
 
-} // namespace codac
-
-#endif
+}

@@ -185,6 +185,19 @@ using namespace codac2;
   }
 
 
+// CtcDiv
+
+  Interval CtcDiv::fwd_eval(const Interval& x1, const Interval& x2)
+  {
+    return x1 / x2;
+  }
+
+  void CtcDiv::bwd_eval(const Interval& y, Interval& x1, Interval& x2)
+  {
+    bwd_div(y, x1, x2);
+  }
+
+
 // CtcSqrt
 
   Interval CtcSqrt::fwd_eval(const Interval& x1)
@@ -234,6 +247,19 @@ using namespace codac2;
   void CtcSin::bwd_eval(const Interval& y, Interval& x1)
   {
     bwd_sin(y, x1);
+  }
+
+
+// CtcAbs
+
+  Interval CtcAbs::fwd_eval(const Interval& x1)
+  {
+    return abs(x1);
+  }
+
+  void CtcAbs::bwd_eval(const Interval& y, Interval& x1)
+  {
+    bwd_abs(y, x1);
   }
 
 

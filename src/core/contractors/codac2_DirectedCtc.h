@@ -9,8 +9,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_DIRECTEDCTC__
-#define __CODAC2_DIRECTEDCTC__
+#pragma once
 
 #include <string>
 #include <codac2_Interval.h>
@@ -65,6 +64,12 @@ namespace codac2
     static void bwd_eval(const IntervalVector& y, IntervalMatrix& x1, IntervalVector& x2);
   };
 
+  struct CtcDiv
+  {
+    static Interval fwd_eval(const Interval& x1, const Interval& x2);
+    static void bwd_eval(const Interval& y, Interval& x1, Interval& x2);
+  };
+
   struct CtcSqrt
   {
     static Interval fwd_eval(const Interval& x1);
@@ -84,6 +89,12 @@ namespace codac2
   };
 
   struct CtcSin
+  {
+    static Interval fwd_eval(const Interval& x1);
+    static void bwd_eval(const Interval& y, Interval& x1);
+  };
+
+  struct CtcAbs
   {
     static Interval fwd_eval(const Interval& x1);
     static void bwd_eval(const Interval& y, Interval& x1);
@@ -135,5 +146,3 @@ namespace codac2
     }
   };
 }
-
-#endif

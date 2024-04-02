@@ -9,8 +9,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_EXPR_OPERATIONS__
-#define __CODAC2_EXPR_OPERATIONS__
+#pragma once
 
 #include <memory>
 #include "codac2_Expr.h"
@@ -155,6 +154,28 @@ namespace codac2
       return std::make_shared<OperationExpr<CtcMul,IntervalVector,IntervalMatrix,IntervalVector>>(x1, x2);
     }
 
+  // operator/
+    
+    inline std::shared_ptr<Expr<Interval>>
+    operator/(const std::shared_ptr<Expr<Interval>>& x1, const std::shared_ptr<Expr<Interval>>& x2)
+    {
+      return std::make_shared<OperationExpr<CtcDiv,Interval,Interval,Interval>>(x1, x2);
+    }
+
+    template<typename X1>
+    inline std::shared_ptr<Expr<Interval>>
+    operator/(const X1& x1, const std::shared_ptr<Expr<Interval>>& x2)
+    {
+      return operator/(const_value(x1), x2);
+    }
+
+    template<typename X2>
+    inline std::shared_ptr<Expr<Interval>>
+    operator/(const std::shared_ptr<Expr<Interval>>& x1, const X2& x2)
+    {
+      return operator/(x1, const_value(x2));
+    }
+
   // Other operators
 
     inline std::shared_ptr<Expr<Interval>>
@@ -181,6 +202,12 @@ namespace codac2
       return std::make_shared<OperationExpr<CtcSin,Interval,Interval>>(x1);
     }
 
+    inline std::shared_ptr<Expr<Interval>>
+    abs(const std::shared_ptr<Expr<Interval>>& x1)
+    {
+      return std::make_shared<OperationExpr<CtcAbs,Interval,Interval>>(x1);
+    }
+
   // Structural operators
 
     template<typename... X>
@@ -198,5 +225,3 @@ namespace codac2
         OperationExpr<CtcMatrix,IntervalMatrix,X...>(x...));
     }
 }
-
-#endif

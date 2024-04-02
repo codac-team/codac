@@ -9,8 +9,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_FUNCTION__
-#define __CODAC2_FUNCTION__
+#pragma once
 
 #include <map>
 #include "codac2_Expr.h"
@@ -107,5 +106,3 @@ namespace codac2
   using VectorFunction = Function<IntervalVector>;
   using MatrixFunction = Function<IntervalMatrix>;
 }
-
-#endif

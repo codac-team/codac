@@ -10,8 +10,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_MATRIXTEMPLATE_H__
-#define __CODAC2_MATRIXTEMPLATE_H__
+#pragma once
 
 #include <ostream>
 #include "codac2_eigen.h"
@@ -127,6 +126,16 @@ namespace codac2
             (*this)(i,j) = copy(i,j);
       }
 
+      double min_coeff() const
+      {
+        return Eigen::Matrix<T,R,C>::minCoeff();
+      }
+
+      double max_coeff() const
+      {
+        return Eigen::Matrix<T,R,C>::maxCoeff();
+      }
+
       static S zeros(size_t nb_rows = R, size_t nb_cols = C)
       {
         assert(nb_rows > 0 && nb_cols > 0);
@@ -170,6 +179,4 @@ namespace codac2
     return os;
   }
 
-} // namespace codac2
-
-#endif
+}

@@ -8,9 +8,16 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/codac2_ibex.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/codac2_ibex.h
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/actions/codac2_OctaSym.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/actions/codac2_OctaSym.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CollectionCtc.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_Ctc.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCenteredForm.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcAction.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcAction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.h
+    #${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCenteredForm.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverseNotIn.h
@@ -37,12 +44,22 @@
 
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_CollectionSep.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_Sep.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepAction.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepAction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCtc.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCtcPair.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCtcPair.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepEllipse.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepEllipse.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepNot.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepUnion.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepUnion.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepWrapper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepWrapper.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Approx.h
@@ -64,6 +81,7 @@
   add_library(codac-core ${CODAC_CORE_SRC})
   target_include_directories(codac-core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd
+    ${CMAKE_CURRENT_SOURCE_DIR}/actions
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors
     ${CMAKE_CURRENT_SOURCE_DIR}/domains
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval

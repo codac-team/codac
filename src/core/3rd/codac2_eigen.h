@@ -7,8 +7,7 @@
 #define EIGEN_NO_DEBUG
 #endif
 
-#ifndef __CODAC2_EIGEN_H__
-#define __CODAC2_EIGEN_H__
+#pragma once
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
@@ -46,6 +45,4 @@ namespace codac2
   //inline Interval abs(const Interval& x)         { return codac2::abs(x); }
   inline Interval abs2(const Interval& x)        { return codac2::sqr(x); }
   
-} // namespace codac2
-
-#endif
+}

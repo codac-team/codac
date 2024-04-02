@@ -9,8 +9,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_CTCINVERSENOTIN__
-#define __CODAC2_CTCINVERSENOTIN__
+#pragma once
 
 #include <map>
 #include "codac2_CtcUnion.h"
@@ -18,28 +17,35 @@
 
 namespace codac2
 {
-  template<typename T>
-  class CtcInverseNotIn : public Ctc_<IntervalVector>
+  template<typename Y,typename X>
+  class CtcInverseNotIn : public Ctc_<X>
   {
     public:
 
-      CtcInverseNotIn(const Function<T>& f, const T& y)
+      CtcInverseNotIn(const Function<Y>& f, const Y& y)
       {
-        _ctc_not_in = CtcUnion(); // empty initialization
+        _ctc_not_in = CtcUnion<X>(); // empty initialization
 
         for(const auto& complem_y : y.complementary())
-          _ctc_not_in |= CtcInverse_IntervalVector(f, complem_y);
+          _ctc_not_in |= CtcInverse_<Y,X>(f, complem_y);
       }
 
-      void contract(IntervalVector& x) const
+      CtcInverseNotIn(const CtcInverseNotIn<Y,X>& c)
+        : _ctc_not_in(c._ctc_not_in)
+      { }
+
+      virtual std::shared_ptr<Ctc> copy() const
+      {
+        return std::make_shared<CtcInverseNotIn<Y,X>>(*this);
+      }
+
+      void contract(X& x) const
       {
         _ctc_not_in.contract(x);
       }
 
     protected:
       
-      CtcUnion _ctc_not_in;
+      CtcUnion<X> _ctc_not_in;
   };
 }
-
-#endif

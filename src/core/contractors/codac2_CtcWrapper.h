@@ -9,39 +9,45 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_CTCWRAPPER__
-#define __CODAC2_CTCWRAPPER__
+#pragma once
 
 #include "codac2_Ctc.h"
 
 namespace codac2
 {
-  template<typename T>
+  template<typename X>
   class Ctc_ : public Ctc
   {
     public:
 
-      virtual void contract(T& x) const = 0;
+      virtual void contract(X& x) const = 0;
   };
 
-  template<typename T>
-  class CtcWrapper_ : public Ctc_<T>
+  template<typename X>
+  class CtcWrapper_ : public Ctc_<X>
   {
     public:
 
-      CtcWrapper_(const T& y)
+      CtcWrapper_(const X& y)
         : _y(y)
       { }
 
-      void contract(T& x) const
+      CtcWrapper_(const CtcWrapper_<X>& c)
+        : _y(c._y)
+      { }
+
+      virtual std::shared_ptr<Ctc> copy() const
+      {
+        return std::make_shared<CtcWrapper_<X>>(*this);
+      }
+
+      virtual void contract(X& x) const
       {
         x &= _y;
       }
 
     protected:
 
-      const T _y;
+      const X _y;
   };
 }
-
-#endif

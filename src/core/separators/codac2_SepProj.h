@@ -9,8 +9,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_SEPPROJ_H__
-#define __CODAC2_SEPPROJ_H__
+#pragma once
 
 #include "codac2_Sep.h"
 
@@ -29,5 +28,3 @@ namespace codac2
       const IntervalVector _y;
   };
 }
-
-#endif

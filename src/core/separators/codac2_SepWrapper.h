@@ -9,10 +9,12 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_SEPWRAPPER__
-#define __CODAC2_SEPWRAPPER__
+#pragma once
 
 #include "codac2_Sep.h"
+#include "codac2_SepCtcPair.h"
+#include "codac2_CtcWrapper.h"
+#include "codac2_CtcUnion.h"
 
 namespace codac2
 {
@@ -31,29 +33,23 @@ namespace codac2
   };
 
   template<>
-  class SepWrapper_<IntervalVector> : public Sep
+  class SepWrapper_<IntervalVector> : public SepCtcPair
   {
     public:
 
       SepWrapper_(const IntervalVector& y)
-        : _y(y)
-      { }
-
-      BoxPair separate(const IntervalVector& x) const
+        : SepCtcPair(CtcUnion<IntervalVector>(),CtcWrapper_<IntervalVector>(y)), _y(y)
       {
-        IntervalVector x_in = x;
-        x_in.set_empty();
-
-        for(const auto& di : IntervalVector(x.size()).diff(_y))
-          x_in |= x & di;
-
-        return { x_in, x & _y };
+        for(const auto& complem_y : y.complementary())
+          *std::dynamic_pointer_cast<CtcUnion<IntervalVector>>(_ctc_in)
+            |= CtcWrapper_<IntervalVector>(complem_y);
       }
+
+      virtual std::shared_ptr<Sep> copy() const;
+      BoxPair separate(const IntervalVector& x) const;
 
     protected:
 
       const IntervalVector _y;
   };
 }
-
-#endif

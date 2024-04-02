@@ -10,8 +10,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_IBEX_H__
-#define __CODAC2_IBEX_H__
+#pragma once
 
 #include <ibex_Interval.h>
 #include <ibex_Vector.h>
@@ -155,6 +154,4 @@ namespace codac2
     cast_matrix(codac2::IntervalMatrix,to_codac,nb_rows,nb_cols,x_(i,j),x[i][j]);
   }
 
-} // namespace codac2
-
-#endif
+}

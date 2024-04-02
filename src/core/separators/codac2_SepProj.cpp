@@ -36,7 +36,7 @@ namespace codac2
       auto y0 = l.front().second;
       l.pop_front();
 
-      x0 &= x_in;
+      // ? x0 &= x_in;
       auto x_sep = _s.separate(x0);
       auto x_boundary = x_sep.in & x_sep.out;
 

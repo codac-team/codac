@@ -9,8 +9,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_DOMAIN_H__
-#define __CODAC2_DOMAIN_H__
+#pragma once
 
 #include <cstdio>
 #include <vector>
@@ -59,6 +58,4 @@ namespace codac2
       virtual bool is_strict_superset(const T& x) const = 0;
   };
 
-} // namespace codac
-
-#endif
+}

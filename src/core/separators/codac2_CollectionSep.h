@@ -9,25 +9,44 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_COLLECTIONSEP_H__
-#define __CODAC2_COLLECTIONSEP_H__
+#pragma once
 
+#include <type_traits>
 #include <memory>
 #include "codac2_Sep.h"
 
 namespace codac2
 {
-  class CollectionSep
+  class CollectionSep : public Sep
   {
     public:
 
       CollectionSep()
       { }
 
-      template<typename... S>
+      template<typename... S, // S should be some Sep class
+        typename = typename std::enable_if<
+          (true && ... && std::is_base_of<Sep,S>::value), void
+        >::type>
       CollectionSep(const S&... s)
       {
         (add_shared_ptr(std::make_shared<S>(s)), ...);
+      }
+
+      virtual std::shared_ptr<Sep> copy() const
+      {
+        auto cp = std::make_shared<CollectionSep>();
+
+        for(const auto& si : _v_sep)
+          cp->add_shared_ptr(si->copy());
+
+        return cp;
+      }
+
+      virtual BoxPair separate(const IntervalVector& x) const
+      {
+        assert(false && "This virtual method should not be called");
+        return { x, x};
       }
 
       template<typename T>
@@ -42,11 +61,9 @@ namespace codac2
         _v_sep_ptrs.push_back(s);
       }
 
-    protected:
+    //protected:
 
       std::vector<std::shared_ptr<Sep>> _v_sep;
       std::vector<Sep*> _v_sep_ptrs;
   };
 }
-
-#endif

@@ -184,9 +184,10 @@ namespace codac2
         return selected_index;
       }
 
-      std::pair<S,S> bisect(float ratio = 0.49) const
+      // In the doc: one could use i=largest_diam_index()
+      // for auto bisection on largest dimension
+      std::pair<S,S> bisect(size_t i, float ratio = 0.49) const
       {
-        size_t i = largest_diam_index();
         assert((this->data()+i)->is_bisectable());
         assert(Interval(0,1).interior_contains(ratio));
 
@@ -593,18 +594,25 @@ namespace codac2
         return !(*this == x);
       }
 
-      template<typename OtherDerived>
-      auto operator&=(const Eigen::MatrixBase<OtherDerived>& x)
+      auto operator&=(const S& x)
       {
+        if(x.is_empty())
+        {
+          set_empty();
+          return *this;
+        }
+        
         for(int i = 0 ; i < this->rows() ; i++)
           for(int j = 0 ; j < this->cols() ; j++)
             (*this)(i,j) &= x(i,j);
         return *this;
       }
 
-      template<typename OtherDerived>
-      auto operator|=(const Eigen::MatrixBase<OtherDerived>& x)
+      auto operator|=(const S& x)
       {
+        if(x.is_empty())
+          return *this;
+
         for(int i = 0 ; i < this->rows() ; i++)
           for(int j = 0 ; j < this->cols() ; j++)
             (*this)(i,j) |= x(i,j);

@@ -1,0 +1,26 @@
+/** 
+ *  SepAction class
+ * ----------------------------------------------------------------------------
+ *  \date       2024
+ *  \author     Simon Rohou
+ *  \copyright  Copyright 2024 Codac Team
+ *  \license    This program is distributed under the terms of
+ *              the GNU Lesser General Public License (LGPL).
+ */
+
+#include "codac2_SepAction.h"
+
+using namespace std;
+using namespace codac2;
+
+std::shared_ptr<Sep> SepAction::copy() const
+{
+  return std::make_shared<SepAction>(_v_sep_ptrs.front()->copy(), _s);
+}
+
+BoxPair SepAction::separate(const IntervalVector& x) const
+{
+  IntervalVector _x(_s(x));
+  auto x_sep = _v_sep_ptrs.front()->separate(_x);
+  return { __s(x_sep.in), __s(x_sep.out) };
+}
