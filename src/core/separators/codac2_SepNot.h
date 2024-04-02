@@ -12,23 +12,25 @@
 #pragma once
 
 #include <type_traits>
-#include <map>
 #include "codac2_Sep.h"
+#include "codac2_SepWrapper.h"
+#include "codac2_Collection.h"
 
 namespace codac2
 {
-  class SepNot : public CollectionSep, public Sep
+  class SepNot : public Sep
   {
     public:
 
       SepNot(const IntervalVector& s)
-        : CollectionSep(SepWrapper_<IntervalVector>(s))
+        : _sep(SepWrapper_<IntervalVector>(s))
       { }
 
-      template<typename S, // S should be some Sep class
-        typename = typename std::enable_if<std::is_base_of<Sep,S>::value>::type>
+      template<typename S, typename = typename std::enable_if<
+          std::is_base_of_v<Sep,S>
+        >::type>
       SepNot(const S& s)
-        : CollectionSep(s)
+        : _sep(s)
       { }
 
       virtual std::shared_ptr<Sep> copy() const
@@ -38,8 +40,12 @@ namespace codac2
 
       BoxPair separate(const IntervalVector& x) const
       {
-        auto x_sep = _v_sep_ptrs.front()->separate(x);
+        auto x_sep = _sep.front().separate(x);
         return { x_sep.out , x_sep.in };
       }
+
+    protected:
+
+      const Collection<Sep> _sep;
   };
 }

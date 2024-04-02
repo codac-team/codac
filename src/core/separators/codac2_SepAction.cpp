@@ -15,12 +15,12 @@ using namespace codac2;
 
 std::shared_ptr<Sep> SepAction::copy() const
 {
-  return std::make_shared<SepAction>(_v_sep_ptrs.front()->copy(), _s);
+  return std::make_shared<SepAction>(*this);
 }
 
 BoxPair SepAction::separate(const IntervalVector& x) const
 {
   IntervalVector _x(_s(x));
-  auto x_sep = _v_sep_ptrs.front()->separate(_x);
+  auto x_sep = _sep.front().separate(_x);
   return { __s(x_sep.in), __s(x_sep.out) };
 }

@@ -30,10 +30,6 @@ namespace codac2
           _ctc_not_in |= CtcInverse_<Y,X>(f, complem_y);
       }
 
-      CtcInverseNotIn(const CtcInverseNotIn<Y,X>& c)
-        : _ctc_not_in(c._ctc_not_in)
-      { }
-
       virtual std::shared_ptr<Ctc> copy() const
       {
         return std::make_shared<CtcInverseNotIn<Y,X>>(*this);

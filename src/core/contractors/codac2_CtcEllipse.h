@@ -12,7 +12,6 @@
 #pragma once
 
 #include "codac2_CtcWrapper.h"
-#include "codac2_IntervalVector.h"
 #include "codac2_OctaSym.h"
 
 namespace codac2

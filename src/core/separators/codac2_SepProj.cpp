@@ -16,10 +16,9 @@ using namespace std;
 
 namespace codac2
 {
-  SepProj::SepProj(const Sep& s, const IntervalVector& y)
-    : _s(s), _y(y)
+  BoxPair SepProj::separate(const IntervalVector& x) const
   {
-
+    return separate(x, 0.1); // for removing virtuality
   }
 
   BoxPair SepProj::separate(const IntervalVector& x, double eps) const

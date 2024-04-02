@@ -13,21 +13,15 @@
 using namespace std;
 using namespace codac2;
 
-SepCtcPair::SepCtcPair(std::shared_ptr<Ctc_<IntervalVector>> ctc_in, std::shared_ptr<Ctc_<IntervalVector>> ctc_out)
-  : _ctc_in(ctc_in), _ctc_out(ctc_out)
-{ }
-
 std::shared_ptr<Sep> SepCtcPair::copy() const
 {
-  return std::make_shared<SepCtcPair>(
-    std::dynamic_pointer_cast<Ctc_<IntervalVector>>(_ctc_in->copy()),
-    std::dynamic_pointer_cast<Ctc_<IntervalVector>>(_ctc_out->copy()));
+  return std::make_shared<SepCtcPair>(*this);
 }
 
 BoxPair SepCtcPair::separate(const IntervalVector& x) const
 {
   IntervalVector x_in(x), x_out(x);
-  _ctc_in->contract(x_in);
-  _ctc_out->contract(x_out);
+  _ctc_in_out.front().contract(x_in);
+  _ctc_in_out.back().contract(x_out);
   return { x_in, x_out };
 }

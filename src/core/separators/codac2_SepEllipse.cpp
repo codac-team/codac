@@ -21,12 +21,12 @@ SepEllipse::SepEllipse(const Vector& q)
 
 std::shared_ptr<Sep> SepEllipse::copy() const
 {
-  return std::make_shared<SepEllipse>(_ctc.q());
+  return std::make_shared<SepEllipse>(*this);
 }
 
 bool test_ellipse(const Vector& x, const Vector& q)
 {
-  // todo: Interval evalution:
+  // todo: Interval evaluation:
   return q[0]
        + q[1]*x[0]
        + q[2]*x[1]

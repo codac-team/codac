@@ -12,7 +12,8 @@
 #pragma once
 
 #include "codac2_Sep.h"
-#include "codac2_CollectionCtc.h"
+#include "codac2_CtcWrapper.h"
+#include "codac2_Collection.h"
 
 namespace codac2
 {
@@ -20,21 +21,19 @@ namespace codac2
   {
     public:
 
-      template<typename C1, // C1 should be some Ctc_<IntervalVector> class
-        typename = typename std::enable_if<std::is_base_of<Ctc_<IntervalVector>,C1>::value>::type,
-               typename C2, // C2 should be some Ctc_<IntervalVector> class
-        typename = typename std::enable_if<std::is_base_of<Ctc_<IntervalVector>,C2>::value>::type>
+      template<typename C1, typename C2, typename = typename std::enable_if<(
+          std::is_base_of_v<Ctc_<IntervalVector>,C1> &&
+          std::is_base_of_v<Ctc_<IntervalVector>,C2>
+        )>::type>
       SepCtcPair(const C1& ctc_in, const C2& ctc_out)
-        : SepCtcPair(std::make_shared<C1>(ctc_in),std::make_shared<C2>(ctc_out))
+        : _ctc_in_out(ctc_in, ctc_out)
       { }
-
-      SepCtcPair(std::shared_ptr<Ctc_<IntervalVector>> ctc_in, std::shared_ptr<Ctc_<IntervalVector>> ctc_out);
 
       virtual std::shared_ptr<Sep> copy() const;
       virtual BoxPair separate(const IntervalVector& x) const;
 
     protected:
 
-      const std::shared_ptr<Ctc_<IntervalVector>> _ctc_in, _ctc_out;
+      Collection<Ctc_<IntervalVector>> _ctc_in_out;
   };
 }

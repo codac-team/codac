@@ -13,52 +13,59 @@
 
 #include <type_traits>
 #include "codac2_CtcWrapper.h"
-#include "codac2_CollectionCtc.h"
+#include "codac2_Collection.h"
 
 namespace codac2
 {
   template<typename X>
-  class CtcInter : public CollectionCtc<X>//, public Ctc_<X>
+  class CtcInter : public Ctc_<X>
   {
     public:
 
-      template<typename... C, // C should be some Ctc_<X> class
-        typename = typename std::enable_if<
-          (true && ... && std::is_base_of<Ctc_<X>,C>::value), void
-        >::type>
-      CtcInter(const C&... c)
-        : CollectionCtc<X>(c...)
+      template<typename C, typename = typename std::enable_if<(
+          std::is_base_of_v<Ctc_<X>,C> &&
+          !std::is_same_v<CtcInter,C>
+        ), void>::type>
+      CtcInter(const C& c)
+        : _ctcs(c)
       { }
 
-      //explicit CtcInter(const CtcInter<X>& c)
-      //  : CollectionCtc<X>(c)
-      //{ }
+      template<typename... C, typename = typename std::enable_if<(true && ... && (
+          std::is_base_of_v<Ctc_<X>,C>
+        )), void>::type>
+      CtcInter(const C&... c)
+        : _ctcs(c...)
+      { }
 
       virtual std::shared_ptr<Ctc> copy() const
       {
-        return std::dynamic_pointer_cast<CtcInter<X>>(this->CollectionCtc<X>::copy());
+        return std::make_shared<CtcInter<X>>(*this);
       }
 
       void contract(X& x) const
       {
-        for(auto& ci : this->_v_ctc_ptrs)
+        for(const auto& ci : _ctcs)
           ci->contract(x);
       }
 
-      template<typename C, // C should be some Ctc_<X> class
-        typename = typename std::enable_if<std::is_base_of<Ctc_<X>,C>::value>::type>
+      template<typename C, typename = typename std::enable_if<
+          std::is_base_of_v<Ctc_<X>,C>
+        >::type>
       CtcInter<X>& operator&=(const C& c)
       {
-        this->add_shared_ptr(std::make_shared<C>(c));
+        _ctcs.add_shared_ptr(std::make_shared<C>(c));
         return *this;
       }
+
+    protected:
+
+      Collection<Ctc_<X>> _ctcs;
   };
 
-  template<typename X,
-    typename C1, // C1 should be some Ctc class
-    typename = typename std::enable_if<std::is_base_of<Ctc_<X>,C1>::value>::type,
-    typename C2, // C2 should be some Ctc class
-    typename = typename std::enable_if<std::is_base_of<Ctc_<X>,C2>::value>::type>
+  template<typename X, typename C1, typename C2, typename = typename std::enable_if<(
+      std::is_base_of_v<Ctc_<X>,C1> &&
+      std::is_base_of_v<Ctc_<X>,C2>
+    )>>
   inline CtcInter<X> operator&(const C1& c1, const C2& c2)
   {
     return CtcInter<X>(c1,c2);

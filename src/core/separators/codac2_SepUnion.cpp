@@ -23,7 +23,7 @@ BoxPair SepUnion::separate(const IntervalVector& x) const
   auto x_in = x;
   auto x_out = IntervalVector::empty(x.size());
 
-  for(const auto& si : _v_sep_ptrs)
+  for(const auto& si : _seps)
   {
     auto x_sep = si->separate(x);
     x_out |= x_sep.out;

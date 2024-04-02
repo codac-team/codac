@@ -13,7 +13,7 @@
 
 #include <type_traits>
 #include "codac2_Sep.h"
-#include "codac2_CollectionSep.h"
+#include "codac2_Collection.h"
 
 namespace codac2
 {
@@ -21,14 +21,11 @@ namespace codac2
   {
     public:
 
-      template<typename S, // S should be some Sep class
-        typename = typename std::enable_if<std::is_base_of<Sep,S>::value>::type>
+      template<typename S, typename = typename std::enable_if<
+          std::is_base_of_v<Sep,S>
+        >::type>
       SepCtcIn(const S& s)
-       : _seps(s)
-      { }
-
-      SepCtcIn(const SepCtcIn& s)
-        : _seps(s._seps)
+        : _seps(s)
       { }
 
       virtual std::shared_ptr<Ctc> copy() const
@@ -38,27 +35,24 @@ namespace codac2
 
       void contract(IntervalVector& x) const
       {
-        auto x_sep = _seps._v_sep.front()->separate(x);
+        auto x_sep = _seps.front().separate(x);
         x &= x_sep.in;
       }
 
     protected:
 
-      const CollectionSep _seps;
+      const Collection<Sep> _seps;
   };
 
   class SepCtcOut : public Ctc_<IntervalVector>
   {
     public:
 
-      template<typename S, // S should be some Sep class
-        typename = typename std::enable_if<std::is_base_of<Sep,S>::value>::type>
+      template<typename S, typename = typename std::enable_if<
+          std::is_base_of_v<Sep,S>
+        >::type>
       SepCtcOut(const S& s)
-       : _seps(s)
-      { }
-
-      SepCtcOut(const SepCtcOut& s)
-        : _seps(s._seps)
+        : _seps(s)
       { }
 
       virtual std::shared_ptr<Ctc> copy() const
@@ -68,12 +62,12 @@ namespace codac2
 
       void contract(IntervalVector& x) const
       {
-        auto x_sep = _seps._v_sep.front()->separate(x);
+        auto x_sep = _seps.front().separate(x);
         x &= x_sep.out;
       }
 
     protected:
 
-      const CollectionSep _seps;
+      const Collection<Sep> _seps;
   };
 }

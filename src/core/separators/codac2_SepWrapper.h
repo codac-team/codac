@@ -38,18 +38,13 @@ namespace codac2
     public:
 
       SepWrapper_(const IntervalVector& y)
-        : SepCtcPair(CtcUnion<IntervalVector>(),CtcWrapper_<IntervalVector>(y)), _y(y)
+        : SepCtcPair(CtcUnion<IntervalVector>(),CtcWrapper_<IntervalVector>(y))
       {
         for(const auto& complem_y : y.complementary())
-          *std::dynamic_pointer_cast<CtcUnion<IntervalVector>>(_ctc_in)
-            |= CtcWrapper_<IntervalVector>(complem_y);
+          dynamic_cast<CtcUnion<IntervalVector>&>(_ctc_in_out.front()) |= CtcWrapper_<IntervalVector>(complem_y);
       }
 
       virtual std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
-
-    protected:
-
-      const IntervalVector _y;
   };
 }

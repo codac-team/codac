@@ -20,44 +20,26 @@
 namespace codac2
 {
   template<typename Y>
-  class SepInverse : public Sep
+  class SepInverse : public SepCtcPair
   {
     using X = IntervalVector;
 
     public:
 
       SepInverse(const Function<Y>& f, const Y& y)
-        : _ctc_out(f,y), _ctc_in(f,y)
+        : SepCtcPair(CtcInverseNotIn<Y,X>(f,y), CtcInverse_<Y,X>(f,y))
       { }
 
-      SepInverse(const Function<Y>& f, const Sep& sep_y)
-        : _ctc_out(f,SepCtcOut(sep_y)), _ctc_in(f,SepCtcIn(sep_y))
-      { }
-
-      SepInverse(const CtcInverse_<Y,X>& ctc_out, const CtcInverseNotIn<Y,X>& ctc_in)
-        : _ctc_out(ctc_out), _ctc_in(ctc_in)
-      { }
-
-      SepInverse(const SepInverse<Y>& s)
-        : SepInverse<Y>(s._ctc_out, s._ctc_in)
+      template<typename S, typename = typename std::enable_if<
+          std::is_base_of_v<Sep,S>
+        >::type>
+      SepInverse(const Function<Y>& f, const S& sep_y)
+        : SepCtcPair(CtcInverseNotIn<Y,X>(f,SepCtcIn(sep_y)), CtcInverse_<Y,X>(f,SepCtcOut(sep_y)))
       { }
 
       virtual std::shared_ptr<Sep> copy() const
       {
         return std::make_shared<SepInverse<Y>>(*this);
       }
-
-      virtual BoxPair separate(const IntervalVector& x) const
-      {
-        auto x_out = x, x_in = x;
-        _ctc_out.contract(x_out);
-        _ctc_in.contract(x_in);
-        return { x_in, x_out };
-      }
-
-    protected:
-
-      const CtcInverse_<Y,X> _ctc_out;
-      const CtcInverseNotIn<Y,X> _ctc_in;
   };
 }

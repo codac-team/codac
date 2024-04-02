@@ -16,24 +16,12 @@
 namespace codac2
 {
   template<typename X>
-  class Ctc_ : public Ctc
-  {
-    public:
-
-      virtual void contract(X& x) const = 0;
-  };
-
-  template<typename X>
   class CtcWrapper_ : public Ctc_<X>
   {
     public:
 
       CtcWrapper_(const X& y)
         : _y(y)
-      { }
-
-      CtcWrapper_(const CtcWrapper_<X>& c)
-        : _y(c._y)
       { }
 
       virtual std::shared_ptr<Ctc> copy() const

@@ -13,34 +13,33 @@
 
 #include <type_traits>
 #include "codac2_CtcWrapper.h"
-#include "codac2_CollectionCtc.h"
+#include "codac2_Collection.h"
 
 namespace codac2
 {
   template<typename X>
-  class CtcUnion : public CollectionCtc<X>//, public Ctc_<X>
+  class CtcUnion : public Ctc_<X>
   {
     public:
 
-      CtcUnion()
-        : CollectionCtc<X>()
+      template<typename C, typename = typename std::enable_if<(
+          std::is_base_of_v<Ctc_<X>,C> &&
+          !std::is_same_v<CtcUnion,C>
+        ), void>::type>
+      CtcUnion(const C& c)
+        : _ctcs(c)
       { }
 
-      template<typename... C, // C should be some Ctc_<X> class
-        typename = typename std::enable_if<
-          (true && ... && std::is_base_of<Ctc_<X>,C>::value), void
-        >::type>
+      template<typename... C, typename = typename std::enable_if<(true && ... && (
+          std::is_base_of_v<Ctc_<X>,C>
+        )), void>::type>
       CtcUnion(const C&... c)
-        : CollectionCtc<X>(c...)
+        : _ctcs(c...)
       { }
-
-      //explicit CtcUnion(const CtcUnion<X>& c)
-      //  : CollectionCtc<X>(c)
-      //{ }
 
       virtual std::shared_ptr<Ctc> copy() const
       {
-        return std::dynamic_pointer_cast<CtcUnion<X>>(this->CollectionCtc<X>::copy());
+        return std::make_shared<CtcUnion<X>>(*this);
       }
 
       void contract(X& x) const
@@ -48,7 +47,7 @@ namespace codac2
         auto result = x;
         result.set_empty();
 
-        for(auto& ci : this->_v_ctc_ptrs)
+        for(const auto& ci : _ctcs)
         {
           auto saved_x = x;
           ci->contract(saved_x);
@@ -58,20 +57,24 @@ namespace codac2
         x = result;
       }
 
-      template<typename C, // C should be some Ctc_<X> class
-        typename = typename std::enable_if<std::is_base_of<Ctc_<X>,C>::value>::type>
+      template<typename C, typename = typename std::enable_if<
+          std::is_base_of_v<Ctc_<X>,C>
+        >::type>
       CtcUnion<X>& operator|=(const C& c)
       {
-        this->add_shared_ptr(std::make_shared<C>(c));
+        _ctcs.add_shared_ptr(std::make_shared<C>(c));
         return *this;
       }
+
+    protected:
+
+      Collection<Ctc_<X>> _ctcs;
   };
 
-  template<typename X,
-    typename C1, // C1 should be some Ctc class
-    typename = typename std::enable_if<std::is_base_of<Ctc_<X>,C1>::value>::type,
-    typename C2, // C2 should be some Ctc class
-    typename = typename std::enable_if<std::is_base_of<Ctc_<X>,C2>::value>::type>
+  template<typename X, typename C1, typename C2, typename = typename std::enable_if<(
+      std::is_base_of_v<Ctc_<X>,C1> &&
+      std::is_base_of_v<Ctc_<X>,C2>
+    )>>
   inline CtcUnion<X> operator|(const C1& c1, const C2& c2)
   {
     return CtcUnion<X>(c1,c2);

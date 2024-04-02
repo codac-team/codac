@@ -19,21 +19,17 @@
 namespace codac2
 {
   template<typename Y>
-  class CtcInverse : public Ctc
+  class CtcInverse : virtual public Ctc
   {
     public:
 
       CtcInverse(const Function<Y>& f, const Y& y)
-        : _f(f), _ctc_y(std::make_shared<CtcWrapper_<Y>>(y))
+        : _f(f), _ctc_y(CtcWrapper_<Y>(y))
       { }
 
       template<typename C>
       CtcInverse(const Function<Y>& f, const C& ctc_y)
-        : _f(f), _ctc_y(std::make_shared<C>(ctc_y))
-      { }
-
-      CtcInverse(const CtcInverse<Y>& c)
-        : _f(c._f), _ctc_y(std::dynamic_pointer_cast<Ctc_<Y>>(c._ctc_y->copy()))
+        : _f(f), _ctc_y(ctc_y)
       { }
 
       virtual std::shared_ptr<Ctc> copy() const
@@ -49,25 +45,20 @@ namespace codac2
 
         // Forward/backward algorithm:
         _f.expr()->fwd_eval(v);
-        _ctc_y->contract(_f.expr()->value(v));
+        _ctc_y.front().contract(_f.expr()->value(v));
         _f.expr()->bwd_eval(v);
 
         _f.intersect_from_args(v, x...);
       }
 
-      const Function<Y>& function() const
-      {
-        return _f;
-      }
-
     protected:
 
       const Function<Y> _f;
-      const std::shared_ptr<Ctc_<Y>> _ctc_y;
+      const Collection<Ctc_<Y>> _ctc_y;
   };
 
   template<typename Y,typename X>
-  class CtcInverse_ : public Ctc_<X>, public CtcInverse<Y>
+  class CtcInverse_ : public CtcInverse<Y>, public Ctc_<X>
   {
     public:
 
@@ -77,19 +68,15 @@ namespace codac2
         assert(f.args().size() == 1);
       }
 
-      CtcInverse_(const Function<Y>& f, const Ctc_<X>& ctc_y)
+      CtcInverse_(const Function<Y>& f, const Ctc_<Y>& ctc_y)
         : CtcInverse<Y>(f,ctc_y)
       {
         assert(f.args().size() == 1);
       }
 
-      CtcInverse_(const CtcInverse_<Y,X>& c)
-        : CtcInverse<Y>(c)
-      { }
-
       virtual std::shared_ptr<Ctc> copy() const
       {
-        return this->CtcInverse<Y>::copy();
+        return std::make_shared<CtcInverse_<Y,X>>(*this);
       }
 
       void contract(X& x) const

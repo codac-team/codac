@@ -11,13 +11,12 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/actions/codac2_OctaSym.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/actions/codac2_OctaSym.h
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CollectionCtc.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_Ctc.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcAction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcAction.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.h
-    #${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCenteredForm.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCenteredForm.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverseNotIn.h
@@ -42,7 +41,6 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_Expr_operations.h
     ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_Function.h
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_CollectionSep.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_Sep.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepAction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepAction.h
@@ -55,7 +53,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepNot.h
-    #${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepUnion.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepUnion.h
@@ -63,6 +61,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepWrapper.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Approx.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Collection.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_Matrix.h
     ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_MatrixTemplate.h

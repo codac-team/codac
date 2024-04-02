@@ -12,28 +12,37 @@
 #pragma once
 
 #include <type_traits>
-#include "codac2_CtcWrapper.h"
-#include "codac2_CollectionCtc.h"
-#include "codac2_IntervalVector.h"
 #include "codac2_OctaSym.h"
+#include "codac2_Ctc.h"
+#include "codac2_Collection.h"
 
 namespace codac2
 {
-  class CtcAction : public CollectionCtc<IntervalVector>
+  class CtcAction : public Ctc
   {
     public:
 
-      CtcAction(const Ctc_<IntervalVector>& c, const OctaSym& a)
-        : CollectionCtc<IntervalVector>(), _s(a), __s(a.invert())
-      {
-        add_shared_ptr(std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c.copy()));
-      }
+      template<typename C, typename = typename std::enable_if<
+          std::is_base_of_v<Ctc_<IntervalVector>,C>
+        >::type>
+      CtcAction(const C& c, const OctaSym& a)
+        : _ctc(c), _s(a), __s(a.invert())
+      { }
 
       virtual std::shared_ptr<Ctc> copy() const;
       void contract(IntervalVector& x) const;
 
     protected:
 
+      const Collection<Ctc_<IntervalVector>> _ctc;
       const OctaSym _s, __s;
   };
+  
+  template<typename C, typename = typename std::enable_if<
+      std::is_base_of_v<Ctc_<IntervalVector>,C>
+    >::type>
+  inline CtcAction OctaSym::operator()(const C& c) const
+  {
+    return CtcAction(c, *this);
+  }
 }

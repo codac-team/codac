@@ -23,7 +23,7 @@ CtcEllipse0::CtcEllipse0(const IntervalVector& q)
 
 std::shared_ptr<Ctc> CtcEllipse0::copy() const
 {
-  return std::make_shared<CtcEllipse0>(_q);
+  return std::make_shared<CtcEllipse0>(*this);
 }
 
 Interval _psi0(const IntervalVector& q) // top vertex of the ellipse
@@ -74,7 +74,7 @@ CtcEllipse::CtcEllipse(const Vector& q)
 
 std::shared_ptr<Ctc> CtcEllipse::copy() const
 {
-  return std::make_shared<CtcEllipse>(_q);
+  return std::make_shared<CtcEllipse>(*this);
 }
 
 void CtcEllipse::contract(IntervalVector& x) const

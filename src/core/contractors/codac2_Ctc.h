@@ -12,6 +12,7 @@
 #pragma once
 
 #include <memory>
+#include <iostream>
 
 namespace codac2
 {
@@ -20,5 +21,13 @@ namespace codac2
     public:
 
       virtual std::shared_ptr<Ctc> copy() const = 0;
+  };
+
+  template<typename X>
+  class Ctc_ : virtual public Ctc
+  {
+    public:
+
+      virtual void contract(X& x) const = 0;
   };
 }

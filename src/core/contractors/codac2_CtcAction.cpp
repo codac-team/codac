@@ -15,12 +15,12 @@ using namespace codac2;
 
 std::shared_ptr<Ctc> CtcAction::copy() const
 {
-  return std::make_shared<CtcAction>(*_v_ctc_ptrs.front(), _s);
+  return std::make_shared<CtcAction>(*this);
 }
 
 void CtcAction::contract(IntervalVector& x) const
 {
   IntervalVector _x(_s(x));
-  _v_ctc_ptrs.front()->contract(_x);
+  _ctc.front().contract(_x);
   x &= __s(_x);
 }
