@@ -78,6 +78,7 @@ namespace codac2
   {
     public:
 
+      virtual size_t size() const = 0;
       virtual std::shared_ptr<ExprBase> exprbase_ptr() const = 0;
   };
 
@@ -88,6 +89,11 @@ namespace codac2
 
       Arg_() : ArgBase(), _arg_expr(std::make_shared<ArgExpr<T>>())
       { }
+
+      virtual size_t size() const
+      {
+        return 1;
+      }
 
       std::shared_ptr<ExprBase> exprbase_ptr() const
       {
@@ -114,6 +120,11 @@ namespace codac2
         : _n(n)
       { }
 
+      virtual size_t size() const
+      {
+        return _n;
+      }
+
       std::shared_ptr<Expr<Interval>> operator[](size_t i)
       {
         assert(i >= 0 && i < _n);
@@ -132,6 +143,11 @@ namespace codac2
       ArgMatrix(size_t r, size_t c)
         : _r(r), _c(c)
       { }
+
+      virtual size_t size() const
+      {
+        return _r * _c;
+      }
 
     protected:
 

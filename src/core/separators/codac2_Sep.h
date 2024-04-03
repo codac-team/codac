@@ -26,6 +26,11 @@ namespace codac2
   {
     public:
 
+      constexpr size_t size() const
+      {
+        return 2;
+      }
+
       virtual std::shared_ptr<Sep> copy() const = 0;
       virtual BoxPair separate(const IntervalVector& x) const = 0;
   };

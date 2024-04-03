@@ -96,6 +96,11 @@ namespace codac2
         return _y;
       }
 
+      size_t nb_args() const
+      {
+        return _args.size();
+      }
+
     protected:
 
       std::vector<std::shared_ptr<const ExprBase>> _args;

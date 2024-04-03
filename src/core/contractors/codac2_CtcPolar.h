@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  CtcWrapper class
+ *  CtcPolar class
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -12,30 +12,19 @@
 #pragma once
 
 #include "codac2_Ctc.h"
+#include "codac2_IntervalVector.h"
 
 namespace codac2
 {
-  template<typename X>
-  class CtcWrapper_ : public Ctc_<X>
+  class CtcPolar : public Ctc_<IntervalVector>
   {
     public:
 
-      CtcWrapper_(const X& y)
-        : Ctc_<X>(y.size()), _y(y)
+      CtcPolar()
+        : Ctc_<IntervalVector>(4)
       { }
 
-      virtual std::shared_ptr<Ctc> copy() const
-      {
-        return std::make_shared<CtcWrapper_<X>>(*this);
-      }
-
-      virtual void contract(X& x) const
-      {
-        x &= _y;
-      }
-
-    protected:
-
-      const X _y;
+      virtual std::shared_ptr<Ctc> copy() const;
+      void contract(IntervalVector& x) const;
   };
 }

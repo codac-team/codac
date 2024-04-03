@@ -28,6 +28,19 @@ namespace codac2
   {
     public:
 
+      Ctc_(size_t n)
+        : _n(n)
+      { }
+
+      size_t size() const
+      {
+        return _n;
+      }
+      
       virtual void contract(X& x) const = 0;
+
+    protected:
+
+      const size_t _n;
   };
 }

@@ -14,6 +14,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_Ctc.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcAction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcAction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCartProd.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCenteredForm.h
@@ -21,6 +22,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverseNotIn.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcUnion.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolar.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolar.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcWrapper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_DirectedCtc.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_DirectedCtc.h
@@ -44,6 +47,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_Sep.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepAction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepAction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCartProd.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCartProd.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCtc.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCtcPair.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCtcPair.h

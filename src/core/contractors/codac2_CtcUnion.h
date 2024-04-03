@@ -22,20 +22,19 @@ namespace codac2
   {
     public:
 
-      template<typename C, typename = typename std::enable_if<(
-          std::is_base_of_v<Ctc_<X>,C> &&
-          !std::is_same_v<CtcUnion,C>
-        ), void>::type>
-      CtcUnion(const C& c)
-        : _ctcs(c)
+      explicit CtcUnion(size_t n)
+        : Ctc_<X>(n)
       { }
 
-      template<typename... C, typename = typename std::enable_if<(true && ... && (
-          std::is_base_of_v<Ctc_<X>,C>
-        )), void>::type>
-      CtcUnion(const C&... c)
-        : _ctcs(c...)
-      { }
+      template<typename C1, typename... C, typename = typename std::enable_if<
+          std::is_base_of_v<Ctc_<X>,C1> && 
+          (true && ... && (std::is_base_of_v<Ctc_<X>,C>)), void
+        >::type>
+      CtcUnion(const C1& c1, const C&... c)
+        : Ctc_<X>(c1.size()), _ctcs(c...)
+      {
+        _ctcs.add_shared_ptr(std::make_shared<C1>(c1));
+      }
 
       virtual std::shared_ptr<Ctc> copy() const
       {

@@ -1,0 +1,28 @@
+/** 
+ *  CtcPolar class
+ * ----------------------------------------------------------------------------
+ *  \date       2024
+ *  \author     Simon Rohou
+ *  \copyright  Copyright 2024 Codac Team
+ *  \license    This program is distributed under the terms of
+ *              the GNU Lesser General Public License (LGPL).
+ */
+
+#include <tuple>
+#include "codac2_CtcPolar.h"
+
+using namespace std;
+using namespace codac2;
+
+std::shared_ptr<Ctc> CtcPolar::copy() const
+{
+  return std::make_shared<CtcPolar>(*this);
+}
+
+#include "codac2_CtcPolar_codac1.cpp"
+
+void CtcPolar::contract(IntervalVector& x) const
+{
+  _contract(x[0],x[1],x[2],x[3]);
+  _contract(x[0],x[1],x[2],x[3]);
+}

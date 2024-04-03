@@ -128,8 +128,10 @@ namespace codac2
         this->template block<M,1>(I,0) << x;
       }
 
-      template<int M>
-      void put(size_t start_id, const IntervalVector_<M>& x)
+      template<typename T, typename = typename std::enable_if<
+          std::is_base_of_v<IntervalVectorTemplate_,T>
+        >::type>
+      void put(size_t start_id, const T& x)
       {
         assert(start_id >= 0 && start_id < this->size());
         assert(start_id+x.size() <= this->size());

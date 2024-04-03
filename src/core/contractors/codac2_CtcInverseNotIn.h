@@ -18,30 +18,22 @@
 namespace codac2
 {
   template<typename Y,typename X>
-  class CtcInverseNotIn : public Ctc_<X>
+  class CtcInverseNotIn : public CtcUnion<X>
   {
     public:
 
       CtcInverseNotIn(const Function<Y>& f, const Y& y)
+        : CtcUnion<X>(2/*std::dynamic_pointer_cast<const ArgBase>(f.args()[0])->size()*/)
       {
-        _ctc_not_in = CtcUnion<X>(); // empty initialization
+        assert(f.nb_args() == 1);
 
         for(const auto& complem_y : y.complementary())
-          _ctc_not_in |= CtcInverse_<Y,X>(f, complem_y);
+          *this |= CtcInverse_<Y,X>(f, complem_y);
       }
 
       virtual std::shared_ptr<Ctc> copy() const
       {
         return std::make_shared<CtcInverseNotIn<Y,X>>(*this);
       }
-
-      void contract(X& x) const
-      {
-        _ctc_not_in.contract(x);
-      }
-
-    protected:
-      
-      CtcUnion<X> _ctc_not_in;
   };
 }

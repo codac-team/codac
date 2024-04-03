@@ -18,7 +18,7 @@
 
 namespace codac2
 {
-  class CtcAction : public Ctc
+  class CtcAction : public Ctc_<IntervalVector>
   {
     public:
 
@@ -26,8 +26,10 @@ namespace codac2
           std::is_base_of_v<Ctc_<IntervalVector>,C>
         >::type>
       CtcAction(const C& c, const OctaSym& a)
-        : _ctc(c), _s(a), __s(a.invert())
-      { }
+        : Ctc_<IntervalVector>(c.size()), _ctc(c), _s(a), __s(a.invert())
+      {
+        assert(c.size() == a.size());
+      }
 
       virtual std::shared_ptr<Ctc> copy() const;
       void contract(IntervalVector& x) const;

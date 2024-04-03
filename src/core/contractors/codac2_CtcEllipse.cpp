@@ -16,7 +16,7 @@ using namespace codac2;
 
 
 CtcEllipse0::CtcEllipse0(const IntervalVector& q)
-  : _q(q), _qs(OctaSym({1,3,2,6,5,4})(q))
+  : Ctc_<IntervalVector>(2), _q(q), _qs(OctaSym({1,3,2,6,5,4})(q))
 {
   assert(q.size() == 6);
 }
@@ -67,7 +67,7 @@ void CtcEllipse0::contract(IntervalVector& x) const
 }
 
 CtcEllipse::CtcEllipse(const Vector& q)
-  : _q(q)
+  : Ctc_<IntervalVector>(2), _q(q)
 {
   assert(q.size() == 6);
 }

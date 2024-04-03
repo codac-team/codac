@@ -23,13 +23,13 @@ namespace codac2
   {
     public:
 
-      CtcInverse(const Function<Y>& f, const Y& y)
-        : _f(f), _ctc_y(CtcWrapper_<Y>(y))
-      { }
-
       template<typename C>
       CtcInverse(const Function<Y>& f, const C& ctc_y)
         : _f(f), _ctc_y(ctc_y)
+      { }
+
+      CtcInverse(const Function<Y>& f, const Y& y)
+        : CtcInverse(f, CtcWrapper_<Y>(y))
       { }
 
       virtual std::shared_ptr<Ctc> copy() const
@@ -63,15 +63,15 @@ namespace codac2
     public:
 
       CtcInverse_(const Function<Y>& f, const Y& y)
-        : CtcInverse<Y>(f,y)
+        : Ctc_<X>(2/*std::dynamic_pointer_cast<const ArgBase>(f.args()[0])->size()*/), CtcInverse<Y>(f,y)
       {
-        assert(f.args().size() == 1);
+        assert(f.nb_args() == 1);
       }
 
       CtcInverse_(const Function<Y>& f, const Ctc_<Y>& ctc_y)
         : CtcInverse<Y>(f,ctc_y)
       {
-        assert(f.args().size() == 1);
+        assert(f.nb_args() == 1);
       }
 
       virtual std::shared_ptr<Ctc> copy() const

@@ -38,7 +38,7 @@ namespace codac2
     public:
 
       SepWrapper_(const IntervalVector& y)
-        : SepCtcPair(CtcUnion<IntervalVector>(),CtcWrapper_<IntervalVector>(y))
+        : SepCtcPair(CtcUnion<IntervalVector>(y.size()),CtcWrapper_<IntervalVector>(y))
       {
         for(const auto& complem_y : y.complementary())
           dynamic_cast<CtcUnion<IntervalVector>&>(_ctc_in_out.front()) |= CtcWrapper_<IntervalVector>(complem_y);

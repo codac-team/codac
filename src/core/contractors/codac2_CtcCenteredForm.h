@@ -23,7 +23,8 @@ namespace codac2
     public:
 
       CtcCenteredForm(const Function<IntervalVector>& f, const Function<IntervalMatrix>& J, const IntervalVector& y)
-        : _ctc_f(CtcInverse<IntervalVector>(f,y))
+        : Ctc_<IntervalVector>(2/*std::dynamic_pointer_cast<const ArgBase>(f.args()[0])->size()*/),
+          _ctc_f(CtcInverse<IntervalVector>(f,y))
       {
         ArgVector x(3), z(3), m(3);
         _ctc_g.add(CtcInverse<IntervalVector>(
