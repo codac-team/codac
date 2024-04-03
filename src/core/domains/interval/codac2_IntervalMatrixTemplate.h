@@ -15,8 +15,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_INTERVALMATRIXTEMPLATE_H__
-#define __CODAC2_INTERVALMATRIXTEMPLATE_H__
+#pragma once
 
 #include <math.h>
 #include <limits>
@@ -634,6 +633,4 @@ namespace codac2
       }
   };
 
-} // namespace codac
-
-#endif
+}

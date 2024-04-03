@@ -16,8 +16,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_INTERVAL_OPERATIONS_H__
-#define __CODAC2_INTERVAL_OPERATIONS_H__
+#pragma once
 
 #include "codac2_Interval.h"
 
@@ -745,6 +744,4 @@ namespace codac2
    */
   void bwd_imod(Interval& x1, Interval& x2, double p);
 
-} // namespace codac2
-
-#endif
+}

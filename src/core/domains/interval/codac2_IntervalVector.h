@@ -15,8 +15,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_INTERVALVECTOR_H__
-#define __CODAC2_INTERVALVECTOR_H__
+#pragma once
 
 #include "codac2_Vector.h"
 #include "codac2_IntervalVectorTemplate.h"
@@ -39,6 +38,10 @@ namespace codac2
 
       explicit IntervalVector_(size_t n, const Interval& x)
         : IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>(n,x)
+      { }
+
+      explicit IntervalVector_(const Interval& x)
+        : IntervalVector_<N>(1,x)
       { }
       
       template<int M>
@@ -96,6 +99,10 @@ namespace codac2
 
       explicit IntervalVector(size_t n, const Interval& x)
         : IntervalVectorTemplate_<IntervalVector,Vector>(n,x)
+      { }
+
+      explicit IntervalVector(const Interval& x)
+        : IntervalVector(1,x)
       { }
       
       template<int M>
@@ -219,6 +226,23 @@ namespace codac2
     return IntervalVector(x).operator|(y);
   }
 
-} // namespace codac
+  template<typename... X>
+  inline IntervalVector cart_prod(const X&... x)
+  {
+    size_t n = 0;
+    ((n += x.size()), ...);
+    IntervalVector x_(n);
 
-#endif
+    size_t i = 0;
+
+    auto increm = [](size_t& i, size_t n)
+    {
+      size_t i_ = i;
+      i += n;
+      return i_;
+    };
+
+    (x_.put(increm(i,x.size()),IntervalVector(x)), ...);
+    return x_;
+  }
+}

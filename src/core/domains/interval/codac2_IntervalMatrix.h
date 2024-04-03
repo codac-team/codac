@@ -15,8 +15,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_INTERVALMATRIX_H__
-#define __CODAC2_INTERVALMATRIX_H__
+#pragma once
 
 #include "codac2_Matrix.h"
 #include "codac2_IntervalMatrixTemplate.h"
@@ -183,6 +182,4 @@ namespace codac2
     return IntervalMatrix(x).operator|(y);
   }
 
-} // namespace codac
-
-#endif
+}

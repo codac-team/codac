@@ -16,8 +16,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_INTERVAL_H__
-#define __CODAC2_INTERVAL_H__
+#pragma once
 
 #include <list>
 #include <array>
@@ -605,6 +604,4 @@ namespace codac2
    */
   Interval operator""_i(long double x);
 
-} // namespace codac2
-
-#endif
+}

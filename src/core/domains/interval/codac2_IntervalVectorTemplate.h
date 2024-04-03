@@ -15,8 +15,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_INTERVALVECTORTEMPLATE_H__
-#define __CODAC2_INTERVALVECTORTEMPLATE_H__
+#pragma once
 
 #include "codac2_Vector.h"
 #include "codac2_IntervalMatrixTemplate.h"
@@ -46,6 +45,10 @@ namespace codac2
       {
         assert(N == Dynamic || N == (int)n);
       }
+
+      explicit IntervalVectorTemplate_(const Interval& x)
+        : IntervalVectorTemplate_(1,x)
+      { }
       
       template<int M>
       explicit IntervalVectorTemplate_(const Vector_<M>& v)
@@ -240,7 +243,4 @@ namespace codac2
   {
     return v.as_diag();
   }
-
-} // namespace codac
-
-#endif
+}
