@@ -183,8 +183,6 @@ namespace codac2
         return selected_index;
       }
 
-      // In the doc: one could use i=largest_diam_index()
-      // for auto bisection on largest dimension
       std::pair<S,S> bisect(size_t i, float ratio = 0.49) const
       {
         assert((this->data()+i)->is_bisectable());
@@ -195,6 +193,11 @@ namespace codac2
         *(p.first.data()+i) = pi.first;
         *(p.second.data()+i) = pi.second;
         return p;
+      }
+      
+      std::pair<S,S> bisect_largest(float ratio = 0.49) const
+      {
+        return bisect(largest_diam_index(), ratio);
       }
 
       #define degenerate_mat(op) \

@@ -25,9 +25,7 @@ namespace codac2
         >::type>
       SepProj(const S& s, const IntervalVector& y)
         : _sep(s), _y(y)
-      {
-
-      }
+      { }
 
       virtual std::shared_ptr<Sep> copy() const
       {

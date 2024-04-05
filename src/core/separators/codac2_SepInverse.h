@@ -42,4 +42,10 @@ namespace codac2
         return std::make_shared<SepInverse<Y>>(*this);
       }
   };
+
+  template<typename Y>
+  SepInverse<Y> inverse(const Function<Y>& f, const Y& y)
+  {
+    return SepInverse<Y>(f,y);
+  }
 }

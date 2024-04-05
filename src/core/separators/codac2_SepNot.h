@@ -48,4 +48,17 @@ namespace codac2
 
       const Collection<Sep> _sep;
   };
+
+  SepNot operator!(const IntervalVector& s)
+  {
+    return SepNot(s);
+  }
+
+  template<typename S, typename = typename std::enable_if<
+      std::is_base_of_v<Sep,S>
+    >::type>
+  SepNot operator!(const S& s)
+  {
+    return SepNot(s);
+  }
 }
