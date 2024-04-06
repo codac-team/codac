@@ -228,7 +228,7 @@ Upload the *wheels* on PyPi:
 
 .. rubric:: Testing the Linux *wheels* with Docker
 
-In the :file:`codac` directory, test the Linux configuration locally using Docker:
+In the :file:`codac` directory, test the x86_64 Linux configuration locally using Docker:
 
 .. code-block:: bash
 
@@ -236,6 +236,8 @@ In the :file:`codac` directory, test the Linux configuration locally using Docke
   docker pull lebarsfa/manylinux2014_x86_64-for-codac
   docker run --rm -v `pwd`:/io lebarsfa/manylinux2014_x86_64-for-codac /io/scripts/docker/build_pybinding.sh
   
+The same can be done for the ARM Linux configurations (preferably from a powerful ARM computer, such as a Mac with Apple Silicon), see `packages/temporary` folder.
+
 .. rubric:: MATLAB compatibility
 
 Some operators or special functions need special attention:
