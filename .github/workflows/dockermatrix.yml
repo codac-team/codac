@@ -48,7 +48,8 @@ jobs:
         docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
       if: (matrix.cfg.arch!='x86_64')&&(matrix.cfg.arch!='i386')
     - run: |
-        docker run ${{ matrix.cfg.docker_flags }} -i -v "${PWD}/..:${PWD}/.." ${{ matrix.cfg.img }} /bin/bash -c "uname -a ; cat /etc/os-release ; cd ${PWD} && pwd && lsb_release -a ; \
+        docker run ${{ matrix.cfg.docker_flags }} -i -v "${PWD}/..:${PWD}/.." ${{ matrix.cfg.img }} /bin/bash -c "uname -a ; cat /etc/os-release ; lsb_release -a ; cd ${PWD} && pwd && \
+        git config --global --add safe.directory ${PWD} && \
         if [ ${{ matrix.cfg.deb }} = true ]; then \
         sudo apt-get -q update --allow-releaseinfo-change ; sudo apt-get -y install libeigen3-dev dpkg-dev || true && \
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_${{ matrix.cfg.arch }}.deb --no-check-certificate -nv && \
