@@ -74,11 +74,6 @@ Some methods have been implemented in Codac in order to extend VIBes' features t
 
 You can `download the VIBes viewer directly from the official page <http://enstabretagnerobotics.github.io/VIBES/>`_ (click on the *Last Release* link).
 
-.. warning::
-
-  | **macOS (arm64):**
-  | `Rosetta <https://support.apple.com/HT211861>`_ might be necessary to run `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_.
-
 .. admonition:: (optional) Get the very last version of VIBes from the sources
 
   You can also install the last version from the sources available on `the GitHub development repository <https://github.com/ENSTABretagneRobotics/VIBES>`_.
