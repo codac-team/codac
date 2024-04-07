@@ -7,14 +7,14 @@ Installing Codac on Linux for C++ use
 #####################################
 
 
-Install from package (latest release, for Ubuntu amd64)
+Install from package (latest release, for Ubuntu (amd64, arm64), Debian (arm64, armhf) and possibly others)
 ---------------------------------------------------------
 
 A Debian package is available for the last release |version| of the library:
 
 .. code-block:: bash
 
-  sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+  sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
   sudo apt update
   sudo apt install libcodac-dev
 
@@ -22,20 +22,29 @@ Then, check your installation `with the instructions of this page <03-start-cpp-
 
 .. warning::
 
-  | **URL changed**:
-  | Please update :code:`/etc/apt/sources.list.d/ensta-bretagne.list` as above.
+  | **URL changed**: Please uninstall before.
 
 .. note::
 
-  For a Raspberry Pi running Raspbian Buster 32 bit, download and extract ``codac_standalone_armv6hf_buster.zip`` from `<https://github.com/codac-team/codac/releases/latest/>`_, then in the ``example`` folder run:
+  To uninstall Codac, you might want to do the following:
+
+  .. code-block:: bash
+
+    sudo apt remove libcodac-dev libibex-dev
+    sudo rm -f /etc/apt/sources.list.d/ensta-bretagne.list
+    sudo apt update
+
+  Note also that ``libeigen3-dev`` might have been installed as a dependency of Codac but might be also used by other software. You might want to keep it.
+
+.. note::
+
+  Standalone archives exist also for all the supported configurations, e.g. for a Raspberry Pi running Raspberry Pi OS Bookworm 32 bit, download and extract ``codac_standalone_armhf_bookworm.zip`` from `<https://github.com/codac-team/codac/releases/latest/>`_, then in the ``example`` folder run:
 
   .. code-block:: bash
 
     cmake . ; cmake --build . ; ./my_project
 
   and check that "My first tube:Tube [0, 10]" appears.
-
-  Similar archives exist also for all the supported configurations.
 
 
 Install from sources (latest development)
