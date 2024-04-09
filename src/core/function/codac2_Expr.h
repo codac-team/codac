@@ -13,24 +13,50 @@
 
 #include <map>
 #include <memory>
+#include <utility>
 #include "codac2_Expr.h"
 #include "codac2_Domain.h"
 #include "codac2_DirectedCtc.h"
 
 namespace codac2
 {
-  class ExprBase
+  class ExprBase;
+
+  class ExprID
+  {
+    public:
+
+      ExprID()
+        : _id(this)
+      { }
+
+      bool operator==(const ExprID i) const
+      {
+        return _id == i._id;
+      }
+
+      bool operator<(const ExprID i) const
+      {
+        return _id < i._id;
+      }
+
+    protected:
+
+      ExprID *_id;
+  };
+
+  class ExprBase : public std::enable_shared_from_this<ExprBase>
   {
     public:
 
       ExprBase()
-        : _unique_id(_unique_id_counter++)
+        : _unique_id(/* creating id from object address */)
       { }
 
       virtual std::shared_ptr<ExprBase> copy() const = 0;
-      virtual void replace_expr(int old_expr_id, const std::shared_ptr<ExprBase>& new_expr) = 0;
+      virtual void replace_expr(ExprID old_expr_id, const std::shared_ptr<ExprBase>& new_expr) = 0;
 
-      int unique_id() const
+      ExprID unique_id() const
       {
         return _unique_id;
       }
@@ -44,13 +70,10 @@ namespace codac2
 
     protected:
 
-      int _unique_id;
-      static int _unique_id_counter;
+      ExprID _unique_id;
   };
 
-  int ExprBase::_unique_id_counter = 0;
-
-  using ValuesMap = std::map<int,std::shared_ptr<Domain>>;
+  using ValuesMap = std::map<ExprID,std::shared_ptr<Domain>>;
 
   template<typename T>
   class Expr : public ExprBase
@@ -142,7 +165,7 @@ namespace codac2
       }
 
       template<typename D>
-      static void __replace_single_expr(std::shared_ptr<Expr<D>>& x, int old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      static void __replace_single_expr(std::shared_ptr<Expr<D>>& x, ExprID old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
       {
         if(x->unique_id() == old_expr_id)
           x = std::dynamic_pointer_cast<Expr<D>>(new_expr);
@@ -150,7 +173,7 @@ namespace codac2
           x->replace_expr(old_expr_id, new_expr);
       }
 
-      void replace_expr(int old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_expr(ExprID old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
       {
         std::apply(
           [&old_expr_id,&new_expr](auto &&... x)
@@ -193,7 +216,7 @@ namespace codac2
         _x1->bwd_eval(v);
       }
 
-      void replace_expr(int old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_expr(ExprID old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
       {
         if(_x1->unique_id() == old_expr_id)
           _x1 = std::dynamic_pointer_cast<Expr<IntervalVector>>(new_expr);

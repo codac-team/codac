@@ -53,7 +53,7 @@ namespace codac2
   {
     public:
 
-      virtual int unique_id() const = 0;
+      virtual ExprID unique_id() const = 0;
       virtual std::shared_ptr<ArgBase> arg_copy() const = 0;
       virtual ~ArgBase() = default;
       virtual size_t size() const = 0;
@@ -67,7 +67,7 @@ namespace codac2
       ArgExpr()
       { }
 
-      virtual int unique_id() const
+      virtual ExprID unique_id() const
       {
         return Expr<T>::unique_id();
       }
@@ -80,7 +80,7 @@ namespace codac2
       void bwd_eval(ValuesMap& v) const
       { }
 
-      void replace_expr(int old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_expr(ExprID old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
       { }
   };
 

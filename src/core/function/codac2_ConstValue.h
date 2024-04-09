@@ -41,7 +41,7 @@ namespace codac2
         Expr<T>::value(v) &= _x;
       }
 
-      void replace_expr(int old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_expr(ExprID old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
       { }
 
     protected:
