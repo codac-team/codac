@@ -13,7 +13,7 @@
 #define __CODAC_CTCCHAIN_H__
 
 #include "codac_CtcLinobs.h"
-#include "codac2_Tube.h"
+//#include "codac2_Tube.h"
 
 namespace codac
 {
@@ -31,8 +31,8 @@ namespace codac
 
       void contract(std::vector<Domain*>& v_domains);
       void contract(Tube& x, Tube& v, const Tube& a, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-      void contract(codac2::Tube<IntervalVector>& x, const codac2::Tube<Interval>& a, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-      void contract(codac2::Tube<Interval>& x, codac2::Tube<Interval>& v, const codac2::Tube<Interval>& a, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      //void contract(codac2::Tube<IntervalVector>& x, const codac2::Tube<Interval>& a, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      //void contract(codac2::Tube<Interval>& x, codac2::Tube<Interval>& v, const codac2::Tube<Interval>& a, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
 
 
     protected:

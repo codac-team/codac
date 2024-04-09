@@ -117,7 +117,7 @@ namespace codac
       contract(x[i], v[i], t_propa);
   }
 
-  void CtcDeriv::contract(codac2::Tube<Interval>& x, const codac2::Tube<Interval>& v, TimePropag t_propa)
+  /*void CtcDeriv::contract(codac2::Tube<Interval>& x, const codac2::Tube<Interval>& v, TimePropag t_propa)
   {
     Tube _x = codac2::to_codac1(x);
     Tube _v = codac2::to_codac1(v);
@@ -140,7 +140,7 @@ namespace codac
     contract(_x[i],_v[j],t_propa);
     x &= codac2::to_codac2(_x);
     v &= codac2::to_codac2(_v);
-  }
+  }*/
 
   void CtcDeriv::contract(Slice& x, const Slice& v, TimePropag t_propa)
   {
