@@ -26,7 +26,7 @@ namespace codac2
         : _x(e._x)
       { }
 
-      std::shared_ptr<Expr<T>> copy()
+      std::shared_ptr<ExprBase> copy() const
       {
         return std::make_shared<ConstValueExpr<T>>(*this);
       }
@@ -41,7 +41,7 @@ namespace codac2
         Expr<T>::value(v) &= _x;
       }
 
-      void replace_expr(const std::shared_ptr<const ExprBase>& old_expr, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_expr(int old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
       { }
 
     protected:

@@ -63,7 +63,8 @@ namespace codac2
     public:
 
       CtcInverse_(const Function<Y>& f, const Y& y)
-        : Ctc_<X>(2/*std::dynamic_pointer_cast<const ArgBase>(f.args()[0])->size()*/), CtcInverse<Y>(f,y)
+        : Ctc_<X>(f.args()[0]->size() /* f must have only one arg, see following assert */),
+          CtcInverse<Y>(f,y)
       {
         assert(f.nb_args() == 1);
       }

@@ -23,7 +23,7 @@ namespace codac2
     public:
 
       CtcInverseNotIn(const Function<Y>& f, const Y& y)
-        : CtcUnion<X>(2/*std::dynamic_pointer_cast<const ArgBase>(f.args()[0])->size()*/)
+        : CtcUnion<X>(f.args()[0]->size() /* f must have only one arg, see following assert */)
       {
         assert(f.nb_args() == 1);
 

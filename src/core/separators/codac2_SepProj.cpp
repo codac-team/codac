@@ -58,4 +58,4 @@ namespace codac2
     return { x_in, x_out };
   }
 
-} // namespace codac
+}

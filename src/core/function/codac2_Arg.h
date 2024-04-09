@@ -49,17 +49,27 @@ namespace codac2
     using Domain = IntervalVector;
   };
   
+  class ArgBase
+  {
+    public:
+
+      virtual int unique_id() const = 0;
+      virtual std::shared_ptr<ArgBase> arg_copy() const = 0;
+      virtual ~ArgBase() = default;
+      virtual size_t size() const = 0;
+  };
+
   template<typename T>
-  class ArgExpr : public Expr<T>
+  class ArgExpr : public Expr<T>, public ArgBase
   {
     public:
 
       ArgExpr()
       { }
 
-      std::shared_ptr<Expr<T>> copy()
+      virtual int unique_id() const
       {
-        return Expr<T>::shared_from_this();
+        return Expr<T>::unique_id();
       }
 
       T fwd_eval(ValuesMap& v) const
@@ -70,69 +80,41 @@ namespace codac2
       void bwd_eval(ValuesMap& v) const
       { }
 
-      void replace_expr(const std::shared_ptr<const ExprBase>& old_expr, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_expr(int old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
       { }
   };
-
-  class ArgBase
-  {
-    public:
-
-      ArgBase()
-        : _unique_id(_unique_id_counter++)
-      { }
-
-      virtual size_t size() const = 0;
-      virtual std::shared_ptr<ExprBase> exprbase_ptr() const = 0;
-
-      bool operator==(const ArgBase& x) const
-      {
-        return _unique_id == x._unique_id;
-      }
-
-      int unique_id() const
-      {
-        return _unique_id;
-      }
-
-    protected:
-
-      const int _unique_id;
-      static int _unique_id_counter;
-  };
-
-  int ArgBase::_unique_id_counter = 0;
 
   template<typename T>
-  class Arg_ : public ArgBase
+  class Arg_ : public ArgExpr<T>
   {
     public:
 
-      Arg_() : ArgBase(), _arg_expr(std::make_shared<ArgExpr<T>>())
+      Arg_() : ArgExpr<T>()
       { }
 
       Arg_(const Arg_<T>& x)
-        : ArgBase(x)
+        : ArgExpr<T>(x)
       { }
+
+      std::shared_ptr<ArgBase> arg_copy() const
+      {
+        return std::make_shared<Arg_<T>>(*this);
+      }
+
+      std::shared_ptr<ExprBase> copy() const
+      {
+        return std::make_shared<Arg_<T>>(*this);
+      }
 
       virtual size_t size() const
       {
         return 1;
       }
 
-      std::shared_ptr<ExprBase> exprbase_ptr() const
-      {
-        return _arg_expr;
-      }
-
       operator std::shared_ptr<Expr<T>>()
       {
-        return _arg_expr;
+        return std::dynamic_pointer_cast<Expr<T>>(this->copy());
       }
-
-    protected:
-
-      std::shared_ptr<ArgExpr<T>> _arg_expr;
   };
 
   using Arg = Arg_<Interval>;
@@ -149,6 +131,16 @@ namespace codac2
         : Arg_<IntervalVector>(x), _n(x._n)
       { }
 
+      std::shared_ptr<ArgBase> arg_copy() const
+      {
+        return std::make_shared<ArgVector>(*this);
+      }
+
+      std::shared_ptr<ExprBase> copy() const
+      {
+        return std::make_shared<ArgVector>(*this);
+      }
+
       virtual size_t size() const
       {
         return _n;
@@ -157,7 +149,7 @@ namespace codac2
       std::shared_ptr<Expr<Interval>> operator[](size_t i)
       {
         assert(i >= 0 && i < _n);
-        return std::make_shared<OperationExpr<CtcComponent,Interval,IntervalVector>>(_arg_expr, i);
+        return std::make_shared<OperationExpr<CtcComponent,Interval,IntervalVector>>(std::dynamic_pointer_cast<Expr<IntervalVector>>(this->copy()), i);
       }
 
     protected:
@@ -176,6 +168,16 @@ namespace codac2
       ArgMatrix(const ArgMatrix& x)
         : Arg_<IntervalMatrix>(x), _r(x._r), _c(x._c)
       { }
+
+      std::shared_ptr<ArgBase> arg_copy() const
+      {
+        return std::make_shared<ArgMatrix>(*this);
+      }
+
+      std::shared_ptr<ExprBase> copy() const
+      {
+        return std::make_shared<ArgMatrix>(*this);
+      }
 
       virtual size_t size() const
       {
