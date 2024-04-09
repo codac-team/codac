@@ -22,9 +22,13 @@ namespace codac2
         : _x(x)
       { }
 
+      ConstValueExpr(const ConstValueExpr<T>& e)
+        : _x(e._x)
+      { }
+
       std::shared_ptr<Expr<T>> copy()
       {
-        return std::make_shared<ConstValueExpr<T>>(_x);
+        return std::make_shared<ConstValueExpr<T>>(*this);
       }
 
       T fwd_eval(ValuesMap& v) const

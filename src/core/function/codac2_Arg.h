@@ -78,9 +78,30 @@ namespace codac2
   {
     public:
 
+      ArgBase()
+        : _unique_id(_unique_id_counter++)
+      { }
+
       virtual size_t size() const = 0;
       virtual std::shared_ptr<ExprBase> exprbase_ptr() const = 0;
+
+      bool operator==(const ArgBase& x) const
+      {
+        return _unique_id == x._unique_id;
+      }
+
+      int unique_id() const
+      {
+        return _unique_id;
+      }
+
+    protected:
+
+      const int _unique_id;
+      static int _unique_id_counter;
   };
+
+  int ArgBase::_unique_id_counter = 0;
 
   template<typename T>
   class Arg_ : public ArgBase
@@ -88,6 +109,10 @@ namespace codac2
     public:
 
       Arg_() : ArgBase(), _arg_expr(std::make_shared<ArgExpr<T>>())
+      { }
+
+      Arg_(const Arg_<T>& x)
+        : ArgBase(x)
       { }
 
       virtual size_t size() const
@@ -120,6 +145,10 @@ namespace codac2
         : _n(n)
       { }
 
+      ArgVector(const ArgVector& x)
+        : Arg_<IntervalVector>(x), _n(x._n)
+      { }
+
       virtual size_t size() const
       {
         return _n;
@@ -142,6 +171,10 @@ namespace codac2
 
       ArgMatrix(size_t r, size_t c)
         : _r(r), _c(c)
+      { }
+
+      ArgMatrix(const ArgMatrix& x)
+        : Arg_<IntervalMatrix>(x), _r(x._r), _c(x._c)
       { }
 
       virtual size_t size() const

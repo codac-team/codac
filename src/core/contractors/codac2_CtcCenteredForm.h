@@ -3,7 +3,7 @@
  *  CtcFunction class
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Luc Jaulin
  *  \copyright  Copyright 2024 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
@@ -26,6 +26,8 @@ namespace codac2
         : Ctc_<IntervalVector>(2/*std::dynamic_pointer_cast<const ArgBase>(f.args()[0])->size()*/),
           _ctc_f(CtcInverse<IntervalVector>(f,y))
       {
+        assert(f.args().size() == 1);
+        
         ArgVector x(3), z(3), m(3);
         _ctc_g.add(CtcInverse<IntervalVector>(
           Function<IntervalVector>({x,z,m}, f(m)+J(z)*(x-m)),

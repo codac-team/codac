@@ -70,14 +70,19 @@ namespace codac2
         : _x(std::make_tuple((x)...))
       { }
 
-      static std::shared_ptr<Expr<Y>> __create_copy_from_tuple(std::shared_ptr<Expr<X>>... x)
+      OperationExpr(const OperationExpr<C,Y,X...>& e)
+        : _x(e._x)
       {
-        return std::make_shared<OperationExpr<C,Y,X...>>(x->copy()...);
+        std::apply(
+          [](auto &&... x)
+          {
+            ((x = x->copy()), ...);
+          }, _x);
       }
 
       std::shared_ptr<Expr<Y>> copy()
       {
-        return std::apply(__create_copy_from_tuple, _x);
+        return std::make_shared<OperationExpr<C,Y,X...>>(*this);
       }
 
       static Y __fwd_eval_from_tuple(ValuesMap& v, std::shared_ptr<Expr<X>>... x)
@@ -140,9 +145,13 @@ namespace codac2
         : _x1(x1), _i(i)
       { }
 
+      OperationExpr(const OperationExpr& e)
+        : _x1(e._x1->copy()), _i(e._i)
+      { }
+
       std::shared_ptr<Expr<Interval>> copy()
       {
-        return std::make_shared<OperationExpr<CtcComponent,Interval,IntervalVector>>(_x1->copy(), _i);
+        return std::make_shared<OperationExpr<CtcComponent,Interval,IntervalVector>>(*this);
       }
       
       Interval fwd_eval(ValuesMap& v) const
