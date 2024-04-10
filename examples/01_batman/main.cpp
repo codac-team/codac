@@ -4,7 +4,7 @@
 using namespace std;
 using namespace codac2;
 
-#include "sivia.cpp"
+#include "../sivia.cpp"
 
 int main()
 {

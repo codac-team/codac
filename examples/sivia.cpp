@@ -28,7 +28,7 @@ void SIVIA_sep(const Sep& cf, const IntervalVector& x0, double eps, const std::s
         vibes::drawBox(boundary[0].lb(),boundary[0].ub(),boundary[1].lb(),boundary[1].ub(),"#9C9C9C[yellow]");
       else
       {
-        auto p = boundary.bisect(boundary.largest_diam_index(), 0.45);
+        auto p = boundary.bisect_largest();
         l.push_back(p.first); l.push_back(p.second);
       }
     }
@@ -38,9 +38,9 @@ void SIVIA_sep(const Sep& cf, const IntervalVector& x0, double eps, const std::s
 }
 
 template<typename C>
-void SIVIA(const C& cf, const IntervalVector& x0, double eps)
+void SIVIA(const C& cf, const IntervalVector& x0, double eps, const std::string& figname)
 {
-  vibes::newFigure("SIVIA");
+  vibes::newFigure(figname);
   vibes::axisLimits(x0[0].lb(),x0[0].ub(),x0[1].lb(),x0[1].ub());
   vibes::setFigureProperties(vibesParams("x",600, "y",100, "width",500, "height",500));
 
@@ -65,7 +65,7 @@ void SIVIA(const C& cf, const IntervalVector& x0, double eps)
 
       else
       {
-        auto p = top.bisect(top.largest_diam_index(),0.45);
+        auto p = top.bisect_largest();
         l.push_back(p.first); l.push_back(p.second);
       }
     }
