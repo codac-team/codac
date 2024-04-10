@@ -94,6 +94,12 @@ namespace codac2
     static void bwd_eval(const Interval& y, Interval& x1);
   };
 
+  struct CtcTanh
+  {
+    static Interval fwd_eval(const Interval& x1);
+    static void bwd_eval(const Interval& y, Interval& x1);
+  };
+
   struct CtcAbs
   {
     static Interval fwd_eval(const Interval& x1);

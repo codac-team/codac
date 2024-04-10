@@ -250,6 +250,19 @@ using namespace codac2;
   }
 
 
+// CtcTanh
+
+  Interval CtcTanh::fwd_eval(const Interval& x1)
+  {
+    return tanh(x1);
+  }
+
+  void CtcTanh::bwd_eval(const Interval& y, Interval& x1)
+  {
+    bwd_tanh(y, x1);
+  }
+
+
 // CtcAbs
 
   Interval CtcAbs::fwd_eval(const Interval& x1)

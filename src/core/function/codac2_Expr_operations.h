@@ -203,6 +203,12 @@ namespace codac2
     }
 
     inline std::shared_ptr<Expr<Interval>>
+    tanh(const std::shared_ptr<Expr<Interval>>& x1)
+    {
+      return std::make_shared<OperationExpr<CtcTanh,Interval,Interval>>(x1);
+    }
+
+    inline std::shared_ptr<Expr<Interval>>
     abs(const std::shared_ptr<Expr<Interval>>& x1)
     {
       return std::make_shared<OperationExpr<CtcAbs,Interval,Interval>>(x1);
