@@ -12,12 +12,12 @@ using namespace codac2;
 int main()
 {
   ArgVector x(3);
-  Function<IntervalVector> f({x}, vec(
+  VectorFunction f({x}, vec(
     -sqr(x[2])+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
     2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
   ));
 
-  Function<IntervalMatrix> J({x}, mat(
+  MatrixFunction J({x}, mat(
     vec(
       2*sqr(x[2])*cos(x[2]*x[0]), // A11
       -2*sqr(x[2])*sin(x[2]*x[0])), // A21
