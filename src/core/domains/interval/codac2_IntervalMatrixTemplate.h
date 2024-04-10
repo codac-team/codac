@@ -98,12 +98,12 @@ namespace codac2
         return (this->data()+extr_diam_index(false))->diam();
       }
 
-      size_t thinnest_diam_index() const
+      size_t min_diam_index() const
       {
         return extr_diam_index(true);
       }
 
-      size_t largest_diam_index() const
+      size_t max_diam_index() const
       {
         return extr_diam_index(false);
       }
@@ -197,7 +197,7 @@ namespace codac2
       
       std::pair<S,S> bisect_largest(float ratio = 0.49) const
       {
-        return bisect(largest_diam_index(), ratio);
+        return bisect(max_diam_index(), ratio);
       }
 
       #define degenerate_mat(op) \
@@ -562,6 +562,25 @@ namespace codac2
             return true;
         return false;
       }
+
+      auto& inflate(double r)
+      {
+        for(int i = 0 ; i < this->rows() ; i++)
+          for(int j = 0 ; j < this->cols() ; j++)
+            (*this)(i,j).inflate(r);
+        return *this;
+      }
+
+      auto& inflate(const V& r)
+      {
+        return inflate_(r);
+      }
+
+      template<typename OtherDerived>
+      auto& inflate(const Eigen::MatrixBase<OtherDerived>& r)
+      {
+        return inflate_(r);
+      }
       
       template<typename OtherDerived>
       auto& inflate_(const Eigen::MatrixBase<OtherDerived>& r)
@@ -598,6 +617,8 @@ namespace codac2
 
       auto operator&=(const S& x)
       {
+        assert(this->size() == x.size());
+        
         if(x.is_empty())
         {
           set_empty();
@@ -612,6 +633,8 @@ namespace codac2
 
       auto operator|=(const S& x)
       {
+        assert(this->size() == x.size());
+
         if(x.is_empty())
           return *this;
 

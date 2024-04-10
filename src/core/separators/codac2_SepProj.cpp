@@ -48,7 +48,7 @@ namespace codac2
 
       else if(y0.max_diam() > eps)
       {
-        auto y_bisected = y0.bisect(y0.largest_diam_index());
+        auto y_bisected = y0.bisect(y0.max_diam_index());
         l.push_back({ x0, y_bisected.first });
         l.push_back({ x0, y_bisected.second });
       }
