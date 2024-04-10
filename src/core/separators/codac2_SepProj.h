@@ -27,15 +27,14 @@ namespace codac2
         : _sep(s), _y(y)
       { }
 
-      virtual std::shared_ptr<Sep> copy() const
-      {
-        return std::make_shared<SepProj>(*this);
-      }
-
+      virtual std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
       BoxPair separate(const IntervalVector& x, double eps) const;
 
     protected:
+
+      IntervalVector extract_x(const IntervalVector& w) const;
+      IntervalVector extract_y(const IntervalVector& w) const;
 
       const Collection<Sep> _sep;
       const IntervalVector _y;
