@@ -122,7 +122,7 @@ jobs:
       if: runner.os=='Windows'
     - run: |
         # Replace these 2 lines by the next ones to test a specific binary package of IBEX.
-        #sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+        #sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
         #sudo apt-get -q update ; sudo apt-get -y install libibex-dev libeigen3-dev dpkg-dev || true
         sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev dpkg-dev || true
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_${{ matrix.cfg.arch }}.deb --no-check-certificate -nv
@@ -193,7 +193,7 @@ jobs:
     - run: |
         cd packages
         chmod +x ./genlibcodac-dev.sh
-        ./genlibcodac-dev.sh $(lsb_release -is | tr [:upper:] [:lower:]) ${{ matrix.cfg.runtime }} $(dpkg --print-architecture) $SOFTWARE_VERSION $DEBIAN_PACKAGE_REV $PACKAGE_REV
+        ./genlibcodac-dev.sh $(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian; else echo ubuntu; fi) ${{ matrix.cfg.runtime }} $(dpkg --print-architecture) $SOFTWARE_VERSION $DEBIAN_PACKAGE_REV $PACKAGE_REV
         cd ..
         sudo dpkg -i libcodac-dev-$PACKAGE_VERSION\_$(dpkg --print-architecture).deb
       shell: bash

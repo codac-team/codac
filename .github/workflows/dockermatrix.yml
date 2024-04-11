@@ -81,7 +81,7 @@ jobs:
         if [ ${{ matrix.cfg.deb }} = true ]; then \
         cd packages && \
         chmod +x ./genlibcodac-dev.sh && \
-        ./genlibcodac-dev.sh \$(lsb_release -is | tr [:upper:] [:lower:]) ${{ matrix.cfg.runtime }} \$(dpkg --print-architecture) $SOFTWARE_VERSION $DEBIAN_PACKAGE_REV $PACKAGE_REV && \
+        ./genlibcodac-dev.sh \$(if [ -z \"\$(. /etc/os-release && echo \$UBUNTU_CODENAME)\" ]; then echo debian; else echo ubuntu; fi) ${{ matrix.cfg.runtime }} \$(dpkg --print-architecture) $SOFTWARE_VERSION $DEBIAN_PACKAGE_REV $PACKAGE_REV && \
         cd .. && \
         sudo dpkg -i libcodac-dev-$PACKAGE_VERSION\_\$(dpkg --print-architecture).deb ; \
         else \
