@@ -17,6 +17,7 @@
 #include <pybind11/stl.h>
 #include "../contractors/static/codac_py_Ctc.h"
 #include "../separators/codac_py_Sep.h"
+#include "codac_Polygon.h"
 
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac_py_CtcSegment_docs.h"
@@ -27,6 +28,34 @@ namespace py = pybind11;
 
 using namespace ibex;
 using namespace codac;
+
+Polygon* create_polygon_from_pylist(const vector<py::list>& lst)
+{
+  vector<Vector> v_pts;
+
+  if(lst.size() < 1)
+    throw invalid_argument("size of the input list is 0");
+  
+  //double (*tmp)[2] = new double[lst.size()][2];
+  for(size_t i = 0; i < lst.size(); i++)
+  {
+    if(lst[i].size() != 2)
+    {
+      //delete[] tmp;
+      throw invalid_argument("sub list must contain only two elements");
+    }
+
+    //tmp[i][0] = lst[i][0].cast<double>();
+    //tmp[i][1] = lst[i][1].cast<double>();
+    v_pts.push_back({ lst[i][0].cast<double>(), lst[i][1].cast<double>() });
+  }
+
+  //IntervalVector *instance = new IntervalVector(lst.size(), tmp);
+  //delete[] tmp;
+  //return instance;
+  return new Polygon(v_pts);
+  // todo: manage delete
+}
 
 SepPolygon* SepPolygonFromList(std::vector< std::array<double, 2> >& lst){
   size_t n = lst.size();
@@ -64,6 +93,12 @@ void export_geometry(py::module& m, py::class_<Ctc, pyCtc>& ctc, py::class_<Sep,
   py::class_<SepPolarXY>(m, "SepPolarXY", sep)
       .def(py::init<Interval, Interval>())
       .def("separate", &SepPolarXY::separate)
+  ;
+
+  // Export Polygon
+  py::class_<Polygon>(m, "Polygon")
+    .def(py::init(&create_polygon_from_pylist), "list"_a)
+    .def(py::init<std::vector<Vector>>())
   ;
 
 }
