@@ -125,9 +125,9 @@ jobs:
         #sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
         #sudo apt-get -q update ; sudo apt-get -y install libibex-dev libeigen3-dev dpkg-dev || true
         sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev dpkg-dev || true
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_${{ matrix.cfg.arch }}.deb --no-check-certificate -nv
-        sudo dpkg -i libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_${{ matrix.cfg.arch }}.deb
-        rm -Rf libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_${{ matrix.cfg.arch }}.deb
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb --no-check-certificate -nv
+        sudo dpkg -i libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb
+        rm -Rf libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb
       shell: bash
       if: matrix.cfg.deb==true
     - run: |
