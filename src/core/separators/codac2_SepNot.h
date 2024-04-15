@@ -49,7 +49,7 @@ namespace codac2
       const Collection<Sep> _sep;
   };
 
-  SepNot operator!(const IntervalVector& s)
+  inline SepNot operator!(const IntervalVector& s)
   {
     return SepNot(s);
   }
