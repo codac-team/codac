@@ -23,5 +23,7 @@ BoxPair SepCtcPair::separate(const IntervalVector& x) const
   IntervalVector x_in(x), x_out(x);
   _ctc_in_out.front().contract(x_in);
   _ctc_in_out.back().contract(x_out);
+
+  //assert((x_in | x_out) == x);
   return { x_in, x_out };
 }

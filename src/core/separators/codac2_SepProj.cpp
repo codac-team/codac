@@ -80,7 +80,7 @@ namespace codac2
 
     // Reconstructing x_in from previous parts
 
-      auto x_in = x;// IntervalVector::empty(x.size());
+      auto x_in = x;
       for(const auto& li_in : l_in)
         x_in &= li_in;
 

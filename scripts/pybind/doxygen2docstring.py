@@ -57,15 +57,16 @@ def anchor_id(filename, memberdef):
                .replace("*=", "MULEQ") \
                .replace("+=", "ADDEQ") \
                .replace("-=", "MINEQ") \
+               .replace("==", "EQ") \
+               .replace("!=", "NEQ") \
+               .replace("=", "AFF") \
                .replace("operator|", "OPERATORUNI") \
                .replace("operator&", "OPERATORINT") \
                .replace("operator+", "OPERATORADD") \
                .replace("operator-", "OPERATORMIN") \
                .replace("operator*", "OPERATORMUL") \
                .replace("operator/", "OPERATORDIV") \
-               .replace("==", "EQ") \
-               .replace("!=", "NEQ") \
-               .replace("=", "AFF") \
+               .replace("operator!", "OPERATORNOT") \
                .replace("()", "P") \
                .replace("(", "") \
                .replace(")", "") \
