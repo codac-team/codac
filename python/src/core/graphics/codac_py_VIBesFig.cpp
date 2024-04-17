@@ -96,5 +96,9 @@ void export_VIBesFig(py::module& m)
     .def("draw_line", (void (VIBesFig::*)(const std::vector<double>&,const std::vector<double>&,const string&,const vibes::Params &))&VIBesFig::draw_line,
       "todo",
       "v_x"_a, "v_y"_a, "color"_a="", "params"_a=vibes::Params())
+
+    .def("draw_polygon", (void (VIBesFig::*)(const Polygon&,const string&,const vibes::Params &))&VIBesFig::draw_polygon,
+      VIBESFIG_VOID_DRAW_POLYGON_POLYGON_STRING_VIBESPARAMS,
+      "p"_a, "color"_a="", "params"_a=vibes::Params())
   ;
 }
