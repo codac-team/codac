@@ -15,6 +15,7 @@
 #include <codac2_Interval.h>
 #include <codac2_Approx.h>
 #include "codac2_py_Approx_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include "codac2_py_doc.h"
 
 using namespace std;
 using namespace codac2;

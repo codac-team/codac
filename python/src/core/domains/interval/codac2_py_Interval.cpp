@@ -16,6 +16,7 @@
 #include <pybind11/stl.h>
 #include <codac2_Interval.h>
 #include "codac2_py_Interval_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include "codac2_py_doc.h"
 
 using namespace std;
 using namespace codac2;
@@ -213,6 +214,12 @@ py::class_<Interval> export_Interval(py::module& m)
 
     .def_static("empty", &Interval::empty,
       INTERVAL_INTERVAL_EMPTY)
+
+    .def_static("zero", &Interval::zero,
+      INTERVAL_INTERVAL_ZERO)
+
+    .def_static("one", &Interval::one,
+      INTERVAL_INTERVAL_ONE)
 
     .def_static("half_pi", &Interval::half_pi,
       INTERVAL_INTERVAL_HALF_PI)
