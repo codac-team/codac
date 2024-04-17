@@ -14,7 +14,7 @@ docker pull lebarsfa/pi:buster-for-codac
 docker run --rm -v `pwd`:/io lebarsfa/pi:buster-for-codac /bin/bash -c "uname -a ; cat /etc/os-release ; lsb_release -a ; \
 python3 -m pip install --upgrade auditwheel==5.1.2 && \
 sudo apt-get -q update --allow-releaseinfo-change ; sudo apt-get -y install libeigen3-dev python3-dev patchelf || true && \
-wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/ibex_armhf_buster.zip --no-check-certificate -nv && \
+wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex_armhf_buster.zip --no-check-certificate -nv && \
 unzip -q ibex_armhf_buster.zip && \
 rm -Rf ibex_armhf_buster.zip && \
 sudo cp -Rf ibex/* /usr/local/ && \

@@ -56,11 +56,11 @@ jobs:
         git config --global --add safe.directory ${PWD} && \
         if [ ${{ matrix.cfg.deb }} = true ]; then \
         sudo apt-get -q update --allow-releaseinfo-change ; sudo apt-get -y install libeigen3-dev dpkg-dev || true && \
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb --no-check-certificate -nv && \
-        sudo dpkg -i libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb && \
-        rm -Rf libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb ; \
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb --no-check-certificate -nv && \
+        sudo dpkg -i libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb && \
+        rm -Rf libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb ; \
         else \
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv && \
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv && \
         unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip && \
         rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip && \
         sudo cp -Rf ibex/* /usr/ ; \

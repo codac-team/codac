@@ -116,23 +116,23 @@ jobs:
       if: (matrix.cfg.runtime=='mingw13')
     - run: |
         choco install -y -r --no-progress eigen --version=3.4.0.20240224 ${{ matrix.cfg.choco_flags }}
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/ibex.2.8.9.20240224.nupkg --no-check-certificate -nv
-        choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20240224 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
-        del /f /q ibex.2.8.9.20240224.nupkg
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex.2.8.9.20240417.nupkg --no-check-certificate -nv
+        choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20240417 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
+        del /f /q ibex.2.8.9.20240417.nupkg
       if: runner.os=='Windows'
     - run: |
         # Replace these 2 lines by the next ones to test a specific binary package of IBEX.
         #sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
         #sudo apt-get -q update ; sudo apt-get -y install libibex-dev libeigen3-dev dpkg-dev || true
         sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev dpkg-dev || true
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb --no-check-certificate -nv
-        sudo dpkg -i libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb
-        rm -Rf libibex-dev-2.8.9.20240224-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb --no-check-certificate -nv
+        sudo dpkg -i libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb
+        rm -Rf libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb
       shell: bash
       if: matrix.cfg.deb==true
     - run: |
         brew install eigen
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
         unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
         rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
         sudo cp -Rf ibex/* /usr/local/
