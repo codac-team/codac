@@ -16,7 +16,7 @@ jobs:
         matrix:
             cfg:
             - { img: 'lebarsfa/manylinux2014_x86_64-for-codac', shell: bash, arch: x86_64, bitness: 64, runtime: manylinux2014, desc: 'CentOS manylinux2014 x86_64' }
-            - { img: 'lebarsfa/manylinux2014_aarch64-for-codac', shell: bash, arch: aarch64, bitness: 64, runtime: manylinux2014, docker_flags: '--platform linux/arm64', desc: 'CentOS manylinux2014 aarch64' }
+ #           - { img: 'lebarsfa/manylinux2014_aarch64-for-codac', shell: bash, arch: aarch64, bitness: 64, runtime: manylinux2014, docker_flags: '--platform linux/arm64', desc: 'CentOS manylinux2014 aarch64' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v4
