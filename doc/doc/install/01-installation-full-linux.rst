@@ -8,7 +8,7 @@ Installing Codac on Linux for C++ use
 
 
 Install from package (latest release, for Ubuntu (amd64, arm64), Debian (arm64, armhf) and possibly others)
----------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
 
 A Debian package is available for the last release |version| of the library:
 
