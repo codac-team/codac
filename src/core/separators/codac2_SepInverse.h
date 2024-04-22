@@ -13,7 +13,7 @@
 
 #include <map>
 #include "codac2_Sep.h"
-#include "codac2_Function.h"
+#include "codac2_AnalyticFunction.h"
 #include "codac2_CtcInverse.h"
 #include "codac2_CtcInverseNotIn.h"
 
@@ -26,14 +26,14 @@ namespace codac2
 
     public:
 
-      SepInverse(const Function<Y>& f, const Y& y)
+      SepInverse(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const Y& y)
         : SepCtcPair(CtcInverseNotIn<Y,X>(f,y), CtcInverse_<Y,X>(f,y))
       { }
 
       template<typename S, typename = typename std::enable_if<
           std::is_base_of_v<Sep,S>
         >::type>
-      SepInverse(const Function<Y>& f, const S& sep_y)
+      SepInverse(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const S& sep_y)
         : SepCtcPair(CtcInverseNotIn<Y,X>(f,SepCtcIn(sep_y)), CtcInverse_<Y,X>(f,SepCtcOut(sep_y)))
       { }
 
@@ -44,8 +44,8 @@ namespace codac2
   };
 
   template<typename Y>
-  SepInverse<Y> inverse(const Function<Y>& f, const Y& y)
+  SepInverse<typename Y::Domain> inverse(const AnalyticFunction<Y>& f, const typename Y::Domain& y)
   {
-    return SepInverse<Y>(f,y);
+    return SepInverse<typename Y::Domain>(f,y);
   }
 }

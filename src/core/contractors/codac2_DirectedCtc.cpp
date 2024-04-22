@@ -8,169 +8,291 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <cassert>
 #include "codac2_DirectedCtc.h"
 
 using namespace std;
 using namespace codac2;
 
-// CtcAdd (unary operations)
 
-  Interval CtcAdd::fwd_eval(const Interval& x1)
+// AddOp (unary operations)
+
+  Interval AddOp::fwd(const Interval& x1)
   {
     return x1;
   }
 
-  void CtcAdd::bwd_eval(const Interval& y, Interval& x1)
+  ScalarOpValue AddOp::fwd(const ScalarOpValue& x1)
+  {
+    return {
+      x1.m,
+      fwd(x1.a),
+      x1.da
+    };
+  }
+
+  void AddOp::bwd(const Interval& y, Interval& x1)
   { }
 
-  IntervalVector CtcAdd::fwd_eval(const IntervalVector& x1)
+  IntervalVector AddOp::fwd(const IntervalVector& x1)
   {
     return x1;
   }
 
-  void CtcAdd::bwd_eval(const IntervalVector& y, IntervalVector& x1)
+  VectorOpValue AddOp::fwd(const VectorOpValue& x1)
+  {
+    return {
+      x1.m,
+      fwd(x1.a),
+      x1.da
+    };
+  }
+
+  void AddOp::bwd(const IntervalVector& y, IntervalVector& x1)
   { }
 
-  IntervalMatrix CtcAdd::fwd_eval(const IntervalMatrix& x1)
+  IntervalMatrix AddOp::fwd(const IntervalMatrix& x1)
   {
     return x1;
   }
 
-  void CtcAdd::bwd_eval(const IntervalMatrix& y, IntervalMatrix& x1)
+  MatrixOpValue AddOp::fwd(const MatrixOpValue& x1)
+  {
+    return {
+      fwd(x1.a)
+    };
+  }
+
+  void AddOp::bwd(const IntervalMatrix& y, IntervalMatrix& x1)
   { }
 
-// CtcAdd (binary operations)
 
-  Interval CtcAdd::fwd_eval(const Interval& x1, const Interval& x2)
+// AddOp (binary operations)
+
+  Interval AddOp::fwd(const Interval& x1, const Interval& x2)
   {
     return x1 + x2;
   }
 
-  void CtcAdd::bwd_eval(const Interval& y, Interval& x1, Interval& x2)
+  ScalarOpValue AddOp::fwd(const ScalarOpValue& x1, const ScalarOpValue& x2)
+  {
+    return {
+      x1.m + x1.m,
+      fwd(x1.a, x2.a),
+      x1.da + x2.da
+    };
+  }
+
+  void AddOp::bwd(const Interval& y, Interval& x1, Interval& x2)
   {
     bwd_add(y, x1, x2);
   }
 
-  IntervalVector CtcAdd::fwd_eval(const IntervalVector& x1, const IntervalVector& x2)
+  IntervalVector AddOp::fwd(const IntervalVector& x1, const IntervalVector& x2)
   {
     return x1 + x2;
   }
 
-  void CtcAdd::bwd_eval(const IntervalVector& y, IntervalVector& x1, IntervalVector& x2)
+  VectorOpValue AddOp::fwd(const VectorOpValue& x1, const VectorOpValue& x2)
+  {
+    return {
+      x1.m + x1.m,
+      fwd(x1.a, x2.a),
+      x1.da + x2.da
+    };
+  }
+
+  void AddOp::bwd(const IntervalVector& y, IntervalVector& x1, IntervalVector& x2)
   {
     assert(y.size() == x1.size() && y.size() == x2.size());
     for(size_t i = 0 ; i < y.size() ; i++)
-      CtcAdd::bwd_eval(y[i], x1[i], x2[i]);
+      AddOp::bwd(y[i], x1[i], x2[i]);
   }
 
-  IntervalMatrix CtcAdd::fwd_eval(const IntervalMatrix& x1, const IntervalMatrix& x2)
+  IntervalMatrix AddOp::fwd(const IntervalMatrix& x1, const IntervalMatrix& x2)
   {
     return x1 + x2;
   }
 
-  void CtcAdd::bwd_eval(const IntervalMatrix& y, IntervalMatrix& x1, IntervalMatrix& x2)
+  MatrixOpValue AddOp::fwd(const MatrixOpValue& x1, const MatrixOpValue& x2)
+  {
+    return {
+      fwd(x1.a, x2.a)
+    };
+  }
+
+  void AddOp::bwd(const IntervalMatrix& y, IntervalMatrix& x1, IntervalMatrix& x2)
   {
     assert(y.size() == x1.size() && y.size() == x2.size());
     for(size_t i = 0 ; i < y.size() ; i++)
-      CtcAdd::bwd_eval(*(y.data()+i), *(x1.data()+i), *(x2.data()+i));
+      AddOp::bwd(*(y.data()+i), *(x1.data()+i), *(x2.data()+i));
   }
 
 
-// CtcSub (unary operations)
+// SubOp (unary operations)
 
-  Interval CtcSub::fwd_eval(const Interval& x1)
+  Interval SubOp::fwd(const Interval& x1)
   {
     return -x1;
   }
 
-  void CtcSub::bwd_eval(const Interval& y, Interval& x1)
+  ScalarOpValue SubOp::fwd(const ScalarOpValue& x1)
+  {
+    return {
+      -x1.m,
+      fwd(x1.a),
+      -x1.da
+    };
+  }
+
+  void SubOp::bwd(const Interval& y, Interval& x1)
   {
     Interval x2_(0.);
     bwd_sub(y, x2_, x1);
   }
 
-  IntervalVector CtcSub::fwd_eval(const IntervalVector& x1)
+  IntervalVector SubOp::fwd(const IntervalVector& x1)
   {
     return -x1;
   }
 
-  void CtcSub::bwd_eval(const IntervalVector& y, IntervalVector& x1)
+  VectorOpValue SubOp::fwd(const VectorOpValue& x1)
+  {
+    return {
+      -x1.m,
+      fwd(x1.a),
+      -x1.da
+    };
+  }
+
+  void SubOp::bwd(const IntervalVector& y, IntervalVector& x1)
   {
     assert(y.size() == x1.size());
     for(size_t i = 0 ; i < y.size() ; i++)
-      bwd_eval(y[i], x1[i]);
+      bwd(y[i], x1[i]);
   }
 
-  IntervalMatrix CtcSub::fwd_eval(const IntervalMatrix& x1)
+  IntervalMatrix SubOp::fwd(const IntervalMatrix& x1)
   {
     return -x1;
   }
 
-  void CtcSub::bwd_eval(const IntervalMatrix& y, IntervalMatrix& x1)
+  MatrixOpValue SubOp::fwd(const MatrixOpValue& x1)
+  {
+    return {
+      fwd(x1.a)
+    };
+  }
+
+  void SubOp::bwd(const IntervalMatrix& y, IntervalMatrix& x1)
   {
     assert(y.size() == x1.size());
     for(size_t i = 0 ; i < y.size() ; i++)
-      CtcSub::bwd_eval(*(y.data()+i), *(x1.data()+i));
+      SubOp::bwd(*(y.data()+i), *(x1.data()+i));
   }
 
-// CtcSub (binary operations)
 
-  Interval CtcSub::fwd_eval(const Interval& x1, const Interval& x2)
+// SubOp (binary operations)
+
+  Interval SubOp::fwd(const Interval& x1, const Interval& x2)
   {
     return x1 - x2;
   }
 
-  void CtcSub::bwd_eval(const Interval& y, Interval& x1, Interval& x2)
+  ScalarOpValue SubOp::fwd(const ScalarOpValue& x1, const ScalarOpValue& x2)
+  {
+    return {
+      x1.m - x2.m,
+      fwd(x1.a, x2.a),
+      x1.da - x2.da
+    };
+  }
+
+  void SubOp::bwd(const Interval& y, Interval& x1, Interval& x2)
   {
     bwd_sub(y, x1, x2);
   }
 
-  IntervalVector CtcSub::fwd_eval(const IntervalVector& x1, const IntervalVector& x2)
+  IntervalVector SubOp::fwd(const IntervalVector& x1, const IntervalVector& x2)
   {
     return x1 - x2;
   }
 
-  void CtcSub::bwd_eval(const IntervalVector& y, IntervalVector& x1, IntervalVector& x2)
+  VectorOpValue SubOp::fwd(const VectorOpValue& x1, const VectorOpValue& x2)
+  {
+    return {
+      x1.m - x2.m,
+      fwd(x1.a, x2.a),
+      x1.da - x2.da
+    };
+  }
+
+  void SubOp::bwd(const IntervalVector& y, IntervalVector& x1, IntervalVector& x2)
   {
     assert(y.size() == x1.size() && y.size() == x2.size());
     for(size_t i = 0 ; i < y.size() ; i++)
-      bwd_eval(y[i], x1[i], x2[i]);
+      bwd(y[i], x1[i], x2[i]);
   }
 
-  IntervalMatrix CtcSub::fwd_eval(const IntervalMatrix& x1, const IntervalMatrix& x2)
+  IntervalMatrix SubOp::fwd(const IntervalMatrix& x1, const IntervalMatrix& x2)
   {
     return x1 - x2;
   }
 
-  void CtcSub::bwd_eval(const IntervalMatrix& y, IntervalMatrix& x1, IntervalMatrix& x2)
+  MatrixOpValue SubOp::fwd(const MatrixOpValue& x1, const MatrixOpValue& x2)
+  {
+    return {
+      fwd(x1.a, x2.a)
+    };
+  }
+
+  void SubOp::bwd(const IntervalMatrix& y, IntervalMatrix& x1, IntervalMatrix& x2)
   {
     assert(y.size() == x1.size() && y.size() == x2.size());
     for(size_t i = 0 ; i < y.size() ; i++)
-      CtcSub::bwd_eval(*(y.data()+i), *(x1.data()+i), *(x2.data()+i));
+      SubOp::bwd(*(y.data()+i), *(x1.data()+i), *(x2.data()+i));
   }
 
 
-// CtcMul
+// MulOp
 
-  Interval CtcMul::fwd_eval(const Interval& x1, const Interval& x2)
+  Interval MulOp::fwd(const Interval& x1, const Interval& x2)
   {
     return x1 * x2;
   }
 
-  void CtcMul::bwd_eval(const Interval& y, Interval& x1, Interval& x2)
+  ScalarOpValue MulOp::fwd(const ScalarOpValue& x1, const ScalarOpValue& x2)
+  {
+    return {
+      x1.m * x2.m,
+      fwd(x1.a, x2.a),
+      x2.a * x1.da + x1.a * x2.da
+    };
+  }
+
+  void MulOp::bwd(const Interval& y, Interval& x1, Interval& x2)
   {
     bwd_mul(y, x1, x2);
   }
 
-  IntervalVector CtcMul::fwd_eval(const IntervalMatrix& x1, const IntervalVector& x2)
+  IntervalVector MulOp::fwd(const IntervalMatrix& x1, const IntervalVector& x2)
   {
     return x1 * x2;
+  }
+
+  VectorOpValue MulOp::fwd(const MatrixOpValue& x1, const VectorOpValue& x2)
+  {
+    return {
+      x1.a.mid() * x2.m,
+      fwd(x1.a, x2.a),
+      x2.a * IntervalMatrix::zeros(x1.a.rows(),x1.a.cols()) + x1.a * x2.da // todo
+    };
   }
 
   #include "codac2_ibex.h"
   #include <ibex_IntervalVector.h> // for ibex::bwd_mul
 
-  void CtcMul::bwd_eval(const IntervalVector& y, IntervalMatrix& x1, IntervalVector& x2)
+  void MulOp::bwd(const IntervalVector& y, IntervalMatrix& x1, IntervalVector& x2)
   {
     // only if squared matrix: CtcGaussElim ctc_ge;
     // only if squared matrix: CtcLinearPrecond ctc_gep(ctc_ge);
@@ -185,115 +307,188 @@ using namespace codac2;
   }
 
 
-// CtcDiv
+// DivOp
 
-  Interval CtcDiv::fwd_eval(const Interval& x1, const Interval& x2)
+  Interval DivOp::fwd(const Interval& x1, const Interval& x2)
   {
     return x1 / x2;
   }
 
-  void CtcDiv::bwd_eval(const Interval& y, Interval& x1, Interval& x2)
+  ScalarOpValue DivOp::fwd(const ScalarOpValue& x1, const ScalarOpValue& x2)
+  {
+    return {
+      x1.m / x2.m,
+      fwd(x1.a, x2.a),
+      IntervalVector(x1.da.size()) // todo
+    };
+  }
+
+  void DivOp::bwd(const Interval& y, Interval& x1, Interval& x2)
   {
     bwd_div(y, x1, x2);
   }
 
 
-// CtcSqrt
+// SqrtOp
 
-  Interval CtcSqrt::fwd_eval(const Interval& x1)
+  Interval SqrtOp::fwd(const Interval& x1)
   {
     return sqrt(x1);
   }
 
-  void CtcSqrt::bwd_eval(const Interval& y, Interval& x1)
+  ScalarOpValue SqrtOp::fwd(const ScalarOpValue& x1)
+  {
+    return {
+      std::sqrt(x1.m),
+      fwd(x1.a),
+      IntervalVector(x1.da.size()) // todo
+    };
+  }
+
+  void SqrtOp::bwd(const Interval& y, Interval& x1)
   {
     bwd_sqrt(y, x1);
   }
 
 
-// CtcSqr
+// SqrOp
 
-  Interval CtcSqr::fwd_eval(const Interval& x1)
+  Interval SqrOp::fwd(const Interval& x1)
   {
     return sqr(x1);
   }
 
-  void CtcSqr::bwd_eval(const Interval& y, Interval& x1)
+  ScalarOpValue SqrOp::fwd(const ScalarOpValue& x1)
+  {
+    return {
+      std::pow(x1.m,2),
+      fwd(x1.a),
+      2.*x1.a*x1.da
+    };
+  }
+
+  void SqrOp::bwd(const Interval& y, Interval& x1)
   {
     bwd_sqr(y, x1);
   }
 
 
-// CtcCos
+// CosOp
 
-  Interval CtcCos::fwd_eval(const Interval& x1)
+  Interval CosOp::fwd(const Interval& x1)
   {
     return cos(x1);
   }
 
-  void CtcCos::bwd_eval(const Interval& y, Interval& x1)
+  ScalarOpValue CosOp::fwd(const ScalarOpValue& x1)
+  {
+    return {
+      std::cos(x1.m),
+      fwd(x1.a),
+      -sin(x1.a)*x1.da
+    };
+  }
+
+  void CosOp::bwd(const Interval& y, Interval& x1)
   {
     bwd_cos(y, x1);
   }
 
 
-// CtcSin
+// SinOp
 
-  Interval CtcSin::fwd_eval(const Interval& x1)
+  Interval SinOp::fwd(const Interval& x1)
   {
     return sin(x1);
   }
 
-  void CtcSin::bwd_eval(const Interval& y, Interval& x1)
+  ScalarOpValue SinOp::fwd(const ScalarOpValue& x1)
+  {
+    return {
+      std::sin(x1.m),
+      fwd(x1.a),
+      cos(x1.a)*x1.da
+    };
+  }
+
+  void SinOp::bwd(const Interval& y, Interval& x1)
   {
     bwd_sin(y, x1);
   }
 
 
-// CtcTanh
+// TanhOp
 
-  Interval CtcTanh::fwd_eval(const Interval& x1)
+  Interval TanhOp::fwd(const Interval& x1)
   {
     return tanh(x1);
   }
 
-  void CtcTanh::bwd_eval(const Interval& y, Interval& x1)
+  ScalarOpValue TanhOp::fwd(const ScalarOpValue& x1)
+  {
+    return {
+      std::tanh(x1.m),
+      fwd(x1.a),
+      IntervalVector(x1.da.size()) // todo
+    };
+  }
+
+  void TanhOp::bwd(const Interval& y, Interval& x1)
   {
     bwd_tanh(y, x1);
   }
 
 
-// CtcAbs
+// AbsOp
 
-  Interval CtcAbs::fwd_eval(const Interval& x1)
+  Interval AbsOp::fwd(const Interval& x1)
   {
     return abs(x1);
   }
 
-  void CtcAbs::bwd_eval(const Interval& y, Interval& x1)
+  ScalarOpValue AbsOp::fwd(const ScalarOpValue& x1)
+  {
+    return {
+      std::fabs(x1.m),
+      fwd(x1.a),
+      IntervalVector(x1.da.size()) // todo
+    };
+  }
+
+  void AbsOp::bwd(const Interval& y, Interval& x1)
   {
     bwd_abs(y, x1);
   }
 
 
-// CtcComponent
+// ComponentOp
 
-  Interval CtcComponent::fwd_eval(const IntervalVector& x1, size_t i)
+  Interval ComponentOp::fwd(const IntervalVector& x1, size_t i)
   {
     assert(i >= 0 && i < x1.size());
     return x1[i];
   }
 
-  void CtcComponent::bwd_eval(const Interval& y, IntervalVector& x1, size_t i)
+  ScalarOpValue ComponentOp::fwd(const VectorOpValue& x1, size_t i)
+  {
+    assert(i >= 0 && i < x1.a.size());
+    return {
+      x1.m[i],
+      fwd(x1.a,i),
+      x1.da.row(i) // todo: consider mixted scalar/vector values
+    };
+  }
+
+  void ComponentOp::bwd(const Interval& y, IntervalVector& x1, size_t i)
   {
     assert(i >= 0 && i < x1.size());
     x1[i] &= y;
   }
 
 
-// CtcMatrix
+// MatrixOp
 
-  void CtcMatrix::fwd_eval_i(IntervalMatrix& m, const IntervalVector& x, size_t i)
+  void MatrixOp::fwd_i(IntervalMatrix& m, const IntervalVector& x, size_t i)
   {
     assert((int)i >= 0 && (int)i < m.cols());
     m.resize(x.size(),m.cols());

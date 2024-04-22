@@ -466,6 +466,22 @@ namespace codac2
       static Interval empty();
 
       /**
+       * \brief Provides an interval for \f$[0]\f$
+       * 
+       * \return an interval containing \f$0\f$
+       */
+      static Interval zero();
+      static Interval zeros();
+
+      /**
+       * \brief Provides an interval for \f$[1]\f$
+       * 
+       * \return an interval containing \f$1\f$
+       */
+      static Interval one();
+      static Interval ones();
+
+      /**
        * \brief Provides an interval for \f$[\frac{\pi}{2}]\f$
        * 
        * \return an interval containing \f$\frac{\pi}{2}\f$

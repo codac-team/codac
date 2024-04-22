@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  CtcFunction class
+ *  CtcCenteredForm class
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou, Luc Jaulin
@@ -13,7 +13,7 @@
 
 #include <map>
 #include "codac2_CtcInverse.h"
-#include "codac2_Expr_operations.h"
+#include "codac2_analytic_operations.h"
 #include "codac2_Collection.h"
 
 namespace codac2
@@ -22,15 +22,15 @@ namespace codac2
   {
     public:
 
-      CtcCenteredForm(const Function<IntervalVector>& f, const Function<IntervalMatrix>& J, const IntervalVector& y)
+      CtcCenteredForm(const AnalyticFunction<VectorOpValue>& f, const AnalyticFunction<MatrixOpValue>& J, const IntervalVector& y)
         : Ctc_<IntervalVector>(f.args()[0]->size() /* f must have only one arg, see following assert */),
           _ctc_f(CtcInverse<IntervalVector>(f,y))
       {
         assert(f.args().size() == 1);
         
-        ArgVector x(3), z(3), m(3);
+        VectorVar x(3), z(3), m(3);
         _ctc_g.add(CtcInverse<IntervalVector>(
-          Function<IntervalVector>({x,z,m}, f(m)+J(z)*(x-m)),
+          AnalyticFunction<VectorOpValue>({x,z,m}, f(m)+J(z)*(x-m)),
           y
         ));
       }

@@ -301,6 +301,26 @@ namespace codac2
   {
     return ibex::Interval::empty_set();
   }
+  
+  Interval Interval::zero()
+  {
+    return ibex::Interval::zero();
+  }
+  
+  Interval Interval::zeros()
+  {
+    return ibex::Interval::zero();
+  }
+  
+  Interval Interval::one()
+  {
+    return ibex::Interval::one();
+  }
+  
+  Interval Interval::ones()
+  {
+    return ibex::Interval::one();
+  }
 
   Interval Interval::half_pi()
   {

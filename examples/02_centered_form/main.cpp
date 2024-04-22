@@ -11,13 +11,13 @@ using namespace codac2;
 
 int main()
 {
-  ArgVector x(3);
-  VectorFunction f({x}, vec(
+  VectorVar x(3);
+  AnalyticFunction f({x}, vec(
     -sqr(x[2])+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
     2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
   ));
 
-  MatrixFunction J({x}, mat(
+  AnalyticFunction J({x}, mat(
     vec(
       2*sqr(x[2])*cos(x[2]*x[0]), // A11
       -2*sqr(x[2])*sin(x[2]*x[0])), // A21
@@ -28,6 +28,9 @@ int main()
       x[2]*(-2+2*x[0]*cos(x[2]*x[0]))+2*sin(x[2]*x[0])-x[1]*sin(x[2]*x[1]), // A13
       (-2*x[0]*x[2]*sin(x[2]*x[0])+2*cos(x[2]*x[0])-x[1]*cos(x[2]*x[1]))) // A23
   ));
+
+  cout << f.eval(IntervalVector({1,2,3})) << endl;
+  cout << J.eval(IntervalVector({1,2,3})) << endl;
 
   vibes::beginDrawing();
 

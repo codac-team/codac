@@ -14,16 +14,12 @@
 namespace codac2
 {
   template<typename T>
-  class ConstValueExpr : public Expr<T>
+  class ConstValueExpr : public AnalyticExpr<T>
   {
     public:
 
-      ConstValueExpr(const T& x)
+      ConstValueExpr(const typename T::Domain& x)
         : _x(x)
-      { }
-
-      ConstValueExpr(const ConstValueExpr<T>& e)
-        : _x(e._x)
       { }
 
       std::shared_ptr<ExprBase> copy() const
@@ -31,26 +27,26 @@ namespace codac2
         return std::make_shared<ConstValueExpr<T>>(*this);
       }
 
-      T fwd_eval(ValuesMap& v) const
+      T fwd_eval(ValuesMap& v, const FunctionArgsList& f_args) const
       {
-        return Expr<T>::init_value(v, _x);
+        return AnalyticExpr<T>::init_value(v, T(_x,f_args.total_size()));
       }
       
       void bwd_eval(ValuesMap& v) const
       {
-        Expr<T>::value(v) &= _x;
+        AnalyticExpr<T>::value(v).a &= _x;
       }
 
-      void replace_expr(ExprID old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_expr(const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
       { }
 
     protected:
 
-      const T _x;
+      const typename T::Domain _x;
   };
 
   template<typename T>
-  std::shared_ptr<Expr<typename Wrapper<T>::Domain>> const_value(const T& x)
+  std::shared_ptr<AnalyticExpr<typename Wrapper<T>::Domain>> const_value(const T& x)
   {
     return std::make_shared<ConstValueExpr<typename Wrapper<T>::Domain>>(x);
   }

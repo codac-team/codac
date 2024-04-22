@@ -12,7 +12,7 @@
 #pragma once
 
 #include <map>
-#include "codac2_Function.h"
+#include "codac2_AnalyticFunction.h"
 #include "codac2_Ctc.h"
 #include "codac2_CtcWrapper.h"
 
@@ -24,11 +24,11 @@ namespace codac2
     public:
 
       template<typename C>
-      CtcInverse(const Function<Y>& f, const C& ctc_y)
+      CtcInverse(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const C& ctc_y)
         : _f(f), _ctc_y(ctc_y)
       { }
 
-      CtcInverse(const Function<Y>& f, const Y& y)
+      CtcInverse(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const Y& y)
         : CtcInverse(f, CtcWrapper_<Y>(y))
       { }
 
@@ -44,16 +44,24 @@ namespace codac2
         _f.fill_from_args(v, x...);
 
         // Forward/backward algorithm:
-        _f.expr()->fwd_eval(v);
-        _ctc_y.front().contract(_f.expr()->value(v));
-        _f.expr()->bwd_eval(v);
+
+          // Forward evaluation
+          _f.expr()->fwd_eval(v,_f.args());
+          //if constexpr(sizeof...(X) == 1) // with centered form
+          //  _f.expr()->value(v) &= _f.centered_eval(x...);
+          
+          // f(x) \in [y]
+          _ctc_y.front().contract(_f.expr()->value(v).a);
+          
+          // Backward evaluation
+          _f.expr()->bwd_eval(v);
 
         _f.intersect_from_args(v, x...);
       }
 
     protected:
 
-      const Function<Y> _f;
+      const AnalyticFunction<typename Wrapper<Y>::Domain> _f;
       const Collection<Ctc_<Y>> _ctc_y;
   };
 
@@ -62,17 +70,17 @@ namespace codac2
   {
     public:
 
-      CtcInverse_(const Function<Y>& f, const Y& y)
+      CtcInverse_(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const Y& y)
         : Ctc_<X>(f.args()[0]->size() /* f must have only one arg, see following assert */),
           CtcInverse<Y>(f,y)
       {
-        assert(f.nb_args() == 1);
+        assert(f.args().size() == 1);
       }
 
-      CtcInverse_(const Function<Y>& f, const Ctc_<Y>& ctc_y)
+      CtcInverse_(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const Ctc_<Y>& ctc_y)
         : CtcInverse<Y>(f,ctc_y)
       {
-        assert(f.nb_args() == 1);
+        assert(f.args().size() == 1);
       }
 
       virtual std::shared_ptr<Ctc> copy() const

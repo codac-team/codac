@@ -23,10 +23,12 @@ namespace codac2
       virtual std::shared_ptr<Ctc> copy() const = 0;
   };
 
-  template<typename X>
+  template<typename X_>
   class Ctc_ : virtual public Ctc
   {
     public:
+    
+      using X = X_;
 
       Ctc_(size_t n)
         : _n(n)
@@ -37,7 +39,7 @@ namespace codac2
         return _n;
       }
       
-      virtual void contract(X& x) const = 0;
+      virtual void contract(X_& x) const = 0;
 
     protected:
 

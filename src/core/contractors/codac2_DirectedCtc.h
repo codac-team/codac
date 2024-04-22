@@ -18,104 +18,219 @@
 
 namespace codac2
 {
-  struct CtcAdd
+  struct OpValueBase
+  {
+    virtual ~OpValueBase() = default;
+  };
+
+  struct ScalarOpValue : public OpValueBase
+  {
+    using Domain = Interval;
+
+    double m;
+    Interval a;
+    IntervalVector da;
+
+    ScalarOpValue(double m_, const Interval& a_, const IntervalVector& da_)
+      : m(m_), a(a_), da(da_)
+    { }
+
+    ScalarOpValue(const Interval& a_, size_t total_args_size)
+      : ScalarOpValue(a_.mid(), a_, IntervalVector::zeros(total_args_size))
+    { }
+
+    ScalarOpValue(const Interval& a_, size_t total_args_size, size_t id_first, size_t id_last)
+      : ScalarOpValue(a_, total_args_size)
+    {
+      assert(id_first <= id_last);
+      assert(id_first >= 0 && id_last < total_args_size);
+
+      for(size_t i = id_first ; i <= id_last ; i++)
+        da[i] = 1.;
+    }
+
+  };
+
+  struct VectorOpValue : public OpValueBase
+  {
+    using Domain = IntervalVector;
+    
+    Vector m;
+    IntervalVector a;
+    IntervalMatrix da;
+
+    VectorOpValue(Vector m_, const IntervalVector& a_, const IntervalMatrix& da_)
+      : m(m_), a(a_), da(da_)
+    { }
+
+    VectorOpValue(const IntervalVector& a_, size_t total_args_size)
+      : VectorOpValue(a_.mid(), a_, IntervalMatrix::zeros(total_args_size,total_args_size))
+    { }
+
+    VectorOpValue(const IntervalVector& a_, size_t total_args_size, size_t id_first, size_t id_last)
+      : VectorOpValue(a_, total_args_size)
+    {
+      assert(id_first <= id_last);
+      assert(id_first >= 0 && id_last < total_args_size);
+
+      for(size_t i = id_first ; i <= id_last ; i++)
+        da(i,i) = 1.;
+    }
+
+  };
+
+  struct MatrixOpValue : public OpValueBase
+  {
+    using Domain = IntervalMatrix;
+    
+    IntervalMatrix a;
+
+    MatrixOpValue(const IntervalMatrix& a_)
+      : a(a_)
+    { }
+
+    MatrixOpValue(const IntervalMatrix& a_, size_t total_args_size)
+      : MatrixOpValue(a_)
+    { }
+
+    MatrixOpValue(const IntervalMatrix& a_, size_t total_args_size, size_t id_first, size_t id_last)
+      : MatrixOpValue(a_)
+    { }
+
+  };
+
+  struct AddOp
   {
     // Unary operations
-    static Interval fwd_eval(const Interval& x1);
-    static void bwd_eval(const Interval& y, Interval& x1);
-    static IntervalVector fwd_eval(const IntervalVector& x1);
-    static void bwd_eval(const IntervalVector& y, IntervalVector& x1);
-    static IntervalMatrix fwd_eval(const IntervalMatrix& x1);
-    static void bwd_eval(const IntervalMatrix& y, IntervalMatrix& x1);
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
+
+    static IntervalVector fwd(const IntervalVector& x1);
+    static VectorOpValue fwd(const VectorOpValue& x1);
+    static void bwd(const IntervalVector& y, IntervalVector& x1);
+
+    static IntervalMatrix fwd(const IntervalMatrix& x1);
+    static MatrixOpValue fwd(const MatrixOpValue& x1);
+    static void bwd(const IntervalMatrix& y, IntervalMatrix& x1);
 
     // Binary operations
-    static Interval fwd_eval(const Interval& x1, const Interval& x2);
-    static void bwd_eval(const Interval& y, Interval& x1, Interval& x2);
-    static IntervalVector fwd_eval(const IntervalVector& x1, const IntervalVector& x2);
-    static void bwd_eval(const IntervalVector& y, IntervalVector& x1, IntervalVector& x2);
-    static IntervalMatrix fwd_eval(const IntervalMatrix& x1, const IntervalMatrix& x2);
-    static void bwd_eval(const IntervalMatrix& y, IntervalMatrix& x1, IntervalMatrix& x2);
+    static Interval fwd(const Interval& x1, const Interval& x2);
+    static ScalarOpValue fwd(const ScalarOpValue& x1, const ScalarOpValue& x2);
+    static void bwd(const Interval& y, Interval& x1, Interval& x2);
+
+    static IntervalVector fwd(const IntervalVector& x1, const IntervalVector& x2);
+    static VectorOpValue fwd(const VectorOpValue& x1, const VectorOpValue& x2);
+    static void bwd(const IntervalVector& y, IntervalVector& x1, IntervalVector& x2);
+
+    static IntervalMatrix fwd(const IntervalMatrix& x1, const IntervalMatrix& x2);
+    static MatrixOpValue fwd(const MatrixOpValue& x1, const MatrixOpValue& x2);
+    static void bwd(const IntervalMatrix& y, IntervalMatrix& x1, IntervalMatrix& x2);
   };
 
-  struct CtcSub
+  struct SubOp
   {
     // Unary operations
-    static Interval fwd_eval(const Interval& x1);
-    static void bwd_eval(const Interval& y, Interval& x1);
-    static IntervalVector fwd_eval(const IntervalVector& x1);
-    static void bwd_eval(const IntervalVector& y, IntervalVector& x1);
-    static IntervalMatrix fwd_eval(const IntervalMatrix& x1);
-    static void bwd_eval(const IntervalMatrix& y, IntervalMatrix& x1);
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
+
+    static IntervalVector fwd(const IntervalVector& x1);
+    static VectorOpValue fwd(const VectorOpValue& x1);
+    static void bwd(const IntervalVector& y, IntervalVector& x1);
+
+    static IntervalMatrix fwd(const IntervalMatrix& x1);
+    static MatrixOpValue fwd(const MatrixOpValue& x1);
+    static void bwd(const IntervalMatrix& y, IntervalMatrix& x1);
 
     // Binary operations
-    static Interval fwd_eval(const Interval& x1, const Interval& x2);
-    static void bwd_eval(const Interval& y, Interval& x1, Interval& x2);
-    static IntervalVector fwd_eval(const IntervalVector& x1, const IntervalVector& x2);
-    static void bwd_eval(const IntervalVector& y, IntervalVector& x1, IntervalVector& x2);
-    static IntervalMatrix fwd_eval(const IntervalMatrix& x1, const IntervalMatrix& x2);
-    static void bwd_eval(const IntervalMatrix& y, IntervalMatrix& x1, IntervalMatrix& x2);
+    static Interval fwd(const Interval& x1, const Interval& x2);
+    static ScalarOpValue fwd(const ScalarOpValue& x1, const ScalarOpValue& x2);
+    static void bwd(const Interval& y, Interval& x1, Interval& x2);
+
+    static IntervalVector fwd(const IntervalVector& x1, const IntervalVector& x2);
+    static VectorOpValue fwd(const VectorOpValue& x1, const VectorOpValue& x2);
+    static void bwd(const IntervalVector& y, IntervalVector& x1, IntervalVector& x2);
+
+    static IntervalMatrix fwd(const IntervalMatrix& x1, const IntervalMatrix& x2);
+    static MatrixOpValue fwd(const MatrixOpValue& x1, const MatrixOpValue& x2);
+    static void bwd(const IntervalMatrix& y, IntervalMatrix& x1, IntervalMatrix& x2);
   };
 
-  struct CtcMul
+  struct MulOp
   {
-    static Interval fwd_eval(const Interval& x1, const Interval& x2);
-    static void bwd_eval(const Interval& y, Interval& x1, Interval& x2);
-    static IntervalVector fwd_eval(const IntervalMatrix& x1, const IntervalVector& x2);
-    static void bwd_eval(const IntervalVector& y, IntervalMatrix& x1, IntervalVector& x2);
+    static Interval fwd(const Interval& x1, const Interval& x2);
+    static ScalarOpValue fwd(const ScalarOpValue& x1, const ScalarOpValue& x2);
+    static void bwd(const Interval& y, Interval& x1, Interval& x2);
+
+    static IntervalVector fwd(const IntervalMatrix& x1, const IntervalVector& x2);
+    static VectorOpValue fwd(const MatrixOpValue& x1, const VectorOpValue& x2);
+    static void bwd(const IntervalVector& y, IntervalMatrix& x1, IntervalVector& x2);
+
   };
 
-  struct CtcDiv
+  struct DivOp
   {
-    static Interval fwd_eval(const Interval& x1, const Interval& x2);
-    static void bwd_eval(const Interval& y, Interval& x1, Interval& x2);
+    static Interval fwd(const Interval& x1, const Interval& x2);
+    static ScalarOpValue fwd(const ScalarOpValue& x1, const ScalarOpValue& x2);
+    static void bwd(const Interval& y, Interval& x1, Interval& x2);
   };
 
-  struct CtcSqrt
+  struct SqrtOp
   {
-    static Interval fwd_eval(const Interval& x1);
-    static void bwd_eval(const Interval& y, Interval& x1);
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
   };
 
-  struct CtcSqr
+  struct SqrOp
   {
-    static Interval fwd_eval(const Interval& x1);
-    static void bwd_eval(const Interval& y, Interval& x1);
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
   };
 
-  struct CtcCos
+  struct CosOp
   {
-    static Interval fwd_eval(const Interval& x1);
-    static void bwd_eval(const Interval& y, Interval& x1);
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
   };
 
-  struct CtcSin
+  struct SinOp
   {
-    static Interval fwd_eval(const Interval& x1);
-    static void bwd_eval(const Interval& y, Interval& x1);
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
   };
 
-  struct CtcTanh
+  struct TanhOp
   {
-    static Interval fwd_eval(const Interval& x1);
-    static void bwd_eval(const Interval& y, Interval& x1);
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
   };
 
-  struct CtcAbs
+  struct AbsOp
   {
-    static Interval fwd_eval(const Interval& x1);
-    static void bwd_eval(const Interval& y, Interval& x1);
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
   };
 
-  struct CtcComponent
+  struct ComponentOp
   {
-    static Interval fwd_eval(const IntervalVector& x1, size_t i);
-    static void bwd_eval(const Interval& y, IntervalVector& x1, size_t i);
+    static Interval fwd(const IntervalVector& x1, size_t i);
+    static ScalarOpValue fwd(const VectorOpValue& x1, size_t i);
+    static void bwd(const Interval& y, IntervalVector& x1, size_t i);
   };
 
-  struct CtcVector
+  struct VectorOp
   {
-    template<typename... X>
-    static IntervalVector fwd_eval(const X&... x)
+    template<typename... X, typename = typename std::enable_if<(true && ... && (
+        std::is_base_of_v<Domain,X>
+      )), void>::type>
+    static IntervalVector fwd(const X&... x)
     {
       IntervalVector iv(sizeof...(X));
       size_t i = 0;
@@ -123,32 +238,56 @@ namespace codac2
       return iv;
     }
 
+    template<typename... X, typename = typename std::enable_if<(true && ... && (
+        std::is_same_v<ScalarOpValue,X>
+      )), void>::type>
+    static VectorOpValue fwd(const X&... x)
+    {
+      return {
+        Vector({x.m...}),
+        IntervalVector({x.a...}),
+        IntervalMatrix(1,1), // todo
+      };
+    }
+
     template<typename... X>
-    static void bwd_eval(const IntervalVector& y, X&... x)
+    static void bwd(const IntervalVector& y, X&... x)
     {
       size_t i = 0;
       ((x &= y[i++]), ...);
     }
   };
 
-  struct CtcMatrix
+  struct MatrixOp
   {
-    static void fwd_eval_i(IntervalMatrix& m, const IntervalVector& x, size_t i);
+    static void fwd_i(IntervalMatrix& m, const IntervalVector& x, size_t i);
 
-    template<typename... X>
-    static IntervalMatrix fwd_eval(const X&... x)
+    template<typename... X, typename = typename std::enable_if<(true && ... && (
+        std::is_base_of_v<Domain,X>
+      )), void>::type>
+    static IntervalMatrix fwd(const X&... x)
     {
       IntervalMatrix m(1, sizeof...(X));
       size_t i = 0;
-      (CtcMatrix::fwd_eval_i(m, x, i++), ...);
+      (MatrixOp::fwd_i(m, x, i++), ...);
       return m;
     }
 
     template<typename... X>
-    static void bwd_eval(const IntervalMatrix& y, X&... x)
+    static void bwd(const IntervalMatrix& y, X&... x)
     {
       size_t i = 0;
       ((x &= y.col(i++)), ...);
+    }
+
+    template<typename... X, typename = typename std::enable_if<(true && ... && (
+        std::is_same_v<VectorOpValue,X>
+      )), void>::type>
+    static MatrixOpValue fwd(const X&... x)
+    {
+      return {
+        IntervalMatrix({x.a...})
+      };
     }
   };
 }

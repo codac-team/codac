@@ -70,12 +70,13 @@ namespace codac2
       Collection<Ctc_<X>> _ctcs;
   };
 
-  template<typename X, typename C1, typename C2, typename = typename std::enable_if<(
-      std::is_base_of_v<Ctc_<X>,C1> &&
-      std::is_base_of_v<Ctc_<X>,C2>
+  template<typename C1, typename C2, typename = typename std::enable_if<(
+      std::is_base_of_v<Ctc_<typename C1::X>,C1> &&
+      std::is_base_of_v<Ctc_<typename C1::X>,C2> &&
+      std::is_same_v<typename C1::X,typename C2::X>
     )>>
-  inline CtcUnion<X> operator|(const C1& c1, const C2& c2)
+  inline CtcUnion<typename C1::X> operator|(const C1& c1, const C2& c2)
   {
-    return CtcUnion<X>(c1,c2);
+    return CtcUnion<typename C1::X>(c1,c2);
   }
 }

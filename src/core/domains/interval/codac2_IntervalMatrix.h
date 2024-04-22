@@ -24,6 +24,8 @@ namespace codac2
 {
   using Eigen::Dynamic;
 
+  class IntervalVector;
+
   template<int R=Dynamic,int C=Dynamic>
   class IntervalMatrix_ : public IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>
   {
@@ -54,6 +56,10 @@ namespace codac2
       { }
 
       IntervalMatrix_(std::initializer_list<std::initializer_list<Interval>> l)
+        : IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>(l)
+      { }
+
+      IntervalMatrix_(std::initializer_list<IntervalVector> l)
         : IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>(l)
       { }
 
@@ -94,6 +100,9 @@ namespace codac2
       IntervalMatrix(std::initializer_list<std::initializer_list<Interval>> l)
         : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(l)
       { }
+
+      // Defined in codac2_IntervalVector.h
+      IntervalMatrix(std::initializer_list<IntervalVector> l);
 
       IntervalMatrix(const Matrix& x)
         : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(x)
