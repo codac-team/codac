@@ -6,8 +6,8 @@ mkdir -p ~/Downloads/newcodac
 
 cd ~/Downloads/newcodac
 sudo rm -Rf codac*
-git clone https://github.com/lebarsfa/codac
-#git clone https://github.com/codac-team/codac
+#git clone https://github.com/lebarsfa/codac
+git clone https://github.com/codac-team/codac
 cd codac
 git submodule init
 git submodule update
