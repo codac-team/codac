@@ -2,9 +2,9 @@
 
 set -e -x
 
-wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/ibex_x86_64_manylinux2014.zip --no-check-certificate -nv
-unzip -q ibex_x86_64_manylinux2014.zip
-rm -Rf ibex_x86_64_manylinux2014.zip
+wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex_$(uname -m)_manylinux2014.zip --no-check-certificate -nv
+unzip -q ibex_$(uname -m)_manylinux2014.zip
+rm -Rf ibex_$(uname -m)_manylinux2014.zip
 sudo cp -Rf ibex/* /usr/local/
 
 git config --global --add safe.directory /io
@@ -18,7 +18,7 @@ for PYBIN in /opt/python/cp3*/bin; do
   "${PYBIN}/python" -m pip install --upgrade pip
   mkdir -p build_dir && cd build_dir
   cmake -E env CXXFLAGS="-fPIC" CFLAGS="-fPIC" cmake -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=OFF -DWITH_PYTHON=ON ..
-  make -j2
+  make -j4
 
   make test ARGS="-V --output-on-failure"
   echo "start of Testing/Temporary/LastTest.log"
@@ -30,7 +30,7 @@ for PYBIN in /opt/python/cp3*/bin; do
     auditwheel repair "$whl" -w /io/wheelhouse/
   done
   
-  "${PYBIN}/python" -m pip install numpy
+  "${PYBIN}/python" -m pip install numpy --prefer-binary
   "${PYBIN}/python" -m pip install codac --no-deps --no-index -f /io/wheelhouse
   (cd "$HOME"; "${PYBIN}/python" -m unittest discover codac.tests)
   cd /io

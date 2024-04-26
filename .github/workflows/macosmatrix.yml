@@ -57,7 +57,7 @@ jobs:
     - run: brew install graphviz ; wget https://github.com/Homebrew/homebrew-core/raw/d2267b9f2ad247bc9c8273eb755b39566a474a70/Formula/doxygen.rb ; brew reinstall ./doxygen.rb ; brew pin doxygen ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects
       if: runner.os=='macOS'
     - run: |
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240224/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
         unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
         rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
         sudo cp -Rf ibex/* /usr/local/
@@ -65,11 +65,11 @@ jobs:
     - run: |
         mkdir build ; cd build
         cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=${{ matrix.cfg.arch }} -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=ON ..
-        cmake --build . --config Release --target install
+        cmake --build . -j 4 --config Release --target install
         cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
         cd ..
       shell: bash
-    - run: pip install *.whl ; python -c "import sys; print(sys.version)" ; python examples/tuto/01_getting_started/01_getting_started.py ; pip install numpy ; python -m unittest discover codac.tests
+    - run: pip install *.whl ; python -c "import sys; print(sys.version)" ; python examples/tuto/01_getting_started/01_getting_started.py ; pip install numpy --prefer-binary ; python -m unittest discover codac.tests
       shell: bash
       if: matrix.cfg.cross!=true
     - uses: xresloader/upload-to-github-release@v1
