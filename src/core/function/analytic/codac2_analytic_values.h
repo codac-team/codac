@@ -27,9 +27,11 @@ namespace codac2
         return std::make_shared<ConstValueExpr<T>>(*this);
       }
 
-      T fwd_eval(ValuesMap& v, const FunctionArgsList& f_args) const
+      T fwd_eval(ValuesMap& v, const FunctionArgsList& f_args, const IntervalVector& flatten_x) const
       {
-        return AnalyticExpr<T>::init_value(v, T(_x,f_args.total_size()));
+        T y = AnalyticExpr<T>::init_value(v, T(_x, f_args.total_size()), flatten_x);
+        y.compute_centered_form(flatten_x);
+        return y;
       }
       
       void bwd_eval(ValuesMap& v) const

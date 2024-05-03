@@ -39,7 +39,7 @@ namespace codac2
       {
         ValuesMap v;
         fill_from_args(v, x...);
-        return this->expr()->fwd_eval(v,this->args()).a;
+        return this->expr()->fwd_eval(v, this->args(), cart_prod(x...)).a;
       }
 
     protected:

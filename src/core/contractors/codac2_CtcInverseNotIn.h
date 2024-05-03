@@ -22,13 +22,14 @@ namespace codac2
   {
     public:
 
-      CtcInverseNotIn(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const Y& y)
+      CtcInverseNotIn(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const Y& y, bool with_centered_form = true)
         : CtcUnion<X>(f.args()[0]->size() /* f must have only one arg, see following assert */)
       {
         assert(f.args().size() == 1);
+        bool is_not_in = true;
 
         for(const auto& complem_y : y.complementary())
-          *this |= CtcInverse_<Y,X>(f, complem_y);
+          *this |= CtcInverse_<Y,X>(f, complem_y, with_centered_form, is_not_in);
       }
 
       virtual std::shared_ptr<Ctc> copy() const

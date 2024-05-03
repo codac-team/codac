@@ -22,6 +22,12 @@ namespace codac2
     IntervalVector out;
   };
 
+  inline std::ostream& operator<<(std::ostream& os, const BoxPair& x)
+  {
+    os << "(" << x.in << "," << x.out << ")";
+    return os;
+  }
+
   class Sep
   {
     public:

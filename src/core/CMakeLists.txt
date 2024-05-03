@@ -74,6 +74,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Approx.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Collection.h
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_GaussJordan.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_GaussJordan.h
     ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_Matrix.h
     ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_MatrixTemplate.h
     ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_Vector.h

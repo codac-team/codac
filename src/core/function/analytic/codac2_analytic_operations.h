@@ -145,21 +145,33 @@ namespace codac2
     {
       return std::make_shared<AnalyticOperationExpr<MulOp,ScalarOpValue,ScalarOpValue,ScalarOpValue>>(x1,x2);
     }
+    
+    inline VectorExpr_ptr
+    operator*(const ScalarExpr_ptr& x1, const VectorExpr_ptr& x2)
+    {
+      return std::make_shared<AnalyticOperationExpr<MulOp,VectorOpValue,ScalarOpValue,VectorOpValue>>(x1,x2);
+    }
 
-    template<typename X1, typename = typename std::enable_if<
-        !std::is_base_of_v<VarBase,X1>
-      >::type>
     inline ScalarExpr_ptr
-    operator*(const X1& x1, const ScalarExpr_ptr& x2)
+    operator*(const Interval& x1, const ScalarExpr_ptr& x2)
     {
       return operator*(const_value(x1),x2);
     }
 
-    template<typename X2, typename = typename std::enable_if<
-        !std::is_base_of_v<VarBase,X2>
-      >::type>
     inline ScalarExpr_ptr
-    operator*(const ScalarExpr_ptr& x1, const X2& x2)
+    operator*(const ScalarExpr_ptr& x1, const Interval& x2)
+    {
+      return operator*(x1, const_value(x2));
+    }
+
+    inline VectorExpr_ptr
+    operator*(const Interval& x1, const VectorExpr_ptr& x2)
+    {
+      return operator*(const_value(x1),x2);
+    }
+
+    inline VectorExpr_ptr
+    operator*(const ScalarExpr_ptr& x1, const IntervalVector& x2)
     {
       return operator*(x1, const_value(x2));
     }
@@ -199,6 +211,30 @@ namespace codac2
   // Other operators
 
     inline ScalarExpr_ptr
+    pow(const ScalarExpr_ptr& x1, const ScalarExpr_ptr& x2)
+    {
+      return std::make_shared<AnalyticOperationExpr<PowOp,ScalarOpValue,ScalarOpValue,ScalarOpValue>>(x1,x2);
+    }
+
+    template<typename X1, typename = typename std::enable_if<
+        !std::is_base_of_v<VarBase,X1>
+      >::type>
+    inline ScalarExpr_ptr
+    pow(const X1& x1, const ScalarExpr_ptr& x2)
+    {
+      return pow(const_value(x1),x2);
+    }
+
+    template<typename X2, typename = typename std::enable_if<
+        !std::is_base_of_v<VarBase,X2>
+      >::type>
+    inline ScalarExpr_ptr
+    pow(const ScalarExpr_ptr& x1, const X2& x2)
+    {
+      return pow(x1,const_value(x2));
+    }
+
+    inline ScalarExpr_ptr
     sqr(const ScalarExpr_ptr& x1)
     {
       return std::make_shared<AnalyticOperationExpr<SqrOp,ScalarOpValue,ScalarOpValue>>(x1);
@@ -208,6 +244,12 @@ namespace codac2
     sqrt(const ScalarExpr_ptr& x1)
     {
       return std::make_shared<AnalyticOperationExpr<SqrtOp,ScalarOpValue,ScalarOpValue>>(x1);
+    }
+
+    inline ScalarExpr_ptr
+    exp(const ScalarExpr_ptr& x1)
+    {
+      return std::make_shared<AnalyticOperationExpr<ExpOp,ScalarOpValue,ScalarOpValue>>(x1);
     }
 
     inline ScalarExpr_ptr

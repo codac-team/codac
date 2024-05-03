@@ -26,15 +26,15 @@ namespace codac2
 
     public:
 
-      SepInverse(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const Y& y)
-        : SepCtcPair(CtcInverseNotIn<Y,X>(f,y), CtcInverse_<Y,X>(f,y))
+      SepInverse(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const Y& y, bool with_centered_form = true)
+        : SepCtcPair(CtcInverseNotIn<Y,X>(f,y,with_centered_form), CtcInverse_<Y,X>(f,y,with_centered_form))
       { }
 
       template<typename S, typename = typename std::enable_if<
           std::is_base_of_v<Sep,S>
         >::type>
-      SepInverse(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const S& sep_y)
-        : SepCtcPair(CtcInverseNotIn<Y,X>(f,SepCtcIn(sep_y)), CtcInverse_<Y,X>(f,SepCtcOut(sep_y)))
+      SepInverse(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const S& sep_y, bool with_centered_form = true)
+        : SepCtcPair(CtcInverseNotIn<Y,X>(f,SepCtcIn(sep_y),with_centered_form), CtcInverse_<Y,X>(f,SepCtcOut(sep_y),with_centered_form))
       { }
 
       virtual std::shared_ptr<Sep> copy() const

@@ -469,37 +469,37 @@ namespace codac2
    * \brief Computes the backward (reverse) power operation
    * 
    * \note Contracts \f$[x]\f$ as: 
-   * \f$[x]\cap\{x\in[x]\ \mid\ \exists y\in[y],\ y=x^n\}\f$.
+   * \f$[x]\cap\{x\in[x]\ \mid\ \exists y\in[y],\ y=x^p\}\f$.
    * 
    * \param y interval value (result of the forward operation)
    * \param x prior value for \f$[x]\f$, may be contracted
-   * \param n power integer value
+   * \param p power integer value
    */
-  void bwd_pow(const Interval& y, Interval& x, int n);
+  void bwd_pow(const Interval& y, Interval& x, int p);
 
   /**
    * \brief Computes the backward (reverse) power operation
    * 
-   * \note Contracts \f$[x_1]\f$, \f$[x_2]\f$ as: 
-   * \f$([x_1],[x_2])\cap\{(x_1,x_2)\in[x_1]\times[x_2]\ \mid\ \exists y\in[y],\ y=x_1^{x_2}\}\f$.
+   * \note Contracts \f$[x]\f$, \f$[p]\f$ as: 
+   * \f$([x],[p])\cap\{(x,p)\in[x]\times[p]\ \mid\ \exists y\in[y],\ y=x^{p}\}\f$.
    * 
    * \param y interval value (result of the forward operation)
-   * \param x1 prior value for \f$[x_1]\f$, may be contracted
-   * \param x2 prior value for \f$[x_2]\f$, may be contracted
+   * \param x prior value for \f$[x]\f$, may be contracted
+   * \param p prior value for \f$[p]\f$, may be contracted
    */
-  void bwd_pow(const Interval& y, Interval& x1, Interval& x2);
+  void bwd_pow(const Interval& y, Interval& x, Interval& p);
 
   /**
    * \brief Computes the backward (reverse) root operation
    * 
    * \note Contracts \f$[x]\f$ as: 
-   * \f$[x]\cap\{x\in[x]\ \mid\ \exists y\in[y],\ y=\sqrt[n]{x}\}\f$.
+   * \f$[x]\cap\{x\in[x]\ \mid\ \exists y\in[y],\ y=\sqrt[p]{x}\}\f$.
    * 
    * \param y interval value (result of the forward operation)
    * \param x prior value for \f$[x]\f$, may be contracted
-   * \param n root integer value
+   * \param p root integer value
    */
-  void bwd_root(const Interval& y, Interval& x, int n);
+  void bwd_root(const Interval& y, Interval& x, int p);
 
   /**
    * \brief Computes the backward (reverse) exponential operation

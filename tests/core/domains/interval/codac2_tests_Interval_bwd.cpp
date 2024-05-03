@@ -350,3 +350,38 @@ TEST_CASE("Interval bwd operations")
   x = Interval(-1.57079632679489678, 1.1780972450961728626);
   CHECK(!(tan(x).is_empty()));
 }
+
+#include <codac2_IntervalMatrix.h>
+#include <codac2_DirectedCtc.h>
+
+TEST_CASE("bwd mul operations")
+{
+  double delta = 0.1;
+  IntervalMatrix A(2,2);
+  Interval deltaM(-delta,delta);
+  A(0,0) = 1+deltaM;
+  A(0,1) = deltaM;
+  A(1,0) = deltaM;
+  A(1,1) = 1+deltaM;
+
+  Vector b(2,1.0);
+
+  IntervalVector x(2,Interval(-10,10));
+
+  double _M[16]={1+delta,   0,       0,     delta,
+             0,    1-delta,    0,    -delta,
+             0,     -delta,    0,   1-delta,
+             0,      delta, 1+delta,    0};
+  Matrix M(4,4,_M);
+  Matrix invM = M.inverse();
+
+  Vector b2(4,1.0);
+  Vector bounds=invM*b2;
+  double _x2[2][2]={ {bounds[0],bounds[1]}, {bounds[2],bounds[3]} };
+  IntervalVector x2(2,_x2);
+
+  MulOp::bwd(b,A,x);
+
+  cout << x << endl;
+  cout << x2 << endl;
+}

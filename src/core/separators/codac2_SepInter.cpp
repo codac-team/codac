@@ -30,5 +30,6 @@ BoxPair SepInter::separate(const IntervalVector& x) const
     x_in |= x_sep.in;
   }
   
+  assert((x_in | x_out) == x);
   return { x_in, x_out };
 }

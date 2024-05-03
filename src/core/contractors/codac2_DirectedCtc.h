@@ -21,22 +21,24 @@ namespace codac2
   struct OpValueBase
   {
     virtual ~OpValueBase() = default;
+    virtual void compute_centered_form(const IntervalVector& flatten_x) = 0;
   };
 
   struct ScalarOpValue : public OpValueBase
   {
     using Domain = Interval;
 
-    double m;
+    Interval m;
     Interval a;
-    IntervalVector da;
+    IntervalMatrix da;
+    bool def_domain = true;
 
-    ScalarOpValue(double m_, const Interval& a_, const IntervalVector& da_)
-      : m(m_), a(a_), da(da_)
+    ScalarOpValue(Interval m_, const Interval& a_, const IntervalMatrix& da_, bool def_domain_ = true)
+      : m(m_), a(a_), da(da_), def_domain(def_domain_)
     { }
 
     ScalarOpValue(const Interval& a_, size_t total_args_size)
-      : ScalarOpValue(a_.mid(), a_, IntervalVector::zeros(total_args_size))
+      : ScalarOpValue(a_.mid(), a_, IntervalMatrix::zeros(1,total_args_size))
     { }
 
     ScalarOpValue(const Interval& a_, size_t total_args_size, size_t id_first, size_t id_last)
@@ -46,25 +48,40 @@ namespace codac2
       assert(id_first >= 0 && id_last < total_args_size);
 
       for(size_t i = id_first ; i <= id_last ; i++)
-        da[i] = 1.;
+        da(0,i) = 1.;
     }
 
+    ScalarOpValue& operator&=(const ScalarOpValue& x)
+    {
+      a &= x.a;
+      da &= x.da;
+      def_domain &= x.def_domain;
+      return *this;
+    }
+
+    virtual void compute_centered_form(const IntervalVector& flatten_x)
+    {
+      assert(flatten_x.size() == (size_t)da.cols());
+      assert(da.rows() == 1);
+      //a &= m + (da*(flatten_x-flatten_x.mid().template cast<Interval>()))(0,0);
+    }
   };
 
   struct VectorOpValue : public OpValueBase
   {
     using Domain = IntervalVector;
     
-    Vector m;
+    IntervalVector m;
     IntervalVector a;
     IntervalMatrix da;
+    bool def_domain = true;
 
-    VectorOpValue(Vector m_, const IntervalVector& a_, const IntervalMatrix& da_)
-      : m(m_), a(a_), da(da_)
+    VectorOpValue(IntervalVector m_, const IntervalVector& a_, const IntervalMatrix& da_, bool def_domain_ = true)
+      : m(m_), a(a_), da(da_), def_domain(def_domain_)
     { }
 
     VectorOpValue(const IntervalVector& a_, size_t total_args_size)
-      : VectorOpValue(a_.mid(), a_, IntervalMatrix::zeros(total_args_size,total_args_size))
+      : VectorOpValue(a_.mid(), a_, IntervalMatrix::zeros(a_.size(),total_args_size))
     { }
 
     VectorOpValue(const IntervalVector& a_, size_t total_args_size, size_t id_first, size_t id_last)
@@ -77,6 +94,20 @@ namespace codac2
         da(i,i) = 1.;
     }
 
+    VectorOpValue& operator&=(const VectorOpValue& x)
+    {
+      a &= x.a;
+      da &= x.da;
+      def_domain &= x.def_domain;
+      return *this;
+    }
+
+    virtual void compute_centered_form(const IntervalVector& flatten_x)
+    {
+      assert(flatten_x.size() == (size_t)da.cols());
+      assert(a.size() == (size_t)da.rows());
+      //a &= m + (da*(flatten_x-flatten_x.mid().template cast<Interval>())).col(0);
+    }
   };
 
   struct MatrixOpValue : public OpValueBase
@@ -97,6 +128,14 @@ namespace codac2
       : MatrixOpValue(a_)
     { }
 
+    MatrixOpValue& operator&=(const MatrixOpValue& x)
+    {
+      a &= x.a;
+      return *this;
+    }
+
+    virtual void compute_centered_form(const IntervalVector& flatten_x)
+    { }
   };
 
   struct AddOp
@@ -163,10 +202,13 @@ namespace codac2
     static ScalarOpValue fwd(const ScalarOpValue& x1, const ScalarOpValue& x2);
     static void bwd(const Interval& y, Interval& x1, Interval& x2);
 
+    static IntervalVector fwd(const Interval& x1, const IntervalVector& x2);
+    static VectorOpValue fwd(const ScalarOpValue& x1, const VectorOpValue& x2);
+    static void bwd(const IntervalVector& y, Interval& x1, IntervalVector& x2);
+
     static IntervalVector fwd(const IntervalMatrix& x1, const IntervalVector& x2);
     static VectorOpValue fwd(const MatrixOpValue& x1, const VectorOpValue& x2);
     static void bwd(const IntervalVector& y, IntervalMatrix& x1, IntervalVector& x2);
-
   };
 
   struct DivOp
@@ -176,6 +218,20 @@ namespace codac2
     static void bwd(const Interval& y, Interval& x1, Interval& x2);
   };
 
+  struct PowOp
+  {
+    static Interval fwd(const Interval& x1, const Interval& x2);
+    static ScalarOpValue fwd(const ScalarOpValue& x1, const ScalarOpValue& x2);
+    static void bwd(const Interval& y, Interval& x1, Interval& x2);
+  };
+
+  struct SqrOp
+  {
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
+  };
+
   struct SqrtOp
   {
     static Interval fwd(const Interval& x1);
@@ -183,7 +239,7 @@ namespace codac2
     static void bwd(const Interval& y, Interval& x1);
   };
 
-  struct SqrOp
+  struct ExpOp
   {
     static Interval fwd(const Interval& x1);
     static ScalarOpValue fwd(const ScalarOpValue& x1);
@@ -228,14 +284,11 @@ namespace codac2
   struct VectorOp
   {
     template<typename... X, typename = typename std::enable_if<(true && ... && (
-        std::is_base_of_v<Domain,X>
+        std::is_base_of_v<Interval,X>
       )), void>::type>
     static IntervalVector fwd(const X&... x)
     {
-      IntervalVector iv(sizeof...(X));
-      size_t i = 0;
-      ((iv[i++] &= x), ...);
-      return iv;
+      return IntervalVector({x...});
     }
 
     template<typename... X, typename = typename std::enable_if<(true && ... && (
@@ -243,10 +296,18 @@ namespace codac2
       )), void>::type>
     static VectorOpValue fwd(const X&... x)
     {
+      IntervalMatrix d(sizeof...(X),std::get<0>(std::tie(x...)).da.cols());
+      size_t i = 0;
+      ((d.row(i++) = x.da.transpose()), ...);
+
+      bool def_domain = true;
+      ((def_domain &= x.def_domain), ...);
+      
       return {
-        Vector({x.m...}),
-        IntervalVector({x.a...}),
-        IntervalMatrix(1,1), // todo
+        fwd(x.m...),
+        fwd(x.a...),
+        d,
+        def_domain
       };
     }
 
@@ -267,6 +328,7 @@ namespace codac2
       )), void>::type>
     static IntervalMatrix fwd(const X&... x)
     {
+      assert(false && "tocheck");
       IntervalMatrix m(1, sizeof...(X));
       size_t i = 0;
       (MatrixOp::fwd_i(m, x, i++), ...);
@@ -276,6 +338,7 @@ namespace codac2
     template<typename... X>
     static void bwd(const IntervalMatrix& y, X&... x)
     {
+      assert(false && "tocheck");
       size_t i = 0;
       ((x &= y.col(i++)), ...);
     }
@@ -285,6 +348,7 @@ namespace codac2
       )), void>::type>
     static MatrixOpValue fwd(const X&... x)
     {
+      assert(false && "tocheck");
       return {
         IntervalMatrix({x.a...})
       };

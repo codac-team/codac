@@ -133,19 +133,20 @@ namespace codac2
     ibex::bwd_sqrt(y,x);
   }
 
-  void bwd_pow(const Interval& y, Interval& x, int n)
+  void bwd_pow(const Interval& y, Interval& x, int p)
   {
-    ibex::bwd_pow(y,n,x);
+    ibex::bwd_pow(y,p,x);
   }
 
-  void bwd_pow(const Interval& y, Interval& x1, Interval& x2)
+  void bwd_pow(const Interval& y, Interval& x, Interval& p)
   {
-    ibex::bwd_pow(y,x1,x2);
+    assert(p.is_degenerated() && "bwd_power(y,x1,x2) (with x1 and x2 intervals) not implemented yet with Gaol");
+    ibex::bwd_pow(y,p.mid(),x);
   }
 
-  void bwd_root(const Interval& y, Interval& x, int n)
+  void bwd_root(const Interval& y, Interval& x, int p)
   {
-    ibex::bwd_root(y,n,x);
+    ibex::bwd_root(y,p,x);
   }
 
   void bwd_exp(const Interval& y, Interval& x)

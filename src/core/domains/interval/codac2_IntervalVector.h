@@ -260,7 +260,7 @@ namespace codac2
     }
   }
 
-  inline IntervalMatrix::IntervalMatrix(std::initializer_list<codac2::IntervalVector> l)
-    : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(l)
-  { }
+  //inline IntervalMatrix::IntervalMatrix(std::initializer_list<codac2::IntervalVector> l)
+  //  : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(l)
+  //{ }
 }

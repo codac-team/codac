@@ -30,10 +30,10 @@ namespace codac2
 
       AnalyticExpr<T>& operator=(const AnalyticExpr<T>& x) = delete;
 
-      virtual T fwd_eval(ValuesMap& v, const FunctionArgsList& f_args) const = 0;
+      virtual T fwd_eval(ValuesMap& v, const FunctionArgsList& f_args, const IntervalVector& flatten_x) const = 0;
       virtual void bwd_eval(ValuesMap& v) const = 0;
 
-      T init_value(ValuesMap& v, const T& x) const
+      T init_value(ValuesMap& v, const T& x, const IntervalVector& flatten_x) const
       {
         auto it = v.find(unique_id());
 
@@ -43,8 +43,9 @@ namespace codac2
           return x;
         }
 
-        std::dynamic_pointer_cast<T>(it->second)->a &= x.a;
-        return x;
+        *std::dynamic_pointer_cast<T>(it->second) &= x;
+        std::dynamic_pointer_cast<T>(it->second)->compute_centered_form(flatten_x);
+        return *std::dynamic_pointer_cast<T>(it->second);
       }
 
       T& value(ValuesMap& v) const
@@ -77,32 +78,30 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<X>...>::replace_expr(old_expr_id, new_expr);
       }
 
-      static Y __fwd_eval_from_tuple(ValuesMap& v, const FunctionArgsList& f_args, std::shared_ptr<AnalyticExpr<X>>... x)
+      Y fwd_eval(ValuesMap& v, const FunctionArgsList& f_args, const IntervalVector& flatten_x) const
       {
-        return C::fwd(x->fwd_eval(v,f_args)...);
-      }
+        Y y = std::apply([this,&v,f_args,flatten_x](auto &&... x)
+        {
+          return AnalyticExpr<Y>::init_value(v, C::fwd(x->fwd_eval(v, f_args, flatten_x)...), flatten_x);
+        }, this->_x);
 
-      Y fwd_eval(ValuesMap& v, const FunctionArgsList& f_args) const
-      {
-        return AnalyticExpr<Y>::init_value(v,
-          std::apply(__fwd_eval_from_tuple, std::tuple_cat(std::tie(v), std::make_tuple(f_args), this->_x)));
-      }
-      
-      static void __bwd_from_tuple(const Y& y, ValuesMap& v, std::shared_ptr<AnalyticExpr<X>>... x)
-      {
-        C::bwd(y.a, x->value(v).a...);
+        y.compute_centered_form(flatten_x);
+        return y;
       }
 
       void bwd_eval(ValuesMap& v) const
       {
-        std::apply(__bwd_from_tuple, std::tuple_cat(
-          std::tie(AnalyticExpr<Y>::value(v)), std::tie(v), this->_x));
+        auto y = AnalyticExpr<Y>::value(v);
 
-        std::apply(
-          [&v](auto &&... x)
-          {
-            (x->bwd_eval(v), ...);
-          }, this->_x);
+        std::apply([&v,y](auto &&... x)
+        {
+          C::bwd(y.a, x->value(v).a...);
+        }, this->_x);
+
+        std::apply([&v](auto &&... x)
+        {
+          (x->bwd_eval(v), ...);
+        }, this->_x);
       }
   };
 
@@ -129,9 +128,13 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<VectorOpValue>>::replace_expr(old_expr_id, new_expr);
       }
       
-      ScalarOpValue fwd_eval(ValuesMap& v, const FunctionArgsList& f_args) const
+      ScalarOpValue fwd_eval(ValuesMap& v, const FunctionArgsList& f_args, const IntervalVector& flatten_x) const
       {
-        return AnalyticExpr<ScalarOpValue>::init_value(v, ComponentOp::fwd(std::get<0>(this->_x)->fwd_eval(v,f_args), _i));
+        ScalarOpValue y = AnalyticExpr<ScalarOpValue>::init_value(
+          v, ComponentOp::fwd(std::get<0>(this->_x)->fwd_eval(v, f_args, flatten_x), _i), flatten_x);
+
+        y.compute_centered_form(flatten_x);
+        return y;
       }
       
       void bwd_eval(ValuesMap& v) const
