@@ -43,8 +43,7 @@ namespace codac2
           return x;
         }
 
-        *std::dynamic_pointer_cast<T>(it->second) &= x;
-        std::dynamic_pointer_cast<T>(it->second)->compute_centered_form(flatten_x);
+        *std::dynamic_pointer_cast<T>(it->second) = x;
         return *std::dynamic_pointer_cast<T>(it->second);
       }
 
@@ -80,13 +79,10 @@ namespace codac2
 
       Y fwd_eval(ValuesMap& v, const FunctionArgsList& f_args, const IntervalVector& flatten_x) const
       {
-        Y y = std::apply([this,&v,f_args,flatten_x](auto &&... x)
+        return std::apply([this,&v,f_args,flatten_x](auto &&... x)
         {
           return AnalyticExpr<Y>::init_value(v, C::fwd(x->fwd_eval(v, f_args, flatten_x)...), flatten_x);
         }, this->_x);
-
-        y.compute_centered_form(flatten_x);
-        return y;
       }
 
       void bwd_eval(ValuesMap& v) const
@@ -130,11 +126,8 @@ namespace codac2
       
       ScalarOpValue fwd_eval(ValuesMap& v, const FunctionArgsList& f_args, const IntervalVector& flatten_x) const
       {
-        ScalarOpValue y = AnalyticExpr<ScalarOpValue>::init_value(
+        return AnalyticExpr<ScalarOpValue>::init_value(
           v, ComponentOp::fwd(std::get<0>(this->_x)->fwd_eval(v, f_args, flatten_x), _i), flatten_x);
-
-        y.compute_centered_form(flatten_x);
-        return y;
       }
       
       void bwd_eval(ValuesMap& v) const

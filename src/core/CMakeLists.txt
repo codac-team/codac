@@ -38,17 +38,17 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalVector.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalVectorTemplate.h
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_ExprBase.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_ExprBase.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_FunctionArgsList.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_FunctionBase.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_FunctionBase.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/function/codac2_VarBase.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/function/analytic/codac2_analytic_operations.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/function/analytic/codac2_analytic_values.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/function/analytic/codac2_analytic_variables.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/function/analytic/codac2_AnalyticExpr.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/function/analytic/codac2_AnalyticFunction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_ExprBase.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_ExprBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_FunctionArgsList.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_FunctionBase.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_FunctionBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_VarBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_operations.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_values.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_variables.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticExpr.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticFunction.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_Sep.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepAction.cpp
@@ -97,9 +97,9 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors
     ${CMAKE_CURRENT_SOURCE_DIR}/domains
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval
-    ${CMAKE_CURRENT_SOURCE_DIR}/function
-    ${CMAKE_CURRENT_SOURCE_DIR}/function/analytic
-    ${CMAKE_CURRENT_SOURCE_DIR}/function/set
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/set
     ${CMAKE_CURRENT_SOURCE_DIR}/separators
     ${CMAKE_CURRENT_SOURCE_DIR}/tools
     ${CMAKE_CURRENT_SOURCE_DIR}/types

@@ -29,9 +29,7 @@ namespace codac2
 
       T fwd_eval(ValuesMap& v, const FunctionArgsList& f_args, const IntervalVector& flatten_x) const
       {
-        T y = AnalyticExpr<T>::init_value(v, T(_x, f_args.total_size()), flatten_x);
-        y.compute_centered_form(flatten_x);
-        return y;
+        return AnalyticExpr<T>::init_value(v, T(_x, f_args.total_size()), flatten_x);
       }
       
       void bwd_eval(ValuesMap& v) const

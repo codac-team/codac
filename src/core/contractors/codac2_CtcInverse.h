@@ -47,65 +47,65 @@ namespace codac2
       void contract(bool with_centered_form, X&... x) const
       {
         ValuesMap v;
+        // Setting user values into a map before the tree evaluation
         _f.fill_from_args(v, x...);
 
         // Forward/backward algorithm:
 
-          // Forward evaluation
-          _f.expr()->fwd_eval(v,_f.args(),cart_prod(x...));
+          // [1/4] Forward evaluation
+          _f.expr()->fwd_eval(v, _f.args(), cart_prod(x...));
+          auto& val_expr = _f.expr()->value(v);
 
-          if(_is_not_in && !_f.expr()->value(v).def_domain)
-            return;
+          if(_is_not_in && !val_expr.def_domain)
+            return; // <-- iota: if the input x is outside the definition 
+          // domain of one of the involved expressions, or their combinations,
+          // then the inner contraction is disabled.
           
-          // f(x) \in [y]
-          _ctc_y.front().contract(_f.expr()->value(v).a);
+          // [2/4] Performing top contraction (from the root of the tree) with
+          // the contractor expressing the output domain Y.
+          // The underlying constraint is:  f(x) \in [y]
+          _ctc_y.front().contract(val_expr.a);
 
-         // Improving contraction with centered form
+          // [3/4 - optional]
+          // The contraction can be significantly improved using a centered form
+          // expression (enabled by default). This step must be processed before the
+          // backward part of the FwdBwd algorithm (the .m, .a values must not be
+          // changed before the centered evaluation).
 
-        if(with_centered_form && _f.expr()->value(v).def_domain)
-        {
-          using X0 = std::tuple_element_t<0, std::tuple<X...>>;
-
-          if(sizeof...(X) == 1 && std::is_same_v<X0,IntervalVector>)
+          if(with_centered_form && val_expr.def_domain)
           {
-            auto& vop = _f.expr()->value(v);
-            X0& x_ = std::get<0>(std::tie(x...));
-            X0 x_mid = X0(x_.mid());
+            using X0 = std::tuple_element_t<0, std::tuple<X...>>;
 
-            IntervalVector fm(vop.da.rows());
-
-            if constexpr(std::is_same_v<Y,Interval>)
+            if(sizeof...(X) == 1 && std::is_same_v<X0,IntervalVector>)
             {
-              assert(fm.size() == 1);
-              fm[0] = _f.expr()->value(v).a - vop.m;
-            }
+              X0& x_ = std::get<0>(std::tie(x...));
+              X0 x_mid = X0(x_.mid());
 
-            else if constexpr(std::is_same_v<Y,IntervalVector>)
-            {
-              assert(fm.size() == vop.m.size());
-              fm = _f.expr()->value(v).a - vop.m;
+              assert(val_expr.a.size() == val_expr.m.size());
+              IntervalVector fm(val_expr.a - val_expr.m);
+
+              if constexpr(std::is_same_v<Y,IntervalMatrix>)
+              {
+                std::cout << "CtcInverse: matrices expressions not (yet) supported with centered form" << std::endl;
+              }
+
+              else
+              {
+                IntervalVector p = x_ - x_mid;
+                MulOp::bwd(fm, val_expr.da, p);
+                x_ &= p + x_mid;
+              }
             }
 
             else
             {
-              assert(false && "Matrices expressions not (yet) supported with centered form");
+              std::cout << "CtcInverse: not (yet) implemented for multi-nonvector-arguments" << std::endl;
             }
-
-            IntervalVector p = x_ - x_mid;
-            MulOp::bwd(fm, vop.da, p);
-            x_ &= p + x_mid;
           }
-
-          else
-          {
-            assert(false && "Not (yet) implemented for multi-nonvector-arguments");
-            // Not (yet) implemented for multi-nonvector-arguments
-          }
-        }
-
-        // Backward evaluation
+          
+        // [4/4] Backward evaluation
         _f.expr()->bwd_eval(v);
-        _f.intersect_from_args(v, x...);          
+        _f.intersect_from_args(v, x...); // updating input values
       }
 
     protected:

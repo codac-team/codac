@@ -21,7 +21,6 @@ namespace codac2
   struct OpValueBase
   {
     virtual ~OpValueBase() = default;
-    virtual void compute_centered_form(const IntervalVector& flatten_x) = 0;
   };
 
   struct ScalarOpValue : public OpValueBase
@@ -33,7 +32,8 @@ namespace codac2
     IntervalMatrix da;
     bool def_domain = true;
 
-    ScalarOpValue(Interval m_, const Interval& a_, const IntervalMatrix& da_, bool def_domain_ = true)
+    ScalarOpValue(
+      const Interval& m_, const Interval& a_, const IntervalMatrix& da_, bool def_domain_ = true)
       : m(m_), a(a_), da(da_), def_domain(def_domain_)
     { }
 
@@ -58,13 +58,6 @@ namespace codac2
       def_domain &= x.def_domain;
       return *this;
     }
-
-    virtual void compute_centered_form(const IntervalVector& flatten_x)
-    {
-      assert(flatten_x.size() == (size_t)da.cols());
-      assert(da.rows() == 1);
-      //a &= m + (da*(flatten_x-flatten_x.mid().template cast<Interval>()))(0,0);
-    }
   };
 
   struct VectorOpValue : public OpValueBase
@@ -76,7 +69,8 @@ namespace codac2
     IntervalMatrix da;
     bool def_domain = true;
 
-    VectorOpValue(IntervalVector m_, const IntervalVector& a_, const IntervalMatrix& da_, bool def_domain_ = true)
+    VectorOpValue(
+      const IntervalVector& m_, const IntervalVector& a_, const IntervalMatrix& da_, bool def_domain_ = true)
       : m(m_), a(a_), da(da_), def_domain(def_domain_)
     { }
 
@@ -100,13 +94,6 @@ namespace codac2
       da &= x.da;
       def_domain &= x.def_domain;
       return *this;
-    }
-
-    virtual void compute_centered_form(const IntervalVector& flatten_x)
-    {
-      assert(flatten_x.size() == (size_t)da.cols());
-      assert(a.size() == (size_t)da.rows());
-      //a &= m + (da*(flatten_x-flatten_x.mid().template cast<Interval>())).col(0);
     }
   };
 

@@ -18,6 +18,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/domains/interval/codac2_tests_Interval_operations
   core/domains/interval/codac2_tests_IntervalMatrix
   core/domains/interval/codac2_tests_IntervalVector
+  core/functions/analytic/codac2_tests_AnalyticFunction
   core/tools/codac2_tests_Approx
 
 

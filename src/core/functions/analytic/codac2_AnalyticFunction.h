@@ -37,9 +37,13 @@ namespace codac2
       template<typename... Args>
       typename T::Domain eval(const Args&... x) const
       {
-        ValuesMap v;
-        fill_from_args(v, x...);
-        return this->expr()->fwd_eval(v, this->args(), cart_prod(x...)).a;
+        return eval_(x...).a;
+      }
+
+      template<typename... Args>
+      auto diff(const Args&... x) const
+      {
+        return eval_(x...).da;
       }
 
     protected:
@@ -78,6 +82,14 @@ namespace codac2
       {
         size_t i = 0;
         (intersect_value_from_arg_map(v, x, i++), ...);
+      }
+
+      template<typename... Args>
+      auto eval_(const Args&... x) const
+      {
+        ValuesMap v;
+        fill_from_args(v, x...);
+        return this->expr()->fwd_eval(v, this->args(), cart_prod(x...));
       }
   };
 }
