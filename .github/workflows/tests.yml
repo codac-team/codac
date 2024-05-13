@@ -76,7 +76,7 @@ jobs:
         # Without synthesis tree
 
         # Building lib + tests
-        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=OFF -DTEST_EXAMPLES=ON ..
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON ..
         ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
         make
         #make doc # todo
@@ -113,7 +113,7 @@ jobs:
         # With synthesis tree for all created tubes
   
         # Building lib + tests
-        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=OFF -DTEST_EXAMPLES=ON ..
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON ..
         ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
         make
         #make doc

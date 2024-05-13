@@ -81,21 +81,6 @@
 
 
 ################################################################################
-# Optional binary tree activation for all tubes (for tests purposes mainly)
-################################################################################
-  
-  # Binary trees allow to speed up some computations. They can be activated
-  # upon request according to the application. For tests purposes, the following
-  # forces the use of binary trees for all computations.
-  option(WITH_TUBE_TREE "Binary trees for fast tube evaluations" OFF)
-
-  if(WITH_TUBE_TREE)
-    message(STATUS "[binary trees] Using binary trees for fast tube evaluations")
-    add_definitions(-DUSE_TUBE_TREE)
-  endif()
-
-
-################################################################################
 # Looking for IBEX
 ################################################################################
 
