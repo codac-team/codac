@@ -14,7 +14,6 @@
 using namespace std;
 using namespace codac2;
 
-
 // AddOp (unary operations)
 
   Interval AddOp::fwd(const Interval& x1)
@@ -61,7 +60,10 @@ using namespace codac2;
   MatrixOpValue AddOp::fwd(const MatrixOpValue& x1)
   {
     return {
-      fwd(x1.a)
+      fwd(x1.m),
+      fwd(x1.a),
+      IntervalMatrix(0,0), // not supported yet for matrices
+      x1.def_domain
     };
   }
 
@@ -99,6 +101,7 @@ using namespace codac2;
 
   VectorOpValue AddOp::fwd(const VectorOpValue& x1, const VectorOpValue& x2)
   {
+    assert(x1.da.rows() == x2.da.rows() && x1.da.cols() == x2.da.cols());
     return {
       fwd(x1.m, x2.m),
       fwd(x1.a, x2.a),
@@ -122,7 +125,10 @@ using namespace codac2;
   MatrixOpValue AddOp::fwd(const MatrixOpValue& x1, const MatrixOpValue& x2)
   {
     return {
-      fwd(x1.a, x2.a)
+      fwd(x1.m, x2.m),
+      fwd(x1.a, x2.a),
+      IntervalMatrix(0,0), // not supported yet for matrices
+      x1.def_domain && x2.def_domain
     };
   }
 
@@ -187,7 +193,10 @@ using namespace codac2;
   MatrixOpValue SubOp::fwd(const MatrixOpValue& x1)
   {
     return {
-      fwd(x1.a)
+      fwd(x1.m),
+      fwd(x1.a),
+      IntervalMatrix(0,0), // not supported yet for matrices
+      x1.def_domain
     };
   }
 
@@ -208,7 +217,7 @@ using namespace codac2;
 
   ScalarOpValue SubOp::fwd(const ScalarOpValue& x1, const ScalarOpValue& x2)
   {
-    assert(x1.da.size() == x2.da.size());
+    assert(x1.da.rows() == x2.da.rows() && x1.da.cols() == x2.da.cols());
     return {
       fwd(x1.m, x2.m),
       fwd(x1.a, x2.a),
@@ -229,6 +238,7 @@ using namespace codac2;
 
   VectorOpValue SubOp::fwd(const VectorOpValue& x1, const VectorOpValue& x2)
   {
+    assert(x1.da.rows() == x2.da.rows() && x1.da.cols() == x2.da.cols());
     return {
       fwd(x1.m, x2.m),
       fwd(x1.a, x2.a),
@@ -251,8 +261,12 @@ using namespace codac2;
 
   MatrixOpValue SubOp::fwd(const MatrixOpValue& x1, const MatrixOpValue& x2)
   {
+    assert(x1.a.cols() == x2.a.cols() && x1.a.rows() == x2.a.rows());
     return {
-      fwd(x1.a, x2.a)
+      fwd(x1.m, x2.m),
+      fwd(x1.a, x2.a),
+      IntervalMatrix(0,0), // not supported yet for matrices
+      x1.def_domain && x2.def_domain
     };
   }
 
@@ -273,10 +287,12 @@ using namespace codac2;
 
   ScalarOpValue MulOp::fwd(const ScalarOpValue& x1, const ScalarOpValue& x2)
   {
-    assert(x1.da.size() == x2.da.size());
-    IntervalMatrix d(1,x1.da.size());
+    assert(x1.da.rows() == 1);
+    assert(x1.da.rows() == x2.da.rows() && x1.da.cols() == x2.da.cols());
+
+    IntervalMatrix d(1,x1.da.cols());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d(i) = x2.a * x1.da(i) + x1.a * x2.da(i);
+      d(i) = x1.da(i)*x2.a + x1.a*x2.da(i);
 
     return {
       fwd(x1.m, x2.m),
@@ -298,13 +314,14 @@ using namespace codac2;
 
   VectorOpValue MulOp::fwd(const ScalarOpValue& x1, const VectorOpValue& x2)
   {
+    assert(x1.da.rows() == 1);
     assert(x1.da.cols() == x2.da.cols());
     assert(x2.a.size() == (size_t)x2.da.rows());
 
     IntervalMatrix d(x2.da.rows(),x2.da.cols());
     for(size_t i = 0 ; i < (size_t)d.rows() ; i++)
       for(size_t j = 0 ; j < (size_t)d.cols() ; j++)
-        d(i,j) = x1.da(j)*x2.a(j)+x1.a*x2.da(i,j);
+        d(i,j) = x1.da(j)*x2.a(i)+x1.a*x2.da(i,j);
 
     return {
       fwd(x1.m, x2.m),
@@ -314,10 +331,14 @@ using namespace codac2;
     };
   }
 
+  #include "codac2_ibex.h"
+
   void MulOp::bwd(const IntervalVector& y, Interval& x1, IntervalVector& x2)
   {
-    assert(false && "not implemented");
-    //bwd_mul(y, x1, x2);
+    auto y_ = to_ibex(y), x2_ = to_ibex(x2);
+    auto x1_ = to_ibex(x1);
+    ibex::bwd_mul(y_, x1_, x2_);
+    x1 &= to_codac(x1_); x2 &= to_codac(x2_);
   }
 
   IntervalVector MulOp::fwd(const IntervalMatrix& x1, const IntervalVector& x2)
@@ -327,11 +348,11 @@ using namespace codac2;
 
   VectorOpValue MulOp::fwd(const MatrixOpValue& x1, const VectorOpValue& x2)
   {
-    assert(false && "tocheck");
     return {
       fwd(x1.a, /* <<----- x1.m */ x2.m),
       fwd(x1.a, x2.a),
-      x2.a * IntervalMatrix::zeros(x1.a.rows(),x1.a.cols()) + x1.a * x2.da // todo
+      x2.a * IntervalMatrix::zeros(x1.a.rows(),x1.a.cols()) + x1.a * x2.da, // todo
+      x1.def_domain && x2.def_domain
     };
   }
 
@@ -398,6 +419,7 @@ using namespace codac2;
   ScalarOpValue DivOp::fwd(const ScalarOpValue& x1, const ScalarOpValue& x2)
   {
     assert(x1.da.size() == x2.da.size());
+
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
       d(i) = (x1.da(i)*x2.a-x1.a*x2.da(i))/sqr(x2.a);
@@ -452,7 +474,9 @@ using namespace codac2;
 
   ScalarOpValue SqrOp::fwd(const ScalarOpValue& x1)
   {
-    IntervalMatrix d(1,x1.da.size());
+    assert(x1.da.rows() == 1);
+
+    IntervalMatrix d(1,x1.da.cols());
     for(size_t i = 0 ; i < d.size() ; i++)
       d(i) = 2.*x1.a*x1.da(i);
 
@@ -586,11 +610,10 @@ using namespace codac2;
   }
 
   ScalarOpValue TanhOp::fwd(const ScalarOpValue& x1)
-  {
-    assert(false);
-    IntervalVector d(x1.da.size());
-    //for(size_t i = 0 ; i < d.size() ; i++)
-    //  d[i] = // todo
+  {    
+    IntervalMatrix d(1,x1.da.size());
+    for(size_t i = 0 ; i < d.size() ; i++)
+      d(i) = x1.da(i)*sqr(1./cosh(x1.a));
 
     return {
       fwd(x1.m),
@@ -643,11 +666,11 @@ using namespace codac2;
 
   ScalarOpValue ComponentOp::fwd(const VectorOpValue& x1, size_t i)
   {
-    assert(i >= 0 && i < x1.a.size());
+    assert(i >= 0 && i < (size_t)x1.a.rows());
     return {
       fwd(x1.m,i),
       fwd(x1.a,i),
-      x1.da.row(i), // todo: consider mixted scalar/vector values,
+      x1.da.row(i),
       x1.def_domain
     };
   }

@@ -17,40 +17,6 @@
 namespace codac2
 {
   template<typename T>
-  struct Wrapper
-  { };
-
-  template<>
-  struct Wrapper<int> {
-    using Domain = ScalarOpValue;
-  };
-
-  template<>
-  struct Wrapper<size_t> {
-    using Domain = ScalarOpValue;
-  };
-
-  template<>
-  struct Wrapper<double> {
-    using Domain = ScalarOpValue;
-  };
-
-  template<>
-  struct Wrapper<Interval> {
-    using Domain = ScalarOpValue;
-  };
-
-  template<>
-  struct Wrapper<Vector> {
-    using Domain = VectorOpValue;
-  };
-
-  template<>
-  struct Wrapper<IntervalVector> {
-    using Domain = VectorOpValue;
-  };
-
-  template<typename T>
   class AnalyticVarExpr : public AnalyticExpr<T>, public VarBase
   {
     public:

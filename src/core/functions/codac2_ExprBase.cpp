@@ -13,24 +13,27 @@
 using namespace std;
 using namespace codac2;
 
+size_t ExprID::_id_counter = 0;
 
 ExprID::ExprID()
-  : _id(this)
-{ }
+  : _id(ExprID::_id_counter)
+{
+  ExprID::_id_counter ++;
+}
 
-bool ExprID::operator==(const ExprID i) const
+bool ExprID::operator==(const ExprID& i) const
 {
   return _id == i._id;
 }
 
-bool ExprID::operator<(const ExprID i) const
+bool ExprID::operator<(const ExprID& i) const
 {
   return _id < i._id;
 }
 
 
 ExprBase::ExprBase()
-  : _unique_id(/* creating id from object address */)
+  : _unique_id(/* creating new id from object address */)
 { }
 
 const ExprID& ExprBase::unique_id() const

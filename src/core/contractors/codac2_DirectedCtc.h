@@ -12,119 +12,10 @@
 #pragma once
 
 #include <string>
-#include <codac2_Interval.h>
-#include <codac2_IntervalVector.h>
-#include <codac2_IntervalMatrix.h>
+#include "codac2_analytic_values.h"
 
 namespace codac2
 {
-  struct OpValueBase
-  {
-    virtual ~OpValueBase() = default;
-  };
-
-  struct ScalarOpValue : public OpValueBase
-  {
-    using Domain = Interval;
-
-    Interval m;
-    Interval a;
-    IntervalMatrix da;
-    bool def_domain = true;
-
-    ScalarOpValue(
-      const Interval& m_, const Interval& a_, const IntervalMatrix& da_, bool def_domain_ = true)
-      : m(m_), a(a_), da(da_), def_domain(def_domain_)
-    { }
-
-    ScalarOpValue(const Interval& a_, size_t total_args_size)
-      : ScalarOpValue(a_.mid(), a_, IntervalMatrix::zeros(1,total_args_size))
-    { }
-
-    ScalarOpValue(const Interval& a_, size_t total_args_size, size_t id_first, size_t id_last)
-      : ScalarOpValue(a_, total_args_size)
-    {
-      assert(id_first <= id_last);
-      assert(id_first >= 0 && id_last < total_args_size);
-
-      for(size_t i = id_first ; i <= id_last ; i++)
-        da(0,i) = 1.;
-    }
-
-    ScalarOpValue& operator&=(const ScalarOpValue& x)
-    {
-      a &= x.a;
-      da &= x.da;
-      def_domain &= x.def_domain;
-      return *this;
-    }
-  };
-
-  struct VectorOpValue : public OpValueBase
-  {
-    using Domain = IntervalVector;
-    
-    IntervalVector m;
-    IntervalVector a;
-    IntervalMatrix da;
-    bool def_domain = true;
-
-    VectorOpValue(
-      const IntervalVector& m_, const IntervalVector& a_, const IntervalMatrix& da_, bool def_domain_ = true)
-      : m(m_), a(a_), da(da_), def_domain(def_domain_)
-    { }
-
-    VectorOpValue(const IntervalVector& a_, size_t total_args_size)
-      : VectorOpValue(a_.mid(), a_, IntervalMatrix::zeros(a_.size(),total_args_size))
-    { }
-
-    VectorOpValue(const IntervalVector& a_, size_t total_args_size, size_t id_first, size_t id_last)
-      : VectorOpValue(a_, total_args_size)
-    {
-      assert(id_first <= id_last);
-      assert(id_first >= 0 && id_last < total_args_size);
-
-      for(size_t i = id_first ; i <= id_last ; i++)
-        da(i,i) = 1.;
-    }
-
-    VectorOpValue& operator&=(const VectorOpValue& x)
-    {
-      a &= x.a;
-      da &= x.da;
-      def_domain &= x.def_domain;
-      return *this;
-    }
-  };
-
-  struct MatrixOpValue : public OpValueBase
-  {
-    using Domain = IntervalMatrix;
-    
-    IntervalMatrix a;
-
-    MatrixOpValue(const IntervalMatrix& a_)
-      : a(a_)
-    { }
-
-    MatrixOpValue(const IntervalMatrix& a_, size_t total_args_size)
-      : MatrixOpValue(a_)
-    { }
-
-    MatrixOpValue(const IntervalMatrix& a_, size_t total_args_size, size_t id_first, size_t id_last)
-      : MatrixOpValue(a_)
-    { }
-
-    MatrixOpValue& operator&=(const MatrixOpValue& x)
-    {
-      a &= x.a;
-      return *this;
-    }
-
-    virtual void compute_centered_form(const IntervalVector& flatten_x)
-    { }
-  };
-
   struct AddOp
   {
     // Unary operations
@@ -322,14 +213,6 @@ namespace codac2
       return m;
     }
 
-    template<typename... X>
-    static void bwd(const IntervalMatrix& y, X&... x)
-    {
-      assert(false && "tocheck");
-      size_t i = 0;
-      ((x &= y.col(i++)), ...);
-    }
-
     template<typename... X, typename = typename std::enable_if<(true && ... && (
         std::is_same_v<VectorOpValue,X>
       )), void>::type>
@@ -337,8 +220,19 @@ namespace codac2
     {
       assert(false && "tocheck");
       return {
-        IntervalMatrix({x.a...})
+        IntervalMatrix({x.m...}),
+        IntervalMatrix({x.a...}),
+        IntervalMatrix(0,0), // not supported yet for matrices
+        true // todo with variadic
       };
+    }
+
+    template<typename... X>
+    static void bwd(const IntervalMatrix& y, X&... x)
+    {
+      assert(false && "tocheck");
+      size_t i = 0;
+      ((x &= y.col(i++)), ...);
     }
   };
 }

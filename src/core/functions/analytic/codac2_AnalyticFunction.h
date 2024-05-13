@@ -41,6 +41,18 @@ namespace codac2
       }
 
       template<typename... Args>
+      typename T::Domain eval_centered(const Args&... x) const
+      {
+        auto x_ = eval_(x...);
+        auto flatten_x = cart_prod(x...);
+        
+        if constexpr(std::is_same_v<typename T::Domain,Interval>) 
+          return x_.a & (x_.m + (x_.da*(flatten_x-flatten_x.mid().template cast<Interval>()))[0]);
+        else
+          return x_.a & (x_.m + (x_.da*(flatten_x-flatten_x.mid().template cast<Interval>())).col(0));
+      }
+
+      template<typename... Args>
       auto diff(const Args&... x) const
       {
         return eval_(x...).da;
@@ -54,13 +66,19 @@ namespace codac2
       template<typename D>
       void add_value_to_arg_map(ValuesMap& v, const D& x, size_t i) const
       {
-        size_t p = 0;
+        assert(i >= 0 && i < this->args().size());
+        assert(x.size() == this->args()[i]->size());
+
+        IntervalMatrix d = IntervalMatrix::zeros(this->args().total_size(), x.size());
+        
+        size_t p = 0, j = 0;
         for(size_t j = 0 ; j < i ; j++)
           p += this->args()[j]->size();
 
-        v[this->args()[i]->unique_id()] = std::make_shared<typename Wrapper<D>::Domain>(
-          x, this->args().total_size(), p, p+this->args()[i]->size()-1
-        );
+        for(size_t k = p ; k < p+x.size() ; k++)
+          d(k,j++) = 1.;
+
+        v[this->args()[i]->unique_id()] = std::make_shared<typename Wrapper<D>::Domain>(x.mid(), x, d, true);
       }
 
       template<typename... Args>

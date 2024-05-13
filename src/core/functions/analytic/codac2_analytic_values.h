@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  ConstValue class
+ *  Var class
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -11,43 +11,75 @@
 
 #pragma once
 
+#include <codac2_Interval.h>
+#include <codac2_IntervalVector.h>
+#include <codac2_IntervalMatrix.h>
+
 namespace codac2
 {
-  template<typename T>
-  class ConstValueExpr : public AnalyticExpr<T>
+  struct OpValueBase
   {
-    public:
-
-      ConstValueExpr(const typename T::Domain& x)
-        : _x(x)
-      { }
-
-      std::shared_ptr<ExprBase> copy() const
-      {
-        return std::make_shared<ConstValueExpr<T>>(*this);
-      }
-
-      T fwd_eval(ValuesMap& v, const FunctionArgsList& f_args, const IntervalVector& flatten_x) const
-      {
-        return AnalyticExpr<T>::init_value(v, T(_x, f_args.total_size()), flatten_x);
-      }
-      
-      void bwd_eval(ValuesMap& v) const
-      {
-        AnalyticExpr<T>::value(v).a &= _x;
-      }
-
-      void replace_expr(const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
-      { }
-
-    protected:
-
-      const typename T::Domain _x;
+    virtual ~OpValueBase() = default;
   };
 
   template<typename T>
-  std::shared_ptr<AnalyticExpr<typename Wrapper<T>::Domain>> const_value(const T& x)
+  struct OpValue : public OpValueBase
   {
-    return std::make_shared<ConstValueExpr<typename Wrapper<T>::Domain>>(x);
-  }
+    using Domain = T;
+
+    T m;
+    T a;
+    IntervalMatrix da;
+    bool def_domain;
+
+    OpValue(const T& m_, const T& a_, const IntervalMatrix& da_, bool def_domain_)
+      : m(m_), a(a_), da(da_), def_domain(def_domain_)
+    { }
+
+    OpValue<T>& operator&=(const OpValue<T>& x)
+    {
+      a &= x.a;
+      // restore this? da &= x.da;
+      def_domain &= x.def_domain;
+      return *this;
+    }
+  };
+
+  using ScalarOpValue = OpValue<Interval>;
+  using VectorOpValue = OpValue<IntervalVector>;
+  using MatrixOpValue = OpValue<IntervalMatrix>;
+
+  template<typename T>
+  struct Wrapper
+  { };
+
+  template<>
+  struct Wrapper<int> {
+    using Domain = ScalarOpValue;
+  };
+
+  template<>
+  struct Wrapper<size_t> {
+    using Domain = ScalarOpValue;
+  };
+
+  template<>
+  struct Wrapper<double> {
+    using Domain = ScalarOpValue;
+  };
+
+  template<>
+  struct Wrapper<Interval> {
+    using Domain = ScalarOpValue;
+  };
+
+  template<>
+  struct Wrapper<Vector> {
+    using Domain = VectorOpValue;
+  };
+
+  template<>
+  struct Wrapper<IntervalVector> {
+    using Domain = VectorOpValue;
+  };
 }

@@ -14,7 +14,7 @@
 #include <memory>
 #include "codac2_AnalyticExpr.h"
 #include "codac2_analytic_variables.h"
-#include "codac2_analytic_values.h"
+#include "codac2_analytic_constants.h"
 
 namespace codac2
 {

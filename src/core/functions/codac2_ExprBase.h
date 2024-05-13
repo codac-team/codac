@@ -27,12 +27,14 @@ namespace codac2
     public:
 
       ExprID();
-      bool operator==(const ExprID i) const;
-      bool operator<(const ExprID i) const;
+      ExprID(const ExprID& i) = default;
+      bool operator==(const ExprID& i) const;
+      bool operator<(const ExprID& i) const;
 
     protected:
 
-      const ExprID *_id;
+      const size_t _id;
+      static size_t _id_counter;
   };
 
   class ExprBase : public std::enable_shared_from_this<ExprBase>
@@ -74,7 +76,7 @@ namespace codac2
       void replace_expr(const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
       {
         std::apply(
-          [&old_expr_id,&new_expr](auto &&... x)
+          [old_expr_id,new_expr](auto &&... x)
           {
             (__replace_single_expr(x,old_expr_id,new_expr), ...);
           }, _x);
@@ -92,7 +94,10 @@ namespace codac2
       static void __replace_single_expr(std::shared_ptr<D>& x, const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
       {
         if(x->unique_id() == old_expr_id)
-          x = std::dynamic_pointer_cast<D>(new_expr);
+        {
+          assert(std::dynamic_pointer_cast<VarBase>(x) && "this subexpr should be some variable");
+          x = std::dynamic_pointer_cast<D>(new_expr->copy() /* todo: keep this copy? */);
+        }
         else
           x->replace_expr(old_expr_id, new_expr);
       }

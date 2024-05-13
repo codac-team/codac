@@ -16,6 +16,9 @@
 #include "codac2_analytic_variables.h"
 #include "codac2_FunctionArgsList.h"
 
+// todo: remove this:
+#include "codac2_analytic_constants.h"
+
 namespace codac2
 {
   template<typename E>
@@ -44,24 +47,31 @@ namespace codac2
         return _y;
       }
 
-      template<typename... F>
-      std::shared_ptr<E> operator()(std::shared_ptr<F>... x) const
+      template<typename... X>
+      std::shared_ptr<E> operator()(const X... x) const
       {
         auto expr_copy = expr()->copy();
         size_t i = 0;
-        (expr_copy->replace_expr(_args[i++]->unique_id(), x), ...);
+        (expr_copy->replace_expr(_args[i++]->unique_id(), this->__get_copy(x)), ...);
         return std::dynamic_pointer_cast<E>(expr_copy);
       }
 
-      template<typename A, typename = typename std::enable_if<
-          std::is_base_of_v<VarBase,A>
-        >::type>
-      std::shared_ptr<E> operator()(const A& x) const
+    protected:
+
+      template<typename X>
+      std::shared_ptr<X> __get_copy(std::shared_ptr<X> x) const
       {
-        return operator()(x.copy());
+        return std::dynamic_pointer_cast<X>(x->copy());
       }
 
-    protected:
+      template<typename A>
+      auto __get_copy(const A& x) const
+      {
+        if constexpr(std::is_base_of_v<VarBase,A>)
+          return std::dynamic_pointer_cast<A>(x.copy());
+        else
+          return const_value(x);
+      }
 
       const std::shared_ptr<E> _y;
       const FunctionArgsList _args;
