@@ -7,8 +7,6 @@
 using namespace std;
 using namespace codac2;
 
-#include "../sivia.cpp"
-
 int main()
 {
   VectorVar x(3);
@@ -17,22 +15,31 @@ int main()
     2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
   ));
 
-  vibes::beginDrawing();
+  IntervalVector x0({{0,2},{2,4},{0,10}});
 
-  CtcInverse ctc_hc4revise(f, IntervalVector({0.,0.}), false);
-  SIVIA(ctc_hc4revise, IntervalVector({{0,2},{2,4},{0,10}}), 0.004, "[Codac] HC4Revise");
+  {
+    CtcInverse_<IntervalVector> ctc(f, IntervalVector({0.,0.}));
 
-  CtcInverse ctc_inverse(f, IntervalVector({{0.},{0.}}));
-  SIVIA(ctc_inverse, IntervalVector({{0,2},{2,4},{0,10}}), 0.01, "[Codac] CtcInverse");
+    Figure g("[Codac] CtcInverse", GraphicOutputMode::VIBES);
+    g.set_axes(axis(0,x0[0],"u"), axis(1,x0[1],"v"));
+    g.set_window_properties({50,50}, {800,800});
+    //g.center_viewbox({1.6,3.18},{0.24,0.24});
 
-  vibes::endDrawing();
-  return EXIT_SUCCESS;
+    Paver p(x0);
+    p.set_figure(&g);
+    p.pave(CtcLazy(ctc), 0.004);
+  }
+
+  {
+    CtcInverse_<IntervalVector> ctc(f, IntervalVector({0.,0.}), false);
+
+    Figure g("[Codac] HC4Revise", GraphicOutputMode::VIBES);
+    g.set_axes(axis(0,x0[0],"u"), axis(1,x0[1],"v"));
+    g.set_window_properties({50,850}, {800,800});
+    //g.center_viewbox({1.6,3.18},{0.24,0.24});
+
+    Paver p(x0);
+    p.set_figure(&g);
+    p.pave(CtcLazy(ctc), 0.004);
+  }
 }
-
-
-
-  //graphics::Figure g("Sep paver", VIBES | IPE);
-  //g.axis_limits({{-10,10},{-10,10}});
-  //g.window_properties({50,50},{600,600});
-  //Paver p(c, {{-10,10},{-10,10}});
-  //p.set_figure(g);

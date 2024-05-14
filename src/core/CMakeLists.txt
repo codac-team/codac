@@ -21,6 +21,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverseNotIn.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcLazy.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcLazy.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcUnion.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolar.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolar.h
@@ -50,6 +52,19 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_variables.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticExpr.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticFunction.h
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_FigureInterface.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_OutputFigure.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_WithGraphicOutput.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/codac2_FigureVIBes.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/codac2_FigureVIBes.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/vibes.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/vibes.h
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_Paver.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_Paver.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_Sep.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepAction.cpp
@@ -101,6 +116,9 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes
+    ${CMAKE_CURRENT_SOURCE_DIR}/paver
     ${CMAKE_CURRENT_SOURCE_DIR}/separators
     ${CMAKE_CURRENT_SOURCE_DIR}/tools
     ${CMAKE_CURRENT_SOURCE_DIR}/types

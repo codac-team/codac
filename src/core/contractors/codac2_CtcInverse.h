@@ -71,7 +71,6 @@ namespace codac2
           // expression (enabled by default). This step must be processed before the
           // backward part of the FwdBwd algorithm (the .m, .a values must not be
           // changed before the centered evaluation).
-
           if(with_centered_form && val_expr.def_domain)
           {
             using X0 = std::tuple_element_t<0, std::tuple<X...>>;
@@ -91,6 +90,7 @@ namespace codac2
 
               else
               {
+
                 IntervalVector p = x_ - x_mid;
                 MulOp::bwd(fm, val_expr.da, p);
                 x_ &= p + x_mid;
@@ -116,7 +116,7 @@ namespace codac2
       bool _is_not_in = false;
   };
 
-  template<typename Y,typename X>
+  template<typename Y,typename X=IntervalVector>
   class CtcInverse_ : public CtcInverse<Y>, public Ctc_<X>
   {
     public:
