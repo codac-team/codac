@@ -23,6 +23,6 @@ void CtcLazy::contract(IntervalVector& x) const
   double v = x.volume();
   _ctc.front().contract(x);
 
-  if(x.volume()/v > 1.5*_r)
+  if(x.volume()/v < 1.1*_r)
     _ctc.front().contract(x);
 }
