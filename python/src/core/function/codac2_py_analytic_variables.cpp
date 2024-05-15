@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  Arg Python binding
+ *  ScalarVar Python binding
  *  Originated from the former pyIbex library (Benoît Desrochers)
  * ----------------------------------------------------------------------------
  *  \date       2024
@@ -14,9 +14,9 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include <codac2_Arg.h>
-#include <codac2_Expr.h>
-#include "codac2_py_Arg_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include <codac2_analytic_variables.h>
+#include <codac2_AnalyticExpr.h>
+#include "codac2_py_analytic_variables_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_doc.h"
 
 #include "codac2_py_wrapper.h"
@@ -27,10 +27,10 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-void export_Arg(py::module& m)
+void export_Var(py::module& m)
 {
-  py::class_<Arg, std::shared_ptr<Arg> /* due to enable_shared_from_this */>
-    exported(m, "Arg", DOC_TO_BE_DEFINED);
+  py::class_<ScalarVar, std::shared_ptr<ScalarVar> /* due to enable_shared_from_this */>
+    exported(m, "ScalarVar", DOC_TO_BE_DEFINED);
   exported
   
     .def(py::init<>(),
@@ -38,14 +38,14 @@ void export_Arg(py::module& m)
 
   ;
 
-  py::implicitly_convertible<Arg,ExprWrapper>();
+  py::implicitly_convertible<ScalarVar,ExprWrapper>();
 }
 
-void export_ArgVector(py::module& m)
+void export_VectorVar(py::module& m)
 {
-  py::class_<ArgVector,
-    std::shared_ptr<ArgVector> /* due to enable_shared_from_this */>
-    exported(m, "ArgVector", DOC_TO_BE_DEFINED);
+  py::class_<VectorVar,
+    std::shared_ptr<VectorVar> /* due to enable_shared_from_this */>
+    exported(m, "VectorVar", DOC_TO_BE_DEFINED);
   exported
   
     .def(py::init<size_t>(),

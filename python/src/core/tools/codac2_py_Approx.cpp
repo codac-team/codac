@@ -28,27 +28,27 @@ void export_Approx(py::module& m)
   exported_class
   
     .def(py::init<const Interval&>(),
-      APPROX_APPROX_CONSTT,
+      APPROX_T_APPROX_CONST_T_REF,
       "x"_a)
 
     .def(py::init<const Interval&,double>(),
-      APPROX_APPROX_CONSTT_DOUBLE,
+      APPROX_T_APPROX_CONST_T_REF_DOUBLE,
       "x"_a, "eps"_a)
 
     .def(Interval() == py::self,
-      APPROX_BOOL_OPERATOREQ_CONSTT_CONSTAPPROXT,
+      BOOL_OPERATOREQ_CONST_T_REF_CONST_APPROX_T_REF,
       "x"_a)
 
     .def(py::self == Interval(),
-      APPROX_BOOL_OPERATOREQ_CONSTAPPROXT_CONSTT,
+      BOOL_OPERATOREQ_CONST_APPROX_T_REF_CONST_T_REF,
       "x"_a)
     
     .def(Interval() != py::self,
-      APPROX_BOOL_OPERATORNEQ_CONSTT_CONSTAPPROXT,
+      BOOL_OPERATORNEQ_CONST_T_REF_CONST_APPROX_T_REF,
       "x"_a)
 
     .def(py::self != Interval(),
-      APPROX_BOOL_OPERATORNEQ_CONSTAPPROXT_CONSTT,
+      BOOL_OPERATORNEQ_CONST_APPROX_T_REF_CONST_T_REF,
       "x"_a)
 
     .def("__repr__", [](const Approx<Interval>& x) {
@@ -56,6 +56,6 @@ void export_Approx(py::module& m)
           stream << x;
           return string(stream.str()); 
         },
-      APPROX_OSTREAM_OPERATOR_OSTREAM_CONSTAPPROXT)
+      OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_APPROX_T_REF)
   ;
 };

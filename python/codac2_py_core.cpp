@@ -11,7 +11,7 @@
 
 #include <pybind11/pybind11.h>
 #include <codac2_Interval.h>
-#include <codac2_Function.h>
+#include <codac2_AnalyticFunction.h>
 
 using namespace codac2;
 namespace py = pybind11;
@@ -23,9 +23,9 @@ py::class_<Interval> export_Interval(py::module& m);
 void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval);
 
 // function
-void export_Arg(py::module& m);
-void export_ArgVector(py::module& m);
-void export_ScalarFunction(py::module& m);
+void export_ScalarVar(py::module& m);
+void export_VectorVar(py::module& m);
+//void export_AnalyticFunction(py::module& m);
 void export_expression_operations(py::module& m);
 void export_ExprWrapper(py::module& m);
 
@@ -44,9 +44,9 @@ PYBIND11_MODULE(core, m)
 
   // function
   export_ExprWrapper(m);
-  export_Arg(m);
-  export_ArgVector(m);
-  export_ScalarFunction(m);
+  export_ScalarVar(m);
+  export_VectorVar(m);
+  //export_AnalyticFunction(m);
   export_expression_operations(m);
 
   // tools

@@ -42,200 +42,200 @@ py::class_<Interval> export_Interval(py::module& m)
       "a"_a, "b"_a)
   
     .def(py::init<const Interval&>(),
-      INTERVAL_INTERVAL_CONSTINTERVAL)
+      INTERVAL_INTERVAL_CONST_INTERVAL_REF)
 
     // Interval(std::array<double,1> array);
     // Interval(std::array<double,2> array);
 
     .def("init", &Interval::init,
-      INTERVAL_INTERVAL_INIT_CONSTINTERVAL,
+      INTERVAL_REF_INTERVAL_INIT_CONST_INTERVAL_REF,
       "x"_a)
 
     .def(py::self == py::self,
-      INTERVAL_BOOL_OPERATOREQ_CONSTINTERVAL,
+      BOOL_INTERVAL_OPERATOREQ_CONST_INTERVAL_REF_CONST,
       "x"_a)
 
     .def(py::self != py::self,
-      INTERVAL_BOOL_OPERATORNEQ_CONSTINTERVAL,
+      BOOL_INTERVAL_OPERATORNEQ_CONST_INTERVAL_REF_CONST,
       "x"_a)
 
     .def("lb", &Interval::lb,
-      INTERVAL_DOUBLE_LB)
+      DOUBLE_INTERVAL_LB_CONST)
 
     .def("ub", &Interval::ub,
-      INTERVAL_DOUBLE_UB)
+      DOUBLE_INTERVAL_UB_CONST)
 
     .def("mid", &Interval::mid,
-      INTERVAL_DOUBLE_MID)
+      DOUBLE_INTERVAL_MID_CONST)
 
     .def("rad", &Interval::rad,
-      INTERVAL_DOUBLE_RAD)
+      DOUBLE_INTERVAL_RAD_CONST)
 
     .def("diam", &Interval::diam,
-      INTERVAL_DOUBLE_DIAM)
+      DOUBLE_INTERVAL_DIAM_CONST)
 
     .def("volume", &Interval::volume,
-      INTERVAL_DOUBLE_VOLUME)
+      DOUBLE_INTERVAL_VOLUME_CONST)
 
     .def("size", &Interval::size,
-      INTERVAL_SIZET_SIZE)
+      SIZET_INTERVAL_SIZE_CONST)
 
     .def("set_empty", &Interval::set_empty,
-      INTERVAL_VOID_SET_EMPTY)
+      VOID_INTERVAL_SET_EMPTY)
 
     .def("is_empty", &Interval::is_empty,
-      INTERVAL_BOOL_IS_EMPTY)
+      BOOL_INTERVAL_IS_EMPTY_CONST)
 
     .def("contains", &Interval::contains,
-      INTERVAL_BOOL_CONTAINS_CONSTDOUBLE,
+      BOOL_INTERVAL_CONTAINS_CONST_DOUBLE_REF_CONST,
       "x"_a)
 
     .def("__contains__", &Interval::contains,
-      INTERVAL_BOOL_CONTAINS_CONSTDOUBLE,
+      BOOL_INTERVAL_CONTAINS_CONST_DOUBLE_REF_CONST,
       "x"_a)
 
     .def("interior_contains", &Interval::interior_contains,
-      INTERVAL_BOOL_INTERIOR_CONTAINS_CONSTDOUBLE,
+      BOOL_INTERVAL_INTERIOR_CONTAINS_CONST_DOUBLE_REF_CONST,
       "x"_a)
 
     .def("is_unbounded", &Interval::is_unbounded,
-      INTERVAL_BOOL_IS_UNBOUNDED)
+      BOOL_INTERVAL_IS_UNBOUNDED_CONST)
 
     .def("is_degenerated", &Interval::is_degenerated,
-      INTERVAL_BOOL_IS_DEGENERATED)
+      BOOL_INTERVAL_IS_DEGENERATED_CONST)
 
     .def("intersects", &Interval::intersects,
-      INTERVAL_BOOL_INTERSECTS_CONSTINTERVAL,
+      BOOL_INTERVAL_INTERSECTS_CONST_INTERVAL_REF_CONST,
       "x"_a)
 
     .def("is_disjoint", &Interval::is_disjoint,
-      INTERVAL_BOOL_IS_DISJOINT_CONSTINTERVAL,
+      BOOL_INTERVAL_IS_DISJOINT_CONST_INTERVAL_REF_CONST,
       "x"_a)
 
     .def("overlaps", &Interval::overlaps,
-      INTERVAL_BOOL_OVERLAPS_CONSTINTERVAL,
+      BOOL_INTERVAL_OVERLAPS_CONST_INTERVAL_REF_CONST,
       "x"_a)
 
     .def("is_subset", &Interval::is_subset,
-      INTERVAL_BOOL_IS_SUBSET_CONSTINTERVAL,
+      BOOL_INTERVAL_IS_SUBSET_CONST_INTERVAL_REF_CONST,
       "x"_a)
 
     .def("is_strict_subset", &Interval::is_strict_subset,
-      INTERVAL_BOOL_IS_STRICT_SUBSET_CONSTINTERVAL,
+      BOOL_INTERVAL_IS_STRICT_SUBSET_CONST_INTERVAL_REF_CONST,
       "x"_a)
 
     .def("is_interior_subset", &Interval::is_interior_subset,
-      INTERVAL_BOOL_IS_INTERIOR_SUBSET_CONSTINTERVAL,
+      BOOL_INTERVAL_IS_INTERIOR_SUBSET_CONST_INTERVAL_REF_CONST,
       "x"_a)
 
     .def("is_strict_interior_subset", &Interval::is_strict_interior_subset,
-      INTERVAL_BOOL_IS_STRICT_INTERIOR_SUBSET_CONSTINTERVAL,
+      BOOL_INTERVAL_IS_STRICT_INTERIOR_SUBSET_CONST_INTERVAL_REF_CONST,
       "x"_a)
 
     .def("is_superset", &Interval::is_superset,
-      INTERVAL_BOOL_IS_SUPERSET_CONSTINTERVAL,
+      BOOL_INTERVAL_IS_SUPERSET_CONST_INTERVAL_REF_CONST,
       "x"_a)
 
     .def("is_strict_superset", &Interval::is_strict_superset,
-      INTERVAL_BOOL_IS_STRICT_SUPERSET_CONSTINTERVAL,
+      BOOL_INTERVAL_IS_STRICT_SUPERSET_CONST_INTERVAL_REF_CONST,
       "x"_a)
 
     .def("inflate", &Interval::inflate,
-      INTERVAL_INTERVAL_INFLATE_CONSTDOUBLE,
+      INTERVAL_REF_INTERVAL_INFLATE_CONST_DOUBLE_REF,
       "rad"_a)
 
     .def("is_bisectable", &Interval::is_bisectable,
-      INTERVAL_BOOL_IS_BISECTABLE)
+      BOOL_INTERVAL_IS_BISECTABLE_CONST)
 
     .def("bisect", &Interval::bisect,
-      INTERVAL_PAIRINTERVALINTERVAL_BISECT_FLOAT,
+      PAIR_INTERVALINTERVAL_INTERVAL_BISECT_FLOAT_CONST,
       "ratio"_a = 0.49)
 
     .def("complementary", &Interval::complementary,
-      INTERVAL_VECTORINTERVAL_COMPLEMENTARY_BOOL,
+      VECTOR_INTERVAL_INTERVAL_COMPLEMENTARY_BOOL_CONST,
       "compactness"_a = true)
 
     .def("diff", &Interval::diff,
-      INTERVAL_VECTORINTERVAL_DIFF_CONSTINTERVAL_BOOL,
+      VECTOR_INTERVAL_INTERVAL_DIFF_CONST_INTERVAL_REF_BOOL_CONST,
       "y"_a, "compactness"_a = true)
 
     .def(py::self |= py::self,
-      INTERVAL_INTERVAL_OPERATORUNIEQ_CONSTINTERVAL,
+      INTERVAL_REF_INTERVAL_OPERATOROREQ_CONST_INTERVAL_REF,
       "x"_a)
 
     // For MATLAB compatibility
     .def("self_union", &Interval::operator|=,
-      INTERVAL_INTERVAL_OPERATORUNIEQ_CONSTINTERVAL,
+      INTERVAL_REF_INTERVAL_OPERATOROREQ_CONST_INTERVAL_REF,
       "x"_a)
 
     .def(py::self &= py::self,
-      INTERVAL_INTERVAL_OPERATORINTEQ_CONSTINTERVAL,
+      INTERVAL_REF_INTERVAL_OPERATORANDEQ_CONST_INTERVAL_REF,
       "x"_a)
 
     // For MATLAB compatibility
     .def("self_inter", &Interval::operator&=,
-      INTERVAL_INTERVAL_OPERATORINTEQ_CONSTINTERVAL,
+      INTERVAL_REF_INTERVAL_OPERATORANDEQ_CONST_INTERVAL_REF,
       "x"_a)
 
     .def(py::self += double(),
-      INTERVAL_INTERVAL_OPERATORADDEQ_DOUBLE,
+      INTERVAL_REF_INTERVAL_OPERATORPLUSEQ_DOUBLE,
       "x"_a)
 
     .def(py::self += py::self,
-      INTERVAL_INTERVAL_OPERATORADDEQ_CONSTINTERVAL,
+      INTERVAL_REF_INTERVAL_OPERATORPLUSEQ_CONST_INTERVAL_REF,
       "x"_a)
 
     .def(-py::self,
-      INTERVAL_INTERVAL_OPERATORMIN)
+      INTERVAL_INTERVAL_OPERATORMINUS_CONST)
 
     .def(py::self -= double(),
-      INTERVAL_INTERVAL_OPERATORMINEQ_DOUBLE,
+      INTERVAL_REF_INTERVAL_OPERATORMINUSEQ_DOUBLE,
       "x"_a)
 
     .def(py::self -= py::self,
-      INTERVAL_INTERVAL_OPERATORMINEQ_CONSTINTERVAL,
+      INTERVAL_REF_INTERVAL_OPERATORMINUSEQ_CONST_INTERVAL_REF,
       "x"_a)
 
     .def(py::self *= double(),
-      INTERVAL_INTERVAL_OPERATORMULEQ_DOUBLE,
+      INTERVAL_REF_INTERVAL_OPERATORMULEQ_DOUBLE,
       "x"_a)
 
     .def(py::self *= py::self,
-      INTERVAL_INTERVAL_OPERATORMULEQ_CONSTINTERVAL,
+      INTERVAL_REF_INTERVAL_OPERATORMULEQ_CONST_INTERVAL_REF,
       "x"_a)
 
     .def(py::self /= double(),
-      INTERVAL_INTERVAL_OPERATORDIVEQ_DOUBLE,
+      INTERVAL_REF_INTERVAL_OPERATORDIVEQ_DOUBLE,
       "x"_a)
 
     .def(py::self /= py::self,
-      INTERVAL_INTERVAL_OPERATORDIVEQ_CONSTINTERVAL,
+      INTERVAL_REF_INTERVAL_OPERATORDIVEQ_CONST_INTERVAL_REF,
       "x"_a)
 
     .def_static("empty", &Interval::empty,
-      INTERVAL_INTERVAL_EMPTY)
+      STATIC_INTERVAL_INTERVAL_EMPTY)
 
     .def_static("zero", &Interval::zero,
-      INTERVAL_INTERVAL_ZERO)
+      STATIC_INTERVAL_INTERVAL_ZERO)
 
     .def_static("one", &Interval::one,
-      INTERVAL_INTERVAL_ONE)
+      STATIC_INTERVAL_INTERVAL_ONE)
 
     .def_static("half_pi", &Interval::half_pi,
-      INTERVAL_INTERVAL_HALF_PI)
+      STATIC_INTERVAL_INTERVAL_HALF_PI)
 
     .def_static("pi", &Interval::pi,
-      INTERVAL_INTERVAL_PI)
+      STATIC_INTERVAL_INTERVAL_PI)
 
     .def_static("two_pi", &Interval::two_pi,
-      INTERVAL_INTERVAL_TWO_PI)
+      STATIC_INTERVAL_INTERVAL_TWO_PI)
 
     .def("__repr__", [](const Interval& x) {
           std::ostringstream stream;
           stream << x;
           return string(stream.str()); 
         },
-      INTERVAL_OSTREAM_OPERATOR_OSTREAM_CONSTINTERVAL)
+      OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_INTERVAL_REF)
   ;
 
   // Automatic cast lists to Intervals

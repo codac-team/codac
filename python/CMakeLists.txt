@@ -52,8 +52,9 @@
       codac2_py_core.cpp
       src/core/domains/interval/codac2_py_Interval.cpp
       src/core/domains/interval/codac2_py_Interval_operations.cpp
-      src/core/function/codac2_py_Arg.cpp
-      src/core/function/codac2_py_Function.cpp
+      src/core/function/codac2_py_analytic_variables.cpp
+      #src/core/function/codac2_py_AnalyticFunction.cpp
+      src/core/function/codac2_py_wrapper.h
       src/core/tools/codac2_py_Approx.cpp
     )
 

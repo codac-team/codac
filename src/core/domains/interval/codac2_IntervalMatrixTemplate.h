@@ -31,15 +31,34 @@ namespace codac2
 
   class IntervalVector;
 
+  /**
+   * \brief Defines a class for sttff. 
+   * \tparam S tests
+   * \tparam V testV
+   * \tparam R testR
+   * \tparam C testC
+   */
   template<typename S,typename V,int R=Dynamic,int C=Dynamic>
   class IntervalMatrixTemplate_ : public MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>, public DomainInterface<S,V>
   {
     public:
 
+      /**
+       * \brief Testing strff
+       * 
+       * \return test
+       */
       IntervalMatrixTemplate_()
         : MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>()
       { }
     
+      /**
+       * \brief Defines a class for steff. 
+       * \tparam S tests
+       * \tparam V testV
+       * \tparam R testR
+       * \tparam C testC
+       */
       IntervalMatrixTemplate_(int nb_rows, int nb_cols)
         : MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>(nb_rows, nb_cols)
       { }

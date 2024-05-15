@@ -12,23 +12,23 @@
 #pragma once
 
 #include <memory>
-#include "codac2_Arg.h"
-#include "codac2_Expr.h"
-#include "codac2_Function.h"
+#include "codac2_analytic_variables.h"
+#include "codac2_AnalyticExpr.h"
+#include "codac2_AnalyticFunction.h"
 
 struct ExprWrapper
 {
-  ExprWrapper(const codac2::Arg& e)
-    : _e( std::dynamic_pointer_cast<codac2::Expr<codac2::Interval>>(e.copy()))
+  ExprWrapper(const codac2::ScalarVar& e)
+    : _e(std::dynamic_pointer_cast<codac2::AnalyticExpr<codac2::Interval>>(e.copy()))
   {
 
   }
 
-  ExprWrapper(const std::shared_ptr<codac2::Expr<codac2::Interval>>& e)
+  ExprWrapper(const std::shared_ptr<codac2::AnalyticExpr<codac2::Interval>>& e)
     : _e(e)
   {
 
   }
 
-  const std::shared_ptr<codac2::Expr<codac2::Interval>> _e;
+  const std::shared_ptr<codac2::AnalyticExpr<codac2::Interval>> _e;
 };

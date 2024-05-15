@@ -15,10 +15,10 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include <codac2_Arg.h>
-#include <codac2_Function.h>
-#include <codac2_Expr_operations.h>
-#include "codac2_py_Function_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include <codac2_analytic_variables.h>
+#include <codac2_analytic_operations.h>
+#include <codac2_AnalyticFunction.h>
+#include "codac2_py_AnalyticFunction_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_doc.h"
 
 #include "codac2_py_wrapper.h"
@@ -29,35 +29,35 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-std::unique_ptr<ScalarFunction> create_scalar_function(const py::list& l, const ExprWrapper& e)
+std::unique_ptr<AnalyticFunction> create_scalar_function(const py::list& l, const ExprWrapper& e)
 {
-  vector<std::reference_wrapper<ArgBase>> args;
-  Arg x;
+  vector<std::reference_wrapper<ScalarVarBase>> args;
+  ScalarVar x;
 
   for(const auto& li : l)
   {
-    if(py::isinstance<Arg>(li))
-      args.push_back(*std::make_shared<Arg>(li.cast<Arg>()));
+    if(py::isinstance<ScalarVar>(li))
+      args.push_back(*std::make_shared<ScalarVar>(li.cast<ScalarVar>()));
 
-    else if(py::isinstance<ArgVector>(li))
-      args.push_back(*std::make_shared<ArgVector>(li.cast<ArgVector>()));
+    else if(py::isinstance<VectorVar>(li))
+      args.push_back(*std::make_shared<VectorVar>(li.cast<VectorVar>()));
 
     else { assert(false && "unhandlded case"); }
   }
 
-  return std::make_unique<ScalarFunction>(args, e._e);
+  return std::make_unique<AnalyticFunction>(args, e._e);
 }
 
-void export_ScalarFunction(py::module& m)
+void export_AnalyticFunction(py::module& m)
 {
-  py::class_<ScalarFunction, std::shared_ptr<ScalarFunction> /* due to enable_shared_from_this */>
-    exported(m, "ScalarFunction", FUNCTION_MAIN);
+  py::class_<AnalyticFunction, std::shared_ptr<AnalyticFunction> /* due to enable_shared_from_this */>
+    exported(m, "AnalyticFunction", ANALYTICFUNCTION_MAIN);
   exported
   
     .def(py::init(&create_scalar_function),
       DOC_TO_BE_DEFINED)
 
-    .def("eval", [](ScalarFunction& f, const Interval& x) { return f.eval(x); }, 
+    .def("eval", [](AnalyticFunction& f, const Interval& x) { return f.eval(x); }, 
       DOC_TO_BE_DEFINED)
 
   ;
@@ -69,7 +69,7 @@ void export_ExprWrapper(py::module& m)
     exported(m, "ExprWrapper", DOC_TO_BE_DEFINED);
   exported
   
-    .def(py::init<Arg>(),
+    .def(py::init<ScalarVar>(),
       DOC_TO_BE_DEFINED)
 
   ;
