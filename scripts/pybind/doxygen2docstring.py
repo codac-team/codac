@@ -41,6 +41,7 @@ def normalize_label(str_label):
     .replace(" ", "_") \
     .replace("::", "_") \
     .replace("\"\"_", "LITT") \
+    .replace("~", "TILD_") \
     .replace("or+", "ORPLUS") \
     .replace("or-", "ORMINUS") \
     .replace("or*", "ORMUL") \

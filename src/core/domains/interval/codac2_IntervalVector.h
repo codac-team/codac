@@ -105,13 +105,6 @@ namespace codac2
         : IntervalVector(1,x)
       { }
       
-      /**
-       * \brief Defines a class for stzff. 
-       * \tparam S tests
-       * \tparam V testV
-       * \tparam R testR
-       * \tparam C testC
-       */
       template<int M>
       explicit IntervalVector(const Vector_<M>& v)
         : IntervalVectorTemplate_<IntervalVector,Vector>(v)

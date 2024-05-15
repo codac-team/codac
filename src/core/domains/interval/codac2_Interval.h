@@ -502,13 +502,6 @@ namespace codac2
        */
       static Interval two_pi();
       
-      /**
-       * \brief Streams out this
-       * 
-       * \param os the stream to be updated
-       * \param x the interval to stream out
-       * \return a reference to the updated stream
-       */
       friend std::ostream& operator<<(std::ostream& os, const Interval& x);
 
     protected:
@@ -611,6 +604,15 @@ namespace codac2
       friend void bwd_root(const Interval&, Interval&, int);
       friend void bwd_imod(Interval&, Interval&, double);
   };
+      
+  /**
+   * \brief Streams out this
+   * 
+   * \param os the stream to be updated
+   * \param x the interval to stream out
+   * \return a reference to the updated stream
+   */
+  std::ostream& operator<<(std::ostream& os, const Interval& x);
 
   /**
    * \brief Codac defined literals allowing to produce an interval from a double
