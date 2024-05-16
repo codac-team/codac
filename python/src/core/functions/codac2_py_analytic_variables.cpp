@@ -17,7 +17,6 @@
 #include <codac2_analytic_variables.h>
 #include <codac2_AnalyticExpr.h>
 #include "codac2_py_analytic_variables_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
-#include "codac2_py_doc.h"
 
 #include "codac2_py_wrapper.h"
 
@@ -27,29 +26,29 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-void export_Var(py::module& m)
+void export_ScalarVar(py::module& m)
 {
   py::class_<ScalarVar, std::shared_ptr<ScalarVar> /* due to enable_shared_from_this */>
-    exported(m, "ScalarVar", DOC_TO_BE_DEFINED);
+    exported(m, "ScalarVar", SCALARVAR_MAIN);
   exported
   
     .def(py::init<>(),
-      DOC_TO_BE_DEFINED)
+      SCALARVAR_SCALARVAR)
 
   ;
 
-  py::implicitly_convertible<ScalarVar,ExprWrapper>();
+  py::implicitly_convertible<ScalarVar,ExprWrapper<ScalarOpValue>>();
 }
 
 void export_VectorVar(py::module& m)
 {
   py::class_<VectorVar,
     std::shared_ptr<VectorVar> /* due to enable_shared_from_this */>
-    exported(m, "VectorVar", DOC_TO_BE_DEFINED);
+    exported(m, "VectorVar", VECTORVAR_MAIN);
   exported
   
     .def(py::init<size_t>(),
-      DOC_TO_BE_DEFINED)
+      VECTORVAR_VECTORVAR_SIZET)
 
   ;
 }

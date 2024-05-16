@@ -12,6 +12,8 @@
 #include <pybind11/pybind11.h>
 #include <codac2_Interval.h>
 #include <codac2_AnalyticFunction.h>
+#include <codac2_analytic_values.h>
+#include "codac2_py_AnalyticFunction.h"
 
 using namespace codac2;
 namespace py = pybind11;
@@ -22,12 +24,17 @@ namespace py = pybind11;
 py::class_<Interval> export_Interval(py::module& m);
 void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval);
 
-// function
+// functions
 void export_ScalarVar(py::module& m);
 void export_VectorVar(py::module& m);
-//void export_AnalyticFunction(py::module& m);
+
+//void export_ScalarAnalyticFunction(py::module& m);
+//void export_VectorAnalyticFunction(py::module& m);
+
 void export_expression_operations(py::module& m);
-void export_ExprWrapper(py::module& m);
+
+//void export_ScalarExprWrapper(py::module& m);
+//void export_VectorExprWrapper(py::module& m);
 
 // tools
 void export_Approx(py::module& m);
@@ -43,10 +50,12 @@ PYBIND11_MODULE(core, m)
   export_Interval_operations(m, py_Interval);
 
   // function
-  export_ExprWrapper(m);
+  export_ExprWrapper<ScalarOpValue>(m,"ScalarExprWrapper");
+  export_ExprWrapper<VectorOpValue>(m,"VectorExprWrapper");
   export_ScalarVar(m);
   export_VectorVar(m);
-  //export_AnalyticFunction(m);
+  export_AnalyticFunction<ScalarOpValue>(m,"ScalarAnalyticFunction");
+  export_AnalyticFunction<VectorOpValue>(m,"VectorAnalyticFunction");
   export_expression_operations(m);
 
   // tools

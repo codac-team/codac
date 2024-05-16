@@ -133,7 +133,8 @@ for xml_doc in files:
       #  print("const char* " + docstring_varname(memberdef) + " = \"Docstring documentation will be available in next release.\"")
       #  exit(1)
 
-      if memberdef.get('kind') != None and memberdef.attrib['kind'] == "friend":
+      if memberdef.get('kind') != None and memberdef.attrib['kind'] == "friend" \
+          and memberdef.get('inline') != None and memberdef.attrib['inline'] != "yes":
         print("// Friend member is not documented here.\n", file=f)
         continue
 

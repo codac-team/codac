@@ -46,7 +46,7 @@ namespace codac2
         auto x_ = eval_(x...);
         auto flatten_x = cart_prod(x...);
         
-        if constexpr(std::is_same_v<typename T::Domain,Interval>) 
+        if constexpr(std::is_same_v<typename T::Domain,Interval>)
           return x_.a & (x_.m + (x_.da*(flatten_x-flatten_x.mid().template cast<Interval>()))[0]);
         else
           return x_.a & (x_.m + (x_.da*(flatten_x-flatten_x.mid().template cast<Interval>())).col(0));
@@ -56,6 +56,15 @@ namespace codac2
       auto diff(const Args&... x) const
       {
         return eval_(x...).da;
+      }
+
+      friend std::ostream& operator<<(std::ostream& os, const AnalyticFunction<T>& f)
+      {
+        if constexpr(std::is_same_v<typename T::Domain,Interval>) 
+          os << "scalar function";
+        else if constexpr(std::is_same_v<typename T::Domain,IntervalVector>) 
+          os << "vector function";
+        return os;
       }
 
     protected:
@@ -78,7 +87,10 @@ namespace codac2
         for(size_t k = p ; k < p+x.size() ; k++)
           d(k,j++) = 1.;
 
-        v[this->args()[i]->unique_id()] = std::make_shared<typename Wrapper<D>::Domain>(x.mid(), x, d, true);
+        using D_DOMAIN = typename Wrapper<D>::Domain;
+
+        v[this->args()[i]->unique_id()] = 
+          std::make_shared<D_DOMAIN>(typename D_DOMAIN::Domain(x).mid(), x, d, true);
       }
 
       template<typename... Args>
