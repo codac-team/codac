@@ -1,10 +1,9 @@
 /** 
  *  \file
- *  ScalarVar Python binding
- *  Originated from the former pyIbex library (Benoît Desrochers)
+ *  Codac binding (core)
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Benoît Desrochers, Simon Rohou, Fabrice Le Bars
+ *  \author     Simon Rohou
  *  \copyright  Copyright 2024 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
@@ -17,10 +16,8 @@
 #include <codac2_analytic_variables.h>
 #include <codac2_AnalyticExpr.h>
 #include "codac2_py_analytic_variables_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include "codac2_py_ExprWrapper.h"
 
-#include "codac2_py_wrapper.h"
-
-using namespace std;
 using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -69,6 +66,7 @@ void export_VectorVar(py::module& m)
 
     .def("__add__", [](const VectorVar& e1, const VectorVar& e2) { return ExprWrapper<VectorOpValue>(e1 + e2); })
     .def("__sub__", [](const VectorVar& e1, const VectorVar& e2) { return ExprWrapper<VectorOpValue>(e1 - e2); })
+    .def("__mul__", [](const ScalarVar& e1, const VectorVar& e2) { return ExprWrapper<VectorOpValue>(e1 * e2); })
   ;
 
   py::implicitly_convertible<VectorVar,ExprWrapper<VectorOpValue>>();

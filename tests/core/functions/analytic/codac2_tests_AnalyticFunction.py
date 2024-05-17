@@ -12,7 +12,16 @@
 import unittest
 from codac import *
 
+def invalid_function():
+    
+  x = ScalarVar()
+  f = AnalyticFunction([3], cos(x))
+
 class TestAnalyticFunction(unittest.TestCase):
+
+  def test_function_invalid_args(self):
+
+    self.assertRaises(ValueError, invalid_function)
 
   def tests_simple_analytic_function(self):
 
@@ -35,8 +44,10 @@ class TestAnalyticFunction(unittest.TestCase):
     self.assertTrue(Approx(f.eval(Interval(2))) == 4)
     f = AnalyticFunction([x], x+x+2)
     self.assertTrue(Approx(f.eval(Interval(2))) == 6)
+    f = AnalyticFunction([x], pow(x,2))
+    self.assertTrue(Approx(f.eval(Interval(3))) == 9)
     f = AnalyticFunction([x], cos(x))
-    self.assertTrue(Approx(f.eval(Interval(0))) == 1)
+    self.assertTrue(Approx(f.eval(Interval(0))) == 1)    
 
     f = AnalyticFunction([x], vec(x,x))
 

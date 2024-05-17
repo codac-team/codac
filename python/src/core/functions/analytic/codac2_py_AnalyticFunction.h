@@ -1,10 +1,9 @@
 /** 
  *  \file
- *  Function Python binding
- *  Originated from the former pyIbex library (Benoît Desrochers)
+ *  Codac binding (core)
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Benoît Desrochers, Simon Rohou, Fabrice Le Bars
+ *  \author     Simon Rohou
  *  \copyright  Copyright 2024 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
@@ -21,13 +20,8 @@
 #include <codac2_analytic_operations.h>
 #include <codac2_AnalyticFunction.h>
 #include "codac2_py_AnalyticFunction_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
-#include "codac2_py_analytic_operations_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_ExprWrapper.h"
 
-#include "codac2_py_doc.h"
-
-#include "codac2_py_wrapper.h"
-
-using namespace std;
 using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -43,20 +37,24 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
     .def(py::init(
       [](const py::list& l, const ExprWrapper<T>& e)
       {
-        vector<std::reference_wrapper<VarBase>> args;
+        std::vector<std::reference_wrapper<VarBase>> args;
+        size_t i = 0;
 
         for(const auto& li : l)
         {
+          i++;
+
           if(py::isinstance<ScalarVar>(li))
-            args.push_back(*std::make_shared<ScalarVar>(li.cast<ScalarVar>()));
+            args.push_back(*(li.cast<ScalarVar>().arg_copy()));
 
           else if(py::isinstance<VectorVar>(li))
-            args.push_back(*std::make_shared<VectorVar>(li.cast<VectorVar>()));
+            args.push_back(*(li.cast<VectorVar>().arg_copy()));
 
-          else { assert(false && "unhandled case"); }
+          else
+            throw std::invalid_argument("Argument " + std::to_string(i) + " is invalid. Only variables are accepted.");
         }
 
-        return std::make_unique<AnalyticFunction<T>>(args, std::dynamic_pointer_cast<codac2::AnalyticExpr<T>>(e->copy()));
+        return std::make_unique<AnalyticFunction<T>>(args, std::dynamic_pointer_cast<AnalyticExpr<T>>(e->copy()));
       }
     ), ANALYTICFUNCTION_TTYPENAME_ANALYTICFUNCTION_CONST_VECTOR_REFERENCE_WRAPPER_VARBASE_REF_CONST_SHARED_PTR_ANALYTICEXPR_T_REF);
 
@@ -97,47 +95,5 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
           return string(stream.str()); 
         },
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_ANALYTICFUNCTION_T_REF)
-  ;
-}
-
-template<typename T>
-void export_ExprWrapper(py::module& m, const std::string& export_name)
-{
-  py::class_<ExprWrapper<T>>
-    exported(m, export_name.c_str());
-
-  exported.def(py::init<std::shared_ptr<AnalyticExpr<T>>>());
-  
-  if constexpr(std::is_same_v<T,ScalarOpValue>)
-    exported.def(py::init<ScalarVar>(),
-      "Converting a ScalarVar into an ExprWrapper (binding object).");
-  
-  if constexpr(std::is_same_v<T,VectorOpValue>)
-    exported.def(py::init<VectorVar>(),
-      "Converting a VectorVar into an ExprWrapper (binding object).");
-
-  exported.def("__add__", [](const ExprWrapper<T>& e1, const typename T::Domain& e2) { return ExprWrapper<T>(e1 + e2); });
-  exported.def("__add__", [](const ExprWrapper<T>& e1, const ExprWrapper<T>& e2) { return ExprWrapper<T>(e1 + e2); });
-}
-
-inline void export_expression_operations(py::module& m)
-{
-  m .def("cos", [](const ExprWrapper<ScalarOpValue>& e) { return ExprWrapper<ScalarOpValue>(cos(e)); },
-      SCALAREXPR_PTR_COS_CONST_SCALAREXPR_PTR_REF,
-      "x1"_a);
-
-  const char* EVAL_VEC_DOC = VECTOREXPR_PTR_VEC_CONST_SHARED_PTR_ANALYTICEXPR_X_REF_VARIADIC;
-  using S = const ExprWrapper<ScalarOpValue>&;
-
-  m .def("vec", [](S e1) { return ExprWrapper<VectorOpValue>(vec(e1)); }, EVAL_VEC_DOC, "x1"_a)
-    .def("vec", [](S e1, S e2) { return ExprWrapper<VectorOpValue>(vec(e1,e2)); }, EVAL_VEC_DOC, "x1"_a,"x2"_a)
-    .def("vec", [](S e1, S e2, S e3) { return ExprWrapper<VectorOpValue>(vec(e1,e2,e3)); }, EVAL_VEC_DOC, "x1"_a,"x2"_a,"x3"_a)
-    .def("vec", [](S e1, S e2, S e3, S e4) { return ExprWrapper<VectorOpValue>(vec(e1,e2,e3,e4)); }, EVAL_VEC_DOC, "x1"_a,"x2"_a,"x3"_a,"x4"_a)
-    .def("vec", [](S e1, S e2, S e3, S e4, S e5) { return ExprWrapper<VectorOpValue>(vec(e1,e2,e3,e4,e5)); }, EVAL_VEC_DOC, "x1"_a,"x2"_a,"x3"_a,"x4"_a,"x5"_a)
-    .def("vec", [](S e1, S e2, S e3, S e4, S e5, S e6) { return ExprWrapper<VectorOpValue>(vec(e1,e2,e3,e4,e5,e6)); }, EVAL_VEC_DOC, "x1"_a,"x2"_a,"x3"_a,"x4"_a,"x5"_a,"x6"_a)
-    .def("vec", [](S e1, S e2, S e3, S e4, S e5, S e6, S e7) { return ExprWrapper<VectorOpValue>(vec(e1,e2,e3,e4,e5,e6,e7)); }, EVAL_VEC_DOC, "x1"_a,"x2"_a,"x3"_a,"x4"_a,"x5"_a,"x6"_a,"x7"_a)
-    .def("vec", [](S e1, S e2, S e3, S e4, S e5, S e6, S e7, S e8) { return ExprWrapper<VectorOpValue>(vec(e1,e2,e3,e4,e5,e6,e7,e8)); }, EVAL_VEC_DOC, "x1"_a,"x2"_a,"x3"_a,"x4"_a,"x5"_a,"x6"_a,"x7"_a,"x8"_a)
-    .def("vec", [](S e1, S e2, S e3, S e4, S e5, S e6, S e7, S e8, S e9) { return ExprWrapper<VectorOpValue>(vec(e1,e2,e3,e4,e5,e6,e7,e8,e9)); }, EVAL_VEC_DOC, "x1"_a,"x2"_a,"x3"_a,"x4"_a,"x5"_a,"x6"_a,"x7"_a,"x8"_a,"x9"_a)
-    .def("vec", [](S e1, S e2, S e3, S e4, S e5, S e6, S e7, S e8, S e9, S e10) { return ExprWrapper<VectorOpValue>(vec(e1,e2,e3,e4,e5,e6,e7,e8,e9,e10)); }, EVAL_VEC_DOC, "x1"_a,"x2"_a,"x3"_a,"x4"_a,"x5"_a,"x6"_a,"x7"_a,"x8"_a,"x9"_a,"x10"_a)
   ;
 }
