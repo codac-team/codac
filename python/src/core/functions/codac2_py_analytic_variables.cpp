@@ -38,6 +38,10 @@ void export_ScalarVar(py::module& m)
     .def("size", &ScalarVar::size,
       SIZET_SCALARVAR_SIZE_CONST)
 
+    .def("__add__", [](const ScalarVar& e1, const ScalarVar& e2) { return ExprWrapper<ScalarOpValue>(e1 + e2); })
+    .def("__sub__", [](const ScalarVar& e1, const ScalarVar& e2) { return ExprWrapper<ScalarOpValue>(e1 - e2); })
+    .def("__mul__", [](const ScalarVar& e1, const ScalarVar& e2) { return ExprWrapper<ScalarOpValue>(e1 * e2); })
+    .def("__div__", [](const ScalarVar& e1, const ScalarVar& e2) { return ExprWrapper<ScalarOpValue>(e1 / e2); })
   ;
 
   py::implicitly_convertible<ScalarVar,ExprWrapper<ScalarOpValue>>();
@@ -63,6 +67,8 @@ void export_VectorVar(py::module& m)
         return ExprWrapper<ScalarOpValue>(std::dynamic_pointer_cast<AnalyticExpr<ScalarOpValue>>(v[static_cast<int>(index)]->copy()));
       }, SHARED_PTR_ANALYTICEXPR_SCALAROPVALUE_VECTORVAR_OPERATORCOMPO_SIZET_CONST)
 
+    .def("__add__", [](const VectorVar& e1, const VectorVar& e2) { return ExprWrapper<VectorOpValue>(e1 + e2); })
+    .def("__sub__", [](const VectorVar& e1, const VectorVar& e2) { return ExprWrapper<VectorOpValue>(e1 - e2); })
   ;
 
   py::implicitly_convertible<VectorVar,ExprWrapper<VectorOpValue>>();

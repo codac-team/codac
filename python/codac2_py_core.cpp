@@ -47,9 +47,9 @@ PYBIND11_MODULE(core, m)
   export_ExprWrapper<VectorOpValue>(m,"VectorExpr");
   export_AnalyticFunction<ScalarOpValue>(m,"ScalarAnalyticFunction");
   export_AnalyticFunction<VectorOpValue>(m,"VectorAnalyticFunction");
-  export_expression_operations(m);
   export_ScalarVar(m);
   export_VectorVar(m);
+  export_expression_operations(m);
 
   // tools
   export_Approx(m);

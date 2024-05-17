@@ -31,8 +31,14 @@ class TestAnalyticFunction(unittest.TestCase):
 
     f = AnalyticFunction([x], x)
     self.assertTrue(Approx(f.eval(Interval(0))) == 0)
+    f = AnalyticFunction([x], x+x)
+    self.assertTrue(Approx(f.eval(Interval(2))) == 4)
+    f = AnalyticFunction([x], x+x+2)
+    self.assertTrue(Approx(f.eval(Interval(2))) == 6)
     f = AnalyticFunction([x], cos(x))
     self.assertTrue(Approx(f.eval(Interval(0))) == 1)
+
+    f = AnalyticFunction([x], vec(x,x))
 
     #fvec = AnalyticFunction([x], vec(x,x))
     #self.assertTrue(Approx(f.eval(0)) == IntervalVector([[1],[1]]))

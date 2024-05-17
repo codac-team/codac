@@ -18,23 +18,21 @@
 #include "codac2_AnalyticFunction.h"
 
 template<typename T>
-struct ExprWrapper
+struct ExprWrapper : public std::shared_ptr<codac2::AnalyticExpr<T>>
 {
   ExprWrapper(const codac2::ScalarVar& e)
-    : _e(std::dynamic_pointer_cast<codac2::AnalyticExpr<T>>(e.copy()))
+    : std::shared_ptr<codac2::AnalyticExpr<T>>(std::dynamic_pointer_cast<codac2::AnalyticExpr<T>>(e.copy()))
   {
     static_assert(std::is_same_v<T,codac2::ScalarOpValue>);
   }
 
   ExprWrapper(const codac2::VectorVar& e)
-    : _e(std::dynamic_pointer_cast<codac2::AnalyticExpr<T>>(e.copy()))
+    : std::shared_ptr<codac2::AnalyticExpr<T>>(std::dynamic_pointer_cast<codac2::AnalyticExpr<T>>(e.copy()))
   {
     static_assert(std::is_same_v<T,codac2::VectorOpValue>);
   }
 
   ExprWrapper(const std::shared_ptr<codac2::AnalyticExpr<T>>& e)
-    : _e(e)
+    : std::shared_ptr<codac2::AnalyticExpr<T>>(e)
   { }
-
-  const std::shared_ptr<codac2::AnalyticExpr<T>> _e;
 };

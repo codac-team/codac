@@ -45,37 +45,73 @@ namespace codac2
   // operator+
     
     inline ScalarExpr_ptr
-    operator+(const ScalarExpr_ptr& x1, const ScalarExpr_ptr& x2)
+    operator+(ScalarExpr_ptr x1, ScalarExpr_ptr x2)
     {
       return std::make_shared<AnalyticOperationExpr<AddOp,ScalarOpValue,ScalarOpValue,ScalarOpValue>>(x1,x2);
     }
 
-    inline VectorExpr_ptr
-    operator+(const VectorExpr_ptr& x1, const VectorExpr_ptr& x2)
-    {
-      return std::make_shared<AnalyticOperationExpr<AddOp,VectorOpValue,VectorOpValue,VectorOpValue>>(x1,x2);
-    }
-
-    inline MatrixExpr_ptr
-    operator+(const MatrixExpr_ptr& x1, const MatrixExpr_ptr& x2)
-    {
-      return std::make_shared<AnalyticOperationExpr<AddOp,MatrixOpValue,MatrixOpValue,MatrixOpValue>>(x1,x2);
-    }
-
     template<typename X1, typename = typename std::enable_if<
-        !std::is_base_of_v<VarBase,X1>
+        (!std::is_base_of_v<VarBase,X1> && !std::is_base_of_v<ScalarExpr_ptr,X1>)
       >::type>
     inline ScalarExpr_ptr
-    operator+(const X1& x1, const ScalarExpr_ptr& x2)
+    operator+(const X1& x1, ScalarExpr_ptr x2)
     {
       return operator+(const_value(x1),x2);
     }
 
     template<typename X2, typename = typename std::enable_if<
-        !std::is_base_of_v<VarBase,X2>
+        (!std::is_base_of_v<VarBase,X2> && !std::is_base_of_v<ScalarExpr_ptr,X2>)
       >::type>
     inline ScalarExpr_ptr
-    operator+(const ScalarExpr_ptr& x1, const X2& x2)
+    operator+(ScalarExpr_ptr x1, const X2& x2)
+    {
+      return operator+(x1, const_value(x2));
+    }
+
+    inline VectorExpr_ptr
+    operator+(VectorExpr_ptr x1, VectorExpr_ptr x2)
+    {
+      return std::make_shared<AnalyticOperationExpr<AddOp,VectorOpValue,VectorOpValue,VectorOpValue>>(x1,x2);
+    }
+
+    template<typename X1, typename = typename std::enable_if<
+        (!std::is_base_of_v<VarBase,X1> && !std::is_base_of_v<VectorExpr_ptr,X1>)
+      >::type>
+    inline VectorExpr_ptr
+    operator+(const X1& x1, VectorExpr_ptr x2)
+    {
+      return operator+(const_value(x1),x2);
+    }
+
+    template<typename X2, typename = typename std::enable_if<
+        (!std::is_base_of_v<VarBase,X2> && !std::is_base_of_v<VectorExpr_ptr,X2>)
+      >::type>
+    inline VectorExpr_ptr
+    operator+(VectorExpr_ptr x1, const X2& x2)
+    {
+      return operator+(x1, const_value(x2));
+    }
+
+    inline MatrixExpr_ptr
+    operator+(MatrixExpr_ptr x1, MatrixExpr_ptr x2)
+    {
+      return std::make_shared<AnalyticOperationExpr<AddOp,MatrixOpValue,MatrixOpValue,MatrixOpValue>>(x1,x2);
+    }
+
+    template<typename X1, typename = typename std::enable_if<
+        (!std::is_base_of_v<VarBase,X1> && !std::is_base_of_v<MatrixExpr_ptr,X1>)
+      >::type>
+    inline MatrixExpr_ptr
+    operator+(const X1& x1, MatrixExpr_ptr x2)
+    {
+      return operator+(const_value(x1),x2);
+    }
+
+    template<typename X2, typename = typename std::enable_if<
+        (!std::is_base_of_v<VarBase,X2> && !std::is_base_of_v<MatrixExpr_ptr,X2>)
+      >::type>
+    inline MatrixExpr_ptr
+    operator+(MatrixExpr_ptr x1, const X2& x2)
     {
       return operator+(x1, const_value(x2));
     }
@@ -108,10 +144,46 @@ namespace codac2
       return std::make_shared<AnalyticOperationExpr<SubOp,ScalarOpValue,ScalarOpValue,ScalarOpValue>>(x1,x2);
     }
 
+    template<typename X1, typename = typename std::enable_if<
+        (!std::is_base_of_v<VarBase,X1> && !std::is_base_of_v<ScalarExpr_ptr,X1>)
+      >::type>
+    inline ScalarExpr_ptr
+    operator-(const X1& x1, const ScalarExpr_ptr& x2)
+    {
+      return operator-(const_value(x1),x2);
+    }
+
+    template<typename X2, typename = typename std::enable_if<
+        (!std::is_base_of_v<VarBase,X2> && !std::is_base_of_v<ScalarExpr_ptr,X2>)
+      >::type>
+    inline ScalarExpr_ptr
+    operator-(const ScalarExpr_ptr& x1, const X2& x2)
+    {
+      return operator-(x1, const_value(x2));
+    }
+
     inline VectorExpr_ptr
     operator-(const VectorExpr_ptr& x1, const VectorExpr_ptr& x2)
     {
       return std::make_shared<AnalyticOperationExpr<SubOp,VectorOpValue,VectorOpValue,VectorOpValue>>(x1,x2);
+    }
+
+    template<typename X1, typename = typename std::enable_if<
+        (!std::is_base_of_v<VarBase,X1> && !std::is_base_of_v<VectorExpr_ptr,X1>)
+      >::type>
+    inline VectorExpr_ptr
+    operator-(const X1& x1, const VectorExpr_ptr& x2)
+    {
+      return operator-(const_value(x1),x2);
+    }
+
+    template<typename X2, typename = typename std::enable_if<
+        (!std::is_base_of_v<VarBase,X2> && !std::is_base_of_v<VectorExpr_ptr,X2>)
+      >::type>
+    inline VectorExpr_ptr
+    operator-(const VectorExpr_ptr& x1, const X2& x2)
+    {
+      return operator-(x1, const_value(x2));
     }
 
     inline MatrixExpr_ptr
@@ -121,19 +193,19 @@ namespace codac2
     }
 
     template<typename X1, typename = typename std::enable_if<
-        !std::is_base_of_v<VarBase,X1>
+        (!std::is_base_of_v<VarBase,X1> && !std::is_base_of_v<MatrixExpr_ptr,X1>)
       >::type>
-    inline ScalarExpr_ptr
-    operator-(const X1& x1, const ScalarExpr_ptr& x2)
+    inline MatrixExpr_ptr
+    operator-(const X1& x1, const MatrixExpr_ptr& x2)
     {
       return operator-(const_value(x1),x2);
     }
 
     template<typename X2, typename = typename std::enable_if<
-        !std::is_base_of_v<VarBase,X2>
+        (!std::is_base_of_v<VarBase,X2> && !std::is_base_of_v<MatrixExpr_ptr,X2>)
       >::type>
-    inline ScalarExpr_ptr
-    operator-(const ScalarExpr_ptr& x1, const X2& x2)
+    inline MatrixExpr_ptr
+    operator-(const MatrixExpr_ptr& x1, const X2& x2)
     {
       return operator-(x1, const_value(x2));
     }
@@ -191,7 +263,7 @@ namespace codac2
     }
 
     template<typename X1, typename = typename std::enable_if<
-        !std::is_base_of_v<VarBase,X1>
+        (!std::is_base_of_v<VarBase,X1> && !std::is_base_of_v<ScalarExpr_ptr,X1>)
       >::type>
     inline ScalarExpr_ptr
     operator/(const X1& x1, const ScalarExpr_ptr& x2)
@@ -200,7 +272,7 @@ namespace codac2
     }
 
     template<typename X2, typename = typename std::enable_if<
-        !std::is_base_of_v<VarBase,X2>
+        (!std::is_base_of_v<VarBase,X2> && !std::is_base_of_v<ScalarExpr_ptr,X2>)
       >::type>
     inline ScalarExpr_ptr
     operator/(const ScalarExpr_ptr& x1, const X2& x2)
@@ -217,7 +289,7 @@ namespace codac2
     }
 
     template<typename X1, typename = typename std::enable_if<
-        !std::is_base_of_v<VarBase,X1>
+        (!std::is_base_of_v<VarBase,X1> && !std::is_base_of_v<ScalarExpr_ptr,X1>)
       >::type>
     inline ScalarExpr_ptr
     pow(const X1& x1, const ScalarExpr_ptr& x2)
@@ -226,7 +298,7 @@ namespace codac2
     }
 
     template<typename X2, typename = typename std::enable_if<
-        !std::is_base_of_v<VarBase,X2>
+        (!std::is_base_of_v<VarBase,X2> && !std::is_base_of_v<ScalarExpr_ptr,X2>)
       >::type>
     inline ScalarExpr_ptr
     pow(const ScalarExpr_ptr& x1, const X2& x2)

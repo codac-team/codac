@@ -40,7 +40,7 @@ namespace codac2
       void replace_expr(const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
       { }
       
-      operator std::shared_ptr<AnalyticExpr<T>>()
+      operator std::shared_ptr<AnalyticExpr<T>>() const
       {
         return std::dynamic_pointer_cast<AnalyticExpr<T>>(this->copy());
       }

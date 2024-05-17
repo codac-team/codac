@@ -92,7 +92,7 @@ namespace codac2
   class IntervalVector : public IntervalVectorTemplate_<IntervalVector,Vector>
   {
     public:
-
+      
       explicit IntervalVector(size_t n)
         : IntervalVectorTemplate_<IntervalVector,Vector>(n)
       { }
