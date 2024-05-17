@@ -100,7 +100,7 @@ namespace codac2
         return _n;
       }
 
-      std::shared_ptr<AnalyticExpr<ScalarOpValue>> operator[](size_t i)
+      std::shared_ptr<AnalyticExpr<ScalarOpValue>> operator[](size_t i) const
       {
         assert(i >= 0 && i < _n);
         return std::make_shared<AnalyticOperationExpr<ComponentOp,ScalarOpValue,VectorOpValue>>(

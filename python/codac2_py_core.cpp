@@ -27,14 +27,7 @@ void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval
 // functions
 void export_ScalarVar(py::module& m);
 void export_VectorVar(py::module& m);
-
-//void export_ScalarAnalyticFunction(py::module& m);
-//void export_VectorAnalyticFunction(py::module& m);
-
 void export_expression_operations(py::module& m);
-
-//void export_ScalarExprWrapper(py::module& m);
-//void export_VectorExprWrapper(py::module& m);
 
 // tools
 void export_Approx(py::module& m);
@@ -50,13 +43,13 @@ PYBIND11_MODULE(core, m)
   export_Interval_operations(m, py_Interval);
 
   // function
-  export_ExprWrapper<ScalarOpValue>(m,"ScalarExprWrapper");
-  export_ExprWrapper<VectorOpValue>(m,"VectorExprWrapper");
-  export_ScalarVar(m);
-  export_VectorVar(m);
+  export_ExprWrapper<ScalarOpValue>(m,"ScalarExpr");
+  export_ExprWrapper<VectorOpValue>(m,"VectorExpr");
   export_AnalyticFunction<ScalarOpValue>(m,"ScalarAnalyticFunction");
   export_AnalyticFunction<VectorOpValue>(m,"VectorAnalyticFunction");
   export_expression_operations(m);
+  export_ScalarVar(m);
+  export_VectorVar(m);
 
   // tools
   export_Approx(m);

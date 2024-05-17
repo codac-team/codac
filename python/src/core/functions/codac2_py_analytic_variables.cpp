@@ -35,6 +35,9 @@ void export_ScalarVar(py::module& m)
     .def(py::init<>(),
       SCALARVAR_SCALARVAR)
 
+    .def("size", &ScalarVar::size,
+      SIZET_SCALARVAR_SIZE_CONST)
+
   ;
 
   py::implicitly_convertible<ScalarVar,ExprWrapper<ScalarOpValue>>();
@@ -50,5 +53,17 @@ void export_VectorVar(py::module& m)
     .def(py::init<size_t>(),
       VECTORVAR_VECTORVAR_SIZET)
 
+    .def("size", &VectorVar::size,
+      SIZET_VECTORVAR_SIZE_CONST)
+
+    .def("__getitem__", [](const VectorVar& v, size_t index) -> ExprWrapper<ScalarOpValue>
+      {
+        if(index < 0 || index >= static_cast<size_t>(v.size()))
+          throw py::index_error();
+        return ExprWrapper<ScalarOpValue>(std::dynamic_pointer_cast<AnalyticExpr<ScalarOpValue>>(v[static_cast<int>(index)]->copy()));
+      }, SHARED_PTR_ANALYTICEXPR_SCALAROPVALUE_VECTORVAR_OPERATORCOMPO_SIZET_CONST)
+
   ;
+
+  py::implicitly_convertible<VectorVar,ExprWrapper<VectorOpValue>>();
 }

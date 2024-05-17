@@ -1,20 +1,21 @@
 from codac.core import *
 from .version import __version__
 
-
 class AnalyticFunction:
 
   def __init__(self, args, e):
 
-    if e.is_scalar():
+    if isinstance(e, (ScalarVar,ScalarExpr)):
       self.f = ScalarAnalyticFunction(args,e)
-    else:
+    elif isinstance(e, (VectorVar,VectorExpr)):
       self.f = VectorAnalyticFunction(args,e)
+    else:
+      print("Can only build functions from scalar or vector expressions")
 
-  def eval(self,x):
+  def eval(self,*args):
 
-    return self.f.eval(x)
-  
+    return self.f.eval(*args)
+
   def __repr__(self):
 
     return str(self.f)

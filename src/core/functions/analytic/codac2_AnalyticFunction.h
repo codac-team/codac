@@ -37,12 +37,14 @@ namespace codac2
       template<typename... Args>
       typename T::Domain eval(const Args&... x) const
       {
+        check_valid_inputs(x...);
         return eval_(x...).a;
       }
 
       template<typename... Args>
       typename T::Domain eval_centered(const Args&... x) const
       {
+        check_valid_inputs(x...);
         auto x_ = eval_(x...);
         auto flatten_x = cart_prod(x...);
         
@@ -55,6 +57,7 @@ namespace codac2
       template<typename... Args>
       auto diff(const Args&... x) const
       {
+        check_valid_inputs(x...);
         return eval_(x...).da;
       }
 
@@ -120,6 +123,21 @@ namespace codac2
         ValuesMap v;
         fill_from_args(v, x...);
         return this->expr()->fwd_eval(v, this->args(), cart_prod(x...));
+      }
+
+      template<typename... Args>
+      void check_valid_inputs(const Args&... x) const
+      {
+        size_t n = 0;
+        ((n += x.size()), ...);
+        
+        if(this->_args.total_size() != n)
+        {
+          std::cerr << "Wrong function input: check the number and dimension of input arguments" << std::endl;
+          std::cerr << "  Required inputs: total_size=" << this->_args.total_size() << std::endl;
+          std::cerr << "  Provided inputs: total_size=" << n << std::endl;
+          throw std::exception();
+        }
       }
   };
 }
