@@ -10,11 +10,18 @@
 
 #include "codac2_Figure.h"
 #include "codac2_FigureVIBes.h"
+#include "codac2_FigureIPE.h"
 
 using namespace std;
 using namespace codac2;
 
-Figure *DefaultFigure::_default_figure = nullptr;
+Figure DefaultFigure::_default_fig = [](){
+  Figure g("Codac - default view", GraphicOutputMode::VIBES);
+  g.set_window_properties({20.,20.}, {800.,800.});
+  return g;
+}();
+
+Figure *DefaultFigure::_selected_fig = &DefaultFigure::_default_fig;
 
 Figure::Figure(const std::string& name, GraphicOutputMode o)
   : _name(name)
@@ -22,6 +29,8 @@ Figure::Figure(const std::string& name, GraphicOutputMode o)
   DefaultFigure::set(this);
   if(o & GraphicOutputMode::VIBES)
     _output_figures.push_back(std::make_shared<FigureVIBes>(*this));
+  if(o & GraphicOutputMode::IPE)
+    _output_figures.push_back(std::make_shared<FigureIPE>(*this));
 }
 
 size_t Figure::size() const
@@ -49,6 +58,11 @@ const std::vector<FigureAxis>& Figure::axes() const
   return _axes;
 }
 
+bool Figure::is_default() const
+{
+  return DefaultFigure::selected_fig() == this;
+}
+
 void Figure::set_as_default()
 {
   DefaultFigure::set(this);
@@ -56,9 +70,7 @@ void Figure::set_as_default()
 
 void Figure::set_axes(const FigureAxis& axis1, const FigureAxis& axis2)
 {
-  _axes.clear();
-  _axes.push_back(axis1);
-  _axes.push_back(axis2);
+  _axes = { axis1, axis2 };
   for(const auto& output_fig : _output_figures)
     output_fig->update_axes();
 }
@@ -79,8 +91,8 @@ void Figure::center_viewbox(const Vector& c, const Vector& r)
     output_fig->center_viewbox(c,r);
 }
 
-void Figure::draw_box(const IntervalVector& x, const std::string& color)
+void Figure::draw_box(const IntervalVector& x, const StyleProperties& s)
 {
   for(const auto& output_fig : _output_figures)
-    output_fig->draw_box(x,color);
+    output_fig->draw_box(x,s);
 }

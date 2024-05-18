@@ -13,6 +13,7 @@
 
 #include <string>
 #include "codac2_IntervalVector.h"
+#include "codac2_StyleProperties.h"
 
 namespace codac2
 {
@@ -20,6 +21,6 @@ namespace codac2
   {
     public:
 
-      virtual void draw_box(const IntervalVector& x, const std::string& color) = 0;
+      virtual void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties()) = 0;
   };
 }

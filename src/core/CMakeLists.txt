@@ -57,7 +57,11 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure.h
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_FigureInterface.h
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_OutputFigure.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_StyleProperties.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_StyleProperties.h
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_WithGraphicOutput.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/ipe/codac2_FigureIPE.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/ipe/codac2_FigureIPE.h
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/codac2_FigureVIBes.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/codac2_FigureVIBes.h
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/vibes.cpp
@@ -117,6 +121,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/ipe
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes
     ${CMAKE_CURRENT_SOURCE_DIR}/paver
     ${CMAKE_CURRENT_SOURCE_DIR}/separators

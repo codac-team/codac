@@ -16,7 +16,7 @@ using namespace codac2;
 int FigureVIBes::_has_been_initialized = 0;
 
 FigureVIBes::FigureVIBes(const Figure& fig)
-  : OutputFigure(fig)
+  : OutputFigure(fig), _params(vibesParams("figure", fig.name()))
 {
   if(FigureVIBes::_has_been_initialized == 0)
     vibes::beginDrawing();
@@ -34,6 +34,7 @@ FigureVIBes::~FigureVIBes()
 
 void FigureVIBes::update_axes()
 {
+  vibes::axisLabels({ _fig.axes()[0].label, _fig.axes()[1].label }, _fig.name());
   vibes::axisLimits(
     _fig.axes()[0].limits.lb(),_fig.axes()[0].limits.ub(),
     _fig.axes()[1].limits.lb(),_fig.axes()[1].limits.ub(),
@@ -53,9 +54,14 @@ void FigureVIBes::center_viewbox(const Vector& c, const Vector& r)
   vibes::axisLimits(c[0]-r[0], c[0]+r[0], c[1]-r[1], c[1]+r[1], _fig.name());
 }
 
-void FigureVIBes::draw_box(const IntervalVector& x, const std::string& color)
+void FigureVIBes::draw_box(const IntervalVector& x, const StyleProperties& s)
 {
   assert(_fig.size() <= x.size());
   int i = _fig.axes()[0].dim_id; int j = _fig.axes()[1].dim_id;
-  vibes::drawBox(x[i].lb(),x[i].ub(),x[j].lb(),x[j].ub(),color);
+  vibes::drawBox(x[i].lb(),x[i].ub(),x[j].lb(),x[j].ub(), to_vibes_style(s), _params);
+}
+
+string FigureVIBes::to_vibes_style(const StyleProperties& s)
+{
+  return s.stroke_color.to_hex_str() + "[" + s.fill_color.to_hex_str() + "]";
 }

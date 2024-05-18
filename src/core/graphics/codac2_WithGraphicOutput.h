@@ -24,8 +24,13 @@ namespace codac2
         _figure = g;
       }
 
+      // Public attributes freely editable by the user
+      StyleProperties inner_style = StyleProperties::inner();
+      StyleProperties outer_style = StyleProperties::outer();
+      StyleProperties boundary_style = StyleProperties::boundary();
+
     protected:
 
-      Figure *_figure;
+      Figure *_figure = nullptr;
   };
 }

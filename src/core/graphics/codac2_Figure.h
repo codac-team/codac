@@ -41,7 +41,7 @@ namespace codac2
   inline FigureAxis axis(size_t dim_id, const Interval& limits, const std::string& label = "")
   {
     assert(dim_id >= 0);
-    assert(!limits.is_empty());
+    //assert(!limits.is_empty());
 
     std::string axis_label = label;
     if(axis_label.empty())
@@ -49,6 +49,8 @@ namespace codac2
 
     return { dim_id, limits, axis_label };
   }
+
+  class DefaultFigure;
 
   class Figure : public FigureInterface
   {
@@ -61,13 +63,14 @@ namespace codac2
       const Vector& window_size() const;
       const std::string& name() const;
       const std::vector<FigureAxis>& axes() const;
+      bool is_default() const;
 
       void set_as_default();
       void set_axes(const FigureAxis& axis1, const FigureAxis& axis2);
       void set_window_properties(const Vector& pos, const Vector& size);
       void center_viewbox(const Vector& c, const Vector& r);
 
-      void draw_box(const IntervalVector& x, const std::string& color = "black");
+      void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties());
 
     protected:
 
@@ -75,25 +78,42 @@ namespace codac2
       Vector _pos {50,50}, _window_size {500,500};
       std::vector<FigureAxis> _axes { axis(0,{0,1}), axis(1,{0,1}) };
       std::vector<std::shared_ptr<OutputFigure>> _output_figures;
+
+      friend DefaultFigure;
   };
 
   class DefaultFigure
   {
     public:
 
-      static void set(Figure *fig)
+      static Figure* selected_fig()
       {
-        _default_figure = fig;
+        return _selected_fig;
       }
 
-      static void draw_box(const IntervalVector& x, const std::string& color = "black")
+      static void set(Figure *fig)
       {
-        if(_default_figure)
-          _default_figure->draw_box(x,color);
+        _selected_fig = fig;
+      }
+      
+      static void set_axes(const FigureAxis& axis1, const FigureAxis& axis2)
+      {
+        _selected_fig->set_axes(axis1,axis2);
+      }
+      
+      static void set_window_properties(const Vector& pos, const Vector& size)
+      {
+        _selected_fig->set_window_properties(pos,size);
+      }
+
+      static void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties())
+      {
+        _selected_fig->draw_box(x,s);
       }
 
     protected:
 
-      static Figure *_default_figure;
+      static Figure _default_fig;
+      static Figure *_selected_fig;
   };
 }

@@ -12,7 +12,7 @@
 #pragma once
 
 #include "codac2_Ctc.h"
-#include "codac2_IntervalVector.h"
+#include "codac2_Sep.h"
 #include "codac2_WithGraphicOutput.h"
 
 namespace codac2
@@ -23,9 +23,20 @@ namespace codac2
 
       Paver(const IntervalVector& x0);
       void pave(const Ctc_<IntervalVector>& c, double eps);
+      void pave(const Sep& s, double eps);
 
     protected:
 
+      void init_figure();
+
       const IntervalVector _x0;
   };
+
+  template<typename O>
+  void pave(const IntervalVector& x0, const O& o, double eps)
+  {
+    Paver p(x0);
+    p.set_figure(DefaultFigure::selected_fig());
+    p.pave(o,eps);
+  }
 }

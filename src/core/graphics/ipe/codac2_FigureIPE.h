@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  FigureVIBes class
+ *  FigureIPE class
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include <fstream>
 #include "codac2_Figure.h"
 #include "codac2_OutputFigure.h"
 #include "codac2_IntervalVector.h"
@@ -18,22 +19,27 @@
 
 namespace codac2
 {
-  class FigureVIBes : public OutputFigure
+  class FigureIPE : public OutputFigure
   {
     public:
 
-      FigureVIBes(const Figure& fig);
-      ~FigureVIBes();
+      FigureIPE(const Figure& fig);
+      ~FigureIPE();
       void update_axes();
       void update_window_properties();
       void center_viewbox(const Vector& c, const Vector& r);
       virtual void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties());
 
-      static std::string to_vibes_style(const StyleProperties& s);
-
     protected:
 
-      static int _has_been_initialized;
-      const vibes::Params _params;
+      double scale_x(double x) const;
+      double scale_y(double y) const;
+      void print_header_page();
+
+      std::ofstream _f, _f_temp_content;
+      const double _ipe_grid_size = 500.;
+      Vector _ratio { 1., 1. };
+
+      std::map<std::string,ColorRGB> _colors;
   };
 }

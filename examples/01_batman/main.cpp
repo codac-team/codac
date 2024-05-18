@@ -1,10 +1,7 @@
 #include <codac-core.h>
-#include <codac-graphics.h>
 
 using namespace std;
 using namespace codac2;
-
-#include "../sivia.cpp"
 
 int main()
 {
@@ -26,10 +23,5 @@ int main()
     & ((not(IntervalVector({{0,4},{-oo,oo}}))) | inverse(f_half_legs, {-oo,0}));
 
   auto sep_bat = sep_half_bat | OctaSym({-1,2})(sep_half_bat);
-
-  vibes::beginDrawing();
-  SIVIA_sep(sep_bat, {{-8,8},{-4,4}}, 0.01, "The batman");
-  vibes::endDrawing();
-
-  return EXIT_SUCCESS;
+  pave(IntervalVector({{-8,8},{-4,4}}), sep_bat, 0.2);
 }
