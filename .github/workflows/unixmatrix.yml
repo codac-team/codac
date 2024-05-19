@@ -98,6 +98,12 @@ jobs:
       shell: bash
       if: runner.os=='Linux'
     - run: |
+        git clone https://github.com/catchorg/Catch2
+        git checkout v2.x
+        mkdir build ; cd build ; cmake .. ; make ; sudo make install
+      shell: bash
+      if: runner.os=='Linux'
+    - run: |
         brew install eigen
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20231007/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
         unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
