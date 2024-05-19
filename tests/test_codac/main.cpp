@@ -1,4 +1,4 @@
-#include <codac-core>
+#include <codac-core.h>
 
 using namespace codac2;
 
