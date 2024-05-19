@@ -99,6 +99,7 @@ jobs:
       if: runner.os=='Linux'
     - run: |
         git clone https://github.com/catchorg/Catch2
+        cd Catch2
         git checkout v2.x
         mkdir build ; cd build ; cmake .. ; make ; sudo make install
       shell: bash
