@@ -170,6 +170,12 @@ namespace codac2
         return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator+=(x));
       }
 
+      template<typename OtherDerived>
+      IntervalVector operator+=(const Vector& x)
+      {
+        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator+=(x.template cast<Interval>()));
+      }
+
       IntervalVector operator-() const
       {
         return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator-());
@@ -185,6 +191,12 @@ namespace codac2
       IntervalVector operator-=(const Eigen::MatrixBase<OtherDerived>& x)
       {
         return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator-=(x));
+      }
+
+      template<typename OtherDerived>
+      IntervalVector operator-=(const Vector& x)
+      {
+        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator-=(x.template cast<Interval>()));
       }
 
       template<typename OtherDerived>

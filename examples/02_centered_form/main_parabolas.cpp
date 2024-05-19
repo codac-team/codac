@@ -21,13 +21,5 @@ int main()
   );
 
   CtcInverse_<IntervalVector> ctc(h, IntervalVector({{0.},{0.},{0.}}));
-  IntervalVector x0({{0,1},{0,1},{0,1},{0,1}});
-
-  Figure g("Lofted parabolas", GraphicOutputMode::VIBES | GraphicOutputMode::IPE);
-  g.set_axes(axis(0,x0[0],"u"), axis(1,x0[1],"v"));
-  g.set_window_properties({50,50}, {800,800});
-
-  Paver p(x0);
-  p.set_figure(&g);
-  p.pave(CtcLazy(ctc), 0.001);
+  pave(IntervalVector({{0,1},{0,1},{0,1},{0,1}}), ctc, 0.001);
 }

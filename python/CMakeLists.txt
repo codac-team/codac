@@ -52,6 +52,8 @@
       codac2_py_core.cpp
       src/core/domains/interval/codac2_py_Interval.cpp
       src/core/domains/interval/codac2_py_Interval_operations.cpp
+      src/core/domains/interval/codac2_py_IntervalVector.cpp
+      src/core/domains/interval/codac2_py_IntervalVector_operations.cpp
       src/core/functions/analytic/codac2_py_analytic_operations.cpp
       src/core/functions/analytic/codac2_py_analytic_variables.cpp
       src/core/functions/analytic/codac2_py_AnalyticFunction.h

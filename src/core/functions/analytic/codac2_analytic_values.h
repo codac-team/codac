@@ -32,6 +32,8 @@ namespace codac2
     IntervalMatrix da;
     bool def_domain;
 
+    OpValue() = delete;
+
     OpValue(const T& m_, const T& a_, const IntervalMatrix& da_, bool def_domain_)
       : m(m_), a(a_), da(da_), def_domain(def_domain_)
     { }

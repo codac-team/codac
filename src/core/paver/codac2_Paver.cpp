@@ -40,7 +40,7 @@ void Paver::pave(const Ctc_<IntervalVector>& c, double eps)
   init_figure();
   clock_t t_start = clock();
 
-  if(_figure)
+  if(_figure && _x0.size() > 2)
     _figure->draw_box(_x0, WithGraphicOutput::outer_style);
 
   list<IntervalVector> l { _x0 };
@@ -48,10 +48,14 @@ void Paver::pave(const Ctc_<IntervalVector>& c, double eps)
 
   while(!l.empty())
   {
-    IntervalVector x = l.front();
+    IntervalVector x = l.front(), prev_x = x;
     l.pop_front();
 
     c.contract(x);
+
+    if(_figure && _x0.size() == 2)
+      for(const auto& bi : prev_x.diff(x))
+        _figure->draw_box(bi, WithGraphicOutput::outer_style);
 
     if(!x.is_empty())
     {

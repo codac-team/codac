@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include <iostream>
 #include "codac2_AnalyticExpr.h"
 #include "codac2_VarBase.h"
 
@@ -44,6 +45,14 @@ namespace codac2
       {
         return std::dynamic_pointer_cast<AnalyticExpr<T>>(this->copy());
       }
+
+      virtual bool belongs_to_args_list(const FunctionArgsList& args) const
+      {
+        for(const auto& xi : args)
+          if(xi->unique_id() == this->unique_id())
+            return true;
+        return false;
+      }
   };
 
   class ScalarVar : public AnalyticVarExpr<ScalarOpValue>
@@ -71,13 +80,18 @@ namespace codac2
       {
         return 1;
       }
+
+      std::shared_ptr<AnalyticVarExpr<ScalarOpValue>> operator-() const
+      {
+        return std::dynamic_pointer_cast<AnalyticVarExpr<ScalarOpValue>>(-*this);
+      }
   };
 
   class VectorVar : public AnalyticVarExpr<VectorOpValue>
   {
     public:
 
-      VectorVar(size_t n)
+      explicit VectorVar(size_t n)
         : _n(n)
       { }
 

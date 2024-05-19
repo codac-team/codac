@@ -23,6 +23,8 @@ namespace py = pybind11;
 // domains
 py::class_<Interval> export_Interval(py::module& m);
 void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval);
+py::class_<IntervalVector> export_IntervalVector(py::module& m);
+void export_IntervalVector_operations(py::module& m, py::class_<IntervalVector>& py_IntervalVector);
 
 // functions
 void export_ScalarVar(py::module& m);
@@ -35,16 +37,19 @@ void export_Approx(py::module& m);
 PYBIND11_MODULE(core, m)
 {
   m.doc() = "Python binding of Codac (core)";
+  m.attr("oo") = oo;
 
   // 3rd
 
   // domains
   auto py_Interval = export_Interval(m);
   export_Interval_operations(m, py_Interval);
+  auto py_IntervalVector = export_IntervalVector(m);
+  export_IntervalVector_operations(m, py_IntervalVector);
 
   // function
-  export_ExprWrapper<ScalarOpValue>(m,"ScalarExpr");
-  export_ExprWrapper<VectorOpValue>(m,"VectorExpr");
+  export_ScalarExpr(m);
+  export_VectorExpr(m);
   export_AnalyticFunction<ScalarOpValue>(m,"ScalarAnalyticFunction");
   export_AnalyticFunction<VectorOpValue>(m,"VectorAnalyticFunction");
   export_ScalarVar(m);

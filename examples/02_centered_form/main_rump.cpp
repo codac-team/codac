@@ -15,13 +15,5 @@ int main()
   );
 
   CtcInverse_<Interval> ctc(f, Interval(0.));
-  IntervalVector x0({{-1,1},{-1,1}});
-
-  Figure g("Rump example", GraphicOutputMode::VIBES);
-  g.set_axes(axis(0,x0[0]), axis(1,x0[1]));
-  g.set_window_properties({50,50}, {800,800});
-
-  Paver p(x0);
-  p.set_figure(&g);
-  p.pave(CtcLazy(ctc), 0.001);
+  pave(IntervalVector({{-1,1},{-1,1}}), ctc, 0.001);
 }

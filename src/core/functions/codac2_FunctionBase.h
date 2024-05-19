@@ -27,6 +27,10 @@ namespace codac2
     public:
 
       FunctionBase(const std::vector<std::reference_wrapper<VarBase>>& args, const std::shared_ptr<E>& y)
+        : FunctionBase(FunctionArgsList(args),y)
+      { }
+
+      FunctionBase(const FunctionArgsList& args, const std::shared_ptr<E>& y)
         : _y(std::dynamic_pointer_cast<E>(y->copy())), _args(args)
       { }
 

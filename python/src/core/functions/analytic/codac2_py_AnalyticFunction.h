@@ -35,9 +35,9 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
   exported
   
     .def(py::init(
-      [](const py::list& l, const ExprWrapper<T>& e)
+      [](const py::list& l, const ExprWrapper<T>& expr)
       {
-        std::vector<std::reference_wrapper<VarBase>> args;
+        FunctionArgsList args {};
         size_t i = 0;
 
         for(const auto& li : l)
@@ -45,16 +45,16 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
           i++;
 
           if(py::isinstance<ScalarVar>(li))
-            args.push_back(*(li.cast<ScalarVar>().arg_copy()));
+            args.push_back(li.cast<ScalarVar>().arg_copy());
 
           else if(py::isinstance<VectorVar>(li))
-            args.push_back(*(li.cast<VectorVar>().arg_copy()));
+            args.push_back(li.cast<VectorVar>().arg_copy());
 
           else
             throw std::invalid_argument("Argument " + std::to_string(i) + " is invalid. Only variables are accepted.");
         }
-
-        return std::make_unique<AnalyticFunction<T>>(args, std::dynamic_pointer_cast<AnalyticExpr<T>>(e->copy()));
+        
+        return std::make_unique<AnalyticFunction<T>>(args, expr.copy());
       }
     ), ANALYTICFUNCTION_TTYPENAME_ANALYTICFUNCTION_CONST_VECTOR_REFERENCE_WRAPPER_VARBASE_REF_CONST_SHARED_PTR_ANALYTICEXPR_T_REF);
 

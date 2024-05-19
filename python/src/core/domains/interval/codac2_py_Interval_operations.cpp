@@ -339,4 +339,4 @@ void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval
     "y"_a, "x"_a, "p"_a)
 
   ;
-};
+}

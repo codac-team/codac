@@ -52,6 +52,8 @@ namespace codac2
         assert(v.find(unique_id()) != v.end() && "argument cannot be found");
         return *std::dynamic_pointer_cast<T>(v[unique_id()]);
       }
+
+      virtual bool belongs_to_args_list(const FunctionArgsList& args) const = 0;
   };
 
   template<typename C,typename Y,typename... X>
@@ -101,6 +103,18 @@ namespace codac2
           (x->bwd_eval(v), ...);
         }, this->_x);
       }
+
+      virtual bool belongs_to_args_list(const FunctionArgsList& args) const
+      {
+        bool b = true;
+
+        std::apply([&b,args](auto &&... x)
+        {
+          ((b &= x->belongs_to_args_list(args)), ...);
+        }, this->_x);
+
+        return b;
+      }
   };
 
   template<>
@@ -136,6 +150,11 @@ namespace codac2
       {
         ComponentOp::bwd(AnalyticExpr<ScalarOpValue>::value(v).a, std::get<0>(this->_x)->value(v).a, _i);
         std::get<0>(this->_x)->bwd_eval(v);
+      }
+
+      virtual bool belongs_to_args_list(const FunctionArgsList& args) const
+      {
+        return std::get<0>(this->_x)->belongs_to_args_list(args);
       }
 
     protected:

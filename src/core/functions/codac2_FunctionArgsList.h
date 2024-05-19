@@ -20,6 +20,15 @@ namespace codac2
   {
     public:
 
+      FunctionArgsList()
+      { }
+
+      FunctionArgsList(const FunctionArgsList& args)
+      {
+        for(const auto& arg : args)
+          push_back(arg->arg_copy());
+      }
+
       FunctionArgsList(const std::vector<std::reference_wrapper<VarBase>>& args)
       {
         for(const auto& arg : args)

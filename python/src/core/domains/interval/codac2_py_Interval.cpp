@@ -24,8 +24,6 @@ using namespace pybind11::literals;
 
 py::class_<Interval> export_Interval(py::module& m)
 {
-  m.attr("oo") = oo;
-
   py::class_<Interval> exported_interval_class(m, "Interval", INTERVAL_MAIN);
   exported_interval_class
   

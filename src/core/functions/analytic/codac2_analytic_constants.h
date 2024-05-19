@@ -48,6 +48,11 @@ namespace codac2
       void replace_expr(const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
       { }
 
+      virtual bool belongs_to_args_list(const FunctionArgsList& args) const
+      {
+        return true;
+      }
+
     protected:
 
       const typename T::Domain _x;

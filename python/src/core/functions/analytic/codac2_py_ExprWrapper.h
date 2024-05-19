@@ -25,86 +25,191 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-
 template<typename T>
-struct ExprWrapper : public std::shared_ptr<codac2::AnalyticExpr<T>>
+struct ExprWrapper;
+
+template<>
+struct ExprWrapper<ScalarOpValue>
 {
-  ExprWrapper(const codac2::ScalarVar& e)
-    : std::shared_ptr<codac2::AnalyticExpr<T>>(std::dynamic_pointer_cast<codac2::AnalyticExpr<T>>(e.copy()))
-  {
-    static_assert(std::is_same_v<T,codac2::ScalarOpValue>);
-  }
-
-  ExprWrapper(const codac2::VectorVar& e)
-    : std::shared_ptr<codac2::AnalyticExpr<T>>(std::dynamic_pointer_cast<codac2::AnalyticExpr<T>>(e.copy()))
-  {
-    static_assert(std::is_same_v<T,codac2::VectorOpValue>);
-  }
-
-  ExprWrapper(const std::shared_ptr<codac2::AnalyticExpr<T>>& e)
-    : std::shared_ptr<codac2::AnalyticExpr<T>>(e)
+  ExprWrapper(const Interval& e)
+    : e(std::dynamic_pointer_cast<AnalyticExpr<ScalarOpValue>>(const_value(e)->copy()))
   { }
+
+  ExprWrapper(const ScalarVar& e)
+    : e(std::dynamic_pointer_cast<AnalyticExpr<ScalarOpValue>>(e.copy()))
+  { }
+
+  explicit ExprWrapper(const ExprWrapper<ScalarOpValue>& e)
+    : e(std::dynamic_pointer_cast<AnalyticExpr<ScalarOpValue>>(e.copy()))
+  { }
+
+  explicit ExprWrapper(const std::shared_ptr<AnalyticExpr<ScalarOpValue>>& e)
+    : e(std::dynamic_pointer_cast<AnalyticExpr<ScalarOpValue>>(e->copy()))
+  { }
+
+  std::shared_ptr<AnalyticExpr<ScalarOpValue>> copy() const
+  {
+    return std::dynamic_pointer_cast<AnalyticExpr<ScalarOpValue>>(e->copy());
+  }
+
+  operator std::shared_ptr<AnalyticExpr<ScalarOpValue>>()
+  {
+    return copy();
+  }
+
+  std::shared_ptr<AnalyticExpr<ScalarOpValue>> e;
 };
 
-template<typename T>
-void export_ExprWrapper(py::module& m, const std::string& export_name)
+using ScalarExpr = ExprWrapper<ScalarOpValue>;
+
+// Scalar operations
+
+inline ScalarExpr operator+(const ScalarExpr& e1, const ScalarExpr& e2)
 {
-  py::class_<ExprWrapper<T>>
-    exported(m, export_name.c_str());
+  return ScalarExpr(e1.e+e2.e);
+}
 
-  exported.def(py::init<std::shared_ptr<AnalyticExpr<T>>>());
-  
-  if constexpr(std::is_same_v<T,ScalarOpValue>)
-    exported.def(py::init<ScalarVar>(),
-      "Converting a ScalarVar into an ExprWrapper (binding object).");
-  
-  if constexpr(std::is_same_v<T,VectorOpValue>)
-    exported.def(py::init<VectorVar>(),
-      "Converting a VectorVar into an ExprWrapper (binding object).");
+inline ScalarExpr operator-(const ScalarExpr& e1)
+{
+  return ScalarExpr(-e1.e);
+}
 
-  if constexpr(std::is_same_v<T,ScalarOpValue>)
+inline ScalarExpr operator-(const ScalarExpr& e1, const ScalarExpr& e2)
+{
+  return ScalarExpr(e1.e-e2.e);
+}
+
+inline ScalarExpr operator*(const ScalarExpr& e1, const ScalarExpr& e2)
+{
+  return ScalarExpr(e1.e*e2.e);
+}
+
+inline ScalarExpr operator/(const ScalarExpr& e1, const ScalarExpr& e2)
+{
+  return ScalarExpr(e1.e/e2.e);
+}
+
+template<>
+struct ExprWrapper<VectorOpValue>
+{
+  ExprWrapper(const IntervalVector& e)
+    : e(std::dynamic_pointer_cast<AnalyticExpr<VectorOpValue>>(const_value(e)->copy()))
+  { }
+
+  ExprWrapper(const VectorVar& e)
+    : e(std::dynamic_pointer_cast<AnalyticExpr<VectorOpValue>>(e.copy()))
+  { }
+
+  explicit ExprWrapper(const ExprWrapper<VectorOpValue>& e)
+    : e(std::dynamic_pointer_cast<AnalyticExpr<VectorOpValue>>(e.copy()))
+  { }
+
+  explicit ExprWrapper(const std::shared_ptr<AnalyticExpr<VectorOpValue>>& e)
+    : e(std::dynamic_pointer_cast<AnalyticExpr<VectorOpValue>>(e->copy()))
+  { }
+
+  std::shared_ptr<AnalyticExpr<VectorOpValue>> copy() const
   {
-    exported
-    
-      .def("__add__", [](const ExprWrapper<T>& e1) { return ExprWrapper<T>(+e1); })
-      .def("__add__", [](const ExprWrapper<T>& e1, const Interval& e2) { return ExprWrapper<T>(e1 + e2); })
-      .def("__add__", [](const Interval& e1, const ExprWrapper<T>& e2) { return ExprWrapper<T>(e1 + e2); })
-      .def("__add__", [](const ExprWrapper<T>& e1, const ExprWrapper<T>& e2) { return ExprWrapper<T>(e1 + e2); })
-
-      .def("__sub__", [](const ExprWrapper<T>& e1) { return ExprWrapper<T>(-e1); })
-      .def("__sub__", [](const ExprWrapper<T>& e1, const Interval& e2) { return ExprWrapper<T>(e1 - e2); })
-      .def("__sub__", [](const Interval& e1, const ExprWrapper<T>& e2) { return ExprWrapper<T>(e1 - e2); })
-      .def("__sub__", [](const ExprWrapper<T>& e1, const ExprWrapper<T>& e2) { return ExprWrapper<T>(e1 - e2); })
-
-      .def("__mul__", [](const ExprWrapper<T>& e1, const Interval& e2) { return ExprWrapper<T>(e1 * e2); })
-      .def("__mul__", [](const Interval& e1, const ExprWrapper<T>& e2) { return ExprWrapper<T>(e1 * e2); })
-      .def("__mul__", [](const ExprWrapper<T>& e1, const ExprWrapper<T>& e2) { return ExprWrapper<T>(e1 * e2); })
-
-      .def("__div__", [](const ExprWrapper<T>& e1, const Interval& e2) { return ExprWrapper<T>(e1 / e2); })
-      .def("__div__", [](const Interval& e1, const ExprWrapper<T>& e2) { return ExprWrapper<T>(e1 / e2); })
-      .def("__div__", [](const ExprWrapper<T>& e1, const ExprWrapper<T>& e2) { return ExprWrapper<T>(e1 / e2); })
-
-    ;
+    return std::dynamic_pointer_cast<AnalyticExpr<VectorOpValue>>(e->copy());
   }
 
-  if constexpr(std::is_same_v<T,VectorOpValue>)
+  operator std::shared_ptr<AnalyticExpr<VectorOpValue>>()
   {
-    exported
-    
-      .def("__add__", [](const ExprWrapper<T>& e1) { return ExprWrapper<T>(+e1); })
-      .def("__add__", [](const ExprWrapper<T>& e1, const IntervalVector& e2) { return ExprWrapper<T>(e1 + e2); })
-      .def("__add__", [](const IntervalVector& e1, const ExprWrapper<T>& e2) { return ExprWrapper<T>(e1 + e2); })
-      .def("__add__", [](const ExprWrapper<T>& e1, const ExprWrapper<T>& e2) { return ExprWrapper<T>(e1 + e2); })
-
-      .def("__sub__", [](const ExprWrapper<T>& e1) { return ExprWrapper<T>(-e1); })
-      .def("__sub__", [](const ExprWrapper<T>& e1, const IntervalVector& e2) { return ExprWrapper<T>(e1 - e2); })
-      .def("__sub__", [](const IntervalVector& e1, const ExprWrapper<T>& e2) { return ExprWrapper<T>(e1 - e2); })
-      .def("__sub__", [](const ExprWrapper<T>& e1, const ExprWrapper<T>& e2) { return ExprWrapper<T>(e1 - e2); })
-
-      .def("__mul__", [](const ExprWrapper<ScalarOpValue>& e1, const ExprWrapper<VectorOpValue>& e2) { return ExprWrapper<VectorOpValue>(e1 * e2); })
-      .def("__mul__", [](const Interval& e1, const ExprWrapper<VectorOpValue>& e2) { return ExprWrapper<VectorOpValue>(e1 * e2); })
-      .def("__mul__", [](const ExprWrapper<ScalarOpValue>& e1, const IntervalVector& e2) { return ExprWrapper<VectorOpValue>(e1 * e2); })
-
-    ;
+    return copy();
   }
+
+  std::shared_ptr<AnalyticExpr<VectorOpValue>> e;
+};
+
+using VectorExpr = ExprWrapper<VectorOpValue>;
+
+// Vector operations
+
+inline VectorExpr operator+(const VectorExpr& e1, const VectorExpr& e2)
+{
+  return VectorExpr(e1.e+e2.e);
+}
+
+inline VectorExpr operator-(const VectorExpr& e1)
+{
+  return VectorExpr(-e1.e);
+}
+
+inline VectorExpr operator-(const VectorExpr& e1, const VectorExpr& e2)
+{
+  return VectorExpr(e1.e-e2.e);
+}
+
+inline VectorExpr operator*(const ScalarExpr& e1, const VectorExpr& e2)
+{
+  return VectorExpr(e1.e*e2.e);
+}
+
+inline void export_ScalarExpr(py::module& m)
+{
+  py::class_<ScalarExpr>
+    exported(m, "ScalarExpr");
+
+  exported
+
+    .def(py::init<std::shared_ptr<AnalyticExpr<ScalarOpValue>>>())
+    .def(py::init<Interval>())
+    .def(py::init<ScalarVar>())
+
+    .def("__add__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1+e2; })
+    .def("__add__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1+e2; })
+    .def("__radd__", [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1+e2; })
+    .def("__add__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1+e2; })
+    .def("__radd__", [](const ScalarExpr& e1, const Interval& e2)   { return e1+e2; })
+
+    .def("__neg__",  [](const ScalarExpr& e1)                       { return -e1;   })
+    .def("__sub__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1-e2; })
+    .def("__sub__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1-e2; })
+    .def("__rsub__", [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1-e2; })
+    .def("__sub__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1-e2; })
+    .def("__rsub__", [](const ScalarExpr& e1, const Interval& e2)   { return e1-e2; })
+
+    .def("__mul__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1*e2; })
+    .def("__mul__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1*e2; })
+    .def("__rmul__", [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1*e2; })
+    .def("__mul__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1*e2; })
+    .def("__rmul__", [](const ScalarExpr& e1, const Interval& e2)   { return e1*e2; })
+
+    .def("__div__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1/e2; })
+    .def("__div__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1/e2; })
+    .def("__rdiv__", [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1/e2; })
+    .def("__div__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1/e2; })
+    .def("__rdiv__", [](const ScalarExpr& e1, const Interval& e2)   { return e1/e2; })
+
+  ;
+}
+
+inline void export_VectorExpr(py::module& m)
+{
+  py::class_<VectorExpr>
+    exported(m, "VectorExpr");
+
+  exported
+
+    .def(py::init<std::shared_ptr<AnalyticExpr<VectorOpValue>>>())
+    .def(py::init<IntervalVector>())
+    .def(py::init<VectorVar>())
+
+    .def("__add__",  [](const VectorExpr& e1, const VectorExpr& e2)     { return e1+e2; })
+    .def("__add__",  [](const VectorExpr& e1, const VectorVar& e2)      { return e1+e2; })
+    .def("__radd__", [](const VectorExpr& e1, const VectorVar& e2)      { return e1+e2; })
+    .def("__add__",  [](const VectorExpr& e1, const IntervalVector& e2) { return e1+e2; })
+    .def("__radd__", [](const VectorExpr& e1, const IntervalVector& e2) { return e1+e2; })
+
+    .def("__neg__",  [](const VectorExpr& e1)                           { return -e1;   })
+    .def("__sub__",  [](const VectorExpr& e1, const VectorExpr& e2)     { return e1-e2; })
+    .def("__sub__",  [](const VectorExpr& e1, const VectorVar& e2)      { return e1-e2; })
+    .def("__rsub__", [](const VectorExpr& e1, const VectorVar& e2)      { return e1-e2; })
+    .def("__sub__",  [](const VectorExpr& e1, const IntervalVector& e2) { return e1-e2; })
+    .def("__rsub__", [](const VectorExpr& e1, const IntervalVector& e2) { return e1-e2; })
+
+    .def("__rmul__", [](const VectorExpr& e1, const ScalarExpr& e2)     { return e2*e1; })
+    .def("__rmul__", [](const VectorExpr& e1, const ScalarVar& e2)      { return e2*e1; })
+
+  ;
 }

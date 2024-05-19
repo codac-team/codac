@@ -28,6 +28,7 @@ namespace codac2
 
       ExprID();
       ExprID(const ExprID& i) = default;
+      size_t id() const;
       bool operator==(const ExprID& i) const;
       bool operator<(const ExprID& i) const;
 

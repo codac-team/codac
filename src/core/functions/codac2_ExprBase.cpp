@@ -21,6 +21,11 @@ ExprID::ExprID()
   ExprID::_id_counter ++;
 }
 
+size_t ExprID::id() const
+{
+  return _id;
+}
+
 bool ExprID::operator==(const ExprID& i) const
 {
   return _id == i._id;

@@ -27,8 +27,15 @@ namespace codac2
     public:
 
       AnalyticFunction(const std::vector<std::reference_wrapper<VarBase>>& args, const std::shared_ptr<AnalyticExpr<T>>& y)
-        : FunctionBase<AnalyticExpr<T>>(args, y)
+        : AnalyticFunction(FunctionArgsList(args),y)
       { }
+
+      AnalyticFunction(const FunctionArgsList& args, const std::shared_ptr<AnalyticExpr<T>>& y)
+        : FunctionBase<AnalyticExpr<T>>(args, y)
+      {
+        if(!y->belongs_to_args_list(this->args()))
+          throw std::invalid_argument("Invalid argument: variable not present in input arguments");
+      }
 
       AnalyticFunction(const AnalyticFunction<T>& f)
         : FunctionBase<AnalyticExpr<T>>(f)
