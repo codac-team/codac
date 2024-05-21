@@ -548,6 +548,33 @@ using namespace codac2;
   }
 
 
+// LogOp
+
+  Interval LogOp::fwd(const Interval& x1)
+  {
+    return log(x1);
+  }
+
+  ScalarOpValue LogOp::fwd(const ScalarOpValue& x1)
+  {
+    IntervalMatrix d(1,x1.da.size());
+    for(size_t i = 0 ; i < d.size() ; i++)
+      d(i) = x1.da(i)/x1.a;
+
+    return {
+      fwd(x1.m),
+      fwd(x1.a),
+      d,
+      x1.a.is_subset({0,oo}) && x1.def_domain
+    };
+  }
+
+  void LogOp::bwd(const Interval& y, Interval& x1)
+  {
+    bwd_log(y, x1);
+  }
+
+
 // CosOp
 
   Interval CosOp::fwd(const Interval& x1)
@@ -602,6 +629,199 @@ using namespace codac2;
   }
 
 
+// TanOp
+
+  Interval TanOp::fwd(const Interval& x1)
+  {
+    return tan(x1);
+  }
+
+  ScalarOpValue TanOp::fwd(const ScalarOpValue& x1)
+  {
+    IntervalMatrix d(1,x1.da.size());
+    for(size_t i = 0 ; i < d.size() ; i++)
+      d(i) = Interval();//x1.da(i)/sqr(cos(x1.a));
+    // ^ todo: bug detected with centered form, disabled for now
+
+    return {
+      fwd(x1.m),
+      fwd(x1.a),
+      d,
+      x1.def_domain
+    };
+  }
+
+  void TanOp::bwd(const Interval& y, Interval& x1)
+  {
+    bwd_tan(y, x1);
+  }
+
+
+// AcosOp
+
+  Interval AcosOp::fwd(const Interval& x1)
+  {
+    return acos(x1);
+  }
+
+  ScalarOpValue AcosOp::fwd(const ScalarOpValue& x1)
+  {
+    IntervalMatrix d(1,x1.da.size());
+    for(size_t i = 0 ; i < d.size() ; i++)
+      d(i) = -x1.da(i)/sqrt(1.-sqr(x1.a));
+
+    return {
+      fwd(x1.m),
+      fwd(x1.a),
+      d,
+      x1.a.is_subset({-1,1}) && x1.def_domain
+    };
+  }
+
+  void AcosOp::bwd(const Interval& y, Interval& x1)
+  {
+    bwd_acos(y, x1);
+  }
+
+
+// AsinOp
+
+  Interval AsinOp::fwd(const Interval& x1)
+  {
+    return asin(x1);
+  }
+
+  ScalarOpValue AsinOp::fwd(const ScalarOpValue& x1)
+  {
+    IntervalMatrix d(1,x1.da.size());
+    for(size_t i = 0 ; i < d.size() ; i++)
+      d(i) = x1.da(i)/sqrt(1.-sqr(x1.a));
+
+    return {
+      fwd(x1.m),
+      fwd(x1.a),
+      d,
+      x1.a.is_subset({-1,1}) && x1.def_domain
+    };
+  }
+
+  void AsinOp::bwd(const Interval& y, Interval& x1)
+  {
+    bwd_asin(y, x1);
+  }
+
+
+// AtanOp
+
+  Interval AtanOp::fwd(const Interval& x1)
+  {
+    return atan(x1);
+  }
+
+  ScalarOpValue AtanOp::fwd(const ScalarOpValue& x1)
+  {
+    IntervalMatrix d(1,x1.da.size());
+    for(size_t i = 0 ; i < d.size() ; i++)
+      d(i) = x1.da(i)/(1.+sqr(x1.a));
+
+    return {
+      fwd(x1.m),
+      fwd(x1.a),
+      d,
+      x1.def_domain
+    };
+  }
+
+  void AtanOp::bwd(const Interval& y, Interval& x1)
+  {
+    bwd_atan(y, x1);
+  }
+
+
+// Atan2Op
+
+  Interval Atan2Op::fwd(const Interval& x1, const Interval& x2)
+  {
+    return atan2(x1,x2);
+  }
+
+  ScalarOpValue Atan2Op::fwd(const ScalarOpValue& x1, const ScalarOpValue& x2)
+  {
+    assert(x1.da.rows() == 1);
+    assert(x1.da.rows() == x2.da.rows() && x1.da.cols() == x2.da.cols());
+
+    IntervalMatrix d(1,x1.da.cols());
+    for(size_t i = 0 ; i < d.size() ; i++)
+      d(i) = (-x1.a*x2.da(i)/(sqr(x2.a)+sqr(x1.a)))+(-x2.a*x1.da(i)/(sqr(x2.a)+sqr(x1.a)));
+
+    return {
+      fwd(x1.m, x2.m),
+      fwd(x1.a, x2.a),
+      d,
+      x1.def_domain && x1.def_domain
+    };
+  }
+
+  void Atan2Op::bwd(const Interval& y, Interval& x1, Interval& x2)
+  {
+    bwd_atan2(y, x1, x2);
+  }
+
+
+// CoshOp
+
+  Interval CoshOp::fwd(const Interval& x1)
+  {
+    return cosh(x1);
+  }
+
+  ScalarOpValue CoshOp::fwd(const ScalarOpValue& x1)
+  {
+    IntervalMatrix d(1,x1.da.size());
+    for(size_t i = 0 ; i < d.size() ; i++)
+      d(i) = sinh(x1.a)*x1.da(i);
+
+    return {
+      fwd(x1.m),
+      fwd(x1.a),
+      d,
+      x1.def_domain
+    };
+  }
+
+  void CoshOp::bwd(const Interval& y, Interval& x1)
+  {
+    bwd_cosh(y, x1);
+  }
+
+
+// SinhOp
+
+  Interval SinhOp::fwd(const Interval& x1)
+  {
+    return sinh(x1);
+  }
+
+  ScalarOpValue SinhOp::fwd(const ScalarOpValue& x1)
+  {
+    IntervalMatrix d(1,x1.da.size());
+    for(size_t i = 0 ; i < d.size() ; i++)
+      d(i) = cosh(x1.a)*x1.da(i);
+
+    return {
+      fwd(x1.m),
+      fwd(x1.a),
+      d,
+      x1.def_domain
+    };
+  }
+
+  void SinhOp::bwd(const Interval& y, Interval& x1)
+  {
+    bwd_sinh(y, x1);
+  }
+
+
 // TanhOp
 
   Interval TanhOp::fwd(const Interval& x1)
@@ -613,7 +833,7 @@ using namespace codac2;
   {    
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d(i) = x1.da(i)*sqr(1./cosh(x1.a));
+      d(i) = x1.da(i)/sqr(cosh(x1.a));
 
     return {
       fwd(x1.m),

@@ -325,6 +325,12 @@ namespace codac2
     }
 
     inline ScalarExpr_ptr
+    log(const ScalarExpr_ptr& x1)
+    {
+      return std::make_shared<AnalyticOperationExpr<LogOp,ScalarOpValue,ScalarOpValue>>(x1);
+    }
+
+    inline ScalarExpr_ptr
     cos(const ScalarExpr_ptr& x1)
     {
       return std::make_shared<AnalyticOperationExpr<CosOp,ScalarOpValue,ScalarOpValue>>(x1);
@@ -334,6 +340,48 @@ namespace codac2
     sin(const ScalarExpr_ptr& x1)
     {
       return std::make_shared<AnalyticOperationExpr<SinOp,ScalarOpValue,ScalarOpValue>>(x1);
+    }
+
+    inline ScalarExpr_ptr
+    tan(const ScalarExpr_ptr& x1)
+    {
+      return std::make_shared<AnalyticOperationExpr<TanOp,ScalarOpValue,ScalarOpValue>>(x1);
+    }
+
+    inline ScalarExpr_ptr
+    acos(const ScalarExpr_ptr& x1)
+    {
+      return std::make_shared<AnalyticOperationExpr<AcosOp,ScalarOpValue,ScalarOpValue>>(x1);
+    }
+
+    inline ScalarExpr_ptr
+    asin(const ScalarExpr_ptr& x1)
+    {
+      return std::make_shared<AnalyticOperationExpr<AsinOp,ScalarOpValue,ScalarOpValue>>(x1);
+    }
+
+    inline ScalarExpr_ptr
+    atan(const ScalarExpr_ptr& x1)
+    {
+      return std::make_shared<AnalyticOperationExpr<AtanOp,ScalarOpValue,ScalarOpValue>>(x1);
+    }
+
+    inline ScalarExpr_ptr
+    atan2(const ScalarExpr_ptr& x1, const ScalarExpr_ptr& x2)
+    {
+      return std::make_shared<AnalyticOperationExpr<Atan2Op,ScalarOpValue,ScalarOpValue,ScalarOpValue>>(x1,x2);
+    }
+
+    inline ScalarExpr_ptr
+    cosh(const ScalarExpr_ptr& x1)
+    {
+      return std::make_shared<AnalyticOperationExpr<CoshOp,ScalarOpValue,ScalarOpValue>>(x1);
+    }
+
+    inline ScalarExpr_ptr
+    sinh(const ScalarExpr_ptr& x1)
+    {
+      return std::make_shared<AnalyticOperationExpr<SinhOp,ScalarOpValue,ScalarOpValue>>(x1);
     }
 
     inline ScalarExpr_ptr

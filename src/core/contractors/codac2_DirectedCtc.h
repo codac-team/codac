@@ -124,6 +124,13 @@ namespace codac2
     static void bwd(const Interval& y, Interval& x1);
   };
 
+  struct LogOp
+  {
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
+  };
+
   struct CosOp
   {
     static Interval fwd(const Interval& x1);
@@ -132,6 +139,55 @@ namespace codac2
   };
 
   struct SinOp
+  {
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
+  };
+
+  struct TanOp
+  {
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
+  };
+
+  struct AcosOp
+  {
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
+  };
+
+  struct AsinOp
+  {
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
+  };
+
+  struct AtanOp
+  {
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
+  };
+
+  struct Atan2Op
+  {
+    static Interval fwd(const Interval& x1, const Interval& x2);
+    static ScalarOpValue fwd(const ScalarOpValue& x1, const ScalarOpValue& x2);
+    static void bwd(const Interval& y, Interval& x1, Interval& x2);
+  };
+
+  struct CoshOp
+  {
+    static Interval fwd(const Interval& x1);
+    static ScalarOpValue fwd(const ScalarOpValue& x1);
+    static void bwd(const Interval& y, Interval& x1);
+  };
+
+  struct SinhOp
   {
     static Interval fwd(const Interval& x1);
     static ScalarOpValue fwd(const ScalarOpValue& x1);
@@ -206,7 +262,7 @@ namespace codac2
       )), void>::type>
     static IntervalMatrix fwd(const X&... x)
     {
-      assert(false && "tocheck");
+      throw std::runtime_error("MatrixOp not fully implemented yet");
       IntervalMatrix m(1, sizeof...(X));
       size_t i = 0;
       (MatrixOp::fwd_i(m, x, i++), ...);
@@ -218,7 +274,7 @@ namespace codac2
       )), void>::type>
     static MatrixOpValue fwd(const X&... x)
     {
-      assert(false && "tocheck");
+      throw std::runtime_error("MatrixOp not fully implemented yet");
       return {
         IntervalMatrix({x.m...}),
         IntervalMatrix({x.a...}),
@@ -230,7 +286,7 @@ namespace codac2
     template<typename... X>
     static void bwd(const IntervalMatrix& y, X&... x)
     {
-      assert(false && "tocheck");
+      throw std::runtime_error("MatrixOp not fully implemented yet");
       size_t i = 0;
       ((x &= y.col(i++)), ...);
     }
