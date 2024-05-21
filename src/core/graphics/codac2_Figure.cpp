@@ -15,22 +15,18 @@
 using namespace std;
 using namespace codac2;
 
-Figure DefaultFigure::_default_fig = [](){
-  Figure g("Codac - default view", GraphicOutputMode::VIBES);
-  g.set_window_properties({20.,20.}, {800.,800.});
-  return g;
-}();
+shared_ptr<Figure> DefaultFigure::_default_fig = nullptr;
+Figure *DefaultFigure::_selected_fig = DefaultFigure::_default_fig.get();
 
-Figure *DefaultFigure::_selected_fig = &DefaultFigure::_default_fig;
-
-Figure::Figure(const std::string& name, GraphicOutputMode o)
+Figure::Figure(const std::string& name, GraphicOutputMode o, bool set_as_default_)
   : _name(name)
 {
-  DefaultFigure::set(this);
   if(o & GraphicOutputMode::VIBES)
     _output_figures.push_back(std::make_shared<FigureVIBes>(*this));
   if(o & GraphicOutputMode::IPE)
     _output_figures.push_back(std::make_shared<FigureIPE>(*this));
+  if(set_as_default_)
+    set_as_default();
 }
 
 size_t Figure::size() const

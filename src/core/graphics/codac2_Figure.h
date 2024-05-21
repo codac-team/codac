@@ -56,7 +56,7 @@ namespace codac2
   {
     public:
 
-      Figure(const std::string& name, GraphicOutputMode o);
+      Figure(const std::string& name, GraphicOutputMode o, bool set_as_default = false);
 
       size_t size() const;
       const Vector& pos() const;
@@ -88,6 +88,13 @@ namespace codac2
 
       static Figure* selected_fig()
       {
+        if(_selected_fig == nullptr && _default_fig.get() == nullptr)
+        {
+          _default_fig = std::make_shared<Figure>("Codac - default view", GraphicOutputMode::VIBES);
+          _default_fig->set_window_properties({20.,20.}, {800.,800.});
+          _selected_fig = _default_fig.get();
+        }
+
         return _selected_fig;
       }
 
@@ -113,7 +120,7 @@ namespace codac2
 
     protected:
 
-      static Figure _default_fig;
+      static std::shared_ptr<Figure> _default_fig;
       static Figure *_selected_fig;
   };
 }
