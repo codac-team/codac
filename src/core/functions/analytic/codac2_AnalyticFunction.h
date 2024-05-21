@@ -88,14 +88,14 @@ namespace codac2
         assert(i >= 0 && i < this->args().size());
         assert(x.size() == this->args()[i]->size());
 
-        IntervalMatrix d = IntervalMatrix::zeros(this->args().total_size(), x.size());
+        IntervalMatrix d = IntervalMatrix::zeros(x.size(), this->args().total_size());
         
         size_t p = 0, j = 0;
-        for(size_t j = 0 ; j < i ; j++)
+        for( ; j < i ; j++)
           p += this->args()[j]->size();
 
         for(size_t k = p ; k < p+x.size() ; k++)
-          d(k,j++) = 1.;
+          d(k-p,k) = 1.;
 
         using D_DOMAIN = typename Wrapper<D>::Domain;
 
@@ -129,7 +129,7 @@ namespace codac2
       {
         ValuesMap v;
         fill_from_args(v, x...);
-        return this->expr()->fwd_eval(v, this->args(), cart_prod(x...));
+        return this->expr()->fwd_eval(v, cart_prod(x...).size()); // todo: improve size computation
       }
 
       template<typename... Args>
@@ -137,14 +137,8 @@ namespace codac2
       {
         size_t n = 0;
         ((n += x.size()), ...);
-        
         if(this->_args.total_size() != n)
-        {
-          std::cerr << "Wrong function input: check the number and dimension of input arguments" << std::endl;
-          std::cerr << "  Required inputs: total_size=" << this->_args.total_size() << std::endl;
-          std::cerr << "  Provided inputs: total_size=" << n << std::endl;
-          throw std::exception();
-        }
+          throw std::invalid_argument("Invalid argument: wrong number of input arguments");
       }
   };
 }

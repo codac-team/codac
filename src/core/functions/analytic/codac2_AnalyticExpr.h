@@ -30,10 +30,10 @@ namespace codac2
 
       AnalyticExpr<T>& operator=(const AnalyticExpr<T>& x) = delete;
 
-      virtual T fwd_eval(ValuesMap& v, const FunctionArgsList& f_args, const IntervalVector& flatten_x) const = 0;
+      virtual T fwd_eval(ValuesMap& v, size_t total_input_size) const = 0;
       virtual void bwd_eval(ValuesMap& v) const = 0;
 
-      T init_value(ValuesMap& v, const T& x, const IntervalVector& flatten_x) const
+      T init_value(ValuesMap& v, const T& x) const
       {
         auto it = v.find(unique_id());
 
@@ -79,12 +79,12 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<X>...>::replace_expr(old_expr_id, new_expr);
       }
 
-      Y fwd_eval(ValuesMap& v, const FunctionArgsList& f_args, const IntervalVector& flatten_x) const
+      Y fwd_eval(ValuesMap& v, size_t total_input_size) const
       {
         return std::apply(
-          [this,&v,f_args,flatten_x](auto &&... x)
+          [this,&v,total_input_size](auto &&... x)
           {
-            return AnalyticExpr<Y>::init_value(v, C::fwd(x->fwd_eval(v, f_args, flatten_x)...), flatten_x);
+            return AnalyticExpr<Y>::init_value(v, C::fwd(x->fwd_eval(v, total_input_size)...));
           },
         this->_x);
       }
@@ -140,10 +140,10 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<VectorOpValue>>::replace_expr(old_expr_id, new_expr);
       }
       
-      ScalarOpValue fwd_eval(ValuesMap& v, const FunctionArgsList& f_args, const IntervalVector& flatten_x) const
+      ScalarOpValue fwd_eval(ValuesMap& v, size_t total_input_size) const
       {
         return AnalyticExpr<ScalarOpValue>::init_value(
-          v, ComponentOp::fwd(std::get<0>(this->_x)->fwd_eval(v, f_args, flatten_x), _i), flatten_x);
+          v, ComponentOp::fwd(std::get<0>(this->_x)->fwd_eval(v, total_input_size), _i));
       }
       
       void bwd_eval(ValuesMap& v) const

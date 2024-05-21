@@ -29,15 +29,15 @@ namespace codac2
         return std::make_shared<ConstValueExpr<T>>(*this);
       }
 
-      T fwd_eval(ValuesMap& v, const FunctionArgsList& f_args, const IntervalVector& flatten_x) const
+      T fwd_eval(ValuesMap& v, size_t total_input_size) const
       {
         return AnalyticExpr<T>::init_value(v, T(
             _x.mid(), _x,
             // the derivative of a const value is zero:
-            IntervalMatrix::zeros(_x.size(),f_args.total_size()),
+            IntervalMatrix::zeros(_x.size(),total_input_size),
             // the definition domain is necesarily met at this point
             true
-          ), flatten_x);
+          ));
       }
       
       void bwd_eval(ValuesMap& v) const
