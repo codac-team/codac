@@ -11,7 +11,7 @@ int main()
     2*x[0]*x[1]+2*exp(-x[0]*x[2])*(x[1]*cos(x[1]*x[2])-x[0]*sin(x[1]*x[2]))-exp(-x[0]*x[3])*sin(x[1]*x[3])
   ));
 
-  CtcInverse_<IntervalVector> ctc(f, IntervalVector({{0.,0.}}));
+  CtcInverse_<IntervalVector> ctc(f, IntervalVector({{0.},{0.}}));
   IntervalVector x0({{-10,10},{0,20},{1,1},{2,2}});
 
   Figure g("Evans", GraphicOutputMode::VIBES);

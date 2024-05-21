@@ -56,7 +56,18 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
         
         return std::make_unique<AnalyticFunction<T>>(args, expr.copy());
       }
-    ), ANALYTICFUNCTION_TTYPENAME_ANALYTICFUNCTION_CONST_VECTOR_REFERENCE_WRAPPER_VARBASE_REF_CONST_SHARED_PTR_ANALYTICEXPR_T_REF);
+    ), ANALYTICFUNCTION_TTYPENAME_ANALYTICFUNCTION_CONST_VECTOR_REFERENCE_WRAPPER_VARBASE_REF_CONST_SHARED_PTR_ANALYTICEXPR_T_REF)
+
+    .def("input_size", &AnalyticFunction<T>::input_size)
+
+    .def("__call__", [](const AnalyticFunction<T>& f, const std::vector<ExprWrapperBase>& x)
+      {
+        std::vector<std::shared_ptr<ExprBase>> v(x.size());
+        for(size_t i = 0 ; i < x.size() ; i++)
+          v[i] = x[i].eb->copy();
+        return ExprWrapper<T>(std::dynamic_pointer_cast<AnalyticExpr<T>>(f(v)->copy()));
+      })
+  ;
 
   const char* EVAL_DOC = T_DOMAIN_ANALYTICFUNCTION_TTYPENAME_EVAL_CONST_ARGS_REF_VARIADIC_CONST;
   using I = const Interval&; using IV = const IntervalVector&;

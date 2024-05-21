@@ -53,12 +53,44 @@ void export_expression_operations(py::module& m)
     SCALAREXPR_PTR_EXP_CONST_SCALAREXPR_PTR_REF,
     "x1"_a)
 
+  .def("log", [](const ScalarExpr& e1) { return ScalarExpr(log(e1.e)); },
+    SCALAREXPR_PTR_LOG_CONST_SCALAREXPR_PTR_REF,
+    "x1"_a)
+
   .def("cos", [](const ScalarExpr& e1) { return ScalarExpr(cos(e1.e)); },
     SCALAREXPR_PTR_COS_CONST_SCALAREXPR_PTR_REF,
     "x1"_a)
 
   .def("sin", [](const ScalarExpr& e1) { return ScalarExpr(sin(e1.e)); },
     SCALAREXPR_PTR_SIN_CONST_SCALAREXPR_PTR_REF,
+    "x1"_a)
+
+  .def("tan", [](const ScalarExpr& e1) { return ScalarExpr(tan(e1.e)); },
+    SCALAREXPR_PTR_TAN_CONST_SCALAREXPR_PTR_REF,
+    "x1"_a)
+
+  .def("acos", [](const ScalarExpr& e1) { return ScalarExpr(acos(e1.e)); },
+    SCALAREXPR_PTR_ACOS_CONST_SCALAREXPR_PTR_REF,
+    "x1"_a)
+
+  .def("asin", [](const ScalarExpr& e1) { return ScalarExpr(asin(e1.e)); },
+    SCALAREXPR_PTR_ASIN_CONST_SCALAREXPR_PTR_REF,
+    "x1"_a)
+
+  .def("atan", [](const ScalarExpr& e1) { return ScalarExpr(atan(e1.e)); },
+    SCALAREXPR_PTR_ATAN_CONST_SCALAREXPR_PTR_REF,
+    "x1"_a)
+
+  .def("atan2", [](const ScalarExpr& e1, const ScalarExpr& e2) { return ScalarExpr(atan2(e1.e,e2.e)); },
+    SCALAREXPR_PTR_ATAN2_CONST_SCALAREXPR_PTR_REF_CONST_SCALAREXPR_PTR_REF,
+    "x1"_a, "x2"_a)
+
+  .def("cosh", [](const ScalarExpr& e1) { return ScalarExpr(cosh(e1.e)); },
+    SCALAREXPR_PTR_COSH_CONST_SCALAREXPR_PTR_REF,
+    "x1"_a)
+
+  .def("sinh", [](const ScalarExpr& e1) { return ScalarExpr(sinh(e1.e)); },
+    SCALAREXPR_PTR_SINH_CONST_SCALAREXPR_PTR_REF,
     "x1"_a)
 
   .def("tanh", [](const ScalarExpr& e1) { return ScalarExpr(tanh(e1.e)); },

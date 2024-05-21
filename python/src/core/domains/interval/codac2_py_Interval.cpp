@@ -41,6 +41,16 @@ py::class_<Interval> export_Interval(py::module& m)
     .def(py::init<const Interval&>(),
       INTERVAL_INTERVAL_CONST_INTERVAL_REF)
 
+    .def(py::init(
+        [](const std::vector<double>& v)
+        {
+          if(v.size() != 2)
+            throw invalid_argument("Interval is not made of two values.");
+          return std::make_unique<Interval>(v[0],v[1]);
+        }),
+      INTERVAL_INTERVAL_ARRAY_DOUBLE2,
+      "v"_a)
+
     // Interval(std::array<double,1> array);
     // Interval(std::array<double,2> array);
 

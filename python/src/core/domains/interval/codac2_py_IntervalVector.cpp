@@ -61,6 +61,24 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
         }),
       INTERVALVECTOR_INTERVALVECTOR_INITIALIZER_LIST_INTERVAL,
       "v"_a)
+
+    .def(py::init(
+        [](const std::vector<std::vector<double>>& v)
+        {
+          auto iv = std::make_unique<IntervalVector>(v.size());
+          for(size_t i = 0 ; i < v.size() ; i++)
+          {
+            if(v[i].size() == 1)
+              (*iv)[i] = Interval(v[i][0]);
+            else if(v[i].size() == 2)
+              (*iv)[i] = Interval(v[i][0],v[i][1]);
+            else
+              throw invalid_argument("Interval is not made of one or two values.");
+          }
+          return iv;
+        }),
+      INTERVALVECTOR_INTERVALVECTOR_INITIALIZER_LIST_INTERVAL,
+      "v"_a)
   
     .def(py::init<const IntervalVector&>(),
       INTERVALVECTOR_INTERVALVECTOR_CONST_INTERVALVECTOR_REF,
@@ -125,8 +143,6 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_INTERVALVECTORTEMPLATE__SVN_REF)
   ;
 
-  // Automatic cast lists to Intervals
-  //py::implicitly_convertible<py::list,Interval>();
-
+  py::implicitly_convertible<py::list,IntervalVector>();
   return exported_intervalvector_class;
 }

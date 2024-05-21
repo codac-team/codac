@@ -50,6 +50,9 @@
 
     pybind11_add_module(core SHARED
       codac2_py_core.cpp
+      src/core/contractors/codac2_py_Ctc.cpp
+      src/core/contractors/codac2_py_Ctc.h
+      src/core/contractors/codac2_py_CtcInverse.h
       src/core/domains/interval/codac2_py_Interval.cpp
       src/core/domains/interval/codac2_py_Interval_operations.cpp
       src/core/domains/interval/codac2_py_IntervalVector.cpp
@@ -58,16 +61,19 @@
       src/core/functions/analytic/codac2_py_analytic_variables.cpp
       src/core/functions/analytic/codac2_py_AnalyticFunction.h
       src/core/functions/analytic/codac2_py_ExprWrapper.h
+      src/core/paver/codac2_py_Paver.cpp
       src/core/tools/codac2_py_Approx.cpp
     )
 
     target_include_directories(core
       PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
+      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/contractors/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/domains/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/domains/interval/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/functions/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/functions/analytic/
+      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/paver/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/tools/
       ${CMAKE_CURRENT_BINARY_DIR}/docstring
     )

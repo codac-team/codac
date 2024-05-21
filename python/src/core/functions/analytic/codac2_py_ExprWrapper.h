@@ -28,8 +28,20 @@ using namespace pybind11::literals;
 template<typename T>
 struct ExprWrapper;
 
+struct ExprWrapperBase
+{
+  ExprWrapperBase()
+  { }
+
+  ExprWrapperBase(const std::shared_ptr<ExprBase>& eb_)
+    : eb(eb_)
+  { }
+  
+  std::shared_ptr<ExprBase> eb = nullptr;
+};
+
 template<>
-struct ExprWrapper<ScalarOpValue>
+struct ExprWrapper<ScalarOpValue> : public ExprWrapperBase
 {
   ExprWrapper(const Interval& e)
     : e(std::dynamic_pointer_cast<AnalyticExpr<ScalarOpValue>>(const_value(e)->copy()))
@@ -39,7 +51,7 @@ struct ExprWrapper<ScalarOpValue>
     : e(std::dynamic_pointer_cast<AnalyticExpr<ScalarOpValue>>(e.copy()))
   { }
 
-  explicit ExprWrapper(const ExprWrapper<ScalarOpValue>& e)
+  ExprWrapper(const ExprWrapper<ScalarOpValue>& e)
     : e(std::dynamic_pointer_cast<AnalyticExpr<ScalarOpValue>>(e.copy()))
   { }
 
@@ -55,6 +67,11 @@ struct ExprWrapper<ScalarOpValue>
   operator std::shared_ptr<AnalyticExpr<ScalarOpValue>>()
   {
     return copy();
+  }
+
+  virtual ExprWrapperBase raw_copy() const
+  {
+    return ExprWrapperBase(e->copy());
   }
 
   std::shared_ptr<AnalyticExpr<ScalarOpValue>> e;
@@ -90,7 +107,7 @@ inline ScalarExpr operator/(const ScalarExpr& e1, const ScalarExpr& e2)
 }
 
 template<>
-struct ExprWrapper<VectorOpValue>
+struct ExprWrapper<VectorOpValue> : public ExprWrapperBase
 {
   ExprWrapper(const IntervalVector& e)
     : e(std::dynamic_pointer_cast<AnalyticExpr<VectorOpValue>>(const_value(e)->copy()))
@@ -100,7 +117,7 @@ struct ExprWrapper<VectorOpValue>
     : e(std::dynamic_pointer_cast<AnalyticExpr<VectorOpValue>>(e.copy()))
   { }
 
-  explicit ExprWrapper(const ExprWrapper<VectorOpValue>& e)
+  ExprWrapper(const ExprWrapper<VectorOpValue>& e)
     : e(std::dynamic_pointer_cast<AnalyticExpr<VectorOpValue>>(e.copy()))
   { }
 
@@ -116,6 +133,11 @@ struct ExprWrapper<VectorOpValue>
   operator std::shared_ptr<AnalyticExpr<VectorOpValue>>()
   {
     return copy();
+  }
+
+  virtual ExprWrapperBase raw_copy() const
+  {
+    return ExprWrapperBase(e->copy());
   }
 
   std::shared_ptr<AnalyticExpr<VectorOpValue>> e;
@@ -145,6 +167,12 @@ inline VectorExpr operator*(const ScalarExpr& e1, const VectorExpr& e2)
   return VectorExpr(e1.e*e2.e);
 }
 
+inline void export_ExprWrapperBase(py::module& m)
+{
+  py::class_<ExprWrapperBase> py_wrap(m, "ExprWrapperBase");
+  py_wrap  .def(py::init<const std::shared_ptr<ExprBase>&>());
+}
+
 inline void export_ScalarExpr(py::module& m)
 {
   py::class_<ScalarExpr>
@@ -153,8 +181,11 @@ inline void export_ScalarExpr(py::module& m)
   exported
 
     .def(py::init<std::shared_ptr<AnalyticExpr<ScalarOpValue>>>())
+    .def(py::init<ScalarExpr>())
     .def(py::init<Interval>())
     .def(py::init<ScalarVar>())
+    .def("copy", &ScalarExpr::copy)
+    .def("raw_copy", &ScalarExpr::raw_copy)
 
     .def("__add__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1+e2; })
     .def("__add__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1+e2; })
@@ -174,6 +205,8 @@ inline void export_ScalarExpr(py::module& m)
     .def("__rmul__", [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1*e2; })
     .def("__mul__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1*e2; })
     .def("__rmul__", [](const ScalarExpr& e1, const Interval& e2)   { return e1*e2; })
+    .def("__mul__",  [](const ScalarExpr& e1, const VectorExpr& e2) { return e1*e2; })
+    .def("__mul__",  [](const ScalarExpr& e1, const VectorVar& e2)  { return e1*e2; })
 
     .def("__div__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1/e2; })
     .def("__div__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1/e2; })
@@ -182,6 +215,8 @@ inline void export_ScalarExpr(py::module& m)
     .def("__rdiv__", [](const ScalarExpr& e1, const Interval& e2)   { return e1/e2; })
 
   ;
+
+  py::implicitly_convertible<Interval,ScalarExpr>();
 }
 
 inline void export_VectorExpr(py::module& m)
@@ -192,8 +227,11 @@ inline void export_VectorExpr(py::module& m)
   exported
 
     .def(py::init<std::shared_ptr<AnalyticExpr<VectorOpValue>>>())
+    .def(py::init<VectorExpr>())
     .def(py::init<IntervalVector>())
     .def(py::init<VectorVar>())
+    .def("copy", &VectorExpr::copy)
+    .def("raw_copy", &VectorExpr::raw_copy)
 
     .def("__add__",  [](const VectorExpr& e1, const VectorExpr& e2)     { return e1+e2; })
     .def("__add__",  [](const VectorExpr& e1, const VectorVar& e2)      { return e1+e2; })
@@ -212,4 +250,6 @@ inline void export_VectorExpr(py::module& m)
     .def("__rmul__", [](const VectorExpr& e1, const ScalarVar& e2)      { return e2*e1; })
 
   ;
+
+  py::implicitly_convertible<IntervalVector,VectorExpr>();
 }

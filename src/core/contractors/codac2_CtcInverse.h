@@ -15,6 +15,7 @@
 #include "codac2_AnalyticFunction.h"
 #include "codac2_Ctc.h"
 #include "codac2_CtcWrapper.h"
+#include "codac2_Collection.h"
 
 namespace codac2
 {
@@ -53,7 +54,7 @@ namespace codac2
         // Forward/backward algorithm:
 
           // [1/4] Forward evaluation
-          _f.expr()->fwd_eval(v, _f.args(), cart_prod(x...));
+          _f.expr()->fwd_eval(v, _f.args().total_size());
           auto& val_expr = _f.expr()->value(v);
 
           if(_is_not_in && !val_expr.def_domain)
@@ -117,7 +118,7 @@ namespace codac2
   };
 
   template<typename Y,typename X=IntervalVector>
-  class CtcInverse_ : public CtcInverse<Y>, public Ctc_<X>
+  class CtcInverse_ : public Ctc_<X>, public CtcInverse<Y>
   {
     public:
 

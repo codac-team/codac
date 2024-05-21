@@ -46,6 +46,9 @@ void export_ScalarVar(py::module& m)
     .def("__mul__",  [](const ScalarVar& e1, const Interval& e2)       { return ScalarExpr(ScalarExpr(e1) * ScalarExpr(e2)); })
     .def("__rmul__", [](const ScalarVar& e1, const Interval& e2)       { return ScalarExpr(ScalarExpr(e2) * ScalarExpr(e1)); })
     .def("__mul__",  [](const ScalarVar& e1, const VectorVar& e2)      { return VectorExpr(ScalarExpr(e1) * VectorExpr(e2)); })
+    
+    .def("__mul__",  [](const ScalarVar& e1, const VectorExpr& e2)     { return VectorExpr(ScalarExpr(e1) * VectorExpr(e2)); })
+    
     .def("__mul__",  [](const ScalarVar& e1, const IntervalVector& e2) { return VectorExpr(ScalarExpr(e1) * VectorExpr(e2)); })
     .def("__div__",  [](const ScalarVar& e1, const ScalarVar& e2)      { return ScalarExpr(ScalarExpr(e1) / ScalarExpr(e2)); })
     .def("__div__",  [](const ScalarVar& e1, const Interval& e2)       { return ScalarExpr(ScalarExpr(e1) / ScalarExpr(e2)); })
