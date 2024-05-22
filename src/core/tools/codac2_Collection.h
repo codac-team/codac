@@ -36,6 +36,15 @@ namespace codac2
         (add_shared_ptr(std::make_shared<T_>(x)), ...);
       }
 
+      template<typename... T_,
+        typename = typename std::enable_if<(true && ... && (
+          std::is_same<std::shared_ptr<T>,std::shared_ptr<T_>>::value
+        )), void>::type>
+      Collection(const std::shared_ptr<T_>&... x)
+      {
+        (add_shared_ptr(x), ...);
+      }
+
       Collection(const Collection<T>& c)
       {
         for(const auto& ci : c._v)

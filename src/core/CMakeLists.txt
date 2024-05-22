@@ -17,7 +17,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCartProd.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCenteredForm.h
+    #${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCenteredForm.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverseNotIn.h
@@ -52,10 +52,11 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_variables.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticExpr.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticFunction.h
-    #${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_operations.h
-    #${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_variables.h
-    #${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_SetExpr.h
-    #${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_SetFunction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_operations.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_operators.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_variables.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_SetExpr.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_SetFunction.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure.h

@@ -23,20 +23,19 @@ namespace codac2
     public:
 
       template<typename S, typename = typename std::enable_if<(
-          std::is_base_of_v<Sep,S> &&
-          !std::is_same_v<SepCartProd,S>
+          (std::is_base_of_v<Sep,S> && !std::is_same_v<SepCartProd,S>) || std::is_same_v<std::shared_ptr<Sep>,S>
         ), void>::type>
       SepCartProd(const S& s)
         : _seps(s)
       { }
 
       template<typename... S, typename = typename std::enable_if<(true && ... && (
-          std::is_base_of_v<Sep,S>
+          (std::is_base_of_v<Sep,S> || std::is_same_v<std::shared_ptr<Sep>,S>)
         )), void>::type>
       SepCartProd(const S&... s)
         : _seps(s...)
       { }
-
+      
       virtual std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
 

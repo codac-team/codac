@@ -24,7 +24,9 @@ namespace codac2
   {
     public:
 
-      template<typename C>
+      template<typename C, typename = typename std::enable_if<
+          std::is_base_of_v<Ctc_<Y>,C>
+        >::type>
       CtcInverse(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const C& ctc_y, bool with_centered_form = true, bool is_not_in = false)
         : _f(f), _ctc_y(ctc_y), _with_centered_form(with_centered_form), _is_not_in(is_not_in)
       { }
@@ -129,8 +131,12 @@ namespace codac2
         assert(f.args().size() == 1);
       }
 
-      CtcInverse_(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const Ctc_<Y>& ctc_y, bool with_centered_form = true, bool is_not_in = false)
-        : CtcInverse<Y>(f,ctc_y,with_centered_form,is_not_in)
+      template<typename C, typename = typename std::enable_if<
+          std::is_base_of_v<Ctc_<Y>,C>
+        >::type>
+      CtcInverse_(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const C& ctc_y, bool with_centered_form = true, bool is_not_in = false)
+        : Ctc_<X>(f.args()[0]->size() /* f must have only one arg, see following assert */),
+          CtcInverse<Y>(f,ctc_y,with_centered_form,is_not_in)
       {
         assert(f.args().size() == 1);
       }

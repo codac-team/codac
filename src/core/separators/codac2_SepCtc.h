@@ -25,7 +25,14 @@ namespace codac2
           std::is_base_of_v<Sep,S>
         >::type>
       SepCtcIn(const S& s)
-        : _seps(s)
+        : Ctc_<IntervalVector>(s.size()), _seps(s)
+      { }
+
+      template<typename S, typename = typename std::enable_if<
+          std::is_base_of_v<S,Sep>
+        >::type>
+      SepCtcIn(const std::shared_ptr<S>& s)
+        : Ctc_<IntervalVector>(s->size()), _seps(s)
       { }
 
       virtual std::shared_ptr<Ctc> copy() const
@@ -52,7 +59,14 @@ namespace codac2
           std::is_base_of_v<Sep,S>
         >::type>
       SepCtcOut(const S& s)
-        : _seps(s)
+        : Ctc_<IntervalVector>(s.size()), _seps(s)
+      { }
+
+      template<typename S, typename = typename std::enable_if<
+          std::is_base_of_v<S,Sep>
+        >::type>
+      SepCtcOut(const std::shared_ptr<S>& s)
+        : Ctc_<IntervalVector>(s->size()), _seps(s)
       { }
 
       virtual std::shared_ptr<Ctc> copy() const

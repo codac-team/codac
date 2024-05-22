@@ -21,12 +21,12 @@ namespace codac2
     public:
 
       template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<Sep,S>
+          std::is_base_of_v<Sep,S> || std::is_same_v<std::shared_ptr<Sep>,S>
         >::type>
       SepProj(const S& s, const IntervalVector& y)
         : _sep(s), _y(y)
       { }
-
+      
       virtual std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
       BoxPair separate(const IntervalVector& x, double eps) const;

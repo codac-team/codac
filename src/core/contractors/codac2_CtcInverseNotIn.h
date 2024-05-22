@@ -32,6 +32,17 @@ namespace codac2
           *this |= CtcInverse_<Y,X>(f, complem_y, with_centered_form, is_not_in);
       }
 
+      template<typename C, typename = typename std::enable_if<
+          std::is_base_of_v<Ctc_<X>,C>
+        >::type>
+      CtcInverseNotIn(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const C& ctc_compl, bool with_centered_form = true)
+        : CtcUnion<X>(f.args()[0]->size() /* f must have only one arg, see following assert */)
+      {
+        assert(f.args().size() == 1);
+        bool is_not_in = true;
+        *this |= CtcInverse_<Y,X>(f, ctc_compl, with_centered_form, is_not_in);
+      }
+
       virtual std::shared_ptr<Ctc> copy() const
       {
         return std::make_shared<CtcInverseNotIn<Y,X>>(*this);

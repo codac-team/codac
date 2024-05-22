@@ -23,15 +23,14 @@ namespace codac2
     public:
 
       template<typename S, typename = typename std::enable_if<(
-          std::is_base_of_v<Sep,S> &&
-          !std::is_same_v<SepInter,S>
+          (std::is_base_of_v<Sep,S> && !std::is_same_v<SepInter,S>) || std::is_same_v<std::shared_ptr<Sep>,S>
         ), void>::type>
       SepInter(const S& s)
         : _seps(s)
       { }
 
       template<typename... S, typename = typename std::enable_if<(true && ... && (
-          std::is_base_of_v<Sep,S>
+          (std::is_base_of_v<Sep,S> || std::is_same_v<std::shared_ptr<Sep>,S>)
         )), void>::type>
       SepInter(const S&... s)
         : _seps(s...)
