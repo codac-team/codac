@@ -35,10 +35,12 @@ void Paver::init_figure()
   }
 }
 
-void Paver::pave(const Ctc_<IntervalVector>& c, double eps)
+std::list<IntervalVector> Paver::pave(const Ctc_<IntervalVector>& c, double eps)
 {
   init_figure();
   clock_t t_start = clock();
+
+  std::list<IntervalVector> l_output;
 
   if(_figure && _x0.size() > 2)
     _figure->draw_box(_x0, WithGraphicOutput::outer_style);
@@ -62,6 +64,7 @@ void Paver::pave(const Ctc_<IntervalVector>& c, double eps)
       if(x.max_diam() < eps)
       {
         n++;
+        l_output.push_back(x);
         if(_figure)
     			_figure->draw_box(x, WithGraphicOutput::boundary_style);
       }
@@ -75,6 +78,7 @@ void Paver::pave(const Ctc_<IntervalVector>& c, double eps)
   }
 
   printf("Computation time: %.4fs, %zd boxes\n", (double)(clock()-t_start)/CLOCKS_PER_SEC, n);
+  return l_output;
 }
 
 void Paver::pave(const Sep& s, double eps)

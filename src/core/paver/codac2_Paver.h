@@ -22,7 +22,7 @@ namespace codac2
     public:
 
       Paver(const IntervalVector& x0);
-      void pave(const Ctc_<IntervalVector>& c, double eps);
+      std::list<IntervalVector> pave(const Ctc_<IntervalVector>& c, double eps);
       void pave(const Sep& s, double eps);
 
     protected:

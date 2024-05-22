@@ -46,6 +46,7 @@ namespace codac2
     static ColorRGB green()     { return ColorRGB(0,   255, 0,   255); };
     static ColorRGB cyan()      { return ColorRGB(75,  207, 250, 255); };
     static ColorRGB yellow()    { return ColorRGB(255, 211, 42,  255); };
+    static ColorRGB red()       { return ColorRGB(209, 59,  0,   255); };
     static ColorRGB dark_gray() { return ColorRGB(112, 112, 112, 255); };
   };
 

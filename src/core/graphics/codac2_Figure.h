@@ -105,17 +105,17 @@ namespace codac2
       
       static void set_axes(const FigureAxis& axis1, const FigureAxis& axis2)
       {
-        _selected_fig->set_axes(axis1,axis2);
+        selected_fig()->set_axes(axis1,axis2);
       }
       
       static void set_window_properties(const Vector& pos, const Vector& size)
       {
-        _selected_fig->set_window_properties(pos,size);
+        selected_fig()->set_window_properties(pos,size);
       }
 
       static void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties())
       {
-        _selected_fig->draw_box(x,s);
+        selected_fig()->draw_box(x,s);
       }
 
     protected:

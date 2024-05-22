@@ -25,14 +25,7 @@ using namespace pybind11::literals;
 
 void export_Paver(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc)
 {
-  //m.def("pave", (void (*)(const IntervalVector&,const Ctc_<IntervalVector>&,double))&pave);
-
-
-  m.def("pave", [](const IntervalVector& x0, const Ctc_<IntervalVector>& ctc, double eps)
-    {
-      return pave(x0, ctc, eps);
-    });
-
-
-
+  m.def("pave", (void (*)(const IntervalVector&,const Ctc_<IntervalVector>&,double))&pave,
+    VOID_PAVE_CONST_INTERVALVECTOR_REF_CONST_O_REF_DOUBLE,
+    "x0"_a, "o"_a, "eps"_a);
 }
