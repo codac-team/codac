@@ -52,6 +52,10 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_variables.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticExpr.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticFunction.h
+    #${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_operations.h
+    #${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_variables.h
+    #${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_SetExpr.h
+    #${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_SetFunction.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure.h
@@ -93,6 +97,8 @@
 
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Approx.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Collection.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_object_file_format.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_object_file_format.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_GaussJordan.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_GaussJordan.h
