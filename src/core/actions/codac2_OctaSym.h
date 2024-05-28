@@ -22,6 +22,7 @@ namespace codac2
   class CtcAction;
   class Sep;
   class SepAction;
+  class SetExpr;
 
   /**
    * \class Action
@@ -56,6 +57,9 @@ namespace codac2
         >::type>
       SepAction operator()(const S& s) const;
       // -> is defined in SepAction class
+
+      std::shared_ptr<SetExpr> operator()(const std::shared_ptr<SetExpr>& x1) const;
+      // -> is defined in set operations file
 
       friend std::ostream& operator<<(std::ostream& str, const OctaSym& s);
   };

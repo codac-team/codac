@@ -19,6 +19,7 @@
 #include "codac2_SepCartProd.h"
 #include "codac2_SepInverse.h"
 #include "codac2_SepNot.h"
+#include "codac2_SepAction.h"
 
 namespace codac2
 {
@@ -40,9 +41,14 @@ namespace codac2
 
   struct ProjSetOp
   {
-    static std::shared_ptr<Sep> create_sep(const std::shared_ptr<Sep>& s1, const IntervalVector& y)
+    static std::shared_ptr<Sep> create_sep(const std::shared_ptr<Sep>& s1, const std::vector<size_t>& proj_indices, double eps)
     {
-      return std::make_shared<SepProj>(s1,y);
+      return std::make_shared<SepProj>(s1,proj_indices,eps);
+    }
+
+    static std::shared_ptr<Sep> create_sep(const std::shared_ptr<Sep>& s1, const std::vector<size_t>& proj_indices, const IntervalVector& y, double eps)
+    {
+      return std::make_shared<SepProj>(s1,proj_indices,y,eps);
     }
   };
 
@@ -67,6 +73,14 @@ namespace codac2
     static std::shared_ptr<Sep> create_sep(const std::shared_ptr<Sep>& s1)
     {
       return std::make_shared<SepNot>(s1);
+    }
+  };
+
+  struct ActionSetOp
+  {
+    static std::shared_ptr<Sep> create_sep(const OctaSym& a, const std::shared_ptr<Sep>& s1)
+    {
+      return std::make_shared<SepAction>(s1,a);
     }
   };
 }

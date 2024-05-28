@@ -85,12 +85,16 @@ namespace codac2
   {
     public:
 
-      SetOperationExpr(std::shared_ptr<SetExpr> x, const IntervalVector& y)
-        : OperationExprBase<SetExpr>(x), _y(y)
+      SetOperationExpr(std::shared_ptr<SetExpr> x, const std::vector<size_t>& proj_indices, double eps)
+        : OperationExprBase<SetExpr>(x), _proj_indices(proj_indices), _y(nullptr), _eps(eps)
+      { }
+
+      SetOperationExpr(std::shared_ptr<SetExpr> x, const std::vector<size_t>& proj_indices, const IntervalVector& y, double eps)
+        : OperationExprBase<SetExpr>(x), _proj_indices(proj_indices), _y(std::make_shared<IntervalVector>(y)), _eps(eps)
       { }
 
       SetOperationExpr(const SetOperationExpr& e)
-        : OperationExprBase<SetExpr>(e), _y(e._y)
+        : OperationExprBase<SetExpr>(e), _proj_indices(e._proj_indices), _y(e._y), _eps(e._eps)
       { }
 
       std::shared_ptr<ExprBase> copy() const
@@ -110,12 +114,17 @@ namespace codac2
 
       std::shared_ptr<Sep> create_sep(const FunctionArgsList& args, const std::vector<std::shared_ptr<Sep>>& values) const
       {
-        return ProjSetOp::create_sep(std::get<0>(this->_x)->create_sep(args,values), _y);
+        if(_y)
+          return ProjSetOp::create_sep(std::get<0>(this->_x)->create_sep(args,values), _proj_indices, *_y, _eps);
+        else
+          return ProjSetOp::create_sep(std::get<0>(this->_x)->create_sep(args,values), _proj_indices, _eps);
       }
 
     protected:
 
-      const IntervalVector _y;
+      const std::vector<size_t> _proj_indices;
+      const std::shared_ptr<IntervalVector> _y;
+      const double _eps;
   };
 
   template<>
@@ -154,5 +163,43 @@ namespace codac2
     protected:
 
       const AnalyticFunction<VectorOpValue> _f;
+  };
+
+  template<>
+  class SetOperationExpr<ActionSetOp,SetExpr> : public SetExpr, public OperationExprBase<SetExpr>
+  {
+    public:
+
+      SetOperationExpr(const OctaSym& a, std::shared_ptr<SetExpr> x)
+        : OperationExprBase<SetExpr>(x), _a(a)
+      { }
+
+      SetOperationExpr(const SetOperationExpr& e)
+        : OperationExprBase<SetExpr>(e), _a(e._a)
+      { }
+
+      std::shared_ptr<ExprBase> copy() const
+      {
+        return std::make_shared<SetOperationExpr<ActionSetOp,SetExpr>>(*this);
+      }
+
+      void replace_expr(const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      {
+        return OperationExprBase<SetExpr>::replace_expr(old_expr_id, new_expr);
+      }
+
+      virtual bool belongs_to_args_list(const FunctionArgsList& args) const
+      {
+        return std::get<0>(this->_x)->belongs_to_args_list(args);
+      }
+
+      std::shared_ptr<Sep> create_sep(const FunctionArgsList& args, const std::vector<std::shared_ptr<Sep>>& values) const
+      {
+        return ActionSetOp::create_sep(_a, std::get<0>(this->_x)->create_sep(args,values));
+      }
+
+    protected:
+
+      const OctaSym _a;
   };
 }

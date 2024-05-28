@@ -26,10 +26,6 @@ namespace codac2
   {
     public:
 
-      AnalyticFunction(const std::vector<std::reference_wrapper<VarBase>>& args, const std::shared_ptr<AnalyticExpr<T>>& y)
-        : AnalyticFunction(FunctionArgsList(args),y)
-      { }
-
       AnalyticFunction(const FunctionArgsList& args, const std::shared_ptr<AnalyticExpr<T>>& y)
         : FunctionBase<AnalyticExpr<T>>(args, y)
       {
@@ -128,8 +124,15 @@ namespace codac2
       auto eval_(const Args&... x) const
       {
         ValuesMap v;
-        fill_from_args(v, x...);
-        return this->expr()->fwd_eval(v, cart_prod(x...).size()); // todo: improve size computation
+
+        if constexpr(sizeof...(Args) == 0)
+          return this->expr()->fwd_eval(v, 0);
+
+        else
+        {
+          fill_from_args(v, x...);
+          return this->expr()->fwd_eval(v, cart_prod(x...).size()); // todo: improve size computation
+        }
       }
 
       template<typename... Args>

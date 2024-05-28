@@ -398,6 +398,108 @@ namespace codac2
 
   // Structural operators
 
+    ScalarExpr_ptr _add_to_vec(const ScalarExpr_ptr& x)
+    {
+      return x;
+    }
+
+    ScalarExpr_ptr _add_to_vec(double x)
+    {
+      return const_value(x);
+    }
+
+    template<typename X1>
+    inline VectorExpr_ptr
+    vec(const X1& x1)
+    {
+      return std::make_shared<AnalyticOperationExpr<VectorOp,VectorOpValue,
+        ScalarOpValue>>(
+          _add_to_vec(x1));
+    }
+
+    template<typename X1,typename X2>
+    inline VectorExpr_ptr
+    vec(const X1& x1, const X2& x2)
+    {
+      return std::make_shared<AnalyticOperationExpr<VectorOp,VectorOpValue,
+        ScalarOpValue,ScalarOpValue>>(
+          _add_to_vec(x1),_add_to_vec(x2));
+    }
+
+    template<typename X1,typename X2,typename X3>
+    inline VectorExpr_ptr
+    vec(const X1& x1, const X2& x2, const X3& x3)
+    {
+      return std::make_shared<AnalyticOperationExpr<VectorOp,VectorOpValue,
+        ScalarOpValue,ScalarOpValue,ScalarOpValue>>(
+          _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3));
+    }
+
+    template<typename X1,typename X2,typename X3,typename X4>
+    inline VectorExpr_ptr
+    vec(const X1& x1, const X2& x2, const X3& x3, const X4& x4)
+    {
+      return std::make_shared<AnalyticOperationExpr<VectorOp,VectorOpValue,
+        ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue>>(
+          _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3),_add_to_vec(x4));
+    }
+
+    template<typename X1,typename X2,typename X3,typename X4,typename X5>
+    inline VectorExpr_ptr
+    vec(const X1& x1, const X2& x2, const X3& x3, const X4& x4, const X5& x5)
+    {
+      return std::make_shared<AnalyticOperationExpr<VectorOp,VectorOpValue,
+        ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue>>(
+          _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3),_add_to_vec(x4),_add_to_vec(x5));
+    }
+
+    template<typename X1,typename X2,typename X3,typename X4,typename X5,typename X6>
+    inline VectorExpr_ptr
+    vec(const X1& x1, const X2& x2, const X3& x3, const X4& x4, const X5& x5, const X6& x6)
+    {
+      return std::make_shared<AnalyticOperationExpr<VectorOp,VectorOpValue,
+        ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue>>(
+          _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3),_add_to_vec(x4),_add_to_vec(x5),_add_to_vec(x6));
+    }
+
+    template<typename X1,typename X2,typename X3,typename X4,typename X5,typename X6,typename X7>
+    inline VectorExpr_ptr
+    vec(const X1& x1, const X2& x2, const X3& x3, const X4& x4, const X5& x5, const X6& x6, const X7& x7)
+    {
+      return std::make_shared<AnalyticOperationExpr<VectorOp,VectorOpValue,
+        ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue>>(
+          _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3),_add_to_vec(x4),_add_to_vec(x5),_add_to_vec(x6),_add_to_vec(x7));
+    }
+
+    template<typename X1,typename X2,typename X3,typename X4,typename X5,typename X6,typename X7,typename X8>
+    inline VectorExpr_ptr
+    vec(const X1& x1, const X2& x2, const X3& x3, const X4& x4, const X5& x5, const X6& x6, const X7& x7, const X8& x8)
+    {
+      return std::make_shared<AnalyticOperationExpr<VectorOp,VectorOpValue,
+        ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue>>(
+          _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3),_add_to_vec(x4),_add_to_vec(x5),_add_to_vec(x6),_add_to_vec(x7),_add_to_vec(x8));
+    }
+
+    template<typename X1,typename X2,typename X3,typename X4,typename X5,typename X6,typename X7,typename X8,typename X9>
+    inline VectorExpr_ptr
+    vec(const X1& x1, const X2& x2, const X3& x3, const X4& x4, const X5& x5, const X6& x6, const X7& x7, const X8& x8, const X9& x9)
+    {
+      return std::make_shared<AnalyticOperationExpr<VectorOp,VectorOpValue,
+        ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue>>(
+          _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3),_add_to_vec(x4),_add_to_vec(x5),_add_to_vec(x6),_add_to_vec(x7),_add_to_vec(x8),_add_to_vec(x9));
+    }
+
+    template<typename X1,typename X2,typename X3,typename X4,typename X5,typename X6,typename X7,typename X8,typename X9,typename X10>
+    inline VectorExpr_ptr
+    vec(const X1& x1, const X2& x2, const X3& x3, const X4& x4, const X5& x5, const X6& x6, const X7& x7, const X8& x8, const X9& x9, const X10& x10)
+    {
+      return std::make_shared<AnalyticOperationExpr<VectorOp,VectorOpValue,
+        ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue,ScalarOpValue>>(
+          _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3),_add_to_vec(x4),_add_to_vec(x5),_add_to_vec(x6),_add_to_vec(x7),_add_to_vec(x8),_add_to_vec(x9),_add_to_vec(x10));
+    }
+
+    // Generic variadic case, cannot handle const values (int, double) for now
+
     template<typename... X>
     inline VectorExpr_ptr
     vec(const std::shared_ptr<AnalyticExpr<X>>&... x)
