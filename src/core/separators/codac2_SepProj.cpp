@@ -24,12 +24,15 @@ namespace codac2
   BoxPair SepProj::separate(const IntervalVector& x) const
   {
     // Default value for eps, for removing virtuality
-    return separate(x, 0.01);
+    return separate(x, _default_eps);
   }
 
   BoxPair SepProj::separate(const IntervalVector& x, double eps) const
   {
-    list<IntervalVector> l_stack { cart_prod(x,_y) };
+    assert(eps > 0.);
+    assert(x.size() == this->size());
+    
+    list<IntervalVector> l_stack { cart_prod_xy(x,_y) };
     list<IntervalVector> l_in, l_out;
 
     // The stack allows to explore along the y-column to be projected,
@@ -47,7 +50,7 @@ namespace codac2
       {
         // Trying to find inner values...
         // A new guess is the y-middle of the previous one
-        auto w_mid = cart_prod(x,extract_y(w).mid());
+        auto w_mid = cart_prod_xy(x,extract_y(w).mid());
         auto w_sep_mid = _sep.front().separate(w_mid);
         assert((w_sep_mid.in | w_sep_mid.out) == w_mid);
 
@@ -60,9 +63,10 @@ namespace codac2
         l_in.push_back(extract_x(w_sep_mid.in));
 
         // If the current guess w is not a leaf, proceed to a bisection of the guess
-        if(extract_y(w).max_diam() > eps)
+        auto y = extract_y(w);
+        if(y.max_diam() > eps)
         {
-          auto b = w.bisect(x.size() + extract_y(w).max_diam_index());
+          auto b = w.bisect(y_max_diam_index(y));
           l_stack.push_back(b.first);
           l_stack.push_back(b.second);
         }
@@ -90,12 +94,89 @@ namespace codac2
 
   IntervalVector SepProj::extract_x(const IntervalVector& w) const
   {
-    return w.subvector(0,w.size()-_y.size()-1);
+    assert(w.size() == this->_sep.front().size());
+
+    IntervalVector x(_xi.size());
+    size_t k = 0;
+    for(const auto& xi : _xi)
+      x[k++] = w[xi];
+    assert(k == _xi.size()); // all components have been reached
+    return x;
   }
 
   IntervalVector SepProj::extract_y(const IntervalVector& w) const
   {
-    return w.subvector(w.size()-_y.size(),w.size()-1);
+    assert(w.size() == this->_sep.front().size());
+    
+    IntervalVector y(_y.size());
+    size_t k = 0;
+    for(size_t j = 0 ; j < w.size() ; j++)
+    {
+      bool outside_proj = true;
+      for(const auto& xi : _xi)
+        if(xi == j)
+        {
+          outside_proj = false;
+          break;
+        }
+
+      if(outside_proj)
+        y[k++] = w[j];
+    }
+
+    assert(k == y.size()); // all components have been reached
+    return y;
   }
 
+  IntervalVector SepProj::cart_prod_xy(const IntervalVector& x, const IntervalVector& y) const
+  {
+    size_t n = this->_sep.front().size();
+    assert(x.size() == this->size());
+    assert(y.size() == _y.size());
+    assert(x.size()+y.size() == n);
+
+    size_t ix = 0, iy = 0;
+    IntervalVector w(n);
+
+    for(size_t j = 0 ; j < n ; j++)
+    {
+      bool outside_proj = true;
+      for(const auto& xi : _xi)
+        if(xi == j)
+        {
+          outside_proj = false;
+          break;
+        }
+
+      w[j] = outside_proj ? y[iy++] : x[ix++];
+    }
+
+    assert(ix+iy == w.size()); // all components have been reached
+    return w;
+  }
+
+  size_t SepProj::y_max_diam_index(const IntervalVector& y) const
+  {
+    size_t k = 0, y_max = y.max_diam_index();
+    for(size_t i = 0 ; i < this->_sep.front().size() ; i++)
+    {
+      bool outside_proj = true;
+      for(const auto& xi : _xi)
+        if(xi == i)
+        {
+          outside_proj = false;
+          break;
+        }
+
+      if(outside_proj)
+      {
+        if(k == y_max)
+          return i;
+        k++;
+      }
+    }
+
+    assert(false && "unable to find y-index");
+    return 0;
+  }
 }

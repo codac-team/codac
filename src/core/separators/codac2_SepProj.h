@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include <vector>
 #include "codac2_Sep.h"
 #include "codac2_Collection.h"
 
@@ -23,9 +24,21 @@ namespace codac2
       template<typename S, typename = typename std::enable_if<
           std::is_base_of_v<Sep,S> || std::is_same_v<std::shared_ptr<Sep>,S>
         >::type>
-      SepProj(const S& s, const IntervalVector& y)
-        : _sep(s), _y(y)
+      SepProj(const S& s, const std::vector<size_t>& proj_indices, double default_eps = 0.01)
+        : SepProj(s, proj_indices, IntervalVector(size_of(s)-proj_indices.size()), default_eps)
       { }
+
+      template<typename S, typename = typename std::enable_if<
+          std::is_base_of_v<Sep,S> || std::is_same_v<std::shared_ptr<Sep>,S>
+        >::type>
+      SepProj(const S& s, const std::vector<size_t>& proj_indices, const IntervalVector& y, double default_eps = 0.01)
+        : Sep(proj_indices.size()), _sep(s), _xi(proj_indices), _y(y & IntervalVector(y.size(),Interval(-99999,99999))), _default_eps(default_eps)
+      {
+        assert(_y.size() == size_of(s)-_xi.size());
+        assert(*min_element(_xi.begin(),_xi.end()) >= 0);
+        assert(*max_element(_xi.begin(),_xi.end()) < size_of(s));
+        assert(size_of(s) >= _xi.size() && "cannot compute a projection of a set into a superset");
+      }
       
       virtual std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
@@ -35,8 +48,12 @@ namespace codac2
 
       IntervalVector extract_x(const IntervalVector& w) const;
       IntervalVector extract_y(const IntervalVector& w) const;
+      IntervalVector cart_prod_xy(const IntervalVector& x, const IntervalVector& y) const;
+      size_t y_max_diam_index(const IntervalVector& w) const;
 
       const Collection<Sep> _sep;
+      const std::vector<size_t> _xi;
       const IntervalVector _y;
+      const double _default_eps;
   };
 }
