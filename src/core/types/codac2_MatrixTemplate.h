@@ -138,21 +138,21 @@ namespace codac2
 
       static S zeros(size_t nb_rows = R, size_t nb_cols = C)
       {
-        assert(nb_rows > 0 && nb_cols > 0);
+        //assert(nb_rows > 0 && nb_cols > 0);
         assert(((int)nb_rows == R || R == Dynamic) && ((int)nb_cols == C || C == Dynamic));
         return Eigen::Matrix<T,R,C>::Zero(nb_rows,nb_cols);
       }
 
       static S ones(size_t nb_rows = R, size_t nb_cols = C)
       {
-        assert(nb_rows > 0 && nb_cols > 0);
+        //assert(nb_rows > 0 && nb_cols > 0);
         assert(((int)nb_rows == R || R == Dynamic) && ((int)nb_cols == C || C == Dynamic));
         return Eigen::Matrix<T,R,C>::Ones(nb_rows,nb_cols);
       }
 
       static S eye(size_t nb_rows = R, size_t nb_cols = C)
       {
-        assert(nb_rows > 0 && nb_cols > 0);
+        //assert(nb_rows > 0 && nb_cols > 0);
         assert(((int)nb_rows == R || R == Dynamic) && ((int)nb_cols == C || C == Dynamic));
         return Eigen::Matrix<T,R,C>::Identity(nb_rows,nb_cols);
       }

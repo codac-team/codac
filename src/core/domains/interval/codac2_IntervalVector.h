@@ -238,7 +238,9 @@ namespace codac2
     return IntervalVector(x).operator|(y);
   }
 
-  template<typename... X>
+  template<typename... X, typename = typename std::enable_if<(true && ... && (
+      std::is_base_of_v<Domain,X>
+    )), void>::type>
   inline IntervalVector cart_prod(const X&... x)
   {
     size_t n = 0;

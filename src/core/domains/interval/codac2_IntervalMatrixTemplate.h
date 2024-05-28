@@ -602,20 +602,27 @@ namespace codac2
         return IntervalMatrixTemplate_<S,V,R,C>(nb_rows, nb_cols, Interval::empty());
       }
 
-      template<typename OtherDerived>
-      bool operator==(const Eigen::MatrixBase<OtherDerived>& x) const
+      //template<typename OtherDerived>
+      //bool operator==(const Eigen::MatrixBase<OtherDerived>& x) const
+      bool operator==(const S& x) const
       {
         if(x.rows() != this->rows() || x.cols() != this->cols())
           return false;
+
+        if(x.is_empty() || this->is_empty())
+          return x.is_empty() && this->is_empty();
+
         for(int i = 0 ; i < this->rows() ; i++)
           for(int j = 0 ; j < this->cols() ; j++)
             if((*this)(i,j) != x(i,j))
               return false;
+
         return true;
       }
 
-      template<typename OtherDerived>
-      bool operator!=(const Eigen::MatrixBase<OtherDerived>& x) const
+      //template<typename OtherDerived>
+      //bool operator!=(const Eigen::MatrixBase<OtherDerived>& x) const
+      bool operator!=(const S& x) const
       {
         return !(*this == x);
       }

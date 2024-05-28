@@ -207,21 +207,21 @@ namespace codac2
 
       static S empty(size_t n = N)
       {
-        assert(n > 0);
+        //assert(n > 0);
         assert(N == Dynamic || N == (int)n);
         return IntervalMatrixTemplate_<IntervalVectorTemplate_<S,V,N>,V,N,1>::empty(n,1);
       }
 
       static S zeros(size_t n = N)
       {
-        assert(n > 0);
+        //assert(n > 0);
         assert(N == Dynamic || N == (int)n);
         return IntervalMatrixTemplate_<IntervalVectorTemplate_<S,V,N>,V,N,1>::zeros(n,1);
       }
 
       static S ones(size_t n = N)
       {
-        assert(n > 0);
+        //assert(n > 0);
         assert(N == Dynamic || N == (int)n);
         return IntervalMatrixTemplate_<IntervalVectorTemplate_<S,V,N>,V,N,1>::ones(n,1);
       }

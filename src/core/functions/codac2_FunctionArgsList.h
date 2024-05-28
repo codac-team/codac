@@ -29,7 +29,7 @@ namespace codac2
           push_back(arg->arg_copy());
       }
 
-      FunctionArgsList(const std::vector<std::reference_wrapper<VarBase>>& args)
+      FunctionArgsList(std::initializer_list<std::reference_wrapper<VarBase>> args)
       {
         for(const auto& arg : args)
           push_back(arg.get().arg_copy());
