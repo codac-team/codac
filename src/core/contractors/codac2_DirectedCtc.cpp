@@ -428,7 +428,7 @@ using namespace codac2;
       fwd(x1.m, x2.m),
       fwd(x1.a, x2.a),
       d,
-      x1.def_domain && x2.def_domain
+      x1.def_domain && x2.def_domain && x2.a != 0. /* def domain of the derivative of div */
     };
   }
 
@@ -511,7 +511,9 @@ using namespace codac2;
       fwd(x1.m),
       fwd(x1.a),
       d,
-      x1.a.is_subset({0,oo}) && x1.def_domain
+      x1.a.is_subset({0,oo}) /* def domain of sqrt */
+      && x1.a != 0. /* def domain of the derivative of sqrt */
+      && x1.def_domain
     };
   }
 
@@ -565,7 +567,9 @@ using namespace codac2;
       fwd(x1.m),
       fwd(x1.a),
       d,
-      x1.a.is_subset({0,oo}) && x1.def_domain
+      x1.a.is_subset({0,oo}) /* def domain of log */
+      && x1.a != 0. /* def domain of the derivative of log */
+      && x1.def_domain
     };
   }
 
@@ -640,14 +644,13 @@ using namespace codac2;
   {
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d(i) = Interval();//x1.da(i)/sqr(cos(x1.a));
-    // ^ todo: bug detected with centered form, disabled for now
+      d(i) = x1.da(i)/sqr(cos(x1.a));
 
     return {
       fwd(x1.m),
       fwd(x1.a),
       d,
-      x1.def_domain
+      x1.def_domain && cos(x1.a) != 0. /* def domain of the derivative of tan */
     };
   }
 
@@ -674,7 +677,9 @@ using namespace codac2;
       fwd(x1.m),
       fwd(x1.a),
       d,
-      x1.a.is_subset({-1,1}) && x1.def_domain
+      x1.a.is_subset({-1,1}) /* def domain of acos */
+      && x1.a != 1. /* def domain of the derivative of acos */
+      && x1.def_domain
     };
   }
 
@@ -701,7 +706,9 @@ using namespace codac2;
       fwd(x1.m),
       fwd(x1.a),
       d,
-      x1.a.is_subset({-1,1}) && x1.def_domain
+      x1.a.is_subset({-1,1}) /* def domain of asin */
+      && x1.a != 1. /* def domain of the derivative of asin */
+      && x1.def_domain
     };
   }
 
@@ -758,7 +765,8 @@ using namespace codac2;
       fwd(x1.m, x2.m),
       fwd(x1.a, x2.a),
       d,
-      x1.def_domain && x1.def_domain
+      x1.def_domain && x2.def_domain
+      && !(x1.a == 0. && x2.a == 0.) /* def domain of the derivative of atan2 */
     };
   }
 
@@ -866,7 +874,7 @@ using namespace codac2;
       fwd(x1.m),
       fwd(x1.a),
       d,
-      x1.def_domain
+      x1.def_domain && x1.a != 0. /* def domain of the derivative of abs */
     };
   }
 
