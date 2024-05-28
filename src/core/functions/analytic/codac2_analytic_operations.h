@@ -398,12 +398,12 @@ namespace codac2
 
   // Structural operators
 
-    ScalarExpr_ptr _add_to_vec(const ScalarExpr_ptr& x)
+    inline ScalarExpr_ptr _add_to_vec(const ScalarExpr_ptr& x)
     {
       return x;
     }
 
-    ScalarExpr_ptr _add_to_vec(double x)
+    inline ScalarExpr_ptr _add_to_vec(double x)
     {
       return const_value(x);
     }

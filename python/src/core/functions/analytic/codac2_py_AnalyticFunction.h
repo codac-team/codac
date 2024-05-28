@@ -56,7 +56,7 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
         
         return std::make_unique<AnalyticFunction<T>>(args, expr.copy());
       }
-    ), ANALYTICFUNCTION_TTYPENAME_ANALYTICFUNCTION_CONST_VECTOR_REFERENCE_WRAPPER_VARBASE_REF_CONST_SHARED_PTR_ANALYTICEXPR_T_REF)
+    ), ANALYTICFUNCTION_TTYPENAME_ANALYTICFUNCTION_CONST_FUNCTIONARGSLIST_REF_CONST_SHARED_PTR_ANALYTICEXPR_T_REF)
 
     .def("input_size", &AnalyticFunction<T>::input_size)
 
