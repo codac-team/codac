@@ -24,7 +24,7 @@ namespace codac2
     public:
 
       SepWrapper_(const T& y)
-        : _y(y)
+        : Sep(y.size()), _y(y)
       { }
 
     protected:
@@ -38,13 +38,20 @@ namespace codac2
     public:
 
       SepWrapper_(const IntervalVector& y)
-        : SepCtcPair(CtcUnion<IntervalVector>(y.size()),CtcWrapper_<IntervalVector>(y))
-      {
-        for(const auto& complem_y : y.complementary())
-          dynamic_cast<CtcUnion<IntervalVector>&>(_ctc_in_out.front()) |= CtcWrapper_<IntervalVector>(complem_y);
-      }
+        : SepCtcPair(complementary_union(y & IntervalVector(y.size(),Interval(-99999,99999))), CtcWrapper_<IntervalVector>(y & IntervalVector(y.size(),Interval(-99999,99999))))
+      { }
 
       virtual std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
+
+    protected:
+
+      CtcUnion<IntervalVector> complementary_union(const IntervalVector& y) const
+      {
+        CtcUnion<IntervalVector> cu(y.size());
+        for(const auto& complem_y : y.complementary())
+          cu |= CtcWrapper_<IntervalVector>(complem_y);
+        return cu;
+      }
   };
 }

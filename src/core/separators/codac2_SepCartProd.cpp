@@ -20,6 +20,7 @@ std::shared_ptr<Sep> SepCartProd::copy() const
 
 BoxPair SepCartProd::separate(const IntervalVector& x) const
 {
+  assert(x.size() == this->size());
   auto x_in = x, x_out = x;
 
   size_t i = 0;

@@ -32,12 +32,20 @@ namespace codac2
   {
     public:
 
-      constexpr size_t size() const
+      Sep(size_t n)
+        : _n(n)
+      { }
+
+      size_t size() const
       {
-        return 2;
+        return _n;
       }
 
       virtual std::shared_ptr<Sep> copy() const = 0;
       virtual BoxPair separate(const IntervalVector& x) const = 0;
+
+    protected:
+
+      const size_t _n;
   };
 }

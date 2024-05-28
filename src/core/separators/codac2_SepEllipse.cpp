@@ -14,7 +14,7 @@ using namespace std;
 using namespace codac2;
 
 SepEllipse::SepEllipse(const Vector& q)
-  : _ctc(CtcEllipse(q))
+  : Sep(2), _ctc(CtcEllipse(q))
 {
   assert(q.size() == 6);
 }
@@ -37,6 +37,7 @@ bool test_ellipse(const Vector& x, const Vector& q)
 
 BoxPair SepEllipse::separate(const IntervalVector& x) const
 {
+  assert(x.size() == this->size());
   IntervalVector p(x), x_in(x), x_out(x);
   _ctc.contract(p);
 

@@ -26,14 +26,14 @@ namespace codac2
           (std::is_base_of_v<Sep,S> && !std::is_same_v<SepCartProd,S>) || std::is_same_v<std::shared_ptr<Sep>,S>
         ), void>::type>
       SepCartProd(const S& s)
-        : _seps(s)
+        : Sep(size_of(s)), _seps(s)
       { }
 
       template<typename... S, typename = typename std::enable_if<(true && ... && (
           (std::is_base_of_v<Sep,S> || std::is_same_v<std::shared_ptr<Sep>,S>)
         )), void>::type>
       SepCartProd(const S&... s)
-        : _seps(s...)
+        : Sep((0 + ... + size_of(s))), _seps(s...)
       { }
       
       virtual std::shared_ptr<Sep> copy() const;

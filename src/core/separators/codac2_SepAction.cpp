@@ -20,6 +20,7 @@ std::shared_ptr<Sep> SepAction::copy() const
 
 BoxPair SepAction::separate(const IntervalVector& x) const
 {
+  assert(x.size() == this->size());
   IntervalVector _x(_s(x));
   auto x_sep = _sep.front().separate(_x);
   return { __s(x_sep.in), __s(x_sep.out) };

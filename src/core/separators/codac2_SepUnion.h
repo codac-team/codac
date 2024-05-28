@@ -26,15 +26,17 @@ namespace codac2
           (std::is_base_of_v<Sep,S> && !std::is_same_v<SepUnion,S>) || std::is_same_v<std::shared_ptr<Sep>,S>
         ), void>::type>
       SepUnion(const S& s)
-        : _seps(s)
+        : Sep(size_of(s)), _seps(s)
       { }
 
       template<typename... S, typename = typename std::enable_if<(true && ... && (
           (std::is_base_of_v<Sep,S> || std::is_same_v<std::shared_ptr<Sep>,S>)
         )), void>::type>
       SepUnion(const S&... s)
-        : _seps(s...)
-      { }
+        : Sep(size_first_item(s...)), _seps(s...)
+      {
+        assert(all_same_size(s...));
+      }
 
       virtual std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;

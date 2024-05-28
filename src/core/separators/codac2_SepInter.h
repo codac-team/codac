@@ -15,6 +15,7 @@
 #include "codac2_Sep.h"
 #include "codac2_Collection.h"
 #include "codac2_SepWrapper.h"
+#include "codac2_templates.h"
 
 namespace codac2
 {
@@ -26,15 +27,17 @@ namespace codac2
           (std::is_base_of_v<Sep,S> && !std::is_same_v<SepInter,S>) || std::is_same_v<std::shared_ptr<Sep>,S>
         ), void>::type>
       SepInter(const S& s)
-        : _seps(s)
+        : Sep(size_of(s)), _seps(s)
       { }
 
       template<typename... S, typename = typename std::enable_if<(true && ... && (
           (std::is_base_of_v<Sep,S> || std::is_same_v<std::shared_ptr<Sep>,S>)
         )), void>::type>
       SepInter(const S&... s)
-        : _seps(s...)
-      { }
+        : Sep(size_first_item(s...)), _seps(s...)
+      {
+        assert(all_same_size(s...));
+      }
 
       virtual std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;

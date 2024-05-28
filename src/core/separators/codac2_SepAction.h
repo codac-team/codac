@@ -23,10 +23,10 @@ namespace codac2
     public:
 
       template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<Sep,S>
+          std::is_base_of_v<Sep,S> || std::is_same_v<std::shared_ptr<Sep>,S>
         >::type>
       SepAction(const S& s, const OctaSym& a)
-        : _sep(s), _s(a), __s(a.invert())
+        : Sep(a.size()), _sep(s), _s(a), __s(a.invert())
       { }
 
       virtual std::shared_ptr<Sep> copy() const;

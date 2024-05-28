@@ -26,8 +26,10 @@ namespace codac2
           std::is_base_of_v<Ctc_<IntervalVector>,C2>
         )>::type>
       SepCtcPair(const C1& ctc_in, const C2& ctc_out)
-        : _ctc_in_out(ctc_in, ctc_out)
-      { }
+        : Sep(ctc_in.size()), _ctc_in_out(ctc_in, ctc_out)
+      {
+        assert(ctc_in.size() == ctc_out.size());
+      }
 
       virtual std::shared_ptr<Sep> copy() const;
       virtual BoxPair separate(const IntervalVector& x) const;

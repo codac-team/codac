@@ -20,6 +20,7 @@ std::shared_ptr<Sep> SepUnion::copy() const
 
 BoxPair SepUnion::separate(const IntervalVector& x) const
 {
+  assert(x.size() == this->size());
   auto x_in = x;
   auto x_out = IntervalVector::empty(x.size());
 
