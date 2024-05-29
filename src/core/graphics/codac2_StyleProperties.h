@@ -21,10 +21,10 @@ namespace codac2
    */
   struct ColorRGB
   {
-    float r;      ///< red, value between 0. and 1.
-    float g;      ///< green, value between 0. and 1.
-    float b;      ///< blue, value between 0. and 1.
-    float alpha;  ///< opacity, value between 0. (transparent) and 1. (opaque)
+    float r;          ///< red, value between 0. and 1.
+    float g;          ///< green, value between 0. and 1.
+    float b;          ///< blue, value between 0. and 1.
+    float alpha = 1.; ///< opacity, value between 0. (transparent) and 1. (opaque)
     mutable std::string hex_str;
 
     explicit ColorRGB(int r_, int g_, int b_, int alpha_ = 255)
@@ -41,13 +41,13 @@ namespace codac2
 
     std::string to_hex_str(const std::string& prefix = "#") const;
 
-    static ColorRGB black()     { return ColorRGB(0,   0,   0,   255); };
-    static ColorRGB white()     { return ColorRGB(255, 255, 255, 255); };
-    static ColorRGB green()     { return ColorRGB(144, 242, 0,   255); };
-    static ColorRGB cyan()      { return ColorRGB(75,  207, 250, 255); };
-    static ColorRGB yellow()    { return ColorRGB(255, 211, 42,  255); };
-    static ColorRGB red()       { return ColorRGB(209, 59,  0,   255); };
-    static ColorRGB dark_gray() { return ColorRGB(112, 112, 112, 255); };
+    static ColorRGB black()     { return ColorRGB(0,   0,   0);   };
+    static ColorRGB white()     { return ColorRGB(255, 255, 255); };
+    static ColorRGB green()     { return ColorRGB(144, 242, 0);   };
+    static ColorRGB cyan()      { return ColorRGB(75,  207, 250); };
+    static ColorRGB yellow()    { return ColorRGB(255, 211, 42);  };
+    static ColorRGB red()       { return ColorRGB(209, 59,  0);   };
+    static ColorRGB dark_gray() { return ColorRGB(112, 112, 112); };
   };
 
   /**
@@ -61,13 +61,8 @@ namespace codac2
 
   struct StyleProperties
   {
-    bool stroke = true;
     ColorRGB stroke_color = ColorRGB::black();
-    double stroke_opacity = 1.;
-
-    bool fill = false;
-    ColorRGB fill_color = ColorRGB::white();
-    double fill_opacity = 1.;
+    ColorRGB fill_color = []() { auto c = ColorRGB::white(); c.alpha = 0.; return c; }();
 
     StyleProperties();
     StyleProperties(const std::string& vibes_style);

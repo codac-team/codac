@@ -56,7 +56,7 @@ const std::vector<FigureAxis>& Figure::axes() const
 
 bool Figure::is_default() const
 {
-  return DefaultFigure::selected_fig() == this;
+  return DefaultFigure::_selected_fig == this;
 }
 
 void Figure::set_as_default()
@@ -91,4 +91,10 @@ void Figure::draw_box(const IntervalVector& x, const StyleProperties& s)
 {
   for(const auto& output_fig : _output_figures)
     output_fig->draw_box(x,s);
+}
+
+void Figure::draw_circle(const Vector& c, double r, const StyleProperties& s)
+{
+  for(const auto& output_fig : _output_figures)
+    output_fig->draw_circle(c,r);
 }

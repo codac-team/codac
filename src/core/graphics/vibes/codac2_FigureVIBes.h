@@ -28,6 +28,7 @@ namespace codac2
       void update_window_properties();
       void center_viewbox(const Vector& c, const Vector& r);
       virtual void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties());
+      virtual void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties());
 
       static std::string to_vibes_style(const StyleProperties& s);
 

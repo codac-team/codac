@@ -18,5 +18,5 @@
 
 namespace codac2
 {
-  void export_to_ObjectFileFormat(const std::list<IntervalVector>& l, const std::string& file_name, const std::string& color);
+  void export_to_ObjectFileFormat(const std::list<IntervalVector>& l, const std::string& file_name, const std::string& color = "black");
 }

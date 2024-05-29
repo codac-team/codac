@@ -77,6 +77,11 @@ void FigureIPE::draw_box(const IntervalVector& x, const StyleProperties& s)
     </path>";
 }
 
+void FigureIPE::draw_circle(const Vector& c, double r, const StyleProperties& s)
+{
+  // Not implemented yet
+}
+
 double FigureIPE::scale_x(double x) const
 {
   return (x-_fig.axes()[0].limits.lb())*_ratio[0];

@@ -61,6 +61,13 @@ void FigureVIBes::draw_box(const IntervalVector& x, const StyleProperties& s)
   vibes::drawBox(x[i].lb(),x[i].ub(),x[j].lb(),x[j].ub(), to_vibes_style(s), _params);
 }
 
+void FigureVIBes::draw_circle(const Vector& c, double r, const StyleProperties& s)
+{
+  assert(_fig.size() <= c.size());
+  int i = _fig.axes()[0].dim_id; int j = _fig.axes()[1].dim_id;
+  vibes::drawCircle(c[i],c[j],r, to_vibes_style(s), _params);
+}
+
 string FigureVIBes::to_vibes_style(const StyleProperties& s)
 {
   return s.stroke_color.to_hex_str() + "[" + s.fill_color.to_hex_str() + "]";

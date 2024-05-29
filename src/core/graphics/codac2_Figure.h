@@ -71,7 +71,8 @@ namespace codac2
       void center_viewbox(const Vector& c, const Vector& r);
 
       void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties());
-
+      void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties());
+      
     protected:
 
       const std::string _name;
@@ -94,7 +95,7 @@ namespace codac2
           _default_fig->set_window_properties({20.,20.}, {800.,800.});
           _selected_fig = _default_fig.get();
         }
-
+        
         return _selected_fig;
       }
 
@@ -117,8 +118,15 @@ namespace codac2
       {
         selected_fig()->draw_box(x,s);
       }
+      
+      static void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties())
+      {
+        selected_fig()->draw_circle(c,r);
+      }
 
     protected:
+
+      friend Figure;
 
       static std::shared_ptr<Figure> _default_fig;
       static Figure *_selected_fig;
