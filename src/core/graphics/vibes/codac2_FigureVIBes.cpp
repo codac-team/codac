@@ -33,7 +33,7 @@ FigureVIBes::~FigureVIBes()
 
 void FigureVIBes::update_axes()
 {
-  vibes::axisLabels({ _fig.axes()[0].label, _fig.axes()[1].label }, _fig.name());
+  vibes::axisLabels(_fig.axes()[0].label, _fig.axes()[1].label, _fig.name());
   vibes::axisLimits(
     _fig.axes()[0].limits.lb(),_fig.axes()[0].limits.ub(),
     _fig.axes()[1].limits.lb(),_fig.axes()[1].limits.ub(),

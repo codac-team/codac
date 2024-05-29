@@ -33,8 +33,6 @@ namespace codac2
       virtual bool belongs_to_args_list(const FunctionArgsList& args) const = 0;
   };
 
-  using SetExpr_ptr = std::shared_ptr<SetExpr>;
-
   template<typename C,typename... X>
   class SetOperationExpr : public SetExpr, public OperationExprBase<X...>
   {

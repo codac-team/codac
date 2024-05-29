@@ -16,6 +16,8 @@
 
 namespace codac2
 {
+  using SetExpr_ptr = std::shared_ptr<SetExpr>;
+
   inline SetExpr_ptr
   operator&(const SetExpr_ptr& x1, const SetExpr_ptr& x2)
   {
@@ -106,8 +108,8 @@ namespace codac2
     return std::make_shared<SetOperationExpr<NotSetOp,SetExpr>>(x1);
   }
 
-  inline SetExpr_ptr
-  OctaSym::operator()(const SetExpr_ptr& x1) const
+  inline std::shared_ptr<SetExpr>
+  OctaSym::operator()(const std::shared_ptr<SetExpr>& x1) const
   {
     return std::make_shared<SetOperationExpr<ActionSetOp,SetExpr>>(*this,x1);
   }
