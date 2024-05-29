@@ -37,7 +37,7 @@ namespace codac2
         : CtcInverse(f, CtcWrapper_<Y>(y), with_centered_form, is_not_in)
       { }
 
-      virtual std::shared_ptr<Ctc> copy() const
+      std::shared_ptr<Ctc> copy() const
       {
         return std::make_shared<CtcInverse<Y>>(*this);
       }
@@ -143,7 +143,7 @@ namespace codac2
         assert(f.args().size() == 1);
       }
 
-      virtual std::shared_ptr<Ctc> copy() const
+      std::shared_ptr<Ctc> copy() const
       {
         return std::make_shared<CtcInverse_<Y,X>>(*this);
       }

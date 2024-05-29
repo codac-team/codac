@@ -38,7 +38,7 @@ namespace codac2
         : SepCtcPair(CtcInverseNotIn<Y,X>(f,SepCtcIn(sep_y),with_centered_form), CtcInverse_<Y,X>(f,SepCtcOut(sep_y),with_centered_form))
       { }
 
-      virtual std::shared_ptr<Sep> copy() const
+      std::shared_ptr<Sep> copy() const
       {
         return std::make_shared<SepInverse<Y>>(*this);
       }

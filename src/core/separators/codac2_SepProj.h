@@ -40,7 +40,7 @@ namespace codac2
         assert(size_of(s) >= _xi.size() && "cannot compute a projection of a set into a superset");
       }
       
-      virtual std::shared_ptr<Sep> copy() const;
+      std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
       BoxPair separate(const IntervalVector& x, double eps) const;
 

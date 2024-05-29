@@ -41,7 +41,7 @@ namespace codac2
         : SepCtcPair(complementary_union(y & IntervalVector(y.size(),Interval(-99999,99999))), CtcWrapper_<IntervalVector>(y & IntervalVector(y.size(),Interval(-99999,99999))))
       { }
 
-      virtual std::shared_ptr<Sep> copy() const;
+      std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
 
     protected:

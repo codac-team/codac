@@ -35,7 +35,7 @@ namespace codac2
         : Ctc_<IntervalVector>(s->size()), _seps(s)
       { }
 
-      virtual std::shared_ptr<Ctc> copy() const
+      std::shared_ptr<Ctc> copy() const
       {
         return std::make_shared<SepCtcIn>(*this);
       }
@@ -69,7 +69,7 @@ namespace codac2
         : Ctc_<IntervalVector>(s->size()), _seps(s)
       { }
 
-      virtual std::shared_ptr<Ctc> copy() const
+      std::shared_ptr<Ctc> copy() const
       {
         return std::make_shared<SepCtcOut>(*this);
       }

@@ -38,7 +38,7 @@ namespace codac2
         assert(all_same_size(s...));
       }
 
-      virtual std::shared_ptr<Sep> copy() const;
+      std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
 
       template<typename S, typename = typename std::enable_if<

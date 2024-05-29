@@ -33,7 +33,7 @@ namespace codac2
         : Sep(size_of(s)), _sep(s)
       { }
 
-      virtual std::shared_ptr<Sep> copy() const
+      std::shared_ptr<Sep> copy() const
       {
         return std::make_shared<SepNot>(*this);
       }

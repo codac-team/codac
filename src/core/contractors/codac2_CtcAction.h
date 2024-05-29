@@ -31,7 +31,7 @@ namespace codac2
         assert(size_of(c) == a.size());
       }
 
-      virtual std::shared_ptr<Ctc> copy() const;
+      std::shared_ptr<Ctc> copy() const;
       void contract(IntervalVector& x) const;
 
     protected:

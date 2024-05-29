@@ -29,8 +29,8 @@ namespace codac2
         : Sep(a.size()), _sep(s), _s(a), __s(a.invert())
       { }
 
-      virtual std::shared_ptr<Sep> copy() const;
-      virtual BoxPair separate(const IntervalVector& x) const;
+      std::shared_ptr<Sep> copy() const;
+      BoxPair separate(const IntervalVector& x) const;
 
     protected:
 

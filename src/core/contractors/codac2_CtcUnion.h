@@ -47,7 +47,7 @@ namespace codac2
         assert(all_same_size(c...));
       }
 
-      virtual std::shared_ptr<Ctc> copy() const
+      std::shared_ptr<Ctc> copy() const
       {
         return std::make_shared<CtcUnion<X>>(*this);
       }

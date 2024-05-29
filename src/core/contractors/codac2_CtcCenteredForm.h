@@ -35,7 +35,7 @@ namespace codac2
         ));
       }
 
-      virtual std::shared_ptr<Ctc> copy() const
+      std::shared_ptr<Ctc> copy() const
       {
         return std::make_shared<CtcCenteredForm>(*this);
       }

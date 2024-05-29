@@ -24,7 +24,7 @@ namespace codac2
         : Ctc_<IntervalVector>(4)
       { }
 
-      virtual std::shared_ptr<Ctc> copy() const;
+      std::shared_ptr<Ctc> copy() const;
       void contract(IntervalVector& x) const;
   };
 }

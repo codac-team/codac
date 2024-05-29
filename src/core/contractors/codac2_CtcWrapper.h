@@ -24,12 +24,12 @@ namespace codac2
         : Ctc_<X>(y.size()), _y(y)
       { }
 
-      virtual std::shared_ptr<Ctc> copy() const
+      std::shared_ptr<Ctc> copy() const
       {
         return std::make_shared<CtcWrapper_<X>>(*this);
       }
 
-      virtual void contract(X& x) const
+      void contract(X& x) const
       {
         x &= _y;
       }

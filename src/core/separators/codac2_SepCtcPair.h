@@ -31,8 +31,8 @@ namespace codac2
         assert(ctc_in.size() == ctc_out.size());
       }
 
-      virtual std::shared_ptr<Sep> copy() const;
-      virtual BoxPair separate(const IntervalVector& x) const;
+      std::shared_ptr<Sep> copy() const;
+      BoxPair separate(const IntervalVector& x) const;
 
     protected:
 
