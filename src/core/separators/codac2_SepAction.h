@@ -38,9 +38,7 @@ namespace codac2
       const OctaSym _s, __s;
   };
   
-  template<typename S, typename = typename std::enable_if<
-      std::is_base_of_v<Sep,S>
-    >::type>
+  template<typename S, typename>
   inline SepAction OctaSym::operator()(const S& s) const
   {
     return SepAction(s, *this);

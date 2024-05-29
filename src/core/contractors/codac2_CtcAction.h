@@ -40,9 +40,7 @@ namespace codac2
       const OctaSym _s, __s;
   };
   
-  template<typename C, typename = typename std::enable_if<
-      std::is_base_of_v<Ctc_<IntervalVector>,C>
-    >::type>
+  template<typename C, typename>
   inline CtcAction OctaSym::operator()(const C& c) const
   {
     return CtcAction(c, *this);
