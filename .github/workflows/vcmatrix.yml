@@ -25,11 +25,11 @@ jobs:
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 10, desc: 'Windows Visual Studio 2019 x64 Python 3.10' }
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 9, desc: 'Windows Visual Studio 2019 x64 Python 3.9' }
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 8, desc: 'Windows Visual Studio 2019 x64 Python 3.8' }
-            # Should be Visual Studio 2015 for Python 3.5-3.7, but need Visual Studio 2017 for C++17 compatibility...?
-            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 17" -T v141 -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 7, desc: 'Windows Visual Studio 2017 x86 Python 3.7' }
-            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 17" -T v141 -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 6, desc: 'Windows Visual Studio 2017 x86 Python 3.6' }
-            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 17" -T v141 -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 7, desc: 'Windows Visual Studio 2017 x64 Python 3.7' }
-            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 17" -T v141 -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 6, desc: 'Windows Visual Studio 2017 x64 Python 3.6' }
+            # Should be Visual Studio 2015 for Python 3.5-3.7, but need Visual Studio 2019 for C++20 compatibility...?
+            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 7, desc: 'Windows Visual Studio 2019 x86 Python 3.7' }
+            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 6, desc: 'Windows Visual Studio 2019 x86 Python 3.6' }
+            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 7, desc: 'Windows Visual Studio 2019 x64 Python 3.7' }
+            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 6, desc: 'Windows Visual Studio 2019 x64 Python 3.6' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v4
