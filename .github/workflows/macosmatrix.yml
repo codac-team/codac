@@ -19,20 +19,20 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
-            - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 12, desc: 'macOS Monterey Python 3.12 arm64' }
-            - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 11, desc: 'macOS Monterey Python 3.11 arm64' }
-            - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Monterey Python 3.10 arm64' }
-            - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 9, desc: 'macOS Monterey Python 3.9 arm64' }
-            - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 8, desc: 'macOS Monterey Python 3.8 arm64' }
-            - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 7, desc: 'macOS Monterey Python 3.7 arm64' }
-            - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 6, desc: 'macOS Monterey Python 3.6 arm64' }
+            - { os: macos-14, shell: bash, arch: arm64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 12, desc: 'macOS Sonoma Python 3.12 arm64' }
+            - { os: macos-14, shell: bash, arch: arm64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 11, desc: 'macOS Sonoma Python 3.11 arm64' }
+            - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 10, cross: true, desc: 'macOS Monterey Python 3.10 arm64 (cross)' }
+            - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 9, cross: true, desc: 'macOS Monterey Python 3.9 arm64 (cross)' }
+            - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 8, cross: true, desc: 'macOS Monterey Python 3.8 arm64 (cross)' }
+            - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: 'm-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 7, cross: true, desc: 'macOS Monterey Python 3.7 arm64 (cross)' }
+            - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: 'm-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 6, cross: true, desc: 'macOS Monterey Python 3.6 arm64 (cross)' }
             - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 12, desc: 'macOS Monterey Python 3.12 x86_64' }
             - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 11, desc: 'macOS Monterey Python 3.11 x86_64' }
             - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Monterey Python 3.10 x86_64' }
             - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 9, desc: 'macOS Monterey Python 3.9 x86_64' }
             - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 8, desc: 'macOS Monterey Python 3.8 x86_64' }
-            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 7, desc: 'macOS Monterey Python 3.7 x86_64' }
-            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.14', cpcfg: '-macosx_10_14_x86_64', py_v_maj: 3, py_v_min: 6, desc: 'macOS Monterey Python 3.6 x86_64' } # 10.14 because of error $MACOSX_DEPLOYMENT_TARGET mismatch: now "10.9" but "10.14" during configure.
+            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.9', cpcfg: 'm-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 7, desc: 'macOS Monterey Python 3.7 x86_64' }
+            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.14', cpcfg: 'm-macosx_10_14_x86_64', py_v_maj: 3, py_v_min: 6, desc: 'macOS Monterey Python 3.6 x86_64' } # 10.14 because of error $MACOSX_DEPLOYMENT_TARGET mismatch: now "10.9" but "10.14" during configure.
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v4
@@ -57,21 +57,21 @@ jobs:
     - run: brew install graphviz ; wget https://github.com/Homebrew/homebrew-core/raw/d2267b9f2ad247bc9c8273eb755b39566a474a70/Formula/doxygen.rb ; brew reinstall ./doxygen.rb ; brew pin doxygen ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects
       if: runner.os=='macOS'
     - run: |
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20231007/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
         unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
         rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
-        cp -Rf ibex/* /usr/local/
+        sudo cp -Rf ibex/* /usr/local/
       shell: bash
     - run: |
         mkdir build ; cd build
         cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=${{ matrix.cfg.arch }} -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=ON ..
-        cmake --build . --config Release --target install
+        cmake --build . -j 4 --config Release --target install
         cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
         cd ..
       shell: bash
-    - run: pip install *.whl ; python -c "import sys; print(sys.version)" ; python examples/tuto/01_getting_started/01_getting_started.py ; pip install numpy ; python -m unittest discover codac.tests
+    - run: pip install *.whl ; python -c "import sys; print(sys.version)" ; python examples/tuto/01_getting_started/01_getting_started.py ; pip install numpy --prefer-binary ; python -m unittest discover codac.tests
       shell: bash
-      if: (runner.os=='macOS')&&(matrix.cfg.arch=='x86_64')
+      if: matrix.cfg.cross!=true
     - uses: xresloader/upload-to-github-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
