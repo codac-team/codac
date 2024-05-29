@@ -1,13 +1,11 @@
 /** 
- *  \file
  *  Interval Python binding
  *  Originated from the former pyIbex library (Benoît Desrochers)
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Benoît Desrochers, Simon Rohou, Fabrice Le Bars
  *  \copyright  Copyright 2024 Codac Team
- *  \license    This program is distributed under the terms of
- *              the GNU Lesser General Public License (LGPL).
+ *  \license    GNU Lesser General Public License (LGPL)
  */
 
 #include <sstream>

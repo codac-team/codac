@@ -1,5 +1,5 @@
 /** 
- *  \file
+ *  codac2_Interval_operations.cpp
  *  
  *  This class reuses several functions developed for ibex::Interval. 
  *  The original IBEX code is encapsulated in Codac for allowing inheritance 
@@ -11,8 +11,7 @@
  *  \date       2024
  *  \author     Gilles Chabert, Simon Rohou
  *  \copyright  Copyright 2024 Codac Team
- *  \license    This program is distributed under the terms of
- *              the GNU Lesser General Public License (LGPL).
+ *  \license    GNU Lesser General Public License (LGPL)
  */
 
 #include <cassert>

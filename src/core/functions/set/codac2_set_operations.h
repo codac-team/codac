@@ -1,12 +1,10 @@
 /** 
- *  \file
- *  Operations
+ *  \file codac2_set_operations.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
  *  \copyright  Copyright 2024 Codac Team
- *  \license    This program is distributed under the terms of
- *              the GNU Lesser General Public License (LGPL).
+ *  \license    GNU Lesser General Public License (LGPL)
  */
 
 #pragma once
@@ -18,8 +16,6 @@
 
 namespace codac2
 {
-  using SetExpr_ptr = std::shared_ptr<SetExpr>;
-
   inline SetExpr_ptr
   operator&(const SetExpr_ptr& x1, const SetExpr_ptr& x2)
   {

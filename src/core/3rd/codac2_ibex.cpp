@@ -1,12 +1,10 @@
 /** 
- *  \file
- * 
+ *  IBEX-related tools
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Gilles Chabert, (Simon Rohou)
  *  \copyright  Copyright 2024 Codac Team
- *  \license    This program is distributed under the terms of
- *              the GNU Lesser General Public License (LGPL).
+ *  \license    GNU Lesser General Public License (LGPL)
  */
 
 #include <cassert>

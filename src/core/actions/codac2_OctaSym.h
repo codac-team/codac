@@ -1,12 +1,10 @@
 /** 
- *  \file
- *  OctaSym class
+ *  \file codac2_OctaSym.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou, Luc Jaulin
  *  \copyright  Copyright 2024 Codac Team
- *  \license    This program is distributed under the terms of
- *              the GNU Lesser General Public License (LGPL).
+ *  \license    GNU Lesser General Public License (LGPL)
  */
 
 #pragma once
@@ -22,7 +20,7 @@ namespace codac2
   class CtcAction;
   class Sep;
   class SepAction;
-  class SetExpr;
+  class SetExpr_ptr;
 
   /**
    * \class Action
@@ -58,7 +56,7 @@ namespace codac2
       SepAction operator()(const S& s) const;
       // -> is defined in SepAction class
 
-      std::shared_ptr<SetExpr> operator()(const std::shared_ptr<SetExpr>& x1) const;
+      SetExpr_ptr operator()(const SetExpr_ptr& x1) const;
       // -> is defined in set operations file
 
       friend std::ostream& operator<<(std::ostream& str, const OctaSym& s);

@@ -1,6 +1,5 @@
 /** 
- *  \file
- *  IntervalVector class
+ *  \file codac2_IntervalVector.h
  *  
  *  This class reuses some of the functions developed for ibex::IntervalVector. 
  *  The original IBEX code is revised in modern C++ and adapted to the template 
@@ -11,8 +10,7 @@
  *  \date       2024
  *  \author     Simon Rohou, Gilles Chabert
  *  \copyright  Copyright 2023 Codac Team
- *  \license    This program is distributed under the terms of
- *              the GNU Lesser General Public License (LGPL).
+ *  \license    GNU Lesser General Public License (LGPL)
  */
 
 #pragma once
@@ -261,7 +259,7 @@ namespace codac2
   }
 
   template<typename S,typename V,int R,int C>
-  inline IntervalMatrixTemplate_<S,V,R,C>::IntervalMatrixTemplate_(std::initializer_list<codac2::IntervalVector> l)
+  inline IntervalMatrixTemplate_<S,V,R,C>::IntervalMatrixTemplate_(std::initializer_list<IntervalVector> l)
     : MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>(l.begin()->size(),l.size())
   {
     size_t j = 0;

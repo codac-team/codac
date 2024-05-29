@@ -1,6 +1,5 @@
 /** 
- *  \file
- *  IntervalVector class
+ *  \file codac2_IntervalVectorTemplate.h
  *  
  *  This class reuses some of the functions developed for ibex::IntervalVector. 
  *  The original IBEX code is revised in modern C++ and adapted to the template 
@@ -11,8 +10,7 @@
  *  \date       2024
  *  \author     Simon Rohou, Gilles Chabert
  *  \copyright  Copyright 2023 Codac Team
- *  \license    This program is distributed under the terms of
- *              the GNU Lesser General Public License (LGPL).
+ *  \license    GNU Lesser General Public License (LGPL)
  */
 
 #pragma once

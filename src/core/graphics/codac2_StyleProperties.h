@@ -1,12 +1,10 @@
 /** 
- *  \file
- *  Figure class
+ *  \file codac2_StyleProperties.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
  *  \copyright  Copyright 2024 Codac Team
- *  \license    This program is distributed under the terms of
- *              the GNU Lesser General Public License (LGPL).
+ *  \license    GNU Lesser General Public License (LGPL)
  */
 
 #pragma once
@@ -16,7 +14,7 @@
 namespace codac2
 {
   /**
-   * \struct
+   * \struct ColorRGB
    * \brief Represents an RGB value
    */
   struct ColorRGB
@@ -53,7 +51,7 @@ namespace codac2
   /**
    * \brief Represents an RGB value in a HTML standard
    *
-   * \param rgb_value
+   * \param c the color in RGB format
    * \param prefix optional characters ("#" by default)
    * \return the HTML string
    */

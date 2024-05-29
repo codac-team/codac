@@ -1,12 +1,10 @@
 /** 
- *  \file
- *  Expr classes
+ *  \file codac2_SetExpr.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
  *  \copyright  Copyright 2024 Codac Team
- *  \license    This program is distributed under the terms of
- *              the GNU Lesser General Public License (LGPL).
+ *  \license    GNU Lesser General Public License (LGPL)
  */
 
 #pragma once
@@ -34,6 +32,8 @@ namespace codac2
 
       virtual bool belongs_to_args_list(const FunctionArgsList& args) const = 0;
   };
+
+  using SetExpr_ptr = std::shared_ptr<SetExpr>;
 
   template<typename C,typename... X>
   class SetOperationExpr : public SetExpr, public OperationExprBase<X...>

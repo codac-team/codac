@@ -5,8 +5,7 @@
  *  \date       2020
  *  \author     Simon Rohou, Benoît Desrochers
  *  \copyright  Copyright 2021 Codac Team
- *  \license    This program is distributed under the terms of
- *              the GNU Lesser General Public License (LGPL).
+ *  \license    GNU Lesser General Public License (LGPL)
  */
 
 #include <pybind11/pybind11.h>

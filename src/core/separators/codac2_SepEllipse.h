@@ -1,6 +1,5 @@
 /** 
- *  \file
- *  SepEllipse class
+ *  \file codac2_SepEllipse.h
  *
  *  From: Optimal separator for an ellipse, Application to localization
  *  Luc Jaulin - arXiv, math.NA, 2305.10842
@@ -10,8 +9,7 @@
  *  \date       2024
  *  \author     Simon Rohou, Luc Jaulin
  *  \copyright  Copyright 2024 Codac Team
- *  \license    This program is distributed under the terms of
- *              the GNU Lesser General Public License (LGPL).
+ *  \license    GNU Lesser General Public License (LGPL)
  */
 
 #pragma once
