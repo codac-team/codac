@@ -2,8 +2,17 @@
 #  Codac - cmake configuration file
 # ==================================================================
 
-find_package(Catch2 3 REQUIRED)
-message(STATUS "Found Catch2 version ${Catch2_VERSION}")
+# Finding Catch2
+
+  Include(FetchContent)
+
+  FetchContent_Declare(
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG        v3.6.0
+  )
+
+  FetchContent_MakeAvailable(Catch2)
 
 list(APPEND SRC_TESTS # listing files without extension
 
