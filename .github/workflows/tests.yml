@@ -86,64 +86,64 @@ jobs:
         #/usr/bin/python3.5 pycodac/tests/test_arithmetic.py 
         #cd ../../
 
-#        # Building the examples
-#        cd ../examples
-#        find . -type d -name build -prune -exec rm -rf {} \;
-#        cd linobs
-#        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-#        cd ..
-#        cd basics
-#        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-#        cd ..
-#        cd robotics
-#        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-#        cd ..
-#        cd tuto
-#        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-#        cd ..
-#        cd lie_group
-#        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-#        cd ../../build
+        ## Building the examples
+        #cd ../examples
+        #find . -type d -name build -prune -exec rm -rf {} \;
+        #cd linobs
+        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        #cd ..
+        #cd basics
+        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        #cd ..
+        #cd robotics
+        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        #cd ..
+        #cd tuto
+        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        #cd ..
+        #cd lie_group
+        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        #cd ../../build
 
         # Testing
-#        ./tests/core/codac-tests-core 
+        #./tests/core/codac-tests-core 
         make test
-#        ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
+        #./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
     
         # With synthesis tree for all created tubes
   
         # Building lib + tests
-#        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON ..
+        #cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON ..
         ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
-#        make
+        #make
         #make doc
-#        make install
+        #make install
         #cd python/python_package
         #/usr/bin/python3.5 setup.py develop --user
         #/usr/bin/python3.5 pycodac/tests/test_arithmetic.py 
         #cd ../../
 
         # Building the examples
-#        cd ../examples
-#        find . -type d -name build -prune -exec rm -rf {} \;
-#        cd linobs
-#        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-#        cd ..
-#        cd basics
-#        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-#        cd ..
-#        cd robotics
-#        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-#        cd ..
-#        cd tuto
-#        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-#        cd ..
-#        cd lie_group
-#        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-#        cd ../../build
+        #cd ../examples
+        #find . -type d -name build -prune -exec rm -rf {} \;
+        #cd linobs
+        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        #cd ..
+        #cd basics
+        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        #cd ..
+        #cd robotics
+        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        #cd ..
+        #cd tuto
+        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        #cd ..
+        #cd lie_group
+        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        #cd ../../build
 
         # Testing
 
-#        ./tests/core/codac-tests-core 
-        make test
-#        ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
+        #./tests/core/codac-tests-core 
+        #make test
+        #./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
