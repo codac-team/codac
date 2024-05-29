@@ -81,12 +81,14 @@ class pyCtcIntervalVector : public Ctc_<IntervalVector>
         else
         {
           assert(false && "Ctc: error with copy method");
+          return nullptr;
         }
       }
 
       else
       {
         assert(false && "Ctc: copy method not found");
+        return nullptr;
       }
     }
 };
