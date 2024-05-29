@@ -92,16 +92,16 @@ void CHECK_pow(const Interval& x, int p, const Interval& expected, double eps = 
 
 TEST_CASE("Interval operations")
 {
-  CHECK(0 < next_float(0));
-  CHECK(0 > previous_float(0));
-  CHECK(1 < next_float(1));
-  CHECK(1 > previous_float(1));
-  CHECK(oo == next_float(oo));
-  CHECK(-MAX_DOUBLE == next_float(-oo));
-  CHECK(MAX_DOUBLE == previous_float(oo));
-  CHECK(-oo == previous_float(-oo));
-  CHECK(oo == next_float(MAX_DOUBLE));
-  CHECK(-oo == previous_float(-MAX_DOUBLE));
+  CHECK(0 < codac2::next_float(0));
+  CHECK(0 > codac2::previous_float(0));
+  CHECK(1 < codac2::next_float(1));
+  CHECK(1 > codac2::previous_float(1));
+  CHECK(oo == codac2::next_float(oo));
+  CHECK(-MAX_DOUBLE == codac2::next_float(-oo));
+  CHECK(MAX_DOUBLE == codac2::previous_float(oo));
+  CHECK(-oo == codac2::previous_float(-oo));
+  CHECK(oo == codac2::next_float(MAX_DOUBLE));
+  CHECK(-oo == codac2::previous_float(-MAX_DOUBLE));
   CHECK(-Interval(0,1) == Interval(-1,0));
   CHECK(-Interval(-oo,oo) == Interval(-oo,oo));
   CHECK(-Interval(-oo,0) == Interval(0,oo));
@@ -113,11 +113,11 @@ TEST_CASE("Interval operations")
   CHECK_add(Interval(1,oo), Interval(0,1), Interval(1,oo));
   CHECK_add(Interval(-oo,oo), Interval(0,1), Interval(-oo,oo));
   CHECK_add(Interval(MAX_DOUBLE,oo), 1, Interval(MAX_DOUBLE,oo));
-  CHECK_add(Interval(MAX_DOUBLE,oo), -1, Interval(ibex::previous_float(MAX_DOUBLE),oo));
+  CHECK_add(Interval(MAX_DOUBLE,oo), -1, Interval(codac2::previous_float(MAX_DOUBLE),oo));
   CHECK_add(Interval(MAX_DOUBLE,oo), Interval(MAX_DOUBLE,oo), Interval(MAX_DOUBLE,oo));
   CHECK_add(Interval(MAX_DOUBLE,oo), -oo, Interval::empty());
   CHECK_add(Interval(MAX_DOUBLE,oo), oo, Interval::empty());
-  CHECK_add(Interval(-oo,-MAX_DOUBLE), 1, Interval(-oo,ibex::next_float(-MAX_DOUBLE)));
+  CHECK_add(Interval(-oo,-MAX_DOUBLE), 1, Interval(-oo,codac2::next_float(-MAX_DOUBLE)));
   CHECK_add(Interval(-oo,-MAX_DOUBLE), -1, Interval(-oo,-MAX_DOUBLE));
   CHECK_add(Interval(-oo,-MAX_DOUBLE), Interval(-oo,-MAX_DOUBLE), Interval(-oo,-MAX_DOUBLE));
 
@@ -183,7 +183,7 @@ TEST_CASE("Interval operations")
   CHECK(Approx(log(Interval(1,oo))) == Interval(0,oo));
   CHECK(log(Interval(0)) == Interval::empty());
   CHECK(log(Interval(-2,-1)) == Interval::empty());
-  CHECK((log(Interval(0,next_float(0)))).ub() > -744.5);
+  CHECK((log(Interval(0,codac2::next_float(0)))).ub() > -744.5);
 
   CHECK(exp(Interval::empty()) == Interval::empty());
   CHECK(exp(Interval(-oo,oo)) == Interval(0,oo));
@@ -270,7 +270,7 @@ TEST_CASE("Interval operations")
   CHECK(Approx(atan2(Interval(-1),1)) == -Interval::pi()/4.0);
   CHECK(Approx(atan2(Interval(1),-1)) == 3*Interval::pi()/4.0);
   CHECK(Approx(atan2(Interval(0,oo),Interval(0,oo))) == Interval(0,1)*Interval::half_pi());
-  CHECK(Approx(atan2(Interval(-oo,previous_float(0.0)),Interval(-oo,0))) == -(Interval::half_pi() | Interval::pi()));
+  CHECK(Approx(atan2(Interval(-oo,codac2::previous_float(0.0)),Interval(-oo,0))) == -(Interval::half_pi() | Interval::pi()));
   CHECK(Approx(atan2(Interval(-oo,0),Interval(0,oo))) == Interval(-1,0)*Interval::half_pi());
   CHECK(Approx(atan2(Interval(0,oo),Interval(-oo,0))) == (Interval::half_pi() | Interval::pi()));
   CHECK(Approx(atan2(Interval(1,oo),Interval(-1,1))) == (Interval::pi()/4.0 | 3*Interval::pi()/4.0));

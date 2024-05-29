@@ -250,8 +250,8 @@ TEST_CASE("Interval bwd operations")
   CHECK_bwd_div(Interval(-1,1), Interval(-2,2), 0, 0, 0);
   CHECK_bwd_div(0, Interval(-2,2), Interval(-2,2), 0, Interval(-2,2));
   CHECK_bwd_div(Interval(0,oo), Interval(0,1), Interval(-1,0), 0, Interval(-1,0));
-  CHECK_bwd_div(Interval(next_float(0.),oo), Interval(0,1), Interval(-1,0), 0, 0);
-  CHECK_bwd_div(Interval(0,oo), Interval(next_float(0.),1), Interval(-1,0), Interval::empty(), Interval::empty());
+  CHECK_bwd_div(Interval(codac2::next_float(0.),oo), Interval(0,1), Interval(-1,0), 0, 0);
+  CHECK_bwd_div(Interval(0,oo), Interval(codac2::next_float(0.),1), Interval(-1,0), Interval::empty(), Interval::empty());
 
   CHECK_bwd_max(Interval::empty(), Interval(-2,-1), Interval(-2,3), Interval::empty(), Interval::empty());
   CHECK_bwd_max(Interval(0,1), Interval(-2,-1), Interval(-2,3), Interval(-2,-1), Interval(0,1));

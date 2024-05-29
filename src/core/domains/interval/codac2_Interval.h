@@ -622,4 +622,13 @@ namespace codac2
    */
   Interval operator""_i(long double x);
 
+  inline double previous_float(double x)
+  {
+    return ibex::previous_float(x);
+  }
+
+  inline double next_float(double x)
+  {
+    return ibex::next_float(x);
+  }
 }

@@ -408,7 +408,10 @@ namespace codac2
       return const_value(x);
     }
 
-    template<typename X1>
+
+    template<typename X1, typename = typename std::enable_if<(
+        !std::is_base_of_v<ScalarExpr_ptr,X1>
+      ), void>::type>
     inline VectorExpr_ptr
     vec(const X1& x1)
     {
@@ -417,7 +420,9 @@ namespace codac2
           _add_to_vec(x1));
     }
 
-    template<typename X1,typename X2>
+    template<typename X1, typename X2, typename = typename std::enable_if<(
+        !std::is_base_of_v<ScalarExpr_ptr,X1> || !std::is_base_of_v<ScalarExpr_ptr,X2>
+      ), void>::type>
     inline VectorExpr_ptr
     vec(const X1& x1, const X2& x2)
     {
@@ -426,7 +431,9 @@ namespace codac2
           _add_to_vec(x1),_add_to_vec(x2));
     }
 
-    template<typename X1,typename X2,typename X3>
+    template<typename X1, typename X2, typename X3, typename = typename std::enable_if<(
+        !std::is_base_of_v<ScalarExpr_ptr,X1> || !std::is_base_of_v<ScalarExpr_ptr,X2> || !std::is_base_of_v<ScalarExpr_ptr,X3>
+      ), void>::type>
     inline VectorExpr_ptr
     vec(const X1& x1, const X2& x2, const X3& x3)
     {
@@ -435,7 +442,9 @@ namespace codac2
           _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3));
     }
 
-    template<typename X1,typename X2,typename X3,typename X4>
+    template<typename X1, typename X2, typename X3, typename X4, typename = typename std::enable_if<(
+        !std::is_base_of_v<ScalarExpr_ptr,X1> || !std::is_base_of_v<ScalarExpr_ptr,X2> || !std::is_base_of_v<ScalarExpr_ptr,X3> || !std::is_base_of_v<ScalarExpr_ptr,X4>
+      ), void>::type>
     inline VectorExpr_ptr
     vec(const X1& x1, const X2& x2, const X3& x3, const X4& x4)
     {
@@ -444,7 +453,9 @@ namespace codac2
           _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3),_add_to_vec(x4));
     }
 
-    template<typename X1,typename X2,typename X3,typename X4,typename X5>
+    template<typename X1, typename X2, typename X3, typename X4, typename X5, typename = typename std::enable_if<(
+        !std::is_base_of_v<ScalarExpr_ptr,X1> || !std::is_base_of_v<ScalarExpr_ptr,X2> || !std::is_base_of_v<ScalarExpr_ptr,X3> || !std::is_base_of_v<ScalarExpr_ptr,X4> || !std::is_base_of_v<ScalarExpr_ptr,X5>
+      ), void>::type>
     inline VectorExpr_ptr
     vec(const X1& x1, const X2& x2, const X3& x3, const X4& x4, const X5& x5)
     {
@@ -453,7 +464,10 @@ namespace codac2
           _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3),_add_to_vec(x4),_add_to_vec(x5));
     }
 
-    template<typename X1,typename X2,typename X3,typename X4,typename X5,typename X6>
+    template<typename X1, typename X2, typename X3, typename X4, typename X5, typename X6, typename = typename std::enable_if<(
+        !std::is_base_of_v<ScalarExpr_ptr,X1> || !std::is_base_of_v<ScalarExpr_ptr,X2> || !std::is_base_of_v<ScalarExpr_ptr,X3> || !std::is_base_of_v<ScalarExpr_ptr,X4> || !std::is_base_of_v<ScalarExpr_ptr,X5> ||
+        !std::is_base_of_v<ScalarExpr_ptr,X6>
+      ), void>::type>
     inline VectorExpr_ptr
     vec(const X1& x1, const X2& x2, const X3& x3, const X4& x4, const X5& x5, const X6& x6)
     {
@@ -462,7 +476,10 @@ namespace codac2
           _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3),_add_to_vec(x4),_add_to_vec(x5),_add_to_vec(x6));
     }
 
-    template<typename X1,typename X2,typename X3,typename X4,typename X5,typename X6,typename X7>
+    template<typename X1, typename X2, typename X3, typename X4, typename X5, typename X6, typename X7, typename = typename std::enable_if<(
+        !std::is_base_of_v<ScalarExpr_ptr,X1> || !std::is_base_of_v<ScalarExpr_ptr,X2> || !std::is_base_of_v<ScalarExpr_ptr,X3> || !std::is_base_of_v<ScalarExpr_ptr,X4> || !std::is_base_of_v<ScalarExpr_ptr,X5> ||
+        !std::is_base_of_v<ScalarExpr_ptr,X6> || !std::is_base_of_v<ScalarExpr_ptr,X7>
+      ), void>::type>
     inline VectorExpr_ptr
     vec(const X1& x1, const X2& x2, const X3& x3, const X4& x4, const X5& x5, const X6& x6, const X7& x7)
     {
@@ -471,7 +488,10 @@ namespace codac2
           _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3),_add_to_vec(x4),_add_to_vec(x5),_add_to_vec(x6),_add_to_vec(x7));
     }
 
-    template<typename X1,typename X2,typename X3,typename X4,typename X5,typename X6,typename X7,typename X8>
+    template<typename X1, typename X2, typename X3, typename X4, typename X5, typename X6, typename X7, typename X8, typename = typename std::enable_if<(
+        !std::is_base_of_v<ScalarExpr_ptr,X1> || !std::is_base_of_v<ScalarExpr_ptr,X2> || !std::is_base_of_v<ScalarExpr_ptr,X3> || !std::is_base_of_v<ScalarExpr_ptr,X4> || !std::is_base_of_v<ScalarExpr_ptr,X5> ||
+        !std::is_base_of_v<ScalarExpr_ptr,X6> || !std::is_base_of_v<ScalarExpr_ptr,X7> || !std::is_base_of_v<ScalarExpr_ptr,X8>
+      ), void>::type>
     inline VectorExpr_ptr
     vec(const X1& x1, const X2& x2, const X3& x3, const X4& x4, const X5& x5, const X6& x6, const X7& x7, const X8& x8)
     {
@@ -480,7 +500,10 @@ namespace codac2
           _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3),_add_to_vec(x4),_add_to_vec(x5),_add_to_vec(x6),_add_to_vec(x7),_add_to_vec(x8));
     }
 
-    template<typename X1,typename X2,typename X3,typename X4,typename X5,typename X6,typename X7,typename X8,typename X9>
+    template<typename X1, typename X2, typename X3, typename X4, typename X5, typename X6, typename X7, typename X8, typename X9, typename = typename std::enable_if<(
+        !std::is_base_of_v<ScalarExpr_ptr,X1> || !std::is_base_of_v<ScalarExpr_ptr,X2> || !std::is_base_of_v<ScalarExpr_ptr,X3> || !std::is_base_of_v<ScalarExpr_ptr,X4> || !std::is_base_of_v<ScalarExpr_ptr,X5> ||
+        !std::is_base_of_v<ScalarExpr_ptr,X6> || !std::is_base_of_v<ScalarExpr_ptr,X7> || !std::is_base_of_v<ScalarExpr_ptr,X8> || !std::is_base_of_v<ScalarExpr_ptr,X9>
+      ), void>::type>
     inline VectorExpr_ptr
     vec(const X1& x1, const X2& x2, const X3& x3, const X4& x4, const X5& x5, const X6& x6, const X7& x7, const X8& x8, const X9& x9)
     {
@@ -489,7 +512,10 @@ namespace codac2
           _add_to_vec(x1),_add_to_vec(x2),_add_to_vec(x3),_add_to_vec(x4),_add_to_vec(x5),_add_to_vec(x6),_add_to_vec(x7),_add_to_vec(x8),_add_to_vec(x9));
     }
 
-    template<typename X1,typename X2,typename X3,typename X4,typename X5,typename X6,typename X7,typename X8,typename X9,typename X10>
+    template<typename X1, typename X2, typename X3, typename X4, typename X5, typename X6, typename X7, typename X8, typename X9, typename X10, typename = typename std::enable_if<(
+        !std::is_base_of_v<ScalarExpr_ptr,X1> || !std::is_base_of_v<ScalarExpr_ptr,X2> || !std::is_base_of_v<ScalarExpr_ptr,X3> || !std::is_base_of_v<ScalarExpr_ptr,X4> || !std::is_base_of_v<ScalarExpr_ptr,X5> ||
+        !std::is_base_of_v<ScalarExpr_ptr,X6> || !std::is_base_of_v<ScalarExpr_ptr,X7> || !std::is_base_of_v<ScalarExpr_ptr,X8> || !std::is_base_of_v<ScalarExpr_ptr,X9> || !std::is_base_of_v<ScalarExpr_ptr,X10>
+      ), void>::type>
     inline VectorExpr_ptr
     vec(const X1& x1, const X2& x2, const X3& x3, const X4& x4, const X5& x5, const X6& x6, const X7& x7, const X8& x8, const X9& x9, const X10& x10)
     {

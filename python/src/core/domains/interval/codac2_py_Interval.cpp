@@ -252,11 +252,11 @@ py::class_<Interval> export_Interval(py::module& m)
 
   // The following functions are defined in GAOL:
 
-    m.def("previous_float", &previous_float,
+    m.def("previous_float", &codac2::previous_float,
       "Returns the previous floating point value",
       "x"_a);
 
-    m.def("next_float", &next_float,
+    m.def("next_float", &codac2::next_float,
       "Returns the next floating point value",
       "x"_a);
 
