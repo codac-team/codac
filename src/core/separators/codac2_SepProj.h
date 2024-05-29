@@ -32,7 +32,7 @@ namespace codac2
           std::is_base_of_v<Sep,S> || std::is_same_v<std::shared_ptr<Sep>,S>
         >::type>
       SepProj(const S& s, const std::vector<size_t>& proj_indices, const IntervalVector& y, double default_eps = 0.01)
-        : Sep(proj_indices.size()), _sep(s), _xi(proj_indices), _y(y & IntervalVector(y.size(),Interval(-99999,99999))), _default_eps(default_eps)
+        : Sep(proj_indices.size()), _sep(s), _xi(proj_indices), _y(y), _default_eps(default_eps)
       {
         assert(_y.size() == size_of(s)-_xi.size());
         assert(*min_element(_xi.begin(),_xi.end()) >= 0);

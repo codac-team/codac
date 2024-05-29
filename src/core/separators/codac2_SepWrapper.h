@@ -38,7 +38,7 @@ namespace codac2
     public:
 
       SepWrapper_(const IntervalVector& y)
-        : SepCtcPair(complementary_union(y & IntervalVector(y.size(),Interval(-99999,99999))), CtcWrapper_<IntervalVector>(y & IntervalVector(y.size(),Interval(-99999,99999))))
+        : SepCtcPair(complementary_union(y), CtcWrapper_<IntervalVector>(y))
       { }
 
       std::shared_ptr<Sep> copy() const;
