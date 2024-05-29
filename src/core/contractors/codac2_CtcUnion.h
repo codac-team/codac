@@ -24,16 +24,27 @@ namespace codac2
 
       explicit CtcUnion(size_t n)
         : Ctc_<X>(n)
+      {
+        if constexpr(std::is_same_v<X,Interval>)
+        {
+          assert(n == 1);
+        }
+      }
+
+      template<typename C, typename = typename std::enable_if<(
+          (std::is_base_of_v<Ctc_<X>,C> && !std::is_same_v<CtcUnion<X>,C>) || std::is_same_v<std::shared_ptr<Ctc_<X>>,C>
+        ), void>::type>
+      CtcUnion(const C& c)
+        : Ctc_<X>(size_of(c)), _ctcs(c)
       { }
 
-      template<typename C1, typename... C, typename = typename std::enable_if<
-          std::is_base_of_v<Ctc_<X>,C1> && 
-          (true && ... && (std::is_base_of_v<Ctc_<X>,C>)), void
-        >::type>
-      CtcUnion(const C1& c1, const C&... c)
-        : Ctc_<X>(c1.size()), _ctcs(c...)
+      template<typename... C, typename = typename std::enable_if<(true && ... && (
+          (std::is_base_of_v<Ctc_<X>,C> || std::is_same_v<std::shared_ptr<Ctc_<X>>,C>)
+        )), void>::type>
+      CtcUnion(const C&... c)
+        : Ctc_<X>(size_first_item(c...)), _ctcs(c...)
       {
-        _ctcs.add_shared_ptr(std::make_shared<C1>(c1));
+        assert(all_same_size(c...));
       }
 
       virtual std::shared_ptr<Ctc> copy() const
@@ -78,5 +89,21 @@ namespace codac2
   inline CtcUnion<typename C1::X> operator|(const C1& c1, const C2& c2)
   {
     return CtcUnion<typename C1::X>(c1,c2);
+  }
+
+  template<typename C2, typename = typename std::enable_if<
+      std::is_base_of_v<Ctc_<IntervalVector>,C2>
+    >::type>
+  inline CtcUnion<IntervalVector> operator|(const IntervalVector& s1, const C2& s2)
+  {
+    return CtcUnion<IntervalVector>(CtcWrapper_<IntervalVector>(s1),s2);
+  }
+
+  template<typename C1, typename = typename std::enable_if<
+      std::is_base_of_v<Ctc_<IntervalVector>,C1>
+    >::type>
+  inline CtcUnion<IntervalVector> operator|(const C1& s1, const IntervalVector& s2)
+  {
+    return CtcUnion<IntervalVector>(s1,CtcWrapper_<IntervalVector>(s2));
   }
 }

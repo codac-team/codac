@@ -23,12 +23,12 @@ namespace codac2
     public:
 
       template<typename C, typename = typename std::enable_if<
-          std::is_base_of_v<Ctc_<IntervalVector>,C>
+          std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>
         >::type>
       CtcAction(const C& c, const OctaSym& a)
-        : Ctc_<IntervalVector>(c.size()), _ctc(c), _s(a), __s(a.invert())
+        : Ctc_<IntervalVector>(a.size()), _ctc(c), _s(a), __s(a.invert())
       {
-        assert(c.size() == a.size());
+        assert(size_of(c) == a.size());
       }
 
       virtual std::shared_ptr<Ctc> copy() const;

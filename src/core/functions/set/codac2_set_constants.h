@@ -37,6 +37,11 @@ namespace codac2
         return true;
       }
 
+      std::shared_ptr<Ctc_<IntervalVector>> create_ctc(const FunctionArgsList& args, const std::vector<std::shared_ptr<Ctc_<IntervalVector>>>& x) const
+      {
+        return std::make_shared<CtcWrapper_<T>>(_x);
+      }
+
       std::shared_ptr<Sep> create_sep(const FunctionArgsList& args, const std::vector<std::shared_ptr<Sep>>& x) const
       {
         return std::make_shared<SepWrapper_<T>>(_x);

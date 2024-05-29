@@ -36,6 +36,17 @@ namespace codac2
       { }
 
       template<typename... Args>
+      auto create_ctc(const Args&... x)
+      {
+        std::vector<std::shared_ptr<Ctc_<IntervalVector>>> ref_x(sizeof...(Args));
+        size_t i = 0;
+        ((ref_x[i++] = create_arg_ctc_copy(x)), ...);
+        if(args().size() != ref_x.size())
+          throw std::invalid_argument("Invalid argument: wrong number of input arguments");
+        return this->expr()->create_ctc(args(), ref_x);
+      }
+
+      template<typename... Args>
       auto create_sep(const Args&... x)
       {
         std::vector<std::shared_ptr<Sep>> ref_x(sizeof...(Args));
@@ -65,6 +76,25 @@ namespace codac2
 
 
     protected:
+
+      template<typename A>
+      std::shared_ptr<Ctc_<IntervalVector>> create_arg_ctc_copy(const A& x)
+      {
+        if constexpr(std::is_base_of_v<Domain,A>)
+        {
+          CtcWrapper_<A> sx(x);
+          return sx.copy();
+        }
+
+        else if constexpr(std::is_base_of_v<Ctc_<IntervalVector>,A>)
+          return x.copy();
+
+        else
+        {
+          throw std::invalid_argument("Invalid argument: unknown input type");
+          return nullptr;
+        }
+      }
 
       template<typename A>
       std::shared_ptr<Sep> create_arg_sep_copy(const A& x)

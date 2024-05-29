@@ -21,15 +21,19 @@ namespace codac2
   {
     public:
 
-      template<typename C1, typename... C, typename = typename std::enable_if<
-          std::is_base_of_v<Ctc_<IntervalVector>,C1> && 
-          (true && ... && (std::is_base_of_v<Ctc_<IntervalVector>,C>)), void
-        >::type>
-      CtcCartProd(const C1& c1, const C&... c)
-        : Ctc_<IntervalVector>(c1.size()), _ctcs(c...)
-      {
-        _ctcs.add_shared_ptr(std::make_shared<C1>(c1));
-      }
+      template<typename C, typename = typename std::enable_if<(
+          (std::is_base_of_v<Ctc_<IntervalVector>,C> && !std::is_same_v<CtcCartProd,C>) || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>
+        ), void>::type>
+      CtcCartProd(const C& c)
+        : Ctc_<IntervalVector>(size_of(c)), _ctcs(c)
+      { }
+
+      template<typename... C, typename = typename std::enable_if<(true && ... && (
+          (std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>)
+        )), void>::type>
+      CtcCartProd(const C&... c)
+        : Ctc_<IntervalVector>((0 + ... + size_of(c))), _ctcs(c...)
+      { }
 
       virtual std::shared_ptr<Ctc> copy() const
       {

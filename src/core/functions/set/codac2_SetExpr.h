@@ -29,6 +29,7 @@ namespace codac2
     public:
 
       SetExpr& operator=(const SetExpr& x) = delete;
+      virtual std::shared_ptr<Ctc_<IntervalVector>> create_ctc(const FunctionArgsList& args, const std::vector<std::shared_ptr<Ctc_<IntervalVector>>>& x) const = 0;
       virtual std::shared_ptr<Sep> create_sep(const FunctionArgsList& args, const std::vector<std::shared_ptr<Sep>>& x) const = 0;
 
       virtual bool belongs_to_args_list(const FunctionArgsList& args) const = 0;
@@ -67,6 +68,16 @@ namespace codac2
         }, this->_x);
 
         return b;
+      }
+
+      std::shared_ptr<Ctc_<IntervalVector>> create_ctc(const FunctionArgsList& args, const std::vector<std::shared_ptr<Ctc_<IntervalVector>>>& values) const
+      {
+        return std::apply(
+          [this,values,args](auto &&... x)
+          {
+            return C::create_ctc(x->create_ctc(args,values)...);
+          },
+        this->_x);
       }
 
       std::shared_ptr<Sep> create_sep(const FunctionArgsList& args, const std::vector<std::shared_ptr<Sep>>& values) const
@@ -112,6 +123,12 @@ namespace codac2
         return std::get<0>(this->_x)->belongs_to_args_list(args);
       }
 
+      std::shared_ptr<Ctc_<IntervalVector>> create_ctc(const FunctionArgsList& args, const std::vector<std::shared_ptr<Ctc_<IntervalVector>>>& values) const
+      {
+        throw std::logic_error("CtcProj not yet available");
+        return nullptr;
+      }
+
       std::shared_ptr<Sep> create_sep(const FunctionArgsList& args, const std::vector<std::shared_ptr<Sep>>& values) const
       {
         if(_y)
@@ -155,6 +172,11 @@ namespace codac2
         return std::get<0>(this->_x)->belongs_to_args_list(args);
       }
 
+      std::shared_ptr<Ctc_<IntervalVector>> create_ctc(const FunctionArgsList& args, const std::vector<std::shared_ptr<Ctc_<IntervalVector>>>& values) const
+      {
+        return InverseSetOp::create_ctc(_f, std::get<0>(this->_x)->create_ctc(args,values));
+      }
+
       std::shared_ptr<Sep> create_sep(const FunctionArgsList& args, const std::vector<std::shared_ptr<Sep>>& values) const
       {
         return InverseSetOp::create_sep(_f, std::get<0>(this->_x)->create_sep(args,values));
@@ -191,6 +213,11 @@ namespace codac2
       virtual bool belongs_to_args_list(const FunctionArgsList& args) const
       {
         return std::get<0>(this->_x)->belongs_to_args_list(args);
+      }
+
+      std::shared_ptr<Ctc_<IntervalVector>> create_ctc(const FunctionArgsList& args, const std::vector<std::shared_ptr<Ctc_<IntervalVector>>>& values) const
+      {
+        return ActionSetOp::create_ctc(_a, std::get<0>(this->_x)->create_ctc(args,values));
       }
 
       std::shared_ptr<Sep> create_sep(const FunctionArgsList& args, const std::vector<std::shared_ptr<Sep>>& values) const

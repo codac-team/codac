@@ -10,6 +10,8 @@
 
 #include "codac2_CtcEllipse.h"
 #include "codac2_CtcAction.h"
+#include "codac2_Sep.h"
+#include "codac2_template_tools.h"
 
 using namespace std;
 using namespace codac2;

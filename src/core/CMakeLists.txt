@@ -23,6 +23,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverseNotIn.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcLazy.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcLazy.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcNot.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcUnion.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolar.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolar.h
@@ -101,7 +102,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Collection.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_object_file_format.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_object_file_format.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_templates.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_template_tools.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_GaussJordan.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_GaussJordan.h
