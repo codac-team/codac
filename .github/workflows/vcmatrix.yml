@@ -1,5 +1,4 @@
 # This file generates Python wheels for Windows
-# (and zip for having Codac and IBEX binaries for several Visual Studio versions)
 on:
     push:
         branches: 'master'
@@ -69,7 +68,7 @@ jobs:
         cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
         cd ..
       shell: bash
-    - run: pip install *.whl ; python -c "import sys; print(sys.version)" ; python examples/tuto/01_getting_started/01_getting_started.py ; pip install numpy --prefer-binary ; python -m unittest discover codac.tests
+    - run: pip install --no-deps --no-index *.whl ; python -c "import sys; print(sys.version)" ; python examples/tuto/01_getting_started/01_getting_started.py ; pip install numpy --prefer-binary ; python -m unittest discover codac.tests
       shell: bash
     - uses: xresloader/upload-to-github-release@v1
       env:

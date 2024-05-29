@@ -17,13 +17,17 @@ jobs:
             cfg:
             - { img: 'lebarsfa/manylinux2014_x86_64-for-codac', shell: bash, arch: x86_64, bitness: 64, runtime: manylinux2014, cmake_flags: '-fPIC', desc: 'CentOS manylinux2014 x86_64' }
             - { img: 'lebarsfa/manylinux2014_aarch64-for-codac', shell: bash, arch: aarch64, bitness: 64, runtime: manylinux2014, cmake_flags: '-fPIC', docker_flags: '--platform linux/arm64', desc: 'CentOS manylinux2014 aarch64' }
+            - { img: 'lebarsfa/amd64:noble-for-codac', shell: bash, arch: amd64, bitness: 64, runtime: noble, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 24.04 amd64' }
             - { img: 'lebarsfa/pi-64:jammy-for-codac', shell: bash, arch: arm64, bitness: 64, runtime: jammy, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 22.04 arm64' }
             - { img: 'lebarsfa/pi-64:focal-for-codac', shell: bash, arch: arm64, bitness: 64, runtime: focal, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 20.04 arm64' }
+            - { img: 'lebarsfa/amd64:bookworm-for-codac', shell: bash, arch: amd64, bitness: 64, runtime: bookworm, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bookworm amd64' }
             - { img: 'lebarsfa/pi-64:bookworm-for-codac', shell: bash, arch: arm64, bitness: 64, runtime: bookworm, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bookworm arm64' }
-            - { img: 'lebarsfa/pi-64:bullseye-for-codac', shell: bash, arch: arm64, bitness: 64, runtime: bullseye, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bullseye arm64' }
-            - { img: 'lebarsfa/pi-64:buster-for-codac', shell: bash, arch: arm64, bitness: 64, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Debian Buster arm64' }
             - { img: 'lebarsfa/pi:bookworm-for-codac', shell: bash, arch: armhf, bitness: 32, runtime: bookworm, cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Bookworm armv6hf' }
+            - { img: 'lebarsfa/amd64:bullseye-for-codac', shell: bash, arch: amd64, bitness: 64, runtime: bullseye, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bullseye amd64' }
+            - { img: 'lebarsfa/pi-64:bullseye-for-codac', shell: bash, arch: arm64, bitness: 64, runtime: bullseye, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bullseye arm64' }
             - { img: 'lebarsfa/pi:bullseye-for-codac', shell: bash, arch: armhf, bitness: 32, runtime: bullseye, cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Bullseye armv6hf' }
+            - { img: 'lebarsfa/amd64:buster-for-codac', shell: bash, arch: amd64, bitness: 64, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Debian Buster amd64' }
+            - { img: 'lebarsfa/pi-64:buster-for-codac', shell: bash, arch: arm64, bitness: 64, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Debian Buster arm64' }
             - { img: 'lebarsfa/pi:buster-for-codac', shell: bash, arch: armhf, bitness: 32, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Buster armv6hf' }
     name: ${{ matrix.cfg.desc }}
     steps: 
@@ -50,12 +54,12 @@ jobs:
         sudo apt-get -y install qemu binfmt-support qemu-user-static || true
         #docker run --rm --privileged multiarch/qemu-user-static:register --reset
         docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-      if: (matrix.cfg.arch!='x86_64')&&(matrix.cfg.arch!='i386')
+      if: (matrix.cfg.arch!='amd64')&&(matrix.cfg.arch!='x86_64')&&(matrix.cfg.arch!='i386')
     - run: |
         docker run ${{ matrix.cfg.docker_flags }} -i -v "${PWD}/..:${PWD}/.." ${{ matrix.cfg.img }} /bin/bash -c "uname -a ; cat /etc/os-release ; lsb_release -a ; cd ${PWD} && pwd && \
         git config --global --add safe.directory ${PWD} && \
         if [ ${{ matrix.cfg.deb }} = true ]; then \
-        sudo apt-get -q update --allow-releaseinfo-change ; sudo apt-get -y install libeigen3-dev dpkg-dev || true && \
+        sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev dpkg-dev || true && \
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb --no-check-certificate -nv && \
         sudo dpkg -i libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb && \
         rm -Rf libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb ; \
