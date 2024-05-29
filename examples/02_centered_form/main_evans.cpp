@@ -11,7 +11,7 @@ int main()
     2*x[0]*x[1]+2*exp(-x[0]*x[2])*(x[1]*cos(x[1]*x[2])-x[0]*sin(x[1]*x[2]))-exp(-x[0]*x[3])*sin(x[1]*x[3])
   ));
 
-  CtcInverse_<IntervalVector> ctc(f, IntervalVector({{0.},{0.}}));
+  CtcInverse_<IntervalVector> ctc(f, {{0.},{0.}});
   IntervalVector x0({{-10,10},{0,20},{1,1},{2,2}});
 
   Figure g("Evans", GraphicOutputMode::VIBES);
@@ -21,4 +21,8 @@ int main()
   Paver p(x0);
   p.set_figure(&g);
   p.pave(CtcLazy(ctc), 0.001);
+
+  // Revealing the tiny solutions:
+  for(const auto& ci : vector<Vector>({{-2.653,13.95},{-2.062,7.589},{-0.318,1.337}}))
+    g.draw_circle({ci},0.2);
 }
