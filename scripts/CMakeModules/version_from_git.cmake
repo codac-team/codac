@@ -172,4 +172,14 @@ function( version_from_git )
   set( VERSION_PATCH ${version_patch} PARENT_SCOPE )
   set( VERSION_ID    ${identifiers}   PARENT_SCOPE )
 
+  # Setting temporary values for dev versions of Codac2
+  # ..because tag cannot be read by this script..
+  set( GIT_TAG       "v2.0.0.dev1"             PARENT_SCOPE )
+  set( SEMVER        "${GIT_TAG}+${metadata}"  PARENT_SCOPE )
+  set( VERSION       "2.0.0.dev1"              PARENT_SCOPE )
+  set( VERSION_MAJOR "2"                       PARENT_SCOPE )
+  set( VERSION_MINOR "0"                       PARENT_SCOPE )
+  set( VERSION_PATCH "0.dev1"                  PARENT_SCOPE )
+  set( VERSION_ID    ${identifiers}            PARENT_SCOPE )
+
 endfunction( version_from_git )
