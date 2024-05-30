@@ -15,6 +15,7 @@
 #include <codac2_AnalyticExpr.h>
 #include "codac2_py_analytic_variables_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_ExprWrapper.h"
+#include "codac2_py_matlab.h"
 
 using namespace codac2;
 namespace py = pybind11;
@@ -56,6 +57,13 @@ void export_ScalarVar(py::module& m)
   py::implicitly_convertible<ScalarVar,ScalarExpr>();
 }
 
+ScalarExpr get_item(const VectorVar& v, size_t index)
+{
+  if(index < 0 || index >= static_cast<size_t>(v.size()))
+    throw py::index_error();
+  return ScalarExpr(std::dynamic_pointer_cast<AnalyticExpr<ScalarOpValue>>(v[static_cast<int>(index)]->copy()));
+}
+
 void export_VectorVar(py::module& m)
 {
   py::class_<VectorVar,
@@ -71,9 +79,12 @@ void export_VectorVar(py::module& m)
 
     .def("__getitem__", [](const VectorVar& v, size_t index) -> ScalarExpr
       {
-        if(index < 0 || index >= static_cast<size_t>(v.size()))
-          throw py::index_error();
-        return ScalarExpr(std::dynamic_pointer_cast<AnalyticExpr<ScalarOpValue>>(v[static_cast<int>(index)]->copy()));
+        return get_item(v, index);
+      }, SHARED_PTR_ANALYTICEXPR_SCALAROPVALUE_VECTORVAR_OPERATORCOMPO_SIZET_CONST)
+
+    .def("i", [](const VectorVar& v, size_t index) -> ScalarExpr
+      {
+        return get_item(v, index - codac2::_matlab_index);
       }, SHARED_PTR_ANALYTICEXPR_SCALAROPVALUE_VECTORVAR_OPERATORCOMPO_SIZET_CONST)
 
     .def("__add__",  [](const VectorVar& e1, const VectorVar& e2)      { return VectorExpr(VectorExpr(e1) + VectorExpr(e2)); })

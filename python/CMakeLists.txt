@@ -50,6 +50,8 @@
 
     pybind11_add_module(core SHARED
       codac2_py_core.cpp
+      codac2_py_matlab.h
+      
       src/core/contractors/codac2_py_Ctc.cpp
       src/core/contractors/codac2_py_Ctc.h
       src/core/contractors/codac2_py_CtcInverse.h

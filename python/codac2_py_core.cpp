@@ -14,6 +14,7 @@
 #include <codac2_analytic_values.h>
 #include "codac2_py_AnalyticFunction.h"
 #include "codac2_py_CtcInverse.h"
+#include "codac2_py_matlab.h"
 
 using namespace codac2;
 namespace py = pybind11;
@@ -42,10 +43,14 @@ void export_Paver(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVe
 // tools
 void export_Approx(py::module& m);
 
+int codac2::_matlab_index = 0;
+
 PYBIND11_MODULE(core, m)
 {
   m.doc() = "Python binding of Codac (core)";
   m.attr("oo") = oo;
+
+  m.def("set_matlab_mode", [](bool m) { codac2::_matlab_index = m ? 1 : 0; });
 
   // 3rd
 
