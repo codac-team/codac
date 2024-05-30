@@ -176,10 +176,10 @@ function( version_from_git )
   # ..because tag cannot be read by this script..
   set( GIT_TAG       "v2.0.0.dev1"             PARENT_SCOPE )
   set( SEMVER        "${GIT_TAG}+${metadata}"  PARENT_SCOPE )
-  set( VERSION       "2.0.0.dev1"              PARENT_SCOPE )
+  set( VERSION       "2.0.0"                   PARENT_SCOPE )
   set( VERSION_MAJOR "2"                       PARENT_SCOPE )
   set( VERSION_MINOR "0"                       PARENT_SCOPE )
-  set( VERSION_PATCH "0.dev1"                  PARENT_SCOPE )
-  set( VERSION_ID    ${identifiers}            PARENT_SCOPE )
+  set( VERSION_PATCH "0"                       PARENT_SCOPE )
+  set( VERSION_ID    ".dev1"                   PARENT_SCOPE )
 
 endfunction( version_from_git )
