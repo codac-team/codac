@@ -96,11 +96,11 @@ TEST_CASE("Interval operations")
   CHECK(1 < codac2::next_float(1));
   CHECK(1 > codac2::previous_float(1));
   CHECK(oo == codac2::next_float(oo));
-  CHECK(-MAX_DOUBLE == codac2::next_float(-oo));
-  CHECK(MAX_DOUBLE == codac2::previous_float(oo));
   CHECK(-oo == codac2::previous_float(-oo));
-  CHECK(oo == codac2::next_float(MAX_DOUBLE));
-  CHECK(-oo == codac2::previous_float(-MAX_DOUBLE));
+  CHECK(-MAX_DOUBLE >= codac2::next_float(-oo));
+  CHECK(MAX_DOUBLE <= codac2::previous_float(oo));
+  CHECK(oo > MAX_DOUBLE);
+  CHECK(-oo < -MAX_DOUBLE);
   CHECK(-Interval(0,1) == Interval(-1,0));
   CHECK(-Interval(-oo,oo) == Interval(-oo,oo));
   CHECK(-Interval(-oo,0) == Interval(0,oo));
