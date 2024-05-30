@@ -148,7 +148,7 @@ function( version_from_git )
   endif()
 
   # Log the results
-  if( ARG_LOG )
+  #if( ARG_LOG )
     message( STATUS
       "[MunkeiVersionFromGit] Version: ${version}
      Git tag:     [${git_tag}]
@@ -156,9 +156,12 @@ function( version_from_git )
      Decorated:   [${git_describe}]
      Identifiers: [${identifiers}]
      Metadata:    [${metadata}]
-     SemVer:      [${semver}]"
+     SemVer:      [${semver}]
+     Major:       [${version_major}]
+     Minor:       [${version_minor}]
+     Patch:       [${version_patch}]"
       )
-  endif( ARG_LOG )
+  #endif( ARG_LOG )
 
   # Set parent scope variables
   set( GIT_TAG       ${git_tag}       PARENT_SCOPE )
