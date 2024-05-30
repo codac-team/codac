@@ -180,6 +180,6 @@ function( version_from_git )
   set( VERSION_MAJOR "2"                       PARENT_SCOPE )
   set( VERSION_MINOR "0"                       PARENT_SCOPE )
   set( VERSION_PATCH "0"                       PARENT_SCOPE )
-  set( VERSION_ID    ".dev1"                   PARENT_SCOPE )
+  set( VERSION_ID    "dev1"                    PARENT_SCOPE )
 
 endfunction( version_from_git )
