@@ -12,7 +12,6 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
-#include <numbers>
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_Interval.h>
 #include <codac2_Interval_operations.h>
