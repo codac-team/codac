@@ -12,7 +12,7 @@
   #set(CMAKE_C_COMPILER "gcc-7")
   #set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
 
-  project(codac VERSION ${VERSION} LANGUAGES CXX)
+  project(codac4matlab VERSION ${VERSION} LANGUAGES CXX)
 
   if(NOT VERSION_ID)
     set(PROJECT_VERSION_FULL ${PROJECT_VERSION})
@@ -141,7 +141,7 @@
     include(CTest)
     add_custom_target(check
                       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure $(ARGS)
-                      DEPENDS codac COMMENT "Running the tests")
+                      DEPENDS ${PROJECT_NAME} COMMENT "Running the tests")
 
     add_subdirectory(tests)
   endif()
