@@ -12,6 +12,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
+#include "codac2_py_core.h"
 #include <codac2_IntervalVector.h>
 #include "codac2_py_IntervalVector_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
 #include "codac2_py_IntervalVectorTemplate_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
@@ -26,15 +27,25 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
 {
   py::class_<IntervalVector> exported_intervalvector_class(m, "IntervalVector", INTERVALVECTOR_MAIN);
   exported_intervalvector_class
-  
-    .def(py::init<size_t>(),
+
+    .def(py::init(
+        [](size_t_type n)
+        {
+          matlab::test_integer(n);
+          return std::make_unique<IntervalVector>(n);
+        }),
       INTERVALVECTOR_INTERVALVECTOR_SIZET,
       "n"_a)
 
-    .def(py::init<size_t,const Interval&>(),
+    .def(py::init(
+        [](size_t_type n, const Interval& x)
+        {
+          matlab::test_integer(n);
+          return std::make_unique<IntervalVector>(n,x);
+        }),
       INTERVALVECTOR_INTERVALVECTOR_SIZET_CONST_INTERVAL_REF,
       "n"_a, "x"_a)
-  
+
     .def(py::init<const Interval&>(),
       INTERVALVECTOR_INTERVALVECTOR_CONST_INTERVAL_REF,
       "x"_a)
@@ -43,7 +54,7 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
       INTERVALVECTOR_INTERVALVECTOR_CONST_VECTOR__M_REF,
       "v"_a)
 
-    // IntervalVector(size_t n, const double bounds[][2])
+    // IntervalVector(size_t_type n, const double bounds[][2])
 
     .def(py::init<const Vector&,const Vector&>(),
       INTERVALVECTOR_INTERVALVECTOR_CONST_VECTOR_REF_CONST_VECTOR_REF,

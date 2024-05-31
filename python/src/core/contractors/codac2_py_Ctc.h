@@ -13,6 +13,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
+#include "codac2_py_core.h"
 #include <codac2_Ctc.h>
 #include <codac2_IntervalVector.h>
 
@@ -25,7 +26,7 @@ class pyCtcIntervalVector : public Ctc_<IntervalVector>
 {
   public:
 
-    pyCtcIntervalVector(size_t n)
+    pyCtcIntervalVector(size_t_type n)
       : Ctc_<IntervalVector>(n)
     { }
 

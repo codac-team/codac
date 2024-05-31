@@ -12,6 +12,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
+#include "codac2_py_core.h"
 #include <codac2_Interval.h>
 #include <codac2_Interval_operations.h>
 #include "codac2_py_Interval_operations_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
@@ -236,7 +237,7 @@ void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval
     VOID_BWD_SQRT_CONST_INTERVAL_REF_INTERVAL_REF,
     "y"_a, "x"_a)
 
-  .def("bwd_pow", (void(*)(const Interval&,Interval&,int)) &codac2::bwd_pow,
+  .def("bwd_pow", [](const Interval& y, Interval& x, int_type p) { return codac2::bwd_pow(y,x,p); },
     VOID_BWD_POW_CONST_INTERVAL_REF_INTERVAL_REF_INT,
     "y"_a, "x"_a, "n"_a)
 
