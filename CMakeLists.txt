@@ -141,7 +141,7 @@
     include(CTest)
     add_custom_target(check
                       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure $(ARGS)
-                      DEPENDS codac COMMENT "Running the tests")
+                      DEPENDS ${PROJECT_NAME} COMMENT "Running the tests")
 
     add_subdirectory(tests)
   endif()
