@@ -34,7 +34,7 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
   exported
   
     .def(py::init(
-      [](const py::list& l, const ExprWrapper<T>& expr)
+      [](const std::vector<py::object>& l, const ExprWrapper<T>& expr)
       {
         FunctionArgsList args {};
         size_t i = 0;
