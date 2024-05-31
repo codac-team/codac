@@ -4,7 +4,7 @@
 
   add_subdirectory(pybind11)
 
-  set(PYTHON_PACKAGE_NAME "codac_for_matlab")
+  set(PYTHON_PACKAGE_NAME "codac4matlab")
   set(PROJECT_PACKAGE_NAME "codac")
   set(PYTHON_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_package")
 
