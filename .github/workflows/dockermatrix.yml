@@ -1,7 +1,9 @@
 # This file checks that the lib runs on ARM
 on:
     push:
-        branches: 'master'
+        branches:
+            - master
+            - codac_matlab
         tags: '' # Restrict to blank tags
     pull_request:
 

@@ -1,7 +1,9 @@
 # This file generates Python wheels for Windows
 on:
     push:
-        branches: 'master'
+        branches:
+            - master
+            - codac_matlab
         tags: '' # Restrict to blank tags
     pull_request:
 
