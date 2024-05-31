@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import unittest
-from codac import *
+from codac4matlab import *
 
 class TestActions(unittest.TestCase):
 

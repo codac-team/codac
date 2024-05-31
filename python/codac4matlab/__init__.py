@@ -1,4 +1,4 @@
-from codac.core import *
+from codac4matlab.core import *
 from .version import __version__
 
 class AnalyticFunction:

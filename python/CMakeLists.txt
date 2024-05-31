@@ -5,11 +5,10 @@
   add_subdirectory(pybind11)
 
   set(PYTHON_PACKAGE_NAME "codac4matlab")
-  set(PROJECT_PACKAGE_NAME "codac")
   set(PYTHON_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_package")
 
   file(MAKE_DIRECTORY ${PYTHON_PACKAGE_DIR})
-  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_PACKAGE_NAME}/" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/${PYTHON_PACKAGE_NAME}/" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}")
   file(GENERATE OUTPUT "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/version.py" CONTENT "__version__=\"${PROJECT_VERSION}\"")
   
   if(NOT WIN32)
@@ -82,7 +81,7 @@
     )
 
    	target_link_libraries(core
-   	  PRIVATE codac-core ${LIBS} Ibex::ibex
+   	  PRIVATE codac4matlab-core ${LIBS} Ibex::ibex
    	)
 
     # Copy the generated library in the package folder
@@ -90,9 +89,9 @@
       COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:core>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
     )
 
-    # ex: from codac import core
+    # ex: from codac4matlab import core
     #     core.Tube
-    # ex: from codac.core import Tube
+    # ex: from codac4matlab.core import Tube
     #     Tube
 
   # Generating a library graphics.so containing the python binding:
@@ -108,7 +107,7 @@
     )
 
     target_link_libraries(graphics
-      PRIVATE codac-core ${LIBS} Ibex::ibex
+      PRIVATE codac4matlab-core ${LIBS} Ibex::ibex
     )
 
     # Copy the generated library in the package folder
@@ -129,7 +128,7 @@
     )
 
     target_link_libraries(unsupported
-      PRIVATE codac-core ${LIBS} Ibex::ibex
+      PRIVATE codac4matlab-core ${LIBS} Ibex::ibex
     )
 
     # Copy the generated library in the package folder
