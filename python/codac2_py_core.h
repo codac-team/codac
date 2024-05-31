@@ -10,7 +10,7 @@
 
 #pragma once
 
-#define FOR_MATLAB true
+#define FOR_MATLAB false
 
 namespace codac2
 {
