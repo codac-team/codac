@@ -174,7 +174,7 @@ function( version_from_git )
 
   # Setting temporary values for dev versions of Codac2
   # ..because tag cannot be read by this script..
-  set( GIT_TAG       "v2.0.0.dev3"             PARENT_SCOPE )
+  set( GIT_TAG       "v2.0.0.dev4"             PARENT_SCOPE )
   set( SEMVER        "${GIT_TAG}+${metadata}"  PARENT_SCOPE )
   set( VERSION       "2.0.0"                   PARENT_SCOPE )
   set( VERSION_MAJOR "2"                       PARENT_SCOPE )
