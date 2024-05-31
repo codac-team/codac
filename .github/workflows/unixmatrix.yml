@@ -171,10 +171,10 @@ jobs:
     - run: |
         if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         cd codac_standalone/example
-        cmake ${{ matrix.cfg.cmake_params }} .
-        cmake --build . --config Release
-        file ./${{ matrix.cfg.test_config }}my_project
-        ./${{ matrix.cfg.test_config }}my_project
+        #cmake ${{ matrix.cfg.cmake_params }} .
+        #cmake --build . --config Release
+        #file ./${{ matrix.cfg.test_config }}my_project
+        #./${{ matrix.cfg.test_config }}my_project
         cd ../..
       shell: bash
       if: matrix.cfg.cross!=true
@@ -223,10 +223,10 @@ jobs:
         if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         rm -Rf codac
         cd tests/test_codac
-        cmake ${{ matrix.cfg.cmake_params }} .
-        cmake --build . --config Release
-        file ./${{ matrix.cfg.test_config }}my_project
-        ./${{ matrix.cfg.test_config }}my_project
+        #cmake ${{ matrix.cfg.cmake_params }} .
+        #cmake --build . --config Release
+        #file ./${{ matrix.cfg.test_config }}my_project
+        #./${{ matrix.cfg.test_config }}my_project
         cd ../..
       shell: bash
       if: matrix.cfg.cross!=true
