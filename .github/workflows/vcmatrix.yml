@@ -3,7 +3,7 @@ on:
     push:
         branches:
             - master
-            - codac_matlab
+            - codac_for_matlab
         tags: '' # Restrict to blank tags
     pull_request:
 
@@ -79,4 +79,4 @@ jobs:
         file: "*.whl"
         overwrite: true
         tag_name: autotagname-${{ github.sha }}
-      if: (github.event_name != 'pull_request')&&((github.ref_name == 'master')||(github.ref_name == 'codac_matlab'))
+      if: (github.event_name != 'pull_request')&&((github.ref_name == 'master')||(github.ref_name == 'codac_for_matlab'))

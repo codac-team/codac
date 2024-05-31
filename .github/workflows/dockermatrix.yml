@@ -3,7 +3,7 @@ on:
     push:
         branches:
             - master
-            - codac_matlab
+            - codac_for_matlab
         tags: '' # Restrict to blank tags
     pull_request:
 
