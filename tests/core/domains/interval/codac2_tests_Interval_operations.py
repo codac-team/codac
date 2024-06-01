@@ -69,14 +69,14 @@ class TestInterval_operations(unittest.TestCase):
     self.assertTrue(x_ == expected) # /=operator
 
   def CHECK_trigo(self, x, expected):
-    self.assertTrue(Approx(sin(x)) == expected)
-    self.assertTrue(Approx(sin(Interval.pi()-x)) == expected)
-    self.assertTrue(Approx(sin(x+Interval.two_pi())) == expected)
-    self.assertTrue(Approx(sin(-x)) == -expected)
-    self.assertTrue(Approx(cos(x-Interval.half_pi())) == expected)
-    self.assertTrue(Approx(cos(Interval.half_pi()-x)) == expected)
-    self.assertTrue(Approx(cos(x+Interval.half_pi())) == -expected)
-    self.assertTrue(Approx(cos(x+Interval.two_pi()-Interval.half_pi())) == expected)
+    self.assertTrue(Approx(sin(x), 1e-9) == expected)
+    self.assertTrue(Approx(sin(Interval.pi()-x), 1e-9) == expected)
+    self.assertTrue(Approx(sin(x+Interval.two_pi()), 1e-9) == expected)
+    self.assertTrue(Approx(sin(-x), 1e-9) == -expected)
+    self.assertTrue(Approx(cos(x-Interval.half_pi()), 1e-9) == expected)
+    self.assertTrue(Approx(cos(Interval.half_pi()-x), 1e-9) == expected)
+    self.assertTrue(Approx(cos(x+Interval.half_pi()), 1e-9) == -expected)
+    self.assertTrue(Approx(cos(x+Interval.two_pi()-Interval.half_pi()), 1e-9) == expected)
 
   def CHECK_pow(self, x, p, expected, eps = 0.):
     self.assertTrue(Approx(pow(x,p),eps) == expected)
