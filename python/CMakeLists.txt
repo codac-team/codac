@@ -4,7 +4,7 @@
 
   add_subdirectory(pybind11)
 
-  set(PYTHON_PACKAGE_NAME "codac")
+  set(PYTHON_PACKAGE_NAME ${PROJECT_NAME})
   set(PYTHON_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_package")
 
   file(MAKE_DIRECTORY ${PYTHON_PACKAGE_DIR})
@@ -81,7 +81,7 @@
     )
 
    	target_link_libraries(core
-   	  PRIVATE codac-core ${LIBS} Ibex::ibex
+   	  PRIVATE ${PROJECT_NAME}-core ${LIBS} Ibex::ibex
    	)
 
     # Copy the generated library in the package folder
@@ -107,7 +107,7 @@
     )
 
     target_link_libraries(graphics
-      PRIVATE codac-core ${LIBS} Ibex::ibex
+      PRIVATE ${PROJECT_NAME}-core ${LIBS} Ibex::ibex
     )
 
     # Copy the generated library in the package folder
@@ -128,7 +128,7 @@
     )
 
     target_link_libraries(unsupported
-      PRIVATE codac-core ${LIBS} Ibex::ibex
+      PRIVATE ${PROJECT_NAME}-core ${LIBS} Ibex::ibex
     )
 
     # Copy the generated library in the package folder

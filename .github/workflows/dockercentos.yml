@@ -1,7 +1,9 @@
 # This files generates Python wheels for Linux
 on:
     push:
-        branches: 'master'
+        branches:
+            - master
+            - codac4matlab
         tags: '' # Restrict to blank tags
     pull_request:
 
@@ -40,4 +42,4 @@ jobs:
         file: "wheelhouse/*.whl"
         overwrite: true
         tag_name: autotagname-${{ github.sha }}
-      if: (github.event_name != 'pull_request')&&(github.ref_name == 'master')
+      if: (github.event_name!='pull_request')&&((github.ref_name=='master')||(github.ref_name=='codac4matlab'))
