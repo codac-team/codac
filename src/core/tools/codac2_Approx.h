@@ -31,7 +31,7 @@ namespace codac2
         return x1 == x2._x
           || (fabs(x1.lb()-x2._x.lb()) < x2._eps.ub() && x1.ub() == x2._x.ub())
           || (fabs(x1.ub()-x2._x.ub()) < x2._eps.ub() && x1.lb() == x2._x.lb())
-          || (fabs(x1.lb()-x2._x.lb()) < x2._eps.ub() && fabs(x1.ub()-x2._x.ub()) < x2._eps.ub() && x1.lb());
+          || (fabs(x1.lb()-x2._x.lb()) < x2._eps.ub() && fabs(x1.ub()-x2._x.ub()) < x2._eps.ub());
       }
 
       friend bool operator==(const Approx<T>& x1, const T& x2)

@@ -42,4 +42,4 @@ jobs:
         file: "wheelhouse/*.whl"
         overwrite: true
         tag_name: autotagname-${{ github.sha }}
-      if: (github.event_name != 'pull_request')&&((github.ref_name == 'master')||(github.ref_name == 'codac4matlab'))
+      if: (github.event_name!='pull_request')&&((github.ref_name=='master')||(github.ref_name=='codac4matlab'))

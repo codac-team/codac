@@ -38,11 +38,6 @@
     endif()
   endif()
 
-  if(WITH_PYTHON)
-    set(CMAKE_CXX_FLAGS "-fPIC")
-    set(CMAKE_C_FLAGS "-fPIC")
-  endif()
-
 ################################################################################
 # Options for directories
 ################################################################################
@@ -137,6 +132,10 @@
   # Note: place this tests block before the add_subdirectory(python),
   # otherwise python tests will not be taken into account. 
   option(BUILD_TESTS "Build test" OFF)
+  if(${CMAKE_VERSION} VERSION_LESS "3.14.0")
+    # Disable tests due to FetchContent_MakeAvailable which needs CMake >= 3.14.
+    set(BUILD_TESTS OFF CACHE BOOL "Build test" FORCE)
+  endif()
   if(BUILD_TESTS)
     include(CTest)
     add_custom_target(check
