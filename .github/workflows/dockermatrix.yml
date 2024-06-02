@@ -1,9 +1,7 @@
 # This file checks that the lib runs on ARM
 on:
     push:
-        branches:
-            - master
-            - codac4matlab
+        branches: 'master'
         tags: '' # Restrict to blank tags
     pull_request:
 
@@ -83,10 +81,10 @@ jobs:
         fi && \
         cp -Rf ../codac . ; cp -Rf ../tests/test_codac/* ./example/ ; cd .. ; zip -q -r codac_standalone_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_standalone && \
         cd codac_standalone/example && \
-        #cmake ${{ matrix.cfg.cmake_params }} . && \
-        #cmake --build . --config Release && \
-        #file ./${{ matrix.cfg.test_config }}my_project && \
-        #./${{ matrix.cfg.test_config }}my_project && \
+        cmake ${{ matrix.cfg.cmake_params }} . && \
+        cmake --build . --config Release && \
+        file ./${{ matrix.cfg.test_config }}my_project && \
+        ./${{ matrix.cfg.test_config }}my_project && \
         cd ../.. && \
         if [ ${{ matrix.cfg.deb }} = true ]; then \
         cd packages && \
@@ -99,10 +97,10 @@ jobs:
         fi && \
         rm -Rf codac && \
         cd tests/test_codac && \
-        #cmake ${{ matrix.cfg.cmake_params }} . && \
-        #cmake --build . --config Release && \
-        #file ./${{ matrix.cfg.test_config }}my_project && \
-        #./${{ matrix.cfg.test_config }}my_project && \
+        cmake ${{ matrix.cfg.cmake_params }} . && \
+        cmake --build . --config Release && \
+        file ./${{ matrix.cfg.test_config }}my_project && \
+        ./${{ matrix.cfg.test_config }}my_project && \
         cd ../.."
     - uses: xresloader/upload-to-github-release@v1
       env:
