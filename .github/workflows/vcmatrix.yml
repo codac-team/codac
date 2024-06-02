@@ -85,4 +85,4 @@ jobs:
         cd build && ctest -C Release -V --output-on-failure
         cd ..
       shell: bash
-      if: (github.ref_name!='codac4matlab')
+      if: (github.ref_name!='codac4matlab')&&(github.event_name!='pull_request')

@@ -177,7 +177,7 @@ jobs:
         ./${{ matrix.cfg.test_config }}my_project
         cd ../..
       shell: bash
-      if: (matrix.cfg.cross!=true)&&(github.ref_name!='codac4matlab')
+      if: (matrix.cfg.cross!=true)&&(github.ref_name!='codac4matlab')&&(github.event_name!='pull_request')
     - run: |
         source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH
         cd packages/choco
@@ -229,4 +229,4 @@ jobs:
         ./${{ matrix.cfg.test_config }}my_project
         cd ../..
       shell: bash
-      if: (matrix.cfg.cross!=true)&&(github.ref_name!='codac4matlab')
+      if: (matrix.cfg.cross!=true)&&(github.ref_name!='codac4matlab')&&(github.event_name!='pull_request')
