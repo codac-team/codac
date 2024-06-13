@@ -99,8 +99,8 @@ namespace codac2
         : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(l)
       { }
 
-      // too ambiguous (IntervalVector can only be row): // Defined in codac2_IntervalVector.h
-      // too ambiguous (IntervalVector can only be row): explicit IntervalMatrix(std::initializer_list<IntervalVector> l);
+      // Defined in codac2_IntervalVector.h
+      explicit IntervalMatrix(std::initializer_list<IntervalVector> l);
 
       IntervalMatrix(const Matrix& x)
         : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(x)
