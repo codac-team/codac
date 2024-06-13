@@ -257,22 +257,4 @@ namespace codac2
     (x_.put(increm(i,x.size()),IntervalVector(x)), ...);
     return x_;
   }
-
-  template<typename S,typename V,int R,int C>
-  inline IntervalMatrixTemplate_<S,V,R,C>::IntervalMatrixTemplate_(std::initializer_list<IntervalVector> l)
-    : MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>(l.begin()->size(),l.size())
-  {
-    size_t j = 0;
-    for(const auto& li : l)
-    {
-      assert(li.size() == (size_t)this->rows());
-      for(size_t i = 0 ; i < li.size() ; i++)
-        (*this)(i,j) = li[i];
-      j++;
-    }
-  }
-
-  inline IntervalMatrix::IntervalMatrix(std::initializer_list<codac2::IntervalVector> l)
-    : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(l)
-  { }
 }

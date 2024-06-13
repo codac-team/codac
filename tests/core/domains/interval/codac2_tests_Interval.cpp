@@ -135,6 +135,21 @@ TEST_CASE("Interval")
   CHECK(x.rad() == oo);
   CHECK(x.diam() == oo);
 
+  x = Interval(-1,1);
+  for(size_t i = 0 ; i < 10 ; i++)
+    CHECK(x.contains(x.rand()));
+  x = Interval(-oo,0);
+  for(size_t i = 0 ; i < 10 ; i++)
+    CHECK(x.contains(x.rand()));
+  x = Interval(0,oo);
+  for(size_t i = 0 ; i < 10 ; i++)
+    CHECK(x.contains(x.rand()));
+  x = Interval(-oo,oo);
+  for(size_t i = 0 ; i < 10 ; i++)
+    CHECK(x.contains(x.rand()));
+  x = Interval::empty();
+  CHECK(std::isnan(x.rand()));
+
   CHECK(Interval(0,1).is_subset(Interval(0,2)));
   CHECK(!Interval(0,1).is_subset(Interval(1,2)));
   CHECK(!Interval(0,1).is_strict_interior_subset(Interval(0,2)));

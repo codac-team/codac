@@ -76,11 +76,10 @@ void FigureIPE::draw_polyline(const vector<Vector>& x, const StyleProperties& s)
     fill=\"codac_color_" << s.fill_color.to_hex_str("") << "\" \n \
     pen=\"ultrafat\"> \n ";
 
-  bool first_vertex = true;
   for(size_t k = 0 ; k < x.size() ; k++)
   {
     assert(_fig.size() <= x[k].size());
-    _f_temp_content << scale_x(x[k][0]) << " " << scale_y(x[k][1]) << ((k == 0 ? " m \n" : " l \n"));
+    _f_temp_content << scale_x(x[k][i]) << " " << scale_y(x[k][j]) << ((k == 0 ? " m \n" : " l \n"));
   }
 
   _f_temp_content << "</path>";

@@ -15,6 +15,7 @@
 import unittest
 from codac import *
 import sys
+import math
 
 class TestInterval(unittest.TestCase):
 
@@ -127,6 +128,21 @@ class TestInterval(unittest.TestCase):
     self.assertTrue(x.mid() == sys.float_info.max)
     self.assertTrue(x.rad() == oo)
     self.assertTrue(x.diam() == oo)
+
+    x = Interval(-1,1)
+    for i in range(10):
+      self.assertTrue(x.contains(x.rand()))
+    x = Interval(-oo,0);
+    for i in range(10):
+      self.assertTrue(x.contains(x.rand()))
+    x = Interval(0,oo);
+    for i in range(10):
+      self.assertTrue(x.contains(x.rand()))
+    x = Interval(-oo,oo);
+    for i in range(10):
+      self.assertTrue(x.contains(x.rand()))
+    x = Interval.empty()
+    self.assertTrue(math.isnan(x.rand()))
 
     self.assertTrue(Interval(0,1).is_subset(Interval(0,2)))
     self.assertTrue(not Interval(0,1).is_subset(Interval(1,2)))

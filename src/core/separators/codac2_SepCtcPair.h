@@ -34,6 +34,6 @@ namespace codac2
 
     protected:
 
-      Collection<Ctc_<IntervalVector>> _ctc_in_out;
+      const Collection<Ctc_<IntervalVector>> _ctc_in_out;
   };
 }

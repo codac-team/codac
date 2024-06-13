@@ -978,14 +978,14 @@ using namespace codac2;
     if(x1.size() != 2 || x2.size() != 2)
       throw std::invalid_argument("Invalid argument: vectors must be of size 2");
 
-    return DetOp::fwd(IntervalMatrix({x1,x2}));
+    return DetOp::fwd(IntervalMatrix(x1,x2));
   }
 
   ScalarOpValue DetOp::fwd(const VectorOpValue& x1, const VectorOpValue& x2)
   {
     return {
-      fwd(IntervalMatrix({x1.m, x2.m})),
-      fwd(IntervalMatrix({x1.a, x2.a})),
+      fwd(IntervalMatrix(x1.m,x2.m)),
+      fwd(IntervalMatrix(x1.a,x2.a)),
       IntervalMatrix(0,0), // not supported yet for auto diff
       x1.def_domain && x2.def_domain
     };
@@ -995,7 +995,7 @@ using namespace codac2;
   {
     if(x1.size() != 2 || x2.size() != 2)
       throw std::invalid_argument("Invalid argument: vectors must be of size 2");
-    IntervalMatrix m({x1,x2});
+    IntervalMatrix m(x1,x2);
     DetOp::bwd(y,m);
     x1 &= m.col(0);
     x2 &= m.col(1);
@@ -1008,14 +1008,14 @@ using namespace codac2;
     if(x1.size() != 3 || x2.size() != 3 || x3.size() != 3)
       throw std::invalid_argument("Invalid argument: vectors must be of size 3");
 
-    return DetOp::fwd(IntervalMatrix({x1,x2,x3}));
+    return DetOp::fwd(IntervalMatrix(x1,x2,x3));
   }
 
   ScalarOpValue DetOp::fwd(const VectorOpValue& x1, const VectorOpValue& x2, const VectorOpValue& x3)
   {
     return {
-      fwd(IntervalMatrix({x1.m, x2.m, x3.m})),
-      fwd(IntervalMatrix({x1.a, x2.a, x3.a})),
+      fwd(IntervalMatrix(x1.m,x2.m,x3.m)),
+      fwd(IntervalMatrix(x1.a,x2.a,x3.a)),
       IntervalMatrix(0,0), // not supported yet for auto diff
       x1.def_domain && x2.def_domain && x3.def_domain
     };
@@ -1025,7 +1025,7 @@ using namespace codac2;
   {
     if(x1.size() != 3 || x2.size() != 3 || x3.size() != 3)
       throw std::invalid_argument("Invalid argument: vectors must be of size 3");
-    IntervalMatrix m({x1,x2,x3});
+    IntervalMatrix m(x1,x2,x3);
     DetOp::bwd(y,m);
     x1 &= m.col(0);
     x2 &= m.col(1);

@@ -147,6 +147,19 @@ namespace codac2
       double mid() const;
 
       /**
+       * \brief Returns a random value inside the interval
+       *
+       * \note The seed of the pseudo-random number generator is 
+       *       voluntarily initialized outside this function, on demand.
+       * 
+       * \note In case of infinite bounds, only floating point values
+       *       can be returned.
+       *
+       * \return random value
+       */
+      double rand() const;
+
+      /**
        * \brief Returns the radius of this
        * 
        * \return the radius, or 0 if this is empty

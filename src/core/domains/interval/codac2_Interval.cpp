@@ -15,6 +15,7 @@
  */
 
 #include <cassert>
+#include <limits>
 #include "codac2_Interval.h"
 
 using namespace std;
@@ -80,6 +81,16 @@ namespace codac2
   double Interval::mid() const
   {
     return ibex::Interval::mid();
+  }
+
+  double Interval::rand() const
+  {
+    if(is_empty())
+      return std::numeric_limits<double>::quiet_NaN();
+
+    double a = max(next_float(-oo),lb());
+    double b = min(previous_float(oo),ub());
+    return a + (((double)std::rand())/(double)RAND_MAX)*(b-a);
   }
 
   double Interval::rad() const

@@ -95,12 +95,19 @@ namespace codac2
         : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(nb_rows, nb_cols, values)
       { }
 
-      explicit IntervalMatrix(std::initializer_list<std::initializer_list<Interval>> l)
+      IntervalMatrix(std::initializer_list<std::initializer_list<Interval>> l)
         : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(l)
       { }
 
-      // Defined in codac2_IntervalVector.h
-      explicit IntervalMatrix(std::initializer_list<IntervalVector> l);
+      template<typename... IV, typename = typename std::enable_if<(true && ... && 
+          std::is_same_v<IntervalVector,IV>
+        ), void>::type>
+      explicit IntervalMatrix(const IV&... x)
+        : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(std::get<0>(std::tie(x...)).size(), sizeof...(IV))
+      {
+        size_t i = 0;
+        ((this->col(i++) = x), ...);
+      }
 
       IntervalMatrix(const Matrix& x)
         : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(x)
