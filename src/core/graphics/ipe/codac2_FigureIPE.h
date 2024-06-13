@@ -9,9 +9,11 @@
 
 #pragma once
 
+#include <vector>
 #include <fstream>
 #include "codac2_Figure.h"
 #include "codac2_OutputFigure.h"
+#include "codac2_Vector.h"
 #include "codac2_IntervalVector.h"
 #include "vibes.h"
 
@@ -28,6 +30,7 @@ namespace codac2
       void center_viewbox(const Vector& c, const Vector& r);
       virtual void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties());
       virtual void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties());
+      virtual void draw_polyline(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties());
 
     protected:
 

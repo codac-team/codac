@@ -95,5 +95,11 @@ void Figure::draw_box(const IntervalVector& x, const StyleProperties& s)
 void Figure::draw_circle(const Vector& c, double r, const StyleProperties& s)
 {
   for(const auto& output_fig : _output_figures)
-    output_fig->draw_circle(c,r);
+    output_fig->draw_circle(c,r,s);
+}
+
+void Figure::draw_polyline(const vector<Vector>& x, const StyleProperties& s)
+{
+  for(const auto& output_fig : _output_figures)
+    output_fig->draw_polyline(x,s);
 }

@@ -10,6 +10,8 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include "codac2_Vector.h"
 #include "codac2_IntervalVector.h"
 #include "codac2_FigureInterface.h"
 
@@ -31,6 +33,7 @@ namespace codac2
 
       virtual void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties()) = 0;
       virtual void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties()) = 0;
+      virtual void draw_polyline(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties()) = 0;
 
     protected:
 
