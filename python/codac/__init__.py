@@ -33,12 +33,12 @@ class AnalyticFunction:
 
 class CtcInverse(CtcIntervalVector):
 
-  def __init__(self, f, y):
+  def __init__(self, f, y, with_centered_form = True):
     CtcIntervalVector.__init__(self, f.input_size())
     if isinstance(f.f, AnalyticFunction_Scalar):
-      self.c = CtcInverse_Interval(f.f,Interval(y))
+      self.c = CtcInverse_Interval(f.f,Interval(y),with_centered_form)
     elif isinstance(f.f, AnalyticFunction_Vector):
-      self.c = CtcInverse_IntervalVector(f.f,IntervalVector(y))
+      self.c = CtcInverse_IntervalVector(f.f,IntervalVector(y),with_centered_form)
     else:
       raise ValueError("Can only build CtcInverse from scalar or vector functions")
 
