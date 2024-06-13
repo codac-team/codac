@@ -18,11 +18,7 @@ namespace codac2
   {
     public:
 
-      /*explicit CtcSegment(const Vector& a, const Vector& b)
-        : CtcSegment(IntervalVector(a), IntervalVector(b))
-      { }
-
-      explicit */CtcSegment(const IntervalVector& a, const IntervalVector& b)
+      CtcSegment(const IntervalVector& a, const IntervalVector& b)
         : Ctc_<IntervalVector>(2), _a(a), _b(b)
       { }
 

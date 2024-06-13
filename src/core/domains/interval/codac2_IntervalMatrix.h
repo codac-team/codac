@@ -95,7 +95,7 @@ namespace codac2
         : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(nb_rows, nb_cols, values)
       { }
 
-      IntervalMatrix(std::initializer_list<std::initializer_list<Interval>> l)
+      explicit IntervalMatrix(std::initializer_list<std::initializer_list<Interval>> l)
         : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(l)
       { }
 
