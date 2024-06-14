@@ -44,6 +44,10 @@ string ColorRGB::to_hex_str(const string& prefix) const
 StyleProperties::StyleProperties()
 { }
 
+StyleProperties::StyleProperties(const ColorRGB& stroke_color_)
+  : stroke_color(stroke_color_), fill_color(ColorRGB::white())
+{ }
+
 StyleProperties::StyleProperties(const string& vibes_style)
   : stroke_color(ColorRGB::green()), fill_color(ColorRGB::white())
 { }

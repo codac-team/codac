@@ -59,6 +59,13 @@ void FigureIPE::draw_box(const IntervalVector& x, const StyleProperties& s)
 {
   assert(_fig.size() <= x.size());
   int i = _fig.axes()[0].dim_id; int j = _fig.axes()[1].dim_id;
+  draw_polyline({{x[i].lb(),x[j].lb()}, {x[i].ub(),x[j].lb()}, {x[i].ub(),x[j].ub()}, {x[i].lb(),x[j].ub()}, {x[i].lb(),x[j].lb()}}, s);
+}
+
+void FigureIPE::draw_polyline(const vector<Vector>& x, const StyleProperties& s)
+{
+  assert(x.size() > 1);
+  int i = _fig.axes()[0].dim_id; int j = _fig.axes()[1].dim_id;
 
   _colors.emplace(s.stroke_color.to_hex_str(""), s.stroke_color);
   _colors.emplace(s.fill_color.to_hex_str(""), s.fill_color);
@@ -67,13 +74,15 @@ void FigureIPE::draw_box(const IntervalVector& x, const StyleProperties& s)
     <path layer=\"alpha\" \n \
     stroke=\"codac_color_" << s.stroke_color.to_hex_str("") << "\" \n \
     fill=\"codac_color_" << s.fill_color.to_hex_str("") << "\" \n \
-    pen=\"ultrafat\"> \n \
-    " << scale_x(x[i].lb()) << " " << scale_y(x[j].ub()) << " m \n \
-    " << scale_x(x[i].ub()) << " " << scale_y(x[j].ub()) << " l \n \
-    " << scale_x(x[i].ub()) << " " << scale_y(x[j].lb()) << " l \n \
-    " << scale_x(x[i].lb()) << " " << scale_y(x[j].lb()) << " l \n \
-    h \n \
-    </path>";
+    pen=\"ultrafat\"> \n ";
+
+  for(size_t k = 0 ; k < x.size() ; k++)
+  {
+    assert(_fig.size() <= x[k].size());
+    _f_temp_content << scale_x(x[k][i]) << " " << scale_y(x[k][j]) << ((k == 0 ? " m \n" : " l \n"));
+  }
+
+  _f_temp_content << "</path>";
 }
 
 void FigureIPE::draw_circle(const Vector& c, double r, const StyleProperties& s)

@@ -56,6 +56,19 @@ namespace codac2
       }
 
       template<typename... Args>
+      typename T::Domain eval_centered_only(const Args&... x) const
+      {
+        check_valid_inputs(x...);
+        auto x_ = eval_(x...);
+        auto flatten_x = cart_prod(x...);
+        
+        if constexpr(std::is_same_v<typename T::Domain,Interval>)
+          return /*x_.a &*/ (x_.m + (x_.da*(flatten_x-flatten_x.mid().template cast<Interval>()))[0]);
+        else
+          return /*x_.a &*/ (x_.m + (x_.da*(flatten_x-flatten_x.mid().template cast<Interval>())).col(0));
+      }
+
+      template<typename... Args>
       auto diff(const Args&... x) const
       {
         check_valid_inputs(x...);

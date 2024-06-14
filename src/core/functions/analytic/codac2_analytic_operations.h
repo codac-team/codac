@@ -538,4 +538,24 @@ namespace codac2
       return std::make_shared<AnalyticOperationExpr<MatrixOp,MatrixOpValue,X...>>(
         AnalyticOperationExpr<MatrixOp,MatrixOpValue,X...>(x...));
     }
+
+  // Vectorial operations
+
+    inline ScalarExpr_ptr
+    det(const MatrixExpr_ptr& x1)
+    {
+      return std::make_shared<AnalyticOperationExpr<DetOp,ScalarOpValue,MatrixOpValue>>(x1);
+    }
+
+    inline ScalarExpr_ptr
+    det(const VectorExpr_ptr& x1, const VectorExpr_ptr& x2)
+    {
+      return std::make_shared<AnalyticOperationExpr<DetOp,ScalarOpValue,VectorOpValue,VectorOpValue>>(x1,x2);
+    }
+
+    inline ScalarExpr_ptr
+    det(const VectorExpr_ptr& x1, const VectorExpr_ptr& x2, const VectorExpr_ptr& x3)
+    {
+      return std::make_shared<AnalyticOperationExpr<DetOp,ScalarOpValue,VectorOpValue,VectorOpValue,VectorOpValue>>(x1,x2,x3);
+    }
 }

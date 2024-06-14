@@ -26,7 +26,8 @@ void export_CtcInverse(py::module& m, const std::string& export_name, py::class_
   py::class_<CtcInverse_<T>> exported(m, export_name.c_str(), pyctc, CTCINVERSE_MAIN);
   exported
 
-    .def(py::init<const AnalyticFunction<OpValue<T>>&, const T&>())
+    .def(py::init<const AnalyticFunction<OpValue<T>>&,const T&,bool>(),
+      "f"_a, "y"_a, "with_centered_form"_a = true)
 
     .def("contract", &CtcInverse_<T>::contract,
       "todo",

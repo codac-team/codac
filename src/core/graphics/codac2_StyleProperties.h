@@ -42,6 +42,7 @@ namespace codac2
     static ColorRGB black()     { return ColorRGB(0,   0,   0);   };
     static ColorRGB white()     { return ColorRGB(255, 255, 255); };
     static ColorRGB green()     { return ColorRGB(144, 242, 0);   };
+    static ColorRGB blue()      { return ColorRGB(0,   98,  198);   };
     static ColorRGB cyan()      { return ColorRGB(75,  207, 250); };
     static ColorRGB yellow()    { return ColorRGB(255, 211, 42);  };
     static ColorRGB red()       { return ColorRGB(209, 59,  0);   };
@@ -63,6 +64,7 @@ namespace codac2
     ColorRGB fill_color = []() { auto c = ColorRGB::white(); c.alpha = 0.; return c; }();
 
     StyleProperties();
+    StyleProperties(const ColorRGB& stroke_color);
     StyleProperties(const std::string& vibes_style);
     StyleProperties(const char* vibes_style);
 

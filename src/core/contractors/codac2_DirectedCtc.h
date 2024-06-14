@@ -289,4 +289,22 @@ namespace codac2
       ((x &= y.col(i++)), ...);
     }
   };
+
+  struct DetOp
+  {
+    // For matrices
+    static Interval fwd(const IntervalMatrix& x);
+    static ScalarOpValue fwd(const MatrixOpValue& x);
+    static void bwd(const Interval& y, IntervalMatrix& x);
+
+    // For two vectors (merged into a 2×2 matrix)
+    static Interval fwd(const IntervalVector& x1, const IntervalVector& x2);
+    static ScalarOpValue fwd(const VectorOpValue& x1, const VectorOpValue& x2);
+    static void bwd(const Interval& y, IntervalVector& x1, IntervalVector& x2);
+
+    // For three vectors (merged into a 3×3 matrix)
+    static Interval fwd(const IntervalVector& x1, const IntervalVector& x2, const IntervalVector& x3);
+    static ScalarOpValue fwd(const VectorOpValue& x1, const VectorOpValue& x2, const VectorOpValue& x3);
+    static void bwd(const Interval& y, IntervalVector& x1, IntervalVector& x2, IntervalVector& x3);
+  };
 }

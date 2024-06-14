@@ -27,10 +27,13 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcUnion.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolar.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolar.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcSegment.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcSegment.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcWrapper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_DirectedCtc.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_DirectedCtc.h
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/codac2_BoolInterval.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/codac2_Domain.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_Interval.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_Interval.h
@@ -60,6 +63,9 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_SetFunction.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_constants.h
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_geometry.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_geometry.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure.h
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_FigureInterface.h
@@ -83,6 +89,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCartProd.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCartProd.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCtc.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCtcBoundary.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCtcBoundary.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCtcPair.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCtcPair.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepEllipse.cpp
@@ -91,6 +99,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepNot.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolygon.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolygon.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepUnion.cpp
@@ -130,6 +140,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set
+    ${CMAKE_CURRENT_SOURCE_DIR}/geometry
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/ipe
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes

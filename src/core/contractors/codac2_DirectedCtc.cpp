@@ -917,3 +917,117 @@ using namespace codac2;
     m.resize(x.size(),m.cols());
     m.col(i) = x;
   }
+
+
+// DetOp
+
+  // For matrices
+
+  Interval DetOp::fwd(const IntervalMatrix& x)
+  {
+    if(x.rows() != x.cols())
+      throw std::invalid_argument("Invalid argument: can only compute determinants for a square matrix");
+
+    else if(x.rows() == 1) // 1×1 matrix
+      return x(0,0);
+
+    else if(x.rows() == 2) // 2×2 matrix
+      return x(0,0)*x(1,1)-x(0,1)*x(1,0);
+
+    else
+    {
+      throw std::invalid_argument("Invalid argument: determinant not yet computable for n×n matrices, n>2");
+      return Interval::empty();
+    }
+  }
+
+  ScalarOpValue DetOp::fwd(const MatrixOpValue& x)
+  {
+    return {
+      fwd(x.m),
+      fwd(x.a),
+      IntervalMatrix(0,0), // not supported yet for auto diff
+      x.def_domain
+    };
+  }
+
+  void DetOp::bwd(const Interval& y, IntervalMatrix& x)
+  {
+    if(x.rows() != x.cols())
+      throw std::invalid_argument("Invalid argument: can only compute determinants for a square matrix");
+
+    if(x.rows() == 1) // 1×1 matrix
+      x(0,0) &= y;
+
+    else if(x.rows() == 2) // 2×2 matrix
+    {
+      Interval z1 = x(0,0)*x(1,1), z2 = x(1,0)*x(0,1);
+      SubOp::bwd(y, z1, z2);
+      MulOp::bwd(z1, x(0,0), x(1,1));
+      MulOp::bwd(z2, x(1,0), x(0,1));
+    }
+
+    else
+      throw std::invalid_argument("Invalid argument: DetOp::bwd not yet computable for n×n matrices, n>2");
+  }
+
+  // For two vectors (merged into a 2×2 matrix)
+
+  Interval DetOp::fwd(const IntervalVector& x1, const IntervalVector& x2)
+  {
+    if(x1.size() != 2 || x2.size() != 2)
+      throw std::invalid_argument("Invalid argument: vectors must be of size 2");
+
+    return DetOp::fwd(IntervalMatrix(x1,x2));
+  }
+
+  ScalarOpValue DetOp::fwd(const VectorOpValue& x1, const VectorOpValue& x2)
+  {
+    return {
+      fwd(IntervalMatrix(x1.m,x2.m)),
+      fwd(IntervalMatrix(x1.a,x2.a)),
+      IntervalMatrix(0,0), // not supported yet for auto diff
+      x1.def_domain && x2.def_domain
+    };
+  }
+
+  void DetOp::bwd(const Interval& y, IntervalVector& x1, IntervalVector& x2)
+  {
+    if(x1.size() != 2 || x2.size() != 2)
+      throw std::invalid_argument("Invalid argument: vectors must be of size 2");
+    IntervalMatrix m(x1,x2);
+    DetOp::bwd(y,m);
+    x1 &= m.col(0);
+    x2 &= m.col(1);
+  }
+
+  // For three vectors (merged into a 3×3 matrix)
+
+  Interval DetOp::fwd(const IntervalVector& x1, const IntervalVector& x2, const IntervalVector& x3)
+  {
+    if(x1.size() != 3 || x2.size() != 3 || x3.size() != 3)
+      throw std::invalid_argument("Invalid argument: vectors must be of size 3");
+
+    return DetOp::fwd(IntervalMatrix(x1,x2,x3));
+  }
+
+  ScalarOpValue DetOp::fwd(const VectorOpValue& x1, const VectorOpValue& x2, const VectorOpValue& x3)
+  {
+    return {
+      fwd(IntervalMatrix(x1.m,x2.m,x3.m)),
+      fwd(IntervalMatrix(x1.a,x2.a,x3.a)),
+      IntervalMatrix(0,0), // not supported yet for auto diff
+      x1.def_domain && x2.def_domain && x3.def_domain
+    };
+  }
+
+  void DetOp::bwd(const Interval& y, IntervalVector& x1, IntervalVector& x2, IntervalVector& x3)
+  {
+    if(x1.size() != 3 || x2.size() != 3 || x3.size() != 3)
+      throw std::invalid_argument("Invalid argument: vectors must be of size 3");
+    IntervalMatrix m(x1,x2,x3);
+    DetOp::bwd(y,m);
+    x1 &= m.col(0);
+    x2 &= m.col(1);
+    x3 &= m.col(2);
+  }

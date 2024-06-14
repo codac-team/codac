@@ -67,6 +67,18 @@ void FigureVIBes::draw_circle(const Vector& c, double r, const StyleProperties& 
   vibes::drawCircle(c[i],c[j],r, to_vibes_style(s), _params);
 }
 
+void FigureVIBes::draw_polyline(const std::vector<Vector>& x, const StyleProperties& s)
+{
+  int i = _fig.axes()[0].dim_id; int j = _fig.axes()[1].dim_id;
+  vector<double> vx(x.size()), vy(x.size());
+  for(size_t k = 0 ; k < x.size() ; k++)
+  {
+    vx[k] = x[k][i]; vy[k] = x[k][j];
+  }
+
+  vibes::drawLine(vx,vy, to_vibes_style(s), _params);
+}
+
 string FigureVIBes::to_vibes_style(const StyleProperties& s)
 {
   return s.stroke_color.to_hex_str() + "[" + s.fill_color.to_hex_str() + "]";

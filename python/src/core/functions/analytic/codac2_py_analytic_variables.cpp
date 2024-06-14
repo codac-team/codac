@@ -85,17 +85,21 @@ void export_VectorVar(py::module& m)
       "n"_a)
 
     .def("size", &VectorVar::size,
-      SIZET_VECTORVAR_SIZE_CONST)
+      SIZET_VECTORVAR_SIZE_CONST);
 
-    .def("__getitem__", [](const VectorVar& v, size_t_type index) -> ScalarExpr
+  if(FOR_MATLAB) 
+    exported.def("__call__", [](const VectorVar& v, size_t_type index) -> ScalarExpr
       {
         return get_item(v, index);
-      }, SHARED_PTR_ANALYTICEXPR_SCALAROPVALUE_VECTORVAR_OPERATORCOMPO_SIZET_CONST)
+      }, SHARED_PTR_ANALYTICEXPR_SCALAROPVALUE_VECTORVAR_OPERATORCOMPO_SIZET_CONST);
 
-    .def("i", [](const VectorVar& v, size_t_type index) -> ScalarExpr
+  else
+    exported.def("__getitem__", [](const VectorVar& v, size_t_type index) -> ScalarExpr
       {
         return get_item(v, index);
-      }, SHARED_PTR_ANALYTICEXPR_SCALAROPVALUE_VECTORVAR_OPERATORCOMPO_SIZET_CONST)
+      }, SHARED_PTR_ANALYTICEXPR_SCALAROPVALUE_VECTORVAR_OPERATORCOMPO_SIZET_CONST);
+
+  exported
 
     .def("__add__",  [](const VectorVar& e1, const VectorVar& e2)      { return VectorExpr(VectorExpr(e1) + VectorExpr(e2)); })
     .def("__add__",  [](const VectorVar& e1, const IntervalVector& e2) { return VectorExpr(VectorExpr(e1) + VectorExpr(e2)); })

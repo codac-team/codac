@@ -232,6 +232,11 @@ namespace codac2
         degenerate_mat(mid);
       }
 
+      V rand() const
+      {
+        degenerate_mat(rand);
+      }
+
       V rad() const
       {
         degenerate_mat(rad);

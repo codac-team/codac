@@ -21,6 +21,7 @@ list(APPEND SRC_TESTS # listing files without extension
   # Core
   core/3rd/codac2_tests_eigen
   core/3rd/codac2_tests_ibex
+  core/domains/codac2_tests_BoolInterval
   core/domains/codac2_tests_Domain
   core/domains/interval/codac2_tests_Interval
   core/domains/interval/codac2_tests_Interval_bwd
@@ -28,6 +29,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/domains/interval/codac2_tests_IntervalMatrix
   core/domains/interval/codac2_tests_IntervalVector
   core/functions/analytic/codac2_tests_AnalyticFunction
+  core/geometry/codac2_tests_geometry
   core/tools/codac2_tests_Approx
 
 

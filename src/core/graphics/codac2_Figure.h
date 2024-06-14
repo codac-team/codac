@@ -70,6 +70,7 @@ namespace codac2
 
       void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties());
       void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties());
+      void draw_polyline(const std::vector<Vector>& c, const StyleProperties& s = StyleProperties());
       
     protected:
 
@@ -119,7 +120,12 @@ namespace codac2
       
       static void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties())
       {
-        selected_fig()->draw_circle(c,r);
+        selected_fig()->draw_circle(c,r,s);
+      }
+
+      static void draw_polyline(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties())
+      {
+        selected_fig()->draw_polyline(x,s);
       }
 
     protected:
