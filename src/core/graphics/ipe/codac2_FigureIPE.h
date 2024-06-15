@@ -42,6 +42,6 @@ namespace codac2
       const double _ipe_grid_size = 500.;
       Vector _ratio { 1., 1. };
 
-      std::map<std::string,ColorRGB> _colors;
+      std::map<std::string,Color> _colors;
   };
 }

@@ -31,10 +31,6 @@ namespace codac2
       virtual void update_window_properties() = 0;
       virtual void center_viewbox(const Vector& c, const Vector& r) = 0;
 
-      virtual void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties()) = 0;
-      virtual void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties()) = 0;
-      virtual void draw_polyline(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties()) = 0;
-
     protected:
 
       const Figure& _fig;

@@ -14,11 +14,11 @@
 using namespace std;
 using namespace codac2;
 
-string ColorRGB::to_hex_str(const string& prefix) const
+string Color::to_hex_str(const string& prefix) const
 {
   if(hex_str.empty())
   {
-    hex_str.append(prefix);
+    hex_str = prefix;
    
     char char_r[255];
     sprintf(char_r, "%.2X", (int)(r * 255));
@@ -44,12 +44,18 @@ string ColorRGB::to_hex_str(const string& prefix) const
 StyleProperties::StyleProperties()
 { }
 
-StyleProperties::StyleProperties(const ColorRGB& stroke_color_)
-  : stroke_color(stroke_color_), fill_color(ColorRGB::white())
+StyleProperties::StyleProperties(const Color& stroke_color_)
+  : stroke_color(stroke_color_), fill_color(Color::none())
 { }
 
+StyleProperties::StyleProperties(std::initializer_list<Color> colors)
+  : stroke_color(*colors.begin()), fill_color(*std::prev(colors.end()))
+{
+  assert(colors.size() <= 2);
+}
+
 StyleProperties::StyleProperties(const string& vibes_style)
-  : stroke_color(ColorRGB::green()), fill_color(ColorRGB::white())
+  : stroke_color(Color::green()), fill_color(Color::none())
 { }
 
 StyleProperties::StyleProperties(const char* vibes_style)
@@ -59,23 +65,23 @@ StyleProperties::StyleProperties(const char* vibes_style)
 StyleProperties StyleProperties::inner()
 {
   StyleProperties s;
-  s.stroke_color = ColorRGB::dark_gray();
-  s.fill_color = ColorRGB::green();
+  s.stroke_color = Color::dark_gray();
+  s.fill_color = Color::green();
   return s;
 }
 
 StyleProperties StyleProperties::outer()
 {
   StyleProperties s;
-  s.stroke_color = ColorRGB::dark_gray();
-  s.fill_color = ColorRGB::cyan();
+  s.stroke_color = Color::dark_gray();
+  s.fill_color = Color::cyan();
   return s;
 }
 
 StyleProperties StyleProperties::boundary()
 {
   StyleProperties s;
-  s.stroke_color = ColorRGB::dark_gray();
-  s.fill_color = ColorRGB::yellow();
+  s.stroke_color = Color::dark_gray();
+  s.fill_color = Color::yellow();
   return s;
 }
