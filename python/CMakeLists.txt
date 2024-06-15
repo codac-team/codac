@@ -64,6 +64,10 @@
       src/core/functions/analytic/codac2_py_AnalyticFunction.h
       src/core/functions/analytic/codac2_py_ExprWrapper.h
       src/core/paver/codac2_py_Paver.cpp
+      src/core/separators/codac2_py_Sep.cpp
+      src/core/separators/codac2_py_Sep.h
+      src/core/separators/codac2_py_SepInverse.h
+      src/core/separators/codac2_py_SepPolygon.cpp
       src/core/tools/codac2_py_Approx.cpp
     )
 
@@ -76,6 +80,7 @@
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/functions/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/functions/analytic/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/paver/
+      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/separators/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/tools/
       ${CMAKE_CURRENT_BINARY_DIR}/docstring
     )

@@ -14,6 +14,7 @@
 #include <codac2_analytic_values.h>
 #include "codac2_py_AnalyticFunction.h"
 #include "codac2_py_CtcInverse.h"
+#include "codac2_py_SepInverse.h"
 #include "codac2_py_core.h"
 
 using namespace codac2;
@@ -39,6 +40,11 @@ void export_expression_operations(py::module& m);
 
 // paver
 void export_Paver(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
+
+// separators
+py::class_<Sep,pySep> export_Sep(py::module& m);
+void export_SepInverse(py::module& m, const std::string& export_name, py::class_<Sep,pySep>& sep);
+void export_SepPolygon(py::module& m, py::class_<Sep,pySep>& sep);
 
 // tools
 void export_Approx(py::module& m);
@@ -73,6 +79,11 @@ PYBIND11_MODULE(core, m)
 
   // paver
   export_Paver(m,py_ctc);
+
+  // separators
+  auto py_sep = export_Sep(m);
+  export_SepInverse<IntervalVector>(m,"SepInverse",py_sep);
+  export_SepPolygon(m,py_sep);
 
   // tools
   export_Approx(m);
