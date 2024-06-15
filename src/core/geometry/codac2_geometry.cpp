@@ -16,7 +16,7 @@ namespace codac2
 {
   BoolInterval on_segment(const IntervalVector& p, const array<IntervalVector,2>& v)
   {
-    return BoolInterval::YES;
+    return BoolInterval::TRUE;
   }
 
   BoolInterval orientation(const IntervalVector& p1, const IntervalVector& p2, const IntervalVector& p3)
@@ -28,9 +28,9 @@ namespace codac2
     if(o.contains(0.)) // possibly collinear points
       return BoolInterval::UNKNOWN;
     else if(o.lb() > 0.) // clockwise orientation
-      return BoolInterval::YES;
+      return BoolInterval::TRUE;
     else // anticlockwise orientation
-      return BoolInterval::NO;
+      return BoolInterval::FALSE;
   }
 
   BoolInterval segments_intersect(const array<IntervalVector,2>& a, const array<IntervalVector,2>& b)
@@ -49,10 +49,10 @@ namespace codac2
       return BoolInterval::UNKNOWN;
 
     else if(o1 != o2 && o3 != o4)
-      return BoolInterval::YES;
+      return BoolInterval::TRUE;
 
     else
-      return BoolInterval::NO;
+      return BoolInterval::FALSE;
   }
 
   BoolInterval in_polygon(const IntervalVector& p, const vector<IntervalVector>& polygon)
@@ -65,11 +65,11 @@ namespace codac2
       array<IntervalVector,2> edge_k { polygon[k], polygon[(k+1)%polygon.size()] };
       switch(segments_intersect(transect,edge_k))
       {
-        case BoolInterval::YES:
+        case BoolInterval::TRUE:
           i++;
           break;
 
-        case BoolInterval::NO:
+        case BoolInterval::FALSE:
           // no intersection
           break;
 
@@ -90,6 +90,6 @@ namespace codac2
       }
     }
 
-    return (i%2 == 0) ? BoolInterval::NO : BoolInterval::YES;
+    return (i%2 == 0) ? BoolInterval::FALSE : BoolInterval::TRUE;
   }
 }
