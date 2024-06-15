@@ -26,7 +26,7 @@ BoxPair SepCtcBoundary::separate(const IntervalVector& x) const
 
   IntervalVector x_in(x_boundary), x_out(x_boundary);
 
-  for(const auto& b : x.diff(x_boundary,true))
+  for(const auto& b : x.diff(x_boundary,false))
   {
     if(b.is_empty())
       continue;
@@ -44,10 +44,10 @@ BoxPair SepCtcBoundary::separate(const IntervalVector& x) const
 
     switch(d)
     {
-      case BoolInterval::YES:
+      case BoolInterval::TRUE:
         x_out |= b;
         break;
-      case BoolInterval::NO:
+      case BoolInterval::FALSE:
         x_in |= b;
         break;
       case BoolInterval::UNKNOWN:
@@ -58,7 +58,7 @@ BoxPair SepCtcBoundary::separate(const IntervalVector& x) const
         break;
     }
   }
-
+  
   assert((x_in | x_out) == x);
   return { x_in, x_out };
 }
