@@ -14,6 +14,7 @@
 #include <pybind11/stl.h>
 #include "codac2_py_core.h"
 #include "codac2_py_Sep.h"
+#include "codac2_py_Sep_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
 
 using namespace codac2;
 namespace py = pybind11;
@@ -25,7 +26,8 @@ py::class_<Sep,pySep> export_Sep(py::module& m)
   py::class_<Sep,pySep> py_sep(m, "Sep");
   py_sep
 
-    .def(py::init<size_t>());
+    .def(py::init<size_t>(),
+      SEP_SEP_SIZET);
 
   return py_sep;
 }

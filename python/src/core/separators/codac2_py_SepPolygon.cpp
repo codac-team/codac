@@ -14,6 +14,7 @@
 #include <codac2_SepPolygon.h>
 #include "codac2_py_Sep.h"
 #include "codac2_py_SepPolygon_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include "codac2_py_SepCtcBoundary_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 
 using namespace std;
 using namespace codac2;
@@ -26,10 +27,11 @@ void export_SepPolygon(py::module& m, py::class_<Sep,pySep>& pysep)
   exported
 
     .def(py::init<const std::vector<IntervalVector>&>(),
+      SEPPOLYGON_SEPPOLYGON_CONST_VECTOR_INTERVALVECTOR_REF,
       "vertices"_a)
 
     .def("separate", &SepPolygon::separate,
-      "todo",
+      BOXPAIR_SEPCTCBOUNDARY_SEPARATE_CONST_INTERVALVECTOR_REF_CONST,
       "x"_a)
   ;
 }

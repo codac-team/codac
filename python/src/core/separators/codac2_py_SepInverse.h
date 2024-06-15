@@ -14,6 +14,7 @@
 #include <codac2_SepInverse.h>
 #include "codac2_py_Sep.h"
 #include "codac2_py_SepInverse_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include "codac2_py_SepCtcPair_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 
 using namespace std;
 using namespace codac2;
@@ -24,13 +25,24 @@ template<typename T>
 void export_SepInverse(py::module& m, const std::string& export_name, py::class_<Sep,pySep>& pysep)
 {
   py::class_<SepInverse<T>> exported(m, export_name.c_str(), pysep, SEPINVERSE_MAIN);
+
+  exported
+    .def(py::init<const AnalyticFunction<OpValue<T>>&,const T&,bool>(),
+      SEPINVERSE_Y_SEPINVERSE_CONST_ANALYTICFUNCTION_TYPENAME_WRAPPER_Y_DOMAIN_REF_CONST_Y_REF_BOOL,
+      "f"_a, "y"_a, "with_centered_form"_a = true);
+
+  if constexpr(std::is_same_v<T,IntervalVector>) // separators only associated with interval vectors
+  {
+    exported
+    .def(py::init<const AnalyticFunction<OpValue<T>>&,const pySep&,bool>(),
+      SEPINVERSE_Y_SEPINVERSE_CONST_ANALYTICFUNCTION_TYPENAME_WRAPPER_Y_DOMAIN_REF_CONST_S_REF_BOOL,
+      "f"_a, "s"_a, "with_centered_form"_a = true);
+  }
+
   exported
 
-    .def(py::init<const AnalyticFunction<OpValue<T>>&,const T&,bool>(),
-      "f"_a, "y"_a, "with_centered_form"_a = true)
-
     .def("separate", &SepInverse<T>::separate,
-      "todo",
+      BOXPAIR_SEPCTCPAIR_SEPARATE_CONST_INTERVALVECTOR_REF_CONST,
       "x"_a)
   ;
 }

@@ -42,25 +42,27 @@ def normalize_label(str_label):
     .replace("::", "_") \
     .replace("\"\"_", "LITT") \
     .replace("~", "TILD_") \
-    .replace("or+", "ORPLUS") \
-    .replace("or-", "ORMINUS") \
-    .replace("or*", "ORMUL") \
-    .replace("or/", "ORDIV") \
-    .replace("or[]", "ORCOMPO") \
-    .replace("or()", "ORCALL") \
-    .replace("or&=", "ORANDEQ") \
-    .replace("or|=", "OROREQ") \
-    .replace("or&", "ORAND") \
-    .replace("or|", "OROR") \
-    .replace("or==", "OREQ") \
-    .replace("or!=", "ORNEQ") \
-    .replace("or=", "ORAFF") \
+    .replace("operator+", "OPERATORPLUS") \
+    .replace("operator-", "OPERATORMINUS") \
+    .replace("operator*", "OPERATORMUL") \
+    .replace("operator/", "OPERATORDIV") \
+    .replace("operator[]", "OPERATORCOMPO") \
+    .replace("operator()", "OPERATORCALL") \
+    .replace("operator&=", "OPERATORANDEQ") \
+    .replace("operator|=", "OPERATOROREQ") \
+    .replace("operator&", "OPERATORAND") \
+    .replace("operator|", "OPERATOROR") \
+    .replace("operator==", "OPERATOREQ") \
+    .replace("operator!=", "OPERATORNEQ") \
+    .replace("operator=", "OPERATORAFF") \
     .replace("&", "_REF") \
     .replace("__REF", "_REF") \
     .replace("PTR", "REF") \
     .replace("=", "EQ") \
     .replace("size_t", "SIZET") \
-    .replace("...", "_VARIADIC")
+    .replace("...", "_VARIADIC") \
+    .replace("(", "_") \
+    .replace(")", "_")
 
 def docstring_varname(memberdef):
 

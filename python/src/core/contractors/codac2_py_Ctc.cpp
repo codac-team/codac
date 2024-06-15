@@ -14,6 +14,7 @@
 #include <pybind11/stl.h>
 #include "codac2_py_core.h"
 #include "codac2_py_Ctc.h"
+#include "codac2_py_Ctc_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
 
 using namespace codac2;
 namespace py = pybind11;
@@ -25,7 +26,8 @@ py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py
   py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector> py_ctc(m, "CtcIntervalVector");
   py_ctc
 
-    .def(py::init<size_t>());
+    .def(py::init<size_t>(),
+      CTC__X__CTC__SIZET);
 
   return py_ctc;
 }

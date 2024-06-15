@@ -24,13 +24,24 @@ template<typename T>
 void export_CtcInverse(py::module& m, const std::string& export_name, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& pyctc)
 {
   py::class_<CtcInverse_<T>> exported(m, export_name.c_str(), pyctc, CTCINVERSE_MAIN);
+
   exported
-
     .def(py::init<const AnalyticFunction<OpValue<T>>&,const T&,bool>(),
-      "f"_a, "y"_a, "with_centered_form"_a = true)
+      "f"_a, "y"_a, "with_centered_form"_a = true,
+      CTCINVERSE_Y_CTCINVERSE_CONST_ANALYTICFUNCTION_TYPENAME_WRAPPER_Y_DOMAIN_REF_CONST_Y_REF_BOOL_BOOL);
 
+  if constexpr(std::is_same_v<T,IntervalVector>) // separators only associated with interval vectors
+  {
+    exported
+    .def(py::init<const AnalyticFunction<OpValue<T>>&,const pyCtcIntervalVector&,bool>(),
+      "f"_a, "c"_a, "with_centered_form"_a = true,
+      CTCINVERSE_Y_CTCINVERSE_CONST_ANALYTICFUNCTION_TYPENAME_WRAPPER_Y_DOMAIN_REF_CONST_C_REF_BOOL_BOOL);
+  }
+
+  exported
+  
     .def("contract", &CtcInverse_<T>::contract,
-      "todo",
+      VOID_CTCINVERSE_Y_CONTRACT_X_REF_VARIADIC_CONST,
       "x"_a)
   ;
 }

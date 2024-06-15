@@ -19,6 +19,7 @@
 #include <codac2_analytic_operations.h>
 #include <codac2_AnalyticFunction.h>
 #include "codac2_py_AnalyticFunction_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_FunctionBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
 #include "codac2_py_ExprWrapper.h"
 
 using namespace codac2;
@@ -57,7 +58,8 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
       }
     ), ANALYTICFUNCTION_TTYPENAME_ANALYTICFUNCTION_CONST_FUNCTIONARGSLIST_REF_CONST_SHARED_PTR_ANALYTICEXPR_T_REF)
 
-    .def("input_size", &AnalyticFunction<T>::input_size)
+    .def("input_size", &AnalyticFunction<T>::input_size,
+      SIZET_FUNCTIONBASE_E_INPUT_SIZE_CONST)
 
     .def("__call__", [](const AnalyticFunction<T>& f, const std::vector<ExprWrapperBase>& x)
       {
@@ -65,7 +67,8 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
         for(size_t i = 0 ; i < x.size() ; i++)
           v[i] = x[i].eb->copy();
         return ExprWrapper<T>(std::dynamic_pointer_cast<AnalyticExpr<T>>(f(v)->copy()));
-      })
+      },
+      SHARED_PTR_E_FUNCTIONBASE_E_OPERATORCALL_CONST_X_REF_VARIADIC_CONST)
   ;
 
   const char* EVAL_DOC = T_DOMAIN_ANALYTICFUNCTION_TTYPENAME_EVAL_CONST_ARGS_REF_VARIADIC_CONST;

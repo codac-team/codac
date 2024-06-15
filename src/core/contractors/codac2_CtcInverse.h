@@ -43,12 +43,6 @@ namespace codac2
       template<typename... X>
       void contract(X&... x) const
       {
-        contract(_with_centered_form, x...);
-      }
-
-      template<typename... X>
-      void contract(bool with_centered_form, X&... x) const
-      {
         ValuesMap v;
         // Setting user values into a map before the tree evaluation
         _f.fill_from_args(v, x...);
@@ -74,7 +68,7 @@ namespace codac2
           // expression (enabled by default). This step must be processed before the
           // backward part of the FwdBwd algorithm (the .m, .a values must not be
           // changed before the centered evaluation).
-          if(with_centered_form && val_expr.def_domain)
+          if(_with_centered_form && val_expr.def_domain)
           {
             using X0 = std::tuple_element_t<0, std::tuple<X...>>;
 
