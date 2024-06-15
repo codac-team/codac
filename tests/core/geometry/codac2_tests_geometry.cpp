@@ -13,7 +13,7 @@
 using namespace std;
 using namespace codac2;
 
-TEST_CASE("geometry")
+TEST_CASE("orientation")
 {
   // Align points
   CHECK(orientation({0.,0.},{5.,0.},{8.,0.}) == BoolInterval::UNKNOWN);
@@ -23,10 +23,17 @@ TEST_CASE("geometry")
   CHECK(orientation({0.,0.},{0.,0.},{0.,0.}) == BoolInterval::UNKNOWN);
 
   // Clockwise points
-  CHECK(orientation({0.,0.},{0.,-5.},{-2.,-5.}) == BoolInterval::YES);
-  CHECK(orientation({-999.,0.1},{0.,0.},{-999.,-0.1}) == BoolInterval::YES);
+  CHECK(orientation({0.,0.},{0.,-5.},{-2.,-5.}) == BoolInterval::TRUE);
+  CHECK(orientation({-999.,0.1},{0.,0.},{-999.,-0.1}) == BoolInterval::TRUE);
 
   // Anticlockwise points
-  CHECK(orientation({0.,0.},{0.,-5.},{2.,-5.}) == BoolInterval::NO);
-  CHECK(orientation({999.,0.1},{0.,0.},{999.,-0.1}) == BoolInterval::NO);
+  CHECK(orientation({0.,0.},{0.,-5.},{2.,-5.}) == BoolInterval::FALSE);
+  CHECK(orientation({999.,0.1},{0.,0.},{999.,-0.1}) == BoolInterval::FALSE);
+}
+
+TEST_CASE("in_polygon")
+{
+  CHECK(in_polygon({{3.1},{3}}, {{{3},{-1}},{{3},{4}},{{5},{6}},{{-1},{1}}}) == BoolInterval::FALSE);
+  CHECK(in_polygon({{2.9},{3}}, {{{3},{-1}},{{3},{4}},{{5},{6}},{{-1},{1}}}) == BoolInterval::TRUE);
+  CHECK(in_polygon({{3},{3}}, {{{3},{-1}},{{3},{4}},{{5},{6}},{{-1},{1}}}) == BoolInterval::UNKNOWN);
 }
