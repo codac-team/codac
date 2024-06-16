@@ -72,7 +72,7 @@ jobs:
         echo "CHOCO_PACKAGE_REV=" >> $GITHUB_ENV
         echo "VERBOSE=1" >> $GITHUB_ENV
       shell: bash
-    - run: if [ -z "$CHOCO_PACKAGE_REV" ]; then echo "PACKAGE_VERSION=$SOFTWARE_VERSION" >> $GITHUB_ENV ; else echo "PACKAGE_VERSION=$SOFTWARE_VERSION.$CHOCO_PACKAGE_REV" >> $GITHUB_ENV ; fi
+    - run: if [ -z "$CHOCO_PACKAGE_REV" ]; then echo "PACKAGE_VERSION=${SOFTWARE_VERSION/.dev*/-dev.$(date +%Y%m%d)}" >> $GITHUB_ENV ; else echo "PACKAGE_VERSION=$SOFTWARE_VERSION.$CHOCO_PACKAGE_REV" >> $GITHUB_ENV ; fi
       shell: bash
       if: runner.os=='Windows'
     - run: echo "PACKAGE_VERSION=$SOFTWARE_VERSION-${DEBIAN_PACKAGE_REV}${{ matrix.cfg.runtime }}$PACKAGE_REV" >> $GITHUB_ENV
@@ -171,13 +171,13 @@ jobs:
     - run: |
         if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         cd codac_standalone/example
-        #cmake ${{ matrix.cfg.cmake_params }} .
-        #cmake --build . --config Release
-        #file ./${{ matrix.cfg.test_config }}my_project
-        #./${{ matrix.cfg.test_config }}my_project
+        cmake ${{ matrix.cfg.cmake_params }} .
+        cmake --build . --config Release
+        file ./${{ matrix.cfg.test_config }}my_project
+        ./${{ matrix.cfg.test_config }}my_project
         cd ../..
       shell: bash
-      if: matrix.cfg.cross!=true
+      if: (matrix.cfg.cross!=true)&&(github.ref_name!='codac4matlab')&&(github.event_name!='pull_request')
     - run: |
         source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH
         cd packages/choco
@@ -194,7 +194,7 @@ jobs:
         mv -f codac.$PACKAGE_VERSION.nupkg ../../../
         cd ../../..
         checksum -f=codac.$PACKAGE_VERSION.nupkg -t=sha256
-        choco install -y -r --no-progress --ignore-dependencies -s . codac --params "'/url:./codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
+        choco install -y -r --no-progress --ignore-dependencies -s . codac --pre --params "'/url:./codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
         if [ ${{ matrix.cfg.runtime }} != mingw11 ] || [ ${{ matrix.cfg.arch }} != x64 ]; then rm -Rf codac.$PACKAGE_VERSION.nupkg ; fi # To avoid upload conflicts of the same file...
         checksum -f=codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip -t=sha256
       shell: bash
@@ -218,15 +218,15 @@ jobs:
         file: "*.zip;*.nupkg;*.deb"
         overwrite: true
         tag_name: autotagname-${{ github.sha }}
-      if: (github.event_name != 'pull_request')&&((github.ref_name == 'master')||(github.ref_name == 'codac4matlab'))
+      if: (github.event_name != 'pull_request')&&(github.ref_name == 'master')
     - run: |
         if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         rm -Rf codac
         cd tests/test_codac
-        #cmake ${{ matrix.cfg.cmake_params }} .
-        #cmake --build . --config Release
-        #file ./${{ matrix.cfg.test_config }}my_project
-        #./${{ matrix.cfg.test_config }}my_project
+        cmake ${{ matrix.cfg.cmake_params }} .
+        cmake --build . --config Release
+        file ./${{ matrix.cfg.test_config }}my_project
+        ./${{ matrix.cfg.test_config }}my_project
         cd ../..
       shell: bash
-      if: matrix.cfg.cross!=true
+      if: (matrix.cfg.cross!=true)&&(github.ref_name!='codac4matlab')&&(github.event_name!='pull_request')
