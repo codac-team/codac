@@ -41,14 +41,14 @@ py::class_<Interval> export_Interval(py::module& m)
       INTERVAL_INTERVAL_CONST_INTERVAL_REF)
 
     .def(py::init(
-        [](const std::vector<double>& v)
+        [](const std::list<double>& l)
         {
-          if(v.size() != 2)
-            throw invalid_argument("Interval is not made of two values.");
-          return std::make_unique<Interval>(v[0],v[1]);
+          auto i = std::make_unique<Interval>();
+          i->init_from_list(l);
+          return i;
         }),
-      INTERVAL_INTERVAL_ARRAY_DOUBLE2,
-      "v"_a)
+      INTERVAL_INTERVAL_INITIALIZER_LIST_DOUBLE,
+      "l"_a)
 
     // Interval(std::array<double,1> array);
     // Interval(std::array<double,2> array);
@@ -56,6 +56,10 @@ py::class_<Interval> export_Interval(py::module& m)
     .def("init", &Interval::init,
       INTERVAL_REF_INTERVAL_INIT_CONST_INTERVAL_REF,
       "x"_a)
+
+    .def("init_from_list", &Interval::init_from_list,
+      INTERVAL_REF_INTERVAL_INIT_FROM_LIST_CONST_LIST_DOUBLE_REF,
+      "l"_a)
 
     .def(py::self == py::self,
       BOOL_INTERVAL_OPERATOREQ_CONST_INTERVAL_REF_CONST,

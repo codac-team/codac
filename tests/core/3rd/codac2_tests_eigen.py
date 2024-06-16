@@ -11,7 +11,6 @@ import unittest
 from codac import *
 
 class TestEigen(unittest.TestCase):
-  #pass # Gives "NO TESTS RAN" error with Python 3.12...
 
   def tests_eigen(self):
      self.assertTrue(True)

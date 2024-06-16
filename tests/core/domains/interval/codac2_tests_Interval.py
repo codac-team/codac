@@ -35,6 +35,17 @@ class TestInterval(unittest.TestCase):
     self.assertTrue(Interval(0,oo) == Interval(0,oo))
     self.assertTrue(Interval.empty() == Interval.empty())
     self.assertTrue(Interval(0,0) == Interval(0,0))
+  
+    self.assertTrue(Interval([]) == Interval.empty());
+    self.assertTrue(Interval([1.]) == Interval(1.));
+    self.assertTrue(Interval([2,3]) == Interval(2,3));
+    self.assertTrue(Interval([3,2]) == Interval(2,3));
+    self.assertTrue(Interval([10,-1,oo,20]) == Interval(-1,oo));
+    self.assertTrue(Interval([-oo]) == Interval.empty());
+    self.assertTrue(Interval([oo]) == Interval.empty());
+    self.assertTrue(Interval([oo,0]) == Interval(0,oo));
+    self.assertTrue(Interval([-oo,oo]) == Interval(-oo,oo));
+    self.assertTrue(Interval([oo,-oo]) == Interval(-oo,oo));
 
     x = Interval() ; y = Interval() ; z = Interval()
 

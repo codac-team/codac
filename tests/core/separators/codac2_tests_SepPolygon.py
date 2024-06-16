@@ -10,9 +10,9 @@
 import unittest
 from codac import *
 
-class TestDomain(unittest.TestCase):
+class TestSepPolygon(unittest.TestCase):
 
-  def tests_domain(self):
+  def tests_SepPolygon(self):
      self.assertTrue(True)
 
 if __name__ ==  '__main__':

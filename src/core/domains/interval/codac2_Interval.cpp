@@ -14,6 +14,7 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
+#include <initializer_list>
 #include <cassert>
 #include <limits>
 #include "codac2_Interval.h"
@@ -47,15 +48,43 @@ namespace codac2
   { }
 
   Interval::Interval(std::initializer_list<double> l)
-    : ibex::Interval()
+    : Interval()
   {
-    assert(((int)l.size() == 2)||((int)l.size() == 1));
-    (int)l.size() == 2? *this = ibex::Interval(*(l.begin()+0),*(l.begin()+1)): *this = ibex::Interval(*l.begin());
+    init_from_list(l);
   }
 
   Interval& Interval::init(const Interval& x)
   {
     *this = x;
+    return *this;
+  }
+
+  Interval& Interval::init_from_list(const std::list<double>& l)
+  {
+    set_empty();
+
+    // Cases for which {-oo,oo} or {oo,-oo} is given as input
+    if(!l.empty() && (
+        (*l.begin() == -oo && *prev(l.end()) == oo) || 
+        (*l.begin() == oo && *prev(l.end()) == -oo)))
+      *this = Interval(-oo,oo);
+
+    else
+    {
+      // First loop: finite values only (because Interval(oo) is empty)
+      for(const auto& li : l)
+        *this |= li;
+
+      // Then, completing with possible infinite values
+      for(const auto& li : l)
+      {
+        if(li == oo)
+          *this = Interval(lb(),oo);
+        else if(li == -oo)
+          *this = Interval(-oo,ub());
+      }
+    }
+
     return *this;
   }
 

@@ -10,9 +10,9 @@
 import unittest
 from codac import *
 
-class TestDomain(unittest.TestCase):
+class TestBoolInterval(unittest.TestCase):
 
-  def tests_domain(self):
+  def tests_BoolInterval(self):
      self.assertTrue(True)
 
 if __name__ ==  '__main__':

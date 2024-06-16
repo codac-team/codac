@@ -11,10 +11,9 @@ import unittest
 from codac import *
 
 class TestIbex(unittest.TestCase):
-  #pass # IBEX is not available in Python # Gives "NO TESTS RAN" error with Python 3.12...
 
   def tests_ibex(self):
-     self.assertTrue(True)
+     self.assertTrue(True) # IBEX is not available in Python
 
 if __name__ ==  '__main__':
   unittest.main()
