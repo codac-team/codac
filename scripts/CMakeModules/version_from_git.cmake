@@ -86,7 +86,9 @@ function( version_from_git )
     return()
   endif()
 
-  if( git_tag MATCHES "^v(0|[1-9][0-9]*)[.](0|[1-9][0-9]*)[.](0|[1-9][0-9]*)(-[.0-9A-Za-z-]+)?([+][.0-9A-Za-z-]+)?$" )
+  # This did not match e.g. v2.0.0.dev1, needed for Python pre-release versions...
+  #if( git_tag MATCHES "^v(0|[1-9][0-9]*)[.](0|[1-9][0-9]*)[.](0|[1-9][0-9]*)(-[.0-9A-Za-z-]+)?([+][.0-9A-Za-z-]+)?$" )
+  if( git_tag MATCHES "^v(0|[1-9][0-9]*)[.](0|[1-9][0-9]*)[.](0|[1-9][0-9]*)(\\.dev[0-9]+|-[^.][.0-9A-Za-z-]+)?([+][.0-9A-Za-z-]+)?$" )
     set( version_major "${CMAKE_MATCH_1}" )
     set( version_minor "${CMAKE_MATCH_2}" )
     set( version_patch "${CMAKE_MATCH_3}" )
@@ -171,15 +173,5 @@ function( version_from_git )
   set( VERSION_MINOR ${version_minor} PARENT_SCOPE )
   set( VERSION_PATCH ${version_patch} PARENT_SCOPE )
   set( VERSION_ID    ${identifiers}   PARENT_SCOPE )
-
-  # Setting temporary values for dev versions of Codac2
-  # ..because tag cannot be read by this script..
-  set( VERSION       "2.0.0"                     PARENT_SCOPE )
-  set( VERSION_ID    "dev5"                      PARENT_SCOPE )
-  set( GIT_TAG       "v${VERSION}.${VERSION_ID}" PARENT_SCOPE )
-  set( SEMVER        "${GIT_TAG}+${metadata}"    PARENT_SCOPE )
-  set( VERSION_MAJOR "2"                         PARENT_SCOPE )
-  set( VERSION_MINOR "0"                         PARENT_SCOPE )
-  set( VERSION_PATCH "0"                         PARENT_SCOPE )
 
 endfunction( version_from_git )

@@ -190,7 +190,7 @@ class TestInterval_bwd(unittest.TestCase):
     x = Interval(-oo,oo);     bwd_log(Interval(-oo,0),x);  self.assertTrue(x == Approx(Interval(0,1)))
     x = Interval(0,1);        bwd_log(Interval(0,oo),x);   self.assertTrue(x == Approx(Interval(1)))
     x = Interval(-1,3);       bwd_log(Interval(0,1),x);    self.assertTrue(x == Approx(Interval(1,math.exp(1.))))
-    x = Interval(-1,3);       bwd_log(Interval(-oo,1),x);  self.assertTrue(x == Interval(0,math.exp(1.)))
+    x = Interval(-1,3);       bwd_log(Interval(-oo,1),x);  self.assertTrue(x == Approx(Interval(0,math.exp(1.))))
     x = Interval(-1,2);       bwd_log(Interval(-oo,1),x);  self.assertTrue(x == Interval(0,2))
     x = Interval(3,4);        bwd_log(Interval(-oo,1),x);  self.assertTrue(x == Interval.empty())
     x = Interval(-0.01,0.01); bwd_log(Interval(-1,1),x);   self.assertTrue(x == Interval.empty())

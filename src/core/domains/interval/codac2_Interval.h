@@ -81,6 +81,9 @@ namespace codac2
        */
       Interval(std::array<double,2> array);
 
+
+      Interval(std::initializer_list<double> l);
+
       /**
        * \brief Sets the value of this interval to x
        * 

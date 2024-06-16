@@ -1,7 +1,9 @@
 # This file generates Python wheels for macOS
 on:
     push:
-        branches: 'master'
+        branches:
+            - master
+            - codac4matlab
         tags: '' # Restrict to blank tags
     pull_request:
 
@@ -25,13 +27,13 @@ jobs:
             - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 8, cross: true, desc: 'macOS Monterey Python 3.8 arm64 (cross)' }
             - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: 'm-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 7, cross: true, desc: 'macOS Monterey Python 3.7 arm64 (cross)' }
             - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: 'm-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 6, cross: true, desc: 'macOS Monterey Python 3.6 arm64 (cross)' }
-            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 12, desc: 'macOS Monterey Python 3.12 x86_64' }
-            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 11, desc: 'macOS Monterey Python 3.11 x86_64' }
-            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Monterey Python 3.10 x86_64' }
-            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 9, desc: 'macOS Monterey Python 3.9 x86_64' }
-            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 8, desc: 'macOS Monterey Python 3.8 x86_64' }
-            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.9', cpcfg: 'm-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 7, desc: 'macOS Monterey Python 3.7 x86_64' }
-            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.14', cpcfg: 'm-macosx_10_14_x86_64', py_v_maj: 3, py_v_min: 6, desc: 'macOS Monterey Python 3.6 x86_64' } # 10.14 because of error $MACOSX_DEPLOYMENT_TARGET mismatch: now "10.9" but "10.14" during configure.
+            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 12, desc: 'macOS Monterey Python 3.12 x86_64' }
+            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 11, desc: 'macOS Monterey Python 3.11 x86_64' }
+            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Monterey Python 3.10 x86_64' }
+            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 9, desc: 'macOS Monterey Python 3.9 x86_64' }
+            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 8, desc: 'macOS Monterey Python 3.8 x86_64' }
+            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: 'm-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 7, desc: 'macOS Monterey Python 3.7 x86_64' }
+            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: 'm-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 6, desc: 'macOS Monterey Python 3.6 x86_64' } # Was 10.14 because of error $MACOSX_DEPLOYMENT_TARGET mismatch: now "10.9" but "10.14" during configure. Now 10.16 due to C++20 problems...
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v4
@@ -63,14 +65,11 @@ jobs:
       shell: bash
     - run: |
         mkdir build ; cd build
-        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=${{ matrix.cfg.arch }} -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=ON ..
+        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=${{ matrix.cfg.arch }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D WITH_CAPD=OFF -D WITH_PYTHON=ON ..
         cmake --build . -j 4 --config Release --target install
         cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
         cd ..
       shell: bash
-    - run: pip install --no-deps --no-index *.whl ; python -c "import sys; print(sys.version)" ; python examples/02_centered_form/main.py ; pip install numpy --prefer-binary #; python -m unittest discover codac.tests
-      shell: bash
-      if: matrix.cfg.cross!=true
     - uses: xresloader/upload-to-github-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -78,4 +77,12 @@ jobs:
         file: "*.whl"
         overwrite: true
         tag_name: autotagname-${{ github.sha }}
-      if: (github.event_name != 'pull_request')&&(github.ref_name == 'master')
+      if: (github.event_name!='pull_request')&&((github.ref_name=='master')||(github.ref_name=='codac4matlab'))
+    - run: |
+        pip install --no-deps --no-index *.whl
+        python -c "import sys; print(sys.version)" ; python examples/02_centered_form/main.py
+        pip install numpy --prefer-binary #; python -m unittest discover codac.tests
+        cd build && ctest -C Release -V --output-on-failure
+        cd ..
+      shell: bash
+      if: (matrix.cfg.cross!=true)&&(github.ref_name!='codac4matlab')

@@ -46,6 +46,13 @@ namespace codac2
     : ibex::Interval(array)
   { }
 
+  Interval::Interval(std::initializer_list<double> l)
+    : ibex::Interval()
+  {
+    assert(((int)l.size() == 2)||((int)l.size() == 1));
+    (int)l.size() == 2? *this = ibex::Interval(*(l.begin()+0),*(l.begin()+1)): *this = ibex::Interval(*l.begin());
+  }
+
   Interval& Interval::init(const Interval& x)
   {
     *this = x;

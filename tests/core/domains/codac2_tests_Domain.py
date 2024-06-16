@@ -11,7 +11,10 @@ import unittest
 from codac import *
 
 class TestDomain(unittest.TestCase):
-  pass
+  #pass # Gives "NO TESTS RAN" error with Python 3.12...
+
+  def tests_domain(self):
+     self.assertTrue(True)
 
 if __name__ ==  '__main__':
   unittest.main()
