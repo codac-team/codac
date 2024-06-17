@@ -1,5 +1,5 @@
 /** 
- *  codac2_OutputFigure.cpp
+ *  codac2_OutputFigure2D.cpp
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -7,19 +7,19 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
-#include "codac2_Figure.h"
-#include "codac2_OutputFigure.h"
+#include "codac2_Figure2D.h"
+#include "codac2_OutputFigure2D.h"
 
 using namespace std;
 using namespace codac2;
 
 
-const size_t& OutputFigure::i() const
+const size_t& OutputFigure2D::i() const
 {
   return _fig.axes()[0].dim_id;
 }
 
-const size_t& OutputFigure::j() const
+const size_t& OutputFigure2D::j() const
 {
   return _fig.axes()[1].dim_id;
 }

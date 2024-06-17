@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_Figure.h
+ *  \file codac2_Figure2D.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -12,8 +12,8 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "codac2_FigureInterface.h"
-#include "codac2_OutputFigure.h"
+#include "codac2_Figure2DInterface.h"
+#include "codac2_OutputFigure2D.h"
 
 namespace codac2
 {
@@ -48,13 +48,13 @@ namespace codac2
     return { dim_id, limits, axis_label };
   }
 
-  class DefaultFigure;
+  class DefaultView;
 
-  class Figure : public FigureInterface
+  class Figure2D : public Figure2DInterface
   {
     public:
 
-      Figure(const std::string& name, GraphicOutput o, bool set_as_default = false);
+      Figure2D(const std::string& name, GraphicOutput o, bool set_as_default = false);
 
       const std::string& name() const;
       size_t size() const;
@@ -91,20 +91,20 @@ namespace codac2
       const std::string _name;
       Vector _pos {50,50}, _window_size {500,500};
       std::vector<FigureAxis> _axes { axis(0,{0,1}), axis(1,{0,1}) };
-      std::vector<std::shared_ptr<OutputFigure>> _output_figures;
+      std::vector<std::shared_ptr<OutputFigure2D>> _output_figures;
 
-      friend DefaultFigure;
+      friend DefaultView;
   };
 
-  class DefaultFigure
+  class DefaultView
   {
     public:
 
-      static Figure* selected_fig()
+      static Figure2D* selected_fig()
       {
         if(_selected_fig == nullptr && _default_fig.get() == nullptr)
         {
-          _default_fig = std::make_shared<Figure>("Codac - default view", GraphicOutput::VIBES);
+          _default_fig = std::make_shared<Figure2D>("Codac - default view", GraphicOutput::VIBES);
           _default_fig->set_window_properties({20.,20.}, {800.,800.});
           _default_fig->set_axes(axis(0,{-10,10}),axis(1,{-10,10}));
           _selected_fig = _default_fig.get();
@@ -113,7 +113,7 @@ namespace codac2
         return _selected_fig;
       }
 
-      static void set(Figure *fig)
+      static void set(Figure2D *fig)
       {
         _selected_fig = fig;
       }
@@ -185,9 +185,9 @@ namespace codac2
 
     protected:
 
-      friend Figure;
+      friend Figure2D;
 
-      static std::shared_ptr<Figure> _default_fig;
-      static Figure *_selected_fig;
+      static std::shared_ptr<Figure2D> _default_fig;
+      static Figure2D *_selected_fig;
   };
 }

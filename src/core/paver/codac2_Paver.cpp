@@ -17,6 +17,11 @@ Paver::Paver(const IntervalVector& x0)
   : _x0(x0)
 { }
 
+void Paver::set_figure(Figure2D *g)
+{
+  _figure = g;
+}
+
 void Paver::init_figure()
 {
   if(_figure && _figure->is_default())
@@ -42,7 +47,7 @@ std::list<IntervalVector> Paver::pave(const Ctc_<IntervalVector>& c, double eps)
   std::list<IntervalVector> l_output;
 
   if(_figure && _x0.size() > 2)
-    _figure->draw_box(_x0, WithGraphicOutput::outer_style);
+    _figure->draw_box(_x0, outer_style);
 
   list<IntervalVector> l { _x0 };
   size_t n = 0;
@@ -56,7 +61,7 @@ std::list<IntervalVector> Paver::pave(const Ctc_<IntervalVector>& c, double eps)
 
     if(_figure && _x0.size() == 2)
       for(const auto& bi : prev_x.diff(x))
-        _figure->draw_box(bi, WithGraphicOutput::outer_style);
+        _figure->draw_box(bi, outer_style);
 
     if(!x.is_empty())
     {
@@ -65,7 +70,7 @@ std::list<IntervalVector> Paver::pave(const Ctc_<IntervalVector>& c, double eps)
         n++;
         l_output.push_back(x);
         if(_figure)
-    			_figure->draw_box(x, WithGraphicOutput::boundary_style);
+    			_figure->draw_box(x, boundary_style);
       }
 
       else
@@ -101,11 +106,11 @@ void Paver::pave(const Sep& s, double eps)
       for(const auto& bi : x.diff(x_sep.inner))
       {
         n_inner++;
-        _figure->draw_box(bi, WithGraphicOutput::inner_style);
+        _figure->draw_box(bi, inner_style);
       }
 
       for(const auto& bi : x.diff(x_sep.outer))
-        _figure->draw_box(bi, WithGraphicOutput::outer_style);
+        _figure->draw_box(bi, outer_style);
     }
 
     if(!boundary.is_empty())
@@ -114,7 +119,7 @@ void Paver::pave(const Sep& s, double eps)
       {
         n_boundary++;
         if(_figure)
-          _figure->draw_box(boundary, WithGraphicOutput::boundary_style);
+          _figure->draw_box(boundary, boundary_style);
       }
 
       else

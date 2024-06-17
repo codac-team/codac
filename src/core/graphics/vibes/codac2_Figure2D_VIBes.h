@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_FigureIPE.h
+ *  \file codac2_Figure2D_VIBes.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -9,27 +9,24 @@
 
 #pragma once
 
-#include <vector>
-#include <fstream>
-#include "codac2_Figure.h"
-#include "codac2_OutputFigure.h"
-#include "codac2_Vector.h"
+#include "codac2_Figure2D.h"
+#include "codac2_OutputFigure2D.h"
 #include "codac2_IntervalVector.h"
 #include "vibes.h"
 
 namespace codac2
 {
-  class FigureIPE : public OutputFigure
+  class Figure2D_VIBes : public OutputFigure2D
   {
     public:
 
-      FigureIPE(const Figure& fig);
-      ~FigureIPE();
+      Figure2D_VIBes(const Figure2D& fig);
+      ~Figure2D_VIBes();
+
       void update_axes();
       void update_window_properties();
       void center_viewbox(const Vector& c, const Vector& r);
-      void begin_path(const StyleProperties& s);
-
+      
       // Geometric shapes
       void draw_point(const Vector& c, const StyleProperties& s = StyleProperties());
       void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties());
@@ -43,17 +40,11 @@ namespace codac2
       void draw_tank(const Vector& x, float size, const StyleProperties& s = StyleProperties());
       void draw_AUV(const Vector& x, float size, const StyleProperties& s = StyleProperties());
 
+      static std::string to_vibes_style(const StyleProperties& s);
+
     protected:
 
-      double scale_x(double x) const;
-      double scale_y(double y) const;
-      double scale_length(double y) const;
-      void print_header_page();
-
-      std::ofstream _f, _f_temp_content;
-      const double _ipe_grid_size = 500.;
-      Vector _ratio { 1., 1. };
-
-      std::map<std::string,Color> _colors;
+      static int _has_been_initialized;
+      const vibes::Params _params;
   };
 }

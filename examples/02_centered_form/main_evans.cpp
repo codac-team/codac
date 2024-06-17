@@ -14,7 +14,7 @@ int main()
   CtcInverse_<IntervalVector> ctc(f, {{0.},{0.}});
   IntervalVector x0({{-10,10},{0,20},{1,1},{2,2}});
 
-  Figure g("Evans", GraphicOutput::VIBES);
+  Figure2D g("Evans", GraphicOutput::VIBES);
   g.set_axes(axis(0,x0[0]), axis(1,x0[1]));
   g.set_window_properties({50,50}, {800,800});
 

@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_FigureInterface.h
+ *  \file codac2_Figure2DInterface.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -17,7 +17,7 @@
 
 namespace codac2
 {
-  class FigureInterface
+  class Figure2DInterface
   {
     public:
 

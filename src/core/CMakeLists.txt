@@ -66,18 +66,17 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_geometry.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_geometry.h
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_FigureInterface.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_OutputFigure.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_OutputFigure.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure2D.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure2D.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure2DInterface.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_OutputFigure2D.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_OutputFigure2D.h
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_StyleProperties.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_StyleProperties.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_WithGraphicOutput.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/ipe/codac2_FigureIPE.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/ipe/codac2_FigureIPE.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/codac2_FigureVIBes.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/codac2_FigureVIBes.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/ipe/codac2_Figure2D_IPE.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/ipe/codac2_Figure2D_IPE.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/codac2_Figure2D_VIBes.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/codac2_Figure2D_VIBes.h
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/vibes.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/vibes.h
 

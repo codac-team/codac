@@ -1,5 +1,5 @@
 /** 
- *  codac2_FigureIPE.cpp
+ *  codac2_Figure2D_IPE.cpp
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -8,18 +8,18 @@
  */
 
 #include <cstdio>
-#include "codac2_FigureIPE.h"
+#include "codac2_Figure2D_IPE.h"
 
 using namespace std;
 using namespace codac2;
 
 
-FigureIPE::FigureIPE(const Figure& fig)
-  : OutputFigure(fig), _f(fig.name() + ".xml"),
+Figure2D_IPE::Figure2D_IPE(const Figure2D& fig)
+  : OutputFigure2D(fig), _f(fig.name() + ".xml"),
     _f_temp_content(fig.name() + "_tmp.xml")
 { }
 
-FigureIPE::~FigureIPE()
+Figure2D_IPE::~Figure2D_IPE()
 {
   print_header_page();
   _f_temp_content.close();
@@ -37,7 +37,7 @@ FigureIPE::~FigureIPE()
   _f.close();
 }
 
-void FigureIPE::update_axes()
+void Figure2D_IPE::update_axes()
 {
   _ratio = {
     _ipe_grid_size/_fig.axes()[0].limits.diam(),
@@ -45,17 +45,17 @@ void FigureIPE::update_axes()
   };
 }
 
-void FigureIPE::update_window_properties()
+void Figure2D_IPE::update_window_properties()
 {
 
 }
 
-void FigureIPE::center_viewbox(const Vector& c, const Vector& r)
+void Figure2D_IPE::center_viewbox(const Vector& c, const Vector& r)
 {
 
 }
 
-void FigureIPE::begin_path(const StyleProperties& s)
+void Figure2D_IPE::begin_path(const StyleProperties& s)
 {
   _colors.emplace(s.stroke_color.to_hex_str(""), s.stroke_color);
   _colors.emplace(s.fill_color.to_hex_str(""), s.fill_color);
@@ -69,12 +69,12 @@ void FigureIPE::begin_path(const StyleProperties& s)
     pen=\"ultrafat\"> \n ";
 }
 
-void FigureIPE::draw_point(const Vector& c, const StyleProperties& s)
+void Figure2D_IPE::draw_point(const Vector& c, const StyleProperties& s)
 {
   // Not implemented yet
 }
 
-void FigureIPE::draw_box(const IntervalVector& x, const StyleProperties& s)
+void Figure2D_IPE::draw_box(const IntervalVector& x, const StyleProperties& s)
 {
   assert(_fig.size() <= x.size());
   draw_polyline({
@@ -84,7 +84,7 @@ void FigureIPE::draw_box(const IntervalVector& x, const StyleProperties& s)
     0., s);
 }
 
-void FigureIPE::draw_circle(const Vector& c, double r, const StyleProperties& s)
+void Figure2D_IPE::draw_circle(const Vector& c, double r, const StyleProperties& s)
 {
   assert(_fig.size() <= c.size());
   assert(r > 0.);
@@ -95,7 +95,7 @@ void FigureIPE::draw_circle(const Vector& c, double r, const StyleProperties& s)
   _f_temp_content << "</path>";
 }
 
-void FigureIPE::draw_ring(const Vector& c, const Interval& r, const StyleProperties& s)
+void Figure2D_IPE::draw_ring(const Vector& c, const Interval& r, const StyleProperties& s)
 {
   assert(_fig.size() <= c.size());
   assert(!r.is_empty() && r.lb() > 0.);
@@ -108,7 +108,7 @@ void FigureIPE::draw_ring(const Vector& c, const Interval& r, const StylePropert
   _f_temp_content << "</path>";
 }
 
-void FigureIPE::draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s)
+void Figure2D_IPE::draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s)
 {
   assert(x.size() > 1);
 
@@ -123,43 +123,43 @@ void FigureIPE::draw_polyline(const std::vector<Vector>& x, float tip_length, co
   _f_temp_content << "</path>";
 }
 
-void FigureIPE::draw_polygone(const std::vector<Vector>& x, const StyleProperties& s)
+void Figure2D_IPE::draw_polygone(const std::vector<Vector>& x, const StyleProperties& s)
 {
   draw_polyline(x,0.,s);
 }
 
-void FigureIPE::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s)
+void Figure2D_IPE::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s)
 {
   // Not implemented yet
 }
 
-void FigureIPE::draw_tank(const Vector& x, float size, const StyleProperties& s)
+void Figure2D_IPE::draw_tank(const Vector& x, float size, const StyleProperties& s)
 {
   // Not implemented yet
 }
 
-void FigureIPE::draw_AUV(const Vector& x, float size, const StyleProperties& s)
+void Figure2D_IPE::draw_AUV(const Vector& x, float size, const StyleProperties& s)
 {
   // Not implemented yet
 }
 
-double FigureIPE::scale_x(double x) const
+double Figure2D_IPE::scale_x(double x) const
 {
   return (x-_fig.axes()[0].limits.lb())*_ratio[0];
 }
 
-double FigureIPE::scale_y(double y) const
+double Figure2D_IPE::scale_y(double y) const
 {
   return (y-_fig.axes()[1].limits.lb())*_ratio[1];
 }
 
-double FigureIPE::scale_length(double x) const
+double Figure2D_IPE::scale_length(double x) const
 {
   // Assuming _ratio[0] == _ratio[1]
   return x*_ratio[0];
 }
 
-void FigureIPE::print_header_page()
+void Figure2D_IPE::print_header_page()
 {
   _f << "<?xml version=\"1.0\"?> \n \
     <!DOCTYPE ipe SYSTEM \"ipe.dtd\"> \n \

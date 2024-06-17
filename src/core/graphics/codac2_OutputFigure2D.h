@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_OutputFigure.h
+ *  \file codac2_OutputFigure2D.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -13,17 +13,17 @@
 #include <vector>
 #include "codac2_Vector.h"
 #include "codac2_IntervalVector.h"
-#include "codac2_FigureInterface.h"
+#include "codac2_Figure2DInterface.h"
 
 namespace codac2
 {
-  class Figure;
+  class Figure2D;
 
-  class OutputFigure : public FigureInterface
+  class OutputFigure2D : public Figure2DInterface
   {
     public:
 
-      OutputFigure(const Figure& fig)
+      OutputFigure2D(const Figure2D& fig)
         : _fig(fig)
       { }
 
@@ -36,6 +36,6 @@ namespace codac2
 
     protected:
 
-      const Figure& _fig;
+      const Figure2D& _fig;
   };
 }

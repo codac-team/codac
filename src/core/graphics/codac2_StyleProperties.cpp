@@ -7,9 +7,9 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
-#include "codac2_Figure.h"
-#include "codac2_FigureVIBes.h"
-#include "codac2_FigureIPE.h"
+#include "codac2_Figure2D.h"
+#include "codac2_Figure2D_VIBes.h"
+#include "codac2_Figure2D_IPE.h"
 
 using namespace std;
 using namespace codac2;

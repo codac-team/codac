@@ -29,6 +29,6 @@ int main()
     half_bat() | OctaSym({-1,2})(half_bat())
   };
 
-  DefaultFigure::set_window_properties({50,50},{1200,1200});
+  DefaultView::set_window_properties({50,50},{1200,1200});
   pave(IntervalVector({{-8,8},{-4,4}}), *bat.create_sep(), 0.02);
 }

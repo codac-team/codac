@@ -11,11 +11,11 @@
 
 #include "codac2_Ctc.h"
 #include "codac2_Sep.h"
-#include "codac2_WithGraphicOutput.h"
+#include "codac2_Figure2D.h"
 
 namespace codac2
 {
-  class Paver : public WithGraphicOutput
+  class Paver
   {
     public:
 
@@ -23,8 +23,16 @@ namespace codac2
       std::list<IntervalVector> pave(const Ctc_<IntervalVector>& c, double eps);
       void pave(const Sep& s, double eps);
 
+      void set_figure(Figure2D *g);
+
+      // Public attributes freely editable by the user
+      StyleProperties inner_style = StyleProperties::inner();
+      StyleProperties outer_style = StyleProperties::outer();
+      StyleProperties boundary_style = StyleProperties::boundary();
+
     protected:
 
+      Figure2D *_figure = nullptr;
       void init_figure();
 
       const IntervalVector _x0;
@@ -34,7 +42,7 @@ namespace codac2
   void pave(const IntervalVector& x0, const O& o, double eps)
   {
     Paver p(x0);
-    p.set_figure(DefaultFigure::selected_fig());
+    p.set_figure(DefaultView::selected_fig());
     p.pave(o,eps);
   }
 }

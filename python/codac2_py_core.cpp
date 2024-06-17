@@ -39,7 +39,7 @@ void export_VectorVar(py::module& m);
 void export_expression_operations(py::module& m);
 
 // graphics
-void export_Figure(py::module& m);
+void export_Figure2D(py::module& m);
 void export_StyleProperties(py::module& m);
 
 // paver
@@ -87,7 +87,7 @@ PYBIND11_MODULE(core, m)
 
   // graphics
   export_StyleProperties(m);
-  export_Figure(m);
+  export_Figure2D(m);
 
   // paver
   export_Paver(m,py_ctc);

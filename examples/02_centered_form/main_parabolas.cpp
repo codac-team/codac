@@ -27,7 +27,7 @@ int main()
   IntervalVector x0({{0,1},{0,1},{0,1},{0,1}});
   Paver p(x0);
 
-  Figure g("(u1,v1)", GraphicOutput::VIBES);
+  Figure2D g("(u1,v1)", GraphicOutput::VIBES);
   g.set_axes(axis(0,x0[0]), axis(1,x0[1]));
   g.set_window_properties({100,100},{600,600});
   p.set_figure(&g);
