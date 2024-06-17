@@ -109,26 +109,79 @@ void export_Figure(py::module& m)
       VOID_FIGURE_DRAW_POLYLINE_CONST_VECTOR_VECTOR_REF_FLOAT_CONST_STYLEPROPERTIES_REF,
       "x"_a, "r"_a, "s"_a=StyleProperties())
 
+    .def("draw_polygone", (void(Figure::*)(const std::vector<Vector>&,const StyleProperties&))&Figure::draw_polygone,
+      VOID_FIGURE_DRAW_POLYGONE_CONST_VECTOR_VECTOR_REF_CONST_STYLEPROPERTIES_REF,
+      "x"_a, "s"_a=StyleProperties())
+
     .def("draw_pie", &Figure::draw_pie,
       VOID_FIGURE_DRAW_PIE_CONST_VECTOR_REF_CONST_INTERVAL_REF_CONST_INTERVAL_REF_CONST_STYLEPROPERTIES_REF,
       "c"_a, "r"_a, "theta"_a, "s"_a=StyleProperties())
 
     // Robots
 
-    .def("draw_tank", (void(Figure::*)(const Vector&,const StyleProperties&))&Figure::draw_tank,
-      VOID_FIGURE_DRAW_TANK_CONST_VECTOR_REF_CONST_STYLEPROPERTIES_REF,
-      "x"_a, "s"_a=StyleProperties())
-
-    .def("draw_tank", (void(Figure::*)(const Vector&,float,const StyleProperties&))&Figure::draw_tank,
+    .def("draw_tank", &Figure::draw_tank,
       VOID_FIGURE_DRAW_TANK_CONST_VECTOR_REF_FLOAT_CONST_STYLEPROPERTIES_REF,
       "x"_a, "size"_a, "s"_a=StyleProperties())
 
-    .def("draw_AUV", (void(Figure::*)(const Vector&,const StyleProperties&))&Figure::draw_AUV,
-      VOID_FIGURE_DRAW_AUV_CONST_VECTOR_REF_CONST_STYLEPROPERTIES_REF,
+    .def("draw_AUV", &Figure::draw_AUV,
+      VOID_FIGURE_DRAW_AUV_CONST_VECTOR_REF_FLOAT_CONST_STYLEPROPERTIES_REF,
+      "x"_a, "size"_a, "s"_a=StyleProperties())
+
+  ;
+
+  py::class_<DefaultFigure> exported_default_figure(m, "DefaultFigure", DEFAULTFIGURE_MAIN);
+  exported_default_figure
+  
+    .def("selected_fig", &DefaultFigure::selected_fig,
+      STATIC_FIGURE__PTR_DEFAULTFIGURE_SELECTED_FIG)
+  
+    .def("set", &DefaultFigure::set,
+      STATIC_VOID_DEFAULTFIGURE_SET_FIGURE__PTR)
+  
+    .def("set_axes", &DefaultFigure::set_axes,
+      STATIC_VOID_DEFAULTFIGURE_SET_AXES_CONST_FIGUREAXIS_REF_CONST_FIGUREAXIS_REF)
+  
+    .def("set_window_properties", &DefaultFigure::set_window_properties,
+      STATIC_VOID_DEFAULTFIGURE_SET_WINDOW_PROPERTIES_CONST_VECTOR_REF_CONST_VECTOR_REF)
+
+    // Geometric shapes
+
+    .def_static("draw_point", &DefaultFigure::draw_point,
+      STATIC_VOID_DEFAULTFIGURE_DRAW_POINT_CONST_VECTOR_REF_CONST_STYLEPROPERTIES_REF,
+      "c"_a, "s"_a=StyleProperties())
+
+    .def_static("draw_box", &DefaultFigure::draw_box,
+      STATIC_VOID_DEFAULTFIGURE_DRAW_BOX_CONST_INTERVALVECTOR_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "s"_a=StyleProperties())
 
-    .def("draw_AUV", (void(Figure::*)(const Vector&,float,const StyleProperties&))&Figure::draw_AUV,
-      VOID_FIGURE_DRAW_AUV_CONST_VECTOR_REF_FLOAT_CONST_STYLEPROPERTIES_REF,
+    .def_static("draw_circle", &DefaultFigure::draw_circle,
+      STATIC_VOID_DEFAULTFIGURE_DRAW_CIRCLE_CONST_VECTOR_REF_DOUBLE_CONST_STYLEPROPERTIES_REF,
+      "c"_a, "r"_a, "s"_a=StyleProperties())
+
+    .def_static("draw_polyline", (void(*)(const std::vector<Vector>&,const StyleProperties&))&DefaultFigure::draw_polyline,
+      STATIC_VOID_DEFAULTFIGURE_DRAW_POLYLINE_CONST_VECTOR_VECTOR_REF_CONST_STYLEPROPERTIES_REF,
+      "x"_a, "s"_a=StyleProperties())
+
+    .def_static("draw_polyline", (void(*)(const std::vector<Vector>&,float,const StyleProperties&))&DefaultFigure::draw_polyline,
+      STATIC_VOID_DEFAULTFIGURE_DRAW_POLYLINE_CONST_VECTOR_VECTOR_REF_FLOAT_CONST_STYLEPROPERTIES_REF,
+      "x"_a, "r"_a, "s"_a=StyleProperties())
+
+    .def_static("draw_polygone", (void(*)(const std::vector<Vector>&,const StyleProperties&))&DefaultFigure::draw_polygone,
+      STATIC_VOID_DEFAULTFIGURE_DRAW_POLYGONE_CONST_VECTOR_VECTOR_REF_CONST_STYLEPROPERTIES_REF,
+      "x"_a, "s"_a=StyleProperties())
+
+    .def_static("draw_pie", &DefaultFigure::draw_pie,
+      STATIC_VOID_DEFAULTFIGURE_DRAW_PIE_CONST_VECTOR_REF_CONST_INTERVAL_REF_CONST_INTERVAL_REF_CONST_STYLEPROPERTIES_REF,
+      "c"_a, "r"_a, "theta"_a, "s"_a=StyleProperties())
+
+    // Robots
+
+    .def_static("draw_tank", &DefaultFigure::draw_tank,
+      STATIC_VOID_DEFAULTFIGURE_DRAW_TANK_CONST_VECTOR_REF_FLOAT_CONST_STYLEPROPERTIES_REF,
+      "x"_a, "size"_a, "s"_a=StyleProperties())
+
+    .def_static("draw_AUV", &DefaultFigure::draw_AUV,
+      STATIC_VOID_DEFAULTFIGURE_DRAW_AUV_CONST_VECTOR_REF_FLOAT_CONST_STYLEPROPERTIES_REF,
       "x"_a, "size"_a, "s"_a=StyleProperties())
 
   ;

@@ -123,6 +123,12 @@ void Figure::draw_polyline(const vector<Vector>& x, float tip_length, const Styl
     output_fig->draw_polyline(x,tip_length,s);
 }
 
+void Figure::draw_polygone(const vector<Vector>& x, const StyleProperties& s)
+{
+  for(const auto& output_fig : _output_figures)
+    output_fig->draw_polygone(x,s);
+}
+
 void Figure::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s)
 {
   assert(!r.is_empty() && !theta.is_empty());
@@ -140,21 +146,11 @@ void Figure::draw_pie(const Vector& c, const Interval& r, const Interval& theta,
     output_fig->draw_pie(c,r_,theta_,s);
 }
 
-void Figure::draw_tank(const Vector& x, const StyleProperties& s)
-{
-  draw_tank(x, 1e-2*scaled_unit(), s);
-}
-
 void Figure::draw_tank(const Vector& x, float size, const StyleProperties& s)
 {
   assert(size > 0.);
   for(const auto& output_fig : _output_figures)
     output_fig->draw_tank(x,size,s);
-}
-
-void Figure::draw_AUV(const Vector& x, const StyleProperties& s)
-{
-  draw_AUV(x, 1e-2*scaled_unit(), s);
 }
 
 void Figure::draw_AUV(const Vector& x, float size, const StyleProperties& s)

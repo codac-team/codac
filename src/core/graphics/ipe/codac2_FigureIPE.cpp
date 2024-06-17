@@ -99,6 +99,11 @@ void FigureIPE::draw_polyline(const std::vector<Vector>& x, float tip_length, co
   _f_temp_content << "</path>";
 }
 
+void FigureIPE::draw_polygone(const std::vector<Vector>& x, const StyleProperties& s)
+{
+  draw_polyline(x,0.,s);
+}
+
 void FigureIPE::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s)
 {
   // Not implemented yet

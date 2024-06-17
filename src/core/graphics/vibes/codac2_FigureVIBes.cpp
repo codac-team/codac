@@ -80,27 +80,41 @@ void FigureVIBes::draw_polyline(const std::vector<Vector>& x, float tip_length, 
     vx[k] = x[k][i()]; vy[k] = x[k][j()];
   }
 
-  vibes::drawLine(vx,vy, to_vibes_style(s), _params);
+  if(tip_length != 0.)
+    vibes::drawArrow(vx,vy, tip_length, to_vibes_style(s), _params);
+  else
+    vibes::drawLine(vx,vy, to_vibes_style(s), _params);
+}
+
+void FigureVIBes::draw_polygone(const std::vector<Vector>& x, const StyleProperties& s)
+{
+  vector<double> vx(x.size()), vy(x.size());
+  for(size_t k = 0 ; k < x.size() ; k++)
+  {
+    vx[k] = x[k][i()]; vy[k] = x[k][j()];
+  }
+
+  vibes::drawPolygon(vx,vy, to_vibes_style(s), _params);
 }
 
 void FigureVIBes::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s)
 {
   assert(_fig.size() <= c.size());
-  vibes::drawPie(c[i()],c[j()], r.lb(),r.ub(), theta.lb(),theta.ub(), to_vibes_style(s), _params);
+  vibes::drawPie(c[i()],c[j()], r.lb(),r.ub(), 180.*theta.lb()/pi,180.*theta.ub()/pi, to_vibes_style(s), _params);
 }
 
 void FigureVIBes::draw_tank(const Vector& x, float size, const StyleProperties& s)
 {
   assert(_fig.size() <= x.size()+1);
   assert(j()+1 < x.size());
-  vibes::drawTank(x[i()],x[j()],x[j()+1], size, to_vibes_style(s), _params);
+  vibes::drawTank(x[i()],x[j()],180.*x[j()+1]/pi, size, to_vibes_style(s), _params);
 }
 
 void FigureVIBes::draw_AUV(const Vector& x, float size, const StyleProperties& s)
 {
   assert(_fig.size() <= x.size()+1);
   assert(j()+1 < x.size());
-  vibes::drawAUV(x[i()],x[j()],x[j()+1], size, to_vibes_style(s), _params);
+  vibes::drawAUV(x[i()],x[j()],180.*x[j()+1]/pi, size, to_vibes_style(s), _params);
 }
 
 string FigureVIBes::to_vibes_style(const StyleProperties& s)

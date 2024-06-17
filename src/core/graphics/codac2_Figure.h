@@ -78,12 +78,11 @@ namespace codac2
       void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties());
       void draw_polyline(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties());
       void draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s = StyleProperties());
+      void draw_polygone(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties());
       void draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s = StyleProperties());
 
       // Robots
-      void draw_tank(const Vector& x, const StyleProperties& s = StyleProperties());
       void draw_tank(const Vector& x, float size, const StyleProperties& s = StyleProperties());
-      void draw_AUV(const Vector& x, const StyleProperties& s = StyleProperties());
       void draw_AUV(const Vector& x, float size, const StyleProperties& s = StyleProperties());
 
     protected:
@@ -106,6 +105,7 @@ namespace codac2
         {
           _default_fig = std::make_shared<Figure>("Codac - default view", GraphicOutput::VIBES);
           _default_fig->set_window_properties({20.,20.}, {800.,800.});
+          _default_fig->set_axes(axis(0,{-10,10}),axis(1,{-10,10}));
           _selected_fig = _default_fig.get();
         }
         
@@ -154,6 +154,11 @@ namespace codac2
         selected_fig()->draw_polyline(x,tip_length,s);
       }
 
+      static void draw_polygone(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties())
+      {
+        selected_fig()->draw_polygone(x,s);
+      }
+
       static void draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s = StyleProperties())
       {
         selected_fig()->draw_pie(c,r,theta,s);
@@ -161,19 +166,9 @@ namespace codac2
 
       // Robots
 
-      static void draw_tank(const Vector& x, const StyleProperties& s = StyleProperties())
-      {
-        selected_fig()->draw_tank(x,s);
-      }
-
       static void draw_tank(const Vector& x, float size, const StyleProperties& s = StyleProperties())
       {
         selected_fig()->draw_tank(x,size,s);
-      }
-
-      static void draw_AUV(const Vector& x, const StyleProperties& s = StyleProperties())
-      {
-        selected_fig()->draw_AUV(x,s);
       }
 
       static void draw_AUV(const Vector& x, float size, const StyleProperties& s = StyleProperties())
