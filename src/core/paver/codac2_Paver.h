@@ -12,6 +12,7 @@
 #include "codac2_Ctc.h"
 #include "codac2_Sep.h"
 #include "codac2_Figure2D.h"
+#include "codac2_Collection.h"
 
 namespace codac2
 {
@@ -20,8 +21,11 @@ namespace codac2
     public:
 
       Paver(const IntervalVector& x0);
+
       std::list<IntervalVector> pave(const Ctc_<IntervalVector>& c, double eps);
+      std::list<IntervalVector> pave(const std::shared_ptr<Ctc_<IntervalVector>>& c, double eps);
       void pave(const Sep& s, double eps);
+      void pave(const std::shared_ptr<Sep>& s, double eps);
 
       void set_figure(Figure2D *g);
 
@@ -40,6 +44,14 @@ namespace codac2
 
   template<typename O>
   void pave(const IntervalVector& x0, const O& o, double eps)
+  {
+    Paver p(x0);
+    p.set_figure(DefaultView::selected_fig());
+    p.pave(o,eps);
+  }
+
+  template<typename O>
+  void pave_test(const IntervalVector& x0, const O& o, double eps)
   {
     Paver p(x0);
     p.set_figure(DefaultView::selected_fig());

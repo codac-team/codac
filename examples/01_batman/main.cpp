@@ -30,5 +30,5 @@ int main()
   };
 
   DefaultView::set_window_properties({50,50},{1200,1200});
-  pave(IntervalVector({{-8,8},{-4,4}}), *bat.create_sep(), 0.02);
+  pave(IntervalVector({{-8,8},{-4,4}}), bat.create_sep(), 0.02);
 }

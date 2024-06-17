@@ -85,6 +85,11 @@ std::list<IntervalVector> Paver::pave(const Ctc_<IntervalVector>& c, double eps)
   return l_output;
 }
 
+std::list<IntervalVector> Paver::pave(const std::shared_ptr<Ctc_<IntervalVector>>& c, double eps)
+{
+  return pave(*c,eps);
+}
+
 void Paver::pave(const Sep& s, double eps)
 {
   init_figure();
@@ -132,4 +137,9 @@ void Paver::pave(const Sep& s, double eps)
   
   printf("Computation time: %.4fs, %zd inner boxes, %zd boundary boxes\n",
     (double)(clock()-t_start)/CLOCKS_PER_SEC, n_inner, n_boundary);
+}
+
+void Paver::pave(const std::shared_ptr<Sep>& s, double eps)
+{
+  return pave(*s,eps);
 }
