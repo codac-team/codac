@@ -16,13 +16,13 @@ namespace codac2
 {
   struct BoxPair
   {
-    IntervalVector in;
-    IntervalVector out;
+    IntervalVector inner;
+    IntervalVector outer;
   };
 
   inline std::ostream& operator<<(std::ostream& os, const BoxPair& x)
   {
-    os << "(" << x.in << "," << x.out << ")";
+    os << "(" << x.inner << "," << x.outer << ")";
     return os;
   }
 

@@ -40,8 +40,8 @@ namespace codac2
       {
         assert(x.size() == this->size());
         auto x_sep = _sep.front().separate(x);
-        assert((x_sep.out | x_sep.in) == x);
-        return { x_sep.out , x_sep.in };
+        assert((x_sep.outer | x_sep.inner) == x);
+        return { x_sep.outer , x_sep.inner };
       }
 
     protected:

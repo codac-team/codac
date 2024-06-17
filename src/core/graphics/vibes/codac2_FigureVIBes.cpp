@@ -8,6 +8,7 @@
  */
 
 #include "codac2_FigureVIBes.h"
+#include "codac2_math.h"
 
 using namespace std;
 using namespace codac2;
@@ -100,21 +101,21 @@ void FigureVIBes::draw_polygone(const std::vector<Vector>& x, const StylePropert
 void FigureVIBes::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s)
 {
   assert(_fig.size() <= c.size());
-  vibes::drawPie(c[i()],c[j()], r.lb(),r.ub(), 180.*theta.lb()/pi,180.*theta.ub()/pi, to_vibes_style(s), _params);
+  vibes::drawPie(c[i()],c[j()], r.lb(),r.ub(), 180.*theta.lb()/codac2::pi,180.*theta.ub()/codac2::pi, to_vibes_style(s), _params);
 }
 
 void FigureVIBes::draw_tank(const Vector& x, float size, const StyleProperties& s)
 {
   assert(_fig.size() <= x.size()+1);
   assert(j()+1 < x.size());
-  vibes::drawTank(x[i()],x[j()],180.*x[j()+1]/pi, size, to_vibes_style(s), _params);
+  vibes::drawTank(x[i()],x[j()],180.*x[j()+1]/codac2::pi, size, to_vibes_style(s), _params);
 }
 
 void FigureVIBes::draw_AUV(const Vector& x, float size, const StyleProperties& s)
 {
   assert(_fig.size() <= x.size()+1);
   assert(j()+1 < x.size());
-  vibes::drawAUV(x[i()],x[j()],180.*x[j()+1]/pi, size, to_vibes_style(s), _params);
+  vibes::drawAUV(x[i()],x[j()],180.*x[j()+1]/codac2::pi, size, to_vibes_style(s), _params);
 }
 
 string FigureVIBes::to_vibes_style(const StyleProperties& s)

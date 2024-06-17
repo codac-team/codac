@@ -26,8 +26,8 @@ BoxPair SepInter::separate(const IntervalVector& x) const
   for(const auto& si : _seps)
   {
     auto x_sep = si->separate(x);
-    x_out &= x_sep.out;
-    x_in |= x_sep.in;
+    x_out &= x_sep.outer;
+    x_in |= x_sep.inner;
   }
   
   assert((x_in | x_out) == x);

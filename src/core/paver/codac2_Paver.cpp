@@ -94,17 +94,17 @@ void Paver::pave(const Sep& s, double eps)
     l.pop_front();
 
     auto x_sep = s.separate(x);
-    auto boundary = x_sep.in & x_sep.out;
+    auto boundary = x_sep.inner & x_sep.outer;
 
     if(_figure)
     {
-      for(const auto& bi : x.diff(x_sep.in))
+      for(const auto& bi : x.diff(x_sep.inner))
       {
         n_inner++;
         _figure->draw_box(bi, WithGraphicOutput::inner_style);
       }
 
-      for(const auto& bi : x.diff(x_sep.out))
+      for(const auto& bi : x.diff(x_sep.outer))
         _figure->draw_box(bi, WithGraphicOutput::outer_style);
     }
 

@@ -41,24 +41,24 @@ namespace codac2
       l_stack.pop_front();
 
       auto w_sep = _sep.front().separate(w);
-      assert((w_sep.in | w_sep.out) == w);
+      assert((w_sep.inner | w_sep.outer) == w);
 
       // If the guess box may contain some values
-      if(!w_sep.out.is_empty())
+      if(!w_sep.outer.is_empty())
       {
         // Trying to find inner values...
         // A new guess is the y-middle of the previous one
         auto w_mid = cart_prod_xy(x,extract_y(w).mid());
         auto w_sep_mid = _sep.front().separate(w_mid);
-        assert((w_sep_mid.in | w_sep_mid.out) == w_mid);
+        assert((w_sep_mid.inner | w_sep_mid.outer) == w_mid);
 
         // If inner values entirely cover the input projection box x,
         // the algorithm can terminate
-        if(extract_x(w_sep_mid.in).is_empty())
+        if(extract_x(w_sep_mid.inner).is_empty())
           return { IntervalVector::empty(x.size()), x };
 
         // Otherwise, the inner parts are stored temporarily
-        l_in.push_back(extract_x(w_sep_mid.in));
+        l_in.push_back(extract_x(w_sep_mid.inner));
 
         // If the current guess w is not a leaf, proceed to a bisection of the guess
         auto y = extract_y(w);
@@ -70,7 +70,7 @@ namespace codac2
         }
 
         else // storing outer values for future reconstruction
-          l_out.push_back(extract_x(w_sep.out));
+          l_out.push_back(extract_x(w_sep.outer));
       }
     }
 
