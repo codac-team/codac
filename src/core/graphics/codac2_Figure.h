@@ -17,17 +17,17 @@
 
 namespace codac2
 {
-  enum class GraphicOutputMode
+  enum class GraphicOutput
   {
     VIBES = 0x01,
     IPE = 0x02
   };
 
-  inline int operator&(GraphicOutputMode a, GraphicOutputMode b)
+  inline int operator&(GraphicOutput a, GraphicOutput b)
   { return static_cast<int>(static_cast<int>(a) & static_cast<int>(b)); }
 
-  inline GraphicOutputMode operator|(GraphicOutputMode a, GraphicOutputMode b)
-  { return static_cast<GraphicOutputMode>(static_cast<int>(a) | static_cast<int>(b)); }
+  inline GraphicOutput operator|(GraphicOutput a, GraphicOutput b)
+  { return static_cast<GraphicOutput>(static_cast<int>(a) | static_cast<int>(b)); }
 
   struct FigureAxis
   {
@@ -54,7 +54,7 @@ namespace codac2
   {
     public:
 
-      Figure(const std::string& name, GraphicOutputMode o, bool set_as_default = false);
+      Figure(const std::string& name, GraphicOutput o, bool set_as_default = false);
 
       const std::string& name() const;
       size_t size() const;
@@ -104,7 +104,7 @@ namespace codac2
       {
         if(_selected_fig == nullptr && _default_fig.get() == nullptr)
         {
-          _default_fig = std::make_shared<Figure>("Codac - default view", GraphicOutputMode::VIBES);
+          _default_fig = std::make_shared<Figure>("Codac - default view", GraphicOutput::VIBES);
           _default_fig->set_window_properties({20.,20.}, {800.,800.});
           _selected_fig = _default_fig.get();
         }

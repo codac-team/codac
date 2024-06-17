@@ -58,10 +58,6 @@ StyleProperties::StyleProperties(const string& vibes_style)
   : stroke_color(Color::green()), fill_color(Color::none())
 { }
 
-StyleProperties::StyleProperties(const char* vibes_style)
-  : StyleProperties(string(vibes_style))
-{ }
-
 StyleProperties StyleProperties::inner()
 {
   StyleProperties s;

@@ -55,20 +55,30 @@
       src/core/contractors/codac2_py_Ctc.cpp
       src/core/contractors/codac2_py_Ctc.h
       src/core/contractors/codac2_py_CtcInverse.h
+
       src/core/domains/interval/codac2_py_Interval.cpp
       src/core/domains/interval/codac2_py_Interval_operations.cpp
       src/core/domains/interval/codac2_py_IntervalVector.cpp
       src/core/domains/interval/codac2_py_IntervalVector_operations.cpp
+
       src/core/functions/analytic/codac2_py_analytic_operations.cpp
       src/core/functions/analytic/codac2_py_analytic_variables.cpp
       src/core/functions/analytic/codac2_py_AnalyticFunction.h
       src/core/functions/analytic/codac2_py_ExprWrapper.h
+
+      src/core/graphics/codac2_py_Figure.cpp
+      src/core/graphics/codac2_py_StyleProperties.cpp
+
       src/core/paver/codac2_py_Paver.cpp
+
       src/core/separators/codac2_py_Sep.cpp
       src/core/separators/codac2_py_Sep.h
       src/core/separators/codac2_py_SepInverse.h
       src/core/separators/codac2_py_SepPolygon.cpp
+
       src/core/tools/codac2_py_Approx.cpp
+
+      src/core/types/codac2_py_Vector.cpp
     )
 
     target_include_directories(core
@@ -79,6 +89,7 @@
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/domains/interval/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/functions/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/functions/analytic/
+      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/graphics/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/paver/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/separators/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/tools/

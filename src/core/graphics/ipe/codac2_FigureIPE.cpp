@@ -86,6 +86,8 @@ void FigureIPE::draw_polyline(const std::vector<Vector>& x, float tip_length, co
     <path layer=\"alpha\" \n \
     stroke=\"codac_color_" << s.stroke_color.to_hex_str("") << "\" \n \
     fill=\"codac_color_" << s.fill_color.to_hex_str("") << "\" \n \
+    opacity=\"" << (int)(10*round(10.*s.fill_color.alpha)) << "%\" \n \
+    stroke-opacity=\"" << (int)(10*round(10.*s.stroke_color.alpha)) << "%\" \n \
     pen=\"ultrafat\"> \n ";
 
   for(size_t k = 0 ; k < x.size() ; k++)
@@ -375,7 +377,7 @@ void FigureIPE::print_header_page()
 
   for(const auto& [k,c] : _colors)
     _f << "<color name=\"codac_color_" << k << "\" "
-      << "value=\"" << c.r << " " << c.g << " " << c.b << "\"/> \n";
+      << "value=\"" << c.r << " " << c.g << " " << c.b << "\" /> \n";
 
   _f << "<dashstyle name=\"dash dot dotted\" value=\"[4 2 1 2 1 2] 0\"/> \n \
     <dashstyle name=\"dash dotted\" value=\"[4 2 1 2] 0\"/> \n \
@@ -389,14 +391,15 @@ void FigureIPE::print_header_page()
     <gridsize name=\"32 pts (~12 mm)\" value=\"32\"/> \n \
     <gridsize name=\"4 pts\" value=\"4\"/> \n \
     <gridsize name=\"56 pts (~20 mm)\" value=\"56\"/> \n \
-    <gridsize name=\"8 pts (~3 mm)\" value=\"8\"/> \n \
-    <opacity name=\"10%\" value=\"0.1\"/> \n \
-    <opacity name=\"30%\" value=\"0.3\"/> \n \
-    <opacity name=\"50%\" value=\"0.5\"/> \n \
-    <opacity name=\"75%\" value=\"0.75\"/> \n \
+    <gridsize name=\"8 pts (~3 mm)\" value=\"8\"/> \n";
+
+  for(float i = 0. ; i < 1. ; i+=0.1)
+    _f << "<opacity name=\"" << (int)(i*100.) << "%\" value=\"" << i << "\"/> \n";
+
+  _f << "<opacity name=\"100%\" value=\"1.0\"/> \n \
     <pen name=\"fat\" value=\"1.2\"/> \n \
     <pen name=\"heavier\" value=\"0.8\"/> \n \
-    <pen name=\"ultrafat\" value=\"0.1\"/> \n \
+    <pen name=\"ultrafat\" value=\"1.5\"/> \n \
     <symbolsize name=\"large\" value=\"5\"/> \n \
     <symbolsize name=\"small\" value=\"2\"/> \n \
     <symbolsize name=\"tiny\" value=\"1.1\"/> \n \

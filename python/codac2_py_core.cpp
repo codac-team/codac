@@ -38,6 +38,10 @@ void export_ScalarVar(py::module& m);
 void export_VectorVar(py::module& m);
 void export_expression_operations(py::module& m);
 
+// graphics
+void export_Figure(py::module& m);
+void export_StyleProperties(py::module& m);
+
 // paver
 void export_Paver(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 
@@ -48,6 +52,10 @@ void export_SepPolygon(py::module& m, py::class_<Sep,pySep>& sep);
 
 // tools
 void export_Approx(py::module& m);
+
+// types
+py::class_<Vector> export_Vector(py::module& m);
+
 
 PYBIND11_MODULE(core, m)
 {
@@ -77,6 +85,10 @@ PYBIND11_MODULE(core, m)
   export_VectorVar(m);
   export_expression_operations(m);
 
+  // graphics
+  export_StyleProperties(m);
+  export_Figure(m);
+
   // paver
   export_Paver(m,py_ctc);
 
@@ -87,5 +99,8 @@ PYBIND11_MODULE(core, m)
 
   // tools
   export_Approx(m);
+
+  // types
+  auto py_Vector = export_Vector(m);
 
 }

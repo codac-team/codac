@@ -18,12 +18,12 @@ using namespace codac2;
 shared_ptr<Figure> DefaultFigure::_default_fig = nullptr;
 Figure *DefaultFigure::_selected_fig = DefaultFigure::_default_fig.get();
 
-Figure::Figure(const std::string& name, GraphicOutputMode o, bool set_as_default_)
+Figure::Figure(const std::string& name, GraphicOutput o, bool set_as_default_)
   : _name(name)
 {
-  if(o & GraphicOutputMode::VIBES)
+  if(o & GraphicOutput::VIBES)
     _output_figures.push_back(std::make_shared<FigureVIBes>(*this));
-  if(o & GraphicOutputMode::IPE)
+  if(o & GraphicOutput::IPE)
     _output_figures.push_back(std::make_shared<FigureIPE>(*this));
   if(set_as_default_)
     set_as_default();
