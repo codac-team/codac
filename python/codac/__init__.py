@@ -1,6 +1,7 @@
 from codac.core import *
 from .version import __version__
 
+
 class AnalyticFunction:
 
   def __init__(self, args, e):
@@ -31,6 +32,7 @@ class AnalyticFunction:
   def __repr__(self):
     return str(self.f)
 
+
 class CtcInverse(CtcIntervalVector):
 
   def __init__(self, f, y, with_centered_form = True):
@@ -45,3 +47,18 @@ class CtcInverse(CtcIntervalVector):
   def contract(self,x):
     self.c.contract(x)
     return x
+
+
+class SepInverse(Sep):
+
+  def __init__(self, f, y, with_centered_form = True):
+    Sep.__init__(self, f.input_size())
+    if isinstance(f.f, AnalyticFunction_Scalar):
+      self.s = SepInverse_Interval(f.f,Interval(y),with_centered_form)
+    elif isinstance(f.f, AnalyticFunction_Vector):
+      self.s = SepInverse_IntervalVector(f.f,IntervalVector(y),with_centered_form)
+    else:
+      raise ValueError("Can only build SepInverse from scalar or vector functions")
+
+  def separate(self,x):
+    return self.s.separate(x)

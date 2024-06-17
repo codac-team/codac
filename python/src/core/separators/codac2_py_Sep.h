@@ -43,7 +43,7 @@ class pySep : public Sep
         auto x_copy = IntervalVector(x);
         auto obj = overload(x_copy); // calls the Python function
 
-        if(pybind11::isinstance<IntervalVector>(obj))
+        if(pybind11::isinstance<BoxPair>(obj))
         {
           // Checks if it returned a correct Python type
           return obj.cast<BoxPair>(); // Return true; value should be used

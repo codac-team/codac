@@ -94,7 +94,8 @@ PYBIND11_MODULE(core, m)
 
   // separators
   auto py_sep = export_Sep(m);
-  export_SepInverse<IntervalVector>(m,"SepInverse",py_sep);
+  export_SepInverse<Interval>(m,"SepInverse_Interval",py_sep);
+  export_SepInverse<IntervalVector>(m,"SepInverse_IntervalVector",py_sep);
   export_SepPolygon(m,py_sep);
 
   // tools
