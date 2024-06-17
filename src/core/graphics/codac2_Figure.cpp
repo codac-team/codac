@@ -111,6 +111,13 @@ void Figure::draw_circle(const Vector& c, double r, const StyleProperties& s)
     output_fig->draw_circle(c,r,s);
 }
 
+void Figure::draw_ring(const Vector& c, const Interval& r, const StyleProperties& s)
+{
+  assert(!r.is_empty() && r.lb() > 0.);
+  for(const auto& output_fig : _output_figures)
+    output_fig->draw_ring(c,r,s);
+}
+
 void Figure::draw_polyline(const vector<Vector>& x, const StyleProperties& s)
 {
   draw_polyline(x, 1e-3*scaled_unit(), s);

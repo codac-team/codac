@@ -25,6 +25,7 @@ namespace codac2
       virtual void draw_point(const Vector& c, const StyleProperties& s = StyleProperties()) = 0;
       virtual void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties()) = 0;
       virtual void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties()) = 0;
+      virtual void draw_ring(const Vector& c, const Interval& r, const StyleProperties& s = StyleProperties()) = 0;
       virtual void draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s = StyleProperties()) = 0;
       virtual void draw_polygone(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties()) = 0;
       virtual void draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s = StyleProperties()) = 0;

@@ -73,6 +73,13 @@ void FigureVIBes::draw_circle(const Vector& c, double r, const StyleProperties& 
   vibes::drawCircle(c[i()],c[j()],r, to_vibes_style(s), _params);
 }
 
+void FigureVIBes::draw_ring(const Vector& c, const Interval& r, const StyleProperties& s)
+{
+  assert(_fig.size() <= c.size());
+  assert(!r.is_empty() && r.lb() > 0.);
+  vibes::drawRing(c[i()],c[j()],r.lb(),r.ub(), to_vibes_style(s), _params);
+}
+
 void FigureVIBes::draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s)
 {
   vector<double> vx(x.size()), vy(x.size());

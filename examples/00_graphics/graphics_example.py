@@ -23,7 +23,8 @@ fig1 = Figure("My figure 1", GraphicOutput.VIBES | GraphicOutput.IPE)
 fig1.set_window_properties([50,50],[500,500]) # position, window size
 fig1.set_axes(axis(0,[-10,10]), axis(1,[-10,10])) # (axis_id,[range_of_values_on_this_axis])
 fig1.draw_box([[-1,1],[-1,1]],[Color.green(),Color.red(0.2)]) # drawing a green box with red opacity values inside
-fig1.draw_circle([1,1],0.5,Color.blue()) # drawing a circle at (1,1) of radius 0.5
+fig1.draw_circle([1,1],0.5,Color(255,155,5)) # drawing a circle at (1,1) of radius 0.5 with a custom RGB color
+fig1.draw_ring([1,1],[4,6],Color.red()) # drawing a circle at (1,1) of radius 0.5 with a custom RGB color
 
 fig2 = Figure("My figure 2", GraphicOutput.VIBES | GraphicOutput.IPE)
 fig2.set_axes(axis(0,[-1,5]), axis(1,[-1,5]))

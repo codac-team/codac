@@ -76,6 +76,7 @@ namespace codac2
       void draw_point(const Vector& c, const StyleProperties& s = StyleProperties());
       void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties());
       void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties());
+      void draw_ring(const Vector& c, const Interval& r, const StyleProperties& s = StyleProperties());
       void draw_polyline(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties());
       void draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s = StyleProperties());
       void draw_polygone(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties());
@@ -142,6 +143,11 @@ namespace codac2
       static void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties())
       {
         selected_fig()->draw_circle(c,r,s);
+      }
+
+      static void draw_ring(const Vector& c, const Interval& r, const StyleProperties& s = StyleProperties())
+      {
+        selected_fig()->draw_ring(c,r,s);
       }
 
       static void draw_polyline(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties())

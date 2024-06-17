@@ -101,6 +101,10 @@ void export_Figure(py::module& m)
       VOID_FIGURE_DRAW_CIRCLE_CONST_VECTOR_REF_DOUBLE_CONST_STYLEPROPERTIES_REF,
       "c"_a, "r"_a, "s"_a=StyleProperties())
 
+    .def("draw_ring", &Figure::draw_ring,
+      VOID_FIGURE_DRAW_RING_CONST_VECTOR_REF_CONST_INTERVAL_REF_CONST_STYLEPROPERTIES_REF,
+      "c"_a, "r"_a, "s"_a=StyleProperties())
+
     .def("draw_polyline", (void(Figure::*)(const std::vector<Vector>&,const StyleProperties&))&Figure::draw_polyline,
       VOID_FIGURE_DRAW_POLYLINE_CONST_VECTOR_VECTOR_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "s"_a=StyleProperties())
@@ -156,6 +160,10 @@ void export_Figure(py::module& m)
 
     .def_static("draw_circle", &DefaultFigure::draw_circle,
       STATIC_VOID_DEFAULTFIGURE_DRAW_CIRCLE_CONST_VECTOR_REF_DOUBLE_CONST_STYLEPROPERTIES_REF,
+      "c"_a, "r"_a, "s"_a=StyleProperties())
+
+    .def_static("draw_ring", &DefaultFigure::draw_ring,
+      STATIC_VOID_DEFAULTFIGURE_DRAW_RING_CONST_VECTOR_REF_CONST_INTERVAL_REF_CONST_STYLEPROPERTIES_REF,
       "c"_a, "r"_a, "s"_a=StyleProperties())
 
     .def_static("draw_polyline", (void(*)(const std::vector<Vector>&,const StyleProperties&))&DefaultFigure::draw_polyline,

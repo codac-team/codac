@@ -28,11 +28,13 @@ namespace codac2
       void update_axes();
       void update_window_properties();
       void center_viewbox(const Vector& c, const Vector& r);
+      void begin_path(const StyleProperties& s);
 
       // Geometric shapes
       void draw_point(const Vector& c, const StyleProperties& s = StyleProperties());
       void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties());
       void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties());
+      void draw_ring(const Vector& c, const Interval& r, const StyleProperties& s = StyleProperties());
       void draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s = StyleProperties());
       void draw_polygone(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties());
       void draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s = StyleProperties());
@@ -45,6 +47,7 @@ namespace codac2
 
       double scale_x(double x) const;
       double scale_y(double y) const;
+      double scale_length(double y) const;
       void print_header_page();
 
       std::ofstream _f, _f_temp_content;

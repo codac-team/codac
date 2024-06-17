@@ -55,6 +55,20 @@ void FigureIPE::center_viewbox(const Vector& c, const Vector& r)
 
 }
 
+void FigureIPE::begin_path(const StyleProperties& s)
+{
+  _colors.emplace(s.stroke_color.to_hex_str(""), s.stroke_color);
+  _colors.emplace(s.fill_color.to_hex_str(""), s.fill_color);
+
+  _f_temp_content << "\n \
+    <path layer=\"alpha\" \n \
+    stroke=\"codac_color_" << s.stroke_color.to_hex_str("") << "\" \n \
+    fill=\"codac_color_" << s.fill_color.to_hex_str("") << "\" \n \
+    opacity=\"" << (int)(10*round(10.*s.fill_color.alpha)) << "%\" \n \
+    stroke-opacity=\"" << (int)(10*round(10.*s.stroke_color.alpha)) << "%\" \n \
+    pen=\"ultrafat\"> \n ";
+}
+
 void FigureIPE::draw_point(const Vector& c, const StyleProperties& s)
 {
   // Not implemented yet
@@ -72,23 +86,33 @@ void FigureIPE::draw_box(const IntervalVector& x, const StyleProperties& s)
 
 void FigureIPE::draw_circle(const Vector& c, double r, const StyleProperties& s)
 {
-  // Not implemented yet
+  assert(_fig.size() <= c.size());
+  assert(r > 0.);
+
+  begin_path(s);
+  _f_temp_content << scale_length(r) << " 0 0 " << scale_length(r) << " "
+                  << scale_x(c[i()]) << " " << scale_y(c[j()]) << " e \n";
+  _f_temp_content << "</path>";
+}
+
+void FigureIPE::draw_ring(const Vector& c, const Interval& r, const StyleProperties& s)
+{
+  assert(_fig.size() <= c.size());
+  assert(!r.is_empty() && r.lb() > 0.);
+
+  begin_path(s);
+  _f_temp_content << scale_length(r.lb()) << " 0 0 " << scale_length(r.lb()) << " "
+                  << scale_x(c[i()]) << " " << scale_y(c[j()]) << " e \n";
+  _f_temp_content << scale_length(r.ub()) << " 0 0 " << scale_length(r.ub()) << " "
+                  << scale_x(c[i()]) << " " << scale_y(c[j()]) << " e \n";
+  _f_temp_content << "</path>";
 }
 
 void FigureIPE::draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s)
 {
   assert(x.size() > 1);
 
-  _colors.emplace(s.stroke_color.to_hex_str(""), s.stroke_color);
-  _colors.emplace(s.fill_color.to_hex_str(""), s.fill_color);
-
-  _f_temp_content << "\n \
-    <path layer=\"alpha\" \n \
-    stroke=\"codac_color_" << s.stroke_color.to_hex_str("") << "\" \n \
-    fill=\"codac_color_" << s.fill_color.to_hex_str("") << "\" \n \
-    opacity=\"" << (int)(10*round(10.*s.fill_color.alpha)) << "%\" \n \
-    stroke-opacity=\"" << (int)(10*round(10.*s.stroke_color.alpha)) << "%\" \n \
-    pen=\"ultrafat\"> \n ";
+  begin_path(s);
 
   for(size_t k = 0 ; k < x.size() ; k++)
   {
@@ -127,6 +151,12 @@ double FigureIPE::scale_x(double x) const
 double FigureIPE::scale_y(double y) const
 {
   return (y-_fig.axes()[1].limits.lb())*_ratio[1];
+}
+
+double FigureIPE::scale_length(double x) const
+{
+  // Assuming _ratio[0] == _ratio[1]
+  return x*_ratio[0];
 }
 
 void FigureIPE::print_header_page()
