@@ -56,22 +56,36 @@ namespace codac2
 
       Figure(const std::string& name, GraphicOutputMode o, bool set_as_default = false);
 
+      const std::string& name() const;
       size_t size() const;
+
+      const std::vector<FigureAxis>& axes() const;
+      void set_axes(const FigureAxis& axis1, const FigureAxis& axis2);
+
       const Vector& pos() const;
       const Vector& window_size() const;
-      const std::string& name() const;
-      const std::vector<FigureAxis>& axes() const;
-      bool is_default() const;
-
-      void set_as_default();
-      void set_axes(const FigureAxis& axis1, const FigureAxis& axis2);
       void set_window_properties(const Vector& pos, const Vector& size);
-      void center_viewbox(const Vector& c, const Vector& r);
 
+      void center_viewbox(const Vector& c, const Vector& r);
+      double scaled_unit() const;
+
+      bool is_default() const;
+      void set_as_default();
+
+      // Geometric shapes
+      void draw_point(const Vector& c, const StyleProperties& s = StyleProperties());
       void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties());
       void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties());
-      void draw_polyline(const std::vector<Vector>& c, const StyleProperties& s = StyleProperties());
-      
+      void draw_polyline(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties());
+      void draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s = StyleProperties());
+      void draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s = StyleProperties());
+
+      // Robots
+      void draw_tank(const Vector& x, const StyleProperties& s = StyleProperties());
+      void draw_tank(const Vector& x, float size, const StyleProperties& s = StyleProperties());
+      void draw_AUV(const Vector& x, const StyleProperties& s = StyleProperties());
+      void draw_AUV(const Vector& x, float size, const StyleProperties& s = StyleProperties());
+
     protected:
 
       const std::string _name;
@@ -113,11 +127,18 @@ namespace codac2
         selected_fig()->set_window_properties(pos,size);
       }
 
+      // Geometric shapes
+
+      static void draw_point(const Vector& c, const StyleProperties& s = StyleProperties())
+      {
+        selected_fig()->draw_point(c,s);
+      }
+
       static void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties())
       {
         selected_fig()->draw_box(x,s);
       }
-      
+
       static void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties())
       {
         selected_fig()->draw_circle(c,r,s);
@@ -127,6 +148,39 @@ namespace codac2
       {
         selected_fig()->draw_polyline(x,s);
       }
+
+      static void draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s = StyleProperties())
+      {
+        selected_fig()->draw_polyline(x,tip_length,s);
+      }
+
+      static void draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s = StyleProperties())
+      {
+        selected_fig()->draw_pie(c,r,theta,s);
+      }
+
+      // Robots
+
+      static void draw_tank(const Vector& x, const StyleProperties& s = StyleProperties())
+      {
+        selected_fig()->draw_tank(x,s);
+      }
+
+      static void draw_tank(const Vector& x, float size, const StyleProperties& s = StyleProperties())
+      {
+        selected_fig()->draw_tank(x,size,s);
+      }
+
+      static void draw_AUV(const Vector& x, const StyleProperties& s = StyleProperties())
+      {
+        selected_fig()->draw_AUV(x,s);
+      }
+
+      static void draw_AUV(const Vector& x, float size, const StyleProperties& s = StyleProperties())
+      {
+        selected_fig()->draw_AUV(x,size,s);
+      }
+
 
     protected:
 

@@ -27,6 +27,9 @@ namespace codac2
         : _fig(fig)
       { }
 
+      const size_t& i() const;
+      const size_t& j() const;
+      
       virtual void update_axes() = 0;
       virtual void update_window_properties() = 0;
       virtual void center_viewbox(const Vector& c, const Vector& r) = 0;

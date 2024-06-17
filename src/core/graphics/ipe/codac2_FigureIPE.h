@@ -28,9 +28,17 @@ namespace codac2
       void update_axes();
       void update_window_properties();
       void center_viewbox(const Vector& c, const Vector& r);
-      virtual void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties());
-      virtual void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties());
-      virtual void draw_polyline(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties());
+
+      // Geometric shapes
+      void draw_point(const Vector& c, const StyleProperties& s = StyleProperties());
+      void draw_box(const IntervalVector& x, const StyleProperties& s = StyleProperties());
+      void draw_circle(const Vector& c, double r, const StyleProperties& s = StyleProperties());
+      void draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s = StyleProperties());
+      void draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s = StyleProperties());
+
+      // Robots
+      void draw_tank(const Vector& x, float size, const StyleProperties& s = StyleProperties());
+      void draw_AUV(const Vector& x, float size, const StyleProperties& s = StyleProperties());
 
     protected:
 

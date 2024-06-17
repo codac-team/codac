@@ -55,17 +55,29 @@ void FigureIPE::center_viewbox(const Vector& c, const Vector& r)
 
 }
 
+void FigureIPE::draw_point(const Vector& c, const StyleProperties& s)
+{
+  // Not implemented yet
+}
+
 void FigureIPE::draw_box(const IntervalVector& x, const StyleProperties& s)
 {
   assert(_fig.size() <= x.size());
-  int i = _fig.axes()[0].dim_id; int j = _fig.axes()[1].dim_id;
-  draw_polyline({{x[i].lb(),x[j].lb()}, {x[i].ub(),x[j].lb()}, {x[i].ub(),x[j].ub()}, {x[i].lb(),x[j].ub()}, {x[i].lb(),x[j].lb()}}, s);
+  draw_polyline({
+    {x[i()].lb(),x[j()].lb()}, {x[i()].ub(),x[j()].lb()},
+    {x[i()].ub(),x[j()].ub()}, {x[i()].lb(),x[j()].ub()},
+    {x[i()].lb(),x[j()].lb()}},
+    0., s);
 }
 
-void FigureIPE::draw_polyline(const vector<Vector>& x, const StyleProperties& s)
+void FigureIPE::draw_circle(const Vector& c, double r, const StyleProperties& s)
+{
+  // Not implemented yet
+}
+
+void FigureIPE::draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s)
 {
   assert(x.size() > 1);
-  int i = _fig.axes()[0].dim_id; int j = _fig.axes()[1].dim_id;
 
   _colors.emplace(s.stroke_color.to_hex_str(""), s.stroke_color);
   _colors.emplace(s.fill_color.to_hex_str(""), s.fill_color);
@@ -79,13 +91,23 @@ void FigureIPE::draw_polyline(const vector<Vector>& x, const StyleProperties& s)
   for(size_t k = 0 ; k < x.size() ; k++)
   {
     assert(_fig.size() <= x[k].size());
-    _f_temp_content << scale_x(x[k][i]) << " " << scale_y(x[k][j]) << ((k == 0 ? " m \n" : " l \n"));
+    _f_temp_content << scale_x(x[k][i()]) << " " << scale_y(x[k][j()]) << ((k == 0 ? " m \n" : " l \n"));
   }
 
   _f_temp_content << "</path>";
 }
 
-void FigureIPE::draw_circle(const Vector& c, double r, const StyleProperties& s)
+void FigureIPE::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s)
+{
+  // Not implemented yet
+}
+
+void FigureIPE::draw_tank(const Vector& x, float size, const StyleProperties& s)
+{
+  // Not implemented yet
+}
+
+void FigureIPE::draw_AUV(const Vector& x, float size, const StyleProperties& s)
 {
   // Not implemented yet
 }

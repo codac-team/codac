@@ -69,6 +69,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure.h
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_FigureInterface.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_OutputFigure.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_OutputFigure.h
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_StyleProperties.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_StyleProperties.h
@@ -110,6 +111,7 @@
 
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Approx.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Collection.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_math.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_object_file_format.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_object_file_format.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_template_tools.h
