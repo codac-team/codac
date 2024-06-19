@@ -33,7 +33,7 @@ namespace codac2
             _x.mid(), _x,
             // the derivative of a const value is zero:
             IntervalMatrix::zeros(_x.size(),total_input_size),
-            // the definition domain is necesarily met at this point
+            // the definition domain is necesarily met at this point:
             true
           ));
       }

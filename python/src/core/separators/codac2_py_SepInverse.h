@@ -27,14 +27,14 @@ void export_SepInverse(py::module& m, const std::string& export_name, py::class_
   py::class_<SepInverse<T>> exported(m, export_name.c_str(), pysep, SEPINVERSE_MAIN);
 
   exported
-    .def(py::init<const AnalyticFunction<OpValue<T>>&,const T&,bool>(),
+    .def(py::init<const AnalyticFunction<OpValue<T,IntervalMatrix>>&,const T&,bool>(),
       SEPINVERSE_Y_SEPINVERSE_CONST_ANALYTICFUNCTION_TYPENAME_WRAPPER_Y_DOMAIN_REF_CONST_Y_REF_BOOL,
       "f"_a, "y"_a, "with_centered_form"_a = true);
 
   if constexpr(std::is_same_v<T,IntervalVector>) // separators only associated with interval vectors
   {
     exported
-    .def(py::init<const AnalyticFunction<OpValue<T>>&,const pySep&,bool>(),
+    .def(py::init<const AnalyticFunction<OpValue<T,IntervalMatrix>>&,const pySep&,bool>(),
       SEPINVERSE_Y_SEPINVERSE_CONST_ANALYTICFUNCTION_TYPENAME_WRAPPER_Y_DOMAIN_REF_CONST_S_REF_BOOL,
       "f"_a, "s"_a, "with_centered_form"_a = true);
   }
