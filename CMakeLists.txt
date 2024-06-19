@@ -113,7 +113,11 @@
 ################################################################################
 # Compile sources
 ################################################################################
-
+  
+  if(FAST_RELEASE)
+    add_compile_definitions(FAST_RELEASE=1)
+  endif()
+  
   add_subdirectory(src) # C++ sources
   add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
 
