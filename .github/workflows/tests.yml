@@ -80,8 +80,8 @@ jobs:
         #make doc # todo
         make install
         cd python/python_package
-        /usr/bin/python3.5 setup.py develop --user
-        #/usr/bin/python3.5 pycodac/tests/test_arithmetic.py 
+        /usr/bin/python3.6 setup.py develop --user
+        #/usr/bin/python3.6 pycodac/tests/test_arithmetic.py 
         cd ../../
 
         ## Building the examples
