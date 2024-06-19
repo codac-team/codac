@@ -56,13 +56,14 @@ def normalize_label(str_label):
     .replace("operator!=", "OPERATORNEQ") \
     .replace("operator=", "OPERATORAFF") \
     .replace("&", "_REF") \
-    .replace("__REF", "_REF") \
     .replace("*", "_PTR") \
     .replace("=", "EQ") \
     .replace("size_t", "SIZET") \
     .replace("...", "_VARIADIC") \
     .replace("(", "_") \
-    .replace(")", "_")
+    .replace(")", "_") \
+    .replace("__REF", "_REF") \
+    .replace("__PTR", "_PTR")
 
 def docstring_varname(memberdef):
 

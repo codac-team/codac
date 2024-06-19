@@ -137,10 +137,10 @@ void export_Figure2D(py::module& m)
   exported_default_view
   
     .def("selected_fig", &DefaultView::selected_fig,
-      STATIC_FIGURE2D__PTR_DEFAULTVIEW_SELECTED_FIG)
+      STATIC_FIGURE2D_PTR_DEFAULTVIEW_SELECTED_FIG)
   
     .def("set", &DefaultView::set,
-      STATIC_VOID_DEFAULTVIEW_SET_FIGURE2D__PTR)
+      STATIC_VOID_DEFAULTVIEW_SET_FIGURE2D_PTR)
   
     .def("set_axes", &DefaultView::set_axes,
       STATIC_VOID_DEFAULTVIEW_SET_AXES_CONST_FIGUREAXIS_REF_CONST_FIGUREAXIS_REF)

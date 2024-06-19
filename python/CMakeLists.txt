@@ -66,7 +66,7 @@
       src/core/functions/analytic/codac2_py_AnalyticFunction.h
       src/core/functions/analytic/codac2_py_ExprWrapper.h
 
-      src/core/graphics/codac2_py_Figure.cpp
+      src/core/graphics/codac2_py_Figure2D.cpp
       src/core/graphics/codac2_py_StyleProperties.cpp
 
       src/core/paver/codac2_py_Paver.cpp
