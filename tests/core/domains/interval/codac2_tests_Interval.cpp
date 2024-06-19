@@ -39,16 +39,14 @@ TEST_CASE("Interval")
   CHECK(Interval::empty() == Interval::empty());
   CHECK(Interval(0,0) == Interval(0,0));
 
-  CHECK(Interval({}) == Interval::empty());
   CHECK(Interval({1.}) == Interval(1.));
   CHECK(Interval({2,3}) == Interval(2,3));
-  CHECK(Interval({3,2}) == Interval(2,3));
-  CHECK(Interval({10,-1,oo,20}) == Interval(-1,oo));
+  CHECK(Interval({3,2}) == Interval::empty());
   CHECK(Interval({-oo}) == Interval::empty());
   CHECK(Interval({oo}) == Interval::empty());
-  CHECK(Interval({oo,0}) == Interval(0,oo));
+  CHECK(Interval({oo,0}) == Interval::empty());
   CHECK(Interval({-oo,oo}) == Interval(-oo,oo));
-  CHECK(Interval({oo,-oo}) == Interval(-oo,oo));
+  CHECK(Interval({oo,-oo}) == Interval::empty());
 
   CHECK(5._i == Interval(5.));
   CHECK(-3._i == Interval(-3.));

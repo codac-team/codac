@@ -61,30 +61,8 @@ namespace codac2
 
   Interval& Interval::init_from_list(const std::list<double>& l)
   {
-    set_empty();
-
-    // Cases for which {-oo,oo} or {oo,-oo} is given as input
-    if(!l.empty() && (
-        (*l.begin() == -oo && *prev(l.end()) == oo) || 
-        (*l.begin() == oo && *prev(l.end()) == -oo)))
-      *this = Interval(-oo,oo);
-
-    else
-    {
-      // First loop: finite values only (because Interval(oo) is empty)
-      for(const auto& li : l)
-        *this |= li;
-
-      // Then, completing with possible infinite values
-      for(const auto& li : l)
-      {
-        if(li == oo)
-          *this = Interval(lb(),oo);
-        else if(li == -oo)
-          *this = Interval(-oo,ub());
-      }
-    }
-
+    assert(l.size() == 1 || l.size() == 2);
+    *this = Interval(*l.begin(),*std::prev(l.end()));
     return *this;
   }
 
