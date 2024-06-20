@@ -148,14 +148,14 @@ TEST_CASE("IntervalMatrix")
 
     CHECK(m1.rows() == 2);
     CHECK(m1.cols() == 3);
-    CHECK(m1.row(0) == r1);
-    CHECK(m1.row(1) == r2);
-    CHECK(m1.row(0) == r1);
-    CHECK(m1.row(1) == r2);
+    CHECK((m1.row(0) == r1));
+    CHECK((m1.row(1) == r2));
+    CHECK((m1.row(0) == r1));
+    CHECK((m1.row(1) == r2));
 
-    CHECK(m1.col(0) == c1);
-    CHECK(m1.col(1) == c2);
-    CHECK(m1.col(2) == c3);
+    CHECK((m1.col(0) == c1));
+    CHECK((m1.col(1) == c2));
+    CHECK((m1.col(2) == c3));
     CHECK(m1(0,0) == Interval(0,1));
     CHECK(m1(0,1) == Interval(0,2));
     CHECK(m1(0,2) == Interval(0,3));
@@ -406,14 +406,26 @@ TEST_CASE("IntervalMatrix")
       { {0,0},{1,1} }
     });
 
-    IntervalMatrix M2 = 2*Matrix::eye(2,2);
+    IntervalMatrix M2 = 2.*Matrix::eye(2,2);
     CHECK(M2 == IntervalMatrix{
       { {2,2},{0,0} },
       { {0,0},{2,2} }
     });
 
-    IntervalMatrix M3 = Interval(-1,1)*Matrix::eye(2,2);
-    CHECK(M3 == IntervalMatrix{
+    Matrix M3_degenerate = -1.*Matrix::eye(2,2);
+    CHECK(M3_degenerate == Matrix{
+      { -1,0 },
+      { 0,-1 }
+    });
+
+    IntervalMatrix M3_Matrix = Interval(-1,1)*Matrix::eye(2,2);
+    CHECK(M3_Matrix == IntervalMatrix{
+      { {-1,1},{0,0} },
+      { {0,0},{-1,1} }
+    });
+
+    IntervalMatrix M3_IntervalMatrix = Interval(-1,1)*IntervalMatrix::eye(2,2);
+    CHECK(M3_IntervalMatrix == IntervalMatrix{
       { {-1,1},{0,0} },
       { {0,0},{-1,1} }
     });
@@ -433,7 +445,7 @@ TEST_CASE("IntervalMatrix")
       0,2,0,4,
       0,0,2,5,
       1,1,1,6 };
-    CHECK(res == (Matrix(4,4,_expected)));
+    CHECK((res == Matrix(4,4,_expected)));
   }
 
   {

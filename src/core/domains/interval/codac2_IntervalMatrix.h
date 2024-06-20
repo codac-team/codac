@@ -128,6 +128,11 @@ namespace codac2
         : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(other)
       { }
 
+      IntervalMatrix transpose() const
+      {
+        return IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::transpose().eval();
+      }
+
       template<typename OtherDerived>
       IntervalMatrix operator+(const Eigen::MatrixBase<OtherDerived>& x) const
       {
@@ -176,7 +181,7 @@ namespace codac2
       }
   };
 
-  inline Matrix operator*(int a, const Matrix& x)
+  /*inline Matrix operator*(int a, const Matrix& x)
   {
     return a * (MatrixTemplate_<Matrix_<Dynamic,Dynamic>,double,Dynamic,Dynamic>)(x);
   }
@@ -194,6 +199,6 @@ namespace codac2
   inline IntervalMatrix operator|(const Matrix& x, const Matrix& y)
   {
     return IntervalMatrix(x).operator|(y);
-  }
+  }*/
 
 }

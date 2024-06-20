@@ -30,24 +30,24 @@ namespace codac2
   class IntervalVector;
 
   template<typename S,typename V,int R=Dynamic,int C=Dynamic>
-  class IntervalMatrixTemplate_ : public MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>, public DomainInterface<S,V>
+  class IntervalMatrixTemplate_ : public MatrixTemplate_<S/*IntervalMatrixTemplate_<S,V,R,C>*/,Interval,R,C>, public DomainInterface<S,V>
   {
     public:
 
       IntervalMatrixTemplate_()
-        : MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>()
+        : MatrixTemplate_<S/*IntervalMatrixTemplate_<S,V,R,C>*/,Interval,R,C>()
       { }
     
       IntervalMatrixTemplate_(int nb_rows, int nb_cols)
-        : MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>(nb_rows, nb_cols)
+        : MatrixTemplate_<S/*IntervalMatrixTemplate_<S,V,R,C>*/,Interval,R,C>(nb_rows, nb_cols)
       { }
     
       IntervalMatrixTemplate_(int nb_rows, int nb_cols, const Interval& x)
-        : MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>(nb_rows, nb_cols, x)
+        : MatrixTemplate_<S/*IntervalMatrixTemplate_<S,V,R,C>*/,Interval,R,C>(nb_rows, nb_cols, x)
       { }
       
       explicit IntervalMatrixTemplate_(int nb_rows, int nb_cols, const double bounds[][2])
-        : MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>(nb_rows, nb_cols)
+        : MatrixTemplate_<S/*IntervalMatrixTemplate_<S,V,R,C>*/,Interval,R,C>(nb_rows, nb_cols)
       {
         size_t k = 0;
         for(int i = 0 ; i < this->rows() ; i++)
@@ -60,17 +60,17 @@ namespace codac2
       }
       
       explicit IntervalMatrixTemplate_(int nb_rows, int nb_cols, const Interval values[])
-        : MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>(nb_rows, nb_cols, values)
+        : MatrixTemplate_<S/*IntervalMatrixTemplate_<S,V,R,C>*/,Interval,R,C>(nb_rows, nb_cols, values)
       { }
       
       explicit IntervalMatrixTemplate_(const Interval values[])
-        : MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>(values)
+        : MatrixTemplate_<S/*IntervalMatrixTemplate_<S,V,R,C>*/,Interval,R,C>(values)
       {
         static_assert(R != Dynamic && C != Dynamic);
       }
 
       IntervalMatrixTemplate_(std::initializer_list<std::initializer_list<Interval>> l)
-        : MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>(l)
+        : MatrixTemplate_<S/*IntervalMatrixTemplate_<S,V,R,C>*/,Interval,R,C>(l)
       { }
 
       // Defined in codac2_IntervalVector.h
@@ -88,7 +88,7 @@ namespace codac2
       
       template<typename OtherDerived>
       IntervalMatrixTemplate_(const Eigen::MatrixBase<OtherDerived>& other)
-        : MatrixTemplate_<IntervalMatrixTemplate_<S,V,R,C>,Interval,R,C>(other.template cast<Interval>())
+        : MatrixTemplate_<S/*IntervalMatrixTemplate_<S,V,R,C>*/,Interval,R,C>(other.template cast<Interval>())
       { }
 
       double min_diam() const
@@ -605,8 +605,14 @@ namespace codac2
         return IntervalMatrixTemplate_<S,V,R,C>(nb_rows, nb_cols, Interval::empty());
       }
 
-      //template<typename OtherDerived>
-      //bool operator==(const Eigen::MatrixBase<OtherDerived>& x) const
+      template<typename S_, typename = typename std::enable_if<
+          !std::is_base_of_v<S,S_>
+        >::type>
+      bool operator==(const S_& x) const
+      {
+        return operator==(S(x));
+      }
+
       bool operator==(const S& x) const
       {
         if(x.rows() != this->rows() || x.cols() != this->cols())
@@ -623,8 +629,14 @@ namespace codac2
         return true;
       }
 
-      //template<typename OtherDerived>
-      //bool operator!=(const Eigen::MatrixBase<OtherDerived>& x) const
+      template<typename S_, typename = typename std::enable_if<
+          !std::is_base_of_v<S,S_>
+        >::type>
+      bool operator!=(const S_& x) const
+      {
+        return operator!=(S(x));
+      }
+
       bool operator!=(const S& x) const
       {
         return !(*this == x);

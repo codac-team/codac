@@ -23,7 +23,7 @@ namespace codac2
     #define assert_release(test,error_message) \
     if(!(test)) \
     { \
-      std::cerr << "[Assert error] " << error_message << std::endl; \
+      throw std::invalid_argument(error_message); \
       abort(); \
     } \
     \

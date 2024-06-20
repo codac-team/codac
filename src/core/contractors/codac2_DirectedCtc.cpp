@@ -375,7 +375,7 @@ using namespace codac2;
 
     else
     {
-      IntervalMatrix Q = gauss_jordan(x1.mid()).template cast<Interval>();
+      IntervalMatrix Q = gauss_jordan(x1.mid());
       IntervalVector b_tilde = Q*y;
       IntervalMatrix A_tilde = Q*x1; // should be a tree matrix
 

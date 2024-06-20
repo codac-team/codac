@@ -102,6 +102,21 @@ namespace codac2
         return *this;
       }
 
+      /*S& row(size_t i)
+      {
+        return this->Eigen::Matrix<T,R,C>::row(i);
+      }
+
+      S& col(size_t i)
+      {
+        return this->Eigen::Matrix<T,R,C>::col(i);
+      }*/
+
+      //S& block(size_t i, size_t j, size_t p, size_t q) const
+      //{
+      //  return this->Eigen::Matrix<T,R,C>::block(i,j,p,q);
+      //}
+
       size_t size() const
       {
         return this->Eigen::Matrix<T,R,C>::size();
@@ -159,6 +174,20 @@ namespace codac2
         return this->diagonal().asDiagonal();
       }
   };
+
+  // Auto conversion of 'a' into Interval is possible, and so the product will produce an Interval matrix
+  // We redefine the following function to avoid this.
+  template<typename S,int R,int C>
+  auto operator*(double a, const MatrixTemplate_<S,double,R,C>& x)
+  {
+    return x.Eigen::Matrix<double,R,C>::operator*(a);
+  }
+
+  template<typename S,int R,int C>
+  auto operator*(const Interval& a, const MatrixTemplate_<S,double,R,C>& x)
+  {
+    return a * x.template cast<Interval>();
+  }
 
   template<typename S,typename T,int R,int C>
   std::ostream& operator<<(std::ostream& os, const MatrixTemplate_<S,T,R,C>& x)

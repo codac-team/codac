@@ -216,7 +216,7 @@ namespace codac2
       }
   };
 
-  inline Vector operator*(int a, const Vector& x)
+  /*inline Vector operator*(int a, const Vector& x)
   {
     return a * (MatrixTemplate_<Matrix_<Dynamic,1>,double,Dynamic,1>)(x);
   }
@@ -229,7 +229,7 @@ namespace codac2
   inline IntervalVector operator*(const Interval& a, const Vector& x)
   {
     return a * x.template cast<Interval>();
-  }
+  }*/
 
   inline IntervalVector operator|(const Vector& x, const Vector& y)
   {
