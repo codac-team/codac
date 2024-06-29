@@ -61,8 +61,8 @@ namespace codac2
 
   Interval& Interval::init_from_list(const std::list<double>& l)
   {
-    assert_release(l.size() == 1 || l.size() == 2,
-      "'Interval' can only be defined by one or two 'double' values.");
+    assert_release((l.size() == 1 || l.size() == 2)
+      && "'Interval' can only be defined by one or two 'double' values.");
     *this = Interval(*l.begin(),*std::prev(l.end()));
     return *this;
   }

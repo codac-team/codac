@@ -65,10 +65,10 @@ TEST_CASE("IntervalMatrix")
     IntervalMatrix m1(2,3);
     IntervalMatrix m2(2,3);
 
-    CHECK(m1.rows() == 2);
-    CHECK(m1.cols() == 3);
-    CHECK(m2.rows() == 2);
-    CHECK(m2.cols() == 3);
+    CHECK(m1.nb_rows() == 2);
+    CHECK(m1.nb_cols() == 3);
+    CHECK(m2.nb_rows() == 2);
+    CHECK(m2.nb_cols() == 3);
 
     m1(0,0) = 1.;
     m1(0,1) = 2.;
@@ -106,8 +106,8 @@ TEST_CASE("IntervalMatrix")
 
   {
     IntervalMatrix m(2,3);
-    CHECK(m.rows() == 2);
-    CHECK(m.cols() == 3);
+    CHECK(m.nb_rows() == 2);
+    CHECK(m.nb_cols() == 3);
     CHECK(m(0,0) == Interval(-oo,oo));
     CHECK(m(0,1) == Interval(-oo,oo));
     CHECK(m(0,2) == Interval(-oo,oo));
@@ -124,14 +124,14 @@ TEST_CASE("IntervalMatrix")
     double _r1[][2] = {{0,1},{0,2},{0,3}};
     double _r2[][2] = {{-1,0},{-2,0},{-3,0}};
     auto r1_0 = IntervalVector(3,_r1);
-    CHECK(r1_0.cols() == 1);
-    CHECK(r1_0.rows() == 3);
+    CHECK(r1_0.nb_cols() == 1);
+    CHECK(r1_0.nb_rows() == 3);
     auto r1 = IntervalVector(3,_r1).transpose();
-    CHECK(r1.cols() == 3);
-    CHECK(r1.rows() == 1);
+    CHECK(r1.nb_cols() == 3);
+    CHECK(r1.nb_rows() == 1);
     auto r2 = IntervalVector(3,_r2).transpose();
-    CHECK(r2.cols() == 3);
-    CHECK(r2.rows() == 1);
+    CHECK(r2.nb_cols() == 3);
+    CHECK(r2.nb_rows() == 1);
     CHECK(r1 == IntervalMatrix({
       { {0,1}, {0,2}, {0,3} }
     }));
@@ -146,8 +146,8 @@ TEST_CASE("IntervalMatrix")
     IntervalVector c2(2,_c2);
     IntervalVector c3(2,_c3);
 
-    CHECK(m1.rows() == 2);
-    CHECK(m1.cols() == 3);
+    CHECK(m1.nb_rows() == 2);
+    CHECK(m1.nb_cols() == 3);
     CHECK((m1.row(0) == r1));
     CHECK((m1.row(1) == r2));
     CHECK((m1.row(0) == r1));
@@ -171,8 +171,8 @@ TEST_CASE("IntervalMatrix")
     Interval x(-1,2);
     IntervalMatrix m(2,3,x);
 
-    CHECK(m.rows() == 2);
-    CHECK(m.cols() == 3);
+    CHECK(m.nb_rows() == 2);
+    CHECK(m.nb_cols() == 3);
     for(size_t i = 0 ; i < 2 ; i++)
       for(size_t j = 0 ; j < 3 ; j++)
         CHECK(m(i,j) == x);
@@ -199,8 +199,8 @@ TEST_CASE("IntervalMatrix")
   }
 
   {
-    CHECK(IntervalMatrix::empty(2,3).rows() == 2);
-    CHECK(IntervalMatrix::empty(2,3).cols() == 3);
+    CHECK(IntervalMatrix::empty(2,3).nb_rows() == 2);
+    CHECK(IntervalMatrix::empty(2,3).nb_cols() == 3);
 
     CHECK(IntervalMatrix(IntervalMatrix::empty(2,3)) == IntervalMatrix::empty(2,3));
     CHECK((IntervalMatrix(2,3)=IntervalMatrix::empty(2,3)) == IntervalMatrix::empty(2,3));
@@ -380,8 +380,8 @@ TEST_CASE("IntervalMatrix")
     IntervalMatrix m1(M1());
     IntervalMatrix m2(M2());
     IntervalMatrix m3(m1*m2);
-    CHECK(m3.rows() == 2);
-    CHECK(m3.cols() == 2);
+    CHECK(m3.nb_rows() == 2);
+    CHECK(m3.nb_cols() == 2);
 
     for(size_t i = 0 ; i < 2 ; i++)
       for(size_t j = 0 ; j < 2 ; j++)
@@ -458,7 +458,7 @@ TEST_CASE("IntervalMatrix")
       { 8,4 }
     };
 
-    CHECK((m1 | m2) == IntervalMatrix{
+    CHECK((IntervalMatrix(m1) | m2) == IntervalMatrix{
       { {-1,0},{2,7} },
       { {3,8},{4,10} }
     });

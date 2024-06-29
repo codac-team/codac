@@ -72,13 +72,13 @@ namespace codac2
           {
             using X0 = std::tuple_element_t<0, std::tuple<X...>>;
 
-            if(sizeof...(X) == 1 && std::is_same_v<X0,IntervalVector>)
+            if constexpr(sizeof...(X) == 1 && std::is_same_v<X0,IntervalVector>)
             {
               X0& x_ = std::get<0>(std::tie(x...));
               X0 x_mid = X0(x_.mid());
 
               assert(val_expr.a.size() == val_expr.m.size());
-              IntervalVector fm(val_expr.a - val_expr.m);
+              IntervalVector fm({val_expr.a - val_expr.m});
 
               if constexpr(std::is_same_v<Y,IntervalMatrix>)
               {
@@ -96,7 +96,7 @@ namespace codac2
 
             else
             {
-              std::cout << "CtcInverse: not (yet) implemented for multi-nonvector-arguments" << std::endl;
+              // Centered form not (yet) implemented for multi-nonvector-arguments
             }
           }
           

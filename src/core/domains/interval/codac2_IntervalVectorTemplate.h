@@ -20,6 +20,7 @@
 
 namespace codac2
 {
+  #if 0
   template<int M>
   class IntervalVector_;
 
@@ -102,107 +103,6 @@ namespace codac2
         return *this;
       }
 
-      void resize(size_t n)
-      {
-        static_assert(N == Dynamic);
-        this->IntervalMatrixTemplate_<IntervalVectorTemplate_<S,V,N>,V,N,1>::resize(n,1);
-      }
-
-      template<size_t N1,size_t N2>
-      auto subvector() const
-      {
-        static_assert(N1 >= 0 && N1 < N && N2 >= 0 && N2 < N && N1 <= N2);
-        return this->template block<N2-N1+1,1>(N1,0);
-      }
-
-      S subvector(size_t start_id, size_t end_id) const
-      {
-        assert(end_id >= 0 && start_id >= 0);
-        assert(end_id < this->size() && start_id <= end_id);
-        return this->block(start_id, 0, end_id-start_id+1, 1);
-      }
-
-      template<size_t I,int M>
-      void put(const IntervalVector_<M>& x)
-      {
-        static_assert(I >= 0 && I < N && M+I <= N && M != Dynamic);
-        this->template block<M,1>(I,0) << x;
-      }
-
-      template<typename T, typename = typename std::enable_if<
-          std::is_base_of_v<IntervalVectorTemplate_,T>
-        >::type>
-      void put(size_t start_id, const T& x)
-      {
-        assert(start_id >= 0 && start_id < this->size());
-        assert(start_id+x.size() <= this->size());
-        this->block(start_id,0,x.size(),1) << x;
-      }
-
-      auto as_diag() const
-      {
-        return Eigen::Matrix<Interval,N,N>(this->asDiagonal());
-      }
-
-      std::vector<S> complementary() const
-      {
-        return S(this->size()).diff(*this);
-      }
-
-      std::vector<S> diff(const S& y, bool compactness = true) const
-      {
-        // This code originates from the ibex-lib
-        // See: ibex_TemplateVector.h
-        // Author: Gilles Chabert
-        // It has been revised with modern C++ and templated types
-
-        const size_t n = this->size();
-        assert(y.size() == n);
-
-        if(y == *this)
-          return { S::empty(n) };
-
-        S x = *this;
-        S z = x & y;
-
-        if(z.is_empty())
-          return { x };
-
-        else
-        {
-          // Check if in one dimension y is flat and x not,
-          // in which case the diff returns also x directly
-          if(compactness)
-            for(size_t i = 0 ; i < n ; i++)
-              if(z[i].is_degenerated() && !x[i].is_degenerated())
-                return { x };
-        }
-
-        std::vector<S> l;
-
-        for(size_t var = 0 ; var < n ; var++)
-        {
-          Interval c1, c2;
-          
-          for(const auto& ci : x[var].diff(y[var], compactness))
-          {
-            assert(!ci.is_empty());
-
-            S v(n);
-            for(size_t i = 0 ; i < var ; i++)
-              v[i] = x[i];
-            v[var] = ci;
-            for(size_t i = var+1 ; i < n ; i++)
-              v[i] = x[i];
-            l.push_back(v);
-          }
-
-          x[var] = z[var];
-        }
-
-        return l;
-      }
-
       static S empty(size_t n = N)
       {
         //assert(n > 0);
@@ -241,4 +141,5 @@ namespace codac2
   {
     return v.as_diag();
   }
+  #endif 
 }

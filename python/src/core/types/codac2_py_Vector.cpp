@@ -22,7 +22,7 @@ using namespace pybind11::literals;
 
 py::class_<Vector> export_Vector(py::module& m)
 {
-  py::class_<Vector> exported_vector_class(m, "Vector", VECTOR__MAIN);
+  py::class_<Vector> exported_vector_class(m, "Vector", VECTOR_MAIN);
   exported_vector_class
 
     .def(py::init(
@@ -31,7 +31,7 @@ py::class_<Vector> export_Vector(py::module& m)
           matlab::test_integer(n);
           return std::make_unique<Vector>(n);
         }),
-      VECTOR__N_VECTOR__SIZET,
+      VECTOR_VECTOR_SIZET,
       "n"_a)
 
     .def(py::init(
@@ -42,11 +42,10 @@ py::class_<Vector> export_Vector(py::module& m)
             (*iv)[i] = v[i];
           return iv;
         }),
-      VECTOR__N_VECTOR__CONST_VECTOR_DOUBLE_REF,
+      VECTOR_VECTOR_INITIALIZER_LIST_DOUBLE,
       "x"_a)
 
     .def(py::init<const Vector&>(),
-      VECTOR__N_VECTOR__CONST_MATRIX__M1_REF,
       "x"_a)
   ;
 

@@ -25,10 +25,11 @@ void CHECK_diff(const IntervalVector& x, const IntervalVector& y, bool compactne
   for(const auto& ci : c)
   {
     bool found = false;
-    for(int i = 0 ; i < result.rows() ; i++)
-      if(ci == result.row(i).transpose())
+    for(size_t i = 0 ; i < result.nb_rows() ; i++)
+      if(ci == IntervalMatrix(result.row(i)).transpose().col(0))
       {
-        found = true; break;
+        found = true;
+        break;
       }
     CHECK(found);
   }
@@ -136,6 +137,25 @@ TEST_CASE("IntervalVector")
     CHECK(x.size() == 2);
     CHECK(x[0] == Interval(1,2));
     CHECK(x[1] == Interval(3,4));
+  }
+
+  {
+    Interval xi(-5,6);
+    IntervalVector x({xi});
+    CHECK(x.size() == 1);
+    CHECK(x[0] == Interval(-5,6));
+  }
+
+  {
+    IntervalVector x({Interval(4.0397,5.40),Interval(1.9089,2.45)});
+    CHECK(x[0] == Interval(4.0397,5.40));
+    CHECK(x[1] == Interval(1.9089,2.45));
+  }
+
+  {
+    IntervalVector x({{4.0397,5.40},{1.9089,2.45}});
+    CHECK(x[0] == Interval(4.0397,5.40));
+    CHECK(x[1] == Interval(1.9089,2.45));
   }
 
   CHECK(IntervalVector({{0,1},{2,3},{4,5}}).subvector(0,1) == IntervalVector({{0,1},{2,3}}));

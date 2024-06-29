@@ -15,190 +15,126 @@
 
 #pragma once
 
+#include "codac2_assert.h"
 #include "codac2_Matrix.h"
-#include "codac2_IntervalMatrixTemplate.h"
+#include "codac2_IntervalMatrixBase.h"
 
 namespace codac2
 {
-  using Eigen::Dynamic;
-
   class IntervalVector;
 
-  template<int R=Dynamic,int C=Dynamic>
-  class IntervalMatrix_ : public IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>
+  class IntervalMatrix : public IntervalMatrixBase<IntervalMatrix,Matrix>
   {
     public:
 
-      IntervalMatrix_()
-        : IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>()
-      { }
-    
-      IntervalMatrix_(int nb_rows, int nb_cols)
-        : IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>(nb_rows, nb_cols)
-      { }
-    
-      IntervalMatrix_(int nb_rows, int nb_cols, const Interval& x)
-        : IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>(nb_rows, nb_cols, x)
-      { }
-      
-      explicit IntervalMatrix_(int nb_rows, int nb_cols, const double bounds[][2])
-        : IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>(nb_rows, nb_cols, bounds)
-      { }
-      
-      explicit IntervalMatrix_(int nb_rows, int nb_cols, const Interval values[])
-        : IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>(nb_rows, nb_cols, values)
-      { }
-      
-      explicit IntervalMatrix_(const Interval values[])
-        : IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>(values)
+      explicit IntervalMatrix(size_t r, size_t c)
+        : IntervalMatrix(r,c,Interval())
+      {
+        assert_release(r > 0 && c > 0);
+      }
+
+      explicit IntervalMatrix(size_t r, size_t c, const Interval& x)
+        : MatrixBase<IntervalMatrix,Interval>(r,c,x),
+          IntervalMatrixBase<IntervalMatrix,Matrix>(r,c,x)
+      {
+        assert_release(r > 0 && c > 0);
+      }
+
+      IntervalMatrix(const Matrix& x)
+        : MatrixBase<IntervalMatrix,Interval>(x._e.template cast<Interval>()),
+          IntervalMatrixBase<IntervalMatrix,Matrix>(x._e.template cast<Interval>())
       { }
 
-      IntervalMatrix_(std::initializer_list<std::initializer_list<Interval>> l)
-        : IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>(l)
-      { }
+      explicit IntervalMatrix(const Matrix& lb, const Matrix& ub)
+        : MatrixBase<IntervalMatrix,Interval>(lb._e.template cast<Interval>()),
+          IntervalMatrixBase<IntervalMatrix,Matrix>(lb._e.template cast<Interval>())
+      {
+        assert_release(lb.size() == ub.size());
+        *this |= ub;
+      }
 
-      IntervalMatrix_(std::initializer_list<IntervalVector> l)
-        : IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>(l)
-      { }
-
-      IntervalMatrix_(const Matrix_<R,C>& x)
-        : IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>(x)
-      { }
-
-      IntervalMatrix_(const Matrix_<R,C>& lb, const Matrix_<R,C>& ub)
-        : IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>(lb, ub)
-      { }
-      
-      template<typename OtherDerived>
-      IntervalMatrix_(const Eigen::MatrixBase<OtherDerived>& other)
-        : IntervalMatrixTemplate_<IntervalMatrix_<R,C>,Matrix_<R,C>,R,C>(other)
-      { }
-  };
-
-  class IntervalMatrix : public IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>
-  {
-    public:
-    
-      IntervalMatrix(int nb_rows, int nb_cols)
-        : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(nb_rows, nb_cols)
-      { }
-    
-      IntervalMatrix(int nb_rows, int nb_cols, const Interval& x)
-        : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(nb_rows, nb_cols, x)
-      { }
-      
-      explicit IntervalMatrix(int nb_rows, int nb_cols, const double bounds[][2])
-        : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(nb_rows, nb_cols, bounds)
-      { }
-      
-      explicit IntervalMatrix(int nb_rows, int nb_cols, const Interval values[])
-        : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(nb_rows, nb_cols, values)
-      { }
+      explicit IntervalMatrix(size_t r, size_t c, const double bounds[][2])
+        : MatrixBase<IntervalMatrix,Interval>(r,c),
+          IntervalMatrixBase<IntervalMatrix,Matrix>(r,c,bounds)
+      {
+        assert_release(r > 0 && c > 0);
+      }
 
       IntervalMatrix(std::initializer_list<std::initializer_list<Interval>> l)
-        : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(l)
-      { }
+        : MatrixBase<IntervalMatrix,Interval>(l),
+          IntervalMatrixBase<IntervalMatrix,Matrix>(l)
+      {
+        assert_release(!std::empty(l));
+      }
+
+      // Defined in codac2_IntervalVector.h
+      //IntervalMatrix(std::initializer_list<IntervalVector> l);
 
       template<typename... IV, typename = typename std::enable_if<(true && ... && 
           std::is_same_v<IntervalVector,IV>
         ), void>::type>
       explicit IntervalMatrix(const IV&... x)
-        : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(std::get<0>(std::tie(x...)).size(), sizeof...(IV))
+        : MatrixBase<IntervalMatrix,Interval>(std::get<0>(std::tie(x...)).size(), sizeof...(IV)),
+          IntervalMatrixBase<IntervalMatrix,Matrix>(std::get<0>(std::tie(x...)).size(), sizeof...(IV))
       {
         size_t i = 0;
         ((this->col(i++) = x), ...);
+        assert(i == nb_cols());
       }
 
-      IntervalMatrix(const Matrix& x)
-        : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(x)
+      IntervalMatrix(const MatrixBase<IntervalMatrix,Interval>& x)
+        : MatrixBase<IntervalMatrix,Interval>(x._e),
+          IntervalMatrixBase<IntervalMatrix,Matrix>(x._e)
       { }
 
-      IntervalMatrix(const codac2::Matrix& lb, const codac2::Matrix& ub)
-        : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(lb, ub)
-      { }
-
-      explicit IntervalMatrix(const IntervalMatrix& x)
-        : IntervalMatrix(x.rows(),x.cols())
-      {
-        *this = x;
-      }
-      
       template<typename OtherDerived>
-      IntervalMatrix(const Eigen::MatrixBase<OtherDerived>& other)
-        : IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>(other)
+      IntervalMatrix(const Eigen::MatrixBase<OtherDerived>& x)
+        : MatrixBase<IntervalMatrix,Interval>(x.template cast<Interval>()),
+          IntervalMatrixBase<IntervalMatrix,Matrix>(x.template cast<Interval>())
+      { }
+
+      template<typename OtherDerived>
+      IntervalMatrix(const MatrixBaseBlock<OtherDerived,IntervalMatrix,Interval>& x)
+        : IntervalMatrix(x.eval())
       { }
 
       IntervalMatrix transpose() const
       {
-        return IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::transpose().eval();
+        return this->_e.transpose();
       }
 
-      template<typename OtherDerived>
-      IntervalMatrix operator+(const Eigen::MatrixBase<OtherDerived>& x) const
+      IntervalMatrix diagonal_matrix() const
       {
-        return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator+(x));
+        return _e.diagonal().asDiagonal().toDenseMatrix();
       }
 
-      template<typename OtherDerived>
-      IntervalMatrix operator+=(const Eigen::MatrixBase<OtherDerived>& x)
+      static IntervalMatrix zeros(size_t r, size_t c)
       {
-        return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator+=(x));
+        assert_release(r > 0 && c > 0);
+        return EigenMatrix<Interval>::Zero(r,c);
       }
 
-      IntervalMatrix operator-() const
+      static IntervalMatrix ones(size_t r, size_t c)
       {
-        return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator-());
+        assert_release(r > 0 && c > 0);
+        return EigenMatrix<Interval>::Ones(r,c);
       }
 
-      template<typename OtherDerived>
-      IntervalMatrix operator-(const Eigen::MatrixBase<OtherDerived>& x) const
+      static IntervalMatrix eye(size_t r, size_t c)
       {
-        return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator-(x));
+        assert_release(r > 0 && c > 0);
+        return EigenMatrix<Interval>::Identity(r,c);
       }
 
-      template<typename OtherDerived>
-      IntervalMatrix operator-=(const Eigen::MatrixBase<OtherDerived>& x)
+      static IntervalMatrix empty(size_t r, size_t c)
       {
-        return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator-=(x));
-      }
-
-      template<typename OtherDerived>
-      IntervalMatrix operator*(const Eigen::MatrixBase<OtherDerived>& x) const
-      {
-        return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator*(x));
-      }
-
-      template<typename OtherDerived>
-      IntervalMatrix operator&(const Eigen::MatrixBase<OtherDerived>& x) const
-      {
-        return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator&(x));
-      }
-      
-      template<typename OtherDerived>
-      IntervalMatrix operator|(const Eigen::MatrixBase<OtherDerived>& x) const
-      {
-        return IntervalMatrix(IntervalMatrixTemplate_<IntervalMatrix,codac2::Matrix>::operator|(x));
+        assert_release(r > 0 && c > 0);
+        return IntervalMatrix(r,c,Interval::empty());
       }
   };
-
-  /*inline Matrix operator*(int a, const Matrix& x)
+  
+  inline IntervalMatrix operator*(const codac2::Interval& a, const IntervalMatrix& x)
   {
-    return a * (MatrixTemplate_<Matrix_<Dynamic,Dynamic>,double,Dynamic,Dynamic>)(x);
+    return a * x._e;
   }
-
-  inline Matrix operator*(double a, const Matrix& x)
-  {
-    return a * (MatrixTemplate_<Matrix_<Dynamic,Dynamic>,double,Dynamic,Dynamic>)(x);
-  }
-
-  inline IntervalMatrix operator*(const Interval& a, const Matrix& x)
-  {
-    return a * x.template cast<Interval>();
-  }
-
-  inline IntervalMatrix operator|(const Matrix& x, const Matrix& y)
-  {
-    return IntervalMatrix(x).operator|(y);
-  }*/
-
 }

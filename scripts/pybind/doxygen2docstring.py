@@ -63,7 +63,8 @@ def normalize_label(str_label):
     .replace("(", "_") \
     .replace(")", "_") \
     .replace("__REF", "_REF") \
-    .replace("__PTR", "_PTR")
+    .replace("__PTR", "_PTR") \
+    .replace("-1", "MINUSONE")
 
 def docstring_varname(memberdef):
 

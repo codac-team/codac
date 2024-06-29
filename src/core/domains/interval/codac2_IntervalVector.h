@@ -15,225 +15,184 @@
 
 #pragma once
 
+#include "codac2_assert.h"
 #include "codac2_Vector.h"
-#include "codac2_IntervalVectorTemplate.h"
+#include "codac2_IntervalMatrixBase.h"
+#include "codac2_VectorBase.h"
 #include "codac2_IntervalMatrix.h"
 
 namespace codac2
 {
-  template<int N=Dynamic>
-  class IntervalVector_ : public IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>
+  class IntervalVector : public IntervalMatrixBase<IntervalVector,Vector>, public VectorBase<IntervalVector,IntervalMatrix,Interval>
   {
     public:
 
-      IntervalVector_()
-        : IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>()
-      { }
-
-      explicit IntervalVector_(size_t n)
-        : IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>(n)
-      { }
-
-      explicit IntervalVector_(size_t n, const Interval& x)
-        : IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>(n,x)
-      { }
-
-      explicit IntervalVector_(const Interval& x)
-        : IntervalVector_<N>(1,x)
-      { }
-      
-      template<int M>
-      explicit IntervalVector_(const Vector_<M>& v)
-        : IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>(v)
-      { }
-      
-      explicit IntervalVector_(size_t n, const double bounds[][2])
-        : IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>(n,bounds)
-      { }
-
-      explicit IntervalVector_(const double bounds[][2])
-        : IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>(bounds)
-      { }
-
-      explicit IntervalVector_(const std::vector<Interval>& x)
-        : IntervalVector_(x.size(), &x[0])
-      {
-        assert(!x.empty());
-      }
-      
-      explicit IntervalVector_(const Vector_<N>& lb, const Vector_<N>& ub)
-        : IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>(lb, ub)
-      { }
-      
-      IntervalVector_(std::initializer_list<Interval> l)
-        : IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>(l)
-      { }
-
-      template<int M=Dynamic>
-      IntervalVector_(const IntervalVector_<M>& x)
-        : IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>(x)
-      { }
-
-      template<typename OtherDerived>
-      IntervalVector_(const Eigen::MatrixBase<OtherDerived>& other)
-        : IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>(other)
-      { }
- 
-      template<typename OtherDerived>
-      IntervalVector_& operator=(const Eigen::MatrixBase<OtherDerived>& other)
-      {
-        this->IntervalVectorTemplate_<IntervalVector_<N>,Vector_<N>,N>::operator=(other);
-        return *this;
-      }
-  };
-
-  class IntervalVector : public IntervalVectorTemplate_<IntervalVector,Vector>
-  {
-    public:
-      
       explicit IntervalVector(size_t n)
-        : IntervalVectorTemplate_<IntervalVector,Vector>(n)
-      { }
+        : IntervalVector(n,Interval())
+      {
+        assert_release(n > 0);
+      }
 
       explicit IntervalVector(size_t n, const Interval& x)
-        : IntervalVectorTemplate_<IntervalVector,Vector>(n,x)
+        : MatrixBase<IntervalVector,Interval>(n,1,x),
+          IntervalMatrixBase<IntervalVector,Vector>(n,1),
+          VectorBase<IntervalVector,IntervalMatrix,Interval>(n)
+      {
+        assert_release(n > 0);
+      }
+
+      IntervalVector(const Vector& x)
+        : MatrixBase<IntervalVector,Interval>(x._e.template cast<Interval>()),
+          IntervalMatrixBase<IntervalVector,Vector>(x.size(),1),
+          VectorBase<IntervalVector,IntervalMatrix,Interval>(x.size())
       { }
 
-      explicit IntervalVector(const Interval& x)
-        : IntervalVector(1,x)
-      { }
-      
-      template<int M>
-      explicit IntervalVector(const Vector_<M>& v)
-        : IntervalVectorTemplate_<IntervalVector,Vector>(v)
-      { }
-      
-      explicit IntervalVector(size_t n, const double bounds[][2])
-        : IntervalVectorTemplate_<IntervalVector,Vector>(n,bounds)
-      { }
-      
       explicit IntervalVector(const Vector& lb, const Vector& ub)
-        : IntervalVectorTemplate_<IntervalVector,Vector>(lb, ub)
-      { }
-      
+        : MatrixBase<IntervalVector,Interval>(lb._e.template cast<Interval>()),
+          IntervalMatrixBase<IntervalVector,Vector>(lb.size(),1),
+          VectorBase<IntervalVector,IntervalMatrix,Interval>(lb.size())
+      {
+        assert_release(lb.size() == ub.size());
+        for(size_t i = 0 ; i < lb.size() ; i++)
+        {
+          assert_release(lb[i] <= ub[i]);
+        }
+
+        *this |= ub;
+      }
+
+      explicit IntervalVector(size_t n, const double bounds[][2])
+        : MatrixBase<IntervalVector,Interval>(n,1),
+          IntervalMatrixBase<IntervalVector,Vector>(n,1,bounds),
+          VectorBase<IntervalVector,IntervalMatrix,Interval>(n)
+      {
+        assert_release(n > 0);
+      }
+
       IntervalVector(std::initializer_list<Interval> l)
-        : IntervalVectorTemplate_<IntervalVector,Vector>(l)
+        : MatrixBase<IntervalVector,Interval>(l.size(),1),
+          IntervalMatrixBase<IntervalVector,Vector>(l.size(),1),
+          VectorBase<IntervalVector,IntervalMatrix,Interval>(l)
+      {
+        assert_release(!std::empty(l));
+      }
+
+      IntervalVector(const IntervalMatrixBase<IntervalVector,Vector>& x)
+        : MatrixBase<IntervalVector,Interval>(x),
+          IntervalMatrixBase<IntervalVector,Vector>(x),
+          VectorBase<IntervalVector,IntervalMatrix,Interval>(x._e)
       { }
 
-      template<int M=Dynamic>
-      IntervalVector(const IntervalVector_<M>& x)
-        : IntervalVectorTemplate_<IntervalVector,Vector>(x)
+      template<typename OtherDerived>
+      IntervalVector(const Eigen::MatrixBase<OtherDerived>& x)
+        : MatrixBase<IntervalVector,Interval>(x.template cast<Interval>()),
+          IntervalMatrixBase<IntervalVector,Vector>(x.template cast<Interval>()),
+          VectorBase<IntervalVector,IntervalMatrix,Interval>(x.template cast<Interval>())
       { }
 
-      explicit IntervalVector(const IntervalVector& x)
-        : IntervalVector(x.size())
-      {
-        *this = x;
-      }
-
       template<typename OtherDerived>
-      IntervalVector(const Eigen::MatrixBase<OtherDerived>& other)
-        : IntervalVectorTemplate_<IntervalVector,Vector>(other)
-      { }
- 
-      template<typename OtherDerived>
-      IntervalVector& operator=(const Eigen::MatrixBase<OtherDerived>& other)
+      IntervalVector(const MatrixBaseBlock<OtherDerived,IntervalMatrix,Interval>& x)
+        : IntervalVector(x.eval())
       {
-        this->IntervalVectorTemplate_<IntervalVector,Vector>::operator=(other);
-        return *this;
+        assert_release(x._q == 1);
       }
 
-      IntervalMatrix transpose() const
+      std::vector<IntervalVector> complementary() const
       {
-        return IntervalVectorTemplate_<IntervalVector,Vector>::transpose().eval();
+        return IntervalVector(this->size()).diff(*this);
       }
 
-      IntervalMatrix as_diag() const
+      std::vector<IntervalVector> diff(const IntervalVector& y, bool compactness = true) const
       {
-        IntervalMatrix diag(size(),size(),0.);
-        for(size_t i = 0 ; i < (size_t)size() ; i++)
-          diag(i,i) = (*this)[i];
-        return diag;
+        // This code originates from the ibex-lib
+        // See: ibex_TemplateVector.h
+        // Author: Gilles Chabert
+        // It has been revised with modern C++ and templated types
+
+        const size_t n = this->size();
+        assert_release(y.size() == n);
+
+        if(y == *this)
+          return { IntervalVector::empty(n) };
+
+        IntervalVector x = *this;
+        IntervalVector z = x & y;
+
+        if(z.is_empty())
+          return { x };
+
+        else
+        {
+          // Check if in one dimension y is flat and x not,
+          // in which case the diff returns also x directly
+          if(compactness)
+            for(size_t i = 0 ; i < n ; i++)
+              if(z[i].is_degenerated() && !x[i].is_degenerated())
+                return { x };
+        }
+
+        std::vector<IntervalVector> l;
+
+        for(size_t var = 0 ; var < n ; var++)
+        {
+          Interval c1, c2;
+          
+          for(const auto& ci : x[var].diff(y[var], compactness))
+          {
+            assert(!ci.is_empty());
+
+            IntervalVector v(n);
+            for(size_t i = 0 ; i < var ; i++)
+              v[i] = x[i];
+            v[var] = ci;
+            for(size_t i = var+1 ; i < n ; i++)
+              v[i] = x[i];
+            l.push_back(v);
+          }
+
+          x[var] = z[var];
+        }
+
+        return l;
       }
 
-      template<typename OtherDerived>
-      IntervalVector operator+(const Eigen::MatrixBase<OtherDerived>& x) const
+      static IntervalVector zeros(size_t n)
       {
-        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator+(x));
+        assert_release(n > 0);
+        return EigenMatrix<Interval>::Zero(n,1);
       }
 
-      template<typename OtherDerived>
-      IntervalVector operator+=(const Eigen::MatrixBase<OtherDerived>& x)
+      static IntervalVector ones(size_t n)
       {
-        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator+=(x));
+        assert_release(n > 0);
+        return EigenMatrix<Interval>::Ones(n,1);
       }
 
-      template<typename OtherDerived>
-      IntervalVector operator+=(const Vector& x)
+      static IntervalVector empty(size_t n)
       {
-        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator+=(x.template cast<Interval>()));
-      }
-
-      IntervalVector operator-() const
-      {
-        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator-());
-      }
-
-      template<typename OtherDerived>
-      IntervalVector operator-(const Eigen::MatrixBase<OtherDerived>& x) const
-      {
-        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator-(x));
-      }
-
-      template<typename OtherDerived>
-      IntervalVector operator-=(const Eigen::MatrixBase<OtherDerived>& x)
-      {
-        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator-=(x));
-      }
-
-      template<typename OtherDerived>
-      IntervalVector operator-=(const Vector& x)
-      {
-        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator-=(x.template cast<Interval>()));
-      }
-
-      template<typename OtherDerived>
-      IntervalVector operator*(const Eigen::MatrixBase<OtherDerived>& x) const
-      {
-        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator*(x));
-      }
-
-      template<typename OtherDerived>
-      IntervalVector operator&(const Eigen::MatrixBase<OtherDerived>& x) const
-      {
-        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator&(x));
-      }
-      
-      template<typename OtherDerived>
-      IntervalVector operator|(const Eigen::MatrixBase<OtherDerived>& x) const
-      {
-        return IntervalVector(IntervalVectorTemplate_<IntervalVector,Vector>::operator|(x));
+        assert_release(n > 0);
+        return IntervalVector(n,Interval::empty());
       }
   };
 
-  /*inline Vector operator*(int a, const Vector& x)
+  /*inline IntervalMatrix::IntervalMatrix(std::initializer_list<IntervalVector> l)
+    : MatrixBase<IntervalMatrix,Interval>(l.begin()->size(),l.size()), IntervalMatrixBase<IntervalMatrix,Matrix>(l.begin()->size(),l.size())
   {
-    return a * (MatrixTemplate_<Matrix_<Dynamic,1>,double,Dynamic,1>)(x);
-  }
+    assert_release(!std::empty(l));
+    size_t i = 0;
 
-  inline Vector operator*(double a, const Vector& x)
-  {
-    return a * (MatrixTemplate_<Matrix_<Dynamic,1>,double,Dynamic,1>)(x);
-  }
+    for(const auto& li : l)
+    {
+      assert_release(this->nb_rows() != li.size());
+      this->col(i++) = li;
+    }
 
-  inline IntervalVector operator*(const Interval& a, const Vector& x)
-  {
-    return a * x.template cast<Interval>();
+    assert(i == this->nb_cols());
   }*/
 
-  inline IntervalVector operator|(const Vector& x, const Vector& y)
+  inline IntervalVector operator*(const IntervalMatrix& x1, const IntervalVector& x2)
   {
-    return IntervalVector(x).operator|(y);
+    return x1._e * x2._e;
   }
 
   template<typename... X, typename = typename std::enable_if<(true && ... && (
@@ -254,7 +213,7 @@ namespace codac2
       return i_;
     };
 
-    (x_.put(increm(i,x.size()),IntervalVector(x)), ...);
+    (x_.put(increm(i,x.size()),IntervalVector({x})), ...);
     return x_;
   }
 }

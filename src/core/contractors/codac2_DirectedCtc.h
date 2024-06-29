@@ -228,9 +228,9 @@ namespace codac2
       )), void>::type>
     static VectorOpValue fwd(const X&... x)
     {
-      IntervalMatrix d(sizeof...(X),std::get<0>(std::tie(x...)).da.cols());
+      IntervalMatrix d(sizeof...(X),std::get<0>(std::tie(x...)).da.nb_cols());
       size_t i = 0;
-      ((d.row(i++) = x.da.transpose()), ...);
+      ((d.row(i++) = x.da/*.transpose()*/), ...);
 
       bool def_domain = true;
       ((def_domain &= x.def_domain), ...);

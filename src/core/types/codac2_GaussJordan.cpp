@@ -41,8 +41,8 @@ namespace codac2
 
   Matrix gauss_jordan(const Matrix& A)
   {
-    size_t n = A.rows(), m = A.cols();
-    Eigen::FullPivLU<Mat> lu(A);
+    size_t n = A.nb_rows(), m = A.nb_cols();
+    Eigen::FullPivLU<Mat> lu(A._e);
 
     Mat L = Mat::Identity(n,n);
     if(std::pow(L.determinant(),2) < 1e-5)

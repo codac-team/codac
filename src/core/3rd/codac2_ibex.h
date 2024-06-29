@@ -45,13 +45,6 @@ namespace codac2
    * \return Codac type Interval
    */
   codac2::Interval to_codac(const ibex::Interval& x);
-  
-  #define cast_vector(OutputType,convert) \
-    \
-    OutputType x_(x.size()); \
-    for(size_t i = 0 ; i < (size_t)x.size() ; i++) \
-      x_[i] = convert(x[i]); \
-    return x_; \
 
   /**
    * \brief Casts a Codac Vector object into an IBEX Vector object
@@ -59,11 +52,7 @@ namespace codac2
    * \param x const Codac type Vector
    * \return IBEX type Vector
    */
-  template<int N=Dynamic>
-  ibex::Vector to_ibex(const codac2::Vector_<N>& x)
-  {
-    cast_vector(ibex::Vector,double);
-  }
+  ibex::Vector to_ibex(const codac2::Vector& x);
 
   /**
    * \brief Casts an IBEX Vector object into a Codac Vector object
@@ -71,10 +60,7 @@ namespace codac2
    * \param x const IBEX type Vector
    * \return Codac type Vector
    */
-  inline codac2::Vector to_codac(const ibex::Vector& x)
-  {
-    cast_vector(codac2::Vector,double);
-  }
+  codac2::Vector to_codac(const ibex::Vector& x);
 
   /**
    * \brief Casts a Codac IntervalVector object into an IBEX IntervalVector object
@@ -82,10 +68,7 @@ namespace codac2
    * \param x const Codac type IntervalVector
    * \return IBEX type IntervalVector
    */
-  inline ibex::IntervalVector to_ibex(const codac2::IntervalVector& x)
-  {
-    cast_vector(ibex::IntervalVector,to_ibex);
-  }
+  ibex::IntervalVector to_ibex(const codac2::IntervalVector& x);
 
   /**
    * \brief Casts an IBEX IntervalVector object into a Codac IntervalVector object
@@ -93,18 +76,7 @@ namespace codac2
    * \param x const IBEX type IntervalVector
    * \return Codac type IntervalVector
    */
-  inline codac2::IntervalVector to_codac(const ibex::IntervalVector& x)
-  {
-    cast_vector(codac2::IntervalVector,to_codac);
-  }
-  
-  #define cast_matrix(OutputType,convert_f,rows_f,cols_f,output_ij,input_ij) \
-    \
-    OutputType x_(x.rows_f(), x.cols_f()); \
-    for(size_t i = 0 ; i < (size_t)x.rows_f() ; i++) \
-      for(size_t j = 0 ; j < (size_t)x.cols_f() ; j++) \
-        output_ij = convert_f(input_ij); \
-    return x_; \
+  codac2::IntervalVector to_codac(const ibex::IntervalVector& x);
 
   /**
    * \brief Casts a Codac Matrix object into an IBEX Matrix object
@@ -112,11 +84,7 @@ namespace codac2
    * \param x const Codac type Matrix
    * \return IBEX type Matrix
    */
-  template<int R=Dynamic,int C=Dynamic>
-  ibex::Matrix to_ibex(const codac2::Matrix_<R,C>& x)
-  {
-    cast_matrix(ibex::Matrix,double,rows,cols,x_[i][j],x(i,j));
-  }
+  ibex::Matrix to_ibex(const codac2::Matrix& x);
 
   /**
    * \brief Casts an IBEX Matrix object into a Codac Matrix object
@@ -124,10 +92,7 @@ namespace codac2
    * \param x const IBEX type Matrix
    * \return Codac type Matrix
    */
-  inline codac2::Matrix to_codac(const ibex::Matrix& x)
-  {
-    cast_matrix(codac2::Matrix,double,nb_rows,nb_cols,x_(i,j),x[i][j]);
-  }
+  codac2::Matrix to_codac(const ibex::Matrix& x);
 
   /**
    * \brief Casts a Codac IntervalMatrix object into an IBEX IntervalMatrix object
@@ -135,10 +100,7 @@ namespace codac2
    * \param x const Codac type IntervalMatrix
    * \return IBEX type IntervalMatrix
    */
-  inline ibex::IntervalMatrix to_ibex(const codac2::IntervalMatrix& x)
-  {
-    cast_matrix(ibex::IntervalMatrix,to_ibex,rows,cols,x_[i][j],x(i,j));
-  }
+  ibex::IntervalMatrix to_ibex(const codac2::IntervalMatrix& x);
 
   /**
    * \brief Casts an IBEX IntervalMatrix object into a Codac IntervalMatrix object
@@ -146,9 +108,6 @@ namespace codac2
    * \param x const IBEX type IntervalMatrix
    * \return Codac type IntervalMatrix
    */
-  inline codac2::IntervalMatrix to_codac(const ibex::IntervalMatrix& x)
-  {
-    cast_matrix(codac2::IntervalMatrix,to_codac,nb_rows,nb_cols,x_(i,j),x[i][j]);
-  }
+  codac2::IntervalMatrix to_codac(const ibex::IntervalMatrix& x);
 
 }

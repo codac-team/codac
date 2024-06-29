@@ -11,6 +11,8 @@
 
 #include <cstdlib>
 #include <cassert>
+#include <sstream>
+#include <source_location>
 
 namespace codac2
 {
@@ -20,10 +22,16 @@ namespace codac2
 
   #else
 
-    #define assert_release(test,error_message) \
+    #define assert_release(test) \
     if(!(test)) \
     { \
-      throw std::invalid_argument(error_message); \
+      auto l = std::source_location::current(); \
+      std::ostringstream s; \
+      s << l.file_name() << '(' \
+        << l.line() << ':' \
+        << l.column() << ")\n  " \
+        << l.function_name() << "\n"; \
+      throw std::invalid_argument("Wrong assertion in the following function:\n  " + s.str()); \
       abort(); \
     } \
     \

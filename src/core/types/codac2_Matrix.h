@@ -9,47 +9,75 @@
 
 #pragma once
 
-#include "codac2_MatrixTemplate.h"
+#include "codac2_assert.h"
+#include "codac2_MatrixBase.h"
 
 namespace codac2
 {
-  template<int R=Dynamic,int C=Dynamic>
-  class Matrix_ : public MatrixTemplate_<Matrix_<R,C>,double,R,C>
+  class Matrix : public MatrixBase<Matrix,double>
   {
     public:
-    
-      Matrix_()
-        : MatrixTemplate_<Matrix_<R,C>,double,R,C>()
-      { }
-    
-      Matrix_(int nb_rows, int nb_cols)
-        : MatrixTemplate_<Matrix_<R,C>,double,R,C>(nb_rows, nb_cols, 0.)
-      { }
-    
-      Matrix_(int nb_rows, int nb_cols, const double& x)
-        : MatrixTemplate_<Matrix_<R,C>,double,R,C>(nb_rows, nb_cols, x)
-      { }
-      
-      explicit Matrix_(int nb_rows, int nb_cols, const double values[])
-        : MatrixTemplate_<Matrix_<R,C>,double,R,C>(nb_rows, nb_cols, values)
-      { }
-      
-      explicit Matrix_(const double values[])
-        : MatrixTemplate_<Matrix_<R,C>,double,R,C>(values)
+
+      explicit Matrix(size_t r, size_t c)
+        : Matrix(r,c,0.)
       {
-        static_assert(R != Dynamic && C != Dynamic);
+        assert_release(r > 0 && c > 0);
       }
 
-      Matrix_(std::initializer_list<std::initializer_list<double>> l)
-        : MatrixTemplate_<Matrix_<R,C>,double,R,C>(l)
-      { }
-      
-      template<typename OtherDerived>
-      Matrix_(const Eigen::MatrixBase<OtherDerived>& other)
-          : MatrixTemplate_<Matrix_<R,C>,double,R,C>(other)
-      { }
-  };
+      explicit Matrix(size_t r, size_t c, double x)
+        : MatrixBase<Matrix,double>(r,c,x)
+      {
+        assert_release(r > 0 && c > 0);
+      }
 
-  using Matrix = Matrix_<Dynamic,Dynamic>;
-  
+      explicit Matrix(size_t r, size_t c, const double values[])
+        : MatrixBase<Matrix,double>(r,c,values)
+      {
+        assert_release(r > 0 && c > 0);
+      }
+
+      Matrix(std::initializer_list<std::initializer_list<double>> l)
+        : MatrixBase<Matrix,double>(l)
+      {
+        assert_release(!std::empty(l));
+      }
+
+      template<typename OtherDerived>
+      Matrix(const Eigen::MatrixBase<OtherDerived>& x)
+        : MatrixBase<Matrix,double>(x)
+      { }
+
+      Matrix transpose() const
+      {
+        return this->_e.transpose();
+      }
+
+      Matrix diagonal_matrix() const
+      {
+        return this->_e.diagonal().asDiagonal().toDenseMatrix();
+      }
+
+      Matrix inverse() const
+      {
+        return this->_e.inverse();
+      }
+
+      static Matrix zeros(size_t r, size_t c)
+      {
+        assert_release(r > 0 && c > 0);
+        return EigenMatrix<double>::Zero(r,c);
+      }
+
+      static Matrix ones(size_t r, size_t c)
+      {
+        assert_release(r > 0 && c > 0);
+        return EigenMatrix<double>::Ones(r,c);
+      }
+
+      static Matrix eye(size_t r, size_t c)
+      {
+        assert_release(r > 0 && c > 0);
+        return EigenMatrix<double>::Identity(r,c);
+      }
+  };
 }

@@ -15,8 +15,9 @@
 #include "codac2_py_core.h"
 #include <codac2_IntervalVector.h>
 #include "codac2_py_IntervalVector_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
-#include "codac2_py_IntervalVectorTemplate_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
-#include "codac2_py_IntervalMatrixTemplate_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_IntervalMatrixBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_VectorBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_MatrixBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
 
 using namespace std;
 using namespace codac2;
@@ -46,12 +47,8 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
       INTERVALVECTOR_INTERVALVECTOR_SIZET_CONST_INTERVAL_REF,
       "n"_a, "x"_a)
 
-    .def(py::init<const Interval&>(),
-      INTERVALVECTOR_INTERVALVECTOR_CONST_INTERVAL_REF,
-      "x"_a)
-
     .def(py::init<const Vector&>(),
-      INTERVALVECTOR_INTERVALVECTOR_CONST_VECTOR__M_REF,
+      INTERVALVECTOR_INTERVALVECTOR_CONST_VECTOR_REF,
       "v"_a)
 
     // IntervalVector(size_t_type n, const double bounds[][2])
@@ -90,14 +87,13 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
       "v"_a)
   
     .def(py::init<const IntervalVector&>(),
-      INTERVALVECTOR_INTERVALVECTOR_CONST_INTERVALVECTOR_REF,
       "x"_a)
 
     .def("transpose", &IntervalVector::transpose,
-      INTERVALMATRIX_INTERVALVECTOR_TRANSPOSE_CONST)
+      M_VECTORBASE_SMT_TRANSPOSE_CONST)
 
-    .def("as_diag", &IntervalVector::as_diag,
-      INTERVALMATRIX_INTERVALVECTOR_AS_DIAG_CONST)
+    .def("diag_matrix", &IntervalVector::diag_matrix,
+      M_VECTORBASE_SMT_DIAG_MATRIX_CONST)
 
 
 
@@ -108,25 +104,25 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
     
 
     .def(py::self |= py::self,
-      AUTO_INTERVALMATRIXTEMPLATE__SVRC_OPERATOROREQ_CONST_S_REF,
+      S_REF_INTERVALMATRIXBASE_SV_OPERATOROREQ_CONST_S_REF,
       "x"_a)
 
     // For MATLAB compatibility
     .def("self_union", &IntervalVector::operator|=,
-      AUTO_INTERVALMATRIXTEMPLATE__SVRC_OPERATOROREQ_CONST_S_REF,
+      S_REF_INTERVALMATRIXBASE_SV_OPERATOROREQ_CONST_S_REF,
       "x"_a)
 
     .def(py::self &= py::self,
-      AUTO_INTERVALMATRIXTEMPLATE__SVRC_OPERATORANDEQ_CONST_S_REF,
+      S_REF_INTERVALMATRIXBASE_SV_OPERATORANDEQ_CONST_S_REF,
       "x"_a)
 
     // For MATLAB compatibility
     .def("self_inter", &IntervalVector::operator&=,
-      AUTO_INTERVALMATRIXTEMPLATE__SVRC_OPERATORANDEQ_CONST_S_REF,
+      S_REF_INTERVALMATRIXBASE_SV_OPERATORANDEQ_CONST_S_REF,
       "x"_a)
 
     .def(py::self += py::self,
-      INTERVALVECTOR_INTERVALVECTOR_OPERATORPLUSEQ_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF,
+      S_REF_MATRIXBASE_ST_OPERATORPLUSEQ_CONST_S_REF,
       "x"_a)
 
     //.def(py::self += Vector(),
@@ -134,10 +130,10 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
     //  "x"_a)
 
     .def(-py::self,
-      INTERVALVECTOR_INTERVALVECTOR_OPERATORMINUS_CONST)
+      S_MATRIXBASE_ST_OPERATORMINUS_CONST)
 
     .def(py::self -= py::self,
-      INTERVALVECTOR_INTERVALVECTOR_OPERATORMINUSEQ_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF,
+      S_REF_MATRIXBASE_ST_OPERATORMINUSEQ_CONST_S_REF,
       "x"_a)
 
     //.def(py::self -= Vector(),
@@ -149,7 +145,7 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
           stream << x;
           return string(stream.str()); 
         },
-      OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_INTERVALVECTORTEMPLATE__SVN_REF)
+      OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_MATRIXBASE_ST_REF)
   ;
 
   py::implicitly_convertible<py::list,IntervalVector>();

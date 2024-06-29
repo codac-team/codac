@@ -50,9 +50,9 @@ namespace codac2
         auto flatten_x = cart_prod(x...);
         
         if constexpr(std::is_same_v<typename T::Domain,Interval>)
-          return x_.a & (x_.m + (x_.da*(flatten_x-flatten_x.mid().template cast<Interval>()))[0]);
+          return x_.a & (x_.m + (x_.da*(flatten_x-flatten_x.mid()))[0]);
         else
-          return x_.a & (x_.m + (x_.da*(flatten_x-flatten_x.mid().template cast<Interval>())).col(0));
+          return x_.a & (x_.m + (x_.da*(flatten_x-flatten_x.mid())).col(0));
       }
 
       template<typename... Args>
@@ -63,9 +63,9 @@ namespace codac2
         auto flatten_x = cart_prod(x...);
         
         if constexpr(std::is_same_v<typename T::Domain,Interval>)
-          return /*x_.a &*/ (x_.m + (x_.da*(flatten_x-flatten_x.mid().template cast<Interval>()))[0]);
+          return /*x_.a &*/ (x_.m + (x_.da*(flatten_x-flatten_x.mid()))[0]);
         else
-          return /*x_.a &*/ (x_.m + (x_.da*(flatten_x-flatten_x.mid().template cast<Interval>())).col(0));
+          return /*x_.a &*/ (x_.m + (x_.da*(flatten_x-flatten_x.mid())).col(0));
       }
 
       template<typename... Args>
