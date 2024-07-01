@@ -190,6 +190,15 @@ namespace codac2
     assert(i == this->nb_cols());
   }*/
 
+  inline std::ostream& operator<<(std::ostream& os, const IntervalVector& x)
+  {
+    if(x.is_empty())
+      return os << "( empty vector )";
+
+    else
+      return os << (const VectorBase<IntervalVector,IntervalMatrix,Interval>&)x;
+  }
+
   inline IntervalVector operator*(const IntervalMatrix& x1, const IntervalVector& x2)
   {
     return x1._e * x2._e;

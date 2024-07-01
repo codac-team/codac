@@ -346,15 +346,10 @@ namespace codac2
 
       bool operator==(const S& x) const
       {
-        if(x.nb_rows() != this->nb_rows() || x.nb_cols() != this->nb_cols())
+        if(this->nb_rows() != x.nb_rows() || this->nb_cols() != x.nb_cols())
           return false;
 
         return MatrixBase<S,Interval>::operator==(x);
-      }
-
-      bool operator!=(const S& x) const
-      {
-        return !(*this == x);
       }
 
       double min_diam() const

@@ -206,7 +206,7 @@ namespace codac2
 
       bool operator==(const S& x) const
       {
-        if(x.nb_rows() != this->nb_rows() || x.nb_cols() != this->nb_cols())
+        if(this->nb_rows() != x.nb_rows() || this->nb_cols() != x.nb_cols())
           return false;
 
         for(size_t i = 0 ; i < this->nb_rows() ; i++)
@@ -215,11 +215,6 @@ namespace codac2
               return false;
 
         return true;
-      }
-
-      bool operator!=(const S& x) const
-      {
-        return !(*this == x);
       }
 
       operator EigenMatrix<T>()
@@ -338,7 +333,7 @@ namespace codac2
     os << "(";
     for(size_t i = 0 ; i < x.nb_rows() ; i++)
     {
-      os << "(";
+      os << (i!=0 ? " " : "") << "(";
       for(size_t j = 0 ; j < x.nb_cols() ; j++)
         os << x(i,j) << (j<x.nb_cols()-1 ? " ; " : "");
       os << ")";
@@ -383,20 +378,4 @@ namespace codac2
     }
   };
 
-  #if 0
-  // Auto conversion of 'a' into Interval is possible, and so the product will produce an Interval matrix
-  // We redefine the following function to avoid this.
-  template<typename S,int R,int C>
-  auto operator*(double a, const MatrixTemplate_<S,double,R,C>& x)
-  {
-    return x.Eigen::Matrix<double,R,C>::operator*(a);
-  }
-
-  template<typename S,int R,int C>
-  auto operator*(const Interval& a, const MatrixTemplate_<S,double,R,C>& x)
-  {
-    return a * x.template cast<Interval>();
-  }
-
-  #endif
 }

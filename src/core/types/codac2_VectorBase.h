@@ -71,4 +71,14 @@ namespace codac2
 
   };
 
+  template<typename S,typename M,typename T>
+  std::ostream& operator<<(std::ostream& os, const VectorBase<S,M,T>& x)
+  {
+    os << "(";
+    for(size_t i = 0 ; i < x.size() ; i++)
+      os << x[i] << (i<x.size()-1 ? " ; " : "");
+    os << ")";
+    return os;
+  }
+
 }

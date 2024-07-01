@@ -67,9 +67,6 @@ namespace codac2
         assert_release(!std::empty(l));
       }
 
-      // Defined in codac2_IntervalVector.h
-      //IntervalMatrix(std::initializer_list<IntervalVector> l);
-
       template<typename... IV, typename = typename std::enable_if<(true && ... && 
           std::is_same_v<IntervalVector,IV>
         ), void>::type>
@@ -132,7 +129,16 @@ namespace codac2
         return IntervalMatrix(r,c,Interval::empty());
       }
   };
-  
+
+  inline std::ostream& operator<<(std::ostream& os, const IntervalMatrix& x)
+  {
+    if(x.is_empty())
+      return os << "( empty matrix )";
+
+    else
+      return os << (const MatrixBase<IntervalMatrix,Interval>&)x;
+  }
+
   inline IntervalMatrix operator*(const codac2::Interval& a, const IntervalMatrix& x)
   {
     return a * x._e;
