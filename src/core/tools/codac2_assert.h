@@ -12,7 +12,7 @@
 #include <cstdlib>
 #include <cassert>
 #include <sstream>
-#include <source_location>
+// C++20 not fully supported by compilers yet: #include <source_location>
 
 namespace codac2
 {
@@ -22,16 +22,24 @@ namespace codac2
 
   #else
 
+    //#define assert_release(test) \
+    //if(!(test)) \
+    //{ \
+    //  auto l = std::source_location::current(); \
+    //  std::ostringstream s; \
+    //  s << l.file_name() << '(' \
+    //    << l.line() << ':' \
+    //    << l.column() << ")\n  " \
+    //    << l.function_name() << "\n"; \
+    //  throw std::invalid_argument("Wrong assertion in the following function:\n  " + s.str()); \
+    //  abort(); \
+    //} \
+    //\
+
     #define assert_release(test) \
     if(!(test)) \
     { \
-      auto l = std::source_location::current(); \
-      std::ostringstream s; \
-      s << l.file_name() << '(' \
-        << l.line() << ':' \
-        << l.column() << ")\n  " \
-        << l.function_name() << "\n"; \
-      throw std::invalid_argument("Wrong assertion in the following function:\n  " + s.str()); \
+      throw std::invalid_argument("Wrong assertion."); \
       abort(); \
     } \
     \
