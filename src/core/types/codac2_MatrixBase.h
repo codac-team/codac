@@ -204,7 +204,7 @@ namespace codac2
         minmax_item(max);
       }
 
-      bool operator==(const S& x) const
+      bool operator==(const MatrixBase<S,T>& x) const
       {
         if(this->nb_rows() != x.nb_rows() || this->nb_cols() != x.nb_cols())
           return false;
