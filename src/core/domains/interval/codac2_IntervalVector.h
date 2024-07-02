@@ -97,6 +97,8 @@ namespace codac2
         assert_release(x._q == 1);
       }
 
+      using IntervalMatrixBase<IntervalVector,Vector>::operator==;
+
       std::vector<IntervalVector> complementary() const
       {
         return IntervalVector(this->size()).diff(*this);
