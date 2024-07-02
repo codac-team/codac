@@ -105,6 +105,12 @@ namespace codac2
         return _e.diagonal().asDiagonal().toDenseMatrix();
       }
 
+      friend bool operator==(const IntervalMatrix& x1, const IntervalMatrix& x2)
+      {
+        // ^ This overload allows automatic cast for Matrix == IntervalMatrix comparisons
+        return (IntervalMatrixBase<IntervalMatrix,Matrix>)x1 == (IntervalMatrixBase<IntervalMatrix,Matrix>)x2;
+      }
+
       static IntervalMatrix zeros(size_t r, size_t c)
       {
         assert_release(r > 0 && c > 0);

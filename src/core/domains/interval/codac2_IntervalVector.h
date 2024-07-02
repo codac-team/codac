@@ -97,7 +97,11 @@ namespace codac2
         assert_release(x._q == 1);
       }
 
-      using IntervalMatrixBase<IntervalVector,Vector>::operator==;
+      friend bool operator==(const IntervalVector& x1, const IntervalVector& x2)
+      {
+        // ^ This overload allows automatic cast for Vector == IntervalVector comparisons
+        return (IntervalMatrixBase<IntervalVector,Vector>)x1 == (IntervalMatrixBase<IntervalVector,Vector>)x2;
+      }
 
       std::vector<IntervalVector> complementary() const
       {

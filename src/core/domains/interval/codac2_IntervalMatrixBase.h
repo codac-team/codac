@@ -344,12 +344,12 @@ namespace codac2
         return y |= x;
       }
 
-      bool operator==(const S& x) const
+      friend bool operator==(const IntervalMatrixBase<S,V>& x1, const IntervalMatrixBase<S,V>& x2)
       {
-        if(this->nb_rows() != x.nb_rows() || this->nb_cols() != x.nb_cols())
+        if(x1.nb_rows() != x2.nb_rows() || x1.nb_cols() != x2.nb_cols())
           return false;
 
-        return MatrixBase<S,Interval>::operator==(x);
+        return (MatrixBase<S,Interval>)x1 == (MatrixBase<S,Interval>)x2;
       }
 
       double min_diam() const

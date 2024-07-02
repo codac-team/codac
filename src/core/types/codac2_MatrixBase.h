@@ -204,14 +204,14 @@ namespace codac2
         minmax_item(max);
       }
 
-      bool operator==(const MatrixBase<S,T>& x) const
+      friend bool operator==(const MatrixBase<S,T>& x1, const MatrixBase<S,T>& x2)
       {
-        if(this->nb_rows() != x.nb_rows() || this->nb_cols() != x.nb_cols())
+        if(x1.nb_rows() != x2.nb_rows() || x1.nb_cols() != x2.nb_cols())
           return false;
 
-        for(size_t i = 0 ; i < this->nb_rows() ; i++)
-          for(size_t j = 0 ; j < this->nb_cols() ; j++)
-            if((*this)(i,j) != x(i,j))
+        for(size_t i = 0 ; i < x1.nb_rows() ; i++)
+          for(size_t j = 0 ; j < x1.nb_cols() ; j++)
+            if(x1(i,j) != x2(i,j))
               return false;
 
         return true;
@@ -343,7 +343,7 @@ namespace codac2
     return os;
   }
 
-  template<typename Q,typename S,typename T>
+  template<typename Q,typename S,typename T> // todo: remove S parameter
   struct MatrixBaseBlock
   {
     Q _m;
@@ -375,6 +375,12 @@ namespace codac2
     auto eval() const
     {
       return _m.block(_i,_j,_p,_q).eval();
+    }
+
+    template<typename M>
+    bool operator==(const M& x) const
+    {
+      return this->eval() == x;
     }
   };
 
