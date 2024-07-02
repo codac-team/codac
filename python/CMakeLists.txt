@@ -69,6 +69,8 @@
       src/core/graphics/codac2_py_Figure2D.cpp
       src/core/graphics/codac2_py_StyleProperties.cpp
 
+      src/core/matrices/codac2_py_Vector.cpp
+
       src/core/paver/codac2_py_Paver.cpp
 
       src/core/separators/codac2_py_Sep.cpp
@@ -77,8 +79,6 @@
       src/core/separators/codac2_py_SepPolygon.cpp
 
       src/core/tools/codac2_py_Approx.cpp
-
-      src/core/types/codac2_py_Vector.cpp
     )
 
     target_include_directories(core
@@ -90,6 +90,7 @@
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/functions/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/functions/analytic/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/graphics/
+      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/matrices/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/paver/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/separators/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/tools/

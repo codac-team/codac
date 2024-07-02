@@ -181,21 +181,6 @@ namespace codac2
       }
   };
 
-  /*inline IntervalMatrix::IntervalMatrix(std::initializer_list<IntervalVector> l)
-    : MatrixBase<IntervalMatrix,Interval>(l.begin()->size(),l.size()), IntervalMatrixBase<IntervalMatrix,Matrix>(l.begin()->size(),l.size())
-  {
-    assert_release(!std::empty(l));
-    size_t i = 0;
-
-    for(const auto& li : l)
-    {
-      assert_release(this->nb_rows() != li.size());
-      this->col(i++) = li;
-    }
-
-    assert(i == this->nb_cols());
-  }*/
-
   inline std::ostream& operator<<(std::ostream& os, const IntervalVector& x)
   {
     if(x.is_empty())

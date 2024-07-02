@@ -79,6 +79,13 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/vibes.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/vibes.h
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_GaussJordan.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_GaussJordan.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_Matrix.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_MatrixBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_Vector.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_VectorBase.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_Paver.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_Paver.h
 
@@ -114,13 +121,6 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_object_file_format.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_object_file_format.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_template_tools.h
-
-    ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_GaussJordan.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_GaussJordan.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_Matrix.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_MatrixBase.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_Vector.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/types/codac2_VectorBase.h
   )
 
 ################################################################################
@@ -146,10 +146,10 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/ipe
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes
+    ${CMAKE_CURRENT_SOURCE_DIR}/matrices
     ${CMAKE_CURRENT_SOURCE_DIR}/paver
     ${CMAKE_CURRENT_SOURCE_DIR}/separators
     ${CMAKE_CURRENT_SOURCE_DIR}/tools
-    ${CMAKE_CURRENT_SOURCE_DIR}/types
   )
   target_link_libraries(${PROJECT_NAME}-core PUBLIC Ibex::ibex)
   

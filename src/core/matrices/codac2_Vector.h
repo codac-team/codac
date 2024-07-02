@@ -91,16 +91,5 @@ namespace codac2
   {
     return x1._e * x2._e;
   }
-  
-
-  /*Vector operator+(const Vector& x1, const Vector& x2)
-  {
-    return x1._e + x2._e;
-  }
-
-  Vector operator-(const Vector& x1, const Vector& x2)
-  {
-    return x1._e - x2._e;
-  }*/
 
 }

@@ -15,5 +15,6 @@
 
 namespace codac2
 {
+  // Gauss Jordan band diagonalization preconditioning
   Matrix gauss_jordan(const Matrix& A);
 }
