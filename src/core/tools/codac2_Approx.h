@@ -18,11 +18,7 @@ namespace codac2
   {
     public:
 
-      explicit Approx(const T& x)
-        : _x(x ), _eps(std::numeric_limits<double>::epsilon()*10)
-      { }
-
-      explicit Approx(const T& x, double eps)
+      explicit Approx(const T& x, double eps = std::numeric_limits<double>::epsilon()*10)
         : _x(x ), _eps(eps)
       { }
 

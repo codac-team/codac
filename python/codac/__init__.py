@@ -1,6 +1,6 @@
 from codac.core import *
 from .version import __version__
-
+from sys import float_info
 
 class AnalyticFunction:
 
@@ -62,3 +62,20 @@ class SepInverse(Sep):
 
   def separate(self,x):
     return self.s.separate(x)
+
+
+class Approx:
+
+  def __init__(self, x, eps = float_info.epsilon*10):
+    if isinstance(x, (float,Interval)):
+      self.a = Approx_Interval(x,eps)
+    elif isinstance(x, (IntervalVector)):
+      self.a = Approx_IntervalVector(x,eps)
+    else:
+      raise ValueError("Can only build Approx from Interval or IntervalVector")
+
+  def __eq__(self, x):
+    return self.a == x
+
+  def __repr__(self):
+    return str(self.a)

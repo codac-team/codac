@@ -15,6 +15,9 @@
 
 namespace codac2
 {
+  template<typename S,typename M,typename T>
+  class VectorBase;
+
   template<typename Q,typename T>
   struct MatrixBaseBlock;
 
@@ -226,16 +229,22 @@ namespace codac2
         return -_e;
       }
 
-      S operator+(const S& x) const
+      friend S operator+(const S& x1, const S& x2)
       {
-        assert_release(this->size() == x.size());
-        return _e + x._e;
+        assert_release(x1.size() == x2.size());
+        return x1._e + x2._e;
       }
 
-      template<typename Q_,typename S_,typename T_>
-      S operator+(const MatrixBaseBlock<Q_,T_>& x) const
+      template<typename Q_,typename T_>
+      friend S operator+(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
       {
-        return operator+(x.eval());
+        return x1._e + x2.eval().template cast<T>();
+      }
+
+      template<typename Q_,typename T_>
+      friend S operator+(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
+      {
+        return x1.eval().template cast<T>() + x2._e;
       }
 
       S& operator+=(const S& x)
@@ -245,22 +254,28 @@ namespace codac2
         return dynamic_cast<S&>(*this);
       }
 
-      template<typename Q_,typename S_,typename T_>
+      template<typename Q_,typename T_>
       S& operator+=(const MatrixBaseBlock<Q_,T_>& x)
       {
-        return operator+=(x.eval());
+        return operator+=(x.eval().template cast<T>());
       }
 
-      S operator-(const S& x) const
+      friend S operator-(const S& x1, const S& x2)
       {
-        assert_release(this->size() == x.size());
-        return _e - x._e;
+        assert_release(x1.size() == x2.size());
+        return x1._e - x2._e;
       }
 
-      template<typename Q_,typename S_,typename T_>
-      S operator-(const MatrixBaseBlock<Q_,T_>& x) const
+      template<typename Q_,typename T_>
+      friend S operator-(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
       {
-        return operator-(x.eval());
+        return x1._e - x2.eval().template cast<T>();
+      }
+
+      template<typename Q_,typename T_>
+      friend S operator-(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
+      {
+        return x1.eval().template cast<T>() - x2._e;
       }
 
       S& operator-=(const S& x)
@@ -270,22 +285,40 @@ namespace codac2
         return dynamic_cast<S&>(*this);
       }
 
-      template<typename Q_,typename S_,typename T_>
+      template<typename Q_,typename T_>
       S& operator-=(const MatrixBaseBlock<Q_,T_>& x)
       {
         return operator-=(x.eval());
       }
 
-      S operator*(const S& x) const
+      friend S operator*(const S& x1, const S& x2)
       {
-        assert_release(this->nb_cols() == x.nb_rows());
-        return _e * x._e;
+        assert_release(x1.nb_cols() == x2.nb_rows());
+        return x1._e * x2._e;
       }
 
-      template<typename Q_,typename S_,typename T_>
-      S operator*(const MatrixBaseBlock<Q_,T_>& x) const
+      friend S operator*(const T& x1, const S& x2)
       {
-        return operator*(x.eval());
+        return x2._e * x1;
+      }
+
+      template<typename S_>
+      friend S_ operator*(const S& x1, const VectorBase<S_,S,T>& x2)
+      {
+        assert_release(x1.nb_cols() == x2.size());
+        return x1._e * x2._e;
+      }
+
+      template<typename Q_,typename T_>
+      friend S operator*(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
+      {
+        return x1._e * x2.eval().template cast<T>();
+      }
+
+      template<typename Q_,typename T_>
+      friend S operator*(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
+      {
+        return x1.eval().template cast<T>() * x2._e;
       }
 
       S& operator*=(const S& x)
@@ -295,10 +328,15 @@ namespace codac2
         return dynamic_cast<S&>(*this);
       }
 
-      template<typename Q_,typename S_,typename T_>
+      template<typename Q_,typename T_>
       S& operator*=(const MatrixBaseBlock<Q_,T_>& x)
       {
         return operator*=(x.eval());
+      }
+
+      friend S operator/(const S& x1, const T& x2)
+      {
+        return x1._e / x2;
       }
 
       static S zeros(size_t r, size_t c)
@@ -334,12 +372,6 @@ namespace codac2
 
       EigenMatrix<T> _e;
   };
-
-  template<typename S,typename T>
-  auto operator*(const T& a, const MatrixBase<S,T>& x)
-  {
-    return x._e * a;
-  }
 
   template<typename S,typename T>
   S abs(const MatrixBase<S,T>& x)
@@ -404,5 +436,12 @@ namespace codac2
       return this->eval() == x;
     }
   };
+
+  template<typename Q,typename T>
+  std::ostream& operator<<(std::ostream& os, const MatrixBaseBlock<Q,T>& x)
+  {
+    os << x.eval();
+    return os;
+  }
 
 }

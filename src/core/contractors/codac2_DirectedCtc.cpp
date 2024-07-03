@@ -9,6 +9,8 @@
 
 #include <cassert>
 #include "codac2_DirectedCtc.h"
+#include "codac2_MatrixBase.h"
+#include "codac2_IntervalMatrix.h"
 
 using namespace std;
 using namespace codac2;

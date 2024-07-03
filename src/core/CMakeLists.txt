@@ -39,8 +39,10 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_Interval.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_Interval_operations.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_Interval_operations.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalMatrix.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalMatrix.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalMatrixBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalVector.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalVector.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_ExprBase.cpp
@@ -81,8 +83,10 @@
 
     ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_GaussJordan.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_GaussJordan.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_Matrix.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_Matrix.h
     ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_MatrixBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_Vector.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_Vector.h
     ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_VectorBase.h
 

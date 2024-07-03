@@ -14,52 +14,41 @@
 
 namespace codac2
 {
+  class Vector;
+  class IntervalVector;
+  class IntervalMatrix;
+
   class Matrix : public MatrixBase<Matrix,double>
   {
     public:
 
-      explicit Matrix(size_t r, size_t c)
-        : Matrix(r,c,0.)
-      {
-        assert_release(r > 0 && c > 0);
-      }
+      explicit Matrix(size_t r, size_t c);
 
-      explicit Matrix(size_t r, size_t c, double x)
-        : MatrixBase<Matrix,double>(r,c,x)
-      {
-        assert_release(r > 0 && c > 0);
-      }
+      explicit Matrix(size_t r, size_t c, double x);
 
-      explicit Matrix(size_t r, size_t c, const double values[])
-        : MatrixBase<Matrix,double>(r,c,values)
-      {
-        assert_release(r > 0 && c > 0);
-      }
+      explicit Matrix(size_t r, size_t c, const double values[]);
 
-      Matrix(std::initializer_list<std::initializer_list<double>> l)
-        : MatrixBase<Matrix,double>(l)
-      {
-        assert_release(!std::empty(l));
-      }
+      Matrix(const MatrixBase<Matrix,double>& x);
+
+      Matrix(std::initializer_list<std::initializer_list<double>> l);
 
       template<typename OtherDerived>
       Matrix(const Eigen::MatrixBase<OtherDerived>& x)
         : MatrixBase<Matrix,double>(x)
       { }
 
-      Matrix transpose() const
-      {
-        return this->_e.transpose();
-      }
+      Matrix transpose() const;
 
-      Matrix diagonal_matrix() const
-      {
-        return this->_e.diagonal().asDiagonal().toDenseMatrix();
-      }
+      Matrix diagonal_matrix() const;
 
-      Matrix inverse() const
-      {
-        return this->_e.inverse();
-      }
+      Matrix inverse() const;
   };
+
+  Vector operator*(const Matrix& x1, const Vector& x2);
+
+  template<typename Q1_,typename Q2_>
+  Matrix operator*(const MatrixBaseBlock<Q1_,double>& x1, const MatrixBaseBlock<Q2_,double>& x2)
+  {
+    return x1.eval() * x2.eval();
+  }
 }

@@ -27,66 +27,30 @@ namespace codac2
   {
     public:
 
-      explicit IntervalVector(size_t n)
-        : IntervalVector(n,Interval())
-      {
-        assert_release(n > 0);
-      }
+      explicit IntervalVector(size_t n);
 
-      explicit IntervalVector(size_t n, const Interval& x)
-        : MatrixBase<IntervalVector,Interval>(n,1,x),
-          IntervalMatrixBase<IntervalVector,Vector>(n,1),
-          VectorBase<IntervalVector,IntervalMatrix,Interval>(n)
-      {
-        assert_release(n > 0);
-      }
+      explicit IntervalVector(size_t n, const Interval& x);
 
-      explicit IntervalVector(size_t n, const double bounds[][2])
-        : MatrixBase<IntervalVector,Interval>(n,1),
-          IntervalMatrixBase<IntervalVector,Vector>(n,1,bounds),
-          VectorBase<IntervalVector,IntervalMatrix,Interval>(n)
-      {
-        assert_release(n > 0);
-      }
+      explicit IntervalVector(size_t n, const double bounds[][2]);
 
-      IntervalVector(const Vector& x)
-        : MatrixBase<IntervalVector,Interval>(x._e.template cast<Interval>()),
-          IntervalMatrixBase<IntervalVector,Vector>(x.size(),1),
-          VectorBase<IntervalVector,IntervalMatrix,Interval>(x.size())
-      { }
+      IntervalVector(const Vector& x);
 
-      explicit IntervalVector(const Vector& lb, const Vector& ub)
-        : MatrixBase<IntervalVector,Interval>(lb._e.template cast<Interval>()),
-          IntervalMatrixBase<IntervalVector,Vector>(lb.size(),1),
-          VectorBase<IntervalVector,IntervalMatrix,Interval>(lb.size())
-      {
-        assert_release(lb.size() == ub.size());
-        for(size_t i = 0 ; i < lb.size() ; i++) {
-          assert_release(lb[i] <= ub[i]);
-        }
-        *this |= ub;
-      }
+      explicit IntervalVector(const Vector& lb, const Vector& ub);
 
-      IntervalVector(std::initializer_list<Interval> l)
-        : MatrixBase<IntervalVector,Interval>(l.size(),1),
-          IntervalMatrixBase<IntervalVector,Vector>(l.size(),1),
-          VectorBase<IntervalVector,IntervalMatrix,Interval>(l)
-      {
-        assert_release(!std::empty(l));
-      }
+      IntervalVector(std::initializer_list<Interval> l);
 
-      IntervalVector(const IntervalMatrixBase<IntervalVector,Vector>& x)
-        : MatrixBase<IntervalVector,Interval>(x),
-          IntervalMatrixBase<IntervalVector,Vector>(x),
-          VectorBase<IntervalVector,IntervalMatrix,Interval>(x._e)
-      { }
+      IntervalVector(const MatrixBase<Vector,double>& x);
+
+      IntervalVector(const MatrixBase<IntervalVector,Interval>& x);
 
       template<typename OtherDerived>
       IntervalVector(const Eigen::MatrixBase<OtherDerived>& x)
         : MatrixBase<IntervalVector,Interval>(x.template cast<Interval>()),
           IntervalMatrixBase<IntervalVector,Vector>(x.template cast<Interval>()),
           VectorBase<IntervalVector,IntervalMatrix,Interval>(x.template cast<Interval>())
-      { }
+      {
+        assert_release(x.cols() == 1);
+      }
 
       template<typename OtherDerived>
       IntervalVector(const MatrixBaseBlock<OtherDerived,Interval>& x)
@@ -95,92 +59,16 @@ namespace codac2
         assert_release(x._q == 1); // column block only
       }
 
-      friend bool operator==(const IntervalVector& x1, const IntervalVector& x2)
-      {
-        // ^ This overload allows automatic cast for Vector == IntervalVector comparisons
-        return (IntervalMatrixBase<IntervalVector,Vector>)x1 == (IntervalMatrixBase<IntervalVector,Vector>)x2;
-      }
+      friend bool operator==(const IntervalVector& x1, const IntervalVector& x2);
 
-      std::vector<IntervalVector> complementary() const
-      {
-        return IntervalVector(this->size()).diff(*this);
-      }
+      std::vector<IntervalVector> complementary() const;
 
-      std::vector<IntervalVector> diff(const IntervalVector& y, bool compactness = true) const
-      {
-        // This code originates from the ibex-lib
-        // See: ibex_TemplateVector.h
-        // Author: Gilles Chabert
-        // It has been revised with modern C++ and templated types
+      std::vector<IntervalVector> diff(const IntervalVector& y, bool compactness = true) const;
 
-        const size_t n = this->size();
-        assert_release(y.size() == n);
-
-        if(y == *this)
-          return { IntervalVector::empty(n) };
-
-        IntervalVector x = *this;
-        IntervalVector z = x & y;
-
-        if(z.is_empty())
-          return { x };
-
-        else
-        {
-          // Check if in one dimension y is flat and x not,
-          // in which case the diff returns also x directly
-          if(compactness)
-            for(size_t i = 0 ; i < n ; i++)
-              if(z[i].is_degenerated() && !x[i].is_degenerated())
-                return { x };
-        }
-
-        std::vector<IntervalVector> l;
-
-        for(size_t var = 0 ; var < n ; var++)
-        {
-          Interval c1, c2;
-          
-          for(const auto& ci : x[var].diff(y[var], compactness))
-          {
-            assert(!ci.is_empty());
-
-            IntervalVector v(n);
-            for(size_t i = 0 ; i < var ; i++)
-              v[i] = x[i];
-            v[var] = ci;
-            for(size_t i = var+1 ; i < n ; i++)
-              v[i] = x[i];
-            l.push_back(v);
-          }
-
-          x[var] = z[var];
-        }
-
-        return l;
-      }
-
-      static IntervalVector empty(size_t n)
-      {
-        assert_release(n > 0);
-        return IntervalVector(n,Interval::empty());
-      }
+      static IntervalVector empty(size_t n);
   };
 
-  inline std::ostream& operator<<(std::ostream& os, const IntervalVector& x)
-  {
-    if(x.is_empty())
-      return os << "( empty vector )";
-
-    else
-      return os << (const VectorBase<IntervalVector,IntervalMatrix,Interval>&)x;
-  }
-
-  inline IntervalVector operator*(const IntervalMatrix& x1, const IntervalVector& x2)
-  {
-    assert_release(x1.nb_cols() == x2.size());
-    return x1._e * x2._e;
-  }
+  std::ostream& operator<<(std::ostream& os, const IntervalVector& x);
 
   template<typename... X, typename = typename std::enable_if<(true && ... && (
       (std::is_same_v<Interval,X> || std::is_same_v<IntervalVector,X> || std::is_same_v<Vector,X>)
@@ -202,5 +90,20 @@ namespace codac2
 
     (x_.put(increm(i,x.size()),IntervalVector({x})), ...);
     return x_;
+  }
+
+
+  template<typename Q_>
+  IntervalVector operator*(const MatrixBaseBlock<Q_,Interval>& x1, const Vector& x2)
+  {
+    assert_release(x1.nb_cols() == x2.size());
+    return x1.eval() * x2._e.template cast<Interval>();
+  }
+
+  template<typename Q_>
+  IntervalVector operator*(const Matrix& x1, const MatrixBaseBlock<Q_,Interval>& x2)
+  {
+    assert_release(x1.nb_cols() == x2._p);
+    return x1._e.template cast<Interval>() * x2.eval();
   }
 }

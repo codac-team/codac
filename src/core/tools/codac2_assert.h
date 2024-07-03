@@ -22,19 +22,39 @@ namespace codac2
 
   #else
 
-    #define assert_release(test) \
-    if(!(test)) \
-    { \
-      std::string s = std::string("=============================================================================") \
-        + "\nThe following Codac assertion failed:\n\n\t" + std::string(#test) \
-        + "\n \nIn: " + std::string(__FILE__) + ":" + std::to_string(__LINE__) \
-        + "\nFunction: " + std::string(__PRETTY_FUNCTION__) \
-        + "\nIf you need help, submit an issue on https://codac.io/issues" \
-        + "\n============================================================================="; \
-      throw std::invalid_argument(s); \
-      abort(); \
-    } \
-    \
+    #if defined __PRETTY_FUNCTION__
+
+      #define assert_release(test) \
+      if(!(test)) \
+      { \
+        std::string s = std::string("=============================================================================") \
+          + "\nThe following Codac assertion failed:\n\n\t" + std::string(#test) \
+          + "\n \nIn: " + std::string(__FILE__) + ":" + std::to_string(__LINE__) \
+          + "\nFunction: " + std::string(__PRETTY_FUNCTION__) \
+          + "\nIf you need help, submit an issue on https://codac.io/issues" \
+          + "\n============================================================================="; \
+        throw std::invalid_argument(s); \
+        abort(); \
+      } \
+      \
+
+    #else
+
+      #define assert_release(test) \
+      if(!(test)) \
+      { \
+        std::string s = std::string("=============================================================================") \
+          + "\nThe following Codac assertion failed:\n\n\t" + std::string(#test) \
+          + "\n \nIn: " + std::string(__FILE__) + ":" + std::to_string(__LINE__) \
+          + "\nFunction: " + std::string(__func__) \
+          + "\nIf you need help, submit an issue on https://codac.io/issues" \
+          + "\n============================================================================="; \
+        throw std::invalid_argument(s); \
+        abort(); \
+      } \
+      \
+
+    #endif
 
   #endif
 }

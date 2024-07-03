@@ -21,25 +21,13 @@ namespace codac2
   {
     public:
 
-      explicit Vector(size_t n)
-        : Vector(n,0.)
-      {
-        assert_release(n > 0);
-      }
+      explicit Vector(size_t n);
 
-      explicit Vector(size_t n, double x)
-        : MatrixBase<Vector,double>(n,1,x),
-          VectorBase<Vector,Matrix,double>(n)
-      {
-        assert_release(n > 0);
-      }
+      explicit Vector(size_t n, double x);
 
-      Vector(std::initializer_list<double> l)
-        : MatrixBase<Vector,double>(l.size(),1),
-          VectorBase<Vector,Matrix,double>(l)
-      {
-        assert_release(!std::empty(l));
-      }
+      Vector(std::initializer_list<double> l);
+
+      Vector(const MatrixBase<Vector,double>& x);
 
       template<typename OtherDerived>
       Vector(const Eigen::MatrixBase<OtherDerived>& x)
@@ -47,38 +35,10 @@ namespace codac2
           VectorBase<Vector,Matrix,double>(x)
       { }
 
-      size_t min_coeff_index() const
-      {
-        size_t r,c;
-        this->_e.minCoeff(&r,&c);
-        assert(c == 0);
-        return r;
-      }
+      size_t min_coeff_index() const;
 
-      size_t max_coeff_index() const
-      {
-        size_t r,c;
-        this->_e.maxCoeff(&r,&c);
-        assert(c == 0);
-        return r;
-      }
-
-      friend std::ostream& operator<<(std::ostream& os, const Vector& x);
+      size_t max_coeff_index() const;
   };
 
-  inline std::ostream& operator<<(std::ostream& os, const Vector& x)
-  {
-    os << "(";
-    for(size_t i = 0 ; i < x.size() ; i++)
-      os << x[i] << (i<x.size()-1 ? " ; " : "");
-    os << ")";
-    return os;
-  }
-
-  inline Vector operator*(const Matrix& x1, const Vector& x2)
-  {
-    assert_release(x1.nb_cols() == x2.size());
-    return x1._e * x2._e;
-  }
-
+  std::ostream& operator<<(std::ostream& os, const Vector& x);
 }

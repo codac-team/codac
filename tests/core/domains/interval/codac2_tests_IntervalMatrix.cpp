@@ -497,6 +497,111 @@ TEST_CASE("IntervalMatrix")
   }
 }
 
+TEST_CASE("IntervalMatrix - mixing types")
+{
+  {
+    Matrix m1 {
+      { {1},{2} },
+      { {3},{4} }
+    };
+
+    // Interval - Matrix
+    CHECK((Interval(-1,1) * m1) == IntervalMatrix{
+      { {-1,1},{-2,2} },
+      { {-3,3},{-4,4} }
+    });
+
+    // Matrix - Interval
+    CHECK((m1 / Interval(2)) == IntervalMatrix{
+      { {1./2.},{2./2.} },
+      { {3./2.},{4./2.} }
+    });
+
+    IntervalVector v1({
+      {-1},
+      {-2}
+    });
+
+    IntervalVector iv1({
+      {-1,1},
+      {-1,1}
+    });
+
+    // Matrix - IntervalVector
+    CHECK((m1 * iv1) == IntervalVector{
+      { {-3,3} },
+      { {-7,7} }
+    });
+
+    // double - IntervalVector
+    CHECK(((double)-3 * iv1) == IntervalVector{
+      { {-3,3} },
+      { {-3,3} }
+    });
+
+    // Interval - Vector
+    CHECK((Interval(-1,1) * v1) == IntervalVector{
+      { {-1,1} },
+      { {-2,2} }
+    });
+
+    IntervalMatrix im1 {
+      { {-1,1},{-2,2} },
+      { {-3,3},{-4,4} }
+    };
+
+    // Matrix - IntervalMatrix
+    CHECK((m1 + im1) == IntervalMatrix{
+      { {0,2},{0,4} },
+      { {0,6},{0,8} }
+    });
+
+    // IntervalMatrix - Matrix
+    CHECK((im1 + m1) == IntervalMatrix{
+      { {0,2},{0,4} },
+      { {0,6},{0,8} }
+    });
+
+    // IntervalMatrix - Matrix block
+    CHECK((im1 + m1.block(0,0,2,2)) == IntervalMatrix{
+      { {0,2},{0,4} },
+      { {0,6},{0,8} }
+    });
+
+    // Matrix block - IntervalMatrix
+    CHECK((m1.block(0,0,2,2) + im1) == IntervalMatrix{
+      { {0,2},{0,4} },
+      { {0,6},{0,8} }
+    });
+
+    // Matrix - IntervalMatrix
+    CHECK((m1 - im1) == IntervalMatrix{
+      { {0,2},{0,4} },
+      { {0,6},{0,8} }
+    });
+
+    // IntervalMatrix - Matrix
+    CHECK((im1 - m1) == IntervalMatrix{
+      { {-2,0},{-4,0} },
+      { {-6,0},{-8,0} }
+    });
+
+    // Matrix - col of IntervalMatrix
+    CHECK((m1 * im1.col(0)) == IntervalVector{
+      { {-7,7} },
+      { {-15,15} }
+    });
+
+    // Row of Matrix - col of Matrix
+    CHECK((m1.row(1) * m1.col(0)) == Matrix({{15}}));
+
+    // Row of Matrix - col of IntervalMatrix
+    CHECK((m1.row(1) * im1.col(0)) == IntervalMatrix({{{-15,15}}}));
+
+    // Row of IntervalMatrix - col of IntervalMatrix
+    CHECK((im1.row(1) * im1.col(0)) == IntervalMatrix({{{-15,15}}}));
+  }
+}
 
 #if 0
 // Tests from the IBEX lib that are not considered in this file:
