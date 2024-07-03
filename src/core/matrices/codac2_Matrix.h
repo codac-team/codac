@@ -61,23 +61,5 @@ namespace codac2
       {
         return this->_e.inverse();
       }
-
-      static Matrix zeros(size_t r, size_t c)
-      {
-        assert_release(r > 0 && c > 0);
-        return EigenMatrix<double>::Zero(r,c);
-      }
-
-      static Matrix ones(size_t r, size_t c)
-      {
-        assert_release(r > 0 && c > 0);
-        return EigenMatrix<double>::Ones(r,c);
-      }
-
-      static Matrix eye(size_t r, size_t c)
-      {
-        assert_release(r > 0 && c > 0);
-        return EigenMatrix<double>::Identity(r,c);
-      }
   };
 }

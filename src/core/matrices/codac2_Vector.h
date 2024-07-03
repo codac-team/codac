@@ -63,18 +63,6 @@ namespace codac2
         return r;
       }
 
-      static Vector zeros(size_t n)
-      {
-        assert_release(n > 0);
-        return EigenMatrix<double>::Zero(n,1);
-      }
-
-      static Vector ones(size_t n)
-      {
-        assert_release(n > 0);
-        return EigenMatrix<double>::Ones(n,1);
-      }
-
       friend std::ostream& operator<<(std::ostream& os, const Vector& x);
   };
 
@@ -89,6 +77,7 @@ namespace codac2
 
   inline Vector operator*(const Matrix& x1, const Vector& x2)
   {
+    assert_release(x1.nb_cols() == x2.size());
     return x1._e * x2._e;
   }
 

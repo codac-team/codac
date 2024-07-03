@@ -41,6 +41,14 @@ namespace codac2
         assert_release(n > 0);
       }
 
+      explicit IntervalVector(size_t n, const double bounds[][2])
+        : MatrixBase<IntervalVector,Interval>(n,1),
+          IntervalMatrixBase<IntervalVector,Vector>(n,1,bounds),
+          VectorBase<IntervalVector,IntervalMatrix,Interval>(n)
+      {
+        assert_release(n > 0);
+      }
+
       IntervalVector(const Vector& x)
         : MatrixBase<IntervalVector,Interval>(x._e.template cast<Interval>()),
           IntervalMatrixBase<IntervalVector,Vector>(x.size(),1),
@@ -53,20 +61,10 @@ namespace codac2
           VectorBase<IntervalVector,IntervalMatrix,Interval>(lb.size())
       {
         assert_release(lb.size() == ub.size());
-        for(size_t i = 0 ; i < lb.size() ; i++)
-        {
+        for(size_t i = 0 ; i < lb.size() ; i++) {
           assert_release(lb[i] <= ub[i]);
         }
-
         *this |= ub;
-      }
-
-      explicit IntervalVector(size_t n, const double bounds[][2])
-        : MatrixBase<IntervalVector,Interval>(n,1),
-          IntervalMatrixBase<IntervalVector,Vector>(n,1,bounds),
-          VectorBase<IntervalVector,IntervalMatrix,Interval>(n)
-      {
-        assert_release(n > 0);
       }
 
       IntervalVector(std::initializer_list<Interval> l)
@@ -91,10 +89,10 @@ namespace codac2
       { }
 
       template<typename OtherDerived>
-      IntervalVector(const MatrixBaseBlock<OtherDerived,IntervalMatrix,Interval>& x)
+      IntervalVector(const MatrixBaseBlock<OtherDerived,Interval>& x)
         : IntervalVector(x.eval())
       {
-        assert_release(x._q == 1);
+        assert_release(x._q == 1); // column block only
       }
 
       friend bool operator==(const IntervalVector& x1, const IntervalVector& x2)
@@ -162,18 +160,6 @@ namespace codac2
         return l;
       }
 
-      static IntervalVector zeros(size_t n)
-      {
-        assert_release(n > 0);
-        return EigenMatrix<Interval>::Zero(n,1);
-      }
-
-      static IntervalVector ones(size_t n)
-      {
-        assert_release(n > 0);
-        return EigenMatrix<Interval>::Ones(n,1);
-      }
-
       static IntervalVector empty(size_t n)
       {
         assert_release(n > 0);
@@ -192,6 +178,7 @@ namespace codac2
 
   inline IntervalVector operator*(const IntervalMatrix& x1, const IntervalVector& x2)
   {
+    assert_release(x1.nb_cols() == x2.size());
     return x1._e * x2._e;
   }
 

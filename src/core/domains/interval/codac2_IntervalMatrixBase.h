@@ -17,31 +17,23 @@
 
 #include "codac2_assert.h"
 #include "codac2_MatrixBase.h"
+#include "codac2_Domain.h"
 
 namespace codac2
 {
   class IntervalMatrix;
 
   template<typename S,typename V>
-  class IntervalMatrixBase : virtual public MatrixBase<S,Interval>
+  class IntervalMatrixBase : virtual public MatrixBase<S,Interval>, public DomainInterface<S,V>
   {
     public:
 
       explicit IntervalMatrixBase(size_t r, size_t c)
         : MatrixBase<S,Interval>(r,c)
-      {
-        assert(r > 0 && c > 0);
-      }
+      { }
 
       explicit IntervalMatrixBase(size_t r, size_t c, const Interval& x)
         : MatrixBase<S,Interval>(r,c,x)
-      {
-        assert(r > 0 && c > 0);
-      }
-
-      template<typename OtherDerived>
-      IntervalMatrixBase(const Eigen::MatrixBase<OtherDerived>& x)
-        : MatrixBase<S,Interval>(x)
       { }
       
       explicit IntervalMatrixBase(size_t r, size_t c, const double bounds[][2])
@@ -59,14 +51,13 @@ namespace codac2
 
       IntervalMatrixBase(std::initializer_list<std::initializer_list<Interval>> l)
         : MatrixBase<S,Interval>(l)
-      {
-        assert(!std::empty(l));
-      }
+      { }
 
       double volume() const
       {
         if(is_empty())
           return 0.;
+
         double v = 0.;
         for(size_t i = 0 ; i < this->size() ; i++)
         {
@@ -76,6 +67,11 @@ namespace codac2
         }
         return std::exp(v);
       }
+
+      template<typename OtherDerived>
+      IntervalMatrixBase(const Eigen::MatrixBase<OtherDerived>& x)
+        : MatrixBase<S,Interval>(x)
+      { }
 
       bool is_empty() const
       {
@@ -88,6 +84,145 @@ namespace codac2
       void set_empty()
       {
         this->init(Interval::empty());
+      }
+
+      #define degenerate_mat(op) \
+        V op(this->nb_rows(),this->nb_cols()); \
+        \
+        if(is_empty()) \
+          op.init(std::numeric_limits<double>::quiet_NaN()); \
+        \
+        else \
+        { \
+          for(size_t i = 0 ; i < this->size() ; i++) \
+            *(op._e.data()+i) = (this->_e.data()+i)->op(); \
+        } \
+        \
+        return op; \
+
+      V lb() const
+      {
+        degenerate_mat(lb);
+      }
+
+      V ub() const
+      {
+        degenerate_mat(ub);
+      }
+
+      V mid() const
+      {
+        degenerate_mat(mid);
+      }
+
+      V rand() const
+      {
+        degenerate_mat(rand);
+      }
+
+      V rad() const
+      {
+        degenerate_mat(rad);
+      }
+
+      V diam() const
+      {
+        degenerate_mat(diam);
+      }
+
+      double min_diam() const
+      {
+        return (this->_e.data()+extr_diam_index(true))->diam();
+      }
+
+      double max_diam() const
+      {
+        return (this->_e.data()+extr_diam_index(false))->diam();
+      }
+
+      size_t min_diam_index() const
+      {
+        return extr_diam_index(true);
+      }
+
+      size_t max_diam_index() const
+      {
+        return extr_diam_index(false);
+      }
+
+      size_t extr_diam_index(bool min) const
+      {
+        // This code originates from the ibex-lib
+        // See: ibex_TemplateVector.h
+        // Author: Gilles Chabert
+
+        double d = min ? oo : -1; // -1 to be sure that even a 0-diameter interval can be selected
+        int selected_index = -1;
+        bool unbounded = false;
+        assert_release(!is_empty() && "Diameter of an empty IntervalVector is undefined");
+
+        size_t i;
+
+        for(i = 0 ; i < this->size() ; i++) 
+        {
+          if((this->_e.data()+i)->is_unbounded()) 
+          {
+            unbounded = true;
+            if(!min) break;
+          }
+          else
+          {
+            double w = (this->_e.data()+i)->diam();
+            if(min ? w<d : w>d)
+            {
+              selected_index = i;
+              d = w;
+            }
+          }
+        }
+
+        if(min && selected_index == -1)
+        {
+          assert(unbounded);
+          // the selected interval is the first one.
+          i = 0;
+        }
+
+        // The unbounded intervals are not considered if we look for the minimal diameter
+        // and some bounded intervals have been found (selected_index!=-1)
+        if(unbounded && (!min || selected_index == -1))
+        {
+          double pt = min ? -oo : oo; // keep the point less/most distant from +oo (we normalize if the lower bound is -oo)
+          selected_index = i;
+
+          for(; i < this->size() ; i++)
+          {
+            if((this->_e.data()+i)->lb() == -oo)
+            {
+              if((this->_e.data()+i)->ub() == oo)
+                if(!min)
+                {
+                  selected_index = i;
+                  break;
+                }
+
+              if((min && (-(this->_e.data()+i)->ub() > pt)) || (!min && (-(this->_e.data()+i)->ub() < pt)))
+              {
+                selected_index = i;
+                pt = -(this->_e.data()+i)->ub();
+              }
+            }
+
+            else if((this->_e.data()+i)->ub() == oo)
+              if((min && ((this->_e.data()+i)->lb() > pt)) || (!min && ((this->_e.data()+i)->lb() < pt)))
+              {
+                selected_index = i;
+                pt = (this->_e.data()+i)->lb();
+              }
+          }
+        }
+
+        return selected_index;
       }
 
       bool contains(const V& x) const
@@ -290,7 +425,7 @@ namespace codac2
 
         for(size_t i = 0 ; i < this->size() ; i++)
           (this->_e.data()+i)->inflate(r);
-        return *this;
+        return static_cast<S&>(*this);
       }
 
       S& inflate(const V& r)
@@ -300,7 +435,7 @@ namespace codac2
 
         for(size_t i = 0 ; i < this->size() ; i++)
           (this->_e.data()+i)->inflate(*(r._e.data()+i));
-        return *this;
+        return static_cast<S&>(*this);
       }
 
       S& operator&=(const S& x)
@@ -332,119 +467,22 @@ namespace codac2
       
       S operator&(const S& x) const
       {
-        assert_release(this->size() == x.size());
         auto y = *this;
         return y &= x;
       }
       
       S operator|(const S& x) const
       {
-        assert_release(this->size() == x.size());
         auto y = *this;
         return y |= x;
       }
 
       friend bool operator==(const IntervalMatrixBase<S,V>& x1, const IntervalMatrixBase<S,V>& x2)
       {
-        if(x1.nb_rows() != x2.nb_rows() || x1.nb_cols() != x2.nb_cols())
-          return false;
+        if(x1.is_empty() || x2.is_empty())
+          return x1.is_empty() && x2.is_empty() && x1.size() == x2.size();
 
         return (MatrixBase<S,Interval>)x1 == (MatrixBase<S,Interval>)x2;
-      }
-
-      double min_diam() const
-      {
-        return (this->_e.data()+extr_diam_index(true))->diam();
-      }
-
-      double max_diam() const
-      {
-        return (this->_e.data()+extr_diam_index(false))->diam();
-      }
-
-      size_t min_diam_index() const
-      {
-        return extr_diam_index(true);
-      }
-
-      size_t max_diam_index() const
-      {
-        return extr_diam_index(false);
-      }
-
-      size_t extr_diam_index(bool min) const
-      {
-        // This code originates from the ibex-lib
-        // See: ibex_TemplateVector.h
-        // Author: Gilles Chabert
-
-        double d = min ? oo : -1; // -1 to be sure that even a 0-diameter interval can be selected
-        int selected_index = -1;
-        bool unbounded = false;
-        assert_release(!is_empty() && "Diameter of an empty IntervalVector is undefined");
-
-        size_t i;
-
-        for(i = 0 ; i < this->size() ; i++) 
-        {
-          if((this->_e.data()+i)->is_unbounded()) 
-          {
-            unbounded = true;
-            if(!min) break;
-          }
-          else
-          {
-            double w = (this->_e.data()+i)->diam();
-            if(min ? w<d : w>d)
-            {
-              selected_index = i;
-              d = w;
-            }
-          }
-        }
-
-        if(min && selected_index == -1)
-        {
-          assert(unbounded);
-          // the selected interval is the first one.
-          i = 0;
-        }
-
-        // The unbounded intervals are not considered if we look for the minimal diameter
-        // and some bounded intervals have been found (selected_index!=-1)
-        if(unbounded && (!min || selected_index == -1))
-        {
-          double pt = min ? -oo : oo; // keep the point less/most distant from +oo (we normalize if the lower bound is -oo)
-          selected_index = i;
-
-          for(; i < this->size() ; i++)
-          {
-            if((this->_e.data()+i)->lb() == -oo)
-            {
-              if((this->_e.data()+i)->ub() == oo)
-                if(!min)
-                {
-                  selected_index = i;
-                  break;
-                }
-
-              if((min && (-(this->_e.data()+i)->ub() > pt)) || (!min && (-(this->_e.data()+i)->ub() < pt)))
-              {
-                selected_index = i;
-                pt = -(this->_e.data()+i)->ub();
-              }
-            }
-
-            else if((this->_e.data()+i)->ub() == oo)
-              if((min && ((this->_e.data()+i)->lb() > pt)) || (!min && ((this->_e.data()+i)->lb() < pt)))
-              {
-                selected_index = i;
-                pt = (this->_e.data()+i)->lb();
-              }
-          }
-        }
-
-        return selected_index;
       }
 
       std::pair<S,S> bisect(size_t i, float ratio = 0.49) const
@@ -463,50 +501,6 @@ namespace codac2
       std::pair<S,S> bisect_largest(float ratio = 0.49) const
       {
         return bisect(max_diam_index(), ratio);
-      }
-
-      #define degenerate_mat(op) \
-        V op(this->nb_rows(),this->nb_cols()); \
-        \
-        if(is_empty()) \
-          op.init(std::numeric_limits<double>::quiet_NaN()); \
-        \
-        else \
-        { \
-          for(size_t i = 0 ; i < this->size() ; i++) \
-            *(op._e.data()+i) = (this->_e.data()+i)->op(); \
-        } \
-        \
-        return op; \
-
-      V lb() const
-      {
-        degenerate_mat(lb);
-      }
-
-      V ub() const
-      {
-        degenerate_mat(ub);
-      }
-
-      V mid() const
-      {
-        degenerate_mat(mid);
-      }
-
-      V rand() const
-      {
-        degenerate_mat(rand);
-      }
-
-      V rad() const
-      {
-        degenerate_mat(rad);
-      }
-
-      V diam() const
-      {
-        degenerate_mat(diam);
       }
   };
 }

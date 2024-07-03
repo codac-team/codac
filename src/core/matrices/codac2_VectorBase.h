@@ -18,9 +18,11 @@ namespace codac2
   {
     public:
 
-      VectorBase(size_t n)
+      explicit VectorBase(size_t n)
         : MatrixBase<S,T>(n,1)
-      { }
+      {
+        assert_release(n > 0);
+      }
 
       VectorBase(std::initializer_list<T> l)
         : MatrixBase<S,T>(l.size(),1)
@@ -35,24 +37,24 @@ namespace codac2
       VectorBase(const Eigen::MatrixBase<OtherDerived>& x)
         : MatrixBase<S,T>(x)
       { }
+      
+      S subvector(size_t start_id, size_t end_id) const
+      {
+        assert_release(end_id >= 0 && start_id >= 0);
+        assert_release(end_id < this->size() && start_id <= end_id);
+        return this->_e.block(start_id, 0, end_id-start_id+1, 1);
+      }
 
       void resize(size_t n)
       {
         assert_release(n > 0);
         MatrixBase<S,T>::resize(n,1);
       }
-      
-      S subvector(size_t start_id, size_t end_id) const
-      {
-        assert(end_id >= 0 && start_id >= 0);
-        assert(end_id < this->size() && start_id <= end_id);
-        return this->_e.block(start_id, 0, end_id-start_id+1, 1);
-      }
 
       void put(size_t start_id, const S& x)
       {
-        assert(start_id >= 0 && start_id < this->size());
-        assert(start_id+x.size() <= this->size());
+        assert_release(start_id >= 0 && start_id < this->size());
+        assert_release(start_id+x.size() <= this->size());
         this->_e.block(start_id,0,x.size(),1) << x._e;
       }
 
@@ -67,6 +69,18 @@ namespace codac2
         for(size_t i = 0 ; i < this->size() ; i++)
           diag(i,i) = (*this)[i];
         return diag;
+      }
+
+      static S zeros(size_t n)
+      {
+        assert_release(n > 0);
+        return EigenMatrix<T>::Zero(n,1);
+      }
+
+      static S ones(size_t n)
+      {
+        assert_release(n > 0);
+        return EigenMatrix<T>::Ones(n,1);
       }
 
   };

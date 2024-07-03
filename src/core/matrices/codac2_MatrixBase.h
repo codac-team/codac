@@ -15,7 +15,7 @@
 
 namespace codac2
 {
-  template<typename Q,typename S,typename T>
+  template<typename Q,typename T>
   struct MatrixBaseBlock;
 
   template<typename T>
@@ -33,17 +33,14 @@ namespace codac2
       }
 
       explicit MatrixBase(size_t r, size_t c, const T& x)
-        : _e(EigenMatrix<T>(r,c))
+        : MatrixBase<S,T>(r,c)
       {
-        assert(r > 0 && c > 0);
         init(x);
       }
 
       explicit MatrixBase(size_t r, size_t c, const T values[])
-        : _e(EigenMatrix<T>(r,c))
+        : MatrixBase<S,T>(r,c)
       {
-        assert(r > 0 && c > 0);
-
         if(values == 0)
           init(T(0.)); // in case the user called MatrixBase(r,c,0) and 0 is interpreted as NULL!
 
@@ -52,7 +49,7 @@ namespace codac2
           size_t k = 0;
           for(size_t i = 0 ; i < nb_rows() ; i++)
             for(size_t j = 0 ; j < nb_cols() ; j++)
-                (*this)(i,j) = values[k++];
+              (*this)(i,j) = values[k++];
           assert(k == size());
         }
       }
@@ -66,6 +63,8 @@ namespace codac2
       MatrixBase(std::initializer_list<std::initializer_list<T>> l)
         : MatrixBase<S,T>(1,1 /* will be resized thereafter */)
       {
+        assert(!std::empty(l));
+
         int cols = -1;
         for(const auto& ri : l) {
           assert_release((cols == -1 || cols == (int)ri.size()) && "ill-formed matrix");
@@ -94,12 +93,6 @@ namespace codac2
 
       MatrixBase<S,T>& operator=(const MatrixBase<S,T>&) = default;
 
-      void init(const T& x)
-      {
-        for(size_t i = 0 ; i < size() ; i++)
-          *(_e.data()+i) = x;
-      }
-
       size_t size() const
       {
         return _e.size();
@@ -113,74 +106,6 @@ namespace codac2
       size_t nb_cols() const
       {
         return _e.cols();
-      }
-
-      void resize(size_t nb_rows, size_t nb_cols)
-      {
-        assert_release(nb_rows > 0 && nb_cols > 0);
-
-        // With resize of Eigen, the data is reallocated and all previous values are lost.
-        auto copy = _e;
-        _e.resize(nb_rows, nb_cols);
-        for(size_t i = 0 ; i < std::min((size_t)copy.rows(),nb_rows) ; i++)
-          for(size_t j = 0 ; j < std::min((size_t)copy.cols(),nb_cols) ; j++)
-            _e(i,j) = copy(i,j);
-      }
-
-      T& operator()(size_t i, size_t j)
-      {
-        return const_cast<T&>(const_cast<const MatrixBase<S,T>*>(this)->operator()(i,j));
-      }
-
-      const T& operator()(size_t i, size_t j) const
-      {
-        assert_release(i >= 0 && i < nb_rows() && j >= 0 && j < nb_cols());
-        return this->_e(i,j);
-      }
-
-      T& operator[](size_t i)
-      {
-        return const_cast<T&>(const_cast<const MatrixBase<S,T>*>(this)->operator[](i));
-      }
-
-      const T& operator[](size_t i) const
-      {
-        assert_release(i >= 0 && i < size());
-        return this->_e(i);
-      }
-
-      MatrixBaseBlock<EigenMatrix<T>&,S,T> block(size_t i, size_t j, size_t p, size_t q)
-      {
-        assert_release(i >= 0 && p > 0 && i+p <= nb_rows());
-        assert_release(j >= 0 && q > 0 && j+q <= nb_cols());
-        return { _e,i,j,p,q };
-      }
-
-      MatrixBaseBlock<const EigenMatrix<T>&,S,T> block(size_t i, size_t j, size_t p, size_t q) const
-      {
-        assert_release(i >= 0 && p > 0 && i+p <= nb_rows());
-        assert_release(j >= 0 && q > 0 && j+q <= nb_cols());
-        return { _e,i,j,p,q };
-      }
-
-      MatrixBaseBlock<EigenMatrix<T>&,S,T> col(size_t i)
-      {
-        return block(0,i,nb_rows(),1);
-      }
-
-      MatrixBaseBlock<const EigenMatrix<T>&,S,T> col(size_t i) const
-      {
-        return block(0,i,nb_rows(),1);
-      }
-
-      MatrixBaseBlock<EigenMatrix<T>&,S,T> row(size_t i)
-      {
-        return block(i,0,1,nb_cols());
-      }
-
-      MatrixBaseBlock<const EigenMatrix<T>&,S,T> row(size_t i) const
-      {
-        return block(i,0,1,nb_cols());
       }
 
       #define minmax_item(op) \
@@ -217,18 +142,79 @@ namespace codac2
         return true;
       }
 
-      operator EigenMatrix<T>()
+      T& operator[](size_t i)
       {
-        return const_cast<EigenMatrix<T>&>(const_cast<const MatrixBase<S,T>*>(this)->operator EigenMatrix<T>());
+        return const_cast<T&>(const_cast<const MatrixBase<S,T>*>(this)->operator[](i));
       }
 
-      operator EigenMatrix<T>() const
+      const T& operator[](size_t i) const
       {
-        return _e;
+        assert_release(i >= 0 && i < size());
+        return this->_e(i);
       }
 
-      template<typename S_,typename T_>
-      friend std::ostream& operator<<(std::ostream& os, const MatrixBase<S_,T_>& x);
+      T& operator()(size_t i, size_t j)
+      {
+        return const_cast<T&>(const_cast<const MatrixBase<S,T>*>(this)->operator()(i,j));
+      }
+
+      const T& operator()(size_t i, size_t j) const
+      {
+        assert_release(i >= 0 && i < nb_rows() && j >= 0 && j < nb_cols());
+        return this->_e(i,j);
+      }
+
+      void init(const T& x)
+      {
+        for(size_t i = 0 ; i < size() ; i++)
+          *(_e.data()+i) = x;
+      }
+
+      void resize(size_t nb_rows, size_t nb_cols)
+      {
+        assert_release(nb_rows > 0 && nb_cols > 0);
+
+        // With resize() of Eigen, the data is reallocated and all previous values are lost.
+        auto copy = _e;
+        _e.resize(nb_rows, nb_cols);
+        for(size_t i = 0 ; i < std::min((size_t)copy.rows(),nb_rows) ; i++)
+          for(size_t j = 0 ; j < std::min((size_t)copy.cols(),nb_cols) ; j++)
+            _e(i,j) = copy(i,j);
+      }
+
+      MatrixBaseBlock<EigenMatrix<T>&,T> block(size_t i, size_t j, size_t p, size_t q)
+      {
+        assert_release(i >= 0 && p > 0 && i+p <= nb_rows());
+        assert_release(j >= 0 && q > 0 && j+q <= nb_cols());
+        return { _e,i,j,p,q };
+      }
+
+      MatrixBaseBlock<const EigenMatrix<T>&,T> block(size_t i, size_t j, size_t p, size_t q) const
+      {
+        assert_release(i >= 0 && p > 0 && i+p <= nb_rows());
+        assert_release(j >= 0 && q > 0 && j+q <= nb_cols());
+        return { _e,i,j,p,q };
+      }
+
+      MatrixBaseBlock<EigenMatrix<T>&,T> col(size_t i)
+      {
+        return block(0,i,nb_rows(),1);
+      }
+
+      MatrixBaseBlock<const EigenMatrix<T>&,T> col(size_t i) const
+      {
+        return block(0,i,nb_rows(),1);
+      }
+
+      MatrixBaseBlock<EigenMatrix<T>&,T> row(size_t i)
+      {
+        return block(i,0,1,nb_cols());
+      }
+
+      MatrixBaseBlock<const EigenMatrix<T>&,T> row(size_t i) const
+      {
+        return block(i,0,1,nb_cols());
+      }
 
       const auto& operator+() const
       {
@@ -242,71 +228,108 @@ namespace codac2
 
       S operator+(const S& x) const
       {
+        assert_release(this->size() == x.size());
         return _e + x._e;
       }
 
       template<typename Q_,typename S_,typename T_>
-      S operator+(const MatrixBaseBlock<Q_,S_,T_>& x) const
+      S operator+(const MatrixBaseBlock<Q_,T_>& x) const
       {
         return operator+(x.eval());
       }
 
       S& operator+=(const S& x)
       {
+        assert_release(this->size() == x.size());
         _e += x._e;
         return dynamic_cast<S&>(*this);
       }
 
       template<typename Q_,typename S_,typename T_>
-      S& operator+=(const MatrixBaseBlock<Q_,S_,T_>& x)
+      S& operator+=(const MatrixBaseBlock<Q_,T_>& x)
       {
         return operator+=(x.eval());
       }
 
       S operator-(const S& x) const
       {
+        assert_release(this->size() == x.size());
         return _e - x._e;
       }
 
       template<typename Q_,typename S_,typename T_>
-      S operator-(const MatrixBaseBlock<Q_,S_,T_>& x) const
+      S operator-(const MatrixBaseBlock<Q_,T_>& x) const
       {
         return operator-(x.eval());
       }
 
       S& operator-=(const S& x)
       {
+        assert_release(this->size() == x.size());
         _e -= x._e;
         return dynamic_cast<S&>(*this);
       }
 
       template<typename Q_,typename S_,typename T_>
-      S& operator-=(const MatrixBaseBlock<Q_,S_,T_>& x)
+      S& operator-=(const MatrixBaseBlock<Q_,T_>& x)
       {
         return operator-=(x.eval());
       }
 
       S operator*(const S& x) const
       {
+        assert_release(this->nb_cols() == x.nb_rows());
         return _e * x._e;
       }
 
       template<typename Q_,typename S_,typename T_>
-      S operator*(const MatrixBaseBlock<Q_,S_,T_>& x) const
+      S operator*(const MatrixBaseBlock<Q_,T_>& x) const
       {
         return operator*(x.eval());
       }
 
       S& operator*=(const S& x)
       {
+        assert_release(this->size() == x.size());
         _e *= x._e;
         return dynamic_cast<S&>(*this);
       }
 
       template<typename Q_,typename S_,typename T_>
-      S& operator*=(const MatrixBaseBlock<Q_,S_,T_>& x)
+      S& operator*=(const MatrixBaseBlock<Q_,T_>& x)
       {
         return operator*=(x.eval());
+      }
+
+      static S zeros(size_t r, size_t c)
+      {
+        assert_release(r > 0 && c > 0);
+        return EigenMatrix<T>::Zero(r,c);
+      }
+
+      static S ones(size_t r, size_t c)
+      {
+        assert_release(r > 0 && c > 0);
+        return EigenMatrix<T>::Ones(r,c);
+      }
+
+      static S eye(size_t r, size_t c)
+      {
+        assert_release(r > 0 && c > 0);
+        return EigenMatrix<T>::Identity(r,c);
+      }
+
+      template<typename S_,typename T_>
+      friend std::ostream& operator<<(std::ostream& os, const MatrixBase<S_,T_>& x);
+
+      operator EigenMatrix<T>()
+      {
+        return const_cast<EigenMatrix<T>&>(const_cast<const MatrixBase<S,T>*>(this)->operator EigenMatrix<T>());
+      }
+
+      operator EigenMatrix<T>() const
+      {
+        return _e;
       }
 
       EigenMatrix<T> _e;
@@ -343,7 +366,7 @@ namespace codac2
     return os;
   }
 
-  template<typename Q,typename S,typename T> // todo: remove S parameter
+  template<typename Q,typename T>
   struct MatrixBaseBlock
   {
     Q _m;
@@ -359,8 +382,6 @@ namespace codac2
     template<typename S_>
     void operator=(const MatrixBase<S_,T>& x)
     {
-      if(!(x.nb_rows() == _p && x.nb_cols() == _q))
-        std::cout << x.nb_rows() << " " <<  _p << " " <<  x.nb_cols() << " " <<  _q << std::endl;
       assert(x.nb_rows() == _p && x.nb_cols() == _q);
       _m.block(_i,_j,_p,_q) = x._e;
     }

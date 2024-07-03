@@ -22,27 +22,37 @@ namespace codac2
 
   #else
 
-    //#define assert_release(test) \
-    //if(!(test)) \
-    //{ \
-    //  auto l = std::source_location::current(); \
-    //  std::ostringstream s; \
-    //  s << l.file_name() << '(' \
-    //    << l.line() << ':' \
-    //    << l.column() << ")\n  " \
-    //    << l.function_name() << "\n"; \
-    //  throw std::invalid_argument("Wrong assertion in the following function:\n  " + s.str()); \
-    //  abort(); \
-    //} \
-    //\
-
     #define assert_release(test) \
     if(!(test)) \
     { \
-      throw std::invalid_argument("Wrong assertion."); \
+      std::string s = std::string("=============================================================================") \
+        + "\nThe following Codac assertion failed:\n\n\t" + std::string(#test) \
+        + "\n \nIn: " + std::string(__FILE__) + ":" + std::to_string(__LINE__) \
+        + "\nFunction: " + std::string(__PRETTY_FUNCTION__) \
+        + "\nIf you need help, submit an issue on https://codac.io/issues" \
+        + "\n============================================================================="; \
+      throw std::invalid_argument(s); \
       abort(); \
     } \
     \
 
   #endif
 }
+
+#if 0
+
+  #define assert_release(test) \
+  if(!(test)) \
+  { \
+    auto l = std::source_location::current(); \
+    std::ostringstream s; \
+    s << l.file_name() << '(' \
+      << l.line() << ':' \
+      << l.column() << ")\n  " \
+      << l.function_name() << "\n"; \
+    throw std::invalid_argument("Wrong assertion in the following function:\n  " + s.str()); \
+    abort(); \
+  } \
+  \
+
+#endif

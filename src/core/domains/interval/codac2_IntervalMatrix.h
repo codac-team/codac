@@ -50,6 +50,9 @@ namespace codac2
           IntervalMatrixBase<IntervalMatrix,Matrix>(lb._e.template cast<Interval>())
       {
         assert_release(lb.size() == ub.size());
+        for(size_t i = 0 ; i < lb.size() ; i++) {
+          assert_release(lb[i] <= ub[i]);
+        }
         *this |= ub;
       }
 
@@ -91,7 +94,7 @@ namespace codac2
       { }
 
       template<typename OtherDerived>
-      IntervalMatrix(const MatrixBaseBlock<OtherDerived,IntervalMatrix,Interval>& x)
+      IntervalMatrix(const MatrixBaseBlock<OtherDerived,Interval>& x)
         : IntervalMatrix(x.eval())
       { }
 
@@ -109,24 +112,6 @@ namespace codac2
       {
         // ^ This overload allows automatic cast for Matrix == IntervalMatrix comparisons
         return (IntervalMatrixBase<IntervalMatrix,Matrix>)x1 == (IntervalMatrixBase<IntervalMatrix,Matrix>)x2;
-      }
-
-      static IntervalMatrix zeros(size_t r, size_t c)
-      {
-        assert_release(r > 0 && c > 0);
-        return EigenMatrix<Interval>::Zero(r,c);
-      }
-
-      static IntervalMatrix ones(size_t r, size_t c)
-      {
-        assert_release(r > 0 && c > 0);
-        return EigenMatrix<Interval>::Ones(r,c);
-      }
-
-      static IntervalMatrix eye(size_t r, size_t c)
-      {
-        assert_release(r > 0 && c > 0);
-        return EigenMatrix<Interval>::Identity(r,c);
       }
 
       static IntervalMatrix empty(size_t r, size_t c)
