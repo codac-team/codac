@@ -14,9 +14,9 @@
 #include <pybind11/stl.h>
 #include "codac2_py_core.h"
 #include <codac2_IntervalVector.h>
+#include "codac2_py_VectorBase.h"
 #include "codac2_py_IntervalVector_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
 #include "codac2_py_IntervalMatrixBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
-#include "codac2_py_VectorBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
 #include "codac2_py_MatrixBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
 
 using namespace std;
@@ -27,6 +27,9 @@ using namespace pybind11::literals;
 py::class_<IntervalVector> export_IntervalVector(py::module& m)
 {
   py::class_<IntervalVector> exported_intervalvector_class(m, "IntervalVector", INTERVALVECTOR_MAIN);
+
+  export_VectorBase<IntervalVector,IntervalMatrix,Interval>(exported_intervalvector_class);
+
   exported_intervalvector_class
 
     .def(py::init(

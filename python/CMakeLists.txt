@@ -70,6 +70,7 @@
       src/core/graphics/codac2_py_StyleProperties.cpp
 
       src/core/matrices/codac2_py_Vector.cpp
+      src/core/matrices/codac2_py_VectorBase.h
 
       src/core/paver/codac2_py_Paver.cpp
 

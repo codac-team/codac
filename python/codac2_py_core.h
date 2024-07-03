@@ -33,10 +33,24 @@ namespace codac2
     }
 
     template<typename I>
+    void test_integer(I x1, I x2)
+    {
+      test_integer(x1);
+      test_integer(x2);
+    }
+
+    template<typename I>
     void scale_index(I& x)
     {
       if constexpr(FOR_MATLAB)
         x--;
+    }
+
+    template<typename I>
+    void scale_index(I& x1, I& x2)
+    {
+      scale_index(x1);
+      scale_index(x2);
     }
   }
 }
