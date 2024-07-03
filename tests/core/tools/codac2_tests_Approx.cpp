@@ -21,7 +21,7 @@ TEST_CASE("Approx")
   CHECK(Approx(Interval(0.1)) == Interval(1.)/Interval(10.));
   CHECK(Interval(0.1) == Approx(Interval(1.)/Interval(10.)));
 
-  CHECK(IntervalVector({{0.1}}) != IntervalVector({1.})/Interval(10.));
-  CHECK(Approx(IntervalVector({{0.1}})) == IntervalVector({1.})/Interval(10.));
-  CHECK(IntervalVector({{0.1}}) == Approx(IntervalVector({1.})/Interval(10.)));
+  CHECK(IntervalVector({{0.1}}) != IntervalVector({{1.}})/Interval(10.));
+  CHECK(Approx(IntervalVector({{0.1}})) == IntervalVector({{1.}})/Interval(10.));
+  CHECK(IntervalVector({{0.1}}) == Approx(IntervalVector({{1.}})/Interval(10.)));
 }
