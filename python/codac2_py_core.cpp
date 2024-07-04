@@ -31,6 +31,8 @@ py::class_<Interval> export_Interval(py::module& m);
 void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval);
 py::class_<IntervalVector> export_IntervalVector(py::module& m);
 void export_IntervalVector_operations(py::module& m, py::class_<IntervalVector>& py_IntervalVector);
+py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m);
+//void export_IntervalVector_operations(py::module& m, py::class_<IntervalVector>& py_IntervalVector);
 
 // functions
 void export_ExprWrapperBase(py::module& m);
@@ -42,6 +44,10 @@ void export_expression_operations(py::module& m);
 void export_Figure2D(py::module& m);
 void export_StyleProperties(py::module& m);
 
+// matrices
+void export_Matrix(py::module& m);
+void export_Vector(py::module& m);
+
 // paver
 void export_Paver(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 
@@ -52,9 +58,6 @@ void export_SepPolygon(py::module& m, py::class_<Sep,pySep>& sep);
 
 // tools
 void export_Approx(py::module& m);
-
-// types
-py::class_<Vector> export_Vector(py::module& m);
 
 
 PYBIND11_MODULE(core, m)
@@ -72,8 +75,10 @@ PYBIND11_MODULE(core, m)
   // domains
   auto py_Interval = export_Interval(m);
   export_Interval_operations(m, py_Interval);
-  auto py_IntervalVector = export_IntervalVector(m);
-  export_IntervalVector_operations(m, py_IntervalVector);
+  //auto py_IntervalVector = export_IntervalVector(m);
+  //export_IntervalVector_operations(m, py_IntervalVector);
+  //auto py_IntervalMatrix = export_IntervalMatrix(m);
+  //export_IntervalMatrix_operations(m, py_IntervalMatrix);
 
   // function
   export_ExprWrapperBase(m);
@@ -89,6 +94,10 @@ PYBIND11_MODULE(core, m)
   export_StyleProperties(m);
   export_Figure2D(m);
 
+  // matrices
+  export_Matrix(m);
+  export_Vector(m);
+
   // paver
   export_Paver(m,py_ctc);
 
@@ -100,8 +109,5 @@ PYBIND11_MODULE(core, m)
 
   // tools
   export_Approx(m);
-
-  // types
-  auto py_Vector = export_Vector(m);
 
 }

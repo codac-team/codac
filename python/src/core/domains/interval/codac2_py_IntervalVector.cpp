@@ -14,10 +14,13 @@
 #include <pybind11/stl.h>
 #include "codac2_py_core.h"
 #include <codac2_IntervalVector.h>
-#include "codac2_py_VectorBase.h"
-#include "codac2_py_IntervalVector_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
-#include "codac2_py_IntervalMatrixBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+
+#include "codac2_py_VectorBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
 #include "codac2_py_MatrixBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_IntervalMatrixBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_IntervalVector_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+
+#include "codac2_py_VectorBase.h"
 
 using namespace std;
 using namespace codac2;
@@ -27,8 +30,7 @@ using namespace pybind11::literals;
 py::class_<IntervalVector> export_IntervalVector(py::module& m)
 {
   py::class_<IntervalVector> exported_intervalvector_class(m, "IntervalVector", INTERVALVECTOR_MAIN);
-
-  export_VectorBase<IntervalVector,IntervalMatrix,Interval>(exported_intervalvector_class);
+  //export_VectorBase<IntervalVector,IntervalMatrix,Interval>(exported_intervalvector_class);
 
   exported_intervalvector_class
 
@@ -125,7 +127,7 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
       "x"_a)
 
     .def(py::self += py::self,
-      S_REF_MATRIXBASE_ST_OPERATORPLUSEQ_CONST_S_REF,
+      "todo"/*S_REF_MATRIXBASE_ST_OPERATORPLUSEQ_CONST_S_REF*/,
       "x"_a)
 
     //.def(py::self += Vector(),
@@ -133,10 +135,10 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
     //  "x"_a)
 
     .def(-py::self,
-      S_MATRIXBASE_ST_OPERATORMINUS_CONST)
+      "todo"/*S_MATRIXBASE_ST_OPERATORMINUS_CONST*/)
 
     .def(py::self -= py::self,
-      S_REF_MATRIXBASE_ST_OPERATORMINUSEQ_CONST_S_REF,
+      "todo"/*S_REF_MATRIXBASE_ST_OPERATORMINUSEQ_CONST_S_REF*/,
       "x"_a)
 
     //.def(py::self -= Vector(),
@@ -148,7 +150,7 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
           stream << x;
           return string(stream.str()); 
         },
-      OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_MATRIXBASE_ST_REF)
+      "todo"/*OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_MATRIXBASE_ST_REF*/)
   ;
 
   py::implicitly_convertible<py::list,IntervalVector>();

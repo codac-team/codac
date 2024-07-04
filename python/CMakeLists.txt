@@ -58,6 +58,7 @@
 
       src/core/domains/interval/codac2_py_Interval.cpp
       src/core/domains/interval/codac2_py_Interval_operations.cpp
+      src/core/domains/interval/codac2_py_IntervalMatrix.cpp
       src/core/domains/interval/codac2_py_IntervalVector.cpp
       src/core/domains/interval/codac2_py_IntervalVector_operations.cpp
 
@@ -69,6 +70,8 @@
       src/core/graphics/codac2_py_Figure2D.cpp
       src/core/graphics/codac2_py_StyleProperties.cpp
 
+      src/core/matrices/codac2_py_Matrix.cpp
+      src/core/matrices/codac2_py_MatrixBase.h
       src/core/matrices/codac2_py_Vector.cpp
       src/core/matrices/codac2_py_VectorBase.h
 

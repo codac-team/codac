@@ -38,8 +38,7 @@ void export_Figure2D(py::module& m)
   m.def("axis", [](size_t_type n, const Interval& limits, const std::string& label)
       {
         matlab::test_integer(n);
-        matlab::scale_index(n);
-        return axis(n,limits,label);
+        return axis(matlab::input_index(n), limits, label);
       },
     FIGUREAXIS_AXIS_SIZET_CONST_INTERVAL_REF_CONST_STRING_REF,
     "dim_id"_a, "limits"_a, "label"_a="");

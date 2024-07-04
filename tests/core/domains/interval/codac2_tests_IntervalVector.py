@@ -23,8 +23,8 @@ class TestIntervalVector(unittest.TestCase):
 
     self.assertTrue(True)
 
-    x = IntervalVector.zeros(3)
-    print(x)
+    #x = IntervalVector.zeros(3)
+    #print(x)
     
 if __name__ ==  '__main__':
   unittest.main()

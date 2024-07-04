@@ -111,9 +111,12 @@ for xml_doc in files:
   with open(sys.argv[2] + "/" + get_originate_file(class_compound), 'a', encoding='utf-8') as f:
 
     print("/// Class " + class_name, file=f)
-    print("const char* "
+    #print("const char* "
+    #   + normalize_label(class_name + "_MAIN").upper()
+    #   + " = R\"Docstring documentation will be available in next release.\";", file=f)
+    print("#define "
        + normalize_label(class_name + "_MAIN").upper()
-       + " = R\"_docs(Docstring documentation will be available in next release.)_docs\";", file=f)
+       + " \"Docstring documentation will be available in next release.\"", file=f)
 
 
   # Members documentation (ex: methods, functions, etc.)
@@ -142,8 +145,12 @@ for xml_doc in files:
         print("// Friend member is not documented here.\n", file=f)
         continue
 
-      print("const char* "
+      #print("const char* "
+      #   + docstring_varname(memberdef)
+      #   + " = R\"Docstring documentation will be available in next release.\";", file=f)
+
+      print("#define "
          + docstring_varname(memberdef)
-         + " = R\"_docs(Docstring documentation will be available in next release.)_docs\";", file=f)
+         + " \"Docstring documentation will be available in next release.\"", file=f)
 
       print("\n", file=f)

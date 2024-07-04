@@ -7,13 +7,15 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
+#pragma once
+
 #include <sstream>
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include "codac2_py_core.h"
-#include <codac2_VectorBase.h>
-#include "codac2_py_VectorBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+
+#include "codac2_py_MatrixBase.h"
 
 using namespace std;
 using namespace codac2;
@@ -23,13 +25,14 @@ using namespace pybind11::literals;
 template<typename S,typename M,typename T>
 void export_VectorBase(py::class_<S>& pyclass)
 {
+  export_MatrixBase<S,T,true>(pyclass);
+
   pyclass
 
     .def("subvector", [](const S& x, size_t_type start_id, size_t_type end_id)
         {
           matlab::test_integer(start_id, end_id);
-          matlab::scale_index(start_id, end_id);
-          return x.subvector(start_id, end_id);
+          return x.subvector(matlab::input_index(start_id), matlab::input_index(end_id));
         },
       S_VECTORBASE_SMT_SUBVECTOR_SIZET_SIZET_CONST,
       "start_id"_a, "end_id"_a)
@@ -45,8 +48,7 @@ void export_VectorBase(py::class_<S>& pyclass)
     .def("put", [](S& x, size_t_type start_id, const S& x1)
         {
           matlab::test_integer(start_id);
-          matlab::scale_index(start_id);
-          x.put(start_id, x1);
+          x.put(matlab::input_index(start_id), x1);
         },
       VOID_VECTORBASE_SMT_PUT_SIZET_CONST_S_REF,
       "start_id"_a, "x"_a)
@@ -72,5 +74,13 @@ void export_VectorBase(py::class_<S>& pyclass)
         },
       STATIC_S_VECTORBASE_SMT_ONES_SIZET,
       "n"_a)
+
+    .def("__repr__", [](const S& x)
+        {
+          std::ostringstream s;
+          s << x;
+          return string(s.str()); 
+        },
+      OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_VECTORBASE_SMT_REF)
   ;
 }

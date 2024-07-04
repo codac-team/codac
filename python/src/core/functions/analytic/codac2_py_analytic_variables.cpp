@@ -60,7 +60,7 @@ void export_ScalarVar(py::module& m)
 ScalarExpr get_item(const VectorVar& v, size_t_type index)
 {
   matlab::test_integer(index);
-  matlab::scale_index(index);
+  index = matlab::input_index(index);
 
   if(index < 0 || index >= static_cast<size_t>(v.size()))
     throw py::index_error("index is out of range");

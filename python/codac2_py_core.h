@@ -40,17 +40,19 @@ namespace codac2
     }
 
     template<typename I>
-    void scale_index(I& x)
+    I input_index(const I& x)
     {
       if constexpr(FOR_MATLAB)
-        x--;
+        return x-1;
+      return x;
     }
 
     template<typename I>
-    void scale_index(I& x1, I& x2)
+    I output_index(const I& x)
     {
-      scale_index(x1);
-      scale_index(x2);
+      if constexpr(FOR_MATLAB)
+        return x+1;
+      return x;
     }
   }
 }
