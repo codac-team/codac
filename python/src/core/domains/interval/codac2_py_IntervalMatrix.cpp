@@ -102,10 +102,7 @@ py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m)
   return exported_intervalmatrix_class;
 }
 
-// friend bool operator==(const IntervalMatrix& x1, const IntervalMatrix& x2);
-
 /*
-
   IntervalMatrix operator*(const Interval& x1, const Matrix& x2);
 
   IntervalVector operator*(const IntervalMatrix& x1, const Vector& x2);
@@ -137,13 +134,4 @@ py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m)
   }
 
   IntervalMatrix operator/(const Matrix& x1, const Interval& x2);
-
-  inline std::ostream& operator<<(std::ostream& os, const IntervalMatrix& x)
-  {
-    if(x.is_empty())
-      return os << "( empty matrix )";
-
-    else
-      return os << (const MatrixBase<IntervalMatrix,Interval>&)x;
-  }
   */

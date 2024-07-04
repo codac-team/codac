@@ -124,8 +124,6 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
 }
 
 
-//  friend bool operator==(const IntervalVector& x1, const IntervalVector& x2);
-//
 //  template<typename... X, typename = typename std::enable_if<(true && ... && (
 //      (std::is_same_v<Interval,X> || std::is_same_v<IntervalVector,X> || std::is_same_v<Vector,X>)
 //    )), void>::type>

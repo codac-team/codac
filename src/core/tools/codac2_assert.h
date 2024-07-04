@@ -27,7 +27,7 @@ namespace codac2
       #define assert_release(test) \
       if(!(test)) \
       { \
-        std::string s = std::string("=============================================================================") \
+        std::string s = std::string("\n=============================================================================") \
           + "\nThe following Codac assertion failed:\n\n\t" + std::string(#test) \
           + "\n \nIn: " + std::string(__FILE__) + ":" + std::to_string(__LINE__) \
           + "\nFunction: " + std::string(__PRETTY_FUNCTION__) \
@@ -43,7 +43,7 @@ namespace codac2
       #define assert_release(test) \
       if(!(test)) \
       { \
-        std::string s = std::string("=============================================================================") \
+        std::string s = std::string("\n=============================================================================") \
           + "\nThe following Codac assertion failed:\n\n\t" + std::string(#test) \
           + "\n \nIn: " + std::string(__FILE__) + ":" + std::to_string(__LINE__) \
           + "\nFunction: " + std::string(__func__) \

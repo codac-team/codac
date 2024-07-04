@@ -24,7 +24,7 @@ template<typename S,typename T,bool VECTOR_INHERITANCE>
 void export_MatrixBase(py::class_<S>& pyclass)
 {
   pyclass
-    
+
     .def(py::self == py::self)
     .def(py::self != py::self)
 
@@ -64,11 +64,18 @@ void export_MatrixBase(py::class_<S>& pyclass)
         },
       T_MATRIXBASE_ST_MAX_COEFF_CONST)
 
-    .def("__getitem__", [](S& x, size_t_type index) -> T&
+    .def("__getitem__", [](const S& x, size_t_type index) -> const T&
         {
           matlab::test_integer(index);
           return x[matlab::input_index(index)];
         }, py::return_value_policy::reference_internal,
+      CONST_T_REF_MATRIXBASE_ST_OPERATORCOMPO_SIZET_CONST)
+
+    .def("__setitem__", [](S& x, size_t_type index, const T& a)
+        {
+          matlab::test_integer(index);
+          x[matlab::input_index(index)] = a;
+        },
       T_REF_MATRIXBASE_ST_OPERATORCOMPO_SIZET)
 
     .def("init", [](S& x, const T& a)
@@ -139,7 +146,6 @@ void export_MatrixBase(py::class_<S>& pyclass)
 
 /*
 
-      friend bool operator==(const MatrixBase<S,T>& x1, const MatrixBase<S,T>& x2)
       MatrixBaseBlock<EigenMatrix<T>&,T> block(size_t i, size_t j, size_t p, size_t q)
       MatrixBaseBlock<EigenMatrix<T>&,T> col(size_t i)
       MatrixBaseBlock<EigenMatrix<T>&,T> row(size_t i)

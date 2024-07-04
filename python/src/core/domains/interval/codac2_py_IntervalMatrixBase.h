@@ -130,20 +130,34 @@ void export_IntervalMatrixBase(py::class_<S>& pyclass)
       S_REF_INTERVALMATRIXBASE_SV_INFLATE_CONST_V_REF,
       "r"_a)
 
-    .def("bisect", &S::bisect,
+    .def("bisect", [](const S& x, size_t_type i, double ratio)
+        {
+          matlab::test_integer(i);
+          return x.bisect(matlab::input_index(i),ratio);
+        },
       PAIR_SS_INTERVALMATRIXBASE_SV_BISECT_SIZET_FLOAT_CONST,
       "i"_a, "ratio"_a = 0.49)
 
     .def("bisect_largest", &S::bisect_largest,
       PAIR_SS_INTERVALMATRIXBASE_SV_BISECT_LARGEST_FLOAT_CONST,
       "ratio"_a = 0.49)
-  ;
-}
 
-/*
-S& operator&=(const S& x)
-S& operator|=(const S& x)
-S operator&(const S& x) const
-S operator|(const S& x) const
-friend bool operator==(const IntervalMatrixBase<S,V>& x1, const IntervalMatrixBase<S,V>& x2)
-*/
+    .def(py::self &= py::self,
+      S_REF_INTERVALMATRIXBASE_SV_OPERATORANDEQ_CONST_S_REF
+      "x"_a)
+
+    .def(py::self |= py::self,
+      S_REF_INTERVALMATRIXBASE_SV_OPERATOROREQ_CONST_S_REF
+      "x"_a)
+
+    .def(py::self & py::self,
+      S_INTERVALMATRIXBASE_SV_OPERATORAND_CONST_S_REF_CONST
+      "x"_a)
+
+    .def(py::self | py::self,
+      S_INTERVALMATRIXBASE_SV_OPERATOROR_CONST_S_REF_CONST,
+      "x"_a)
+  ;
+
+  py::implicitly_convertible<V,S>();
+}
