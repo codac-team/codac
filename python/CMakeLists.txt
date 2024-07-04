@@ -59,6 +59,8 @@
       src/core/domains/interval/codac2_py_Interval.cpp
       src/core/domains/interval/codac2_py_Interval_operations.cpp
       src/core/domains/interval/codac2_py_IntervalMatrix.cpp
+      src/core/domains/interval/codac2_py_IntervalMatrix_operations.cpp
+      src/core/domains/interval/codac2_py_IntervalMatrixBase.h
       src/core/domains/interval/codac2_py_IntervalVector.cpp
       src/core/domains/interval/codac2_py_IntervalVector_operations.cpp
 

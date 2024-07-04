@@ -40,5 +40,23 @@ void export_Matrix(py::module& m)
       MATRIX_MATRIX_SIZET_SIZET,
       "r"_a, "c"_a)
 
+    .def(py::init(
+        [](size_t_type r, size_t_type c, double x)
+        {
+          matlab::test_integer(r,c);
+          return std::make_unique<Matrix>(r,c,x);
+        }),
+      MATRIX_MATRIX_SIZET_SIZET_DOUBLE,
+      "r"_a, "c"_a, "x"_a)
+
+    .def("transpose", &Matrix::transpose,
+      MATRIX_MATRIX_TRANSPOSE_CONST)
+
+    .def("diag_matrix", &Matrix::diag_matrix,
+      MATRIX_MATRIX_DIAG_MATRIX_CONST)
+
+    .def("inverse", &Matrix::inverse,
+      MATRIX_MATRIX_INVERSE_CONST)
+
   ;
 }

@@ -72,7 +72,7 @@ namespace codac2
     return this->_e.transpose();
   }
 
-  IntervalMatrix IntervalMatrix::diagonal_matrix() const
+  IntervalMatrix IntervalMatrix::diag_matrix() const
   {
     return _e.diagonal().asDiagonal().toDenseMatrix();
   }

@@ -24,35 +24,44 @@ template<typename S,typename T,bool VECTOR_INHERITANCE>
 void export_MatrixBase(py::class_<S>& pyclass)
 {
   pyclass
+    
+    .def(py::self == py::self)
+    .def(py::self != py::self)
+
+    .def("__len__", [](const S& x)
+        {
+          return x.size();
+        },
+      SIZET_MATRIXBASE_ST_SIZE_CONST)
 
     .def("size", [](const S& x)
-      {
-        return x.size();
-      },
-    SIZET_MATRIXBASE_ST_SIZE_CONST)
+        {
+          return x.size();
+        },
+      SIZET_MATRIXBASE_ST_SIZE_CONST)
 
     .def("nb_rows", [](const S& x)
-      {
-        return x.nb_rows();
-      },
+        {
+          return x.nb_rows();
+        },
       SIZET_MATRIXBASE_ST_NB_ROWS_CONST)
 
     .def("nb_cols", [](const S& x)
-      {
-        return x.nb_cols();
-      },
+        {
+          return x.nb_cols();
+        },
       SIZET_MATRIXBASE_ST_NB_COLS_CONST)
 
     .def("min_coeff", [](const S& x)
-      {
-        return x.min_coeff();
-      },
+        {
+          return x.min_coeff();
+        },
       T_MATRIXBASE_ST_MIN_COEFF_CONST)
 
     .def("max_coeff", [](const S& x)
-      {
-        return x.max_coeff();
-      },
+        {
+          return x.max_coeff();
+        },
       T_MATRIXBASE_ST_MAX_COEFF_CONST)
 
     .def("__getitem__", [](S& x, size_t_type index) -> T&
@@ -197,51 +206,19 @@ void export_MatrixBase(py::class_<S>& pyclass)
     Q _m;
     size_t _i,_j,_p,_q;
 
-    MatrixBaseBlock(Q m, size_t i, size_t j, size_t p, size_t q)
-      : _m(m), _i(i), _j(j), _p(p), _q(q)
-    {
-      assert(i >= 0 && p > 0 && i+p <= (size_t)m.rows());
-      assert(j >= 0 && q > 0 && j+q <= (size_t)m.cols());
-    }
+    MatrixBaseBlock(Q m, size_t i, size_t j, size_t p, size_t q);
 
     template<typename S_>
-    void operator=(const MatrixBase<S_,T>& x)
-    {
-      assert(x.nb_rows() == _p && x.nb_cols() == _q);
-      _m.block(_i,_j,_p,_q) = x._e;
-    }
+    void operator=(const MatrixBase<S_,T>& x);
 
     template<typename OtherDerived>
-    void operator=(const Eigen::MatrixBase<OtherDerived>& x)
-    {
-      assert(x.rows() == _p && x.cols() == _q);
-      _m.block(_i,_j,_p,_q) = x;
-    }
+    void operator=(const Eigen::MatrixBase<OtherDerived>& x);
 
-    auto eval() const
-    {
-      return _m.block(_i,_j,_p,_q).eval();
-    }
+    auto eval() const;
 
     template<typename M>
-    bool operator==(const M& x) const
-    {
-      return this->eval() == x;
-    }
+    bool operator==(const M& x) const;
   };
-
-
   */
-
-
-
-
-
-
-
-
-
-
-
 
 }

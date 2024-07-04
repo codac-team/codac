@@ -35,22 +35,22 @@ namespace codac2
     assert_release(r > 0 && c > 0);
   }
 
-  Matrix::Matrix(const MatrixBase<Matrix,double>& x)
-    : Matrix(x._e)
-  { }
-
   Matrix::Matrix(std::initializer_list<std::initializer_list<double>> l)
     : MatrixBase<Matrix,double>(l)
   {
     assert_release(!std::empty(l));
   }
 
+  Matrix::Matrix(const MatrixBase<Matrix,double>& x)
+    : Matrix(x._e)
+  { }
+
   Matrix Matrix::transpose() const
   {
     return this->_e.transpose();
   }
 
-  Matrix Matrix::diagonal_matrix() const
+  Matrix Matrix::diag_matrix() const
   {
     return this->_e.diagonal().asDiagonal().toDenseMatrix();
   }

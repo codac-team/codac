@@ -32,7 +32,7 @@ void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval
 py::class_<IntervalVector> export_IntervalVector(py::module& m);
 void export_IntervalVector_operations(py::module& m, py::class_<IntervalVector>& py_IntervalVector);
 py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m);
-//void export_IntervalVector_operations(py::module& m, py::class_<IntervalVector>& py_IntervalVector);
+void export_IntervalMatrix_operations(py::module& m, py::class_<IntervalMatrix>& py_IntervalMatrix);
 
 // functions
 void export_ExprWrapperBase(py::module& m);
@@ -72,13 +72,17 @@ PYBIND11_MODULE(core, m)
   export_CtcInverse<Interval>(m,"CtcInverse_Interval",py_ctc);
   export_CtcInverse<IntervalVector>(m,"CtcInverse_IntervalVector",py_ctc);
 
+  // matrices
+  export_Matrix(m);
+  export_Vector(m);
+
   // domains
   auto py_Interval = export_Interval(m);
   export_Interval_operations(m, py_Interval);
-  //auto py_IntervalVector = export_IntervalVector(m);
-  //export_IntervalVector_operations(m, py_IntervalVector);
-  //auto py_IntervalMatrix = export_IntervalMatrix(m);
-  //export_IntervalMatrix_operations(m, py_IntervalMatrix);
+  auto py_IntervalVector = export_IntervalVector(m);
+  export_IntervalVector_operations(m, py_IntervalVector);
+  auto py_IntervalMatrix = export_IntervalMatrix(m);
+  export_IntervalMatrix_operations(m, py_IntervalMatrix);
 
   // function
   export_ExprWrapperBase(m);
@@ -93,10 +97,6 @@ PYBIND11_MODULE(core, m)
   // graphics
   export_StyleProperties(m);
   export_Figure2D(m);
-
-  // matrices
-  export_Matrix(m);
-  export_Vector(m);
 
   // paver
   export_Paver(m,py_ctc);

@@ -28,9 +28,9 @@ namespace codac2
 
       explicit Matrix(size_t r, size_t c, const double values[]);
 
-      Matrix(const MatrixBase<Matrix,double>& x);
-
       Matrix(std::initializer_list<std::initializer_list<double>> l);
+
+      Matrix(const MatrixBase<Matrix,double>& x);
 
       template<typename OtherDerived>
       Matrix(const Eigen::MatrixBase<OtherDerived>& x)
@@ -39,7 +39,7 @@ namespace codac2
 
       Matrix transpose() const;
 
-      Matrix diagonal_matrix() const;
+      Matrix diag_matrix() const;
 
       Matrix inverse() const;
   };

@@ -53,6 +53,11 @@ namespace codac2
         : MatrixBase<S,Interval>(l)
       { }
 
+      template<typename OtherDerived>
+      IntervalMatrixBase(const Eigen::MatrixBase<OtherDerived>& x)
+        : MatrixBase<S,Interval>(x)
+      { }
+
       double volume() const
       {
         if(is_empty())
@@ -67,11 +72,6 @@ namespace codac2
         }
         return std::exp(v);
       }
-
-      template<typename OtherDerived>
-      IntervalMatrixBase(const Eigen::MatrixBase<OtherDerived>& x)
-        : MatrixBase<S,Interval>(x)
-      { }
 
       bool is_empty() const
       {
@@ -117,6 +117,7 @@ namespace codac2
 
       V rand() const
       {
+        srand(time(NULL));
         degenerate_mat(rand);
       }
 
@@ -431,7 +432,7 @@ namespace codac2
       S& inflate(const V& r)
       {
         assert_release(this->size() == r.size());
-        assert_release(r.minCoeff() >= 0.);
+        assert_release(r.min_coeff() >= 0.);
 
         for(size_t i = 0 ; i < this->size() ; i++)
           (this->_e.data()+i)->inflate(*(r._e.data()+i));

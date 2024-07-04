@@ -40,7 +40,7 @@ namespace codac2
     }
 
     template<typename I>
-    I input_index(const I& x)
+    size_t input_index(const I& x)
     {
       if constexpr(FOR_MATLAB)
         return x-1;

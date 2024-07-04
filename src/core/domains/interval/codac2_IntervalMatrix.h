@@ -69,7 +69,7 @@ namespace codac2
 
       IntervalMatrix transpose() const;
 
-      IntervalMatrix diagonal_matrix() const;
+      IntervalMatrix diag_matrix() const;
 
       friend bool operator==(const IntervalMatrix& x1, const IntervalMatrix& x2);
 

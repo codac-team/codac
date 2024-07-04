@@ -21,6 +21,7 @@
 #include "codac2_py_IntervalVector_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
 
 #include "codac2_py_VectorBase.h"
+#include "codac2_py_IntervalMatrixBase.h"
 
 using namespace std;
 using namespace codac2;
@@ -30,7 +31,8 @@ using namespace pybind11::literals;
 py::class_<IntervalVector> export_IntervalVector(py::module& m)
 {
   py::class_<IntervalVector> exported_intervalvector_class(m, "IntervalVector", INTERVALVECTOR_MAIN);
-  //export_VectorBase<IntervalVector,IntervalMatrix,Interval>(exported_intervalvector_class);
+  export_IntervalMatrixBase<IntervalVector,Vector,true>(exported_intervalvector_class);
+  export_VectorBase<IntervalVector,IntervalMatrix,Interval>(exported_intervalvector_class);
 
   exported_intervalvector_class
 
@@ -51,16 +53,6 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
         }),
       INTERVALVECTOR_INTERVALVECTOR_SIZET_CONST_INTERVAL_REF,
       "n"_a, "x"_a)
-
-    .def(py::init<const Vector&>(),
-      INTERVALVECTOR_INTERVALVECTOR_CONST_VECTOR_REF,
-      "v"_a)
-
-    // IntervalVector(size_t_type n, const double bounds[][2])
-
-    .def(py::init<const Vector&,const Vector&>(),
-      INTERVALVECTOR_INTERVALVECTOR_CONST_VECTOR_REF_CONST_VECTOR_REF,
-      "lb"_a, "ub"_a)
 
     .def(py::init(
         [](const std::vector<Interval>& v)
@@ -90,69 +82,51 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
         }),
       INTERVALVECTOR_INTERVALVECTOR_INITIALIZER_LIST_INTERVAL,
       "v"_a)
-  
+
     .def(py::init<const IntervalVector&>(),
       "x"_a)
 
-    .def("transpose", &IntervalVector::transpose,
-      M_VECTORBASE_SMT_TRANSPOSE_CONST)
+    .def(py::init<const Vector&>(),
+      INTERVALVECTOR_INTERVALVECTOR_CONST_VECTOR_REF,
+      "x"_a)
 
-    .def("diag_matrix", &IntervalVector::diag_matrix,
-      M_VECTORBASE_SMT_DIAG_MATRIX_CONST)
+    .def(py::init<const Vector&,const Vector&>(),
+      INTERVALVECTOR_INTERVALVECTOR_CONST_VECTOR_REF_CONST_VECTOR_REF,
+      "lb"_a, "ub"_a)
 
+    .def("complementary", &IntervalVector::complementary,
+      VECTOR_INTERVALVECTOR_INTERVALVECTOR_COMPLEMENTARY_CONST)
 
-
-
-
-
-
+    .def("diff", &IntervalVector::diff,
+      VECTOR_INTERVALVECTOR_INTERVALVECTOR_DIFF_CONST_INTERVALVECTOR_REF_BOOL_CONST,
+      "y"_a, "compactness"_a = true)
     
-
-    .def(py::self |= py::self,
-      S_REF_INTERVALMATRIXBASE_SV_OPERATOROREQ_CONST_S_REF,
-      "x"_a)
-
-    // For MATLAB compatibility
-    .def("self_union", &IntervalVector::operator|=,
-      S_REF_INTERVALMATRIXBASE_SV_OPERATOROREQ_CONST_S_REF,
-      "x"_a)
-
-    .def(py::self &= py::self,
-      S_REF_INTERVALMATRIXBASE_SV_OPERATORANDEQ_CONST_S_REF,
-      "x"_a)
-
-    // For MATLAB compatibility
-    .def("self_inter", &IntervalVector::operator&=,
-      S_REF_INTERVALMATRIXBASE_SV_OPERATORANDEQ_CONST_S_REF,
-      "x"_a)
-
-    .def(py::self += py::self,
-      "todo"/*S_REF_MATRIXBASE_ST_OPERATORPLUSEQ_CONST_S_REF*/,
-      "x"_a)
-
-    //.def(py::self += Vector(),
-    //  INTERVALVECTOR_INTERVALVECTOR_OPERATORPLUSEQ_CONST_VECTOR_REF,
-    //  "x"_a)
-
-    .def(-py::self,
-      "todo"/*S_MATRIXBASE_ST_OPERATORMINUS_CONST*/)
-
-    .def(py::self -= py::self,
-      "todo"/*S_REF_MATRIXBASE_ST_OPERATORMINUSEQ_CONST_S_REF*/,
-      "x"_a)
-
-    //.def(py::self -= Vector(),
-    //  INTERVALVECTOR_INTERVALVECTOR_OPERATORMINUSEQ_CONST_VECTOR_REF,
-    //  "x"_a)
-
-    .def("__repr__", [](const IntervalVector& x) {
-          std::ostringstream stream;
-          stream << x;
-          return string(stream.str()); 
+    .def_static("empty", [](size_t_type n)
+        {
+          matlab::test_integer(n);
+          return IntervalVector::empty(n);
         },
-      "todo"/*OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_MATRIXBASE_ST_REF*/)
+      STATIC_INTERVALVECTOR_INTERVALVECTOR_EMPTY_SIZET,
+      "n"_a)
+
+    .def("__repr__", [](const IntervalVector& x)
+        {
+          std::ostringstream s;
+          s << x;
+          return string(s.str()); 
+        },
+      OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_INTERVALVECTOR_REF)
   ;
 
   py::implicitly_convertible<py::list,IntervalVector>();
+
   return exported_intervalvector_class;
 }
+
+
+//  friend bool operator==(const IntervalVector& x1, const IntervalVector& x2);
+//
+//  template<typename... X, typename = typename std::enable_if<(true && ... && (
+//      (std::is_same_v<Interval,X> || std::is_same_v<IntervalVector,X> || std::is_same_v<Vector,X>)
+//    )), void>::type>
+//  inline IntervalVector cart_prod(const X&... x)
