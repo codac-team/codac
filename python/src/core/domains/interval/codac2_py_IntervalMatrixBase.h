@@ -74,6 +74,13 @@ void export_IntervalMatrixBase(py::class_<S>& pyclass)
         },
       SIZET_INTERVALMATRIXBASE_SV_MAX_DIAM_INDEX_CONST)
 
+    .def("extr_diam_index", [](const S& x, bool min)
+        {
+          return matlab::output_index(x.extr_diam_index(min));
+        },
+      SIZET_INTERVALMATRIXBASE_SV_EXTR_DIAM_INDEX_BOOL_CONST,
+      "min"_a)
+
     .def("__contains__", &S::contains,
       BOOL_INTERVALMATRIXBASE_SV_CONTAINS_CONST_V_REF_CONST)
 

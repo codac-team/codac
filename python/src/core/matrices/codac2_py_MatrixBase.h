@@ -92,6 +92,12 @@ void export_MatrixBase(py::class_<S>& pyclass)
           return string(s.str()); 
         },
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_MATRIXBASE_ST_REF)
+
+    .def(+py::self)
+    .def(-py::self)
+    .def(py::self += py::self)
+    .def(py::self -= py::self)
+    .def(py::self *= py::self)
   ;
 
   if constexpr(!VECTOR_INHERITANCE)
