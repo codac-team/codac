@@ -27,6 +27,7 @@ py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py
 void export_CtcInverse(py::module& m, const std::string& export_name, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 
 // domains
+void export_BoolInterval(py::module& m);
 py::class_<Interval> export_Interval(py::module& m);
 void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval);
 py::class_<IntervalVector> export_IntervalVector(py::module& m);
@@ -77,6 +78,7 @@ PYBIND11_MODULE(core, m)
   export_Vector(m);
 
   // domains
+  export_BoolInterval(m);
   auto py_Interval = export_Interval(m);
   export_Interval_operations(m, py_Interval);
   auto py_IntervalVector = export_IntervalVector(m);

@@ -2,6 +2,7 @@ from codac.core import *
 from .version import __version__
 from sys import float_info
 
+
 class AnalyticFunction:
 
   def __init__(self, args, e):
@@ -79,3 +80,13 @@ class Approx:
 
   def __repr__(self):
     return str(self.a)
+
+
+def cart_prod(*args):
+  lst=[]
+  for arg in args:
+    if isinstance(arg, (float,Interval)):
+      lst.append(IntervalVector(1,Interval(arg)))
+    else:
+      lst.append(IntervalVector(arg))
+  return cart_prod_list(lst)

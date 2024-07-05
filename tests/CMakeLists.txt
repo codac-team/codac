@@ -24,7 +24,6 @@ list(APPEND SRC_TESTS # listing files without extension
   core/contractors/codac2_tests_CtcInverse
   core/contractors/codac2_tests_CtcSegment
   core/domains/codac2_tests_BoolInterval
-  core/domains/codac2_tests_Domain
   core/domains/interval/codac2_tests_Interval
   core/domains/interval/codac2_tests_Interval_bwd
   core/domains/interval/codac2_tests_Interval_operations
@@ -35,8 +34,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/separators/codac2_tests_SepInverse
   core/separators/codac2_tests_SepPolygon
   core/tools/codac2_tests_Approx
-
-
+  
 )
 
 foreach(SRC_TEST ${SRC_TESTS})

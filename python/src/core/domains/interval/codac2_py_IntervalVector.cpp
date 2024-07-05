@@ -120,6 +120,16 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
 
   py::implicitly_convertible<py::list,IntervalVector>();
 
+  m.def("cart_prod_list", [](const std::list<IntervalVector>& l)
+      {
+        IntervalVector c = *l.begin();
+        for(auto it = std::next(l.cbegin()); it != l.cend(); it++)
+          c = cart_prod(c,*it);
+        return c;
+      },
+    INTERVALVECTOR_CART_PROD_CONST_X_REF_VARIADIC);
+  // The variadic version of this function is defined in __init__.py file
+
   return exported_intervalvector_class;
 }
 

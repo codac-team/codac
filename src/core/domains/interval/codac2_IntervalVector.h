@@ -70,25 +70,37 @@ namespace codac2
 
   std::ostream& operator<<(std::ostream& os, const IntervalVector& x);
 
-  template<typename... X, typename = typename std::enable_if<(true && ... && (
-      (std::is_same_v<Interval,X> || std::is_same_v<IntervalVector,X> || std::is_same_v<Vector,X>)
-    )), void>::type>
+
+  inline IntervalVector to_IntervalVector(const Interval& x)
+  {
+    return IntervalVector(1,x);
+  }
+
+  inline IntervalVector to_IntervalVector(const IntervalVector& x)
+  {
+    return x;
+  }
+
+  template<typename... X>
   inline IntervalVector cart_prod(const X&... x)
   {
+    std::vector<IntervalVector> v_x;
+    ((v_x.push_back(to_IntervalVector(x))), ...);
+
     size_t n = 0;
-    ((n += x.size()), ...);
+    for(const auto& xi : v_x)
+      n += xi.size();
     IntervalVector x_(n);
 
-    size_t i = 0;
-
-    auto increm = [](size_t& i, size_t n)
-    {
+    auto increm = [](size_t& i, size_t n) {
       size_t i_ = i;
       i += n;
       return i_;
     };
 
-    (x_.put(increm(i,x.size()),IntervalVector({x})), ...);
+    size_t i = 0;
+    for(const auto& xi : v_x)
+      x_.put(increm(i,xi.size()), xi);
     return x_;
   }
 
