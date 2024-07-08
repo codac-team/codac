@@ -83,12 +83,13 @@ jobs:
         make
         #make doc # todo
         make install
-        /usr/bin/python3 ../tests/core/domains/codac2_tests_BoolInterval.py
-        make test
 
         cd python/python_package
         /usr/bin/python3 setup.py develop --user
         cd ../../
+        
+        /usr/bin/python3 ../tests/core/domains/codac2_tests_BoolInterval.py
+        make test
 
         ## Building the examples
 
