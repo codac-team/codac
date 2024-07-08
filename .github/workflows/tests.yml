@@ -83,31 +83,19 @@ jobs:
         make
         #make doc # todo
         make install
+        make test
+
         cd python/python_package
         /usr/bin/python3 setup.py develop --user
         #/usr/bin/python3 pycodac/tests/test_arithmetic.py 
         cd ../../
 
         ## Building the examples
-        #cd ../examples
-        #find . -type d -name build -prune -exec rm -rf {} \;
-        #cd linobs
-        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-        #cd ..
-        #cd basics
-        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-        #cd ..
-        #cd robotics
-        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-        #cd ..
-        #cd tuto
-        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-        #cd ..
-        #cd lie_group
-        #find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-        #cd ../../build
 
-        # Testing
-        #./tests/core/codac-tests-core 
-        make test
-        #./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
+        cd ../examples
+
+        cd 01_batman/
+        mkdir build ; cd build ; cmake -DCMAKE_PREFIX_PATH="~/ibex-lib/build_install;~/codac/build_install" -DCMAKE_BUILD_TYPE=Debug .. ; make ; ./codac_example
+
+        cd ../../02_centered_form/
+        mkdir build ; cd build ; cmake -DCMAKE_PREFIX_PATH="~/ibex-lib/build_install;~/codac/build_install" -DCMAKE_BUILD_TYPE=Debug .. ; make ; ./codac_example
