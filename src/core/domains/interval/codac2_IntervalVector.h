@@ -92,15 +92,12 @@ namespace codac2
       n += xi.size();
     IntervalVector x_(n);
 
-    auto increm = [](size_t& i, size_t n) {
-      size_t i_ = i;
-      i += n;
-      return i_;
-    };
-
     size_t i = 0;
     for(const auto& xi : v_x)
-      x_.put(increm(i,xi.size()), xi);
+    {
+      x_.put(i, xi);
+      i += xi.size();
+    }
     return x_;
   }
 

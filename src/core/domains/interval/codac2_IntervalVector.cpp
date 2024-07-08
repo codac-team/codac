@@ -48,9 +48,6 @@ namespace codac2
       VectorBase<IntervalVector,IntervalMatrix,Interval>(lb.size())
   {
     assert_release(lb.size() == ub.size());
-    for(size_t i = 0 ; i < lb.size() ; i++) {
-      assert_release(lb[i] <= ub[i]);
-    }
     *this |= ub;
   }
 

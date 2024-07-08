@@ -54,6 +54,7 @@ py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m)
     .def(py::init(
         [](const std::vector<IntervalVector>& v)
         {
+          assert_release(!std::empty(v));
           auto iv = std::make_unique<IntervalMatrix>(v[0].size(),v.size());
           for(size_t i = 0 ; i < v.size() ; i++)
           {

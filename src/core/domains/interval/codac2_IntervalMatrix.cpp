@@ -38,9 +38,6 @@ namespace codac2
       IntervalMatrixBase<IntervalMatrix,Matrix>(lb._e.template cast<Interval>())
   {
     assert_release(lb.size() == ub.size());
-    for(size_t i = 0 ; i < lb.size() ; i++) {
-      assert_release(lb[i] <= ub[i]);
-    }
     *this |= ub;
   }
 

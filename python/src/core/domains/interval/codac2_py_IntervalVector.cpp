@@ -132,9 +132,3 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
 
   return exported_intervalvector_class;
 }
-
-
-//  template<typename... X, typename = typename std::enable_if<(true && ... && (
-//      (std::is_same_v<Interval,X> || std::is_same_v<IntervalVector,X> || std::is_same_v<Vector,X>)
-//    )), void>::type>
-//  inline IntervalVector cart_prod(const X&... x)
