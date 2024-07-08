@@ -74,7 +74,7 @@ jobs:
         cd $ORIGIN_DIR
         pwd
         ls
-        #git submodule init ; git submodule update # for pybind11 submodule
+        git submodule init ; git submodule update # for pybind11 submodule
         mkdir build -p
         cd build
   
@@ -83,11 +83,11 @@ jobs:
         make
         #make doc # todo
         make install
+        /usr/bin/python3 ~/codac/tests/core/domains/codac2_tests_BoolInterval.py
         make test
 
         cd python/python_package
         /usr/bin/python3 setup.py develop --user
-        #/usr/bin/python3 pycodac/tests/test_arithmetic.py 
         cd ../../
 
         ## Building the examples
