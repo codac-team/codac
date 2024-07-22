@@ -68,7 +68,7 @@ namespace codac2
           // expression (enabled by default). This step must be processed before the
           // backward part of the FwdBwd algorithm (the .m, .a values must not be
           // changed before the centered evaluation).
-          if(_with_centered_form && val_expr.def_domain)
+          if(_with_centered_form && val_expr.def_domain && !val_expr.da.is_unbounded())
           {
             using X0 = std::tuple_element_t<0, std::tuple<X...>>;
 
