@@ -13,7 +13,7 @@
 using namespace std;
 using namespace codac2;
 
-std::shared_ptr<Ctc> CtcSegment::copy() const
+std::shared_ptr<Ctc_<IntervalVector>> CtcSegment::copy() const
 {
   return std::make_shared<CtcSegment>(*this);
 }

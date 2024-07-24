@@ -26,7 +26,7 @@ namespace codac2
         : Ctc_<IntervalVector>(size_of(c))
       { }
 
-      std::shared_ptr<Ctc> copy() const
+      std::shared_ptr<Ctc_<IntervalVector>> copy() const
       {
         return std::make_shared<CtcNot>(*this);
       }

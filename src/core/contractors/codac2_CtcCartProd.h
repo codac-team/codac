@@ -33,7 +33,7 @@ namespace codac2
         : Ctc_<IntervalVector>((0 + ... + size_of(c))), _ctcs(c...)
       { }
 
-      std::shared_ptr<Ctc> copy() const
+      std::shared_ptr<Ctc_<IntervalVector>> copy() const
       {
         return std::make_shared<CtcCartProd>(*this);
       }

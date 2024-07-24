@@ -22,7 +22,7 @@ CtcEllipse0::CtcEllipse0(const IntervalVector& q)
   assert(q.size() == 6);
 }
 
-std::shared_ptr<Ctc> CtcEllipse0::copy() const
+std::shared_ptr<Ctc_<IntervalVector>> CtcEllipse0::copy() const
 {
   return std::make_shared<CtcEllipse0>(*this);
 }
@@ -73,7 +73,7 @@ CtcEllipse::CtcEllipse(const Vector& q)
   assert(q.size() == 6);
 }
 
-std::shared_ptr<Ctc> CtcEllipse::copy() const
+std::shared_ptr<Ctc_<IntervalVector>> CtcEllipse::copy() const
 {
   return std::make_shared<CtcEllipse>(*this);
 }

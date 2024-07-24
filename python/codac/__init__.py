@@ -47,10 +47,25 @@ class AnalyticFunction:
     return str(self.f)
 
 
-class CtcInverse(CtcIntervalVector):
+class Ctc(CtcIntervalVector):
+
+  def __init__(self, n):
+    CtcIntervalVector.__init__(self,n)
+
+  def copy(self):
+    return super().copy()
+
+
+class Sep(Sep_):
+
+  def copy(self):
+    return super().copy()
+
+
+class CtcInverse(Ctc):
 
   def __init__(self, f, y, with_centered_form = True):
-    CtcIntervalVector.__init__(self, f.input_size())
+    Ctc.__init__(self, f.input_size())
     if isinstance(f.f, AnalyticFunction_Scalar):
       self.c = CtcInverse_Interval(f.f,Interval(y),with_centered_form)
     elif isinstance(f.f, AnalyticFunction_Vector):
@@ -60,7 +75,9 @@ class CtcInverse(CtcIntervalVector):
 
   def contract(self,x):
     self.c.contract(x)
-    return x
+
+  def copy(self):
+    return self.c.copy()
 
 
 class SepInverse(Sep):
@@ -76,6 +93,9 @@ class SepInverse(Sep):
 
   def separate(self,x):
     return self.s.separate(x)
+
+  def copy(self):
+    return super().copy()
 
 
 class Approx:

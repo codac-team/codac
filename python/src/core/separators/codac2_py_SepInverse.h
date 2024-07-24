@@ -12,6 +12,7 @@
 #include <pybind11/stl.h>
 #include "codac2_py_core.h"
 #include <codac2_SepInverse.h>
+#include "codac2_Sep.h"
 #include "codac2_py_Sep.h"
 #include "codac2_py_SepInverse_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_SepCtcPair_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):

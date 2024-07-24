@@ -16,6 +16,7 @@
 
 namespace codac2
 {
+  #if 0
   class CtcCenteredForm : public Ctc_<IntervalVector>
   {
     public:
@@ -64,4 +65,5 @@ namespace codac2
       CtcInverse<IntervalVector> _ctc_f;
       Collection<CtcInverse<IntervalVector>> _ctc_g;
   };
+  #endif
 }

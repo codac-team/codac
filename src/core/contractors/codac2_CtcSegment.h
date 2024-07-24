@@ -22,7 +22,7 @@ namespace codac2
         : Ctc_<IntervalVector>(2), _a(a), _b(b)
       { }
 
-      std::shared_ptr<Ctc> copy() const;
+      std::shared_ptr<Ctc_<IntervalVector>> copy() const;
       void contract(IntervalVector& x) const;
 
     protected:

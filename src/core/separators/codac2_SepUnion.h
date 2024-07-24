@@ -13,6 +13,7 @@
 #include "codac2_Sep.h"
 #include "codac2_Collection.h"
 #include "codac2_SepWrapper.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -45,6 +46,12 @@ namespace codac2
       SepUnion& operator|=(const S& s)
       {
         _seps.add_shared_ptr(std::make_shared<S>(s));
+        return *this;
+      }
+
+      SepUnion& operator|=(const std::shared_ptr<Sep>& s)
+      {
+        _seps.add_shared_ptr(s);
         return *this;
       }
 

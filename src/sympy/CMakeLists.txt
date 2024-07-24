@@ -25,11 +25,14 @@
   #  set(CMAKE_CXX_STANDARD_REQUIRED ON)
   #endif()
 
-  add_library(${PROJECT_NAME}-sympy ${CODAC_SYMPY_SRC})
+  #add_library(${PROJECT_NAME}-sympy
+  
+  pybind11_add_module(${PROJECT_NAME}-sympy MODULE
+    ${CODAC_SYMPY_SRC})
   target_include_directories(${PROJECT_NAME}-sympy PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/
   )
-  target_link_libraries(${PROJECT_NAME}-sympy PUBLIC Ibex::ibex pybind11::embed)
+  target_link_libraries(${PROJECT_NAME}-sympy PUBLIC Ibex::ibex) # pybind11::embed)
   
 ################################################################################
 # Installation of libcodac-sympy files

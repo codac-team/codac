@@ -12,6 +12,7 @@
 #include <type_traits>
 #include "codac2_CtcWrapper.h"
 #include "codac2_Collection.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -36,7 +37,7 @@ namespace codac2
         assert(all_same_size(c...));
       }
 
-      std::shared_ptr<Ctc> copy() const
+      std::shared_ptr<Ctc_<X>> copy() const
       {
         return std::make_shared<CtcInter<X>>(*this);
       }
@@ -53,6 +54,12 @@ namespace codac2
       CtcInter<X>& operator&=(const C& c)
       {
         _ctcs.add_shared_ptr(std::make_shared<C>(c));
+        return *this;
+      }
+
+      CtcInter<X>& operator&=(const std::shared_ptr<Ctc_<X>>& c)
+      {
+        _ctcs.add_shared_ptr(c);
         return *this;
       }
 

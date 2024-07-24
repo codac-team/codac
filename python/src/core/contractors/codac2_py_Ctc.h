@@ -27,11 +27,11 @@ class pyCtcIntervalVector : public Ctc_<IntervalVector>
   public:
 
     pyCtcIntervalVector(size_t_type n)
-      : Ctc_<IntervalVector>(n)
+      : Ctc_<IntervalVector>(n), _n(n)
     { }
 
     // Trampoline (need one for each virtual function)
-    void contract(IntervalVector& x) const override
+    virtual void contract(IntervalVector& x) const override
     {
       pybind11::gil_scoped_acquire gil; // Acquire the GIL while in this scope
 
@@ -39,31 +39,18 @@ class pyCtcIntervalVector : public Ctc_<IntervalVector>
       pybind11::function overload = pybind11::get_overload(this, "contract");
 
       if(overload) // method is found
-      {
-        auto x_copy = IntervalVector(x);
-        auto obj = overload(x_copy); // calls the Python function
-
-        if(pybind11::isinstance<IntervalVector>(obj))
-        {
-          // Checks if it returned a correct Python type
-          x &= obj.cast<IntervalVector>(); // casts it and assigns it to the value
-          return; // Return true; value should be used
-        }
-
-        else
-        {
-          assert(false && "Ctc: error with contract method");
-        }
-      }
+        overload.operator()<
+          pybind11::return_value_policy::reference // because contract() works by reference
+        >(x);
 
       else
       {
-        assert(false && "Ctc: contract method not found");
+        assert(false && "Ctc_<IntervalVector>: contract method not found");
       }
     }
 
     // Trampoline (need one for each virtual function)
-    virtual std::shared_ptr<Ctc> copy() const override
+    virtual std::shared_ptr<Ctc_<IntervalVector>> copy() const override
     {
       pybind11::gil_scoped_acquire gil; // Acquire the GIL while in this scope
 
@@ -73,21 +60,17 @@ class pyCtcIntervalVector : public Ctc_<IntervalVector>
       if(overload) // method is found
       {
         auto obj = overload();
-
-        if(pybind11::isinstance<std::shared_ptr<Ctc>>(obj))
-          return obj.cast<std::shared_ptr<Ctc>>();
-
-        else
-        {
-          assert(false && "Ctc: error with copy method");
-          return nullptr;
-        }
+        return std::shared_ptr<Ctc_<IntervalVector>>(obj.cast<Ctc_<IntervalVector>*>(), [](auto p) { /* no delete */ });
       }
 
       else
       {
-        assert(false && "Ctc: copy method not found");
+        assert(false && "Ctc_<IntervalVector>: copy method not found");
         return nullptr;
       }
     }
+
+  protected:
+
+    const size_t_type _n;
 };

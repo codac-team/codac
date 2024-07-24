@@ -49,6 +49,12 @@ namespace codac2
         return *this;
       }
 
+      SepInter& operator&=(const std::shared_ptr<Sep>& s)
+      {
+        _seps.add_shared_ptr(s);
+        return *this;
+      }
+
     protected:
 
       Collection<Sep> _seps;

@@ -54,7 +54,10 @@
       
       src/core/contractors/codac2_py_Ctc.cpp
       src/core/contractors/codac2_py_Ctc.h
+      src/core/contractors/codac2_py_CtcInter.cpp
       src/core/contractors/codac2_py_CtcInverse.h
+      src/core/contractors/codac2_py_CtcUnion.cpp
+      src/core/contractors/codac2_py_CtcWrapper.cpp
 
       src/core/domains/interval/codac2_py_Interval.cpp
       src/core/domains/interval/codac2_py_Interval_operations.cpp
@@ -82,8 +85,10 @@
 
       src/core/separators/codac2_py_Sep.cpp
       src/core/separators/codac2_py_Sep.h
+      src/core/separators/codac2_py_SepInter.cpp
       src/core/separators/codac2_py_SepInverse.h
       src/core/separators/codac2_py_SepPolygon.cpp
+      src/core/separators/codac2_py_SepUnion.cpp
 
       src/core/tools/codac2_py_Approx.cpp
     )

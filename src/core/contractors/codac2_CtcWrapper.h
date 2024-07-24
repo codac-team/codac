@@ -22,7 +22,7 @@ namespace codac2
         : Ctc_<X>(y.size()), _y(y)
       { }
 
-      std::shared_ptr<Ctc> copy() const
+      std::shared_ptr<Ctc_<X>> copy() const
       {
         return std::make_shared<CtcWrapper_<X>>(*this);
       }

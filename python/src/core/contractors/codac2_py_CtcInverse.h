@@ -43,5 +43,6 @@ void export_CtcInverse(py::module& m, const std::string& export_name, py::class_
     .def("contract", &CtcInverse_<T>::contract,
       VOID_CTCINVERSE_Y_CONTRACT_X_REF_VARIADIC_CONST,
       "x"_a)
+    
   ;
 }

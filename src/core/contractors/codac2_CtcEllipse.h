@@ -19,7 +19,7 @@ namespace codac2
     public:
 
       CtcEllipse0(const IntervalVector& q);
-      std::shared_ptr<Ctc> copy() const;
+      std::shared_ptr<Ctc_<IntervalVector>> copy() const;
       void contract(IntervalVector& x) const;
 
     protected:
@@ -32,7 +32,7 @@ namespace codac2
     public:
 
       CtcEllipse(const Vector& q);
-      std::shared_ptr<Ctc> copy() const;
+      std::shared_ptr<Ctc_<IntervalVector>> copy() const;
       void contract(IntervalVector& x) const;
       const Vector& q() const;
 

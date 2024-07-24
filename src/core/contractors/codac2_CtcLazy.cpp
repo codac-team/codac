@@ -12,7 +12,7 @@
 using namespace std;
 using namespace codac2;
 
-std::shared_ptr<Ctc> CtcLazy::copy() const
+std::shared_ptr<Ctc_<IntervalVector>> CtcLazy::copy() const
 {
   return std::make_shared<CtcLazy>(*this);
 }

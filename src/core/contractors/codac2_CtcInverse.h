@@ -35,10 +35,10 @@ namespace codac2
         : CtcInverse(f, CtcWrapper_<Y>(y), with_centered_form, is_not_in)
       { }
 
-      std::shared_ptr<Ctc> copy() const
-      {
-        return std::make_shared<CtcInverse<Y>>(*this);
-      }
+      //std::shared_ptr<Ctc_<X>> copy() const
+      //{
+      //  return std::make_shared<CtcInverse<Y>>(*this);
+      //}
 
       template<typename... X>
       void contract(X&... x) const
@@ -70,6 +70,8 @@ namespace codac2
           // changed before the centered evaluation).
           if(_with_centered_form && val_expr.def_domain && !val_expr.da.is_unbounded())
           {
+            // todo: the above condition !val_expr.da.is_unbounded() should not be necesary,
+            // possible bug in MulOp in case of unbounded domain?
             using X0 = std::tuple_element_t<0, std::tuple<X...>>;
 
             if constexpr(sizeof...(X) == 1 && std::is_same_v<X0,IntervalVector>)
@@ -135,7 +137,7 @@ namespace codac2
         assert(f.args().size() == 1);
       }
 
-      std::shared_ptr<Ctc> copy() const
+      std::shared_ptr<Ctc_<X>> copy() const
       {
         return std::make_shared<CtcInverse_<Y,X>>(*this);
       }

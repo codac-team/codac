@@ -27,7 +27,7 @@ namespace codac2
           _r(1./std::pow(2,c.size()-1))
       { }
 
-      std::shared_ptr<Ctc> copy() const;
+      std::shared_ptr<Ctc_<IntervalVector>> copy() const;
       void contract(IntervalVector& x) const;
 
     protected:

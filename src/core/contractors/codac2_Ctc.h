@@ -18,11 +18,23 @@ namespace codac2
   {
     public:
 
-      virtual std::shared_ptr<Ctc> copy() const = 0;
+      //virtual std::shared_ptr<Ctc> copy() const = 0;
   };
+  //template<typename... X>
+  //class Ctc
+  //{
+  //  public:
+  //
+  //    virtual std::shared_ptr<Ctc<X...>> copy() const
+  //    {
+  //      return nullptr;
+  //    }
+  //    
+  //    virtual void contract(X&... x) const = 0;
+  //};
 
   template<typename X_>
-  class Ctc_ : virtual public Ctc
+  class Ctc_// : virtual public Ctc<X_>
   {
     public:
     
@@ -38,6 +50,11 @@ namespace codac2
       }
       
       virtual void contract(X_& x) const = 0;
+
+      virtual std::shared_ptr<Ctc_<X>> copy() const
+      {
+        return nullptr;
+      }
 
     protected:
 

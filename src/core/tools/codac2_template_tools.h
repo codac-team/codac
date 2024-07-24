@@ -10,6 +10,7 @@
 #pragma once
 
 #include <memory>
+#include "codac2_Sep.h"
 
 namespace codac2
 {
