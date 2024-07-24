@@ -80,6 +80,11 @@ using ScalarExpr = ExprWrapper<ScalarOpValue>;
 
 // Scalar operations
 
+inline const ScalarExpr& operator+(const ScalarExpr& e1)
+{
+  return e1;
+}
+
 inline ScalarExpr operator+(const ScalarExpr& e1, const ScalarExpr& e2)
 {
   return ScalarExpr(e1.e+e2.e);
@@ -146,6 +151,11 @@ using VectorExpr = ExprWrapper<VectorOpValue>;
 
 // Vector operations
 
+inline const VectorExpr& operator+(const VectorExpr& e1)
+{
+  return e1;
+}
+
 inline VectorExpr operator+(const VectorExpr& e1, const VectorExpr& e2)
 {
   return VectorExpr(e1.e+e2.e);
@@ -186,36 +196,45 @@ inline void export_ScalarExpr(py::module& m)
     .def("copy", &ScalarExpr::copy)
     .def("raw_copy", &ScalarExpr::raw_copy)
 
-    .def("__add__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1+e2; })
-    .def("__add__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1+e2; })
+    .def(+ py::self)
+    .def(py::self + py::self)
+    //.def("__add__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1+e2; })
+    //.def("__add__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1+e2; })
     .def("__radd__", [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1+e2; })
-    .def("__add__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1+e2; })
+    //.def("__add__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1+e2; })
     .def("__radd__", [](const ScalarExpr& e1, const Interval& e2)   { return e1+e2; })
 
-    .def("__neg__",  [](const ScalarExpr& e1)                       { return -e1;   })
-    .def("__sub__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1-e2; })
-    .def("__sub__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1-e2; })
+    .def(- py::self)
+    //.def("__neg__",  [](const ScalarExpr& e1)                       { return -e1;   })
+    .def(py::self - py::self)
+    //.def("__sub__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1-e2; })
+    //.def("__sub__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1-e2; })
     .def("__rsub__", [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1-e2; })
-    .def("__sub__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1-e2; })
+    //.def("__sub__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1-e2; })
     .def("__rsub__", [](const ScalarExpr& e1, const Interval& e2)   { return e1-e2; })
 
-    .def("__mul__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1*e2; })
-    .def("__mul__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1*e2; })
+    .def(py::self * py::self)
+    //.def("__mul__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1*e2; })
+    //.def("__mul__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1*e2; })
     .def("__rmul__", [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1*e2; })
-    .def("__mul__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1*e2; })
+    //.def("__mul__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1*e2; })
     .def("__rmul__", [](const ScalarExpr& e1, const Interval& e2)   { return e1*e2; })
+    //.def("__mul__",  [](const ScalarExpr& e1, const VectorVar& e2)  { return e1*e2; })
     .def("__mul__",  [](const ScalarExpr& e1, const VectorExpr& e2) { return e1*e2; })
-    .def("__mul__",  [](const ScalarExpr& e1, const VectorVar& e2)  { return e1*e2; })
 
-    .def("__div__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1/e2; })
-    .def("__div__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1/e2; })
+    .def(py::self / py::self)
+    //.def("__div__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1/e2; })
+    //.def("__div__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1/e2; })
     .def("__rdiv__", [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1/e2; })
-    .def("__div__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1/e2; })
+    //.def("__div__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1/e2; })
     .def("__rdiv__", [](const ScalarExpr& e1, const Interval& e2)   { return e1/e2; })
 
   ;
 
+  py::implicitly_convertible<int,ScalarExpr>();
+  py::implicitly_convertible<double,ScalarExpr>();
   py::implicitly_convertible<Interval,ScalarExpr>();
+  py::implicitly_convertible<ScalarVar,ScalarExpr>();
 }
 
 inline void export_VectorExpr(py::module& m)
@@ -232,17 +251,21 @@ inline void export_VectorExpr(py::module& m)
     .def("copy", &VectorExpr::copy)
     .def("raw_copy", &VectorExpr::raw_copy)
 
-    .def("__add__",  [](const VectorExpr& e1, const VectorExpr& e2)     { return e1+e2; })
-    .def("__add__",  [](const VectorExpr& e1, const VectorVar& e2)      { return e1+e2; })
+    .def(+ py::self)
+    .def(py::self + py::self)
+    //.def("__add__",  [](const VectorExpr& e1, const VectorExpr& e2)     { return e1+e2; })
+    //.def("__add__",  [](const VectorExpr& e1, const VectorVar& e2)      { return e1+e2; })
     .def("__radd__", [](const VectorExpr& e1, const VectorVar& e2)      { return e1+e2; })
-    .def("__add__",  [](const VectorExpr& e1, const IntervalVector& e2) { return e1+e2; })
+    //.def("__add__",  [](const VectorExpr& e1, const IntervalVector& e2) { return e1+e2; })
     .def("__radd__", [](const VectorExpr& e1, const IntervalVector& e2) { return e1+e2; })
 
-    .def("__neg__",  [](const VectorExpr& e1)                           { return -e1;   })
-    .def("__sub__",  [](const VectorExpr& e1, const VectorExpr& e2)     { return e1-e2; })
-    .def("__sub__",  [](const VectorExpr& e1, const VectorVar& e2)      { return e1-e2; })
+    .def(- py::self)
+    //.def("__neg__",  [](const VectorExpr& e1)                           { return -e1;   })
+    .def(py::self - py::self)
+    //.def("__sub__",  [](const VectorExpr& e1, const VectorExpr& e2)     { return e1-e2; })
+    //.def("__sub__",  [](const VectorExpr& e1, const VectorVar& e2)      { return e1-e2; })
     .def("__rsub__", [](const VectorExpr& e1, const VectorVar& e2)      { return e1-e2; })
-    .def("__sub__",  [](const VectorExpr& e1, const IntervalVector& e2) { return e1-e2; })
+    //.def("__sub__",  [](const VectorExpr& e1, const IntervalVector& e2) { return e1-e2; })
     .def("__rsub__", [](const VectorExpr& e1, const IntervalVector& e2) { return e1-e2; })
 
     .def("__rmul__", [](const VectorExpr& e1, const ScalarExpr& e2)     { return e2*e1; })
@@ -250,5 +273,7 @@ inline void export_VectorExpr(py::module& m)
 
   ;
 
+  py::implicitly_convertible<Vector,VectorExpr>();
   py::implicitly_convertible<IntervalVector,VectorExpr>();
+  py::implicitly_convertible<VectorVar,VectorExpr>();
 }
