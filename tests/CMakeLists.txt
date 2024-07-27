@@ -4,8 +4,9 @@
 
 # Finding Catch2
 
-  Include(FetchContent)
+  message(STATUS "Getting Catch2 library... (an Internet connection is required)")
 
+  Include(FetchContent)
   FetchContent_Declare(
     Catch2
     GIT_REPOSITORY https://github.com/catchorg/Catch2.git

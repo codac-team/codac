@@ -44,12 +44,12 @@ namespace codac2
           std::is_same_v<IntervalVector,IV>
         ), void>::type>
       IntervalMatrix(const IV&... x)
-        : MatrixBase<IntervalMatrix,Interval>(std::get<0>(std::tie(x...)).size(), sizeof...(IV)),
-          IntervalMatrixBase<IntervalMatrix,Matrix>(std::get<0>(std::tie(x...)).size(), sizeof...(IV))
+        : MatrixBase<IntervalMatrix,Interval>(sizeof...(IV), std::get<0>(std::tie(x...)).size()),
+          IntervalMatrixBase<IntervalMatrix,Matrix>(sizeof...(IV), std::get<0>(std::tie(x...)).size())
       {
         size_t i = 0;
-        ((this->col(i++) = x), ...);
-        assert(i == nb_cols());
+        ((this->row(i++) = x), ...);
+        assert(i == nb_rows());
       }
 
       IntervalMatrix(const MatrixBase<Matrix,double>& x);

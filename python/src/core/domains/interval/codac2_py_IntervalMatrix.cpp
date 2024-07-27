@@ -55,11 +55,11 @@ py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m)
         [](const std::vector<IntervalVector>& v)
         {
           assert_release(!std::empty(v));
-          auto iv = std::make_unique<IntervalMatrix>(v[0].size(),v.size());
+          auto iv = std::make_unique<IntervalMatrix>(v.size(),v[0].size());
           for(size_t i = 0 ; i < v.size() ; i++)
           {
-            assert_release(v[i].size() == iv->nb_rows() && "IntervalVector objects of different size");
-            iv->col(i) = v[i];
+            assert_release(v[i].size() == iv->nb_cols() && "IntervalVector objects of different size");
+            iv->row(i) = v[i].transpose();
           }
           return iv;
         }),

@@ -997,7 +997,8 @@ using namespace codac2;
   {
     if(x1.size() != 2 || x2.size() != 2)
       throw std::invalid_argument("Invalid argument: vectors must be of size 2");
-    IntervalMatrix m(x1,x2);
+    IntervalMatrix m(2,2);
+    m.col(0) = x1; m.col(1) = x2;
     DetOp::bwd(y,m);
     x1 &= m.col(0);
     x2 &= m.col(1);
