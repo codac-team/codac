@@ -32,7 +32,7 @@ namespace codac2
       explicit MatrixBase(size_t r, size_t c)
         : _e(EigenMatrix<T>(r,c))
       {
-        assert(r > 0 && c > 0);
+        assert(r >= 0 && c >= 0);
       }
 
       explicit MatrixBase(size_t r, size_t c, const T& x)
@@ -64,7 +64,7 @@ namespace codac2
       }
 
       MatrixBase(std::initializer_list<std::initializer_list<T>> l)
-        : MatrixBase<S,T>(1,1 /* will be resized thereafter */)
+        : MatrixBase<S,T>(0,0 /* will be resized thereafter */)
       {
         assert(!std::empty(l));
 
@@ -175,7 +175,7 @@ namespace codac2
 
       void resize(size_t nb_rows, size_t nb_cols)
       {
-        assert_release(nb_rows > 0 && nb_cols > 0);
+        assert_release(nb_rows >= 0 && nb_cols >= 0);
 
         // With resize() of Eigen, the data is reallocated and all previous values are lost.
         auto copy = _e;
@@ -341,19 +341,19 @@ namespace codac2
 
       static S zeros(size_t r, size_t c)
       {
-        assert_release(r > 0 && c > 0);
+        assert_release(r >= 0 && c >= 0);
         return EigenMatrix<T>::Zero(r,c);
       }
 
       static S ones(size_t r, size_t c)
       {
-        assert_release(r > 0 && c > 0);
+        assert_release(r >= 0 && c >= 0);
         return EigenMatrix<T>::Ones(r,c);
       }
 
       static S eye(size_t r, size_t c)
       {
-        assert_release(r > 0 && c > 0);
+        assert_release(r >= 0 && c >= 0);
         return EigenMatrix<T>::Identity(r,c);
       }
 

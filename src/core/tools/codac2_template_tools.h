@@ -11,38 +11,18 @@
 
 #include <memory>
 #include "codac2_Sep.h"
+#include "codac2_Ctc.h"
 
 namespace codac2
 {
-  inline bool same_size(const std::shared_ptr<Ctc_<IntervalVector>>& x1, const std::shared_ptr<Ctc_<IntervalVector>>& x2)
+  inline size_t size_of(int x)
   {
-    return x1->size() == x2->size();
+    return 1;
   }
-
-  inline bool same_size(const Ctc_<IntervalVector>& x1, const Ctc_<IntervalVector>& x2)
+  
+  inline size_t size_of(double x)
   {
-    return x1.size() == x2.size();
-  }
-
-  inline bool same_size(const std::shared_ptr<Sep>& x1, const std::shared_ptr<Sep>& x2)
-  {
-    return x1->size() == x2->size();
-  }
-
-  inline bool same_size(const Sep& x1, const Sep& x2)
-  {
-    return x1.size() == x2.size();
-  }
-
-  template<class... T>
-  bool all_same_size(const T&... x)
-  {
-    return (... && (same_size(std::get<0>(std::make_tuple(x...)), x)));
-  }
-
-  inline size_t size_of(const Ctc_<IntervalVector>& x)
-  {
-    return x.size();
+    return 1;
   }
 
   inline size_t size_of(const std::shared_ptr<Ctc_<IntervalVector>>& x)
@@ -50,14 +30,32 @@ namespace codac2
     return x->size();
   }
 
-  inline size_t size_of(const Sep& x)
+  inline size_t size_of(const std::shared_ptr<Sep>& x)
+  {
+    return x->size();
+  }
+
+  template<typename T, typename = typename std::enable_if<(
+      (!std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,T>
+    && !std::is_same_v<std::shared_ptr<Sep>,T>
+    && !std::is_same_v<int,T>
+    && !std::is_same_v<double,T>)
+    ), void>::type>
+  inline size_t size_of(const T& x)
   {
     return x.size();
   }
 
-  inline size_t size_of(const std::shared_ptr<Sep>& x)
+  template<typename T1, typename T2>
+  inline bool same_size(const T1& x1, const T2& x2)
   {
-    return x->size();
+    return size_of(x1) == size_of(x2);
+  }
+
+  template<class... T>
+  bool all_same_size(const T&... x)
+  {
+    return (... && (same_size(std::get<0>(std::make_tuple(x...)), x)));
   }
 
   template<class... T>

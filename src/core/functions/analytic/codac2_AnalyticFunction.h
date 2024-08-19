@@ -14,6 +14,7 @@
 #include "codac2_Domain.h"
 #include "codac2_analytic_variables.h"
 #include "codac2_FunctionBase.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -27,9 +28,13 @@ namespace codac2
       AnalyticFunction(const FunctionArgsList& args, const std::shared_ptr<AnalyticExpr<T>>& y)
         : FunctionBase<AnalyticExpr<T>>(args, y)
       {
-        if(!y->belongs_to_args_list(this->args()))
-          throw std::invalid_argument("Invalid argument: variable not present in input arguments");
+        assert_release(y->belongs_to_args_list(this->args()) && 
+          "Invalid argument: variable not present in input arguments");
       }
+
+      AnalyticFunction(const FunctionArgsList& args, const AnalyticVarExpr<T>& y)
+        : AnalyticFunction(args, y.operator std::shared_ptr<AnalyticExpr<T>>())
+      { }
 
       AnalyticFunction(const AnalyticFunction<T>& f)
         : FunctionBase<AnalyticExpr<T>>(f)
@@ -93,15 +98,15 @@ namespace codac2
       void add_value_to_arg_map(ValuesMap& v, const D& x, size_t i) const
       {
         assert(i >= 0 && i < this->args().size());
-        assert(x.size() == this->args()[i]->size());
+        assert_release(size_of(x) == this->args()[i]->size() && "provided arguments do not match function inputs");
 
-        IntervalMatrix d = IntervalMatrix::zeros(x.size(), this->args().total_size());
+        IntervalMatrix d = IntervalMatrix::zeros(size_of(x), this->args().total_size());
         
         size_t p = 0, j = 0;
         for( ; j < i ; j++)
           p += this->args()[j]->size();
 
-        for(size_t k = p ; k < p+x.size() ; k++)
+        for(size_t k = p ; k < p+size_of(x) ; k++)
           d(k-p,k) = 1.;
 
         using D_DOMAIN = typename Wrapper<D>::Domain;
@@ -150,9 +155,11 @@ namespace codac2
       void check_valid_inputs(const Args&... x) const
       {
         size_t n = 0;
-        ((n += x.size()), ...);
-        if(this->_args.total_size() != n)
-          throw std::invalid_argument("Invalid argument: wrong number of input arguments");
+        ((n += size_of(x)), ...);
+
+        assert_release(this->_args.total_size() == n && 
+          "Invalid arguments: wrong number of input arguments");
       }
   };
+
 }

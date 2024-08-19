@@ -17,7 +17,7 @@ namespace codac2
   IntervalVector::IntervalVector(size_t n)
     : IntervalVector(n,Interval())
   {
-    assert_release(n > 0);
+    assert_release(n >= 0);
   }
 
   IntervalVector::IntervalVector(size_t n, const Interval& x)
@@ -25,7 +25,7 @@ namespace codac2
       IntervalMatrixBase<IntervalVector,Vector>(n,1),
       VectorBase<IntervalVector,IntervalMatrix,Interval>(n)
   {
-    assert_release(n > 0);
+    assert_release(n >= 0);
   }
 
   IntervalVector::IntervalVector(size_t n, const double bounds[][2])
@@ -33,7 +33,7 @@ namespace codac2
       IntervalMatrixBase<IntervalVector,Vector>(n,1,bounds),
       VectorBase<IntervalVector,IntervalMatrix,Interval>(n)
   {
-    assert_release(n > 0);
+    assert_release(n >= 0);
   }
 
   IntervalVector::IntervalVector(const Vector& x)
@@ -134,7 +134,7 @@ namespace codac2
 
   IntervalVector IntervalVector::empty(size_t n)
   {
-    assert_release(n > 0);
+    assert_release(n >= 0);
     return IntervalVector(n,Interval::empty());
   }
 

@@ -21,7 +21,7 @@ namespace codac2
       explicit VectorBase(size_t n)
         : MatrixBase<S,T>(n,1)
       {
-        assert_release(n > 0);
+        assert_release(n >= 0);
       }
 
       VectorBase(std::initializer_list<T> l)
@@ -47,7 +47,7 @@ namespace codac2
 
       void resize(size_t n)
       {
-        assert_release(n > 0);
+        assert_release(n >= 0);
         MatrixBase<S,T>::resize(n,1);
       }
 
@@ -73,13 +73,13 @@ namespace codac2
 
       static S zeros(size_t n)
       {
-        assert_release(n > 0);
+        assert_release(n >= 0);
         return EigenMatrix<T>::Zero(n,1);
       }
 
       static S ones(size_t n)
       {
-        assert_release(n > 0);
+        assert_release(n >= 0);
         return EigenMatrix<T>::Ones(n,1);
       }
 

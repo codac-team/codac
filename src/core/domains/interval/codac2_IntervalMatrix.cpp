@@ -18,14 +18,14 @@ namespace codac2
   IntervalMatrix::IntervalMatrix(size_t r, size_t c)
     : IntervalMatrix(r,c,Interval())
   {
-    assert_release(r > 0 && c > 0);
+    assert_release(r >= 0 && c >= 0);
   }
 
   IntervalMatrix::IntervalMatrix(size_t r, size_t c, const Interval& x)
     : MatrixBase<IntervalMatrix,Interval>(r,c,x),
       IntervalMatrixBase<IntervalMatrix,Matrix>(r,c,x)
   {
-    assert_release(r > 0 && c > 0);
+    assert_release(r >= 0 && c >= 0);
   }
 
   IntervalMatrix::IntervalMatrix(const Matrix& x)
@@ -45,7 +45,7 @@ namespace codac2
     : MatrixBase<IntervalMatrix,Interval>(r,c),
       IntervalMatrixBase<IntervalMatrix,Matrix>(r,c,bounds)
   {
-    assert_release(r > 0 && c > 0);
+    assert_release(r >= 0 && c >= 0);
   }
 
   IntervalMatrix::IntervalMatrix(std::initializer_list<std::initializer_list<Interval>> l)
@@ -82,7 +82,7 @@ namespace codac2
 
   IntervalMatrix IntervalMatrix::empty(size_t r, size_t c)
   {
-    assert_release(r > 0 && c > 0);
+    assert_release(r >= 0 && c >= 0);
     return IntervalMatrix(r,c,Interval::empty());
   }
 

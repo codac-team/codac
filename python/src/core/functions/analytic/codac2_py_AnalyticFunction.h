@@ -26,6 +26,37 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
+#define bind_(exported, op_name, op, doc) \
+  \
+  exported \
+  \
+    /* Several cases of scalar inputs */ \
+    .def(op_name, [](AnalyticFunction<T>& f) { return f.op(); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1) { return f.op(x1); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2) { return f.op(x1,x2); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3) { return f.op(x1,x2,x3); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4) { return f.op(x1,x2,x3,x4); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5) { return f.op(x1,x2,x3,x4,x5); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6) { return f.op(x1,x2,x3,x4,x5,x6); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6, I x7) { return f.op(x1,x2,x3,x4,x5,x6,x7); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6, I x7, I x8) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6, I x7, I x8, I x9) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8,x9); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6, I x7, I x8, I x9, I x10) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10); }, doc) \
+  \
+    /* Several cases of vector inputs */ \
+    .def(op_name, [](AnalyticFunction<T>& f) { return f.op(); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1) { return f.op(x1); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2) { return f.op(x1,x2); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3) { return f.op(x1,x2,x3); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4) { return f.op(x1,x2,x3,x4); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5) { return f.op(x1,x2,x3,x4,x5); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6) { return f.op(x1,x2,x3,x4,x5,x6); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6, IV x7) { return f.op(x1,x2,x3,x4,x5,x6,x7); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6, IV x7, IV x8) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6, IV x7, IV x8, IV x9) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8,x9); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6, IV x7, IV x8, IV x9, IV x10) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10); }, doc) \
+  \
+  ; \
 
 template<typename T>
 void export_AnalyticFunction(py::module& m, const std::string& export_name)
@@ -71,34 +102,12 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
       SHARED_PTR_E_FUNCTIONBASE_E_OPERATORCALL_CONST_X_REF_VARIADIC_CONST)
   ;
 
-  const char* EVAL_DOC = T_DOMAIN_ANALYTICFUNCTION_TTYPENAME_EVAL_CONST_ARGS_REF_VARIADIC_CONST;
   using I = const Interval&; using IV = const IntervalVector&;
 
+  bind_(exported, "eval", eval, T_DOMAIN_ANALYTICFUNCTION_TTYPENAME_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
+  bind_(exported, "diff", diff, AUTO_ANALYTICFUNCTION_TTYPENAME_DIFF_CONST_ARGS_REF_VARIADIC_CONST);
+
   exported
-
-    // Several cases of scalar inputs
-    .def("eval", [](AnalyticFunction<T>& f, I x1) { return f.eval(x1); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, I x1, I x2) { return f.eval(x1,x2); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, I x1, I x2, I x3) { return f.eval(x1,x2,x3); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4) { return f.eval(x1,x2,x3,x4); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5) { return f.eval(x1,x2,x3,x4,x5); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6) { return f.eval(x1,x2,x3,x4,x5,x6); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6, I x7) { return f.eval(x1,x2,x3,x4,x5,x6,x7); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6, I x7, I x8) { return f.eval(x1,x2,x3,x4,x5,x6,x7,x8); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6, I x7, I x8, I x9) { return f.eval(x1,x2,x3,x4,x5,x6,x7,x8,x9); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6, I x7, I x8, I x9, I x10) { return f.eval(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10); }, EVAL_DOC)
-
-    // Several cases of vector inputs
-    .def("eval", [](AnalyticFunction<T>& f, IV x1) { return f.eval(x1); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, IV x1, IV x2) { return f.eval(x1,x2); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3) { return f.eval(x1,x2,x3); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4) { return f.eval(x1,x2,x3,x4); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5) { return f.eval(x1,x2,x3,x4,x5); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6) { return f.eval(x1,x2,x3,x4,x5,x6); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6, IV x7) { return f.eval(x1,x2,x3,x4,x5,x6,x7); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6, IV x7, IV x8) { return f.eval(x1,x2,x3,x4,x5,x6,x7,x8); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6, IV x7, IV x8, IV x9) { return f.eval(x1,x2,x3,x4,x5,x6,x7,x8,x9); }, EVAL_DOC)
-    .def("eval", [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6, IV x7, IV x8, IV x9, IV x10) { return f.eval(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10); }, EVAL_DOC)
 
     // Mixed scalar/vector inputs are not supported yet
 

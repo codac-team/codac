@@ -199,6 +199,18 @@ TEST_CASE("IntervalMatrix")
   }
 
   {
+    IntervalMatrix m(2,3);
+    // accessor (row,col)
+    m(0,0) = Interval(0,1);
+    m(0,1) = Interval(0,2);
+    m(0,2) = Interval(0,3);
+    m(1,0) = Interval(-1,0);
+    m(1,1) = Interval(-2,0);
+    m(1,2) = Interval(-3,0);
+    CHECK(m == M1());
+  }
+
+  {
     CHECK(IntervalMatrix::empty(2,3).nb_rows() == 2);
     CHECK(IntervalMatrix::empty(2,3).nb_cols() == 3);
 

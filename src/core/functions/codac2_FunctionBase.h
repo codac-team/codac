@@ -55,15 +55,15 @@ namespace codac2
         auto expr_copy = expr()->copy();
         size_t i = 0;
         (expr_copy->replace_expr(_args[i++]->unique_id(), this->__get_copy(x)), ...);
-        if(i != this->args().size())
-          throw std::invalid_argument("Invalid argument: wrong number of input arguments");
+        assert_release(i == this->args().size() && 
+          "Invalid arguments: wrong number of input arguments");
         return std::dynamic_pointer_cast<E>(expr_copy);
       }
 
       std::shared_ptr<E> operator()(const std::vector<std::shared_ptr<ExprBase>>& x) const
       {
-        if(x.size() != this->args().size())
-          throw std::invalid_argument("Invalid argument: wrong number of input arguments");
+        assert_release(x.size() == this->args().size() && 
+          "Invalid arguments: wrong number of input arguments");
         auto expr_copy = expr()->copy();
         for(size_t i = 0 ; i < x.size() ; i++)
           expr_copy->replace_expr(_args[i]->unique_id(), x[i]->copy());

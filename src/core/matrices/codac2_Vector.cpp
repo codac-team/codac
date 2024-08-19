@@ -17,14 +17,14 @@ namespace codac2
   Vector::Vector(size_t n)
     : Vector(n,0.)
   {
-    assert_release(n > 0);
+    assert_release(n >= 0);
   }
 
   Vector::Vector(size_t n, double x)
     : MatrixBase<Vector,double>(n,1,x),
       VectorBase<Vector,Matrix,double>(n)
   {
-    assert_release(n > 0);
+    assert_release(n >= 0);
   }
 
   Vector::Vector(std::initializer_list<double> l)

@@ -20,19 +20,19 @@ namespace codac2
   Matrix::Matrix(size_t r, size_t c)
     : Matrix(r,c,0.)
   {
-    assert_release(r > 0 && c > 0);
+    assert_release(r >= 0 && c >= 0);
   }
 
   Matrix::Matrix(size_t r, size_t c, double x)
     : MatrixBase<Matrix,double>(r,c,x)
   {
-    assert_release(r > 0 && c > 0);
+    assert_release(r >= 0 && c >= 0);
   }
 
   Matrix::Matrix(size_t r, size_t c, const double values[])
     : MatrixBase<Matrix,double>(r,c,values)
   {
-    assert_release(r > 0 && c > 0);
+    assert_release(r >= 0 && c >= 0);
   }
 
   Matrix::Matrix(std::initializer_list<std::initializer_list<double>> l)

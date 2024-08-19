@@ -19,9 +19,9 @@ If you need help, submit an issue on https://codac.io/issues
 class AnalyticFunction:
 
   def __init__(self, args, e):
-    if isinstance(e, (ScalarVar,ScalarExpr)):
+    if isinstance(e, (int,float,Interval,ScalarVar,ScalarExpr)):
       self.f = AnalyticFunction_Scalar(args,e)
-    elif isinstance(e, (VectorVar,VectorExpr)):
+    elif isinstance(e, (Vector,IntervalVector,VectorVar,VectorExpr)):
       self.f = AnalyticFunction_Vector(args,e)
     else:
       codac_error("AnalyticFunction: can only build functions from scalar or vector expressions")
@@ -32,12 +32,15 @@ class AnalyticFunction:
   def eval(self,*args):
     return self.f.eval(*args)
 
+  def diff(self,*args):
+    return self.f.diff(*args)
+
   def __call__(self,*args):
     lst=[]
     for arg in args:
-      if isinstance(arg, (ScalarVar,ScalarExpr,Interval)):
+      if isinstance(arg, (int,float,Interval,ScalarVar,ScalarExpr)):
         lst.append(ScalarExpr(arg).raw_copy())
-      elif isinstance(arg, (VectorVar,VectorExpr,IntervalVector)):
+      elif isinstance(arg, (Vector,IntervalVector,VectorVar,VectorExpr)):
         lst.append(VectorExpr(arg).raw_copy())
       else:
         codac_error("AnalyticFunction: invalid input arguments")

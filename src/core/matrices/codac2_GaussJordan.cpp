@@ -47,7 +47,7 @@ namespace codac2
     Mat L = Mat::Identity(n,n);
     if(std::pow(L.determinant(),2) < 1e-5)
     {
-      cout << "gauss_jordan eye" << endl;
+      cout << "[Matrix gauss_jordan(const Matrix& A)] -> eye matrix" << endl;
       return Matrix::eye(n,n);
     }
     L.block(0,0,n,m).triangularView<Eigen::StrictlyLower>() = lu.matrixLU();

@@ -79,9 +79,9 @@ namespace codac2
         return 1;
       }
 
-      std::shared_ptr<AnalyticVarExpr<ScalarOpValue>> operator-() const
+      std::shared_ptr<AnalyticExpr<ScalarOpValue>> operator-() const
       {
-        return std::dynamic_pointer_cast<AnalyticVarExpr<ScalarOpValue>>(-*this);
+        return std::make_shared<AnalyticOperationExpr<SubOp,ScalarOpValue,ScalarOpValue>>(*this);
       }
   };
 
