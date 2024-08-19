@@ -11,6 +11,7 @@
 #include <codac2_AnalyticFunction.h>
 #include <codac2_analytic_operations.h>
 #include <codac2_Approx.h>
+#include <codac2_math.h>
 
 using namespace std;
 using namespace codac2;
@@ -135,47 +136,47 @@ TEST_CASE("AnalyticFunction")
     //.def(py::self + py::self);
     CHECK(Approx(AnalyticFunction({x1}, cos(x1)+cos(x1)).eval(Interval(0.))) == Interval(2.));
     //.def("__add__",  {}(const ScalarExpr& e1, const ScalarVar& e2);
-    CHECK(Approx(AnalyticFunction({x1}, cos(x1)+x1).eval(M_PI)) == M_PI-1);
+    CHECK(Approx(AnalyticFunction({x1}, cos(x1)+x1).eval(codac2::pi)) == codac2::pi-1);
     //.def("__radd__", {}(const ScalarExpr& e1, const ScalarVar& e2);
-    CHECK(Approx(AnalyticFunction({x1}, x1+cos(x1)).eval(M_PI)) == M_PI-1);
+    CHECK(Approx(AnalyticFunction({x1}, x1+cos(x1)).eval(codac2::pi)) == codac2::pi-1);
     //.def("__add__",  {}(const ScalarExpr& e1, const Interval& e2);
-    CHECK(Approx(AnalyticFunction({x1}, cos(x1)+Interval(10.)).eval(M_PI)) == Interval(9));
+    CHECK(Approx(AnalyticFunction({x1}, cos(x1)+Interval(10.)).eval(codac2::pi)) == Interval(9));
     //.def("__radd__", {}(const ScalarExpr& e1, const Interval& e2);
-    CHECK(Approx(AnalyticFunction({x1}, 10+cos(x1)).eval(M_PI)) == Interval(9));
+    CHECK(Approx(AnalyticFunction({x1}, 10+cos(x1)).eval(codac2::pi)) == Interval(9));
     //.def(- py::self);
     CHECK(Approx(AnalyticFunction({x1}, -cos(x1)).eval(Interval(0.))) == Interval(-1.));
     //.def(py::self - py::self);
     CHECK(Approx(AnalyticFunction({x1}, cos(x1)-cos(x1)).eval(Interval(0.))) == Interval(0.));
     //.def("__sub__",  {}(const ScalarExpr& e1, const ScalarVar& e2);
-    CHECK(Approx(AnalyticFunction({x1}, cos(x1)-x1).eval(M_PI)) == -M_PI-1);
+    CHECK(Approx(AnalyticFunction({x1}, cos(x1)-x1).eval(codac2::pi)) == -codac2::pi-1);
     //.def("__rsub__", {}(const ScalarExpr& e1, const ScalarVar& e2);
-    CHECK(Approx(AnalyticFunction({x1}, x1-cos(x1)).eval(M_PI)) == M_PI+1);
+    CHECK(Approx(AnalyticFunction({x1}, x1-cos(x1)).eval(codac2::pi)) == codac2::pi+1);
     //.def("__sub__",  {}(const ScalarExpr& e1, const Interval& e2);
-    CHECK(Approx(AnalyticFunction({x1}, cos(x1)-Interval(10.)).eval(M_PI)) == -Interval(11));
+    CHECK(Approx(AnalyticFunction({x1}, cos(x1)-Interval(10.)).eval(codac2::pi)) == -Interval(11));
     //.def("__rsub__", {}(const ScalarExpr& e1, const Interval& e2);
-    CHECK(Approx(AnalyticFunction({x1}, 10-cos(x1)).eval(M_PI)) == Interval(11));
+    CHECK(Approx(AnalyticFunction({x1}, 10-cos(x1)).eval(codac2::pi)) == Interval(11));
     //.def(py::self * py::self);
     CHECK(Approx(AnalyticFunction({x1}, cos(x1)*cos(x1)).eval(Interval(0.))) == Interval(1.));
     //.def("__mul__",  {}(const ScalarExpr& e1, const ScalarVar& e2);
-    CHECK(Approx(AnalyticFunction({x1}, cos(x1)*x1).eval(M_PI)) == -1*M_PI);
+    CHECK(Approx(AnalyticFunction({x1}, cos(x1)*x1).eval(codac2::pi)) == -1*codac2::pi);
     //.def("__rmul__", {}(const ScalarExpr& e1, const ScalarVar& e2);
-    CHECK(Approx(AnalyticFunction({x1}, x1*cos(x1)).eval(M_PI)) == -1*M_PI);
+    CHECK(Approx(AnalyticFunction({x1}, x1*cos(x1)).eval(codac2::pi)) == -1*codac2::pi);
     //.def("__mul__",  {}(const ScalarExpr& e1, const Interval& e2);
-    CHECK(Approx(AnalyticFunction({x1}, cos(x1)*Interval(10.)).eval(M_PI),1e-9) == -Interval(10));
+    CHECK(Approx(AnalyticFunction({x1}, cos(x1)*Interval(10.)).eval(codac2::pi),1e-9) == -Interval(10));
     //.def("__rmul__", {}(const ScalarExpr& e1, const Interval& e2);
-    CHECK(Approx(AnalyticFunction({x1}, Interval(10.)*cos(x1)).eval(M_PI),1e-9) == -10);
+    CHECK(Approx(AnalyticFunction({x1}, Interval(10.)*cos(x1)).eval(codac2::pi),1e-9) == -10);
     //.def("__mul__",  {}(const ScalarExpr& e1, const VectorExpr& e2);
-    CHECK(Approx(AnalyticFunction({v1,v2}, cos(v1[0])*(v2+v2)).eval(Vector({M_PI,-1}),Vector({2,3})),1e-9) == IntervalVector({{-4},{-6}}));
+    CHECK(Approx(AnalyticFunction({v1,v2}, cos(v1[0])*(v2+v2)).eval(Vector({codac2::pi,-1}),Vector({2,3})),1e-9) == IntervalVector({{-4},{-6}}));
     //.def("__truediv__",  {}(const ScalarExpr& e1, const ScalarExpr& e2);
     CHECK(Approx(AnalyticFunction({x1}, cos(x1)/cos(x1)).eval(Interval(0.))) == Interval(1.));
     //.def("__truediv__",  {}(const ScalarExpr& e1, const ScalarVar& e2);
-    CHECK(Approx(AnalyticFunction({x1}, cos(x1)/x1).eval(M_PI)) == -1/M_PI);
+    CHECK(Approx(AnalyticFunction({x1}, cos(x1)/x1).eval(codac2::pi)) == -1/codac2::pi);
     //.def("__rtruediv__", {}(const ScalarExpr& e1, const ScalarVar& e2);
-    CHECK(Approx(AnalyticFunction({x1}, x1/cos(x1)).eval(M_PI)) == -M_PI);
+    CHECK(Approx(AnalyticFunction({x1}, x1/cos(x1)).eval(codac2::pi)) == -codac2::pi);
     //.def("__truediv__",  {}(const ScalarExpr& e1, const Interval& e2);
-    CHECK(Approx(AnalyticFunction({x1}, cos(x1)/Interval(4.)).eval(M_PI)) == -1./4);
+    CHECK(Approx(AnalyticFunction({x1}, cos(x1)/Interval(4.)).eval(codac2::pi)) == -1./4);
     //.def("__rtruediv__", {}(const ScalarExpr& e1, const Interval& e2);
-    CHECK(Approx(AnalyticFunction({x1}, 4./cos(x1)).eval(M_PI)) == -4);
+    CHECK(Approx(AnalyticFunction({x1}, 4./cos(x1)).eval(codac2::pi)) == -4);
 
     // ======> VectorExpr
 
@@ -200,7 +201,7 @@ TEST_CASE("AnalyticFunction")
     //.def("__rsub__", {}(const VectorExpr& e1, const IntervalVector& e2);
     CHECK(Approx(AnalyticFunction({v1,v2}, Vector({1,5})-(v1-v2)).eval(IntervalVector({{2},{3}}),Vector({1,5}))) == IntervalVector({{0},{7}}));
     //.def("__rmul__", {}(const VectorExpr& e1, const ScalarExpr& e2);
-    CHECK(Approx(AnalyticFunction({v1,v2}, cos(v1[0])*(v2+v2)).eval(Vector({M_PI,-1}),Vector({2,3})),1e-9) == IntervalVector({{-4},{-6}}));
+    CHECK(Approx(AnalyticFunction({v1,v2}, cos(v1[0])*(v2+v2)).eval(Vector({codac2::pi,-1}),Vector({2,3})),1e-9) == IntervalVector({{-4},{-6}}));
     //.def("__rmul__", {}(const VectorExpr& e1, const ScalarVar& e2);
     CHECK(Approx(AnalyticFunction({x1}, x1*vec(3*x1,2*x1)).eval(3),1e-9) == IntervalVector({{27},{18}}));
   }
