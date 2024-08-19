@@ -62,6 +62,7 @@ void export_SepInter(py::module& m, py::class_<Sep,pySep>& sep);
 void export_SepInverse(py::module& m, const std::string& export_name, py::class_<Sep,pySep>& sep);
 void export_SepPolygon(py::module& m, py::class_<Sep,pySep>& sep);
 void export_SepUnion(py::module& m, py::class_<Sep,pySep>& sep);
+void export_SepWrapper(py::module& m, py::class_<Sep,pySep>& sep);
 
 // tools
 void export_Approx(py::module& m);
@@ -120,6 +121,7 @@ PYBIND11_MODULE(core, m)
   export_SepInverse<IntervalVector>(m,"SepInverse_IntervalVector",py_sep);
   export_SepPolygon(m,py_sep);
   export_SepUnion(m,py_sep);
+  export_SepWrapper(m,py_sep);
 
   // tools
   export_Approx(m);

@@ -89,6 +89,7 @@
       src/core/separators/codac2_py_SepInverse.h
       src/core/separators/codac2_py_SepPolygon.cpp
       src/core/separators/codac2_py_SepUnion.cpp
+      src/core/separators/codac2_py_SepWrapper.cpp
 
       src/core/tools/codac2_py_Approx.cpp
     )
