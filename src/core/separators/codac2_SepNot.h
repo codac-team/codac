@@ -38,7 +38,8 @@ namespace codac2
 
       BoxPair separate(const IntervalVector& x) const
       {
-        assert(x.size() == this->size());
+        assert_release(x.size() == this->size());
+        
         auto x_sep = _sep.front().separate(x);
         assert((x_sep.outer | x_sep.inner) == x);
         return { x_sep.outer , x_sep.inner };

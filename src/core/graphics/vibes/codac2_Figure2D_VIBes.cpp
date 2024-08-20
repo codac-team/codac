@@ -50,10 +50,10 @@ void Figure2D_VIBes::update_window_properties()
 
 void Figure2D_VIBes::center_viewbox(const Vector& c, const Vector& r)
 {
+  assert(_fig.size() <= c.size() && _fig.size() <= r.size());
   assert(r.min_coeff() > 0.);
   vibes::axisLimits(c[i()]-r[i()], c[i()]+r[i()], c[j()]-r[j()], c[j()]+r[j()], _fig.name());
 }
-
 
 void Figure2D_VIBes::draw_point(const Vector& c, const StyleProperties& s)
 {
@@ -70,21 +70,26 @@ void Figure2D_VIBes::draw_box(const IntervalVector& x, const StyleProperties& s)
 void Figure2D_VIBes::draw_circle(const Vector& c, double r, const StyleProperties& s)
 {
   assert(_fig.size() <= c.size());
+  assert(r > 0.);
   vibes::drawCircle(c[i()],c[j()],r, to_vibes_style(s), _params);
 }
 
 void Figure2D_VIBes::draw_ring(const Vector& c, const Interval& r, const StyleProperties& s)
 {
   assert(_fig.size() <= c.size());
-  assert(!r.is_empty() && r.lb() > 0.);
+  assert(!r.is_empty() && r.lb() >= 0.);
   vibes::drawRing(c[i()],c[j()],r.lb(),r.ub(), to_vibes_style(s), _params);
 }
 
 void Figure2D_VIBes::draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s)
 {
+  assert(x.size() > 1);
+  assert(tip_length >= 0.);
+
   vector<double> vx(x.size()), vy(x.size());
   for(size_t k = 0 ; k < x.size() ; k++)
   {
+    assert(_fig.size() <= x[k].size());
     vx[k] = x[k][i()]; vy[k] = x[k][j()];
   }
 
@@ -96,9 +101,12 @@ void Figure2D_VIBes::draw_polyline(const std::vector<Vector>& x, float tip_lengt
 
 void Figure2D_VIBes::draw_polygone(const std::vector<Vector>& x, const StyleProperties& s)
 {
+  assert(x.size() > 1);
+  
   vector<double> vx(x.size()), vy(x.size());
   for(size_t k = 0 ; k < x.size() ; k++)
   {
+    assert(_fig.size() <= x[k].size());
     vx[k] = x[k][i()]; vy[k] = x[k][j()];
   }
 
@@ -108,6 +116,7 @@ void Figure2D_VIBes::draw_polygone(const std::vector<Vector>& x, const StyleProp
 void Figure2D_VIBes::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s)
 {
   assert(_fig.size() <= c.size());
+  assert(r.lb() >= 0.);
   vibes::drawPie(c[i()],c[j()], r.lb(),r.ub(), 180.*theta.lb()/codac2::pi,180.*theta.ub()/codac2::pi, to_vibes_style(s), _params);
 }
 

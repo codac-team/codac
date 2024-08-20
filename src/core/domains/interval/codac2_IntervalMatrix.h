@@ -67,6 +67,9 @@ namespace codac2
         : IntervalMatrix(x.eval())
       { }
 
+      //Interval& operator[](size_t i) = delete;
+      //const Interval& operator[](size_t i) const = delete;
+
       IntervalMatrix transpose() const;
 
       IntervalMatrix diag_matrix() const;

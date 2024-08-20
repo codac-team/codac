@@ -34,7 +34,7 @@ namespace codac2
       SepInter(const S&... s)
         : Sep(size_first_item(s...)), _seps(s...)
       {
-        assert(all_same_size(s...));
+        assert_release(all_same_size(s...));
       }
 
       std::shared_ptr<Sep> copy() const;
@@ -45,12 +45,14 @@ namespace codac2
         >::type>
       SepInter& operator&=(const S& s)
       {
+        assert_release(s.size() == this->size());
         _seps.add_shared_ptr(std::make_shared<S>(s));
         return *this;
       }
 
       SepInter& operator&=(const std::shared_ptr<Sep>& s)
       {
+        assert_release(s->size() == this->size());
         _seps.add_shared_ptr(s);
         return *this;
       }
@@ -74,6 +76,7 @@ namespace codac2
     >::type>
   inline SepInter operator&(const IntervalVector& s1, const S2& s2)
   {
+    assert_release(s1.size() == s2.size());
     return SepInter(SepWrapper_<IntervalVector>(s1),s2);
   }
 
@@ -82,6 +85,7 @@ namespace codac2
     >::type>
   inline SepInter operator&(const S1& s1, const IntervalVector& s2)
   {
+    assert_release(s1.size() == s2.size());
     return SepInter(s1,SepWrapper_<IntervalVector>(s2));
   }
 }

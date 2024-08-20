@@ -32,10 +32,10 @@ namespace codac2
       SepProj(const S& s, const std::vector<size_t>& proj_indices, const IntervalVector& y, double default_eps = 0.01)
         : Sep(proj_indices.size()), _sep(s), _xi(proj_indices), _y(y), _default_eps(default_eps)
       {
-        assert(_y.size() == size_of(s)-_xi.size());
-        assert(*min_element(_xi.begin(),_xi.end()) >= 0);
-        assert(*max_element(_xi.begin(),_xi.end()) < size_of(s));
-        assert(size_of(s) >= _xi.size() && "cannot compute a projection of a set into a superset");
+        assert_release(_y.size() == size_of(s)-_xi.size());
+        assert_release(*min_element(_xi.begin(),_xi.end()) >= 0);
+        assert_release(*max_element(_xi.begin(),_xi.end()) < size_of(s));
+        assert_release(size_of(s) >= _xi.size() && "cannot compute a projection of a set into a superset");
       }
       
       std::shared_ptr<Sep> copy() const;

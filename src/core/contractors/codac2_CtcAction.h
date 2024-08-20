@@ -26,7 +26,7 @@ namespace codac2
       CtcAction(const C& c, const OctaSym& a)
         : Ctc_<IntervalVector>(a.size()), _ctc(c), _s(a), __s(a.invert())
       {
-        assert(size_of(c) == a.size());
+        assert_release(size_of(c) == a.size());
       }
 
       std::shared_ptr<Ctc_<IntervalVector>> copy() const;

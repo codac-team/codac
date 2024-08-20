@@ -32,7 +32,9 @@ namespace codac2
 
       Sep(size_t n)
         : _n(n)
-      { }
+      {
+        assert(n > 0);
+      }
 
       size_t size() const
       {

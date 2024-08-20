@@ -19,7 +19,8 @@ std::shared_ptr<Sep> SepCtcBoundary::copy() const
 
 BoxPair SepCtcBoundary::separate(const IntervalVector& x) const
 {
-  assert(x.size() == this->size());
+  assert_release(x.size() == this->size());
+  
   size_t attempt_nb = 5;
   IntervalVector x_boundary(x);
   _ctc_boundary.front().contract(x_boundary);

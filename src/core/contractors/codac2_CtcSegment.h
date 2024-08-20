@@ -20,7 +20,9 @@ namespace codac2
 
       CtcSegment(const IntervalVector& a, const IntervalVector& b)
         : Ctc_<IntervalVector>(2), _a(a), _b(b)
-      { }
+      {
+        assert_release(a.size() == 2 && b.size() == 2 && "only 2d segments are supported");
+      }
 
       std::shared_ptr<Ctc_<IntervalVector>> copy() const;
       void contract(IntervalVector& x) const;

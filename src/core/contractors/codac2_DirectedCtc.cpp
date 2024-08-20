@@ -51,7 +51,9 @@ using namespace codac2;
   }
 
   void AddOp::bwd(const IntervalVector& y, IntervalVector& x1)
-  { }
+  {
+    assert(y.size() == x1.size());
+  }
 
   IntervalMatrix AddOp::fwd(const IntervalMatrix& x1)
   {
@@ -69,7 +71,9 @@ using namespace codac2;
   }
 
   void AddOp::bwd(const IntervalMatrix& y, IntervalMatrix& x1)
-  { }
+  {
+    assert(y.size() == x1.size());
+  }
 
 
 // AddOp (binary operations)
@@ -97,6 +101,7 @@ using namespace codac2;
 
   IntervalVector AddOp::fwd(const IntervalVector& x1, const IntervalVector& x2)
   {
+    assert(x1.size() == x2.size());
     return x1 + x2;
   }
 
@@ -120,6 +125,7 @@ using namespace codac2;
 
   IntervalMatrix AddOp::fwd(const IntervalMatrix& x1, const IntervalMatrix& x2)
   {
+    assert(x1.size() == x2.size());
     return x1 + x2;
   }
 
@@ -234,6 +240,7 @@ using namespace codac2;
 
   IntervalVector SubOp::fwd(const IntervalVector& x1, const IntervalVector& x2)
   {
+    assert(x1.size() == x2.size());
     return x1 - x2;
   }
 
@@ -257,6 +264,7 @@ using namespace codac2;
 
   IntervalMatrix SubOp::fwd(const IntervalMatrix& x1, const IntervalMatrix& x2)
   {
+    assert(x1.size() == x2.size());
     return x1 - x2;
   }
 
@@ -336,6 +344,7 @@ using namespace codac2;
 
   void MulOp::bwd(const IntervalVector& y, Interval& x1, IntervalVector& x2)
   {
+    assert(y.size() == x2.size());
     auto y_ = to_ibex(y), x2_ = to_ibex(x2);
     auto x1_ = to_ibex(x1);
     ibex::bwd_mul(y_, x1_, x2_);
@@ -344,6 +353,7 @@ using namespace codac2;
 
   IntervalVector MulOp::fwd(const IntervalMatrix& x1, const IntervalVector& x2)
   {
+    assert(x1.nb_cols() == x2.size());
     return x1 * x2;
   }
 
@@ -927,20 +937,17 @@ using namespace codac2;
 
   Interval DetOp::fwd(const IntervalMatrix& x)
   {
-    if(x.nb_rows() != x.nb_cols())
-      throw std::invalid_argument("Invalid argument: can only compute determinants for a square matrix");
+    assert_release(x.nb_rows() == x.nb_cols() && "can only compute determinants for a square matrix");
+    assert_release((x.nb_rows() == 1 || x.nb_rows() == 2) && "determinant not yet computable for n×n matrices, n>2");
 
-    else if(x.nb_rows() == 1) // 1×1 matrix
+    if(x.nb_rows() == 1) // 1×1 matrix
       return x(0,0);
 
     else if(x.nb_rows() == 2) // 2×2 matrix
       return x(0,0)*x(1,1)-x(0,1)*x(1,0);
 
     else
-    {
-      throw std::invalid_argument("Invalid argument: determinant not yet computable for n×n matrices, n>2");
-      return Interval::empty();
-    }
+      return Interval::empty(); // unhandled case
   }
 
   ScalarOpValue DetOp::fwd(const MatrixOpValue& x)
@@ -955,8 +962,8 @@ using namespace codac2;
 
   void DetOp::bwd(const Interval& y, IntervalMatrix& x)
   {
-    if(x.nb_rows() != x.nb_cols())
-      throw std::invalid_argument("Invalid argument: can only compute determinants for a square matrix");
+    assert_release(x.nb_rows() == x.nb_cols() && "can only compute determinants for a square matrix");
+    assert_release((x.nb_rows() == 1 || x.nb_rows() == 2) && "determinant not yet computable for n×n matrices, n>2");
 
     if(x.nb_rows() == 1) // 1×1 matrix
       x(0,0) &= y;
@@ -970,16 +977,16 @@ using namespace codac2;
     }
 
     else
-      throw std::invalid_argument("Invalid argument: DetOp::bwd not yet computable for n×n matrices, n>2");
+    {
+      // unhandled case
+    }
   }
 
   // For two vectors (merged into a 2×2 matrix)
 
   Interval DetOp::fwd(const IntervalVector& x1, const IntervalVector& x2)
   {
-    if(x1.size() != 2 || x2.size() != 2)
-      throw std::invalid_argument("Invalid argument: vectors must be of size 2");
-
+    assert_release(x1.size() == 2 && x2.size() == 2 && "determinant only computable for pairs of 2d vectors");
     return DetOp::fwd(IntervalMatrix(x1,x2));
   }
 
@@ -995,8 +1002,7 @@ using namespace codac2;
 
   void DetOp::bwd(const Interval& y, IntervalVector& x1, IntervalVector& x2)
   {
-    if(x1.size() != 2 || x2.size() != 2)
-      throw std::invalid_argument("Invalid argument: vectors must be of size 2");
+    assert_release(x1.size() == 2 && x2.size() == 2 && "determinant only computable for pairs of 2d vectors");
     IntervalMatrix m(2,2);
     m.col(0) = x1; m.col(1) = x2;
     DetOp::bwd(y,m);
@@ -1008,9 +1014,7 @@ using namespace codac2;
 
   Interval DetOp::fwd(const IntervalVector& x1, const IntervalVector& x2, const IntervalVector& x3)
   {
-    if(x1.size() != 3 || x2.size() != 3 || x3.size() != 3)
-      throw std::invalid_argument("Invalid argument: vectors must be of size 3");
-
+    assert_release(x1.size() == 3 && x2.size() == 3 && x3.size() == 3 && "determinant only computable for triplet of 3d vectors");
     return DetOp::fwd(IntervalMatrix(x1,x2,x3));
   }
 
@@ -1026,8 +1030,7 @@ using namespace codac2;
 
   void DetOp::bwd(const Interval& y, IntervalVector& x1, IntervalVector& x2, IntervalVector& x3)
   {
-    if(x1.size() != 3 || x2.size() != 3 || x3.size() != 3)
-      throw std::invalid_argument("Invalid argument: vectors must be of size 3");
+    assert_release(x1.size() == 3 && x2.size() == 3 && x3.size() == 3 && "determinant only computable for triplet of 3d vectors");
     IntervalMatrix m(x1,x2,x3);
     DetOp::bwd(y,m);
     x1 &= m.col(0);

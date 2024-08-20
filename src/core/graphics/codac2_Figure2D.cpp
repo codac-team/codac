@@ -63,8 +63,8 @@ const Vector& Figure2D::window_size() const
 
 void Figure2D::set_window_properties(const Vector& pos, const Vector& size)
 {
-  assert(pos.size() == 2 && size.size() == 2);
-  assert(size.min_coeff() > 0);
+  assert_release(pos.size() == 2 && size.size() == 2);
+  assert_release(size.min_coeff() > 0);
 
   _pos = pos; _window_size = size;
   for(const auto& output_fig : _output_figures)
@@ -73,6 +73,9 @@ void Figure2D::set_window_properties(const Vector& pos, const Vector& size)
 
 void Figure2D::center_viewbox(const Vector& c, const Vector& r)
 {
+  assert_release(this->size() <= c.size() && this->size() <= r.size());
+  assert_release(r.min_coeff() > 0.);
+
   for(const auto& output_fig : _output_figures)
     output_fig->center_viewbox(c,r);
 }
@@ -94,26 +97,34 @@ void Figure2D::set_as_default()
 
 void Figure2D::draw_point(const Vector& c, const StyleProperties& s)
 {
+  assert_release(this->size() <= c.size());
+
   for(const auto& output_fig : _output_figures)
     output_fig->draw_point(c,s);
 }
 
 void Figure2D::draw_box(const IntervalVector& x, const StyleProperties& s)
 {
+  assert_release(this->size() <= x.size());
+
   for(const auto& output_fig : _output_figures)
     output_fig->draw_box(x,s);
 }
 
 void Figure2D::draw_circle(const Vector& c, double r, const StyleProperties& s)
 {
-  assert(r > 0.);
+  assert_release(this->size() <= c.size());
+  assert_release(r > 0.);
+
   for(const auto& output_fig : _output_figures)
     output_fig->draw_circle(c,r,s);
 }
 
 void Figure2D::draw_ring(const Vector& c, const Interval& r, const StyleProperties& s)
 {
-  assert(!r.is_empty() && r.lb() > 0.);
+  assert_release(this->size() <= c.size());
+  assert_release(!r.is_empty() && r.lb() >= 0.);
+
   for(const auto& output_fig : _output_figures)
     output_fig->draw_ring(c,r,s);
 }
@@ -125,21 +136,36 @@ void Figure2D::draw_polyline(const vector<Vector>& x, const StyleProperties& s)
 
 void Figure2D::draw_polyline(const vector<Vector>& x, float tip_length, const StyleProperties& s)
 {
-  assert(tip_length >= 0.); // 0 = disabled tip
+  assert_release(x.size() > 1);
+  assert_release(tip_length >= 0.); // 0 = disabled tip
+  for(const auto& xi : x)
+  {
+    assert_release(this->size() <= xi.size());
+  }
+
   for(const auto& output_fig : _output_figures)
     output_fig->draw_polyline(x,tip_length,s);
 }
 
 void Figure2D::draw_polygone(const vector<Vector>& x, const StyleProperties& s)
 {
+  assert_release(x.size() > 1);
+  for(const auto& xi : x)
+  {
+    assert_release(this->size() <= xi.size());
+  }
+
   for(const auto& output_fig : _output_figures)
     output_fig->draw_polygone(x,s);
 }
 
 void Figure2D::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s)
 {
-  assert(!r.is_empty() && !theta.is_empty());
-  assert(r.lb() >= 0.);
+  assert_release(this->size() <= c.size());
+  assert_release(r.lb() >= 0.);
+
+  if(r.is_empty() || theta.is_empty())
+    return;
 
   Interval theta_(theta);
   if(theta.is_unbounded())
@@ -155,14 +181,24 @@ void Figure2D::draw_pie(const Vector& c, const Interval& r, const Interval& thet
 
 void Figure2D::draw_tank(const Vector& x, float size, const StyleProperties& s)
 {
-  assert(size > 0.);
+  assert_release(this->size() <= x.size()+1);
+  assert_release(size >= 0.);
+
   for(const auto& output_fig : _output_figures)
+  {
+    assert_release(output_fig->j()+1 < x.size());
     output_fig->draw_tank(x,size,s);
+  }
 }
 
 void Figure2D::draw_AUV(const Vector& x, float size, const StyleProperties& s)
 {
-  assert(size > 0.);
+  assert_release(this->size() <= x.size()+1);
+  assert_release(size >= 0.);
+
   for(const auto& output_fig : _output_figures)
+  {
+    assert_release(output_fig->j()+1 < x.size());
     output_fig->draw_AUV(x,size,s);
+  }
 }

@@ -52,7 +52,8 @@ void Figure2D_IPE::update_window_properties()
 
 void Figure2D_IPE::center_viewbox(const Vector& c, const Vector& r)
 {
-
+  assert(_fig.size() <= c.size() && _fig.size() <= r.size());
+  assert(r.min_coeff() > 0.);
 }
 
 void Figure2D_IPE::begin_path(const StyleProperties& s)
@@ -71,6 +72,7 @@ void Figure2D_IPE::begin_path(const StyleProperties& s)
 
 void Figure2D_IPE::draw_point(const Vector& c, const StyleProperties& s)
 {
+  assert(_fig.size() <= c.size());
   // Not implemented yet
 }
 
@@ -98,7 +100,7 @@ void Figure2D_IPE::draw_circle(const Vector& c, double r, const StyleProperties&
 void Figure2D_IPE::draw_ring(const Vector& c, const Interval& r, const StyleProperties& s)
 {
   assert(_fig.size() <= c.size());
-  assert(!r.is_empty() && r.lb() > 0.);
+  assert(!r.is_empty() && r.lb() >= 0.);
 
   begin_path(s);
   _f_temp_content << scale_length(r.lb()) << " 0 0 " << scale_length(r.lb()) << " "
@@ -111,6 +113,8 @@ void Figure2D_IPE::draw_ring(const Vector& c, const Interval& r, const StyleProp
 void Figure2D_IPE::draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s)
 {
   assert(x.size() > 1);
+  assert(tip_length >= 0.);
+  // todo: draw tip
 
   begin_path(s);
 
@@ -130,16 +134,24 @@ void Figure2D_IPE::draw_polygone(const std::vector<Vector>& x, const StyleProper
 
 void Figure2D_IPE::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s)
 {
+  assert(_fig.size() <= c.size());
+  assert(r.lb() >= 0.);
   // Not implemented yet
 }
 
 void Figure2D_IPE::draw_tank(const Vector& x, float size, const StyleProperties& s)
 {
+  assert(_fig.size() <= x.size()+1);
+  assert(j()+1 < x.size());
+  assert(size >= 0.);
   // Not implemented yet
 }
 
 void Figure2D_IPE::draw_AUV(const Vector& x, float size, const StyleProperties& s)
 {
+  assert(_fig.size() <= x.size()+1);
+  assert(j()+1 < x.size());
+  assert(size >= 0.);
   // Not implemented yet
 }
 

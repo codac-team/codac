@@ -91,7 +91,9 @@ namespace codac2
 
       explicit VectorVar(size_t n)
         : _n(n)
-      { }
+      {
+        assert_release(n > 0);
+      }
 
       VectorVar(const VectorVar& x)
         : AnalyticVarExpr<VectorOpValue>(x), _n(x._n)
@@ -114,7 +116,7 @@ namespace codac2
 
       std::shared_ptr<AnalyticExpr<ScalarOpValue>> operator[](size_t i) const
       {
-        assert(i >= 0 && i < _n);
+        assert_release(i >= 0 && i < _n);
         return std::make_shared<AnalyticOperationExpr<ComponentOp,ScalarOpValue,VectorOpValue>>(
           std::dynamic_pointer_cast<AnalyticExpr<VectorOpValue>>(this->copy()), i);
       }

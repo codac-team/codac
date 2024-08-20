@@ -38,8 +38,8 @@ namespace codac2
 
   inline FigureAxis axis(size_t dim_id, const Interval& limits, const std::string& label = "")
   {
-    assert(dim_id >= 0);
-    //assert(!limits.is_empty());
+    assert_release(dim_id >= 0);
+    //assert_release(!limits.is_empty());
 
     std::string axis_label = label;
     if(axis_label.empty())

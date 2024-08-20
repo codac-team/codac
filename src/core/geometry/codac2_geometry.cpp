@@ -14,13 +14,10 @@ using namespace codac2;
 
 namespace codac2
 {
-  BoolInterval on_segment(const IntervalVector& p, const array<IntervalVector,2>& v)
-  {
-    return BoolInterval::TRUE;
-  }
-
   BoolInterval orientation(const IntervalVector& p1, const IntervalVector& p2, const IntervalVector& p3)
   {
+    assert_release(p1.size() == 2 && p2.size() == 2 && p3.size() == 2);
+
     Interval o = (p2[1]-p1[1])*(p3[0]-p2[0])-(p2[0]-p1[0])*(p3[1]-p2[1]); 
 
     if(o.is_empty())
@@ -35,6 +32,8 @@ namespace codac2
 
   BoolInterval segments_intersect(const array<IntervalVector,2>& a, const array<IntervalVector,2>& b)
   {
+    assert_release(a[0].size() == 2 && a[1].size() == 2 && b[0].size() == 2 && b[1].size() == 2);
+
     BoolInterval o1 = orientation(a[0], a[1], b[0]);
     BoolInterval o2 = orientation(a[0], a[1], b[1]);
     BoolInterval o3 = orientation(b[0], b[1], a[0]);
@@ -57,11 +56,15 @@ namespace codac2
 
   BoolInterval in_polygon(const IntervalVector& p, const vector<IntervalVector>& polygon)
   {
+    assert_release(p.size() == 2);
+
     size_t i = 0;
     array<IntervalVector,2> transect { IntervalVector({next_float(-oo),p[1]}), p };
 
     for(size_t k = 0 ; k < polygon.size() ; k++)
     {
+      assert_release(polygon[k].size() == 2);
+
       array<IntervalVector,2> edge_k { polygon[k], polygon[(k+1)%polygon.size()] };
       switch(segments_intersect(transect,edge_k))
       {

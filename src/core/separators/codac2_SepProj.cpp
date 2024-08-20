@@ -27,8 +27,8 @@ namespace codac2
 
   BoxPair SepProj::separate(const IntervalVector& x, double eps) const
   {
-    assert(eps > 0.);
-    assert(x.size() == this->size());
+    assert_release(eps > 0.);
+    assert_release(x.size() == this->size());
     
     list<IntervalVector> l_stack { cart_prod_xy(x,_y) };
     list<IntervalVector> l_in, l_out;

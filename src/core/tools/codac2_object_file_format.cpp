@@ -30,7 +30,7 @@ namespace codac2
     // List of vertices: X, Y and Z coordinates
     for(const auto& x : l)
     {
-      assert(x.size() == 3);
+      assert_release(x.size() == 3);
       // 8 vertices
       of << x[0].lb() << " " << x[1].lb() << " " << x[2].lb() << endl;
       of << x[0].lb() << " " << x[1].lb() << " " << x[2].ub() << endl;

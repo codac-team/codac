@@ -17,7 +17,6 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCartProd.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.h
-    #${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCenteredForm.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverseNotIn.h
@@ -48,7 +47,6 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_ExprBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_ExprBase.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_FunctionArgsList.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_FunctionBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_FunctionBase.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_VarBase.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_constants.h

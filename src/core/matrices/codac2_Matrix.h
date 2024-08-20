@@ -37,6 +37,9 @@ namespace codac2
         : MatrixBase<Matrix,double>(x)
       { }
 
+      //double& operator[](size_t i) = delete;
+      //const double& operator[](size_t i) const = delete;
+
       Matrix transpose() const;
 
       Matrix diag_matrix() const;

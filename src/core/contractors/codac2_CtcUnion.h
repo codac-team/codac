@@ -43,7 +43,7 @@ namespace codac2
       CtcUnion(const C&... c)
         : Ctc_<X>(size_first_item(c...)), _ctcs(c...)
       {
-        assert(all_same_size(c...));
+        assert_release(all_same_size(c...));
       }
 
       std::shared_ptr<Ctc_<X>> copy() const
@@ -71,12 +71,14 @@ namespace codac2
         >::type>
       CtcUnion<X>& operator|=(const C& c)
       {
+        assert_release(c.size() == this->size());
         _ctcs.add_shared_ptr(std::make_shared<C>(c));
         return *this;
       }
 
       CtcUnion<X>& operator|=(const std::shared_ptr<Ctc_<X>>& c)
       {
+        assert_release(c->size() == this->size());
         _ctcs.add_shared_ptr(c);
         return *this;
       }
@@ -99,16 +101,18 @@ namespace codac2
   template<typename C2, typename = typename std::enable_if<
       std::is_base_of_v<Ctc_<IntervalVector>,C2>
     >::type>
-  inline CtcUnion<IntervalVector> operator|(const IntervalVector& s1, const C2& s2)
+  inline CtcUnion<IntervalVector> operator|(const IntervalVector& c1, const C2& c2)
   {
-    return CtcUnion<IntervalVector>(CtcWrapper_<IntervalVector>(s1),s2);
+    assert_release(c1.size() == c2.size());
+    return CtcUnion<IntervalVector>(CtcWrapper_<IntervalVector>(c1),c2);
   }
 
   template<typename C1, typename = typename std::enable_if<
       std::is_base_of_v<Ctc_<IntervalVector>,C1>
     >::type>
-  inline CtcUnion<IntervalVector> operator|(const C1& s1, const IntervalVector& s2)
+  inline CtcUnion<IntervalVector> operator|(const C1& c1, const IntervalVector& c2)
   {
-    return CtcUnion<IntervalVector>(s1,CtcWrapper_<IntervalVector>(s2));
+    assert_release(c1.size() == c2.size());
+    return CtcUnion<IntervalVector>(c1,CtcWrapper_<IntervalVector>(c2));
   }
 }

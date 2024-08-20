@@ -25,7 +25,9 @@ namespace codac2
         >::type>
       SepAction(const S& s, const OctaSym& a)
         : Sep(a.size()), _sep(s), _s(a), __s(a.invert())
-      { }
+      {
+        assert_release(size_of(s) == a.size());
+      }
 
       std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;

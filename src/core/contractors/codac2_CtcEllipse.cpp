@@ -70,7 +70,7 @@ void CtcEllipse0::contract(IntervalVector& x) const
 CtcEllipse::CtcEllipse(const Vector& q)
   : Ctc_<IntervalVector>(2), _q(q)
 {
-  assert(q.size() == 6);
+  assert_release(q.size() == 6);
 }
 
 std::shared_ptr<Ctc_<IntervalVector>> CtcEllipse::copy() const
@@ -80,7 +80,7 @@ std::shared_ptr<Ctc_<IntervalVector>> CtcEllipse::copy() const
 
 void CtcEllipse::contract(IntervalVector& x) const
 {
-  assert(x.size() == 2);
+  assert_release(x.size() == 2);
   
   x = contract_ith({1, 2}, x) | contract_ith({-1,-2}, x)
     | contract_ith({1,-2}, x) | contract_ith({-1, 2}, x);

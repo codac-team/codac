@@ -216,6 +216,7 @@ namespace codac2
 
   pair<Interval,Interval> Interval::bisect(float ratio) const
   {
+    assert_release(Interval(0,1).interior_contains(ratio));
     auto p = ibex::Interval::bisect(ratio);
     return { p.first, p.second };
   }

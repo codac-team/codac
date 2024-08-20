@@ -20,6 +20,7 @@ std::shared_ptr<Sep> SepCtcPair::copy() const
 BoxPair SepCtcPair::separate(const IntervalVector& x) const
 {
   assert(x.size() == this->size());
+
   IntervalVector x_in(x), x_out(x);
   _ctc_in_out.front().contract(x_in);
   _ctc_in_out.back().contract(x_out);

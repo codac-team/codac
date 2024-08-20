@@ -25,7 +25,7 @@ namespace codac2
         CtcUnion<IntervalVector> ctc_segments(2);
         for(size_t i = 0 ; i < vertices.size() ; i++)
         {
-          assert(vertices[i].size() == 2 && "Polygons must be defined by 2d points");
+          assert_release(vertices[i].size() == 2 && "polygons must be defined by 2d points");
           ctc_segments |= CtcSegment(vertices[i],vertices[(i+1)%vertices.size()]);
         }
         return ctc_segments;
@@ -34,7 +34,7 @@ namespace codac2
       // Tests if a point of a box is inside the polygon
       [vertices](const Vector& x) -> BoolInterval
       {
-        assert(x.size() == 2);
+        assert_release(x.size() == 2);
         return in_polygon(x,vertices);
       }
     )

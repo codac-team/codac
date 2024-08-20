@@ -11,6 +11,7 @@
 
 #include <memory>
 #include <iostream>
+#include "codac2_assert.h"
 
 namespace codac2
 {
@@ -42,7 +43,9 @@ namespace codac2
 
       Ctc_(size_t n)
         : _n(n)
-      { }
+      {
+        assert(n > 0);
+      }
 
       size_t size() const
       {

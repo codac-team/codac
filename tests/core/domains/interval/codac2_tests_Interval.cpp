@@ -20,7 +20,7 @@
 using namespace std;
 using namespace codac2;
 
-TEST_CASE("Interval")
+TEST_CASE("Interval - tests from IBEX")
 {
   CHECK(Interval() == Interval(-oo,oo));
   CHECK(Interval(1.0) == Interval(1.0,1.0));
@@ -231,6 +231,30 @@ TEST_CASE("Interval")
   Interval b = Interval(1,3) & Interval(6,7); // [b] is empty
   Interval c = a+b;
   CHECK(c.is_empty());
+}
+
+TEST_CASE("Interval - other tests")
+{
+  Interval x;
+
+  auto a = x.bisect(0.5);
+  CHECK(a.first == Interval(-oo,0));
+  CHECK(a.second == Interval(0,oo));
+
+  x = Interval(0,oo);
+  a = x.bisect(0.5);
+  CHECK(a.first == Interval(0,codac2::previous_float(oo)));
+  CHECK(a.second == Interval(codac2::previous_float(oo),oo));
+
+  x = Interval(-oo,0);
+  a = x.bisect(0.5);
+  CHECK(a.first == Interval(-oo,codac2::next_float(-oo)));
+  CHECK(a.second == Interval(codac2::next_float(-oo),0));
+
+  x = Interval(0,10);
+  a = x.bisect(0.2);
+  CHECK(Approx(a.first,1e-7) == Interval(0,2));
+  CHECK(Approx(a.second,1e-7) == Interval(2,10));
 }
 
 #if 0

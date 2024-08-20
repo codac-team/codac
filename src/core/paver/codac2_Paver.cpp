@@ -41,6 +41,9 @@ void Paver::init_figure()
 
 std::list<IntervalVector> Paver::pave(const Ctc_<IntervalVector>& c, double eps)
 {
+  assert_release(eps > 0.);
+  assert_release(c.size() >= 2 && "cannot reveal 1d contractors");
+
   init_figure();
   clock_t t_start = clock();
 
@@ -92,6 +95,9 @@ std::list<IntervalVector> Paver::pave(const std::shared_ptr<Ctc_<IntervalVector>
 
 void Paver::pave(const Sep& s, double eps)
 {
+  assert_release(eps > 0.);
+  assert_release(s.size() >= 2 && "cannot reveal 1d separators");
+  
   init_figure();
   clock_t t_start = clock();
 

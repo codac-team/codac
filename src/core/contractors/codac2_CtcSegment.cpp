@@ -20,7 +20,7 @@ std::shared_ptr<Ctc_<IntervalVector>> CtcSegment::copy() const
 
 void CtcSegment::contract(IntervalVector& x) const
 {
-  assert(x.size() == 2);
+  assert_release(x.size() == 2 && "only 2d segments are supported");
   IntervalVector a(_a), b(_b); // variables that may be contracted
   x &= a | b; // boxed domain of the segment
   IntervalVector c = a-x, d = b-a;

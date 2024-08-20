@@ -19,7 +19,8 @@ std::shared_ptr<Sep> SepInter::copy() const
 
 BoxPair SepInter::separate(const IntervalVector& x) const
 {
-  assert(x.size() == this->size());
+  assert_release(x.size() == this->size());
+  
   auto x_in = IntervalVector::empty(x.size());
   auto x_out = x;
 

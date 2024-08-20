@@ -23,7 +23,7 @@ namespace codac2
       CtcInverseNotIn(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const Y& y, bool with_centered_form = true)
         : CtcUnion<X>(f.args()[0]->size() /* f must have only one arg, see following assert */)
       {
-        assert(f.args().size() == 1);
+        assert_release(f.args().size() == 1 && "f must have only one arg");
         bool is_not_in = true;
 
         for(const auto& complem_y : y.complementary())
@@ -36,7 +36,7 @@ namespace codac2
       CtcInverseNotIn(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const C& ctc_compl, bool with_centered_form = true)
         : CtcUnion<X>(f.args()[0]->size() /* f must have only one arg, see following assert */)
       {
-        assert(f.args().size() == 1);
+        assert_release(f.args().size() == 1 && "f must have only one arg");
         bool is_not_in = true;
         *this |= CtcInverse_<Y,X>(f, ctc_compl, with_centered_form, is_not_in);
       }

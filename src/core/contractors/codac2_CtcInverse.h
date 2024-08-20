@@ -122,9 +122,9 @@ namespace codac2
 
       CtcInverse_(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const Y& y, bool with_centered_form = true, bool is_not_in = false)
         : Ctc_<X>(f.args()[0]->size() /* f must have only one arg, see following assert */),
-          CtcInverse<Y>(f,y,with_centered_form,is_not_in)
+          CtcInverse<Y>(f, y, with_centered_form,is_not_in)
       {
-        assert(f.args().size() == 1);
+        assert_release(f.args().size() == 1 && "f must have only one arg");
       }
 
       template<typename C, typename = typename std::enable_if<
@@ -132,9 +132,9 @@ namespace codac2
         >::type>
       CtcInverse_(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const C& ctc_y, bool with_centered_form = true, bool is_not_in = false)
         : Ctc_<X>(f.args()[0]->size() /* f must have only one arg, see following assert */),
-          CtcInverse<Y>(f,ctc_y,with_centered_form,is_not_in)
+          CtcInverse<Y>(f, ctc_y, with_centered_form,is_not_in)
       {
-        assert(f.args().size() == 1);
+        assert_release(f.args().size() == 1 && "f must have only one arg");
       }
 
       std::shared_ptr<Ctc_<X>> copy() const

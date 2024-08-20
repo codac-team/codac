@@ -26,7 +26,7 @@ namespace codac2
       SepCtcPair(const C1& ctc_in, const C2& ctc_out)
         : Sep(ctc_in.size()), _ctc_in_out(ctc_in, ctc_out)
       {
-        assert(ctc_in.size() == ctc_out.size());
+        assert_release(ctc_in.size() == ctc_out.size());
       }
 
       std::shared_ptr<Sep> copy() const;

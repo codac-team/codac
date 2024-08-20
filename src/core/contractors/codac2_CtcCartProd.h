@@ -40,6 +40,8 @@ namespace codac2
 
       void contract(IntervalVector& x) const
       {
+        assert_release(x.size() == this->size());
+
         size_t i = 0;
         for(const auto& ci : _ctcs)
         {
