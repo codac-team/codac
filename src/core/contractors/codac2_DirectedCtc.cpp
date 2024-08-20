@@ -345,10 +345,8 @@ using namespace codac2;
   void MulOp::bwd(const IntervalVector& y, Interval& x1, IntervalVector& x2)
   {
     assert(y.size() == x2.size());
-    auto y_ = to_ibex(y), x2_ = to_ibex(x2);
-    auto x1_ = to_ibex(x1);
-    ibex::bwd_mul(y_, x1_, x2_);
-    x1 &= to_codac(x1_); x2 &= to_codac(x2_);
+    for(size_t i = 0 ; i < x2.size() ; i++)
+      bwd_mul(y[i], x1, x2[i]);
   }
 
   IntervalVector MulOp::fwd(const IntervalMatrix& x1, const IntervalVector& x2)

@@ -34,6 +34,7 @@ def normalize_label(str_label):
     .replace("or>>", "ORIN")
 
   return normalize_template_label(str_label) \
+    .replace("constexpr ", "") \
     .replace("codac::", "") \
     .replace("codac2::", "") \
     .replace("std::", "") \
