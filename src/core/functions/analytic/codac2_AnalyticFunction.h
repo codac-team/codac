@@ -18,6 +18,19 @@
 
 namespace codac2
 {
+  enum class EvaluationMode
+  {
+    NATURAL = 0x01,
+    CENTERED = 0x02
+  };
+
+  inline EvaluationMode operator&(EvaluationMode a, EvaluationMode b)
+  { return static_cast<EvaluationMode>(static_cast<int>(a) & static_cast<int>(b)); }
+
+  inline EvaluationMode operator|(EvaluationMode a, EvaluationMode b)
+  { return static_cast<EvaluationMode>(static_cast<int>(a) | static_cast<int>(b)); }
+  
+
   template<typename T, typename = typename std::enable_if<
       std::is_base_of_v<OpValueBase,T>
     >::type>
@@ -41,19 +54,32 @@ namespace codac2
       { }
 
       template<typename... Args>
-      typename T::Domain eval(const Args&... x) const
+      typename T::Domain eval(const EvaluationMode& m, const Args&... x) const
       {
-        check_valid_inputs(x...);
-        return eval_(x...).a;
+        switch(m)
+        {
+          case EvaluationMode::NATURAL:
+            return natural_eval(x...);
+
+          case EvaluationMode::CENTERED:
+            return centered_eval(x...);
+
+          default:
+            return eval(x...);
+        }
       }
 
       template<typename... Args>
-      typename T::Domain eval_centered(const Args&... x) const
+      typename T::Domain eval(const Args&... x) const
       {
         check_valid_inputs(x...);
         auto x_ = eval_(x...);
+
+        if(x_.da.size() == 0) // if the centered form is not available for this expression
+          return natural_eval(x...);
+
         auto flatten_x = cart_prod(x...);
-        
+
         if constexpr(std::is_same_v<typename T::Domain,Interval>)
           return x_.a & (x_.m + (x_.da*(flatten_x-flatten_x.mid()))[0]);
         else
@@ -61,16 +87,23 @@ namespace codac2
       }
 
       template<typename... Args>
-      typename T::Domain eval_centered_only(const Args&... x) const
+      typename T::Domain natural_eval(const Args&... x) const
+      {
+        check_valid_inputs(x...);
+        return eval_(x...).a;
+      }
+
+      template<typename... Args>
+      typename T::Domain centered_eval(const Args&... x) const
       {
         check_valid_inputs(x...);
         auto x_ = eval_(x...);
         auto flatten_x = cart_prod(x...);
-        
+
         if constexpr(std::is_same_v<typename T::Domain,Interval>)
-          return /*x_.a &*/ (x_.m + (x_.da*(flatten_x-flatten_x.mid()))[0]);
+          return x_.m + (x_.da*(flatten_x-flatten_x.mid()))[0];
         else
-          return /*x_.a &*/ (x_.m + (x_.da*(flatten_x-flatten_x.mid())).col(0));
+          return x_.m + (x_.da*(flatten_x-flatten_x.mid())).col(0);
       }
 
       template<typename... Args>

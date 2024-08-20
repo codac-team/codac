@@ -330,8 +330,8 @@ using namespace codac2;
     IntervalMatrix d(x2.da.nb_rows(),x2.da.nb_cols());
     for(size_t i = 0 ; i < d.nb_rows() ; i++)
       for(size_t j = 0 ; j < d.nb_cols() ; j++)
-        d(i,j) = x1.da[j]*x2.a[i]+x1.a*x2.da(i,j);
-
+        d(i,j) = x1.da(0,j)*x2.a[i]+x1.a*x2.da(i,j);
+    
     return {
       fwd(x1.m, x2.m),
       fwd(x1.a, x2.a),

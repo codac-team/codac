@@ -105,6 +105,8 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
   using I = const Interval&; using IV = const IntervalVector&;
 
   bind_(exported, "eval", eval, T_DOMAIN_ANALYTICFUNCTION_TTYPENAME_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
+  bind_(exported, "natural_eval", natural_eval, T_DOMAIN_ANALYTICFUNCTION_TTYPENAME_NATURAL_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
+  bind_(exported, "centered_eval", centered_eval, T_DOMAIN_ANALYTICFUNCTION_TTYPENAME_CENTERED_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
   bind_(exported, "diff", diff, AUTO_ANALYTICFUNCTION_TTYPENAME_DIFF_CONST_ARGS_REF_VARIADIC_CONST);
 
   exported

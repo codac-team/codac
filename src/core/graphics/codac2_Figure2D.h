@@ -23,10 +23,10 @@ namespace codac2
     IPE = 0x02
   };
 
-  inline int operator&(GraphicOutput a, GraphicOutput b)
+  constexpr int operator&(GraphicOutput a, GraphicOutput b)
   { return static_cast<int>(static_cast<int>(a) & static_cast<int>(b)); }
 
-  inline GraphicOutput operator|(GraphicOutput a, GraphicOutput b)
+  constexpr GraphicOutput operator|(GraphicOutput a, GraphicOutput b)
   { return static_cast<GraphicOutput>(static_cast<int>(a) | static_cast<int>(b)); }
 
   struct FigureAxis

@@ -32,6 +32,12 @@ class AnalyticFunction:
   def eval(self,*args):
     return self.f.eval(*args)
 
+  def natural_eval(self,*args):
+    return self.f.natural_eval(*args)
+
+  def centered_eval(self,*args):
+    return self.f.centered_eval(*args)
+
   def diff(self,*args):
     return self.f.diff(*args)
 

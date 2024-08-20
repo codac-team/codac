@@ -21,12 +21,12 @@ namespace codac2
     UNKNOWN = 0x01 | 0x02
   };
 
-  inline BoolInterval operator&(BoolInterval a, BoolInterval b)
+  constexpr BoolInterval operator&(BoolInterval a, BoolInterval b)
   { return static_cast<BoolInterval>(static_cast<int>(a) & static_cast<int>(b)); }
 
-  inline BoolInterval operator|(BoolInterval a, BoolInterval b)
+  constexpr BoolInterval operator|(BoolInterval a, BoolInterval b)
   { return static_cast<BoolInterval>(static_cast<int>(a) | static_cast<int>(b)); }
-      
+  
   /**
    * \brief Streams out a BoolInterval
    * 
