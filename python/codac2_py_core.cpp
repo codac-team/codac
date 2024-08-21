@@ -29,6 +29,7 @@ void export_OctaSym(py::module& m);
 //py::class_<Ctc,pyCtc> export_Ctc(py::module& m);
 py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py::module& m/*, py::class_<Ctc,pyCtc>& py_ctc*/);
 void export_CtcAction(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
+void export_CtcCartProd(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcInter(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcInverse(py::module& m, const std::string& export_name, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcUnion(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
@@ -63,6 +64,7 @@ void export_Paver(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVe
 // separators
 py::class_<Sep,pySep> export_Sep(py::module& m);
 void export_SepAction(py::module& m, py::class_<Sep,pySep>& pysep);
+void export_SepCartProd(py::module& m, py::class_<Sep,pySep>& pysep);
 void export_SepInter(py::module& m, py::class_<Sep,pySep>& sep);
 void export_SepInverse(py::module& m, const std::string& export_name, py::class_<Sep,pySep>& sep);
 void export_SepPolygon(py::module& m, py::class_<Sep,pySep>& sep);
@@ -86,8 +88,9 @@ PYBIND11_MODULE(core, m)
   // contractors
   //auto py_ctc = export_Ctc(m);
   auto py_ctc_iv = export_CtcIntervalVector(m/*,py_ctc*/);
-  export_CtcInter(m, py_ctc_iv);
   export_CtcAction(m, py_ctc_iv);
+  export_CtcCartProd(m, py_ctc_iv);
+  export_CtcInter(m, py_ctc_iv);
   export_CtcInverse<Interval>(m,"CtcInverse_Interval",py_ctc_iv);
   export_CtcInverse<IntervalVector>(m,"CtcInverse_IntervalVector",py_ctc_iv);
   export_CtcUnion(m, py_ctc_iv);
@@ -126,6 +129,7 @@ PYBIND11_MODULE(core, m)
   // separators
   auto py_sep = export_Sep(m);
   export_SepAction(m,py_sep);
+  export_SepCartProd(m,py_sep);
   export_SepInter(m,py_sep);
   export_SepInverse<Interval>(m,"SepInverse_Interval",py_sep);
   export_SepInverse<IntervalVector>(m,"SepInverse_IntervalVector",py_sep);

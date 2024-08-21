@@ -81,7 +81,9 @@ namespace codac2
     return x;
   }
 
-  template<typename... X>
+  template<typename... X, typename = typename std::enable_if<(true && ... && (
+      (std::is_same_v<int,X> || std::is_same_v<double,X> || std::is_same_v<Interval,X> || std::is_same_v<Vector,X> || std::is_same_v<IntervalVector,X>)
+    )), void>::type>
   inline IntervalVector cart_prod(const X&... x)
   {
     std::vector<IntervalVector> v_x;

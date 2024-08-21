@@ -10,6 +10,7 @@
 #pragma once
 
 #include <type_traits>
+#include "codac2_IntervalVector.h"
 #include "codac2_CtcWrapper.h"
 #include "codac2_Collection.h"
 
@@ -18,6 +19,15 @@ namespace codac2
   class CtcCartProd : public Ctc_<IntervalVector>
   {
     public:
+
+      CtcCartProd(const Collection<Ctc_<IntervalVector>>& ctcs)
+        : Ctc_<IntervalVector>([ctcs] {
+            size_t n = 0;
+            for(const auto& ci : ctcs)
+              n += ci->size();
+            return n;
+        }()), _ctcs(ctcs)
+      { }
 
       template<typename C, typename = typename std::enable_if<(
           (std::is_base_of_v<Ctc_<IntervalVector>,C> && !std::is_same_v<CtcCartProd,C>) || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>
@@ -59,7 +69,7 @@ namespace codac2
   };
 
   template<typename... C, typename = typename std::enable_if<(true && ... && (
-      std::is_base_of_v<Ctc_<IntervalVector>,C>
+      (std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>)
     )), void>::type>
   inline CtcCartProd cart_prod(const C&... c)
   {

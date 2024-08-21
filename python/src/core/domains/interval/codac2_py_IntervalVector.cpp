@@ -120,7 +120,7 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
 
   py::implicitly_convertible<py::list,IntervalVector>();
 
-  m.def("cart_prod_list", [](const std::list<IntervalVector>& l)
+  m.def("cart_prod_boxes", [](const std::list<IntervalVector>& l)
       {
         IntervalVector c = *l.begin();
         for(auto it = std::next(l.cbegin()); it != l.cend(); it++)

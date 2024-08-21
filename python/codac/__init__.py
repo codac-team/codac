@@ -125,10 +125,51 @@ class Approx:
 
 
 def cart_prod(*args):
+  # -1: to be defined, 0: domains, 1: ctc, 2: sep
   lst=[]
+  mode = -1
+
+  mode_str = {}
+  mode_str[-2] = "error"
+  mode_str[-1] = "undefined"
+  mode_str[0] = "domain"
+  mode_str[1] = "contractor"
+  mode_str[2] = "separator"
+
   for arg in args:
+
     if isinstance(arg, (float,Interval)):
+      if mode != -1 and mode != 0:
+        codac_error("cart_prod: invalid input arguments, was expecting a " + mode_str[mode] + ", got a scalar domain")
+      mode = 0
       lst.append(IntervalVector(1,Interval(arg)))
-    else:
+
+    elif isinstance(arg, (list,Vector,IntervalVector)):
+      if mode != -1 and mode != 0:
+        codac_error("cart_prod: invalid input arguments, was expecting a " + mode_str[mode] + ", got a vector domain")
+      mode = 0
       lst.append(IntervalVector(arg))
-  return cart_prod_list(lst)
+
+    elif isinstance(arg, Ctc):
+      if mode != -1 and mode != 1:
+        codac_error("cart_prod: invalid input arguments, was expecting a " + mode_str[mode] + ", got a contractor")
+      mode = 1
+      lst.append(arg)
+
+    elif isinstance(arg, Sep):
+      if mode != -1 and mode != 2:
+        codac_error("cart_prod: invalid input arguments, was expecting a " + mode_str[mode] + ", got a separator")
+      mode = 2
+      lst.append(arg)
+
+    else:
+      mode = -2 # will generate an error
+
+  if mode == 0:
+    return cart_prod_boxes(lst)
+  elif mode == 1:
+    return cart_prod_ctc(lst)
+  elif mode == 2:
+    return cart_prod_sep(lst)
+  else:
+    codac_error("cart_prod: invalid input arguments")

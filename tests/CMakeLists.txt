@@ -23,6 +23,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/3rd/codac2_tests_eigen
   core/3rd/codac2_tests_ibex
   core/actions/codac2_tests_OctaSym
+  core/contractors/codac2_tests_CtcCartProd
   core/contractors/codac2_tests_CtcInverse
   core/contractors/codac2_tests_CtcSegment
   core/domains/codac2_tests_BoolInterval
@@ -33,6 +34,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/domains/interval/codac2_tests_IntervalVector
   core/functions/analytic/codac2_tests_AnalyticFunction
   core/geometry/codac2_tests_geometry
+  core/separators/codac2_tests_SepCartProd
   core/separators/codac2_tests_SepInverse
   core/separators/codac2_tests_SepPolygon
   core/tools/codac2_tests_Approx
