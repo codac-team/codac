@@ -25,6 +25,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/actions/codac2_tests_OctaSym
   core/contractors/codac2_tests_CtcCartProd
   core/contractors/codac2_tests_CtcInverse
+  core/contractors/codac2_tests_CtcInverseNotIn
   core/contractors/codac2_tests_CtcSegment
   core/domains/codac2_tests_BoolInterval
   core/domains/interval/codac2_tests_Interval

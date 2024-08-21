@@ -14,6 +14,7 @@
 #include <codac2_analytic_values.h>
 #include "codac2_py_AnalyticFunction.h"
 #include "codac2_py_CtcInverse.h"
+#include "codac2_py_CtcInverseNotIn.h"
 #include "codac2_py_SepInverse.h"
 #include "codac2_py_core.h"
 
@@ -31,7 +32,6 @@ py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py
 void export_CtcAction(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcCartProd(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcInter(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
-void export_CtcInverse(py::module& m, const std::string& export_name, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcUnion(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcWrapper(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 
@@ -66,7 +66,6 @@ py::class_<Sep,pySep> export_Sep(py::module& m);
 void export_SepAction(py::module& m, py::class_<Sep,pySep>& pysep);
 void export_SepCartProd(py::module& m, py::class_<Sep,pySep>& pysep);
 void export_SepInter(py::module& m, py::class_<Sep,pySep>& sep);
-void export_SepInverse(py::module& m, const std::string& export_name, py::class_<Sep,pySep>& sep);
 void export_SepPolygon(py::module& m, py::class_<Sep,pySep>& sep);
 void export_SepUnion(py::module& m, py::class_<Sep,pySep>& sep);
 void export_SepWrapper(py::module& m, py::class_<Sep,pySep>& sep);
@@ -93,6 +92,8 @@ PYBIND11_MODULE(core, m)
   export_CtcInter(m, py_ctc_iv);
   export_CtcInverse<Interval>(m,"CtcInverse_Interval",py_ctc_iv);
   export_CtcInverse<IntervalVector>(m,"CtcInverse_IntervalVector",py_ctc_iv);
+  export_CtcInverseNotIn<Interval>(m,"CtcInverseNotIn_Interval",py_ctc_iv);
+  export_CtcInverseNotIn<IntervalVector>(m,"CtcInverseNotIn_IntervalVector",py_ctc_iv);
   export_CtcUnion(m, py_ctc_iv);
   export_CtcWrapper(m, py_ctc_iv);
 

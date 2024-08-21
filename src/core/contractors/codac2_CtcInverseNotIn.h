@@ -15,7 +15,7 @@
 
 namespace codac2
 {
-  template<typename Y,typename X>
+  template<typename Y,typename X=IntervalVector>
   class CtcInverseNotIn : public CtcUnion<X>
   {
     public:

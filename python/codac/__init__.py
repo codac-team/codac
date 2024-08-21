@@ -89,6 +89,24 @@ class CtcInverse(Ctc):
     return self.c.copy()
 
 
+class CtcInverseNotIn(Ctc):
+
+  def __init__(self, f, y, with_centered_form = True):
+    Ctc.__init__(self, f.input_size())
+    if isinstance(f.f, AnalyticFunction_Scalar):
+      self.c = CtcInverseNotIn_Interval(f.f,Interval(y),with_centered_form)
+    elif isinstance(f.f, AnalyticFunction_Vector):
+      self.c = CtcInverseNotIn_IntervalVector(f.f,IntervalVector(y),with_centered_form)
+    else:
+      codac_error("CtcInverseNotIn: can only build CtcInverseNotIn from scalar or vector functions")
+
+  def contract(self,x):
+    self.c.contract(x)
+
+  def copy(self):
+    return self.c.copy()
+
+
 class SepInverse(Sep):
 
   def __init__(self, f, y, with_centered_form = True):

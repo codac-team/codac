@@ -60,6 +60,7 @@
       src/core/contractors/codac2_py_CtcCartProd.cpp
       src/core/contractors/codac2_py_CtcInter.cpp
       src/core/contractors/codac2_py_CtcInverse.h
+      src/core/contractors/codac2_py_CtcInverseNotIn.h
       src/core/contractors/codac2_py_CtcUnion.cpp
       src/core/contractors/codac2_py_CtcWrapper.cpp
 
