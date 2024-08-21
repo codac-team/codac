@@ -46,6 +46,15 @@ OctaSym OctaSym::invert() const
   return inv;
 }
 
+OctaSym OctaSym::operator*(const OctaSym& s) const
+{
+  assert_release(size() == s.size());
+  OctaSym a(*this);
+  for(size_t i = 0 ; i < a.size() ; i++)
+    a[i] = isign(s[i])*(*this)[std::abs((int)s[i])-1];
+  return a;
+}
+
 IntervalVector OctaSym::operator()(const IntervalVector& x) const
 {
   assert_release((size_t)x.size() == size());
@@ -53,22 +62,4 @@ IntervalVector OctaSym::operator()(const IntervalVector& x) const
   for(size_t i = 0 ; i < size() ; i++)
     x_[i] = sign((*this)[i])*x[std::abs((*this)[i])-1];
   return x_;
-}
-
-ostream& operator<<(ostream& str, const OctaSym& s)
-{
-  str << "(";
-  for(size_t i = 0 ; i < s.size() ; i++)
-    str << (i != 0 ? " " : "") << s[i];
-  str << ")" << flush;
-  return str;
-}
-
-OctaSym operator*(const OctaSym& s1, const OctaSym& s2)
-{
-  assert_release(s1.size() == s2.size());
-  OctaSym s3(s1);
-  for(size_t i = 0 ; i < s3.size() ; i++)
-    s3[i] = isign(s2[i])*s1[std::abs((int)s2[i])-1];
-  return s3;
 }

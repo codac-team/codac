@@ -340,8 +340,6 @@ using namespace codac2;
     };
   }
 
-  #include "codac2_ibex.h"
-
   void MulOp::bwd(const IntervalVector& y, Interval& x1, IntervalVector& x2)
   {
     assert(y.size() == x2.size());

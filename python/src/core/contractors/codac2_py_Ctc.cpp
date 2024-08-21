@@ -50,12 +50,6 @@ py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py
       py::return_value_policy::reference_internal,
       py::keep_alive<1,0>())
 
-    //.def("__or__", [](const std::shared_ptr<Ctc_<IntervalVector>>& c1, const std::shared_ptr<Ctc_<IntervalVector>>& c2)
-    //    {
-    //      return CtcUnion<IntervalVector>(c1,c2);
-    //    },
-    //  CTCUNION_TYPENAME_C1_X_OPERATOROR_CONST_C1_REF_CONST_C2_REF)
-
     // Intersection of contractors
 
     .def("__and__", [](const Ctc_<IntervalVector>& c1, const Ctc_<IntervalVector>& c2)

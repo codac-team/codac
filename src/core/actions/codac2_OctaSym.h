@@ -25,9 +25,7 @@ namespace codac2
    * \class Action
    */
   class Action
-  {
-
-  };
+  { };
 
   /**
    * \class OctaSym
@@ -40,6 +38,8 @@ namespace codac2
       OctaSym(const std::vector<int>& s);
 
       OctaSym invert() const;
+
+      OctaSym operator*(const OctaSym& s) const;
 
       IntervalVector operator()(const IntervalVector& x) const;
 
@@ -58,8 +58,13 @@ namespace codac2
       std::shared_ptr<SetExpr> operator()(const std::shared_ptr<SetExpr>& x1) const;
       // -> is defined in set operations file
 
-      friend std::ostream& operator<<(std::ostream& str, const OctaSym& s);
+      friend std::ostream& operator<<(std::ostream& str, const OctaSym& s)
+      {
+        str << "(";
+        for(size_t i = 0 ; i < s.size() ; i++)
+          str << (i != 0 ? " " : "") << s[i];
+        str << ")" << std::flush;
+        return str;
+      }
   };
-
-  OctaSym operator*(const OctaSym& s1, const OctaSym& s2);
 }

@@ -52,8 +52,11 @@
       codac2_py_core.cpp
       codac2_py_core.h
       
+      src/core/actions/codac2_py_OctaSym.cpp
+      
       src/core/contractors/codac2_py_Ctc.cpp
       src/core/contractors/codac2_py_Ctc.h
+      src/core/contractors/codac2_py_CtcAction.cpp
       src/core/contractors/codac2_py_CtcInter.cpp
       src/core/contractors/codac2_py_CtcInverse.h
       src/core/contractors/codac2_py_CtcUnion.cpp
@@ -85,6 +88,7 @@
 
       src/core/separators/codac2_py_Sep.cpp
       src/core/separators/codac2_py_Sep.h
+      src/core/separators/codac2_py_SepAction.cpp
       src/core/separators/codac2_py_SepInter.cpp
       src/core/separators/codac2_py_SepInverse.h
       src/core/separators/codac2_py_SepPolygon.cpp
@@ -97,6 +101,7 @@
     target_include_directories(core
       PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
+      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/actions/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/contractors/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/domains/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/domains/interval/
