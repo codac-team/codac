@@ -45,5 +45,10 @@ namespace codac2
       {
         return std::make_shared<CtcInverseNotIn<Y,X>>(*this);
       }
+
+      void contract(X& x) const
+      {
+        CtcUnion<X>::contract(x);
+      }
   };
 }

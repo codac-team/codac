@@ -44,9 +44,8 @@ void export_CtcInter(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcInterva
       CTCINTER_X_CTCINTER_CONST_C_REF_VARIADIC,
       "c1"_a, "c2"_a)
 
-    .def("contract", &CtcInter<IntervalVector>::contract,
-      VOID_CTCINTER_X_CONTRACT_X_REF_CONST,
-      "x"_a)
+    .def(CONTRACT_BOX_METHOD(CtcInter<IntervalVector>,
+      VOID_CTCINTER_X_CONTRACT_X_REF_CONST))
 
     .def("__iand__", [](CtcInter<IntervalVector>& c1, const Ctc_<IntervalVector>& c2)
         {

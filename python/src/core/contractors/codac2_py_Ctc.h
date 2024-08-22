@@ -22,6 +22,9 @@ namespace py = pybind11;
 using namespace py::literals;
 
 
+#define CONTRACT_BOX_METHOD(clss,doc) \
+  "contract", [](const clss& c, IntervalVector& x) -> const IntervalVector& { c.contract(x); return x; }, doc, "x"_a
+
 class pyCtcIntervalVector : public Ctc_<IntervalVector>
 {
   public:
@@ -37,11 +40,14 @@ class pyCtcIntervalVector : public Ctc_<IntervalVector>
 
       // Try to look up the overloaded method on the Python side
       py::function overload = py::get_overload(this, "contract");
-      assert_release(overload && "Ctc_<IntervalVector>: contract method not found");
+      assert_release(overload && "Ctc: contract method not found");
 
-      overload.operator()<
-        py::return_value_policy::reference // because contract() works by reference
-      >(x);
+      auto obj = overload(x);
+      assert_release(py::isinstance<IntervalVector>(obj) &&
+        "Ctc: error with contract method, it should return an IntervalVector");
+
+      IntervalVector contracted_x = obj.cast<IntervalVector>();
+      x &= obj.cast<IntervalVector>();
     }
 
     // Trampoline (need one for each virtual function)

@@ -27,16 +27,15 @@ void export_CtcLazy(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcInterval
   exported
 
     .def(py::init(
-        [](const Ctc_<IntervalVector>& c)
+        [](const pyCtcIntervalVector& c)
         {
           return std::make_unique<CtcLazy>(c.copy());
         }),
       CTCLAZY_CTCLAZY_CONST_C_REF,
       "c"_a)
 
-    .def("contract", &CtcLazy::contract,
-      VOID_CTCLAZY_CONTRACT_INTERVALVECTOR_REF_CONST,
-      "x"_a)
-    
+    .def(CONTRACT_BOX_METHOD(CtcLazy,
+      VOID_CTCLAZY_CONTRACT_INTERVALVECTOR_REF_CONST))
+
   ;
 }

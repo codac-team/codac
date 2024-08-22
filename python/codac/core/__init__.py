@@ -82,7 +82,7 @@ class CtcInverse(Ctc):
       codac_error("CtcInverse: can only build CtcInverse from scalar or vector functions")
 
   def contract(self,x):
-    self.c.contract(x)
+    return self.c.contract(x)
 
   def copy(self):
     return self.c.copy()
@@ -100,7 +100,7 @@ class CtcInverseNotIn(Ctc):
       codac_error("CtcInverseNotIn: can only build CtcInverseNotIn from scalar or vector functions")
 
   def contract(self,x):
-    self.c.contract(x)
+    return self.c.contract(x)
 
   def copy(self):
     return self.c.copy()

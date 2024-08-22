@@ -29,9 +29,8 @@ void export_CtcWrapper(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcInter
       CTCWRAPPER__X_CTCWRAPPER__CONST_X_REF,
       "y"_a)
 
-    .def("contract", &CtcWrapper_<IntervalVector>::contract,
-      VOID_CTCWRAPPER__X_CONTRACT_X_REF_CONST,
-      "x"_a)
+    .def(CONTRACT_BOX_METHOD(CtcWrapper_<IntervalVector>,
+      VOID_CTCWRAPPER__X_CONTRACT_X_REF_CONST))
     
   ;
 }

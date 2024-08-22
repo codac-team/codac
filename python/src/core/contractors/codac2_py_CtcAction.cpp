@@ -34,9 +34,8 @@ void export_CtcAction(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcInterv
       CTCACTION_CTCACTION_CONST_C_REF_CONST_OCTASYM_REF,
       "c"_a, "a"_a)
 
-    .def("contract", &CtcAction::contract,
-      VOID_CTCACTION_CONTRACT_INTERVALVECTOR_REF_CONST,
-      "x"_a)
+    .def(CONTRACT_BOX_METHOD(CtcAction,
+      VOID_CTCACTION_CONTRACT_INTERVALVECTOR_REF_CONST))
     
   ;
 }

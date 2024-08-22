@@ -18,7 +18,8 @@ class CtcCustom(Ctc):
 
   def contract(self, x):
     if x[0].rad() > 1.:
-      x.init(IntervalVector(x.mid()).inflate(0.5*x.rad()))
+      return IntervalVector(x.mid()).inflate(0.5*x.rad())
+    return x
 
 
 class TestCtcLazy(unittest.TestCase):
@@ -27,22 +28,21 @@ class TestCtcLazy(unittest.TestCase):
 
     ctc_custom = CtcCustom()
     x = IntervalVector([[-1000,1000],[-1000,1000]])
-    ctc_custom.contract(x)
-
+    x = ctc_custom.contract(x)
     self.assertTrue(Approx(x) == IntervalVector([[-500,500],[-500,500]]))
-    ctc_custom.contract(x)
+    x = ctc_custom.contract(x)
     self.assertTrue(Approx(x) == IntervalVector([[-250,250],[-250,250]]))
-    ctc_custom.contract(x)
+    x = ctc_custom.contract(x)
     self.assertTrue(Approx(x) == IntervalVector([[-125,125],[-125,125]]))
 
     ctc_lazy = CtcLazy(ctc_custom)
     
     x = IntervalVector([[-1000,1000],[-1000,1000]])
-    ctc_lazy.contract(x)
+    x = ctc_lazy.contract(x)
     self.assertTrue(x == IntervalVector([[-250,250],[-250,250]]))
     
     x = IntervalVector([[-500,500],[-500,500]])
-    ctc_lazy.contract(x)
+    x = ctc_lazy.contract(x)
     self.assertTrue(x == IntervalVector([[-125,125],[-125,125]]))
 
 

@@ -9,7 +9,7 @@ class MyCtc(Ctc):
     self.C = C_
 
   def contract(self, x):
-    self.C.contract(x)
+    return self.C.contract(x)
 
 # Trying this custom contractor
 
