@@ -23,7 +23,7 @@ setup(
   packages=['${PYTHON_PACKAGE_NAME}', '${PYTHON_PACKAGE_NAME}.tests'],
   package_data={
     '${PYTHON_PACKAGE_NAME}': [
-      'core${PYTHON_MODULE_EXTENSION}',
+      '_core${PYTHON_MODULE_EXTENSION}',
       'graphics${PYTHON_MODULE_EXTENSION}',
       'unsupported${PYTHON_MODULE_EXTENSION}',
     ],

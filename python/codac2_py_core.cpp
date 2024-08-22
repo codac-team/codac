@@ -75,7 +75,7 @@ void export_SepWrapper(py::module& m, py::class_<Sep,pySep>& sep);
 void export_Approx(py::module& m);
 
 
-PYBIND11_MODULE(core, m)
+PYBIND11_MODULE(_core, m)
 {
   m.doc() = string(FOR_MATLAB ? "Matlab" : "Python") + " binding of Codac (core)";
   m.attr("oo") = oo;

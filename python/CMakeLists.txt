@@ -48,7 +48,7 @@
 
   # Generating a library core.so containing the python binding:
 
-    pybind11_add_module(core SHARED
+    pybind11_add_module(_core SHARED
       codac2_py_core.cpp
       codac2_py_core.h
       
@@ -102,7 +102,7 @@
       src/core/tools/codac2_py_Approx.cpp
     )
 
-    target_include_directories(core
+    target_include_directories(_core
       PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/actions/
@@ -119,13 +119,13 @@
       ${CMAKE_CURRENT_BINARY_DIR}/docstring
     )
 
-    target_link_libraries(core
+    target_link_libraries(_core
       PRIVATE ${PROJECT_NAME}-core ${LIBS} Ibex::ibex
     )
 
     # Copy the generated library in the package folder
-    add_custom_command(TARGET core POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:core>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
+    add_custom_command(TARGET _core POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:_core>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
     )
 
     # ex: from codac import core
@@ -189,13 +189,15 @@
   if(BUILD_TESTS)
     
     file(GLOB_RECURSE TESTS_FILES
-      "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/../../tests/core/codac2_tests_*.py"
+      "${CMAKE_CURRENT_SOURCE_DIR}/../tests/codac2_tests_*.py"
       )
+
     foreach(TEST_FILE ${TESTS_FILES})
-      get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
-      set(TEST_NAME "python_${TEST_NAME}")
-      add_test(NAME ${TEST_NAME} COMMAND ${PYTHON_EXECUTABLE} ${TEST_FILE})
-      set_tests_properties(${TEST_NAME} PROPERTIES ENVIRONMENT "PYTHONPATH=${PYTHON_PACKAGE_DIR}")
+      file(COPY ${TEST_FILE} DESTINATION ${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests)
+      #get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
+      #set(TEST_NAME "python_${TEST_NAME}")
+      #add_test(NAME ${TEST_NAME} COMMAND ${PYTHON_EXECUTABLE} ${TEST_FILE})
+      #set_tests_properties(${TEST_NAME} PROPERTIES ENVIRONMENT "PYTHONPATH=${PYTHON_PACKAGE_DIR}")
     endforeach()
 
   endif()
