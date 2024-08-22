@@ -17,6 +17,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCartProd.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcFixpoint.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcFixpoint.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverseNotIn.h

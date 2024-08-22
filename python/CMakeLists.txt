@@ -58,6 +58,7 @@
       src/core/contractors/codac2_py_Ctc.h
       src/core/contractors/codac2_py_CtcAction.cpp
       src/core/contractors/codac2_py_CtcCartProd.cpp
+      src/core/contractors/codac2_py_CtcFixpoint.cpp
       src/core/contractors/codac2_py_CtcInter.cpp
       src/core/contractors/codac2_py_CtcInverse.h
       src/core/contractors/codac2_py_CtcInverseNotIn.h

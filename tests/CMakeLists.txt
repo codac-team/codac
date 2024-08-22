@@ -24,6 +24,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/3rd/codac2_tests_ibex
   core/actions/codac2_tests_OctaSym
   core/contractors/codac2_tests_CtcCartProd
+  core/contractors/codac2_tests_CtcFixpoint
   core/contractors/codac2_tests_CtcInverse
   core/contractors/codac2_tests_CtcInverseNotIn
   core/contractors/codac2_tests_CtcLazy

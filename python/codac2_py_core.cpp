@@ -31,6 +31,7 @@ void export_OctaSym(py::module& m);
 py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py::module& m/*, py::class_<Ctc,pyCtc>& py_ctc*/);
 void export_CtcAction(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcCartProd(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
+void export_CtcFixpoint(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcInter(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcLazy(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcUnion(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
@@ -90,6 +91,7 @@ PYBIND11_MODULE(_core, m)
   auto py_ctc_iv = export_CtcIntervalVector(m/*,py_ctc*/);
   export_CtcAction(m, py_ctc_iv);
   export_CtcCartProd(m, py_ctc_iv);
+  export_CtcFixpoint(m, py_ctc_iv);
   export_CtcInter(m, py_ctc_iv);
   export_CtcInverse<Interval>(m,"CtcInverse_Interval",py_ctc_iv);
   export_CtcInverse<IntervalVector>(m,"CtcInverse_IntervalVector",py_ctc_iv);
