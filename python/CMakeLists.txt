@@ -63,8 +63,12 @@
       src/core/contractors/codac2_py_CtcInverse.h
       src/core/contractors/codac2_py_CtcInverseNotIn.h
       src/core/contractors/codac2_py_CtcLazy.cpp
+      src/core/contractors/codac2_py_CtcNot.cpp
+      src/core/contractors/codac2_py_CtcPolar.cpp
+      src/core/contractors/codac2_py_CtcSegment.cpp
       src/core/contractors/codac2_py_CtcUnion.cpp
       src/core/contractors/codac2_py_CtcWrapper.cpp
+      src/core/contractors/codac2_py_DirectedCtc.cpp
 
       src/core/domains/interval/codac2_py_Interval.cpp
       src/core/domains/interval/codac2_py_Interval_operations.cpp

@@ -17,7 +17,7 @@ TEST_CASE("CtcSegment")
 {
   {
     IntervalVector x(2);
-    CtcSegment c({{{3},{-1}},{{3},{4}}});
+    CtcSegment c({{3},{-1}},{{3},{4}});
 
     x = IntervalVector(2);
     c.contract(x);
@@ -34,7 +34,7 @@ TEST_CASE("CtcSegment")
 
   {
     IntervalVector x(2);
-    CtcSegment c({{{-1},{-1}},{{1},{1}}});
+    CtcSegment c({{-1},{-1}},{{1},{1}});
 
     x = IntervalVector(2);
     c.contract(x);
