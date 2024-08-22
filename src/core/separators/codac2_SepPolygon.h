@@ -21,5 +21,6 @@ namespace codac2
 
       SepPolygon(const std::vector<IntervalVector>& vertices);
       std::shared_ptr<Sep> copy() const;
+      BoxPair separate(const IntervalVector& x) const;
   };
 }

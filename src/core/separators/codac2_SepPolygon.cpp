@@ -44,4 +44,9 @@ namespace codac2
   {
     return std::make_shared<SepPolygon>(*this);
   }
+
+  BoxPair SepPolygon::separate(const IntervalVector& x) const
+  {
+    return SepCtcBoundary::separate(x);
+  }
 }

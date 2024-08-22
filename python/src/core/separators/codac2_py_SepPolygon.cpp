@@ -31,7 +31,7 @@ void export_SepPolygon(py::module& m, py::class_<Sep,pySep>& pysep)
       "vertices"_a)
 
     .def("separate", &SepPolygon::separate,
-      BOXPAIR_SEPCTCBOUNDARY_SEPARATE_CONST_INTERVALVECTOR_REF_CONST,
+      BOXPAIR_SEPPOLYGON_SEPARATE_CONST_INTERVALVECTOR_REF_CONST,
       "x"_a)
   ;
 }
