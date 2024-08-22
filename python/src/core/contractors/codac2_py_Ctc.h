@@ -19,7 +19,7 @@
 
 using namespace codac2;
 namespace py = pybind11;
-using namespace pybind11::literals;
+using namespace py::literals;
 
 
 class pyCtcIntervalVector : public Ctc_<IntervalVector>
@@ -33,41 +33,28 @@ class pyCtcIntervalVector : public Ctc_<IntervalVector>
     // Trampoline (need one for each virtual function)
     virtual void contract(IntervalVector& x) const override
     {
-      pybind11::gil_scoped_acquire gil; // Acquire the GIL while in this scope
+      py::gil_scoped_acquire gil; // Acquire the GIL while in this scope
 
       // Try to look up the overloaded method on the Python side
-      pybind11::function overload = pybind11::get_overload(this, "contract");
+      py::function overload = py::get_overload(this, "contract");
+      assert_release(overload && "Ctc_<IntervalVector>: contract method not found");
 
-      if(overload) // method is found
-        overload.operator()<
-          pybind11::return_value_policy::reference // because contract() works by reference
-        >(x);
-
-      else
-      {
-        assert(false && "Ctc_<IntervalVector>: contract method not found");
-      }
+      overload.operator()<
+        py::return_value_policy::reference // because contract() works by reference
+      >(x);
     }
 
     // Trampoline (need one for each virtual function)
     virtual std::shared_ptr<Ctc_<IntervalVector>> copy() const override
     {
-      pybind11::gil_scoped_acquire gil; // Acquire the GIL while in this scope
+      py::gil_scoped_acquire gil; // Acquire the GIL while in this scope
 
       // Try to look up the overloaded method on the Python side
-      pybind11::function overload = pybind11::get_overload(this, "copy");
+      py::function overload = py::get_overload(this, "copy");
+      assert_release(overload && "Ctc_<IntervalVector>: copy method not found");
 
-      if(overload) // method is found
-      {
-        auto obj = overload();
-        return std::shared_ptr<Ctc_<IntervalVector>>(obj.cast<Ctc_<IntervalVector>*>(), [](auto p) { /* no delete */ });
-      }
-
-      else
-      {
-        assert(false && "Ctc_<IntervalVector>: copy method not found");
-        return nullptr;
-      }
+      auto obj = overload();
+      return std::shared_ptr<Ctc_<IntervalVector>>(obj.cast<Ctc_<IntervalVector>*>(), [](auto p) { /* no delete */ });
     }
 
   protected:

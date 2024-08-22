@@ -173,6 +173,11 @@ namespace codac2
           *(_e.data()+i) = x;
       }
 
+      void init(const S& x)
+      {
+        *this = x;
+      }
+
       void resize(size_t nb_rows, size_t nb_cols)
       {
         assert_release(nb_rows >= 0 && nb_cols >= 0);

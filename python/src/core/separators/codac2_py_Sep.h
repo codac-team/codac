@@ -19,7 +19,7 @@
 
 using namespace codac2;
 namespace py = pybind11;
-using namespace pybind11::literals;
+using namespace py::literals;
 
 
 class pySep : public Sep
@@ -33,50 +33,30 @@ class pySep : public Sep
     // Trampoline (need one for each virtual function)
     BoxPair separate(const IntervalVector& x) const override
     {
-      pybind11::gil_scoped_acquire gil; // Acquire the GIL while in this scope
+      py::gil_scoped_acquire gil; // Acquire the GIL while in this scope
 
       // Try to look up the overloaded method on the Python side
-      pybind11::function overload = pybind11::get_overload(this, "separate");
+      py::function overload = py::get_overload(this, "separate");
+      assert_release(overload && "Sep: separate method not found");
 
-      if(overload) // method is found
-      {
-        auto x_copy = IntervalVector(x);
-        auto obj = overload(x_copy); // calls the Python function
+      auto x_copy = IntervalVector(x);
 
-        if(pybind11::isinstance<BoxPair>(obj)) // checks if it returned a correct Python type
-          return obj.cast<BoxPair>();
+      auto obj = overload(x_copy); // calls the Python function
+      assert_release(py::isinstance<BoxPair>(obj) &&
+        "Sep: error with separate method, incorrect returned Python type");
 
-        else
-        {
-          assert(false && "Sep: error with separate method");
-        }
-      }
-
-      else
-      {
-        assert(false && "Sep: separate method not found");
-      }
-
-      return { x,x }; // should not reach this point
+      return obj.cast<BoxPair>();
     }
 
     // Trampoline (need one for each virtual function)
     virtual std::shared_ptr<Sep> copy() const override
     {
       // Try to look up the overloaded method on the Python side
-      pybind11::function overload = pybind11::get_overload(this, "copy");
+      py::function overload = py::get_overload(this, "copy");
+      assert(overload && "Sep: copy method not found");
 
-      if(overload) // method is found
-      {
-        auto obj = overload();
-        return std::shared_ptr<Sep>(obj.cast<Sep*>(), [](auto p) { /* no delete */ });
-      }
-
-      else
-      {
-        assert(false && "Sep: copy method not found");
-        return nullptr;
-      }
+      auto obj = overload();
+      return std::shared_ptr<Sep>(obj.cast<Sep*>(), [](auto p) { /* no delete */ });
     }
 
   protected:

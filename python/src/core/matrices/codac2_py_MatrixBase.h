@@ -85,6 +85,13 @@ void export_MatrixBase(py::class_<S>& pyclass)
       VOID_MATRIXBASE_ST_INIT_CONST_T_REF,
       "x"_a)
 
+    .def("init", [](S& x, const S& a)
+        {
+          x.init(a);
+        },
+      VOID_MATRIXBASE_ST_INIT_CONST_S_REF,
+      "x"_a)
+
     .def("__repr__", [](const S& x)
         {
           std::ostringstream s;

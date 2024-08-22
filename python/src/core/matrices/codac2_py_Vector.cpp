@@ -83,6 +83,8 @@ void export_Vector(py::module& m)
           return string(s.str()); 
         },
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_VECTOR_REF)
+
+    .def(double() * py::self)
   ;
 
   py::implicitly_convertible<py::list,Vector>();
