@@ -2,7 +2,6 @@ from codac.core import *
 from .version import __version__
 from sys import float_info
 
-
 def codac_error(message):
   print(f'''
 ============================================================================
