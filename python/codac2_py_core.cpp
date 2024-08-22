@@ -32,6 +32,7 @@ py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py
 void export_CtcAction(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcCartProd(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcInter(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
+void export_CtcLazy(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcUnion(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcWrapper(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 
@@ -94,6 +95,7 @@ PYBIND11_MODULE(core, m)
   export_CtcInverse<IntervalVector>(m,"CtcInverse_IntervalVector",py_ctc_iv);
   export_CtcInverseNotIn<Interval>(m,"CtcInverseNotIn_Interval",py_ctc_iv);
   export_CtcInverseNotIn<IntervalVector>(m,"CtcInverseNotIn_IntervalVector",py_ctc_iv);
+  export_CtcLazy(m, py_ctc_iv);
   export_CtcUnion(m, py_ctc_iv);
   export_CtcWrapper(m, py_ctc_iv);
 

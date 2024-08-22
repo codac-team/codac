@@ -46,9 +46,11 @@
   # Library for Python binding
   ################################################################################
 
-  # Generating a library core.so containing the python binding:
+  set(CODAC_MAIN_PYPACKAGE "codac")
 
-    pybind11_add_module(core SHARED
+  # Generating a library {CODAC_MAIN_PYPACKAGE}.so containing the python binding:
+
+    pybind11_add_module(${CODAC_MAIN_PYPACKAGE} SHARED
       codac2_py_core.cpp
       codac2_py_core.h
       
@@ -61,6 +63,7 @@
       src/core/contractors/codac2_py_CtcInter.cpp
       src/core/contractors/codac2_py_CtcInverse.h
       src/core/contractors/codac2_py_CtcInverseNotIn.h
+      src/core/contractors/codac2_py_CtcLazy.cpp
       src/core/contractors/codac2_py_CtcUnion.cpp
       src/core/contractors/codac2_py_CtcWrapper.cpp
 
@@ -101,7 +104,7 @@
       src/core/tools/codac2_py_Approx.cpp
     )
 
-    target_include_directories(core
+    target_include_directories(${CODAC_MAIN_PYPACKAGE}
       PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/actions/
@@ -118,13 +121,13 @@
       ${CMAKE_CURRENT_BINARY_DIR}/docstring
     )
 
-   	target_link_libraries(core
+   	target_link_libraries(${CODAC_MAIN_PYPACKAGE}
    	  PRIVATE ${PROJECT_NAME}-core ${LIBS} Ibex::ibex
    	)
 
     # Copy the generated library in the package folder
-    add_custom_command(TARGET core POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:core>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
+    add_custom_command(TARGET ${CODAC_MAIN_PYPACKAGE} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${CODAC_MAIN_PYPACKAGE}>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
     )
 
     # ex: from codac import core
