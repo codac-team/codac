@@ -27,9 +27,10 @@ for PYBIN in /opt/python/cp3*/bin; do
   done
   
   "${PYBIN}/python" -m pip install codac --no-deps --no-index -f /io/wheelhouse
-  "${PYBIN}/python" ../examples/02_centered_form/main.py
   "${PYBIN}/python" -m pip install numpy --prefer-binary
-  #(cd "$HOME"; "${PYBIN}/python" -m unittest discover codac.tests)
+  "${PYBIN}/python" ../examples/02_centered_form/main.py
+  "${PYBIN}/python" -m unittest discover codac.tests
+  
   make test ARGS="-V --output-on-failure"
   echo "start of Testing/Temporary/LastTest.log"
   cat Testing/Temporary/LastTest.log

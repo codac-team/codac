@@ -193,7 +193,9 @@
       )
 
     foreach(TEST_FILE ${TESTS_FILES})
-      file(COPY ${TEST_FILE} DESTINATION ${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests)
+      string(REPLACE "codac2_tests_" "test_" TEST_FILE_UNITTEST ${TEST_FILE}) # unittest convention
+      get_filename_component(TEST_FILE_UNITTEST ${TEST_FILE_UNITTEST} NAME_WE)
+      configure_file(${TEST_FILE} ${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests/${TEST_FILE_UNITTEST}.py COPYONLY)
       #get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
       #set(TEST_NAME "python_${TEST_NAME}")
       #add_test(NAME ${TEST_NAME} COMMAND ${PYTHON_EXECUTABLE} ${TEST_FILE})
