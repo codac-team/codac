@@ -71,7 +71,9 @@ void export_Paver(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVe
 py::class_<Sep,pySep> export_Sep(py::module& m);
 void export_SepAction(py::module& m, py::class_<Sep,pySep>& pysep);
 void export_SepCartProd(py::module& m, py::class_<Sep,pySep>& pysep);
+void export_SepCtcBoundary(py::module& m, py::class_<Sep,pySep>& pysep);
 void export_SepInter(py::module& m, py::class_<Sep,pySep>& sep);
+void export_SepNot(py::module& m, py::class_<Sep,pySep>& sep);
 void export_SepPolygon(py::module& m, py::class_<Sep,pySep>& sep);
 void export_SepUnion(py::module& m, py::class_<Sep,pySep>& sep);
 void export_SepWrapper(py::module& m, py::class_<Sep,pySep>& sep);
@@ -143,9 +145,11 @@ PYBIND11_MODULE(_core, m)
   auto py_sep = export_Sep(m);
   export_SepAction(m,py_sep);
   export_SepCartProd(m,py_sep);
+  export_SepCtcBoundary(m,py_sep);
   export_SepInter(m,py_sep);
   export_SepInverse<Interval>(m,"SepInverse_Interval",py_sep);
   export_SepInverse<IntervalVector>(m,"SepInverse_IntervalVector",py_sep);
+  export_SepNot(m,py_sep);
   export_SepPolygon(m,py_sep);
   export_SepUnion(m,py_sep);
   export_SepWrapper(m,py_sep);

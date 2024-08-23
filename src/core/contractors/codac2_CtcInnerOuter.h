@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_SepCtc.h
+ *  \file codac2_CtcInnerOuter.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -15,27 +15,27 @@
 
 namespace codac2
 {
-  class SepCtcIn : public Ctc_<IntervalVector>
+  class CtcInner : public Ctc_<IntervalVector>
   {
     public:
 
       template<typename S, typename = typename std::enable_if<
           std::is_base_of_v<Sep,S>
         >::type>
-      SepCtcIn(const S& s)
+      CtcInner(const S& s)
         : Ctc_<IntervalVector>(s.size()), _seps(s)
       { }
 
       template<typename S, typename = typename std::enable_if<
           std::is_base_of_v<S,Sep>
         >::type>
-      SepCtcIn(const std::shared_ptr<S>& s)
+      CtcInner(const std::shared_ptr<S>& s)
         : Ctc_<IntervalVector>(s->size()), _seps(s)
       { }
 
       std::shared_ptr<Ctc_<IntervalVector>> copy() const
       {
-        return std::make_shared<SepCtcIn>(*this);
+        return std::make_shared<CtcInner>(*this);
       }
 
       void contract(IntervalVector& x) const
@@ -49,27 +49,27 @@ namespace codac2
       const Collection<Sep> _seps;
   };
 
-  class SepCtcOut : public Ctc_<IntervalVector>
+  class CtcOuter : public Ctc_<IntervalVector>
   {
     public:
 
       template<typename S, typename = typename std::enable_if<
           std::is_base_of_v<Sep,S>
         >::type>
-      SepCtcOut(const S& s)
+      CtcOuter(const S& s)
         : Ctc_<IntervalVector>(s.size()), _seps(s)
       { }
 
       template<typename S, typename = typename std::enable_if<
           std::is_base_of_v<S,Sep>
         >::type>
-      SepCtcOut(const std::shared_ptr<S>& s)
+      CtcOuter(const std::shared_ptr<S>& s)
         : Ctc_<IntervalVector>(s->size()), _seps(s)
       { }
 
       std::shared_ptr<Ctc_<IntervalVector>> copy() const
       {
-        return std::make_shared<SepCtcOut>(*this);
+        return std::make_shared<CtcOuter>(*this);
       }
 
       void contract(IntervalVector& x) const

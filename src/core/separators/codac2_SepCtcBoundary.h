@@ -14,6 +14,7 @@
 #include "codac2_CtcWrapper.h"
 #include "codac2_Collection.h"
 #include "codac2_BoolInterval.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -22,10 +23,10 @@ namespace codac2
     public:
 
       template<typename C, typename = typename std::enable_if<(
-          std::is_base_of_v<Ctc_<IntervalVector>,C>
+          std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>
         )>::type>
       SepCtcBoundary(const C& ctc_boundary, const std::function<BoolInterval(const Vector&)>& inside_test)
-        : Sep(ctc_boundary.size()), _ctc_boundary(ctc_boundary), _inside_test(inside_test)
+        : Sep(size_of(ctc_boundary)), _ctc_boundary(ctc_boundary), _inside_test(inside_test)
       { }
 
       std::shared_ptr<Sep> copy() const;

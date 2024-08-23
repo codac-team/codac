@@ -20,8 +20,8 @@ namespace codac2
   {
     public:
 
-      SepNot(const IntervalVector& s)
-        : Sep(s.size()), _sep(SepWrapper_<IntervalVector>(s))
+      SepNot(const IntervalVector& x)
+        : Sep(x.size()), _sep(SepWrapper_<IntervalVector>(x))
       { }
 
       template<typename S, typename = typename std::enable_if<(

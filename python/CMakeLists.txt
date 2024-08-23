@@ -98,8 +98,10 @@
       src/core/separators/codac2_py_Sep.h
       src/core/separators/codac2_py_SepAction.cpp
       src/core/separators/codac2_py_SepCartProd.cpp
+      src/core/separators/codac2_py_SepCtcBoundary.cpp
       src/core/separators/codac2_py_SepInter.cpp
       src/core/separators/codac2_py_SepInverse.h
+      src/core/separators/codac2_py_SepNot.cpp
       src/core/separators/codac2_py_SepPolygon.cpp
       src/core/separators/codac2_py_SepUnion.cpp
       src/core/separators/codac2_py_SepWrapper.cpp

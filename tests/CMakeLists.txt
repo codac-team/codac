@@ -38,6 +38,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/functions/analytic/codac2_tests_AnalyticFunction
   core/geometry/codac2_tests_geometry
   core/separators/codac2_tests_SepCartProd
+  core/separators/codac2_tests_SepCtcBoundary
   core/separators/codac2_tests_SepInverse
   core/separators/codac2_tests_SepPolygon
   core/tools/codac2_tests_Approx

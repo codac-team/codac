@@ -56,6 +56,7 @@ def normalize_label(str_label):
     .replace("operator==", "OPERATOREQ") \
     .replace("operator!=", "OPERATORNEQ") \
     .replace("operator=", "OPERATORAFF") \
+    .replace("operator!", "OPERATORNOT") \
     .replace("&", "_REF") \
     .replace("*", "_PTR") \
     .replace("=", "EQ") \
