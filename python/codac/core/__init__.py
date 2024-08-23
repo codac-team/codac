@@ -4,12 +4,12 @@ from sys import float_info
 
 def codac_error(message):
   print(f'''
-============================================================================
+=============================================================================
 The following Codac assertion failed:
 
 {message}
 
-If you need help, submit an issue on https://codac.io/issues
+You need help? Submit an issue on: https://github.com/codac-team/codac/issues
 =============================================================================
   ''')
   raise ValueError("")

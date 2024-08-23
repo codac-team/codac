@@ -41,6 +41,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/separators/codac2_tests_SepCtcBoundary
   core/separators/codac2_tests_SepInverse
   core/separators/codac2_tests_SepPolygon
+  core/separators/codac2_tests_SepProj
   core/tools/codac2_tests_Approx
   
 )

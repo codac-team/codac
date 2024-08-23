@@ -14,7 +14,6 @@
 #include <codac2_SepPolygon.h>
 #include "codac2_py_Sep.h"
 #include "codac2_py_SepPolygon_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
-#include "codac2_py_SepCtcBoundary_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 
 using namespace std;
 using namespace codac2;

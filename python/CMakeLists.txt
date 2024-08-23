@@ -59,6 +59,7 @@
       src/core/contractors/codac2_py_CtcAction.cpp
       src/core/contractors/codac2_py_CtcCartProd.cpp
       src/core/contractors/codac2_py_CtcFixpoint.cpp
+      src/core/contractors/codac2_py_CtcInnerOuter.cpp
       src/core/contractors/codac2_py_CtcInter.cpp
       src/core/contractors/codac2_py_CtcInverse.h
       src/core/contractors/codac2_py_CtcInverseNotIn.h
@@ -99,10 +100,12 @@
       src/core/separators/codac2_py_SepAction.cpp
       src/core/separators/codac2_py_SepCartProd.cpp
       src/core/separators/codac2_py_SepCtcBoundary.cpp
+      src/core/separators/codac2_py_SepCtcPair.cpp
       src/core/separators/codac2_py_SepInter.cpp
       src/core/separators/codac2_py_SepInverse.h
       src/core/separators/codac2_py_SepNot.cpp
       src/core/separators/codac2_py_SepPolygon.cpp
+      src/core/separators/codac2_py_SepProj.cpp
       src/core/separators/codac2_py_SepUnion.cpp
       src/core/separators/codac2_py_SepWrapper.cpp
 

@@ -31,7 +31,7 @@ namespace codac2
           + "\nThe following Codac assertion failed:\n\n\t" + std::string(#test) \
           + "\n \nIn: " + std::string(__FILE__) + ":" + std::to_string(__LINE__) \
           + "\nFunction: " + std::string(__PRETTY_FUNCTION__) \
-          + "\nIf you need help, submit an issue on https://codac.io/issues" \
+          + "\nYou need help? Submit an issue on: https://github.com/codac-team/codac/issues" \
           + "\n============================================================================="; \
         throw std::invalid_argument(s); \
         abort(); \
@@ -47,7 +47,7 @@ namespace codac2
           + "\nThe following Codac assertion failed:\n\n\t" + std::string(#test) \
           + "\n \nIn: " + std::string(__FILE__) + ":" + std::to_string(__LINE__) \
           + "\nFunction: " + std::string(__func__) \
-          + "\nIf you need help, submit an issue on https://codac.io/issues" \
+          + "\nYou need help? Submit an issue on: https://github.com/codac-team/codac/issues" \
           + "\n============================================================================="; \
         throw std::invalid_argument(s); \
         abort(); \
