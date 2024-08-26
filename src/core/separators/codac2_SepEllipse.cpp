@@ -13,14 +13,9 @@ using namespace std;
 using namespace codac2;
 
 SepEllipse::SepEllipse(const Vector& q)
-  : Sep(2), _ctc(CtcEllipse(q))
+  : Sep<SepEllipse>(2), _ctc(CtcEllipse(q))
 {
   assert_release(q.size() == 6);
-}
-
-std::shared_ptr<Sep> SepEllipse::copy() const
-{
-  return std::make_shared<SepEllipse>(*this);
 }
 
 bool test_ellipse(const Vector& x, const Vector& q)

@@ -16,7 +16,7 @@
 
 namespace codac2
 {
-  class CtcLazy : public Ctc_<IntervalVector>
+  class CtcLazy : public Ctc<CtcLazy,IntervalVector>
   {
     public:
 
@@ -24,11 +24,10 @@ namespace codac2
           std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>
         >::type>
       CtcLazy(const C& c)
-        : Ctc_<IntervalVector>(size_of(c)), _ctc(c),
+        : Ctc<CtcLazy,IntervalVector>(size_of(c)), _ctc(c),
           _r(1./std::pow(2,size_of(c)-1))
       { }
 
-      std::shared_ptr<Ctc_<IntervalVector>> copy() const;
       void contract(IntervalVector& x) const;
 
     protected:

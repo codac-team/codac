@@ -26,7 +26,7 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-py::class_<Sep,pySep> export_Sep(py::module& m)
+py::class_<Sep_,pySep> export_Sep(py::module& m)
 {
   py::class_<BoxPair> exported_BoxPair(m, "BoxPair", BOXPAIR_MAIN);
   exported_BoxPair
@@ -52,16 +52,16 @@ py::class_<Sep,pySep> export_Sep(py::module& m)
 
   py::implicitly_convertible<py::list,BoxPair>();
 
-  py::class_<Sep,pySep> py_sep(m, "Sep_");
+  py::class_<Sep_,pySep> py_sep(m, "Sep_");
   py_sep
 
     .def(py::init<size_t>(),
-      SEP_SEP_SIZET)
+      SEP__SEP__SIZET)
 
-    .def("size", &Sep::size,
-      SIZET_SEP_SIZE_CONST)
+    .def("size", &Sep_::size,
+      SIZET_SEP__SIZE_CONST)
 
-    .def("copy", [](Sep& s)
+    .def("copy", [](Sep_& s)
         {
           return &s;
         },
@@ -70,20 +70,20 @@ py::class_<Sep,pySep> export_Sep(py::module& m)
 
     // Intersection of separators
 
-    .def("__and__", [](const Sep& s1, const Sep& s2)
+    .def("__and__", [](const Sep_& s1, const Sep_& s2)
         {
           return SepInter(s1.copy(),s2.copy());
         },
       SEPINTER_OPERATORAND_CONST_S1_REF_CONST_S2_REF)
 
-    .def("__and__", [](const Sep& s1, const IntervalVector& x2)
+    .def("__and__", [](const Sep_& s1, const IntervalVector& x2)
         {
           auto s2 = SepWrapper_<IntervalVector>(x2);
           return SepInter(s1.copy(),s2.copy());
         },
       SEPINTER_OPERATORAND_CONST_INTERVALVECTOR_REF_CONST_S2_REF)
 
-    .def("__rand__", [](const Sep& s1, const IntervalVector& x2)
+    .def("__rand__", [](const Sep_& s1, const IntervalVector& x2)
         {
           auto s2 = SepWrapper_<IntervalVector>(x2);
           return SepInter(s1.copy(),s2.copy());
@@ -92,20 +92,20 @@ py::class_<Sep,pySep> export_Sep(py::module& m)
 
     // Union of separators
 
-    .def("__or__", [](const Sep& s1, const Sep& s2)
+    .def("__or__", [](const Sep_& s1, const Sep_& s2)
         {
           return SepUnion(s1.copy(),s2.copy());
         },
       SEPUNION_OPERATOROR_CONST_S1_REF_CONST_S2_REF)
 
-    .def("__or__", [](const Sep& s1, const IntervalVector& x2)
+    .def("__or__", [](const Sep_& s1, const IntervalVector& x2)
         {
           auto s2 = SepWrapper_<IntervalVector>(x2);
           return SepUnion(s1.copy(),s2.copy());
         },
       SEPUNION_OPERATOROR_CONST_INTERVALVECTOR_REF_CONST_S2_REF)
 
-    .def("__ror__", [](const Sep& s1, const IntervalVector& x2)
+    .def("__ror__", [](const Sep_& s1, const IntervalVector& x2)
         {
           auto s2 = SepWrapper_<IntervalVector>(x2);
           return SepUnion(s1.copy(),s2.copy());

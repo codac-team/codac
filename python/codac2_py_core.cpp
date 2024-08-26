@@ -74,17 +74,17 @@ void export_Vector(py::module& m);
 void export_Paver(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& ctc);
 
 // separators
-py::class_<Sep,pySep> export_Sep(py::module& m);
-void export_SepAction(py::module& m, py::class_<Sep,pySep>& pysep);
-void export_SepCartProd(py::module& m, py::class_<Sep,pySep>& pysep);
-void export_SepCtcBoundary(py::module& m, py::class_<Sep,pySep>& pysep);
-void export_SepCtcPair(py::module& m, py::class_<Sep,pySep>& pysep);
-void export_SepInter(py::module& m, py::class_<Sep,pySep>& sep);
-void export_SepNot(py::module& m, py::class_<Sep,pySep>& sep);
-void export_SepPolygon(py::module& m, py::class_<Sep,pySep>& sep);
-void export_SepProj(py::module& m, py::class_<Sep,pySep>& sep);
-void export_SepUnion(py::module& m, py::class_<Sep,pySep>& sep);
-void export_SepWrapper(py::module& m, py::class_<Sep,pySep>& sep);
+py::class_<Sep_,pySep> export_Sep(py::module& m);
+void export_SepAction(py::module& m, py::class_<Sep_,pySep>& pysep);
+void export_SepCartProd(py::module& m, py::class_<Sep_,pySep>& pysep);
+void export_SepCtcBoundary(py::module& m, py::class_<Sep_,pySep>& pysep);
+void export_SepCtcPair(py::module& m, py::class_<Sep_,pySep>& pysep);
+void export_SepInter(py::module& m, py::class_<Sep_,pySep>& sep);
+void export_SepNot(py::module& m, py::class_<Sep_,pySep>& sep);
+void export_SepPolygon(py::module& m, py::class_<Sep_,pySep>& sep);
+void export_SepProj(py::module& m, py::class_<Sep_,pySep>& sep);
+void export_SepUnion(py::module& m, py::class_<Sep_,pySep>& sep);
+void export_SepWrapper(py::module& m, py::class_<Sep_,pySep>& sep);
 
 // tools
 void export_Approx(py::module& m);

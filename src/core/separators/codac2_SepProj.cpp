@@ -14,11 +14,6 @@ using namespace std;
 
 namespace codac2
 {
-  std::shared_ptr<Sep> SepProj::copy() const
-  {
-    return std::make_shared<SepProj>(*this);
-  }
-
   BoxPair SepProj::separate(const IntervalVector& x) const
   {
     // Default value for eps, for removing virtuality

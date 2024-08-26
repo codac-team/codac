@@ -38,10 +38,10 @@ py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py
   py_ctc_iv
 
     .def(py::init<size_t>(),
-      CTC__X__CTC__SIZET)
+      CTC__X_CTC__SIZET)
 
     .def("size", &Ctc_<IntervalVector>::size,
-      SIZET_CTC__X__SIZE_CONST)
+      SIZET_CTC__X_SIZE_CONST)
 
     .def("copy", [](const Ctc_<IntervalVector>& c)
         {
@@ -58,7 +58,7 @@ py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py
             std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c1.copy()),
             std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c2.copy()));
         },
-      CTCINTER_TYPENAME_C1_X_OPERATORAND_CONST_C1_REF_CONST_C2_REF)
+      CTCINTER_TYPENAME_C1_CONTRACTEDTYPE_OPERATORAND_CONST_C1_REF_CONST_C2_REF)
 
     .def("__and__", [](const Ctc_<IntervalVector>& c1, const IntervalVector& x2)
         {
@@ -86,7 +86,7 @@ py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py
             std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c1.copy()),
             std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c2.copy()));
         },
-      CTCUNION_TYPENAME_C1_X_OPERATOROR_CONST_C1_REF_CONST_C2_REF)
+      CTCUNION_TYPENAME_C1_CONTRACTEDTYPE_OPERATOROR_CONST_C1_REF_CONST_C2_REF)
 
     .def("__or__", [](const Ctc_<IntervalVector>& c1, const IntervalVector& x2)
         {

@@ -12,11 +12,6 @@
 using namespace std;
 using namespace codac2;
 
-std::shared_ptr<Sep> SepCtcPair::copy() const
-{
-  return std::make_shared<SepCtcPair>(*this);
-}
-
 BoxPair SepCtcPair::separate(const IntervalVector& x) const
 {
   assert(x.size() == this->size());

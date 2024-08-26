@@ -12,11 +12,6 @@
 using namespace std;
 using namespace codac2;
 
-std::shared_ptr<Sep> SepUnion::copy() const
-{
-  return std::make_shared<SepUnion>(*this);
-}
-
 BoxPair SepUnion::separate(const IntervalVector& x) const
 {
   assert_release(x.size() == this->size());

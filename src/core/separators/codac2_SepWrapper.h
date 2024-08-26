@@ -17,12 +17,12 @@
 namespace codac2
 {
   template<typename T>
-  class SepWrapper_ : public Sep
+  class SepWrapper_ : public Sep<SepWrapper_<T>>
   {
     public:
 
       SepWrapper_(const T& y)
-        : Sep(y.size()), _y(y)
+        : Sep<SepWrapper_<T>>(y.size()), _y(y)
       { }
 
     protected:
@@ -39,7 +39,6 @@ namespace codac2
         : SepCtcPair(complementary_union(y), CtcWrapper_<IntervalVector>(y))
       { }
 
-      std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
 
     protected:

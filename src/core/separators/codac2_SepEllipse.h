@@ -19,13 +19,12 @@
 
 namespace codac2
 {
-  class SepEllipse : public Sep
+  class SepEllipse : public Sep<SepEllipse>
   {
     public:
 
       // f(q,x) = q_0 + q_1*x_1 + q_2*x_2 + q_3*x_1^2 + q_4*x_1*x_2 + q_5*x_2^2
       SepEllipse(const Vector& q);
-      std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
 
     protected:

@@ -14,11 +14,6 @@
 using namespace std;
 using namespace codac2;
 
-std::shared_ptr<Ctc_<IntervalVector>> CtcDist::copy() const
-{
-  return std::make_shared<CtcDist>(*this);
-}
-
 void CtcDist::contract(IntervalVector& x) const
 {
   assert_release(x.size() == 5 && "dist constraint is 5d: <ax,ay,bx,bx,d>");

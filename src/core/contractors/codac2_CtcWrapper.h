@@ -14,18 +14,13 @@
 namespace codac2
 {
   template<typename X>
-  class CtcWrapper_ : public Ctc_<X>
+  class CtcWrapper_ : public Ctc<CtcWrapper_<X>,X>
   {
     public:
 
       CtcWrapper_(const X& y)
-        : Ctc_<X>(y.size()), _y(y)
+        : Ctc<CtcWrapper_<X>,X>(y.size()), _y(y)
       { }
-
-      std::shared_ptr<Ctc_<X>> copy() const
-      {
-        return std::make_shared<CtcWrapper_<X>>(*this);
-      }
 
       void contract(X& x) const
       {

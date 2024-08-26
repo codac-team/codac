@@ -16,25 +16,24 @@
 
 namespace codac2
 {
-  class SepAction : public Sep
+  class SepAction : public Sep<SepAction>
   {
     public:
 
       template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<Sep,S> || std::is_same_v<std::shared_ptr<Sep>,S>
+          std::is_base_of_v<Sep_,S> || std::is_same_v<std::shared_ptr<Sep_>,S>
         >::type>
       SepAction(const S& s, const OctaSym& a)
-        : Sep(a.size()), _sep(s), _s(a), __s(a.invert())
+        : Sep<SepAction>(a.size()), _sep(s), _s(a), __s(a.invert())
       {
         assert_release(size_of(s) == a.size());
       }
 
-      std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
 
     protected:
 
-      const Collection<Sep> _sep;
+      const Collection<Sep_> _sep;
       const OctaSym _s, __s;
   };
   

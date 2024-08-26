@@ -16,25 +16,20 @@
 
 namespace codac2
 {
-  class SepNot : public Sep
+  class SepNot : public Sep<SepNot>
   {
     public:
 
       SepNot(const IntervalVector& x)
-        : Sep(x.size()), _sep(SepWrapper_<IntervalVector>(x))
+        : Sep<SepNot>(x.size()), _sep(SepWrapper_<IntervalVector>(x))
       { }
 
       template<typename S, typename = typename std::enable_if<(
-          (std::is_base_of_v<Sep,S> && !std::is_same_v<SepNot,S>) || std::is_same_v<std::shared_ptr<Sep>,S>
+          (std::is_base_of_v<Sep_,S> && !std::is_same_v<SepNot,S>) || std::is_same_v<std::shared_ptr<Sep_>,S>
         ), void>::type>
       SepNot(const S& s)
-        : Sep(size_of(s)), _sep(s)
+        : Sep<SepNot>(size_of(s)), _sep(s)
       { }
-
-      std::shared_ptr<Sep> copy() const
-      {
-        return std::make_shared<SepNot>(*this);
-      }
 
       BoxPair separate(const IntervalVector& x) const
       {
@@ -47,11 +42,11 @@ namespace codac2
 
     protected:
 
-      const Collection<Sep> _sep;
+      const Collection<Sep_> _sep;
   };
 
   template<typename S, typename = typename std::enable_if<
-      std::is_base_of_v<Sep,S>
+      std::is_base_of_v<Sep_,S>
     >::type>
   SepNot operator!(const S& s)
   {

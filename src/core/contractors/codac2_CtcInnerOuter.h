@@ -16,21 +16,16 @@
 
 namespace codac2
 {
-  class CtcInner : public Ctc_<IntervalVector>
+  class CtcInner : public Ctc<CtcInner,IntervalVector>
   {
     public:
 
       template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<Sep,S> || std::is_base_of_v<S,std::shared_ptr<Sep>>
+          std::is_base_of_v<Sep_,S> || std::is_base_of_v<S,std::shared_ptr<Sep_>>
         >::type>
       CtcInner(const S& s)
-        : Ctc_<IntervalVector>(size_of(s)), _seps(s)
+        : Ctc<CtcInner,IntervalVector>(size_of(s)), _seps(s)
       { }
-
-      std::shared_ptr<Ctc_<IntervalVector>> copy() const
-      {
-        return std::make_shared<CtcInner>(*this);
-      }
 
       void contract(IntervalVector& x) const
       {
@@ -40,24 +35,19 @@ namespace codac2
 
     protected:
 
-      const Collection<Sep> _seps;
+      const Collection<Sep_> _seps;
   };
 
-  class CtcOuter : public Ctc_<IntervalVector>
+  class CtcOuter : public Ctc<CtcOuter,IntervalVector>
   {
     public:
 
       template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<Sep,S> || std::is_base_of_v<S,std::shared_ptr<Sep>>
+          std::is_base_of_v<Sep_,S> || std::is_base_of_v<S,std::shared_ptr<Sep_>>
         >::type>
       CtcOuter(const S& s)
-        : Ctc_<IntervalVector>(size_of(s)), _seps(s)
+        : Ctc<CtcOuter,IntervalVector>(size_of(s)), _seps(s)
       { }
-
-      std::shared_ptr<Ctc_<IntervalVector>> copy() const
-      {
-        return std::make_shared<CtcOuter>(*this);
-      }
 
       void contract(IntervalVector& x) const
       {
@@ -67,6 +57,6 @@ namespace codac2
 
     protected:
 
-      const Collection<Sep> _seps;
+      const Collection<Sep_> _seps;
   };
 }

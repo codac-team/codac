@@ -14,15 +14,14 @@
 
 namespace codac2
 {
-  class CtcDist : public Ctc_<IntervalVector>
+  class CtcDist : public Ctc<CtcDist,IntervalVector>
   {
     public:
 
       CtcDist()
-        : Ctc_<IntervalVector>(5)
+        : Ctc<CtcDist,IntervalVector>(5)
       { }
 
-      std::shared_ptr<Ctc_<IntervalVector>> copy() const;
       void contract(IntervalVector& x) const;
       void contract(Interval& ax, Interval& ay, Interval& bx, Interval& by, Interval& d) const;
   };

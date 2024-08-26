@@ -20,7 +20,7 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_SepPolygon(py::module& m, py::class_<Sep,pySep>& pysep)
+void export_SepPolygon(py::module& m, py::class_<Sep_,pySep>& pysep)
 {
   py::class_<SepPolygon> exported(m, "SepPolygon", pysep, SEPPOLYGON_MAIN);
   exported

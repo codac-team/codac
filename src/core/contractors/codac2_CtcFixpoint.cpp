@@ -12,11 +12,6 @@
 using namespace std;
 using namespace codac2;
 
-std::shared_ptr<Ctc_<IntervalVector>> CtcFixpoint::copy() const
-{
-  return std::make_shared<CtcFixpoint>(*this);
-}
-
 void CtcFixpoint::contract(IntervalVector& x) const
 {
   double v;

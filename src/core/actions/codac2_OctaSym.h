@@ -17,7 +17,7 @@
 namespace codac2
 {
   class CtcAction;
-  class Sep;
+  class Sep_;
   class SepAction;
   class SetExpr;
 
@@ -50,7 +50,7 @@ namespace codac2
       // -> is defined in CtcAction class
 
       template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<Sep,S>
+          std::is_base_of_v<Sep_,S>
         >::type>
       SepAction operator()(const S& s) const;
       // -> is defined in SepAction class

@@ -12,11 +12,6 @@
 using namespace std;
 using namespace codac2;
 
-std::shared_ptr<Sep> SepWrapper_<IntervalVector>::copy() const
-{
-  return std::make_shared<SepWrapper_<IntervalVector>>(*this);
-}
-
 BoxPair SepWrapper_<IntervalVector>::separate(const IntervalVector& x) const
 {
   return SepCtcPair::separate(x);

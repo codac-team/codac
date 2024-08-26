@@ -13,11 +13,6 @@
 using namespace std;
 using namespace codac2;
 
-std::shared_ptr<Ctc_<IntervalVector>> CtcPolar::copy() const
-{
-  return std::make_shared<CtcPolar>(*this);
-}
-
 #include "codac2_CtcPolar_codac1.cpp"
 
 void CtcPolar::contract(IntervalVector& x) const

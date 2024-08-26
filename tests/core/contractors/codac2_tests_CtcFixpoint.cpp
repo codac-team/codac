@@ -14,12 +14,12 @@
 using namespace std;
 using namespace codac2;
 
-class CtcCustom : public Ctc_<IntervalVector>
+class CtcCustom : public Ctc<CtcCustom,IntervalVector>
 {
   public:
 
     CtcCustom()
-      : Ctc_<IntervalVector>(2)
+      : Ctc<CtcCustom,IntervalVector>(2)
     { }
 
     void contract(IntervalVector& x) const

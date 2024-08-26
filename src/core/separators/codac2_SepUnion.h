@@ -17,31 +17,30 @@
 
 namespace codac2
 {
-  class SepUnion : public Sep
+  class SepUnion : public Sep<SepUnion>
   {
     public:
 
       template<typename S, typename = typename std::enable_if<(
-          (std::is_base_of_v<Sep,S> && !std::is_same_v<SepUnion,S>) || std::is_same_v<std::shared_ptr<Sep>,S>
+          (std::is_base_of_v<Sep_,S> && !std::is_same_v<SepUnion,S>) || std::is_same_v<std::shared_ptr<Sep_>,S>
         ), void>::type>
       SepUnion(const S& s)
-        : Sep(size_of(s)), _seps(s)
+        : Sep<SepUnion>(size_of(s)), _seps(s)
       { }
 
       template<typename... S, typename = typename std::enable_if<(true && ... && (
-          (std::is_base_of_v<Sep,S> || std::is_same_v<std::shared_ptr<Sep>,S>)
+          (std::is_base_of_v<Sep_,S> || std::is_same_v<std::shared_ptr<Sep_>,S>)
         )), void>::type>
       SepUnion(const S&... s)
-        : Sep(size_first_item(s...)), _seps(s...)
+        : Sep<SepUnion>(size_first_item(s...)), _seps(s...)
       {
         assert_release(all_same_size(s...));
       }
 
-      std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
 
       template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<Sep,S>
+          std::is_base_of_v<Sep_,S>
         >::type>
       SepUnion& operator|=(const S& s)
       {
@@ -50,7 +49,7 @@ namespace codac2
         return *this;
       }
 
-      SepUnion& operator|=(const std::shared_ptr<Sep>& s)
+      SepUnion& operator|=(const std::shared_ptr<Sep_>& s)
       {
         assert_release(s->size() == this->size());
         _seps.add_shared_ptr(s);
@@ -59,12 +58,12 @@ namespace codac2
 
     protected:
 
-      Collection<Sep> _seps;
+      Collection<Sep_> _seps;
   };
 
   template<typename S1, typename S2, typename = typename std::enable_if<(
-      std::is_base_of_v<Sep,S1> &&
-      std::is_base_of_v<Sep,S2>
+      std::is_base_of_v<Sep_,S1> &&
+      std::is_base_of_v<Sep_,S2>
     )>::type>
   inline SepUnion operator|(const S1& s1, const S2& s2)
   {
@@ -72,7 +71,7 @@ namespace codac2
   }
 
   template<typename S2, typename = typename std::enable_if<
-      std::is_base_of_v<Sep,S2>
+      std::is_base_of_v<Sep_,S2>
     >::type>
   inline SepUnion operator|(const IntervalVector& s1, const S2& s2)
   {
@@ -81,7 +80,7 @@ namespace codac2
   }
 
   template<typename S1, typename = typename std::enable_if<
-      std::is_base_of_v<Sep,S1>
+      std::is_base_of_v<Sep_,S1>
     >::type>
   inline SepUnion operator|(const S1& s1, const IntervalVector& s2)
   {

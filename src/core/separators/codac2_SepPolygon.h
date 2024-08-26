@@ -20,7 +20,6 @@ namespace codac2
     public:
 
       SepPolygon(const Polygon& p);
-      std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
   };
 }

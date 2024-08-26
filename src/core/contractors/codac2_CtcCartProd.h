@@ -16,12 +16,12 @@
 
 namespace codac2
 {
-  class CtcCartProd : public Ctc_<IntervalVector>
+  class CtcCartProd : public Ctc<CtcCartProd,IntervalVector>
   {
     public:
 
       CtcCartProd(const Collection<Ctc_<IntervalVector>>& ctcs)
-        : Ctc_<IntervalVector>([ctcs] {
+        : Ctc<CtcCartProd,IntervalVector>([ctcs] {
             size_t n = 0;
             for(const auto& ci : ctcs)
               n += ci->size();
@@ -33,20 +33,15 @@ namespace codac2
           (std::is_base_of_v<Ctc_<IntervalVector>,C> && !std::is_same_v<CtcCartProd,C>) || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>
         ), void>::type>
       CtcCartProd(const C& c)
-        : Ctc_<IntervalVector>(size_of(c)), _ctcs(c)
+        : Ctc<CtcCartProd,IntervalVector>(size_of(c)), _ctcs(c)
       { }
 
       template<typename... C, typename = typename std::enable_if<(true && ... && (
           (std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>)
         )), void>::type>
       CtcCartProd(const C&... c)
-        : Ctc_<IntervalVector>((0 + ... + size_of(c))), _ctcs(c...)
+        : Ctc<CtcCartProd,IntervalVector>((0 + ... + size_of(c))), _ctcs(c...)
       { }
-
-      std::shared_ptr<Ctc_<IntervalVector>> copy() const
-      {
-        return std::make_shared<CtcCartProd>(*this);
-      }
 
       void contract(IntervalVector& x) const
       {

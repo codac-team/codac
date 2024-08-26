@@ -30,14 +30,14 @@ namespace codac2
     return x->size();
   }
 
-  inline size_t size_of(const std::shared_ptr<Sep>& x)
+  inline size_t size_of(const std::shared_ptr<Sep_>& x)
   {
     return x->size();
   }
 
   template<typename T, typename = typename std::enable_if<(
       (!std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,T>
-    && !std::is_same_v<std::shared_ptr<Sep>,T>
+    && !std::is_same_v<std::shared_ptr<Sep_>,T>
     && !std::is_same_v<int,T>
     && !std::is_same_v<double,T>)
     ), void>::type>

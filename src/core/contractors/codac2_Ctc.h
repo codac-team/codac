@@ -15,12 +15,12 @@
 
 namespace codac2
 {
-  class Ctc
-  {
-    public:
-
-      //virtual std::shared_ptr<Ctc> copy() const = 0;
-  };
+  //class Ctc
+  //{
+  //  public:
+  //
+  //    //virtual std::shared_ptr<Ctc> copy() const = 0;
+  //};
   //template<typename... X>
   //class Ctc
   //{
@@ -34,12 +34,12 @@ namespace codac2
   //    virtual void contract(X&... x) const = 0;
   //};
 
-  template<typename X_>
+  template<typename X>
   class Ctc_// : virtual public Ctc<X_>
   {
     public:
     
-      using X = X_;
+      using ContractedType = X;
 
       Ctc_(size_t n)
         : _n(n)
@@ -52,15 +52,27 @@ namespace codac2
         return _n;
       }
       
-      virtual void contract(X_& x) const = 0;
+      virtual void contract(X& x) const = 0;
 
-      virtual std::shared_ptr<Ctc_<X>> copy() const
-      {
-        return nullptr;
-      }
+      virtual std::shared_ptr<Ctc_<X>> copy() const = 0;
 
     protected:
 
       const size_t _n;
+  };
+
+  template<typename C,typename X_>
+  class Ctc : public Ctc_<X_>
+  {
+    public:
+    
+      Ctc(size_t n)
+        : Ctc_<X_>(n)
+      { }
+
+      virtual std::shared_ptr<Ctc_<X_>> copy() const
+      {
+        return std::make_shared<C>(*dynamic_cast<const C*>(this));
+      }
   };
 }

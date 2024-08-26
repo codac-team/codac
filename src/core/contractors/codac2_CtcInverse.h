@@ -20,7 +20,7 @@ namespace codac2
   class CtcNot;
   
   template<typename Y>
-  class CtcInverse : virtual public Ctc
+  class CtcInverse// : virtual public Ctc
   {
     public:
 
@@ -116,12 +116,12 @@ namespace codac2
   };
 
   template<typename Y,typename X=IntervalVector>
-  class CtcInverse_ : public Ctc_<X>, public CtcInverse<Y>
+  class CtcInverse_ : public Ctc<CtcInverse_<Y,X>,X>, public CtcInverse<Y>
   {
     public:
 
       CtcInverse_(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const Y& y, bool with_centered_form = true, bool is_not_in = false)
-        : Ctc_<X>(f.args()[0]->size() /* f must have only one arg, see following assert */),
+        : Ctc<CtcInverse_<Y,X>,X>(f.args()[0]->size() /* f must have only one arg, see following assert */),
           CtcInverse<Y>(f, y, with_centered_form,is_not_in)
       {
         assert_release(f.args().size() == 1 && "f must have only one arg");
@@ -131,15 +131,10 @@ namespace codac2
           std::is_base_of_v<Ctc_<Y>,C> || std::is_same_v<std::shared_ptr<Ctc_<Y>>,C>
         >::type>
       CtcInverse_(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const C& ctc_y, bool with_centered_form = true, bool is_not_in = false)
-        : Ctc_<X>(f.args()[0]->size() /* f must have only one arg, see following assert */),
+        : Ctc<CtcInverse_<Y,X>,X>(f.args()[0]->size() /* f must have only one arg, see following assert */),
           CtcInverse<Y>(f, ctc_y, with_centered_form,is_not_in)
       {
         assert_release(f.args().size() == 1 && "f must have only one arg");
-      }
-
-      std::shared_ptr<Ctc_<X>> copy() const
-      {
-        return std::make_shared<CtcInverse_<Y,X>>(*this);
       }
 
       void contract(X& x) const

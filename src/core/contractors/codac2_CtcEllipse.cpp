@@ -17,14 +17,9 @@ using namespace codac2;
 
 
 CtcEllipse0::CtcEllipse0(const IntervalVector& q)
-  : Ctc_<IntervalVector>(2), _q(q), _qs(OctaSym({1,3,2,6,5,4})(q))
+  : Ctc<CtcEllipse0,IntervalVector>(2), _q(q), _qs(OctaSym({1,3,2,6,5,4})(q))
 {
   assert(q.size() == 6);
-}
-
-std::shared_ptr<Ctc_<IntervalVector>> CtcEllipse0::copy() const
-{
-  return std::make_shared<CtcEllipse0>(*this);
 }
 
 Interval _psi0(const IntervalVector& q) // top vertex of the ellipse
@@ -68,14 +63,9 @@ void CtcEllipse0::contract(IntervalVector& x) const
 }
 
 CtcEllipse::CtcEllipse(const Vector& q)
-  : Ctc_<IntervalVector>(2), _q(q)
+  : Ctc<CtcEllipse,IntervalVector>(2), _q(q)
 {
   assert_release(q.size() == 6);
-}
-
-std::shared_ptr<Ctc_<IntervalVector>> CtcEllipse::copy() const
-{
-  return std::make_shared<CtcEllipse>(*this);
 }
 
 void CtcEllipse::contract(IntervalVector& x) const

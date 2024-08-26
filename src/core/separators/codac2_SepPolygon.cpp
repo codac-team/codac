@@ -37,11 +37,6 @@ namespace codac2
     )
   { }
 
-  std::shared_ptr<Sep> SepPolygon::copy() const
-  {
-    return std::make_shared<SepPolygon>(*this);
-  }
-
   BoxPair SepPolygon::separate(const IntervalVector& x) const
   {
     return SepCtcBoundary::separate(x);

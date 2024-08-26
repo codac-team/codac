@@ -20,7 +20,7 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_SepCtcPair(py::module& m, py::class_<Sep,pySep>& pysep)
+void export_SepCtcPair(py::module& m, py::class_<Sep_,pySep>& pysep)
 {
   py::class_<SepCtcPair> exported(m, "SepCtcPair", pysep, SEPCTCPAIR_MAIN);
   exported

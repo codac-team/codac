@@ -13,11 +13,6 @@
 using namespace std;
 using namespace codac2;
 
-std::shared_ptr<Ctc_<IntervalVector>> CtcSegment::copy() const
-{
-  return std::make_shared<CtcSegment>(*this);
-}
-
 void CtcSegment::contract(IntervalVector& x) const
 {
   assert_release(x.size() == 2 && "only 2d segments are supported");

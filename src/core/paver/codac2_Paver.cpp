@@ -93,7 +93,7 @@ std::list<IntervalVector> Paver::pave(const std::shared_ptr<Ctc_<IntervalVector>
   return pave(*c,eps);
 }
 
-void Paver::pave(const Sep& s, double eps)
+void Paver::pave(const Sep_& s, double eps)
 {
   assert_release(eps > 0.);
   assert_release(s.size() >= 2 && "cannot reveal 1d separators");
@@ -145,7 +145,7 @@ void Paver::pave(const Sep& s, double eps)
     (double)(clock()-t_start)/CLOCKS_PER_SEC, n_inner, n_boundary);
 }
 
-void Paver::pave(const std::shared_ptr<Sep>& s, double eps)
+void Paver::pave(const std::shared_ptr<Sep_>& s, double eps)
 {
   return pave(*s,eps);
 }

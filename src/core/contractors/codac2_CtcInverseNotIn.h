@@ -41,11 +41,6 @@ namespace codac2
         *this |= CtcInverse_<Y,X>(f, ctc_compl, with_centered_form, is_not_in);
       }
 
-      std::shared_ptr<Ctc_<X>> copy() const
-      {
-        return std::make_shared<CtcInverseNotIn<Y,X>>(*this);
-      }
-
       void contract(X& x) const
       {
         CtcUnion<X>::contract(x);

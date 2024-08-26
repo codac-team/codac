@@ -28,7 +28,7 @@ void export_Paver(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVe
     VOID_PAVE_CONST_INTERVALVECTOR_REF_CONST_O_REF_DOUBLE,
     "x0"_a, "c"_a, "eps"_a);
 
-  m.def("pave", (void (*)(const IntervalVector&,const Sep&,double))&pave,
+  m.def("pave", (void (*)(const IntervalVector&,const Sep_&,double))&pave,
     VOID_PAVE_CONST_INTERVALVECTOR_REF_CONST_O_REF_DOUBLE,
     "x0"_a, "s"_a, "eps"_a);
 }

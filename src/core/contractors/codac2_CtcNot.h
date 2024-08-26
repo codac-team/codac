@@ -15,7 +15,7 @@
 
 namespace codac2
 {
-  class CtcNot : public Ctc_<IntervalVector>
+  class CtcNot : public Ctc<CtcNot,IntervalVector>
   {
     public:
 
@@ -23,13 +23,8 @@ namespace codac2
           std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>
         >::type>
       CtcNot(const C& c)
-        : Ctc_<IntervalVector>(size_of(c))
+        : Ctc<CtcNot,IntervalVector>(size_of(c))
       { }
-
-      std::shared_ptr<Ctc_<IntervalVector>> copy() const
-      {
-        return std::make_shared<CtcNot>(*this);
-      }
 
       void contract(IntervalVector& x) const
       {

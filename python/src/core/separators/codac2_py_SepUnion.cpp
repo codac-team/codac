@@ -20,13 +20,13 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_SepUnion(py::module& m, py::class_<Sep,pySep>& pysep)
+void export_SepUnion(py::module& m, py::class_<Sep_,pySep>& pysep)
 {
   py::class_<SepUnion> exported(m, "SepUnion", pysep, SEPUNION_MAIN);
   exported
 
     .def(py::init(
-        [](const Sep& s)
+        [](const Sep_& s)
         {
           return std::make_unique<SepUnion>(s.copy());
         }),
@@ -34,7 +34,7 @@ void export_SepUnion(py::module& m, py::class_<Sep,pySep>& pysep)
       "s"_a)
 
     .def(py::init(
-        [](const Sep& s1, const Sep& s2)
+        [](const Sep_& s1, const Sep_& s2)
         {
           return std::make_unique<SepUnion>(s1.copy(),s2.copy());
         }),
@@ -45,7 +45,7 @@ void export_SepUnion(py::module& m, py::class_<Sep,pySep>& pysep)
       BOXPAIR_SEPUNION_SEPARATE_CONST_INTERVALVECTOR_REF_CONST,
       "x"_a)
 
-    .def("__ior__", [](SepUnion& s1, const Sep& s2)
+    .def("__ior__", [](SepUnion& s1, const Sep_& s2)
         {
           s1 |= s2.copy();
           return s1;

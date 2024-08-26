@@ -16,7 +16,7 @@
 
 namespace codac2
 {
-  class SepCtcPair : public Sep
+  class SepCtcPair : public Sep<SepCtcPair>
   {
     public:
 
@@ -25,12 +25,11 @@ namespace codac2
           (std::is_base_of_v<Ctc_<IntervalVector>,C2> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C2>)
         )>::type>
       SepCtcPair(const C1& ctc_in, const C2& ctc_out)
-        : Sep(size_of(ctc_in)), _ctc_in_out(ctc_in, ctc_out)
+        : Sep<SepCtcPair>(size_of(ctc_in)), _ctc_in_out(ctc_in, ctc_out)
       {
         assert_release(size_of(ctc_in) == size_of(ctc_out));
       }
 
-      std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
 
     protected:

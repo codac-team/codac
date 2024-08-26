@@ -14,12 +14,11 @@
 
 namespace codac2
 {
-  class CtcEllipse0 : public Ctc_<IntervalVector>
+  class CtcEllipse0 : public Ctc<CtcEllipse0,IntervalVector>
   {
     public:
 
       CtcEllipse0(const IntervalVector& q);
-      std::shared_ptr<Ctc_<IntervalVector>> copy() const;
       void contract(IntervalVector& x) const;
 
     protected:
@@ -27,12 +26,11 @@ namespace codac2
       const IntervalVector _q, _qs;
   };
 
-  class CtcEllipse : public Ctc_<IntervalVector>
+  class CtcEllipse : public Ctc<CtcEllipse,IntervalVector>
   {
     public:
 
       CtcEllipse(const Vector& q);
-      std::shared_ptr<Ctc_<IntervalVector>> copy() const;
       void contract(IntervalVector& x) const;
       const Vector& q() const;
 

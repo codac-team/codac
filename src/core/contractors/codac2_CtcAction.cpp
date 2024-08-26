@@ -12,11 +12,6 @@
 using namespace std;
 using namespace codac2;
 
-std::shared_ptr<Ctc_<IntervalVector>> CtcAction::copy() const
-{
-  return std::make_shared<CtcAction>(*this);
-}
-
 void CtcAction::contract(IntervalVector& x) const
 {
   assert_release(x.size() == this->size());

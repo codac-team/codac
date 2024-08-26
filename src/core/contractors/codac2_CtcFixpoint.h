@@ -16,7 +16,7 @@
 
 namespace codac2
 {
-  class CtcFixpoint : public Ctc_<IntervalVector>
+  class CtcFixpoint : public Ctc<CtcFixpoint,IntervalVector>
   {
     public:
 
@@ -24,11 +24,10 @@ namespace codac2
           std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>
         >::type>
       CtcFixpoint(const C& c, double ratio = 0.1)
-        : Ctc_<IntervalVector>(size_of(c)), _ctc(c),
+        : Ctc<CtcFixpoint,IntervalVector>(size_of(c)), _ctc(c),
           _r(ratio)
       { }
 
-      std::shared_ptr<Ctc_<IntervalVector>> copy() const;
       void contract(IntervalVector& x) const;
 
     protected:

@@ -23,7 +23,7 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 template<typename T>
-void export_SepInverse(py::module& m, const std::string& export_name, py::class_<Sep,pySep>& pysep)
+void export_SepInverse(py::module& m, const std::string& export_name, py::class_<Sep_,pySep>& pysep)
 {
   py::class_<SepInverse<T>> exported(m, export_name.c_str(), pysep, SEPINVERSE_MAIN);
 

@@ -26,7 +26,7 @@ void export_CtcInnerOuter(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIn
   exported_inner
 
     .def(py::init(
-        [](const Sep& s)
+        [](const Sep_& s)
         {
           return std::make_unique<CtcInner>(s.copy());
         }),
@@ -42,7 +42,7 @@ void export_CtcInnerOuter(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIn
   exported_outer
 
     .def(py::init(
-        [](const Sep& s)
+        [](const Sep_& s)
         {
           return std::make_unique<CtcOuter>(s.copy());
         }),
