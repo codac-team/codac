@@ -48,6 +48,10 @@ TEST_CASE("AnalyticFunction")
         CHECK(Approx(f.eval(m, Interval(0))) == 0);
       }
       {
+        AnalyticFunction f({x}, x+Interval(2));
+        CHECK(Approx(f.eval(m, Interval(3))) == 5);
+      }
+      {
         AnalyticFunction f({x}, x+x);
         CHECK(Approx(f.eval(m, Interval(2))) == 4);
       }

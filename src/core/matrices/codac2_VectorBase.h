@@ -33,6 +33,15 @@ namespace codac2
           (*this)[i++] = li;
       }
 
+      VectorBase(const std::vector<T>& l)
+        : MatrixBase<S,T>(l.size(),1)
+      {
+        assert(!std::empty(l));
+        size_t i = 0;
+        for(const auto& li : l)
+          (*this)[i++] = li;
+      }
+
       template<typename OtherDerived>
       VectorBase(const Eigen::MatrixBase<OtherDerived>& x)
         : MatrixBase<S,T>(x)

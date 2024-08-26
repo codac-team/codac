@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_geometry.h
+ *  \file codac2_Edge.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -9,10 +9,19 @@
 
 #pragma once
 
+#include <vector>
+#include <utility>
+#include "codac2_Vector.h"
 #include "codac2_BoolInterval.h"
-#include "codac2_IntervalVector.h"
 
 namespace codac2
 {
-  BoolInterval orientation(const IntervalVector& p1, const IntervalVector& p2, const IntervalVector& p3);
+  class Edge : public std::array<Vector,2>
+  {
+    public:
+
+      Edge(std::initializer_list<Vector> vertices);
+      Edge(const std::vector<Vector>& vertices);
+      BoolInterval intersects(const Edge& e) const;
+  };
 }

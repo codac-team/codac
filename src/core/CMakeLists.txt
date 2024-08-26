@@ -15,6 +15,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcAction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcAction.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCartProd.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcDist.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcDist.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcFixpoint.cpp
@@ -65,8 +67,12 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_SetFunction.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_constants.h
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_Edge.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_Edge.h
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_geometry.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_geometry.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_Polygon.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_Polygon.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure2D.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac2_Figure2D.h

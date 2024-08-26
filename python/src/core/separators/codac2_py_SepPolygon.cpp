@@ -25,12 +25,14 @@ void export_SepPolygon(py::module& m, py::class_<Sep,pySep>& pysep)
   py::class_<SepPolygon> exported(m, "SepPolygon", pysep, SEPPOLYGON_MAIN);
   exported
 
-    .def(py::init<const std::vector<IntervalVector>&>(),
-      SEPPOLYGON_SEPPOLYGON_CONST_VECTOR_INTERVALVECTOR_REF,
-      "vertices"_a)
+    .def(py::init<const Polygon&>(),
+      SEPPOLYGON_SEPPOLYGON_CONST_POLYGON_REF,
+      "p"_a)
 
     .def("separate", &SepPolygon::separate,
       BOXPAIR_SEPPOLYGON_SEPARATE_CONST_INTERVALVECTOR_REF_CONST,
       "x"_a)
   ;
+  
+  py::implicitly_convertible<Polygon,SepPolygon>();
 }

@@ -86,6 +86,29 @@ namespace codac2
         // todo: use this instead (faster?) ? std::copy(l.begin(), l.end(), vec);
       }
 
+      MatrixBase(const std::vector<std::vector<T>>& l)
+        : MatrixBase<S,T>(0,0 /* will be resized thereafter */)
+      {
+        assert(!std::empty(l));
+
+        int cols = -1;
+        for(const auto& ri : l) {
+          assert_release((cols == -1 || cols == (int)ri.size()) && "ill-formed matrix");
+          cols = (int)ri.size();
+        }
+
+        resize(l.size(),cols);
+        size_t i = 0;
+        for(const auto& ri : l)
+        {
+          size_t j = 0;
+          for(const auto& ci : ri)
+            (*this)(i,j++) = ci;
+          i++;
+        }
+        // todo: use this instead (faster?) ? std::copy(l.begin(), l.end(), vec);
+      }
+
       template<typename OtherDerived>
       MatrixBase(const Eigen::MatrixBase<OtherDerived>& x)
         : _e(x)

@@ -57,6 +57,11 @@ void export_ScalarVar(py::module& m);
 void export_VectorVar(py::module& m);
 void export_expression_operations(py::module& m);
 
+// geometry
+void export_Edge(py::module& m);
+void export_geometry(py::module& m);
+void export_Polygon(py::module& m);
+
 // graphics
 void export_Figure2D(py::module& m);
 void export_StyleProperties(py::module& m);
@@ -137,6 +142,11 @@ PYBIND11_MODULE(_core, m)
   export_ScalarVar(m);
   export_VectorVar(m);
   export_expression_operations(m);
+
+  // geometry
+  export_Edge(m);
+  export_geometry(m);
+  export_Polygon(m);
 
   // graphics
   export_StyleProperties(m);

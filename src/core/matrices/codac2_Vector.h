@@ -27,6 +27,8 @@ namespace codac2
 
       Vector(std::initializer_list<double> l);
 
+      Vector(const std::vector<double>& l);
+
       Vector(const MatrixBase<Vector,double>& x);
 
       template<typename OtherDerived>

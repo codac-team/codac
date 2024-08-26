@@ -34,6 +34,13 @@ namespace codac2
     assert_release(!std::empty(l));
   }
 
+  Vector::Vector(const std::vector<double>& l)
+    : MatrixBase<Vector,double>(l.size(),1),
+      VectorBase<Vector,Matrix,double>(l)
+  {
+    assert_release(!std::empty(l));
+  }
+
   Vector::Vector(const MatrixBase<Vector,double>& x)
     : Vector(x._e)
   { }

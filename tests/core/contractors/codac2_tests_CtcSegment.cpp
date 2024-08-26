@@ -53,3 +53,62 @@ TEST_CASE("CtcSegment")
     CHECK(x.is_empty());
   }
 }
+
+TEST_CASE("CtcSegment - tests from Codac1")
+{
+  // Test_CtcSegment01
+  {
+    CtcSegment c({{0},{0}}, {{10},{20}});
+    IntervalVector x({{-5,50},{-5, 50}});
+    c.contract(x);
+    CHECK(x == IntervalVector({{0,10},{0,20}}));
+  }
+
+  // Test_CtcSegment02
+  {
+    CtcSegment c({{0},{0}}, {{10},{20}});
+    IntervalVector x({{10,50},{20,50}});
+    c.contract(x);
+    CHECK(x == IntervalVector({{10,10},{20,20}}));
+  }
+
+  // Test_contract_degenerate
+  {
+    CtcSegment c({{5},{5}}, {{5},{5}});
+    IntervalVector x({{-5,50},{-5,50}});
+    c.contract(x);
+    CHECK(x == IntervalVector({{5,5},{5,5}}));
+  }
+
+  // Test_contract_degenerate_x
+  {
+    CtcSegment c({{5},{5}}, {{10},{5}});
+    IntervalVector x({{-50,50},{-50,50}});
+    c.contract(x);
+    CHECK(x == IntervalVector({{5,10},{5,5}}));
+  }
+
+  // Test_contract_degenerate_y
+  {
+    CtcSegment c({{-5},{-5}}, {{-5},{15}});
+    IntervalVector x({Interval(-50, 50), Interval(-50, 50)});
+    c.contract(x);
+    CHECK(x == IntervalVector({{-5,-5},{-5,15}}));
+  }
+
+  // Test_contract_empty
+  {
+    CtcSegment c({{0},{0}}, {{10},{20}});
+    IntervalVector x({{-5,-2},{-5,50}});
+    c.contract(x);
+    CHECK(x.is_empty());
+  }
+
+  // Test_call_with_empty_x
+  {
+    CtcSegment c({{0},{0}}, {{10},{20}});
+    IntervalVector x(2);
+    c.contract(x);
+    CHECK(x == IntervalVector({{0,10},{0,20}}));
+  }
+}

@@ -44,6 +44,8 @@ class TestAnalyticFunction(unittest.TestCase):
 
       f = AnalyticFunction([x], x)
       self.assertTrue(Approx(test_eval(f,Interval(0))) == 0)
+      f = AnalyticFunction([x], x+Interval(2))
+      self.assertTrue(Approx(test_eval(f,Interval(3))) == 5)
       f = AnalyticFunction([x], x+x)
       self.assertTrue(Approx(test_eval(f,Interval(2))) == 4)
       f = AnalyticFunction([x], x+x+2)

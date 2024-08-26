@@ -85,6 +85,10 @@
       src/core/functions/analytic/codac2_py_AnalyticFunction.h
       src/core/functions/analytic/codac2_py_ExprWrapper.h
 
+      src/core/geometry/codac2_py_Edge.cpp
+      src/core/geometry/codac2_py_geometry.cpp
+      src/core/geometry/codac2_py_Polygon.cpp
+
       src/core/graphics/codac2_py_Figure2D.cpp
       src/core/graphics/codac2_py_StyleProperties.cpp
 

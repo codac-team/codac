@@ -76,4 +76,6 @@ void export_OctaSym(py::module& m)
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_OCTASYM_REF)
     
   ;
+  
+  py::implicitly_convertible<py::list,OctaSym>();
 }

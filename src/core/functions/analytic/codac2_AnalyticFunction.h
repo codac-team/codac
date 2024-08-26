@@ -15,6 +15,7 @@
 #include "codac2_analytic_variables.h"
 #include "codac2_FunctionBase.h"
 #include "codac2_template_tools.h"
+#include "codac2_analytic_operations.h"
 
 namespace codac2
 {

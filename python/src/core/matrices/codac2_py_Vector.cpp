@@ -50,15 +50,8 @@ void export_Vector(py::module& m)
       VECTOR_VECTOR_SIZET_DOUBLE,
       "n"_a, "x"_a)
 
-    .def(py::init(
-        [](const std::vector<double>& v)
-        {
-          auto iv = std::make_unique<Vector>(v.size());
-          for(size_t i = 0 ; i < v.size() ; i++)
-            (*iv)[i] = v[i];
-          return iv;
-        }),
-      VECTOR_VECTOR_INITIALIZER_LIST_DOUBLE,
+    .def(py::init<const std::vector<double>>(),
+      VECTOR_VECTOR_CONST_VECTOR_DOUBLE_REF,
       "x"_a)
 
     .def(py::init<const Vector&>(),

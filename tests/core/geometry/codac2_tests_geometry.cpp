@@ -30,10 +30,3 @@ TEST_CASE("orientation")
   CHECK(orientation({0.,0.},{0.,-5.},{2.,-5.}) == BoolInterval::FALSE);
   CHECK(orientation({999.,0.1},{0.,0.},{999.,-0.1}) == BoolInterval::FALSE);
 }
-
-TEST_CASE("in_polygon")
-{
-  CHECK(in_polygon({{3.1},{3}}, {{{3},{-1}},{{3},{4}},{{5},{6}},{{-1},{1}}}) == BoolInterval::FALSE);
-  CHECK(in_polygon({{2.9},{3}}, {{{3},{-1}},{{3},{4}},{{5},{6}},{{-1},{1}}}) == BoolInterval::TRUE);
-  CHECK(in_polygon({{3},{3}}, {{{3},{-1}},{{3},{4}},{{5},{6}},{{-1},{1}}}) == BoolInterval::UNKNOWN);
-}

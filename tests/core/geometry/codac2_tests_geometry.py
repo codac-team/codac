@@ -13,7 +13,21 @@ from codac import *
 class TestGeometry(unittest.TestCase):
 
   def tests_geometry(self):
-     self.assertTrue(True)
+    
+    # Align points
+    self.assertTrue(orientation([0.,0.],[5.,0.],[8.,0.]) == BoolInterval.UNKNOWN)
+    self.assertTrue(orientation([0.,0.],[5.,0.],[-2.,0.]) == BoolInterval.UNKNOWN)
+    self.assertTrue(orientation([0.,0.],[-2.,0.],[5.,0.]) == BoolInterval.UNKNOWN)
+    self.assertTrue(orientation([0.,0.],[0.,0.],[5.,0.]) == BoolInterval.UNKNOWN)
+    self.assertTrue(orientation([0.,0.],[0.,0.],[0.,0.]) == BoolInterval.UNKNOWN)
+
+    # Clockwise points
+    self.assertTrue(orientation([0.,0.],[0.,-5.],[-2.,-5.]) == BoolInterval.TRUE)
+    self.assertTrue(orientation([-999.,0.1],[0.,0.],[-999.,-0.1]) == BoolInterval.TRUE)
+
+    # Anticlockwise points
+    self.assertTrue(orientation([0.,0.],[0.,-5.],[2.,-5.]) == BoolInterval.FALSE)
+    self.assertTrue(orientation([999.,0.1],[0.,0.],[999.,-0.1]) == BoolInterval.FALSE)
 
 if __name__ ==  '__main__':
   unittest.main()

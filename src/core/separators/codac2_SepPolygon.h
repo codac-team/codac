@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include <vector>
+#include "codac2_Polygon.h"
 #include "codac2_SepCtcBoundary.h"
 #include "codac2_CtcUnion.h"
 
@@ -19,7 +19,7 @@ namespace codac2
   {
     public:
 
-      SepPolygon(const std::vector<IntervalVector>& vertices);
+      SepPolygon(const Polygon& p);
       std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
   };
