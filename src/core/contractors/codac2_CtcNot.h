@@ -20,7 +20,7 @@ namespace codac2
     public:
 
       template<typename C, typename = typename std::enable_if<
-          std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>
+          std::is_base_of_v<CtcBase<IntervalVector>,C> || std::is_same_v<std::shared_ptr<CtcBase<IntervalVector>>,C>
         >::type>
       CtcNot(const C& c)
         : Ctc<CtcNot,IntervalVector>(size_of(c))

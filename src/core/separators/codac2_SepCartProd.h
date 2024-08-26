@@ -20,7 +20,7 @@ namespace codac2
   {
     public:
 
-      SepCartProd(const Collection<Sep_>& seps)
+      SepCartProd(const Collection<SepBase>& seps)
         : Sep<SepCartProd>([seps] {
             size_t n = 0;
             for(const auto& si : seps)
@@ -30,14 +30,14 @@ namespace codac2
       { }
 
       template<typename S, typename = typename std::enable_if<(
-          (std::is_base_of_v<Sep_,S> && !std::is_same_v<SepCartProd,S>) || std::is_same_v<std::shared_ptr<Sep_>,S>
+          (std::is_base_of_v<SepBase,S> && !std::is_same_v<SepCartProd,S>) || std::is_same_v<std::shared_ptr<SepBase>,S>
         ), void>::type>
       SepCartProd(const S& s)
         : Sep<SepCartProd>(size_of(s)), _seps(s)
       { }
 
       template<typename... S, typename = typename std::enable_if<(true && ... && (
-          (std::is_base_of_v<Sep_,S> || std::is_same_v<std::shared_ptr<Sep_>,S>)
+          (std::is_base_of_v<SepBase,S> || std::is_same_v<std::shared_ptr<SepBase>,S>)
         )), void>::type>
       SepCartProd(const S&... s)
         : Sep<SepCartProd>((0 + ... + size_of(s))), _seps(s...)
@@ -47,11 +47,11 @@ namespace codac2
 
     protected:
 
-      Collection<Sep_> _seps;
+      Collection<SepBase> _seps;
   };
 
   template<typename... S, typename = typename std::enable_if<(true && ... && (
-      std::is_base_of_v<Sep_,S>
+      std::is_base_of_v<SepBase,S>
     )), void>::type>
   inline SepCartProd cart_prod(const S&... s)
   {

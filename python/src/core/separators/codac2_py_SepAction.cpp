@@ -21,13 +21,13 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_SepAction(py::module& m, py::class_<Sep_,pySep>& pysep)
+void export_SepAction(py::module& m, py::class_<SepBase,pySep>& pysep)
 {
   py::class_<SepAction> exported(m, "SepAction", pysep, SEPACTION_MAIN);
   exported
 
     .def(py::init(
-        [](const Sep_& s, const OctaSym& a)
+        [](const SepBase& s, const OctaSym& a)
         {
           return std::make_unique<SepAction>(s.copy(),a);
         }),

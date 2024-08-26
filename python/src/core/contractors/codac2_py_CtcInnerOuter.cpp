@@ -20,13 +20,13 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_CtcInnerOuter(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& pyctc)
+void export_CtcInnerOuter(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& pyctc)
 {
   py::class_<CtcInner> exported_inner(m, "CtcInner", pyctc, CTCINNER_MAIN);
   exported_inner
 
     .def(py::init(
-        [](const Sep_& s)
+        [](const SepBase& s)
         {
           return std::make_unique<CtcInner>(s.copy());
         }),
@@ -42,7 +42,7 @@ void export_CtcInnerOuter(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIn
   exported_outer
 
     .def(py::init(
-        [](const Sep_& s)
+        [](const SepBase& s)
         {
           return std::make_unique<CtcOuter>(s.copy());
         }),

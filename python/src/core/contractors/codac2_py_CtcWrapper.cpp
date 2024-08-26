@@ -20,7 +20,7 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_CtcWrapper(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& pyctc)
+void export_CtcWrapper(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& pyctc)
 {
   py::class_<CtcWrapper_<IntervalVector>> exported(m, "CtcWrapper", pyctc, CTCWRAPPER__MAIN);
   exported

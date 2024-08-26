@@ -31,7 +31,7 @@ namespace codac2
       }
 
       template<typename C, typename = typename std::enable_if<
-          std::is_base_of_v<Ctc_<X>,C>
+          std::is_base_of_v<CtcBase<X>,C>
         >::type>
       CtcInverseNotIn(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const C& ctc_compl, bool with_centered_form = true)
         : CtcUnion<X>(f.args()[0]->size() /* f must have only one arg, see following assert */)

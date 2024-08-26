@@ -31,7 +31,7 @@ namespace codac2
       { }
 
       template<typename S, typename = typename std::enable_if<
-          std::is_same_v<Y,IntervalVector> && (std::is_base_of_v<Sep_,S> || std::is_same_v<std::shared_ptr<Sep_>,S>)
+          std::is_same_v<Y,IntervalVector> && (std::is_base_of_v<SepBase,S> || std::is_same_v<std::shared_ptr<SepBase>,S>)
         >::type>
       SepInverse(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const S& sep_y, bool with_centered_form = true)
         : SepCtcPair(CtcInverseNotIn<Y,X>(f,CtcInner(sep_y),with_centered_form), CtcInverse_<Y,X>(f,CtcOuter(sep_y),with_centered_form))

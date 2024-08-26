@@ -17,7 +17,7 @@
 namespace codac2
 {
   class CtcAction;
-  class Sep_;
+  class SepBase;
   class SepAction;
   class SetExpr;
 
@@ -44,13 +44,13 @@ namespace codac2
       IntervalVector operator()(const IntervalVector& x) const;
 
       template<typename C, typename = typename std::enable_if<
-          std::is_base_of_v<Ctc_<IntervalVector>,C>
+          std::is_base_of_v<CtcBase<IntervalVector>,C>
         >::type>
       CtcAction operator()(const C& c) const;
       // -> is defined in CtcAction class
 
       template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<Sep_,S>
+          std::is_base_of_v<SepBase,S>
         >::type>
       SepAction operator()(const S& s) const;
       // -> is defined in SepAction class

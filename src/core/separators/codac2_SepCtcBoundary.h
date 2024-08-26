@@ -23,7 +23,7 @@ namespace codac2
     public:
 
       template<typename C, typename = typename std::enable_if<(
-          std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>
+          std::is_base_of_v<CtcBase<IntervalVector>,C> || std::is_same_v<std::shared_ptr<CtcBase<IntervalVector>>,C>
         )>::type>
       SepCtcBoundary(const C& ctc_boundary, const std::function<BoolInterval(const Vector&)>& inside_test)
         : Sep<SepCtcBoundary>(size_of(ctc_boundary)), _ctc_boundary(ctc_boundary), _inside_test(inside_test)
@@ -33,7 +33,7 @@ namespace codac2
 
     protected:
 
-      const Collection<Ctc_<IntervalVector>> _ctc_boundary;
+      const Collection<CtcBase<IntervalVector>> _ctc_boundary;
       const std::function<BoolInterval(const Vector&)> _inside_test;
   };
 }

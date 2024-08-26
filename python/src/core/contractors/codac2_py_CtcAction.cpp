@@ -21,13 +21,13 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_CtcAction(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& pyctc)
+void export_CtcAction(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& pyctc)
 {
   py::class_<CtcAction> exported(m, "CtcAction", pyctc, CTCACTION_MAIN);
   exported
 
     .def(py::init(
-        [](const Ctc_<IntervalVector>& c, const OctaSym& a)
+        [](const CtcBase<IntervalVector>& c, const OctaSym& a)
         {
           return std::make_unique<CtcAction>(c.copy(),a);
         }),

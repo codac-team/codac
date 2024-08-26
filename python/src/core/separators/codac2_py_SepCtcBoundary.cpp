@@ -21,13 +21,13 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_SepCtcBoundary(py::module& m, py::class_<Sep_,pySep>& pysep)
+void export_SepCtcBoundary(py::module& m, py::class_<SepBase,pySep>& pysep)
 {
   py::class_<SepCtcBoundary> exported(m, "SepCtcBoundary", pysep, SEPCTCBOUNDARY_MAIN);
   exported
 
     .def(py::init(
-        [](const Ctc_<IntervalVector>& ctc_boundary, const std::function<BoolInterval(const Vector&)>& inside_test)
+        [](const CtcBase<IntervalVector>& ctc_boundary, const std::function<BoolInterval(const Vector&)>& inside_test)
         {
           return std::make_unique<SepCtcBoundary>(ctc_boundary.copy(),inside_test);
         }),

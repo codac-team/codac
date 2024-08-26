@@ -22,12 +22,12 @@ namespace py = pybind11;
 using namespace py::literals;
 
 
-class pySep : public Sep_
+class pySep : public SepBase
 {
   public:
 
     pySep(size_t_type n)
-      : Sep_(n), _n(n)
+      : SepBase(n), _n(n)
     { }
 
     // Trampoline (need one for each virtual function)
@@ -37,26 +37,26 @@ class pySep : public Sep_
 
       // Try to look up the overloaded method on the Python side
       py::function overload = py::get_overload(this, "separate");
-      assert_release(overload && "Sep_: separate method not found");
+      assert_release(overload && "SepBase: separate method not found");
 
       auto x_copy = IntervalVector(x);
 
       auto obj = overload(x_copy); // calls the Python function
       assert_release(py::isinstance<BoxPair>(obj) &&
-        "Sep_: error with separate method, incorrect returned Python type");
+        "SepBase: error with separate method, incorrect returned Python type");
 
       return obj.cast<BoxPair>();
     }
 
     // Trampoline (need one for each virtual function)
-    virtual std::shared_ptr<Sep_> copy() const override
+    virtual std::shared_ptr<SepBase> copy() const override
     {
       // Try to look up the overloaded method on the Python side
       py::function overload = py::get_overload(this, "copy");
-      assert(overload && "Sep_: copy method not found");
+      assert(overload && "SepBase: copy method not found");
 
       auto obj = overload();
-      return std::shared_ptr<Sep_>(obj.cast<Sep_*>(), [](auto p) { /* no delete */ });
+      return std::shared_ptr<SepBase>(obj.cast<SepBase*>(), [](auto p) { /* no delete */ });
     }
 
   protected:

@@ -35,13 +35,13 @@ namespace codac2
   //};
 
   template<typename X>
-  class Ctc_// : virtual public Ctc<X_>
+  class CtcBase// : virtual public Ctc<X_>
   {
     public:
     
       using ContractedType = X;
 
-      Ctc_(size_t n)
+      CtcBase(size_t n)
         : _n(n)
       {
         assert(n > 0);
@@ -54,7 +54,7 @@ namespace codac2
       
       virtual void contract(X& x) const = 0;
 
-      virtual std::shared_ptr<Ctc_<X>> copy() const = 0;
+      virtual std::shared_ptr<CtcBase<X>> copy() const = 0;
 
     protected:
 
@@ -62,15 +62,15 @@ namespace codac2
   };
 
   template<typename C,typename X_>
-  class Ctc : public Ctc_<X_>
+  class Ctc : public CtcBase<X_>
   {
     public:
     
       Ctc(size_t n)
-        : Ctc_<X_>(n)
+        : CtcBase<X_>(n)
       { }
 
-      virtual std::shared_ptr<Ctc_<X_>> copy() const
+      virtual std::shared_ptr<CtcBase<X_>> copy() const
       {
         return std::make_shared<C>(*dynamic_cast<const C*>(this));
       }

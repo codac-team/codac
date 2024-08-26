@@ -25,7 +25,7 @@ namespace codac2
     public:
 
       template<typename C, typename = typename std::enable_if<
-          std::is_base_of_v<Ctc_<Y>,C> || std::is_same_v<std::shared_ptr<Ctc_<Y>>,C>
+          std::is_base_of_v<CtcBase<Y>,C> || std::is_same_v<std::shared_ptr<CtcBase<Y>>,C>
         >::type>
       CtcInverse(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const C& ctc_y, bool with_centered_form = true, bool is_not_in = false)
         : _f(f), _ctc_y(ctc_y), _with_centered_form(with_centered_form), _is_not_in(is_not_in)
@@ -35,7 +35,7 @@ namespace codac2
         : CtcInverse(f, CtcWrapper_<Y>(y), with_centered_form, is_not_in)
       { }
 
-      //std::shared_ptr<Ctc_<X>> copy() const
+      //std::shared_ptr<CtcBase<X>> copy() const
       //{
       //  return std::make_shared<CtcInverse<Y>>(*this);
       //}
@@ -110,7 +110,7 @@ namespace codac2
     protected:
 
       const AnalyticFunction<typename Wrapper<Y>::Domain> _f;
-      const Collection<Ctc_<Y>> _ctc_y;
+      const Collection<CtcBase<Y>> _ctc_y;
       bool _with_centered_form;
       bool _is_not_in = false;
   };
@@ -128,7 +128,7 @@ namespace codac2
       }
 
       template<typename C, typename = typename std::enable_if<
-          std::is_base_of_v<Ctc_<Y>,C> || std::is_same_v<std::shared_ptr<Ctc_<Y>>,C>
+          std::is_base_of_v<CtcBase<Y>,C> || std::is_same_v<std::shared_ptr<CtcBase<Y>>,C>
         >::type>
       CtcInverse_(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const C& ctc_y, bool with_centered_form = true, bool is_not_in = false)
         : Ctc<CtcInverse_<Y,X>,X>(f.args()[0]->size() /* f must have only one arg, see following assert */),

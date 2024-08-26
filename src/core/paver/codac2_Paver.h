@@ -22,10 +22,10 @@ namespace codac2
 
       Paver(const IntervalVector& x0);
 
-      std::list<IntervalVector> pave(const Ctc_<IntervalVector>& c, double eps);
-      std::list<IntervalVector> pave(const std::shared_ptr<Ctc_<IntervalVector>>& c, double eps);
-      void pave(const Sep_& s, double eps);
-      void pave(const std::shared_ptr<Sep_>& s, double eps);
+      std::list<IntervalVector> pave(const CtcBase<IntervalVector>& c, double eps);
+      std::list<IntervalVector> pave(const std::shared_ptr<CtcBase<IntervalVector>>& c, double eps);
+      void pave(const SepBase& s, double eps);
+      void pave(const std::shared_ptr<SepBase>& s, double eps);
 
       void set_figure(Figure2D *g);
 

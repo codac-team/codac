@@ -21,7 +21,7 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_CtcFixpoint(py::module& m, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& pyctc)
+void export_CtcFixpoint(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& pyctc)
 {
   py::class_<CtcFixpoint> exported(m, "CtcFixpoint", pyctc, CTCFIXPOINT_MAIN);
   exported

@@ -25,7 +25,7 @@ namespace codac2
       { }
 
       template<typename S, typename = typename std::enable_if<(
-          (std::is_base_of_v<Sep_,S> && !std::is_same_v<SepNot,S>) || std::is_same_v<std::shared_ptr<Sep_>,S>
+          (std::is_base_of_v<SepBase,S> && !std::is_same_v<SepNot,S>) || std::is_same_v<std::shared_ptr<SepBase>,S>
         ), void>::type>
       SepNot(const S& s)
         : Sep<SepNot>(size_of(s)), _sep(s)
@@ -42,11 +42,11 @@ namespace codac2
 
     protected:
 
-      const Collection<Sep_> _sep;
+      const Collection<SepBase> _sep;
   };
 
   template<typename S, typename = typename std::enable_if<
-      std::is_base_of_v<Sep_,S>
+      std::is_base_of_v<SepBase,S>
     >::type>
   SepNot operator!(const S& s)
   {

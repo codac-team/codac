@@ -39,7 +39,7 @@ void Paver::init_figure()
   }
 }
 
-std::list<IntervalVector> Paver::pave(const Ctc_<IntervalVector>& c, double eps)
+std::list<IntervalVector> Paver::pave(const CtcBase<IntervalVector>& c, double eps)
 {
   assert_release(eps > 0.);
   assert_release(c.size() >= 2 && "cannot reveal 1d contractors");
@@ -88,12 +88,12 @@ std::list<IntervalVector> Paver::pave(const Ctc_<IntervalVector>& c, double eps)
   return l_output;
 }
 
-std::list<IntervalVector> Paver::pave(const std::shared_ptr<Ctc_<IntervalVector>>& c, double eps)
+std::list<IntervalVector> Paver::pave(const std::shared_ptr<CtcBase<IntervalVector>>& c, double eps)
 {
   return pave(*c,eps);
 }
 
-void Paver::pave(const Sep_& s, double eps)
+void Paver::pave(const SepBase& s, double eps)
 {
   assert_release(eps > 0.);
   assert_release(s.size() >= 2 && "cannot reveal 1d separators");
@@ -145,7 +145,7 @@ void Paver::pave(const Sep_& s, double eps)
     (double)(clock()-t_start)/CLOCKS_PER_SEC, n_inner, n_boundary);
 }
 
-void Paver::pave(const std::shared_ptr<Sep_>& s, double eps)
+void Paver::pave(const std::shared_ptr<SepBase>& s, double eps)
 {
   return pave(*s,eps);
 }

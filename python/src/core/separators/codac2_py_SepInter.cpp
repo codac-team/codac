@@ -20,13 +20,13 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_SepInter(py::module& m, py::class_<Sep_,pySep>& pysep)
+void export_SepInter(py::module& m, py::class_<SepBase,pySep>& pysep)
 {
   py::class_<SepInter> exported(m, "SepInter", pysep, SEPINTER_MAIN);
   exported
 
     .def(py::init(
-        [](const Sep_& s)
+        [](const SepBase& s)
         {
           return std::make_unique<SepInter>(s.copy());
         }),
@@ -34,7 +34,7 @@ void export_SepInter(py::module& m, py::class_<Sep_,pySep>& pysep)
       "s"_a)
 
     .def(py::init(
-        [](const Sep_& s1, const Sep_& s2)
+        [](const SepBase& s1, const SepBase& s2)
         {
           return std::make_unique<SepInter>(s1.copy(),s2.copy());
         }),
@@ -45,7 +45,7 @@ void export_SepInter(py::module& m, py::class_<Sep_,pySep>& pysep)
       BOXPAIR_SEPINTER_SEPARATE_CONST_INTERVALVECTOR_REF_CONST,
       "x"_a)
 
-    .def("__iand__", [](SepInter& s1, const Sep_& s2)
+    .def("__iand__", [](SepInter& s1, const SepBase& s2)
         {
           s1 &= s2.copy();
           return s1;

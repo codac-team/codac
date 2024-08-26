@@ -21,7 +21,7 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 template<typename T>
-void export_CtcInverseNotIn(py::module& m, const std::string& export_name, py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector>& pyctc)
+void export_CtcInverseNotIn(py::module& m, const std::string& export_name, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& pyctc)
 {
   py::class_<CtcInverseNotIn<T>> exported(m, export_name.c_str(), pyctc, CTCINVERSE_MAIN);
 

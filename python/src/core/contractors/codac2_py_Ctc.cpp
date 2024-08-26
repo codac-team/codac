@@ -32,18 +32,18 @@ using namespace pybind11::literals;
   return py_ctc;
 }*/
 
-py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py::module& m/*, py::class_<Ctc,pyCtc>& py_ctc*/)
+py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py::module& m/*, py::class_<Ctc,pyCtc>& py_ctc*/)
 {
-  py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector> py_ctc_iv(m, "CtcIntervalVector"/*, py_ctc*/);
+  py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector> py_ctc_iv(m, "CtcIntervalVector"/*, py_ctc*/);
   py_ctc_iv
 
     .def(py::init<size_t>(),
-      CTC__X_CTC__SIZET)
+      CTCBASE_X_CTCBASE_SIZET)
 
-    .def("size", &Ctc_<IntervalVector>::size,
-      SIZET_CTC__X_SIZE_CONST)
+    .def("size", &CtcBase<IntervalVector>::size,
+      SIZET_CTCBASE_X_SIZE_CONST)
 
-    .def("copy", [](const Ctc_<IntervalVector>& c)
+    .def("copy", [](const CtcBase<IntervalVector>& c)
         {
           return &c;
         },
@@ -52,57 +52,57 @@ py::class_<Ctc_<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py
 
     // Intersection of contractors
 
-    .def("__and__", [](const Ctc_<IntervalVector>& c1, const Ctc_<IntervalVector>& c2)
+    .def("__and__", [](const CtcBase<IntervalVector>& c1, const CtcBase<IntervalVector>& c2)
         {
           return CtcInter<IntervalVector>(
-            std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c1.copy()),
-            std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c2.copy()));
+            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c1.copy()),
+            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c2.copy()));
         },
       CTCINTER_TYPENAME_C1_CONTRACTEDTYPE_OPERATORAND_CONST_C1_REF_CONST_C2_REF)
 
-    .def("__and__", [](const Ctc_<IntervalVector>& c1, const IntervalVector& x2)
+    .def("__and__", [](const CtcBase<IntervalVector>& c1, const IntervalVector& x2)
         {
           auto c2 = CtcWrapper_<IntervalVector>(x2);
           return CtcInter<IntervalVector>(
-            std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c1.copy()),
-            std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c2.copy()));
+            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c1.copy()),
+            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c2.copy()));
         },
       CTCINTER_INTERVALVECTOR_OPERATORAND_CONST_INTERVALVECTOR_REF_CONST_C2_REF)
 
-    .def("__rand__", [](const Ctc_<IntervalVector>& c1, const IntervalVector& x2)
+    .def("__rand__", [](const CtcBase<IntervalVector>& c1, const IntervalVector& x2)
         {
           auto c2 = CtcWrapper_<IntervalVector>(x2);
           return CtcInter<IntervalVector>(
-            std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c1.copy()),
-            std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c2.copy()));
+            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c1.copy()),
+            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c2.copy()));
         },
       CTCINTER_INTERVALVECTOR_OPERATORAND_CONST_INTERVALVECTOR_REF_CONST_C2_REF)
 
     // Union of contractors
 
-    .def("__or__", [](const Ctc_<IntervalVector>& c1, const Ctc_<IntervalVector>& c2)
+    .def("__or__", [](const CtcBase<IntervalVector>& c1, const CtcBase<IntervalVector>& c2)
         {
           return CtcUnion<IntervalVector>(
-            std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c1.copy()),
-            std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c2.copy()));
+            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c1.copy()),
+            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c2.copy()));
         },
       CTCUNION_TYPENAME_C1_CONTRACTEDTYPE_OPERATOROR_CONST_C1_REF_CONST_C2_REF)
 
-    .def("__or__", [](const Ctc_<IntervalVector>& c1, const IntervalVector& x2)
+    .def("__or__", [](const CtcBase<IntervalVector>& c1, const IntervalVector& x2)
         {
           auto c2 = CtcWrapper_<IntervalVector>(x2);
           return CtcUnion<IntervalVector>(
-            std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c1.copy()),
-            std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c2.copy()));
+            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c1.copy()),
+            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c2.copy()));
         },
       CTCUNION_INTERVALVECTOR_OPERATOROR_CONST_INTERVALVECTOR_REF_CONST_C2_REF)
 
-    .def("__ror__", [](const Ctc_<IntervalVector>& c1, const IntervalVector& x2)
+    .def("__ror__", [](const CtcBase<IntervalVector>& c1, const IntervalVector& x2)
         {
           auto c2 = CtcWrapper_<IntervalVector>(x2);
           return CtcUnion<IntervalVector>(
-            std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c1.copy()),
-            std::dynamic_pointer_cast<Ctc_<IntervalVector>>(c2.copy()));
+            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c1.copy()),
+            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c2.copy()));
         },
       CTCUNION_INTERVALVECTOR_OPERATOROR_CONST_INTERVALVECTOR_REF_CONST_C2_REF)
 

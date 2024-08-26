@@ -25,19 +25,19 @@ namespace codac2
     return 1;
   }
 
-  inline size_t size_of(const std::shared_ptr<Ctc_<IntervalVector>>& x)
+  inline size_t size_of(const std::shared_ptr<CtcBase<IntervalVector>>& x)
   {
     return x->size();
   }
 
-  inline size_t size_of(const std::shared_ptr<Sep_>& x)
+  inline size_t size_of(const std::shared_ptr<SepBase>& x)
   {
     return x->size();
   }
 
   template<typename T, typename = typename std::enable_if<(
-      (!std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,T>
-    && !std::is_same_v<std::shared_ptr<Sep_>,T>
+      (!std::is_same_v<std::shared_ptr<CtcBase<IntervalVector>>,T>
+    && !std::is_same_v<std::shared_ptr<SepBase>,T>
     && !std::is_same_v<int,T>
     && !std::is_same_v<double,T>)
     ), void>::type>

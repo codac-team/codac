@@ -20,7 +20,7 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_SepNot(py::module& m, py::class_<Sep_,pySep>& pysep)
+void export_SepNot(py::module& m, py::class_<SepBase,pySep>& pysep)
 {
   py::class_<SepNot> exported(m, "SepNot", pysep, SEPNOT_MAIN);
   exported
@@ -30,7 +30,7 @@ void export_SepNot(py::module& m, py::class_<Sep_,pySep>& pysep)
       "x"_a)
 
     .def(py::init(
-        [](const Sep_& s)
+        [](const SepBase& s)
         {
           return std::make_unique<SepNot>(s.copy());
         }),

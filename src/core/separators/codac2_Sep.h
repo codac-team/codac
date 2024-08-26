@@ -26,11 +26,11 @@ namespace codac2
     return os;
   }
 
-  class Sep_
+  class SepBase
   {
     public:
 
-      Sep_(size_t n)
+      SepBase(size_t n)
         : _n(n)
       {
         assert(n > 0);
@@ -41,7 +41,7 @@ namespace codac2
         return _n;
       }
 
-      virtual std::shared_ptr<Sep_> copy() const = 0;
+      virtual std::shared_ptr<SepBase> copy() const = 0;
       virtual BoxPair separate(const IntervalVector& x) const = 0;
 
     protected:
@@ -50,15 +50,15 @@ namespace codac2
   };
 
   template<typename S>
-  class Sep : public Sep_
+  class Sep : public SepBase
   {
     public:
 
       Sep(size_t n)
-        : Sep_(n)
+        : SepBase(n)
       { }
 
-      virtual std::shared_ptr<Sep_> copy() const
+      virtual std::shared_ptr<SepBase> copy() const
       {
         return std::make_shared<S>(*dynamic_cast<const S*>(this));
       }

@@ -21,7 +21,7 @@ namespace codac2
     public:
 
       template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<Sep_,S> || std::is_base_of_v<S,std::shared_ptr<Sep_>>
+          std::is_base_of_v<SepBase,S> || std::is_base_of_v<S,std::shared_ptr<SepBase>>
         >::type>
       CtcInner(const S& s)
         : Ctc<CtcInner,IntervalVector>(size_of(s)), _seps(s)
@@ -35,7 +35,7 @@ namespace codac2
 
     protected:
 
-      const Collection<Sep_> _seps;
+      const Collection<SepBase> _seps;
   };
 
   class CtcOuter : public Ctc<CtcOuter,IntervalVector>
@@ -43,7 +43,7 @@ namespace codac2
     public:
 
       template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<Sep_,S> || std::is_base_of_v<S,std::shared_ptr<Sep_>>
+          std::is_base_of_v<SepBase,S> || std::is_base_of_v<S,std::shared_ptr<SepBase>>
         >::type>
       CtcOuter(const S& s)
         : Ctc<CtcOuter,IntervalVector>(size_of(s)), _seps(s)
@@ -57,6 +57,6 @@ namespace codac2
 
     protected:
 
-      const Collection<Sep_> _seps;
+      const Collection<SepBase> _seps;
   };
 }

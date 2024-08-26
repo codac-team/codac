@@ -64,7 +64,7 @@ void export_OctaSym(py::module& m)
       CTCACTION_OCTASYM_OPERATORCALL_CONST_C_REF_CONST,
       "c"_a)
 
-    .def("__call__", [](const OctaSym& a, const Sep_& s) { return SepAction(s.copy(),a); },
+    .def("__call__", [](const OctaSym& a, const SepBase& s) { return SepAction(s.copy(),a); },
       SEPACTION_OCTASYM_OPERATORCALL_CONST_S_REF_CONST,
       "s"_a)
 

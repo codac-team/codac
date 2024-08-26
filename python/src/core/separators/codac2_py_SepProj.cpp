@@ -20,13 +20,13 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_SepProj(py::module& m, py::class_<Sep_,pySep>& pysep)
+void export_SepProj(py::module& m, py::class_<SepBase,pySep>& pysep)
 {
   py::class_<SepProj> exported(m, "SepProj", pysep, SEPPROJ_MAIN);
   exported
 
     .def(py::init(
-        [](const Sep_& s, std::vector<size_t_type> proj_indices, double default_eps)
+        [](const SepBase& s, std::vector<size_t_type> proj_indices, double default_eps)
         {
           std::transform(std::begin(proj_indices),std::end(proj_indices),std::begin(proj_indices),
             [](size_t_type x)
@@ -41,7 +41,7 @@ void export_SepProj(py::module& m, py::class_<Sep_,pySep>& pysep)
       "s"_a, "proj_indices"_a, "default_eps"_a=0.01)
 
     .def(py::init(
-        [](const Sep_& s, std::vector<size_t_type> proj_indices, const IntervalVector& y, double default_eps)
+        [](const SepBase& s, std::vector<size_t_type> proj_indices, const IntervalVector& y, double default_eps)
         {
           std::transform(std::begin(proj_indices),std::end(proj_indices),std::begin(proj_indices),
             [](size_t_type x)

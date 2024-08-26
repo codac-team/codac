@@ -20,13 +20,13 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_SepCtcPair(py::module& m, py::class_<Sep_,pySep>& pysep)
+void export_SepCtcPair(py::module& m, py::class_<SepBase,pySep>& pysep)
 {
   py::class_<SepCtcPair> exported(m, "SepCtcPair", pysep, SEPCTCPAIR_MAIN);
   exported
 
     .def(py::init(
-        [](const Ctc_<IntervalVector>& ctc_in, const Ctc_<IntervalVector>& ctc_out)
+        [](const CtcBase<IntervalVector>& ctc_in, const CtcBase<IntervalVector>& ctc_out)
         {
           return std::make_unique<SepCtcPair>(ctc_in.copy(),ctc_out.copy());
         }),

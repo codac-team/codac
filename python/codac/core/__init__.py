@@ -64,7 +64,7 @@ class Ctc(CtcIntervalVector):
     return super().copy()
 
 
-class Sep(Sep_):
+class Sep(SepBase):
 
   def copy(self):
     return super().copy()

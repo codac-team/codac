@@ -21,7 +21,7 @@ namespace codac2
     public:
 
       template<typename C, typename = typename std::enable_if<
-          std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>
+          std::is_base_of_v<CtcBase<IntervalVector>,C> || std::is_same_v<std::shared_ptr<CtcBase<IntervalVector>>,C>
         >::type>
       CtcFixpoint(const C& c, double ratio = 0.1)
         : Ctc<CtcFixpoint,IntervalVector>(size_of(c)), _ctc(c),
@@ -32,7 +32,7 @@ namespace codac2
 
     protected:
 
-      const Collection<Ctc_<IntervalVector>> _ctc;
+      const Collection<CtcBase<IntervalVector>> _ctc;
       const double _r;
   };
 }

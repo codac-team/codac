@@ -22,14 +22,14 @@ namespace codac2
     public:
 
       template<typename S, typename = typename std::enable_if<(
-          (std::is_base_of_v<Sep_,S> && !std::is_same_v<SepInter,S>) || std::is_same_v<std::shared_ptr<Sep_>,S>
+          (std::is_base_of_v<SepBase,S> && !std::is_same_v<SepInter,S>) || std::is_same_v<std::shared_ptr<SepBase>,S>
         ), void>::type>
       SepInter(const S& s)
         : Sep<SepInter>(size_of(s)), _seps(s)
       { }
 
       template<typename... S, typename = typename std::enable_if<(true && ... && (
-          (std::is_base_of_v<Sep_,S> || std::is_same_v<std::shared_ptr<Sep_>,S>)
+          (std::is_base_of_v<SepBase,S> || std::is_same_v<std::shared_ptr<SepBase>,S>)
         )), void>::type>
       SepInter(const S&... s)
         : Sep<SepInter>(size_first_item(s...)), _seps(s...)
@@ -40,7 +40,7 @@ namespace codac2
       BoxPair separate(const IntervalVector& x) const;
 
       template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<Sep_,S>
+          std::is_base_of_v<SepBase,S>
         >::type>
       SepInter& operator&=(const S& s)
       {
@@ -49,7 +49,7 @@ namespace codac2
         return *this;
       }
 
-      SepInter& operator&=(const std::shared_ptr<Sep_>& s)
+      SepInter& operator&=(const std::shared_ptr<SepBase>& s)
       {
         assert_release(s->size() == this->size());
         _seps.add_shared_ptr(s);
@@ -58,12 +58,12 @@ namespace codac2
 
     protected:
 
-      Collection<Sep_> _seps;
+      Collection<SepBase> _seps;
   };
 
   template<typename S1, typename S2, typename = typename std::enable_if<(
-      std::is_base_of_v<Sep_,S1> &&
-      std::is_base_of_v<Sep_,S2>
+      std::is_base_of_v<SepBase,S1> &&
+      std::is_base_of_v<SepBase,S2>
     )>::type>
   inline SepInter operator&(const S1& s1, const S2& s2)
   {
@@ -71,7 +71,7 @@ namespace codac2
   }
 
   template<typename S2, typename = typename std::enable_if<
-      std::is_base_of_v<Sep_,S2>
+      std::is_base_of_v<SepBase,S2>
     >::type>
   inline SepInter operator&(const IntervalVector& s1, const S2& s2)
   {
@@ -80,7 +80,7 @@ namespace codac2
   }
 
   template<typename S1, typename = typename std::enable_if<
-      std::is_base_of_v<Sep_,S1>
+      std::is_base_of_v<SepBase,S1>
     >::type>
   inline SepInter operator&(const S1& s1, const IntervalVector& s2)
   {

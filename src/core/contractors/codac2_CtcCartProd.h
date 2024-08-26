@@ -20,7 +20,7 @@ namespace codac2
   {
     public:
 
-      CtcCartProd(const Collection<Ctc_<IntervalVector>>& ctcs)
+      CtcCartProd(const Collection<CtcBase<IntervalVector>>& ctcs)
         : Ctc<CtcCartProd,IntervalVector>([ctcs] {
             size_t n = 0;
             for(const auto& ci : ctcs)
@@ -30,14 +30,14 @@ namespace codac2
       { }
 
       template<typename C, typename = typename std::enable_if<(
-          (std::is_base_of_v<Ctc_<IntervalVector>,C> && !std::is_same_v<CtcCartProd,C>) || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>
+          (std::is_base_of_v<CtcBase<IntervalVector>,C> && !std::is_same_v<CtcCartProd,C>) || std::is_same_v<std::shared_ptr<CtcBase<IntervalVector>>,C>
         ), void>::type>
       CtcCartProd(const C& c)
         : Ctc<CtcCartProd,IntervalVector>(size_of(c)), _ctcs(c)
       { }
 
       template<typename... C, typename = typename std::enable_if<(true && ... && (
-          (std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>)
+          (std::is_base_of_v<CtcBase<IntervalVector>,C> || std::is_same_v<std::shared_ptr<CtcBase<IntervalVector>>,C>)
         )), void>::type>
       CtcCartProd(const C&... c)
         : Ctc<CtcCartProd,IntervalVector>((0 + ... + size_of(c))), _ctcs(c...)
@@ -60,11 +60,11 @@ namespace codac2
 
     protected:
 
-      Collection<Ctc_<IntervalVector>> _ctcs;
+      Collection<CtcBase<IntervalVector>> _ctcs;
   };
 
   template<typename... C, typename = typename std::enable_if<(true && ... && (
-      (std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>)
+      (std::is_base_of_v<CtcBase<IntervalVector>,C> || std::is_same_v<std::shared_ptr<CtcBase<IntervalVector>>,C>)
     )), void>::type>
   inline CtcCartProd cart_prod(const C&... c)
   {
