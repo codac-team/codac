@@ -49,12 +49,4 @@ namespace codac2
     p.set_figure(DefaultView::selected_fig());
     p.pave(o,eps);
   }
-
-  template<typename O>
-  void pave_test(const IntervalVector& x0, const O& o, double eps)
-  {
-    Paver p(x0);
-    p.set_figure(DefaultView::selected_fig());
-    p.pave(o,eps);
-  }
 }

@@ -31,8 +31,8 @@ using namespace pybind11::literals;
 py::class_<IntervalVector> export_IntervalVector(py::module& m)
 {
   py::class_<IntervalVector> exported_intervalvector_class(m, "IntervalVector", INTERVALVECTOR_MAIN);
-  export_IntervalMatrixBase<IntervalVector,Vector,true>(exported_intervalvector_class);
-  export_VectorBase<IntervalVector,IntervalMatrix,Interval>(exported_intervalvector_class);
+  export_IntervalMatrixBase<IntervalVector,Vector,true>(m, exported_intervalvector_class);
+  export_VectorBase<IntervalVector,IntervalMatrix,Interval>(m, exported_intervalvector_class);
 
   exported_intervalvector_class
 
@@ -132,3 +132,7 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
 
   return exported_intervalvector_class;
 }
+
+
+  //IntervalVector operator*(const MatrixBaseBlock<Q_,Interval>& x1, const Vector& x2)
+  //IntervalVector operator*(const Matrix& x1, const MatrixBaseBlock<Q_,Interval>& x2)

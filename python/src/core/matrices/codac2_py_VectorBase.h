@@ -23,9 +23,12 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 template<typename S,typename M,typename T>
-void export_VectorBase(py::class_<S>& pyclass)
+void export_VectorBase(py::module& m, py::class_<S>& pyclass)
 {
-  export_MatrixBase<S,T,true>(pyclass);
+  //export_MatrixBase<S,T,true>(m, pyclass);
+  // ^ We do not "inherit" from VectorBase here, in order to
+  // avoid double inheritance from IntervalVector or IntervalMatrix.
+  // Inheritance is compensated in Vector binding.
 
   pyclass
 

@@ -28,7 +28,8 @@ using namespace pybind11::literals;
 void export_Vector(py::module& m)
 {
   py::class_<Vector> exported_vector_class(m, "Vector", VECTOR_MAIN);
-  export_VectorBase<Vector,Matrix,double>(exported_vector_class);
+  export_MatrixBase<Vector,double,true>(m, exported_vector_class);
+  export_VectorBase<Vector,Matrix,double>(m, exported_vector_class);
 
   exported_vector_class
 

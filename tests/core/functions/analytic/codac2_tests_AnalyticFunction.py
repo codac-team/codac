@@ -15,7 +15,7 @@ class TestAnalyticFunction(unittest.TestCase):
 
   def tests_AnalyticFunction(self):
 
-    def invalid_function():  
+    def invalid_function():
       x = ScalarVar()
       f = AnalyticFunction([3], cos(x))
 

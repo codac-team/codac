@@ -14,6 +14,7 @@
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include "codac2_py_core.h"
+#include <codac2_Vector.h>
 
 using namespace std;
 using namespace codac2;
@@ -21,7 +22,7 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 template<typename S,typename T,bool VECTOR_INHERITANCE>
-void export_MatrixBase(py::class_<S>& pyclass)
+void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
 {
   pyclass
 
@@ -99,12 +100,6 @@ void export_MatrixBase(py::class_<S>& pyclass)
           return string(s.str()); 
         },
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_MATRIXBASE_ST_REF)
-
-    .def(+py::self)
-    .def(-py::self)
-    .def(py::self += py::self)
-    .def(py::self -= py::self)
-    .def(py::self *= py::self)
   ;
 
   if constexpr(!VECTOR_INHERITANCE)
@@ -156,6 +151,76 @@ void export_MatrixBase(py::class_<S>& pyclass)
     ;
   }
 
+  // MatrixBase operations
+
+  //const auto& operator+() const
+  pyclass.def(+py::self,
+    CONST_AUTO_REF_MATRIXBASE_ST_OPERATORPLUS_CONST);
+
+  //S operator-() const
+  pyclass.def(-py::self,
+    S_MATRIXBASE_ST_OPERATORMINUS_CONST);
+
+  //friend S operator+(const S& x1, const S& x2)
+  pyclass.def(py::self + py::self,
+    S_OPERATORPLUS_CONST_S_REF_CONST_S_REF);
+
+  //friend S operator+(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
+
+  //friend S operator+(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
+
+  //S& operator+=(const S& x)
+  pyclass.def(py::self += py::self,
+    S_REF_MATRIXBASE_ST_OPERATORPLUSEQ_CONST_S_REF);
+
+  //S& operator+=(const MatrixBaseBlock<Q_,T_>& x)
+
+  //friend S operator-(const S& x1, const S& x2)
+  pyclass.def(py::self - py::self,
+    S_OPERATORMINUS_CONST_S_REF_CONST_S_REF);
+
+  //friend S operator-(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
+
+  //friend S operator-(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
+
+  //S& operator-=(const S& x)
+  pyclass.def(py::self -= py::self,
+    S_REF_MATRIXBASE_ST_OPERATORMINUSEQ_CONST_S_REF);
+
+  //S& operator-=(const MatrixBaseBlock<Q_,T_>& x)
+
+  //if constexpr(!VECTOR_INHERITANCE)
+  {
+    //friend S operator*(const S& x1, const S& x2)
+    pyclass.def(py::self * py::self,
+      S_OPERATORMUL_CONST_S_REF_CONST_S_REF);
+  }
+
+  //friend S operator*(const T& x1, const S& x2)
+  pyclass.def("__mul__", [](const T& x1, const S& x2) { return x1*x2; }, py::is_operator(),
+    S_OPERATORMUL_CONST_T_REF_CONST_S_REF);
+
+  if constexpr(!VECTOR_INHERITANCE)
+  {
+    //friend S_ operator*(const S& x1, const VectorBase<S_,S,T>& x2)
+    pyclass.def("__mul__", [](const S& x1, const Vector& x2) { return x1*x2; }, py::is_operator(),
+      S__OPERATORMUL_CONST_S_REF_CONST_VECTORBASE_S_ST_REF);
+  }
+
+  //friend S operator*(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
+
+  //friend S operator*(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
+
+  //S& operator*=(const S& x)
+  pyclass.def(py::self *= py::self,
+    S_REF_MATRIXBASE_ST_OPERATORMULEQ_CONST_S_REF);
+
+  //S& operator*=(const MatrixBaseBlock<Q_,T_>& x)
+
+  //friend S operator/(const S& x1, const T& x2)
+  pyclass.def("__truediv__", [](const S& x1, const T& x2) { return x1/x2; }, py::is_operator(),
+    S_OPERATORDIV_CONST_S_REF_CONST_T_REF);
+
 
 /*
 
@@ -163,52 +228,6 @@ void export_MatrixBase(py::class_<S>& pyclass)
       MatrixBaseBlock<EigenMatrix<T>&,T> col(size_t i)
       MatrixBaseBlock<EigenMatrix<T>&,T> row(size_t i)
 
-      const auto& operator+() const
-      S operator-() const
-      friend S operator+(const S& x1, const S& x2)
-
-      template<typename Q_,typename T_>
-      friend S operator+(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
-
-      template<typename Q_,typename T_>
-      friend S operator+(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
-
-      S& operator+=(const S& x)
-
-      template<typename Q_,typename T_>
-      S& operator+=(const MatrixBaseBlock<Q_,T_>& x)
-
-      friend S operator-(const S& x1, const S& x2)
-
-      template<typename Q_,typename T_>
-      friend S operator-(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
-
-      template<typename Q_,typename T_>
-      friend S operator-(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
-
-      S& operator-=(const S& x)
-
-      template<typename Q_,typename T_>
-      S& operator-=(const MatrixBaseBlock<Q_,T_>& x)
-
-      friend S operator*(const S& x1, const S& x2)
-      friend S operator*(const T& x1, const S& x2)
-
-      template<typename S_>
-      friend S_ operator*(const S& x1, const VectorBase<S_,S,T>& x2)
-
-      template<typename Q_,typename T_>
-      friend S operator*(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
-
-      template<typename Q_,typename T_>
-      friend S operator*(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
-
-      S& operator*=(const S& x)
-
-      template<typename Q_,typename T_>
-      S& operator*=(const MatrixBaseBlock<Q_,T_>& x)
-
-      friend S operator/(const S& x1, const T& x2)
 
       template<typename S_,typename T_>
       friend std::ostream& operator<<(std::ostream& os, const MatrixBase<S_,T_>& x);

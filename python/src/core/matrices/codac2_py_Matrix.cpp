@@ -27,7 +27,7 @@ using namespace pybind11::literals;
 void export_Matrix(py::module& m)
 {
   py::class_<Matrix> exported_matrix_class(m, "Matrix", MATRIX_MAIN);
-  export_MatrixBase<Matrix,double,false>(exported_matrix_class);
+  export_MatrixBase<Matrix,double,false>(m, exported_matrix_class);
 
   exported_matrix_class
 

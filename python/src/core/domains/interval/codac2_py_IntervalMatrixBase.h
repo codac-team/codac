@@ -23,9 +23,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 template<typename S,typename V,bool VECTOR_INHERITANCE>
-void export_IntervalMatrixBase(py::class_<S>& pyclass)
+void export_IntervalMatrixBase(py::module& m, py::class_<S>& pyclass)
 {
-  export_MatrixBase<S,Interval,VECTOR_INHERITANCE>(pyclass);
+  export_MatrixBase<S,Interval,VECTOR_INHERITANCE>(m, pyclass);
 
   pyclass
 

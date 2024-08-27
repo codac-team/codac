@@ -29,7 +29,7 @@ using namespace pybind11::literals;
 py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m)
 {
   py::class_<IntervalMatrix> exported_intervalmatrix_class(m, "IntervalMatrix", INTERVALMATRIX_MAIN);
-  export_IntervalMatrixBase<IntervalMatrix,Matrix,false>(exported_intervalmatrix_class);
+  export_IntervalMatrixBase<IntervalMatrix,Matrix,false>(m, exported_intervalmatrix_class);
 
   exported_intervalmatrix_class
 
@@ -100,39 +100,37 @@ py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m)
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_INTERVALMATRIX_REF)
   ;
 
+  // IntervalMatrix operations
+
+  exported_intervalmatrix_class
+
+    //IntervalMatrix operator*(const Interval& x1, const Matrix& x2);
+    .def("__mul__", [](const Interval& x1, const Matrix& x2) { return x1*x2; }, py::is_operator(),
+      INTERVALMATRIX_OPERATORMUL_CONST_INTERVAL_REF_CONST_MATRIX_REF)
+
+    //IntervalVector operator*(const IntervalMatrix& x1, const Vector& x2);
+    .def("__mul__", [](const IntervalMatrix& x1, const Vector& x2) { return x1*x2; }, py::is_operator(),
+      INTERVALVECTOR_OPERATORMUL_CONST_INTERVALMATRIX_REF_CONST_VECTOR_REF)
+
+    //IntervalVector operator*(const MatrixBaseBlock<Q_,Interval>& x1, const Vector& x2);
+
+    //IntervalVector operator*(const Matrix& x1, const IntervalVector& x2);
+    .def("__mul__", [](const Matrix& x1, const IntervalVector& x2) { return x1*x2; }, py::is_operator(),
+      INTERVALVECTOR_OPERATORMUL_CONST_MATRIX_REF_CONST_INTERVALVECTOR_REF)
+
+    //IntervalVector operator*(const Matrix& x1, const MatrixBaseBlock<Q_,Interval>& x2);
+
+    //IntervalMatrix operator*(const MatrixBaseBlock<Q1_,Interval>& x1, const MatrixBaseBlock<Q2_,T>& x2)
+
+    //IntervalMatrix operator*(const MatrixBaseBlock<Q1_,T>& x1, const MatrixBaseBlock<Q2_,Interval>& x2)
+
+    //IntervalMatrix operator*(const MatrixBaseBlock<Q1_,Interval>& x1, const MatrixBaseBlock<Q2_,Interval>& x2)
+
+    //IntervalMatrix operator/(const Matrix& x1, const Interval& x2);
+    .def("__truediv__", [](const Matrix& x1, const Interval& x2) { return x1/x2; }, py::is_operator(),
+      INTERVALMATRIX_OPERATORDIV_CONST_MATRIX_REF_CONST_INTERVAL_REF)
+
+  ;
+
   return exported_intervalmatrix_class;
 }
-
-/*
-  IntervalMatrix operator*(const Interval& x1, const Matrix& x2);
-
-  IntervalVector operator*(const IntervalMatrix& x1, const Vector& x2);
-
-  template<typename Q_>
-  IntervalVector operator*(const MatrixBaseBlock<Q_,Interval>& x1, const Vector& x2);
-
-  IntervalVector operator*(const Matrix& x1, const IntervalVector& x2);
-
-  template<typename Q_>
-  IntervalVector operator*(const Matrix& x1, const MatrixBaseBlock<Q_,Interval>& x2);
-
-  template<typename Q1_,typename Q2_,typename T>
-  IntervalMatrix operator*(const MatrixBaseBlock<Q1_,Interval>& x1, const MatrixBaseBlock<Q2_,T>& x2)
-  {
-    return x1.eval() * x2.eval().template cast<Interval>();
-  }
-
-  template<typename Q1_,typename Q2_,typename T>
-  IntervalMatrix operator*(const MatrixBaseBlock<Q1_,T>& x1, const MatrixBaseBlock<Q2_,Interval>& x2)
-  {
-    return x1.eval().template cast<Interval>() * x2.eval();
-  }
-
-  template<typename Q1_,typename Q2_>
-  IntervalMatrix operator*(const MatrixBaseBlock<Q1_,Interval>& x1, const MatrixBaseBlock<Q2_,Interval>& x2)
-  {
-    return x1.eval() * x2.eval();
-  }
-
-  IntervalMatrix operator/(const Matrix& x1, const Interval& x2);
-  */
