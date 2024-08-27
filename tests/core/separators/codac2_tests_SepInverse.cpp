@@ -74,3 +74,24 @@ TEST_CASE("SepInverse")
     CHECK(xs.outer == b);
   }
 }
+
+TEST_CASE("SepInverse - other test")
+{
+  VectorVar x(2);
+  AnalyticFunction f { {x}, vec(sqr(x[0])+sqr(x[1])) };
+  SepInverse<IntervalVector> s(f, {{0,1}});
+
+  //pave({{-5,5},{-5,5}}, s, 0.01);
+
+  auto xs = s.separate(IntervalVector({{0.1,0.2},{0.1,0.2}})); // fully inside
+  CHECK(xs.inner.is_empty());
+  CHECK(xs.outer == IntervalVector({{0.1,0.2},{0.1,0.2}}));
+
+  xs = s.separate(IntervalVector({{-0.2,0.2},{-0.2,0.2}})); // fully inside
+  CHECK(xs.inner.is_empty());
+  CHECK(xs.outer == IntervalVector({{-0.2,0.2},{-0.2,0.2}}));
+
+  xs = s.separate(IntervalVector(2));
+  CHECK(xs.inner == IntervalVector(2));
+  CHECK(xs.outer == IntervalVector({{-1,1},{-1,1}}));
+}

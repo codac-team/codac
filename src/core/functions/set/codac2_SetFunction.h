@@ -103,7 +103,7 @@ namespace codac2
           return sx.copy();
         }
 
-        else if constexpr(std::is_base_of_v<Sep,A>)
+        else if constexpr(std::is_base_of_v<SepBase,A>)
           return x.copy();
 
         else

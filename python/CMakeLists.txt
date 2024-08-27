@@ -110,6 +110,7 @@
       src/core/separators/codac2_py_SepNot.cpp
       src/core/separators/codac2_py_SepPolygon.cpp
       src/core/separators/codac2_py_SepProj.cpp
+      src/core/separators/codac2_py_SepTransform.cpp
       src/core/separators/codac2_py_SepUnion.cpp
       src/core/separators/codac2_py_SepWrapper.cpp
 

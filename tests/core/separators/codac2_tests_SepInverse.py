@@ -43,5 +43,25 @@ class TestSepInverse(unittest.TestCase):
     self.assertTrue(xs.inner == IntervalVector.empty(2))
     self.assertTrue(xs.outer == b)
 
+  def tests_SepInverse_other_test(self):
+
+    x = VectorVar(2)
+    f = AnalyticFunction([x], vec(sqr(x[0])+sqr(x[1])))
+    s = SepInverse(f, [[0,1]])
+
+    #pave([[-5,5],[-5,5]], s, 0.01);
+
+    xs = s.separate(IntervalVector([[0.1,0.2],[0.1,0.2]])) # fully inside
+    self.assertTrue(xs.inner.is_empty())
+    self.assertTrue(xs.outer == IntervalVector([[0.1,0.2],[0.1,0.2]]))
+
+    xs = s.separate(IntervalVector([[-0.2,0.2],[-0.2,0.2]])) # fully inside
+    self.assertTrue(xs.inner.is_empty())
+    self.assertTrue(xs.outer == IntervalVector([[-0.2,0.2],[-0.2,0.2]]))
+
+    xs = s.separate(IntervalVector(2))
+    self.assertTrue(xs.inner == IntervalVector(2))
+    self.assertTrue(xs.outer == IntervalVector([[-1,1],[-1,1]]))
+
 if __name__ ==  '__main__':
   unittest.main()

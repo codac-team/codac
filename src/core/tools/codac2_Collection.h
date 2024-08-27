@@ -76,32 +76,29 @@ namespace codac2
 
       T& front()
       {
-        return *_v_raw.front();
+        return const_cast<T&>(const_cast<const Collection<T>*>(this)->front());
       }
 
       const T& front() const
       {
+        assert(!_v_raw.empty());
         return *_v_raw.front();
       }
 
       T& back()
       {
-        return *_v_raw.back();
+        return const_cast<T&>(const_cast<const Collection<T>*>(this)->back());
       }
 
       const T& back() const
       {
+        assert(!_v_raw.empty());
         return *_v_raw.back();
       }
 
       iterator begin()
       {
-        return _v_raw.begin();
-      }
-
-      iterator end()
-      {
-        return _v_raw.end();
+        return const_cast<iterator>(const_cast<const Collection<T>*>(this)->begin());
       }
 
       const_iterator begin() const
@@ -112,6 +109,11 @@ namespace codac2
       const_iterator end() const
       {
         return _v_raw.cend();
+      }
+
+      iterator end()
+      {
+        return const_cast<iterator>(const_cast<const Collection<T>*>(this)->end());
       }
 
     private:

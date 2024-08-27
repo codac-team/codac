@@ -33,7 +33,7 @@ namespace codac2
       { }
 
       FunctionBase(const FunctionBase<E>& f)
-        : _y(f.expr()), _args(f.args()) // todo: keep this dynamic_pointer_cast?
+        : _y(std::dynamic_pointer_cast<E>(f.expr()->copy())), _args(f.args()) // todo: keep this dynamic_pointer_cast?
       { }
       
       virtual ~FunctionBase()

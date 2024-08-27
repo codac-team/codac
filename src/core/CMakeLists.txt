@@ -119,6 +119,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolygon.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepTransform.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepTransform.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepUnion.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepUnion.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepWrapper.cpp

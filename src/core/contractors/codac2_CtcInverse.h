@@ -43,6 +43,18 @@ namespace codac2
       template<typename... X>
       void contract(X&... x) const
       {
+        return contract_(_ctc_y.front(), x...);
+      }
+
+      template<typename... X>
+      void contract_(const Y& y, X&... x) const
+      {
+        return contract_(CtcWrapper_<Y>(y), x...);
+      }
+
+      template<typename... X>
+      void contract_(const CtcBase<Y>& ctc_y, X&... x) const
+      {
         ValuesMap v;
         // Setting user values into a map before the tree evaluation
         _f.fill_from_args(v, x...);
@@ -61,7 +73,7 @@ namespace codac2
           // [2/4] Performing top contraction (from the root of the tree) with
           // the contractor expressing the output domain Y.
           // The underlying constraint is:  f(x) \in [y]
-          _ctc_y.front().contract(val_expr.a);
+          ctc_y.contract(val_expr.a);
 
           // [3/4 - optional]
           // The contraction can be significantly improved using a centered form

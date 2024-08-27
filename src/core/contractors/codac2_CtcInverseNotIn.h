@@ -24,10 +24,23 @@ namespace codac2
         : CtcUnion<X>(f.args()[0]->size() /* f must have only one arg, see following assert */)
       {
         assert_release(f.args().size() == 1 && "f must have only one arg");
-        bool is_not_in = true;
+        const bool is_not_in = true;
+
+        Y f_codomain(y);
+
+        if constexpr(std::is_same_v<X,Interval>)
+          f_codomain = f.eval(Interval());
+        else if constexpr(std::is_same_v<X,IntervalVector>)
+          f_codomain = f.eval(IntervalVector(f.args()[0]->size()));
+        else
+          std::cout << "CtcInverseNotIn: matrices expressions not (yet) supported" << std::endl;
 
         for(const auto& complem_y : y.complementary())
-          *this |= CtcInverse_<Y,X>(f, complem_y, with_centered_form, is_not_in);
+        {
+          Y w = complem_y & f_codomain;
+          if(!w.is_empty() && !w.is_subset(y))
+            *this |= CtcInverse_<Y,X>(f, complem_y, with_centered_form, is_not_in);
+        }
       }
 
       template<typename C, typename = typename std::enable_if<
@@ -37,7 +50,8 @@ namespace codac2
         : CtcUnion<X>(f.args()[0]->size() /* f must have only one arg, see following assert */)
       {
         assert_release(f.args().size() == 1 && "f must have only one arg");
-        bool is_not_in = true;
+        const bool is_not_in = true;
+
         *this |= CtcInverse_<Y,X>(f, ctc_compl, with_centered_form, is_not_in);
       }
 

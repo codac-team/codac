@@ -83,6 +83,7 @@ void export_SepInter(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepNot(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepPolygon(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepProj(py::module& m, py::class_<SepBase,pySep>& sep);
+void export_SepTransform(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepUnion(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepWrapper(py::module& m, py::class_<SepBase,pySep>& sep);
 
@@ -167,6 +168,7 @@ PYBIND11_MODULE(_core, m)
   export_SepNot(m,py_sep);
   export_SepPolygon(m,py_sep);
   export_SepProj(m,py_sep);
+  export_SepTransform(m,py_sep);
   export_SepUnion(m,py_sep);
   export_SepWrapper(m,py_sep);
 
