@@ -16,6 +16,7 @@
 #include "codac2_py_CtcInverse.h"
 #include "codac2_py_CtcInverseNotIn.h"
 #include "codac2_py_SepInverse.h"
+#include "codac2_py_MatrixBaseBlock.h"
 #include "codac2_py_core.h"
 
 using namespace codac2;
@@ -122,6 +123,7 @@ PYBIND11_MODULE(_core, m)
   // matrices
   export_Matrix(m);
   export_Vector(m);
+  export_MatrixBaseBlock<Matrix,double>(m, "MatrixBaseBlock_Matrix_double");
 
   // domains
   export_BoolInterval(m);
@@ -129,6 +131,7 @@ PYBIND11_MODULE(_core, m)
   export_Interval_operations(m, py_Interval);
   auto py_IntervalVector = export_IntervalVector(m);
   auto py_IntervalMatrix = export_IntervalMatrix(m);
+  export_MatrixBaseBlock<IntervalMatrix,Interval>(m, "MatrixBaseBlock_IntervalMatrix_Interval");
 
   // function
   export_ExprWrapperBase(m);

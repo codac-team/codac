@@ -63,7 +63,7 @@ py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m)
           }
           return iv;
         }),
-      INTERVALMATRIX_INTERVALMATRIX_CONST_IV_REF_VARIADIC,
+      INTERVALMATRIX_INTERVALMATRIX_INITIALIZER_LIST_INITIALIZER_LIST_INTERVAL,
       "v"_a)
 
     .def(py::init<const IntervalMatrix&>(),
@@ -104,31 +104,13 @@ py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m)
 
   exported_intervalmatrix_class
 
-    //IntervalMatrix operator*(const Interval& x1, const Matrix& x2);
-    .def("__mul__", [](const Interval& x1, const Matrix& x2) { return x1*x2; }, py::is_operator(),
-      INTERVALMATRIX_OPERATORMUL_CONST_INTERVAL_REF_CONST_MATRIX_REF)
-
     //IntervalVector operator*(const IntervalMatrix& x1, const Vector& x2);
     .def("__mul__", [](const IntervalMatrix& x1, const Vector& x2) { return x1*x2; }, py::is_operator(),
       INTERVALVECTOR_OPERATORMUL_CONST_INTERVALMATRIX_REF_CONST_VECTOR_REF)
 
-    //IntervalVector operator*(const MatrixBaseBlock<Q_,Interval>& x1, const Vector& x2);
-
-    //IntervalVector operator*(const Matrix& x1, const IntervalVector& x2);
-    .def("__mul__", [](const Matrix& x1, const IntervalVector& x2) { return x1*x2; }, py::is_operator(),
-      INTERVALVECTOR_OPERATORMUL_CONST_MATRIX_REF_CONST_INTERVALVECTOR_REF)
-
-    //IntervalVector operator*(const Matrix& x1, const MatrixBaseBlock<Q_,Interval>& x2);
-
-    //IntervalMatrix operator*(const MatrixBaseBlock<Q1_,Interval>& x1, const MatrixBaseBlock<Q2_,T>& x2)
-
-    //IntervalMatrix operator*(const MatrixBaseBlock<Q1_,T>& x1, const MatrixBaseBlock<Q2_,Interval>& x2)
-
     //IntervalMatrix operator*(const MatrixBaseBlock<Q1_,Interval>& x1, const MatrixBaseBlock<Q2_,Interval>& x2)
-
-    //IntervalMatrix operator/(const Matrix& x1, const Interval& x2);
-    .def("__truediv__", [](const Matrix& x1, const Interval& x2) { return x1/x2; }, py::is_operator(),
-      INTERVALMATRIX_OPERATORDIV_CONST_MATRIX_REF_CONST_INTERVAL_REF)
+    .def("__mul__", [](const MatrixBaseBlock<EigenMatrix<Interval>&,Interval>& x1, const MatrixBaseBlock<EigenMatrix<Interval>&,Interval>& x2) { return x1*x2; }, py::is_operator(),
+      "todo")
 
   ;
 

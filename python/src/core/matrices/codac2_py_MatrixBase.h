@@ -109,6 +109,28 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
 
     pyclass
 
+      .def("block", [](S& x, size_t_type i, size_t_type j, size_t_type p, size_t_type q) -> MatrixBaseBlock<EigenMatrix<T>&,T>
+          {
+            matlab::test_integer(i,j);
+            matlab::test_integer(p,q);
+            return x.block(matlab::input_index(i),matlab::input_index(j),matlab::input_index(p),matlab::input_index(q));
+          },
+        MATRIXBASEBLOCK_EIGENMATRIX_T_REFT_MATRIXBASE_ST_BLOCK_SIZET_SIZET_SIZET_SIZET)
+
+      .def("col", [](S& x, size_t_type i) -> MatrixBaseBlock<EigenMatrix<T>&,T>
+          {
+            matlab::test_integer(i);
+            return x.col(matlab::input_index(i));
+          },
+        MATRIXBASEBLOCK_EIGENMATRIX_T_REFT_MATRIXBASE_ST_COL_SIZET)
+
+      .def("row", [](S& x, size_t_type i) -> MatrixBaseBlock<EigenMatrix<T>&,T>
+          {
+            matlab::test_integer(i);
+            return x.row(matlab::input_index(i));
+          },
+        MATRIXBASEBLOCK_EIGENMATRIX_T_REFT_MATRIXBASE_ST_ROW_SIZET)
+
       .def("__call__", [](S& x, size_t_type i, size_t_type j) -> T&
           {
             matlab::test_integer(i,j);
@@ -166,38 +188,47 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
     S_OPERATORPLUS_CONST_S_REF_CONST_S_REF);
 
   //friend S operator+(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
+  pyclass.def("__add__", [](const S& x1, const MatrixBaseBlock<EigenMatrix<T>&,T>& x2) { return x1+x2; }, py::is_operator(),
+    S_OPERATORPLUS_CONST_S_REF_CONST_MATRIXBASEBLOCK_Q_T__REF);
 
   //friend S operator+(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
+  pyclass.def("__radd__", [](const S& x2, const MatrixBaseBlock<EigenMatrix<T>&,T>& x1) { return x1+x2; }, py::is_operator(),
+    S_OPERATORPLUS_CONST_MATRIXBASEBLOCK_Q_T__REF_CONST_S_REF);
 
   //S& operator+=(const S& x)
   pyclass.def(py::self += py::self,
     S_REF_MATRIXBASE_ST_OPERATORPLUSEQ_CONST_S_REF);
 
   //S& operator+=(const MatrixBaseBlock<Q_,T_>& x)
+  pyclass.def("__iadd__", [](S& x1, const MatrixBaseBlock<EigenMatrix<T>&,T>& x2) { return x1+=x2; }, py::is_operator(),
+    S_REF_MATRIXBASE_ST_OPERATORPLUSEQ_CONST_MATRIXBASEBLOCK_Q_T__REF);
 
   //friend S operator-(const S& x1, const S& x2)
   pyclass.def(py::self - py::self,
     S_OPERATORMINUS_CONST_S_REF_CONST_S_REF);
 
   //friend S operator-(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
+  pyclass.def("__sub__", [](const S& x1, const MatrixBaseBlock<EigenMatrix<T>&,T>& x2) { return x1-x2; }, py::is_operator(),
+    S_OPERATORMINUS_CONST_S_REF_CONST_MATRIXBASEBLOCK_Q_T__REF);
 
   //friend S operator-(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
+  pyclass.def("__rsub__", [](const S& x2, const MatrixBaseBlock<EigenMatrix<T>&,T>& x1) { return x1-x2; }, py::is_operator(),
+    S_OPERATORMINUS_CONST_MATRIXBASEBLOCK_Q_T__REF_CONST_S_REF);
 
   //S& operator-=(const S& x)
   pyclass.def(py::self -= py::self,
     S_REF_MATRIXBASE_ST_OPERATORMINUSEQ_CONST_S_REF);
 
   //S& operator-=(const MatrixBaseBlock<Q_,T_>& x)
+  pyclass.def("__isub__", [](S& x1, const MatrixBaseBlock<EigenMatrix<T>&,T>& x2) { return x1-=x2; }, py::is_operator(),
+    S_REF_MATRIXBASE_ST_OPERATORMINUSEQ_CONST_MATRIXBASEBLOCK_Q_T__REF);
 
-  //if constexpr(!VECTOR_INHERITANCE)
-  {
-    //friend S operator*(const S& x1, const S& x2)
-    pyclass.def(py::self * py::self,
-      S_OPERATORMUL_CONST_S_REF_CONST_S_REF);
-  }
+  //friend S operator*(const S& x1, const S& x2)
+  pyclass.def(py::self * py::self,
+    S_OPERATORMUL_CONST_S_REF_CONST_S_REF);
 
   //friend S operator*(const T& x1, const S& x2)
-  pyclass.def("__mul__", [](const T& x1, const S& x2) { return x1*x2; }, py::is_operator(),
+  pyclass.def("__rmul__", [](const S& x2, const T& x1) { return x1*x2; }, py::is_operator(),
     S_OPERATORMUL_CONST_T_REF_CONST_S_REF);
 
   if constexpr(!VECTOR_INHERITANCE)
@@ -208,55 +239,26 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
   }
 
   //friend S operator*(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
+  pyclass.def("__mul__", [](const S& x1, const MatrixBaseBlock<EigenMatrix<T>&,T>& x2) { return x1*x2; }, py::is_operator(),
+    S_OPERATORMUL_CONST_S_REF_CONST_MATRIXBASEBLOCK_Q_T__REF);
 
   //friend S operator*(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
+  pyclass.def("__rmul__", [](const S& x2, const MatrixBaseBlock<EigenMatrix<T>&,T>& x1) { return x1*x2; }, py::is_operator(),
+    S_OPERATORMUL_CONST_MATRIXBASEBLOCK_Q_T__REF_CONST_S_REF);
 
   //S& operator*=(const S& x)
   pyclass.def(py::self *= py::self,
     S_REF_MATRIXBASE_ST_OPERATORMULEQ_CONST_S_REF);
 
   //S& operator*=(const MatrixBaseBlock<Q_,T_>& x)
+  pyclass.def("__imul__", [](S& x1, const MatrixBaseBlock<EigenMatrix<T>&,T>& x2) { return x1*=x2; }, py::is_operator(),
+    S_REF_MATRIXBASE_ST_OPERATORMULEQ_CONST_MATRIXBASEBLOCK_Q_T__REF);
 
   //friend S operator/(const S& x1, const T& x2)
   pyclass.def("__truediv__", [](const S& x1, const T& x2) { return x1/x2; }, py::is_operator(),
     S_OPERATORDIV_CONST_S_REF_CONST_T_REF);
 
-
-/*
-
-      MatrixBaseBlock<EigenMatrix<T>&,T> block(size_t i, size_t j, size_t p, size_t q)
-      MatrixBaseBlock<EigenMatrix<T>&,T> col(size_t i)
-      MatrixBaseBlock<EigenMatrix<T>&,T> row(size_t i)
-
-
-      template<typename S_,typename T_>
-      friend std::ostream& operator<<(std::ostream& os, const MatrixBase<S_,T_>& x);
-
-  template<typename S,typename T>
-  S abs(const MatrixBase<S,T>& x)
-
-  template<typename S,typename T>
-  std::ostream& operator<<(std::ostream& os, const MatrixBase<S,T>& x)
-
-  template<typename Q,typename T>
-  struct MatrixBaseBlock
-  {
-    Q _m;
-    size_t _i,_j,_p,_q;
-
-    MatrixBaseBlock(Q m, size_t i, size_t j, size_t p, size_t q);
-
-    template<typename S_>
-    void operator=(const MatrixBase<S_,T>& x);
-
-    template<typename OtherDerived>
-    void operator=(const Eigen::MatrixBase<OtherDerived>& x);
-
-    auto eval() const;
-
-    template<typename M>
-    bool operator==(const M& x) const;
-  };
-  */
-
+  //S abs(const MatrixBase<S,T>& x)
+  m.def("abs", [](const S& x) { return abs(x); },
+    S_ABS_CONST_MATRIXBASE_ST_REF);
 }

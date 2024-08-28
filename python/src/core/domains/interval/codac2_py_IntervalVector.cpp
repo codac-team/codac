@@ -132,7 +132,3 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
 
   return exported_intervalvector_class;
 }
-
-
-  //IntervalVector operator*(const MatrixBaseBlock<Q_,Interval>& x1, const Vector& x2)
-  //IntervalVector operator*(const Matrix& x1, const MatrixBaseBlock<Q_,Interval>& x2)

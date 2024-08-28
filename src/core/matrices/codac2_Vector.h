@@ -43,4 +43,7 @@ namespace codac2
   };
 
   std::ostream& operator<<(std::ostream& os, const Vector& x);
+
+  template<typename Q_>
+  IntervalVector operator*(const MatrixBaseBlock<Q_,Interval>& x1, const Vector& x2);
 }

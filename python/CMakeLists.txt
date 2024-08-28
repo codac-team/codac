@@ -92,6 +92,7 @@
 
       src/core/matrices/codac2_py_Matrix.cpp
       src/core/matrices/codac2_py_MatrixBase.h
+      src/core/matrices/codac2_py_MatrixBaseBlock.h
       src/core/matrices/codac2_py_Vector.cpp
       src/core/matrices/codac2_py_VectorBase.h
 

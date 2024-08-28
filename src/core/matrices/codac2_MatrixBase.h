@@ -12,6 +12,7 @@
 #include <ostream>
 #include "codac2_eigen.h"
 #include "codac2_assert.h"
+#include "codac2_MatrixBaseBlock.h"
 
 namespace codac2
 {
@@ -406,7 +407,12 @@ namespace codac2
   {
     S a(x);
     for(size_t i = 0 ; i < a.size() ; i++)
-      a[i] = fabs(a[i]);
+    {
+      if constexpr(std::is_same_v<T,double>)
+        a[i] = fabs(a[i]);
+      else
+        a[i] = abs(a[i]);
+    }
     return a;
   }
 
@@ -425,51 +431,4 @@ namespace codac2
     os << ")";
     return os;
   }
-
-  template<typename Q,typename T>
-  struct MatrixBaseBlock
-  {
-    Q _m;
-    size_t _i,_j,_p,_q;
-
-    MatrixBaseBlock(Q m, size_t i, size_t j, size_t p, size_t q)
-      : _m(m), _i(i), _j(j), _p(p), _q(q)
-    {
-      assert(i >= 0 && p > 0 && i+p <= (size_t)m.rows());
-      assert(j >= 0 && q > 0 && j+q <= (size_t)m.cols());
-    }
-
-    template<typename S_>
-    void operator=(const MatrixBase<S_,T>& x)
-    {
-      assert(x.nb_rows() == _p && x.nb_cols() == _q);
-      _m.block(_i,_j,_p,_q) = x._e;
-    }
-
-    template<typename OtherDerived>
-    void operator=(const Eigen::MatrixBase<OtherDerived>& x)
-    {
-      assert(x.rows() == _p && x.cols() == _q);
-      _m.block(_i,_j,_p,_q) = x;
-    }
-
-    auto eval() const
-    {
-      return _m.block(_i,_j,_p,_q).eval();
-    }
-
-    template<typename M>
-    bool operator==(const M& x) const
-    {
-      return this->eval() == x;
-    }
-  };
-
-  template<typename Q,typename T>
-  std::ostream& operator<<(std::ostream& os, const MatrixBaseBlock<Q,T>& x)
-  {
-    os << x.eval();
-    return os;
-  }
-
 }

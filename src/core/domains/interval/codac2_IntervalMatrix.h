@@ -79,7 +79,7 @@ namespace codac2
       static IntervalMatrix empty(size_t r, size_t c);
   };
 
-  // Some of the following functions are defined in codac2_Intervalvector.h file
+  // Some of the following functions are defined in codac2_IntervalVector.h file
 
   IntervalMatrix operator*(const Interval& x1, const Matrix& x2);
 

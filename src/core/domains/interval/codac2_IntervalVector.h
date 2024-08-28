@@ -114,7 +114,7 @@ namespace codac2
   template<typename Q_>
   IntervalVector operator*(const Matrix& x1, const MatrixBaseBlock<Q_,Interval>& x2)
   {
-    assert_release(x1.nb_cols() == x2._p);
+    assert_release(x1.nb_cols() == x2.nb_rows());
     return x1._e.template cast<Interval>() * x2.eval();
   }
 }

@@ -13,6 +13,7 @@
 #include <pybind11/stl.h>
 #include "codac2_py_core.h"
 #include <codac2_Vector.h>
+#include <codac2_IntervalMatrix.h>
 
 #include "codac2_py_MatrixBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
 #include "codac2_py_VectorBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
@@ -82,4 +83,18 @@ void export_Vector(py::module& m)
   ;
 
   py::implicitly_convertible<py::list,Vector>();
+
+  // Vector operations
+
+  exported_vector_class
+
+    //IntervalVector operator*(const MatrixBaseBlock<Q_,double>& x1, const Vector& x2);
+    .def("__rmul__", [](const Vector& x2, const MatrixBaseBlock<EigenMatrix<double>&,double>& x1) { return x1*x2; }, py::is_operator(),
+      "todo")
+
+    //IntervalVector operator*(const MatrixBaseBlock<Q_,Interval>& x1, const Vector& x2)
+    .def("__rmul__", [](const Vector& x2, const MatrixBaseBlock<EigenMatrix<Interval>&,Interval>& x1) { return x1*x2; }, py::is_operator(),
+      "todo")
+
+  ;
 }
