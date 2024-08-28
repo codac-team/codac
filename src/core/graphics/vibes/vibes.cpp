@@ -26,6 +26,8 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cassert>
+#include <limits>
+#include <iomanip>
 
 //
 // Vibes properties key,value system implementation
@@ -38,7 +40,7 @@ namespace vibes {
         case vt_integer:
             ss<<_integer; break;
         case vt_decimal:
-            ss<<_decimal; break;
+            ss<< std::setprecision(std::numeric_limits<double>::digits10) <<_decimal; break;
         case vt_string:
             ss<<'"'<<_string<<'"'; break;
         case vt_array:
