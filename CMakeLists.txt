@@ -54,15 +54,15 @@
 # Compilation configuration
 ################################################################################
 
-#  # Check that the compiler supports c++11
-#  include(CheckCXXCompilerFlag)
-#  check_cxx_compiler_flag("-std=c++17" COMPILER_SUPPORTS_CXX17)
-#
-#  if(COMPILER_SUPPORTS_CXX17)
-#    add_compile_options(-std=c++17)
-#  else()
-#    message(FATAL_ERROR "Codac needs a compiler with C++17 support")
-#  endif()
+  # Check that the compiler supports c++20
+  include(CheckCXXCompilerFlag)
+  check_cxx_compiler_flag("-std=c++20" COMPILER_SUPPORTS_CXX20)
+
+  if(COMPILER_SUPPORTS_CXX20)
+    add_compile_options(-std=c++20)
+  else()
+    message(FATAL_ERROR "Codac needs a compiler with C++20 support")
+  endif()
 
 #  if(WIN32)
 #    # We need this for strdup under Windows (see issue #287 of ibex-lib repo)
