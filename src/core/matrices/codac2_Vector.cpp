@@ -69,5 +69,4 @@ namespace codac2
     os << ")";
     return os;
   }
-
 }

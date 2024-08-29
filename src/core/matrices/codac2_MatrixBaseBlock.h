@@ -45,14 +45,14 @@ namespace codac2
     template<typename S_>
     void operator=(const MatrixBase<S_,T>& x)
     {
-      assert(x.nb_rows() == _p && x.nb_cols() == _q);
+      assert_release(x.nb_rows() == _p && x.nb_cols() == _q);
       _m.block(_i,_j,_p,_q) = x._e;
     }
 
     template<typename OtherDerived>
     void operator=(const Eigen::MatrixBase<OtherDerived>& x)
     {
-      assert(x.rows() == _p && x.cols() == _q);
+      assert_release(x.rows() == _p && x.cols() == _q);
       _m.block(_i,_j,_p,_q) = x;
     }
 
@@ -81,5 +81,11 @@ namespace codac2
   {
     os << x.eval();
     return os;
+  }
+
+  template<typename Q,typename T>
+  auto eigen(const MatrixBaseBlock<Q,T>& x)
+  {
+    return x._m.block(x._i,x._j,x._p,x._q);
   }
 }

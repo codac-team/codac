@@ -10,6 +10,7 @@
 #include <cassert>
 #include "codac2_DirectedCtc.h"
 #include "codac2_MatrixBase.h"
+#include "codac2_IntervalVector.h"
 #include "codac2_IntervalMatrix.h"
 
 using namespace std;
@@ -347,6 +348,21 @@ using namespace codac2;
       bwd_mul(y[i], x1, x2[i]);
   }
 
+  IntervalVector MulOp::fwd(const IntervalVector& x1, const Interval& x2)
+  {
+    return MulOp::fwd(x2,x1);
+  }
+
+  VectorOpValue MulOp::fwd(const VectorOpValue& x1, const ScalarOpValue& x2)
+  {
+    return MulOp::fwd(x2,x1);
+  }
+
+  void MulOp::bwd(const IntervalVector& y, IntervalVector& x1, Interval& x2)
+  {
+    MulOp::bwd(y, x1, x2);
+  }
+
   IntervalVector MulOp::fwd(const IntervalMatrix& x1, const IntervalVector& x2)
   {
     assert(x1.nb_cols() == x2.size());
@@ -442,6 +458,33 @@ using namespace codac2;
   void DivOp::bwd(const Interval& y, Interval& x1, Interval& x2)
   {
     bwd_div(y, x1, x2);
+  }
+
+  IntervalVector DivOp::fwd(const IntervalVector& x1, const Interval& x2)
+  {
+    return x1 / x2;
+  }
+
+  VectorOpValue DivOp::fwd(const VectorOpValue& x1, const ScalarOpValue& x2)
+  {
+    assert(x1.da.size() == x2.da.size());
+
+    IntervalMatrix d(1,x1.da.size());
+    assert_release(false && "not implemented yet");
+
+    return {
+      fwd(x1.m, x2.m),
+      fwd(x1.a, x2.a),
+      d,
+      x1.def_domain && x2.def_domain && x2.a != 0. /* def domain of the derivative of div */
+    };
+  }
+
+  void DivOp::bwd(const IntervalVector& y, IntervalVector& x1, Interval& x2)
+  {
+    assert(x1.size() == y.size());
+    for(size_t i = 0 ; i < x1.size() ; i++)
+      bwd_div(y[i], x1[i], x2);
   }
 
 

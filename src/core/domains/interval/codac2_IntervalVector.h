@@ -66,6 +66,34 @@ namespace codac2
       std::vector<IntervalVector> diff(const IntervalVector& y, bool compactness = true) const;
 
       static IntervalVector empty(size_t n);
+
+      // Operators
+
+      IntervalVector& operator+=(const IntervalVector& x)
+      {
+        assert_release(this->size() == x.size());
+        this->_e += x._e;
+        return *this;
+      }
+
+      IntervalVector& operator-=(const IntervalVector& x)
+      {
+        assert_release(this->size() == x.size());
+        this->_e -= x._e;
+        return *this;
+      }
+
+      IntervalVector& operator*=(const Interval& x)
+      {
+        this->_e *= x;
+        return *this;
+      }
+
+      IntervalVector& operator/=(const Interval& x)
+      {
+        this->_e /= x;
+        return *this;
+      }
   };
 
   std::ostream& operator<<(std::ostream& os, const IntervalVector& x);
@@ -101,20 +129,5 @@ namespace codac2
       i += xi.size();
     }
     return x_;
-  }
-
-
-  template<typename Q_>
-  IntervalVector operator*(const MatrixBaseBlock<Q_,Interval>& x1, const Vector& x2)
-  {
-    assert_release(x1.nb_cols() == x2.size());
-    return x1.eval() * x2._e.template cast<Interval>();
-  }
-
-  template<typename Q_>
-  IntervalVector operator*(const Matrix& x1, const MatrixBaseBlock<Q_,Interval>& x2)
-  {
-    assert_release(x1.nb_cols() == x2.nb_rows());
-    return x1._e.template cast<Interval>() * x2.eval();
   }
 }

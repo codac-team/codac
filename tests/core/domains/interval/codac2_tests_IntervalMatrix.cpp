@@ -16,6 +16,7 @@
 #include <codac2_IntervalMatrix.h>
 #include <codac2_IntervalVector.h>
 #include <codac2_Approx.h>
+#include <codac2_arithmetic.h>
 
 using namespace std;
 using namespace codac2;
@@ -599,10 +600,10 @@ TEST_CASE("IntervalMatrix - mixing types")
     });
 
     // Matrix - col of IntervalMatrix
-    CHECK((m1 * im1.col(0)) == IntervalVector{
+    CHECK((m1 * im1.col(0)) == IntervalMatrix({
       { {-7,7} },
       { {-15,15} }
-    });
+    }));
 
     // Row of Matrix - col of Matrix
     CHECK((m1.row(1) * m1.col(0)) == Matrix({{15}}));

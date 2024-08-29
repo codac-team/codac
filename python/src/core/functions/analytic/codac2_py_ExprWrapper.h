@@ -176,6 +176,16 @@ inline VectorExpr operator*(const ScalarExpr& e1, const VectorExpr& e2)
   return VectorExpr(e1.e*e2.e);
 }
 
+inline VectorExpr operator*(const VectorExpr& e1, const ScalarExpr& e2)
+{
+  return VectorExpr(e1.e*e2.e);
+}
+
+inline VectorExpr operator/(const VectorExpr& e1, const ScalarExpr& e2)
+{
+  return VectorExpr(e1.e/e2.e);
+}
+
 inline void export_ExprWrapperBase(py::module& m)
 {
   py::class_<ExprWrapperBase> py_wrap(m, "ExprWrapperBase");
@@ -243,6 +253,8 @@ inline void export_VectorExpr(py::module& m)
 
     .def("__pos__",  [](const VectorExpr& e1)                           { return e1; }, py::is_operator())
     .def(py::self + py::self)
+    .def("__add__",  [](const VectorExpr& e1, const VectorVar& e2)      { return e1+e2; }, py::is_operator())
+    .def("__add__",  [](const VectorExpr& e1, const IntervalVector& e2) { return e1+e2; }, py::is_operator())
     .def("__radd__", [](const VectorExpr& e1, const IntervalVector& e2) { return e1+e2; }, py::is_operator())
 
     .def(- py::self)
@@ -251,7 +263,13 @@ inline void export_VectorExpr(py::module& m)
     .def("__sub__",  [](const VectorExpr& e1, const IntervalVector& e2) { return e1-e2; }, py::is_operator())
     .def("__rsub__", [](const VectorExpr& e1, const IntervalVector& e2) { return e2-e1; }, py::is_operator())
 
+    .def("__mul__",  [](const VectorExpr& e1, const ScalarExpr& e2)     { return e1*e2; }, py::is_operator())
     .def("__rmul__", [](const VectorExpr& e1, const ScalarExpr& e2)     { return e2*e1; }, py::is_operator())
+    .def("__mul__",  [](const VectorExpr& e1, const Interval& e2)       { return e1*e2; }, py::is_operator())
+    .def("__rmul__", [](const VectorExpr& e1, const Interval& e2)       { return e2*e1; }, py::is_operator())
+
+    .def("__truediv__",  [](const VectorExpr& e1, const ScalarExpr& e2) { return e1/e2; }, py::is_operator())
+    .def("__truediv__",  [](const VectorExpr& e1, const Interval& e2)   { return e1/e2; }, py::is_operator())
 
   ;
 

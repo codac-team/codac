@@ -63,4 +63,14 @@ namespace codac2
   {
     return size_of(std::get<0>(std::make_tuple(x...)));
   }
+
+  template<class T>
+  concept IsMatrix = (std::is_same_v<Matrix,T> 
+      || std::is_same_v<MatrixBaseBlock<EigenMatrix<double>&,double>,T> 
+      || std::is_same_v<MatrixBaseBlock<const EigenMatrix<double>&,double>,T>);
+
+  template<class T>
+  concept IsIntervalMatrix = (std::is_same_v<IntervalMatrix,T> 
+      || std::is_same_v<MatrixBaseBlock<EigenMatrix<Interval>&,Interval>,T> 
+      || std::is_same_v<MatrixBaseBlock<const EigenMatrix<Interval>&,Interval>,T>);
 }

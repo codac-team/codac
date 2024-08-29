@@ -77,41 +77,66 @@ namespace codac2
       friend bool operator==(const IntervalMatrix& x1, const IntervalMatrix& x2);
 
       static IntervalMatrix empty(size_t r, size_t c);
+
+      // Operators
+
+      IntervalMatrix& operator+=(const IntervalMatrix& x)
+      {
+        assert_release(this->nb_rows() == x.nb_rows() && this->nb_cols() == x.nb_cols());
+        this->_e += x._e;
+        return *this;
+      }
+
+      template<typename Q,typename T>
+      IntervalMatrix& operator+=(const MatrixBaseBlock<Q,T>& x)
+      {
+        assert_release(this->nb_rows() == x.nb_rows() && this->nb_cols() == x.nb_cols());
+        this->_e += eigen(x).template cast<Interval>();
+        return *this;
+      }
+
+      IntervalMatrix& operator-=(const IntervalMatrix& x)
+      {
+        assert_release(this->nb_rows() == x.nb_rows() && this->nb_cols() == x.nb_cols());
+        this->_e -= x._e;
+        return *this;
+      }
+
+      template<typename Q,typename T>
+      IntervalMatrix& operator-=(const MatrixBaseBlock<Q,T>& x)
+      {
+        assert_release(this->nb_rows() == x.nb_rows() && this->nb_cols() == x.nb_cols());
+        this->_e -= eigen(x).template cast<Interval>();
+        return *this;
+      }
+
+      IntervalMatrix& operator*=(const Interval& x)
+      {
+        this->_e *= x;
+        return *this;
+      }
+
+      IntervalMatrix& operator*=(const IntervalMatrix& x)
+      {
+        assert_release(this->nb_rows() == x.nb_rows() && this->nb_cols() == x.nb_cols());
+        this->_e *= x._e;
+        return *this;
+      }
+
+      template<typename Q,typename T>
+      IntervalMatrix& operator*=(const MatrixBaseBlock<Q,T>& x)
+      {
+        assert_release(this->nb_rows() == x.nb_rows() && this->nb_cols() == x.nb_cols());
+        this->_e *= eigen(x).template cast<Interval>();
+        return *this;
+      }
+
+      IntervalMatrix& operator/=(const Interval& x)
+      {
+        this->_e /= x;
+        return *this;
+      }
   };
-
-  // Some of the following functions are defined in codac2_IntervalVector.h file
-
-  IntervalMatrix operator*(const Interval& x1, const Matrix& x2);
-
-  IntervalVector operator*(const IntervalMatrix& x1, const Vector& x2);
-
-  template<typename Q_>
-  IntervalVector operator*(const MatrixBaseBlock<Q_,Interval>& x1, const Vector& x2);
-
-  IntervalVector operator*(const Matrix& x1, const IntervalVector& x2);
-
-  template<typename Q_>
-  IntervalVector operator*(const Matrix& x1, const MatrixBaseBlock<Q_,Interval>& x2);
-
-  template<typename Q1_,typename Q2_,typename T>
-  IntervalMatrix operator*(const MatrixBaseBlock<Q1_,Interval>& x1, const MatrixBaseBlock<Q2_,T>& x2)
-  {
-    return x1.eval() * x2.eval().template cast<Interval>();
-  }
-
-  template<typename Q1_,typename Q2_,typename T>
-  IntervalMatrix operator*(const MatrixBaseBlock<Q1_,T>& x1, const MatrixBaseBlock<Q2_,Interval>& x2)
-  {
-    return x1.eval().template cast<Interval>() * x2.eval();
-  }
-
-  template<typename Q1_,typename Q2_>
-  IntervalMatrix operator*(const MatrixBaseBlock<Q1_,Interval>& x1, const MatrixBaseBlock<Q2_,Interval>& x2)
-  {
-    return x1.eval() * x2.eval();
-  }
-
-  IntervalMatrix operator/(const Matrix& x1, const Interval& x2);
 
   inline std::ostream& operator<<(std::ostream& os, const IntervalMatrix& x)
   {

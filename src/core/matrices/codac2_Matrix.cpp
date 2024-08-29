@@ -59,10 +59,4 @@ namespace codac2
   {
     return this->_e.inverse();
   }
-
-  Vector operator*(const Matrix& x1, const Vector& x2)
-  {
-    assert_release(x1.nb_cols() == x2.size());
-    return x1._e * x2._e;
-  }
 }

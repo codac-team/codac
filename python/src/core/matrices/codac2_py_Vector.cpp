@@ -26,7 +26,7 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_Vector(py::module& m)
+py::class_<Vector> export_Vector(py::module& m)
 {
   py::class_<Vector> exported_vector_class(m, "Vector", VECTOR_MAIN);
   export_MatrixBase<Vector,double,true>(m, exported_vector_class);
@@ -78,23 +78,10 @@ void export_Vector(py::module& m)
           return string(s.str()); 
         },
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_VECTOR_REF)
-
-    .def(double() * py::self)
+    
   ;
 
   py::implicitly_convertible<py::list,Vector>();
-
-  // Vector operations
-
-  exported_vector_class
-
-    //IntervalVector operator*(const MatrixBaseBlock<Q_,double>& x1, const Vector& x2);
-    .def("__rmul__", [](const Vector& x2, const MatrixBaseBlock<EigenMatrix<double>&,double>& x1) { return x1*x2; }, py::is_operator(),
-      "todo")
-
-    //IntervalVector operator*(const MatrixBaseBlock<Q_,Interval>& x1, const Vector& x2)
-    .def("__rmul__", [](const Vector& x2, const MatrixBaseBlock<EigenMatrix<Interval>&,Interval>& x1) { return x1*x2; }, py::is_operator(),
-      "todo")
-
-  ;
+  
+  return exported_vector_class;
 }

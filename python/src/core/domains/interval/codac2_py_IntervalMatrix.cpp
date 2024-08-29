@@ -99,22 +99,6 @@ py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m)
         },
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_INTERVALMATRIX_REF)
   ;
-
-  // IntervalMatrix operations
-
-  exported_intervalmatrix_class
-
-    //IntervalVector operator*(const IntervalMatrix& x1, const Vector& x2);
-    .def("__mul__", [](const IntervalMatrix& x1, const Vector& x2) { return x1*x2; }, py::is_operator(),
-      INTERVALVECTOR_OPERATORMUL_CONST_INTERVALMATRIX_REF_CONST_VECTOR_REF)
-
-    .def("__mul__", [](const IntervalMatrix& x1, const IntervalVector& x2) { return x1*x2; }, py::is_operator())
-
-    //IntervalMatrix operator*(const MatrixBaseBlock<Q1_,Interval>& x1, const MatrixBaseBlock<Q2_,Interval>& x2)
-    .def("__mul__", [](const MatrixBaseBlock<EigenMatrix<Interval>&,Interval>& x1, const MatrixBaseBlock<EigenMatrix<Interval>&,Interval>& x2) { return x1*x2; }, py::is_operator(),
-      "todo")
-
-  ;
-
+  
   return exported_intervalmatrix_class;
 }

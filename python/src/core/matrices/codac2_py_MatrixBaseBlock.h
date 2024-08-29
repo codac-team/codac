@@ -23,7 +23,7 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 template<typename S,typename T>
-void export_MatrixBaseBlock(py::module& m, const std::string& name)
+py::class_<MatrixBaseBlock<EigenMatrix<T>&,T>> export_MatrixBaseBlock(py::module& m, const std::string& name)
 {
   py::class_<MatrixBaseBlock<EigenMatrix<T>&,T>> exported_mbb_class(m, name.c_str(), MATRIXBASEBLOCK_MAIN);
 
@@ -57,34 +57,6 @@ void export_MatrixBaseBlock(py::module& m, const std::string& name)
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_MATRIXBASEBLOCK_QT_REF)
     
   ;
-
-  // MatrixBaseBlock operations
-
-  exported_mbb_class
-
-    .def("__mul__", [](const MatrixBaseBlock<EigenMatrix<T>&,T>& x1, const MatrixBaseBlock<EigenMatrix<T>&,T>& x2) { return x1*x2; }, py::is_operator(),
-      "todo")
-  ;
-
-  if constexpr(std::is_same_v<T,Interval>)
-  {
-    exported_mbb_class
-
-    .def("__mul__", [](const MatrixBaseBlock<EigenMatrix<Interval>&,Interval>& x1, const MatrixBaseBlock<EigenMatrix<double>&,double>& x2) { return x1*x2; }, py::is_operator(),
-      "todo")
-    .def("__rmul__", [](const MatrixBaseBlock<EigenMatrix<Interval>&,Interval>& x2, const MatrixBaseBlock<EigenMatrix<double>&,double>& x1) { return x1*x2; }, py::is_operator(),
-      "todo")
-    ;
-  }
-
-  if constexpr(std::is_same_v<T,double>)
-  {
-    exported_mbb_class
-
-    .def("__mul__", [](const MatrixBaseBlock<EigenMatrix<double>&,double>& x1, const MatrixBaseBlock<EigenMatrix<Interval>&,Interval>& x2) { return x1*x2; }, py::is_operator(),
-      "todo")
-    .def("__rmul__", [](const MatrixBaseBlock<EigenMatrix<double>&,double>& x2, const MatrixBaseBlock<EigenMatrix<Interval>&,Interval>& x1) { return x1*x2; }, py::is_operator(),
-      "todo")
-    ;
-  }
+  
+  return exported_mbb_class;
 }

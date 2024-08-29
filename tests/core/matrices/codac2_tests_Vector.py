@@ -13,11 +13,8 @@ from codac import *
 class TestVector(unittest.TestCase):
 
   def tests_Vector(self):
-
-    def invalid_vectors_product():  
-      Vector([1,2])*Vector([3,4])
-
-    self.assertRaises(ValueError, invalid_vectors_product)
+    
+    self.assertTrue(Vector([1,2])+Vector([3,4]) == Vector([4,6]))
 
 if __name__ ==  '__main__':
   unittest.main()

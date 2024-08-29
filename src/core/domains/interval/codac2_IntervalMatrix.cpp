@@ -85,26 +85,4 @@ namespace codac2
     assert_release(r >= 0 && c >= 0);
     return IntervalMatrix(r,c,Interval::empty());
   }
-
-  IntervalMatrix operator*(const Interval& x1, const Matrix& x2)
-  {
-    return x1 * x2._e.template cast<Interval>();
-  }
-
-  IntervalVector operator*(const IntervalMatrix& x1, const Vector& x2)
-  {
-    assert_release(x1.nb_cols() == x2.size());
-    return x1._e * x2._e.template cast<Interval>();
-  }
-
-  IntervalVector operator*(const Matrix& x1, const IntervalVector& x2)
-  {
-    assert_release(x1.nb_cols() == x2.size());
-    return x1._e.template cast<Interval>() * x2._e;
-  }
-
-  IntervalMatrix operator/(const Matrix& x1, const Interval& x2)
-  {
-    return x1._e.template cast<Interval>() / x2;
-  }
 }

@@ -82,4 +82,14 @@ namespace codac2
   struct Wrapper<IntervalVector> {
     using Domain = VectorOpValue;
   };
+
+  template<>
+  struct Wrapper<Matrix> {
+    using Domain = MatrixOpValue;
+  };
+
+  template<>
+  struct Wrapper<IntervalMatrix> {
+    using Domain = MatrixOpValue;
+  };
 }

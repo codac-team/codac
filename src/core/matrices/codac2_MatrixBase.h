@@ -258,116 +258,6 @@ namespace codac2
         return -_e;
       }
 
-      friend S operator+(const S& x1, const S& x2)
-      {
-        assert_release(x1.size() == x2.size());
-        return x1._e + x2._e;
-      }
-
-      template<typename Q_,typename T_>
-      friend S operator+(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
-      {
-        return x1._e + x2.eval().template cast<T>();
-      }
-
-      template<typename Q_,typename T_>
-      friend S operator+(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
-      {
-        return x1.eval().template cast<T>() + x2._e;
-      }
-
-      S& operator+=(const S& x)
-      {
-        assert_release(this->size() == x.size());
-        _e += x._e;
-        return dynamic_cast<S&>(*this);
-      }
-
-      template<typename Q_,typename T_>
-      S& operator+=(const MatrixBaseBlock<Q_,T_>& x)
-      {
-        return operator+=(x.eval().template cast<T>());
-      }
-
-      friend S operator-(const S& x1, const S& x2)
-      {
-        assert_release(x1.size() == x2.size());
-        return x1._e - x2._e;
-      }
-
-      template<typename Q_,typename T_>
-      friend S operator-(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
-      {
-        return x1._e - x2.eval().template cast<T>();
-      }
-
-      template<typename Q_,typename T_>
-      friend S operator-(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
-      {
-        return x1.eval().template cast<T>() - x2._e;
-      }
-
-      S& operator-=(const S& x)
-      {
-        assert_release(this->size() == x.size());
-        _e -= x._e;
-        return dynamic_cast<S&>(*this);
-      }
-
-      template<typename Q_,typename T_>
-      S& operator-=(const MatrixBaseBlock<Q_,T_>& x)
-      {
-        return operator-=(x.eval());
-      }
-
-      friend S operator*(const S& x1, const S& x2)
-      {
-        assert_release(x1.nb_cols() == x2.nb_rows());
-        return x1._e * x2._e;
-      }
-
-      friend S operator*(const T& x1, const S& x2)
-      {
-        return x2._e * x1;
-      }
-
-      template<typename S_>
-      friend S_ operator*(const S& x1, const VectorBase<S_,S,T>& x2)
-      {
-        assert_release(x1.nb_cols() == x2.size());
-        return x1._e * x2._e;
-      }
-
-      template<typename Q_,typename T_>
-      friend S operator*(const S& x1, const MatrixBaseBlock<Q_,T_>& x2)
-      {
-        return x1._e * x2.eval().template cast<T>();
-      }
-
-      template<typename Q_,typename T_>
-      friend S operator*(const MatrixBaseBlock<Q_,T_>& x1, const S& x2)
-      {
-        return x1.eval().template cast<T>() * x2._e;
-      }
-
-      S& operator*=(const S& x)
-      {
-        assert_release(this->size() == x.size());
-        _e *= x._e;
-        return dynamic_cast<S&>(*this);
-      }
-
-      template<typename Q_,typename T_>
-      S& operator*=(const MatrixBaseBlock<Q_,T_>& x)
-      {
-        return operator*=(x.eval());
-      }
-
-      friend S operator/(const S& x1, const T& x2)
-      {
-        return x1._e / x2;
-      }
-
       static S zeros(size_t r, size_t c)
       {
         assert_release(r >= 0 && c >= 0);
@@ -430,5 +320,11 @@ namespace codac2
     }
     os << ")";
     return os;
+  }
+
+  template<typename S,typename T>
+  const auto& eigen(const MatrixBase<S,T>& x)
+  {
+    return x._e;
   }
 }

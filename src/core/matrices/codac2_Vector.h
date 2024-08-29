@@ -40,10 +40,36 @@ namespace codac2
       size_t min_coeff_index() const;
 
       size_t max_coeff_index() const;
+
+      // Operators
+
+      Vector& operator+=(const Vector& x)
+      {
+        assert_release(this->size() == x.size());
+        this->_e += x._e;
+        return *this;
+      }
+
+      Vector& operator-=(const Vector& x)
+      {
+        assert_release(this->size() == x.size());
+        this->_e -= x._e;
+        return *this;
+      }
+
+      Vector& operator*=(double x)
+      {
+        this->_e *= x;
+        return *this;
+      }
+
+      Vector& operator/=(double x)
+      {
+        this->_e /= x;
+        return *this;
+      }
+
   };
 
   std::ostream& operator<<(std::ostream& os, const Vector& x);
-
-  template<typename Q_>
-  IntervalVector operator*(const MatrixBaseBlock<Q_,Interval>& x1, const Vector& x2);
 }

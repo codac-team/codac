@@ -90,6 +90,10 @@
       src/core/graphics/codac2_py_Figure2D.cpp
       src/core/graphics/codac2_py_StyleProperties.cpp
 
+      src/core/matrices/codac2_py_arithmetic_add.cpp
+      src/core/matrices/codac2_py_arithmetic_sub.cpp
+      src/core/matrices/codac2_py_arithmetic_mul.cpp
+      src/core/matrices/codac2_py_arithmetic_div.cpp
       src/core/matrices/codac2_py_Matrix.cpp
       src/core/matrices/codac2_py_MatrixBase.h
       src/core/matrices/codac2_py_MatrixBaseBlock.h

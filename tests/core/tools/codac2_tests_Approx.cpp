@@ -11,6 +11,7 @@
 #include <codac2_Interval.h>
 #include <codac2_IntervalVector.h>
 #include <codac2_Approx.h>
+#include <codac2_arithmetic.h>
 
 using namespace std;
 using namespace codac2;

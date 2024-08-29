@@ -1,5 +1,5 @@
 /** 
- *  Codac tests
+ *  \file codac2_arithmetic.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -7,14 +7,9 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
-#include <catch2/catch_test_macros.hpp>
-#include <codac2_Vector.h>
-#include <codac2_arithmetic.h>
+#pragma once
 
-using namespace std;
-using namespace codac2;
-
-TEST_CASE("Vector")
-{
-  
-}
+#include "codac2_arithmetic_add.h"
+#include "codac2_arithmetic_sub.h"
+#include "codac2_arithmetic_mul.h"
+#include "codac2_arithmetic_div.h"

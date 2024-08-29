@@ -9,11 +9,13 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_Vector.h>
+#include <codac2_Matrix.h>
+#include <codac2_arithmetic.h>
 
 using namespace std;
 using namespace codac2;
 
 TEST_CASE("Matrix")
 {
-  CHECK_THROWS(Vector({1,2})*Vector({3,4}) == Vector({5,5}));
+  
 }

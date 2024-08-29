@@ -45,13 +45,64 @@ namespace codac2
       Matrix diag_matrix() const;
 
       Matrix inverse() const;
+
+      // Operators
+
+      Matrix& operator+=(const Matrix& x)
+      {
+        assert_release(this->nb_rows() == x.nb_rows() && this->nb_cols() == x.nb_cols());
+        this->_e += x._e;
+        return *this;
+      }
+
+      template<typename Q>
+      Matrix& operator+=(const MatrixBaseBlock<Q,double>& x)
+      {
+        assert_release(this->nb_rows() == x.nb_rows() && this->nb_cols() == x.nb_cols());
+        this->_e += eigen(x);
+        return *this;
+      }
+
+      Matrix& operator-=(const Matrix& x)
+      {
+        assert_release(this->nb_rows() == x.nb_rows() && this->nb_cols() == x.nb_cols());
+        this->_e -= x._e;
+        return *this;
+      }
+
+      template<typename Q>
+      Matrix& operator-=(const MatrixBaseBlock<Q,double>& x)
+      {
+        assert_release(this->nb_rows() == x.nb_rows() && this->nb_cols() == x.nb_cols());
+        this->_e -= eigen(x);
+        return *this;
+      }
+
+      Matrix& operator*=(double x)
+      {
+        this->_e *= x;
+        return *this;
+      }
+
+      Matrix& operator*=(const Matrix& x)
+      {
+        assert_release(this->nb_rows() == x.nb_rows() && this->nb_cols() == x.nb_cols());
+        this->_e *= x._e;
+        return *this;
+      }
+
+      template<typename Q>
+      Matrix& operator*=(const MatrixBaseBlock<Q,double>& x)
+      {
+        assert_release(this->nb_rows() == x.nb_rows() && this->nb_cols() == x.nb_cols());
+        this->_e *= eigen(x);
+        return *this;
+      }
+
+      Matrix& operator/=(double x)
+      {
+        this->_e /= x;
+        return *this;
+      }
   };
-
-  Vector operator*(const Matrix& x1, const Vector& x2);
-
-  template<typename Q1_,typename Q2_>
-  Matrix operator*(const MatrixBaseBlock<Q1_,double>& x1, const MatrixBaseBlock<Q2_,double>& x2)
-  {
-    return x1.eval() * x2.eval();
-  }
 }

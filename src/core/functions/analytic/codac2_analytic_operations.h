@@ -221,6 +221,12 @@ namespace codac2
     {
       return std::make_shared<AnalyticOperationExpr<MulOp,VectorOpValue,ScalarOpValue,VectorOpValue>>(x1,x2);
     }
+    
+    inline VectorExpr_ptr
+    operator*(const VectorExpr_ptr& x1, const ScalarExpr_ptr& x2)
+    {
+      return std::make_shared<AnalyticOperationExpr<MulOp,VectorOpValue,VectorOpValue,ScalarOpValue>>(x1,x2);
+    }
 
     inline ScalarExpr_ptr
     operator*(const Interval& x1, const ScalarExpr_ptr& x2)
@@ -231,7 +237,7 @@ namespace codac2
     inline ScalarExpr_ptr
     operator*(const ScalarExpr_ptr& x1, const Interval& x2)
     {
-      return operator*(x1, const_value(x2));
+      return operator*(x1,const_value(x2));
     }
 
     inline VectorExpr_ptr
@@ -241,15 +247,39 @@ namespace codac2
     }
 
     inline VectorExpr_ptr
+    operator*(const VectorExpr_ptr& x1, const Interval& x2)
+    {
+      return operator*(x1,const_value(x2));
+    }
+
+    inline VectorExpr_ptr
     operator*(const ScalarExpr_ptr& x1, const IntervalVector& x2)
     {
-      return operator*(x1, const_value(x2));
+      return operator*(x1,const_value(x2));
+    }
+
+    inline VectorExpr_ptr
+    operator*(const IntervalVector& x1, const ScalarExpr_ptr& x2)
+    {
+      return operator*(const_value(x1),x2);
     }
 
     inline VectorExpr_ptr
     operator*(const MatrixExpr_ptr& x1, const VectorExpr_ptr& x2)
     {
       return std::make_shared<AnalyticOperationExpr<MulOp,VectorOpValue,MatrixOpValue,VectorOpValue>>(x1,x2);
+    }
+
+    inline VectorExpr_ptr
+    operator*(const MatrixExpr_ptr& x1, const IntervalVector& x2)
+    {
+      return std::make_shared<AnalyticOperationExpr<MulOp,VectorOpValue,MatrixOpValue,VectorOpValue>>(x1,const_value(x2));
+    }
+
+    inline VectorExpr_ptr
+    operator*(const IntervalMatrix& x1, const VectorExpr_ptr& x2)
+    {
+      return std::make_shared<AnalyticOperationExpr<MulOp,VectorOpValue,MatrixOpValue,VectorOpValue>>(const_value(x1),x2);
     }
 
   // operator/
@@ -276,6 +306,12 @@ namespace codac2
     operator/(const ScalarExpr_ptr& x1, const X2& x2)
     {
       return operator/(x1, const_value(x2));
+    }
+    
+    inline VectorExpr_ptr
+    operator/(const VectorExpr_ptr& x1, const ScalarExpr_ptr& x2)
+    {
+      return std::make_shared<AnalyticOperationExpr<DivOp,VectorOpValue,VectorOpValue,ScalarOpValue>>(x1,x2);
     }
 
   // Other operators

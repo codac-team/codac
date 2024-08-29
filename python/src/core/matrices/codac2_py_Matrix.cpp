@@ -26,7 +26,7 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_Matrix(py::module& m)
+py::class_<Matrix> export_Matrix(py::module& m)
 {
   py::class_<Matrix> exported_matrix_class(m, "Matrix", MATRIX_MAIN);
   export_MatrixBase<Matrix,double,false>(m, exported_matrix_class);
@@ -77,25 +77,5 @@ void export_Matrix(py::module& m)
 
   ;
 
-  // Matrix operations
-
-  exported_matrix_class
-
-    //IntervalMatrix operator*(const Interval& x1, const Matrix& x2);
-    .def("__rmul__", [](const Matrix& x2, const Interval& x1) { return x1*x2; }, py::is_operator(),
-      INTERVALMATRIX_OPERATORMUL_CONST_INTERVAL_REF_CONST_MATRIX_REF)
-
-    //IntervalVector operator*(const Matrix& x1, const IntervalVector& x2);
-    .def("__mul__", [](const Matrix& x1, const IntervalVector& x2) { return x1*x2; }, py::is_operator(),
-      INTERVALVECTOR_OPERATORMUL_CONST_MATRIX_REF_CONST_INTERVALVECTOR_REF)
-
-    //IntervalVector operator*(const Matrix& x1, const MatrixBaseBlock<Q_,Interval>& x2);
-    .def("__mul__", [](const Matrix& x1, const MatrixBaseBlock<EigenMatrix<Interval>&,Interval>& x2) { return x1*x2; }, py::is_operator(),
-      "todo")
-
-    //IntervalMatrix operator/(const Matrix& x1, const Interval& x2);
-    .def("__truediv__", [](const Matrix& x1, const Interval& x2) { return x1/x2; }, py::is_operator(),
-      INTERVALMATRIX_OPERATORDIV_CONST_MATRIX_REF_CONST_INTERVAL_REF)
-
-  ;
+  return exported_matrix_class;
 }
