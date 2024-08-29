@@ -159,4 +159,49 @@ namespace codac2
 
       const size_t _i;
   };
+
+  template<>
+  class AnalyticOperationExpr<SubvectorOp,VectorOpValue,VectorOpValue> : public AnalyticExpr<VectorOpValue>, public OperationExprBase<AnalyticExpr<VectorOpValue>>
+  {
+    public:
+
+      AnalyticOperationExpr(const std::shared_ptr<AnalyticExpr<VectorOpValue>>& x1, size_t i, size_t j)
+        : OperationExprBase<AnalyticExpr<VectorOpValue>>(x1), _i(i), _j(j)
+      { }
+
+      AnalyticOperationExpr(const AnalyticOperationExpr& e)
+        : OperationExprBase<AnalyticExpr<VectorOpValue>>(e), _i(e._i), _j(e._j)
+      { }
+
+      std::shared_ptr<ExprBase> copy() const
+      {
+        return std::make_shared<AnalyticOperationExpr<SubvectorOp,VectorOpValue,VectorOpValue>>(*this);
+      }
+
+      void replace_expr(const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      {
+        return OperationExprBase<AnalyticExpr<VectorOpValue>>::replace_expr(old_expr_id, new_expr);
+      }
+      
+      VectorOpValue fwd_eval(ValuesMap& v, size_t total_input_size) const
+      {
+        return AnalyticExpr<VectorOpValue>::init_value(
+          v, SubvectorOp::fwd(std::get<0>(this->_x)->fwd_eval(v, total_input_size), _i, _j));
+      }
+      
+      void bwd_eval(ValuesMap& v) const
+      {
+        SubvectorOp::bwd(AnalyticExpr<VectorOpValue>::value(v).a, std::get<0>(this->_x)->value(v).a, _i, _j);
+        std::get<0>(this->_x)->bwd_eval(v);
+      }
+
+      virtual bool belongs_to_args_list(const FunctionArgsList& args) const
+      {
+        return std::get<0>(this->_x)->belongs_to_args_list(args);
+      }
+
+    protected:
+
+      const size_t _i, _j;
+  };
 }

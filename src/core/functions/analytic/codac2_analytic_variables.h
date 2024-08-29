@@ -121,6 +121,13 @@ namespace codac2
           std::dynamic_pointer_cast<AnalyticExpr<VectorOpValue>>(this->copy()), i);
       }
 
+      std::shared_ptr<AnalyticExpr<VectorOpValue>> subvector(size_t i, size_t j) const
+      {
+        assert_release(i >= 0 && i < _n && j >= i && j < _n);
+        return std::make_shared<AnalyticOperationExpr<SubvectorOp,VectorOpValue,VectorOpValue>>(
+          std::dynamic_pointer_cast<AnalyticExpr<VectorOpValue>>(this->copy()), i, j);
+      }
+
     protected:
 
       size_t _n;

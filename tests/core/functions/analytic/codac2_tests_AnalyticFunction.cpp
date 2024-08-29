@@ -260,4 +260,23 @@ TEST_CASE("AnalyticFunction")
       CHECK(f.eval(Interval(-1,1)) == Interval(0));
     }
 
+    // Subvector on variables
+    {
+      VectorVar p(2);
+      VectorVar x(4);
+      AnalyticFunction f({p}, p[0]*p[1]);
+      AnalyticFunction g({x}, f(x.subvector(0,1)) + f(x.subvector(2,3)));
+
+      IntervalVector a(4);
+
+      a = IntervalVector({{1},{2},{3},{4}});
+      CHECK(g.natural_eval(a) == 14);
+      CHECK(g.centered_eval(a) == 14);
+      CHECK(g.eval(a) == 14);
+
+      a = IntervalVector({{0},{2},{5},{4}});
+      CHECK(g.natural_eval(a) == 20);
+      CHECK(g.centered_eval(a) == 20);
+      CHECK(g.eval(a) == 20);
+    }
 }

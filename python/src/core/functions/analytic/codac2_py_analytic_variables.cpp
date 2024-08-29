@@ -60,15 +60,15 @@ void export_ScalarVar(py::module& m)
   py::implicitly_convertible<ScalarVar,ScalarExpr>();
 }
 
-ScalarExpr get_item(const VectorVar& v, size_t_type index)
+ScalarExpr get_item(const VectorVar& v, size_t_type i)
 {
-  matlab::test_integer(index);
-  index = matlab::input_index(index);
+  matlab::test_integer(i);
+  i = matlab::input_index(i);
 
-  if(index < 0 || index >= static_cast<size_t>(v.size()))
+  if(i < 0 || i >= static_cast<size_t>(v.size()))
     throw py::index_error("index is out of range");
 
-  return ScalarExpr(std::dynamic_pointer_cast<AnalyticExpr<ScalarOpValue>>(v[static_cast<int>(index)]->copy()));
+  return ScalarExpr(std::dynamic_pointer_cast<AnalyticExpr<ScalarOpValue>>(v[static_cast<int>(i)]->copy()));
 }
 
 void export_VectorVar(py::module& m)
@@ -90,19 +90,26 @@ void export_VectorVar(py::module& m)
     .def("size", &VectorVar::size,
       SIZET_VECTORVAR_SIZE_CONST);
 
-  if(FOR_MATLAB) 
-    exported.def("__call__", [](const VectorVar& v, size_t_type index) -> ScalarExpr
+  if(FOR_MATLAB)
+    exported.def("__call__", [](const VectorVar& v, size_t_type i) -> ScalarExpr
       {
-        return get_item(v, index);
+        return get_item(v, i);
       }, SHARED_PTR_ANALYTICEXPR_SCALAROPVALUE_VECTORVAR_OPERATORCOMPO_SIZET_CONST);
 
   else
-    exported.def("__getitem__", [](const VectorVar& v, size_t_type index) -> ScalarExpr
+    exported.def("__getitem__", [](const VectorVar& v, size_t_type i) -> ScalarExpr
       {
-        return get_item(v, index);
+        return get_item(v, i);
       }, SHARED_PTR_ANALYTICEXPR_SCALAROPVALUE_VECTORVAR_OPERATORCOMPO_SIZET_CONST);
 
   exported
+
+    .def("subvector", [](const VectorVar& v, size_t_type i, size_t_type j) -> VectorExpr
+      {
+        matlab::test_integer(i, j);
+        return VectorExpr(std::dynamic_pointer_cast<AnalyticExpr<VectorOpValue>>(
+          v.subvector(matlab::input_index(i),matlab::input_index(j))->copy()));
+      }, SHARED_PTR_ANALYTICEXPR_VECTOROPVALUE_VECTORVAR_SUBVECTOR_SIZET_SIZET_CONST)
 
     .def("__pos__",  [](const VectorVar& e1)                           { return VectorExpr(VectorExpr(e1)); }, py::is_operator())
     .def("__add__",  [](const VectorVar& e1, const VectorVar& e2)      { return VectorExpr(VectorExpr(e1) + VectorExpr(e2)); }, py::is_operator())

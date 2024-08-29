@@ -236,5 +236,23 @@ class TestAnalyticFunction(unittest.TestCase):
     self.assertTrue(f.centered_eval(Interval(-1,1)) == Interval(0))
     self.assertTrue(f.eval(Interval(-1,1)) == Interval(0))
 
+    # Subvector on variables
+    p = VectorVar(2)
+    x = VectorVar(4)
+    f = AnalyticFunction([p], p[0]*p[1])
+    g = AnalyticFunction([x], f(x.subvector(0,1)) + f(x.subvector(2,3)))
+
+    a = IntervalVector(4)
+
+    a = IntervalVector([[1],[2],[3],[4]])
+    self.assertTrue(g.natural_eval(a) == 14)
+    self.assertTrue(g.centered_eval(a) == 14)
+    self.assertTrue(g.eval(a) == 14)
+
+    a = IntervalVector([[0],[2],[5],[4]])
+    self.assertTrue(g.natural_eval(a) == 20)
+    self.assertTrue(g.centered_eval(a) == 20)
+    self.assertTrue(g.eval(a) == 20)
+
 if __name__ ==  '__main__':
   unittest.main()

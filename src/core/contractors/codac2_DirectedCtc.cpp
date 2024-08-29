@@ -960,6 +960,34 @@ using namespace codac2;
   }
 
 
+// SubvectorOp
+
+  IntervalVector SubvectorOp::fwd(const IntervalVector& x1, size_t i, size_t j)
+  {
+    assert(i >= 0 && i < x1.size() && j >= i && j < x1.size());
+    return x1.subvector(i,j);
+  }
+
+  VectorOpValue SubvectorOp::fwd(const VectorOpValue& x1, size_t i, size_t j)
+  {
+    assert(i >= 0 && i < x1.a.nb_rows() && j >= i && j < x1.a.nb_rows());
+    return {
+      fwd(x1.m,i,j),
+      fwd(x1.a,i,j),
+      x1.da.block(i,0,j-i+1,x1.da.nb_cols()),
+      x1.def_domain
+    };
+  }
+
+  void SubvectorOp::bwd(const IntervalVector& y, IntervalVector& x1, size_t i, size_t j)
+  {
+    assert(i >= 0 && i < x1.size() && j >= i && j < x1.size());
+    assert(j-i < y.size());
+    for(size_t k = 0 ; k < j-i+1 ; k++)
+      x1[i+k] &= y[k];
+  }
+
+
 // MatrixOp
 
   void MatrixOp::fwd_i(IntervalMatrix& m, const IntervalVector& x, size_t i)

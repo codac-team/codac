@@ -222,6 +222,13 @@ namespace codac2
     static void bwd(const Interval& y, IntervalVector& x1, size_t i);
   };
 
+  struct SubvectorOp
+  {
+    static IntervalVector fwd(const IntervalVector& x1, size_t i, size_t j);
+    static VectorOpValue fwd(const VectorOpValue& x1, size_t i, size_t j);
+    static void bwd(const IntervalVector& y, IntervalVector& x1, size_t i, size_t j);
+  };
+
   struct VectorOp
   {
     template<typename... X, typename = typename std::enable_if<(true && ... && (
