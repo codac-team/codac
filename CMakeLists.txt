@@ -56,10 +56,10 @@
 
   # Check that the compiler supports c++20
   include(CheckCXXCompilerFlag)
-  check_cxx_compiler_flag("-std=c++20" COMPILER_SUPPORTS_CXX20)
+  check_cxx_compiler_flag("-std=c++2a" COMPILER_SUPPORTS_CXX20)
 
   if(COMPILER_SUPPORTS_CXX20)
-    add_compile_options(-std=c++20)
+    add_compile_options(-std=c++2a)
   else()
     message(FATAL_ERROR "Codac needs a compiler with C++20 support")
   endif()
