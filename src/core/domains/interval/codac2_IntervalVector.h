@@ -59,6 +59,9 @@ namespace codac2
         assert_release(x._q == 1); // column block only
       }
 
+      Interval& operator()(size_t i, size_t j) = delete;
+      const Interval& operator()(size_t i, size_t j) const = delete;
+
       friend bool operator==(const IntervalVector& x1, const IntervalVector& x2);
 
       std::vector<IntervalVector> complementary() const;

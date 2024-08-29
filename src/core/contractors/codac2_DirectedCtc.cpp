@@ -302,7 +302,7 @@ using namespace codac2;
 
     IntervalMatrix d(1,x1.da.nb_cols());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = x1.da[i]*x2.a + x1.a*x2.da[i];
+      d(0,i) = x1.da(0,i)*x2.a + x1.a*x2.da(0,i);
 
     return {
       fwd(x1.m, x2.m),
@@ -445,7 +445,7 @@ using namespace codac2;
 
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = (x1.da[i]*x2.a-x1.a*x2.da[i])/sqr(x2.a);
+      d(0,i) = (x1.da(0,i)*x2.a-x1.a*x2.da(0,i))/sqr(x2.a);
 
     return {
       fwd(x1.m, x2.m),
@@ -499,7 +499,7 @@ using namespace codac2;
   {
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = x2.a*x1.da[i]*pow(x1.a,x2.a-1.);
+      d(0,i) = x2.a*x1.da(0,i)*pow(x1.a,x2.a-1.);
 
     return {
       fwd(x1.m, x2.m),
@@ -528,7 +528,7 @@ using namespace codac2;
 
     IntervalMatrix d(1,x1.da.nb_cols());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = 2.*x1.a*x1.da[i];
+      d(0,i) = 2.*x1.a*x1.da(0,i);
 
     return {
       fwd(x1.m),
@@ -555,7 +555,7 @@ using namespace codac2;
   {
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = x1.da[i]/(2.*sqrt(x1.a));
+      d(0,i) = x1.da(0,i)/(2.*sqrt(x1.a));
 
     return {
       fwd(x1.m),
@@ -584,7 +584,7 @@ using namespace codac2;
   {
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = x1.da[i]*exp(x1.a);
+      d(0,i) = x1.da(0,i)*exp(x1.a);
 
     return {
       fwd(x1.m),
@@ -611,7 +611,7 @@ using namespace codac2;
   {
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = x1.da[i]/x1.a;
+      d(0,i) = x1.da(0,i)/x1.a;
 
     return {
       fwd(x1.m),
@@ -640,7 +640,7 @@ using namespace codac2;
   {
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = -sin(x1.a)*x1.da[i];
+      d(0,i) = -sin(x1.a)*x1.da(0,i);
 
     return {
       fwd(x1.m),
@@ -667,7 +667,7 @@ using namespace codac2;
   {
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = cos(x1.a)*x1.da[i];
+      d(0,i) = cos(x1.a)*x1.da(0,i);
 
     return {
       fwd(x1.m),
@@ -694,7 +694,7 @@ using namespace codac2;
   {
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = x1.da[i]/sqr(cos(x1.a));
+      d(0,i) = x1.da(0,i)/sqr(cos(x1.a));
 
     return {
       fwd(x1.m),
@@ -721,7 +721,7 @@ using namespace codac2;
   {
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = -x1.da[i]/sqrt(1.-sqr(x1.a));
+      d(0,i) = -x1.da(0,i)/sqrt(1.-sqr(x1.a));
 
     return {
       fwd(x1.m),
@@ -750,7 +750,7 @@ using namespace codac2;
   {
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = x1.da[i]/sqrt(1.-sqr(x1.a));
+      d(0,i) = x1.da(0,i)/sqrt(1.-sqr(x1.a));
 
     return {
       fwd(x1.m),
@@ -779,7 +779,7 @@ using namespace codac2;
   {
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = x1.da[i]/(1.+sqr(x1.a));
+      d(0,i) = x1.da(0,i)/(1.+sqr(x1.a));
 
     return {
       fwd(x1.m),
@@ -809,7 +809,7 @@ using namespace codac2;
 
     IntervalMatrix d(1,x1.da.nb_cols());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = (-x1.a*x2.da[i]/(sqr(x2.a)+sqr(x1.a)))+(-x2.a*x1.da[i]/(sqr(x2.a)+sqr(x1.a)));
+      d(0,i) = (-x1.a*x2.da(0,i)/(sqr(x2.a)+sqr(x1.a)))+(-x2.a*x1.da(0,i)/(sqr(x2.a)+sqr(x1.a)));
 
     return {
       fwd(x1.m, x2.m),
@@ -837,7 +837,7 @@ using namespace codac2;
   {
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = sinh(x1.a)*x1.da[i];
+      d(0,i) = sinh(x1.a)*x1.da(0,i);
 
     return {
       fwd(x1.m),
@@ -864,7 +864,7 @@ using namespace codac2;
   {
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = cosh(x1.a)*x1.da[i];
+      d(0,i) = cosh(x1.a)*x1.da(0,i);
 
     return {
       fwd(x1.m),
@@ -891,7 +891,7 @@ using namespace codac2;
   {    
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = x1.da[i]/sqr(cosh(x1.a));
+      d(0,i) = x1.da(0,i)/sqr(cosh(x1.a));
 
     return {
       fwd(x1.m),
@@ -918,7 +918,7 @@ using namespace codac2;
   {
     IntervalMatrix d(1,x1.da.size());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d[i] = (x1.a/abs(x1.a))*x1.da[i];
+      d(0,i) = (x1.a/abs(x1.a))*x1.da(0,i);
 
     return {
       fwd(x1.m),

@@ -98,27 +98,6 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
     ;
   }
 
-  else
-  {
-    pyclass
-
-    .def("__getitem__", [](const S& x, size_t_type index) -> const T&
-        {
-          matlab::test_integer(index);
-          return x[matlab::input_index(index)];
-        }, py::return_value_policy::reference_internal,
-      CONST_T_REF_MATRIXBASE_ST_OPERATORCOMPO_SIZET_CONST)
-
-    .def("__setitem__", [](S& x, size_t_type index, const T& a)
-        {
-          matlab::test_integer(index);
-          x[matlab::input_index(index)] = a;
-        },
-      T_REF_MATRIXBASE_ST_OPERATORCOMPO_SIZET)
-
-    ;
-  }
-
   pyclass
 
     .def("init", [](S& x, const T& a)

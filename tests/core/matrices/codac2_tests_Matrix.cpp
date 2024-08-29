@@ -17,5 +17,13 @@ using namespace codac2;
 
 TEST_CASE("Matrix")
 {
-  
+  Matrix x({
+  	{ -1, 3  },
+  	{ -6, -9 }
+  });
+
+  CHECK(abs(x) == Matrix({
+  	{ 1, 3 },
+  	{ 6, 9 }
+  }));
 }

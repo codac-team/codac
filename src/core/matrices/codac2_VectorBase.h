@@ -46,6 +46,17 @@ namespace codac2
       VectorBase(const Eigen::MatrixBase<OtherDerived>& x)
         : MatrixBase<S,T>(x)
       { }
+
+      T& operator[](size_t i)
+      {
+        return const_cast<T&>(const_cast<const VectorBase<S,M,T>*>(this)->operator[](i));
+      }
+
+      const T& operator[](size_t i) const
+      {
+        assert_release(i >= 0 && i < this->size());
+        return this->_e(i);
+      }
       
       S subvector(size_t start_id, size_t end_id) const
       {

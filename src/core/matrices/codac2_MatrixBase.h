@@ -169,17 +169,6 @@ namespace codac2
         return true;
       }
 
-      T& operator[](size_t i)
-      {
-        return const_cast<T&>(const_cast<const MatrixBase<S,T>*>(this)->operator[](i));
-      }
-
-      const T& operator[](size_t i) const
-      {
-        assert_release(i >= 0 && i < size());
-        return this->_e(i);
-      }
-
       T& operator()(size_t i, size_t j)
       {
         return const_cast<T&>(const_cast<const MatrixBase<S,T>*>(this)->operator()(i,j));
@@ -279,6 +268,9 @@ namespace codac2
       template<typename S_,typename T_>
       friend std::ostream& operator<<(std::ostream& os, const MatrixBase<S_,T_>& x);
 
+      template<typename S_,typename T_>
+      friend S_ abs(const MatrixBase<S_,T_>& x);
+
       operator EigenMatrix<T>()
       {
         return const_cast<EigenMatrix<T>&>(const_cast<const MatrixBase<S,T>*>(this)->operator EigenMatrix<T>());
@@ -296,13 +288,15 @@ namespace codac2
   S abs(const MatrixBase<S,T>& x)
   {
     S a(x);
-    for(size_t i = 0 ; i < a.size() ; i++)
+
+    for(size_t i = 0 ; i < x.size() ; i++)
     {
       if constexpr(std::is_same_v<T,double>)
-        a[i] = fabs(a[i]);
+        *(a._e.data()+i) = fabs(*(x._e.data()+i));
       else
-        a[i] = abs(a[i]);
+        *(a._e.data()+i) = abs(*(x._e.data()+i));
     }
+
     return a;
   }
 

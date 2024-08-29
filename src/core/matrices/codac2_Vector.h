@@ -37,6 +37,9 @@ namespace codac2
           VectorBase<Vector,Matrix,double>(x)
       { }
 
+      double& operator()(size_t i, size_t j) = delete;
+      const double& operator()(size_t i, size_t j) const = delete;
+
       size_t min_coeff_index() const;
 
       size_t max_coeff_index() const;

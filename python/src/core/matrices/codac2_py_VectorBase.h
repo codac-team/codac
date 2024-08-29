@@ -26,11 +26,25 @@ template<typename S,typename M,typename T>
 void export_VectorBase(py::module& m, py::class_<S>& pyclass)
 {
   //export_MatrixBase<S,T,true>(m, pyclass);
-  // ^ We do not "inherit" from VectorBase here, in order to
+  // ^ We do not "inherit" from export_MatrixBase here, in order to
   // avoid double inheritance from IntervalVector or IntervalMatrix.
   // Inheritance is compensated in Vector binding.
 
   pyclass
+
+    .def("__getitem__", [](const S& x, size_t_type index) -> const T&
+        {
+          matlab::test_integer(index);
+          return x[matlab::input_index(index)];
+        }, py::return_value_policy::reference_internal,
+      CONST_T_REF_VECTORBASE_SMT_OPERATORCOMPO_SIZET_CONST)
+
+    .def("__setitem__", [](S& x, size_t_type index, const T& a)
+        {
+          matlab::test_integer(index);
+          x[matlab::input_index(index)] = a;
+        },
+      T_REF_VECTORBASE_SMT_OPERATORCOMPO_SIZET)
 
     .def("subvector", [](const S& x, size_t_type start_id, size_t_type end_id)
         {
