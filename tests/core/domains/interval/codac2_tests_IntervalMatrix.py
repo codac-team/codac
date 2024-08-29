@@ -21,7 +21,20 @@ class TestIntervalMatrix(unittest.TestCase):
 
   def tests_intervalmatrix(self):
 
-    self.assertTrue(True)
+    x = IntervalMatrix([
+      [ [-1,1], [-2,2] ],
+      [ [-3,3], [-4,4] ],
+    ])
+
+    x[0,1] = Interval()
+    x[1,1] = Interval()
+
+    self.assertTrue(x == IntervalMatrix([
+      [ [-1,1], [-oo,oo] ],
+      [ [-3,3], [-oo,oo] ],
+    ]))
+
+    #m = IntervalMatrix(x)
     
 if __name__ ==  '__main__':
   unittest.main()

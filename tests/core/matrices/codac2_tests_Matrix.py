@@ -14,7 +14,20 @@ class TestMatrix(unittest.TestCase):
 
   def tests_Matrix(self):
 
-    self.assertTrue(True)
+    x = Matrix([
+      [ 1, 2 ],
+      [ 3, 4 ],
+    ])
+
+    x[0,1] = 42
+    x[1,1] = 42
+
+    self.assertTrue(x == Matrix([
+      [ 1, 42 ],
+      [ 3, 42 ],
+    ]))
+
+    #m = Matrix(x)
 
 if __name__ ==  '__main__':
   unittest.main()

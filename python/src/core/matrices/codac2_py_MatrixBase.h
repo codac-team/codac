@@ -65,6 +65,43 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
         },
       T_MATRIXBASE_ST_MAX_COEFF_CONST)
 
+  ;
+
+  if constexpr(!VECTOR_INHERITANCE)
+  {
+    pyclass
+
+    .def("__getitem__", [](const S& x, const py::tuple& ij) -> const T&
+        {
+          if constexpr(FOR_MATLAB)
+            assert_release(py::isinstance<py::int_>(ij[0]) && py::isinstance<py::int_>(ij[1]));
+
+          int i = ij[0].cast<int>();
+          int j = ij[1].cast<int>();
+
+          return x(matlab::input_index(i), matlab::input_index(j));
+        }, py::return_value_policy::reference_internal,
+      CONST_T_REF_MATRIXBASE_ST_OPERATORCALL_SIZET_SIZET_CONST)
+
+    .def("__setitem__", [](S& x, const py::tuple& ij, const T& a)
+        {
+          if constexpr(FOR_MATLAB)
+            assert_release(py::isinstance<py::int_>(ij[0]) && py::isinstance<py::int_>(ij[1]));
+
+          int i = ij[0].cast<int>();
+          int j = ij[1].cast<int>();
+
+          x(matlab::input_index(i), matlab::input_index(j)) = a;
+        },
+      T_REF_MATRIXBASE_ST_OPERATORCALL_SIZET_SIZET)
+
+    ;
+  }
+
+  else
+  {
+    pyclass
+
     .def("__getitem__", [](const S& x, size_t_type index) -> const T&
         {
           matlab::test_integer(index);
@@ -78,6 +115,11 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
           x[matlab::input_index(index)] = a;
         },
       T_REF_MATRIXBASE_ST_OPERATORCOMPO_SIZET)
+
+    ;
+  }
+
+  pyclass
 
     .def("init", [](S& x, const T& a)
         {
