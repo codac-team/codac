@@ -24,7 +24,7 @@ class TestVector(unittest.TestCase):
 
     i = 0
     for xi in x: # using __iter__
-      y[i] = x[i]
+      y[i] = xi
       i = i+1
 
     self.assertTrue(x == y)
