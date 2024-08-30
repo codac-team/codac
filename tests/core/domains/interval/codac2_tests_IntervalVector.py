@@ -634,5 +634,26 @@ class TestIntervalVector(unittest.TestCase):
     c = a | b
     self.assertTrue(c.is_empty())
     
+
+  def tests_intervalvector_specific_to_python(self):
+
+    x = IntervalVector([[1,2],[2,3],[3,4]])
+    y = IntervalVector(3)
+
+    i = 0
+    for xi in x: # using __iter__
+      y[i] = x[i]
+      i = i+1
+
+    self.assertTrue(x == y)
+
+    a,b,c = x # using __iter__
+    self.assertTrue(a == x[0])
+    self.assertTrue(b == x[1])
+    self.assertTrue(c == x[2])
+
+    v = IntervalVector([*x, [3,6]]) # using __iter__
+    self.assertTrue(v == [[1,2],[2,3],[3,4],[3,6]])
+
 if __name__ ==  '__main__':
   unittest.main()

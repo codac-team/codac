@@ -281,6 +281,29 @@ namespace codac2
         return _e;
       }
 
+      using iterator = typename EigenMatrix<T>::iterator;
+      using const_iterator = typename EigenMatrix<T>::const_iterator;
+      
+      iterator begin()
+      {
+        return const_cast<iterator>(const_cast<const MatrixBase<S,T>*>(this)->begin());
+      }
+
+      const_iterator begin() const
+      {
+        return _e.cbegin();
+      }
+
+      const_iterator end() const
+      {
+        return _e.cend();
+      }
+
+      iterator end()
+      {
+        return const_cast<iterator>(const_cast<const MatrixBase<S,T>*>(this)->end());
+      }
+
       EigenMatrix<T> _e;
   };
 

@@ -99,5 +99,12 @@ void export_VectorBase(py::module& m, py::class_<S>& pyclass)
           return string(s.str()); 
         },
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_VECTORBASE_SMT_REF)
+
+    .def("__iter__", [](const S &x)
+        {
+          auto x_ = x._e.reshaped();
+          return py::make_iterator(x_.begin(), x_.end());
+        },
+      py::keep_alive<0, 1>() /*  keep object alive while iterator exists */)
   ;
 }

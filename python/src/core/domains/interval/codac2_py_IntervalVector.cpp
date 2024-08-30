@@ -116,6 +116,7 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
           return string(s.str()); 
         },
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_INTERVALVECTOR_REF)
+
   ;
 
   py::implicitly_convertible<py::list,IntervalVector>();
