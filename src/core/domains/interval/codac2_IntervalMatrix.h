@@ -56,15 +56,17 @@ namespace codac2
 
       IntervalMatrix(const MatrixBase<IntervalMatrix,Interval>& x);
 
+      IntervalMatrix(const IntervalVector& x);
+
+      template<typename Q,typename T>
+      IntervalMatrix(const MatrixBaseBlock<Q,T>& x)
+        : IntervalMatrix(x.eval())
+      { }
+
       template<typename OtherDerived>
       IntervalMatrix(const Eigen::MatrixBase<OtherDerived>& x)
         : MatrixBase<IntervalMatrix,Interval>(x.template cast<Interval>()),
           IntervalMatrixBase<IntervalMatrix,Matrix>(x.template cast<Interval>())
-      { }
-
-      template<typename OtherDerived>
-      IntervalMatrix(const MatrixBaseBlock<OtherDerived,Interval>& x)
-        : IntervalMatrix(x.eval())
       { }
 
       IntervalMatrix transpose() const;

@@ -298,8 +298,3 @@ TEST_CASE("Interval operations")
   CHECK(root(Interval(-4,1),2) == Interval(0,1));
   CHECK(Approx(root(Interval(-8,1),3)) == Interval(-2,1));
 }
-
-#if 0
-// Tests from the IBEX lib that are not considered in this file:
-
-#endif

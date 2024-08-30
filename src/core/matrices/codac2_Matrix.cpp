@@ -45,6 +45,11 @@ namespace codac2
     : Matrix(x._e)
   { }
 
+  Matrix::Matrix(const Vector& x)
+    : Matrix(x._e)
+  { }
+
+
   Matrix Matrix::transpose() const
   {
     return this->_e.transpose();

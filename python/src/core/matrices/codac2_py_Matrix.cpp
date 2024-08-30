@@ -55,6 +55,14 @@ py::class_<Matrix> export_Matrix(py::module& m)
       MATRIX_MATRIX_CONST_MATRIXBASE_MATRIXDOUBLE_REF,
       "x"_a)
 
+    .def(py::init<const Vector&>(),
+      MATRIX_MATRIX_CONST_VECTOR_REF,
+      "x"_a)
+
+    .def(py::init<const MatrixBaseBlock<EigenMatrix<double>&,double>&>(),
+      MATRIX_MATRIX_CONST_MATRIXBASEBLOCK_QDOUBLE_REF,
+      "x"_a)
+
     .def(py::init( // this constructor must be the last one to be declared
         [](const std::vector<Vector>& v)
         {

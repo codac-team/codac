@@ -62,6 +62,18 @@ py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m)
       INTERVALMATRIX_INTERVALMATRIX_CONST_MATRIX_REF_CONST_MATRIX_REF,
       "lb"_a, "ub"_a)
 
+    .def(py::init<const IntervalVector&>(),
+      INTERVALMATRIX_INTERVALMATRIX_CONST_INTERVALVECTOR_REF,
+      "x"_a)
+
+    .def(py::init<const MatrixBaseBlock<EigenMatrix<double>&,double>&>(),
+      INTERVALMATRIX_INTERVALMATRIX_CONST_MATRIXBASEBLOCK_QT_REF,
+      "x"_a)
+
+    .def(py::init<const MatrixBaseBlock<EigenMatrix<Interval>&,Interval>&>(),
+      INTERVALMATRIX_INTERVALMATRIX_CONST_MATRIXBASEBLOCK_QT_REF,
+      "x"_a)
+
     .def(py::init( // this constructor must be the last one to be declared
         [](const std::vector<IntervalVector>& v)
         {

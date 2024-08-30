@@ -64,6 +64,10 @@ namespace codac2
       IntervalMatrixBase<IntervalMatrix,Matrix>(x._e)
   { }
 
+  IntervalMatrix::IntervalMatrix(const IntervalVector& x)
+    : IntervalMatrix(x._e)
+  { }
+
   IntervalMatrix IntervalMatrix::transpose() const
   {
     return this->_e.transpose();

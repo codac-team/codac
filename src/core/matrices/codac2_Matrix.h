@@ -32,6 +32,13 @@ namespace codac2
 
       Matrix(const MatrixBase<Matrix,double>& x);
 
+      Matrix(const Vector& x);
+
+      template<typename Q>
+      Matrix(const MatrixBaseBlock<Q,double>& x)
+        : Matrix(x.eval())
+      { }
+
       template<typename OtherDerived>
       Matrix(const Eigen::MatrixBase<OtherDerived>& x)
         : MatrixBase<Matrix,double>(x)
