@@ -54,7 +54,18 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
       INTERVALVECTOR_INTERVALVECTOR_SIZET_CONST_INTERVAL_REF,
       "n"_a, "x"_a)
 
-    .def(py::init(
+    .def(py::init<const IntervalVector&>(),
+      "x"_a)
+
+    .def(py::init<const Vector&>(),
+      INTERVALVECTOR_INTERVALVECTOR_CONST_VECTOR_REF,
+      "x"_a)
+
+    .def(py::init<const Vector&,const Vector&>(),
+      INTERVALVECTOR_INTERVALVECTOR_CONST_VECTOR_REF_CONST_VECTOR_REF,
+      "lb"_a, "ub"_a)
+
+    .def(py::init( // this constructor must be the last one to be declared
         [](const std::vector<Interval>& v)
         {
           auto iv = std::make_unique<IntervalVector>(v.size());
@@ -65,7 +76,7 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
       INTERVALVECTOR_INTERVALVECTOR_INITIALIZER_LIST_INTERVAL,
       "v"_a)
 
-    .def(py::init(
+    .def(py::init( // this constructor must be the last one to be declared
         [](const std::vector<std::vector<double>>& v)
         {
           auto iv = std::make_unique<IntervalVector>(v.size());
@@ -82,17 +93,6 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
         }),
       INTERVALVECTOR_INTERVALVECTOR_INITIALIZER_LIST_INTERVAL,
       "v"_a)
-
-    .def(py::init<const IntervalVector&>(),
-      "x"_a)
-
-    .def(py::init<const Vector&>(),
-      INTERVALVECTOR_INTERVALVECTOR_CONST_VECTOR_REF,
-      "x"_a)
-
-    .def(py::init<const Vector&,const Vector&>(),
-      INTERVALVECTOR_INTERVALVECTOR_CONST_VECTOR_REF_CONST_VECTOR_REF,
-      "lb"_a, "ub"_a)
 
     .def("complementary", &IntervalVector::complementary,
       VECTOR_INTERVALVECTOR_INTERVALVECTOR_COMPLEMENTARY_CONST)

@@ -27,7 +27,9 @@ class TestMatrix(unittest.TestCase):
       [ 3, 42 ],
     ]))
 
-    #m = Matrix(x)
+    # The following simple call was a problem before
+    # (order of def of constructors):
+    m = Matrix(x)
 
 if __name__ ==  '__main__':
   unittest.main()

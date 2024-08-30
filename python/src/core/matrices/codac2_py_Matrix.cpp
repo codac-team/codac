@@ -51,7 +51,11 @@ py::class_<Matrix> export_Matrix(py::module& m)
       MATRIX_MATRIX_SIZET_SIZET_DOUBLE,
       "r"_a, "c"_a, "x"_a)
 
-    .def(py::init(
+    .def(py::init<const Matrix&>(),
+      MATRIX_MATRIX_CONST_MATRIXBASE_MATRIXDOUBLE_REF,
+      "x"_a)
+
+    .def(py::init( // this constructor must be the last one to be declared
         [](const std::vector<Vector>& v)
         {
           assert_release(!std::empty(v));

@@ -51,7 +51,18 @@ py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m)
       INTERVALMATRIX_INTERVALMATRIX_SIZET_SIZET_CONST_INTERVAL_REF,
       "r"_a, "c"_a, "x"_a)
 
-    .def(py::init(
+    .def(py::init<const IntervalMatrix&>(),
+      "x"_a)
+
+    .def(py::init<const Matrix&>(),
+      INTERVALMATRIX_INTERVALMATRIX_CONST_MATRIX_REF,
+      "x"_a)
+
+    .def(py::init<const Matrix&,const Matrix&>(),
+      INTERVALMATRIX_INTERVALMATRIX_CONST_MATRIX_REF_CONST_MATRIX_REF,
+      "lb"_a, "ub"_a)
+
+    .def(py::init( // this constructor must be the last one to be declared
         [](const std::vector<IntervalVector>& v)
         {
           assert_release(!std::empty(v));
@@ -65,17 +76,6 @@ py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m)
         }),
       INTERVALMATRIX_INTERVALMATRIX_INITIALIZER_LIST_INITIALIZER_LIST_INTERVAL,
       "v"_a)
-
-    .def(py::init<const IntervalMatrix&>(),
-      "x"_a)
-
-    .def(py::init<const Matrix&>(),
-      INTERVALMATRIX_INTERVALMATRIX_CONST_MATRIX_REF,
-      "x"_a)
-
-    .def(py::init<const Matrix&,const Matrix&>(),
-      INTERVALMATRIX_INTERVALMATRIX_CONST_MATRIX_REF_CONST_MATRIX_REF,
-      "lb"_a, "ub"_a)
 
     .def("transpose", &IntervalMatrix::transpose,
       INTERVALMATRIX_INTERVALMATRIX_TRANSPOSE_CONST)

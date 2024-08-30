@@ -52,11 +52,11 @@ py::class_<Vector> export_Vector(py::module& m)
       VECTOR_VECTOR_SIZET_DOUBLE,
       "n"_a, "x"_a)
 
-    .def(py::init<const std::vector<double>>(),
-      VECTOR_VECTOR_CONST_VECTOR_DOUBLE_REF,
+    .def(py::init<const Vector&>(),
       "x"_a)
 
-    .def(py::init<const Vector&>(),
+    .def(py::init<const std::vector<double>>(), // this constructor must be the last one to be declared
+      VECTOR_VECTOR_CONST_VECTOR_DOUBLE_REF,
       "x"_a)
 
     .def("min_coeff_index", [](const Vector& x)
