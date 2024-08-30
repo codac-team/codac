@@ -24,7 +24,7 @@
   # to specify its path with the CMAKE_PREFIX_PATH option, e.g.
   # set(CMAKE_PREFIX_PATH "~/eigen/build_install")
 
-  find_package(Eigen3 REQUIRED NO_MODULE)
+  find_package(Eigen3 3.4 REQUIRED NO_MODULE)
   message(STATUS "Found Eigen3 version ${Eigen3_VERSION}")
 
 # Adding Codac
