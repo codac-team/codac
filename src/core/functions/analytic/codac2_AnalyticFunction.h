@@ -31,10 +31,8 @@ namespace codac2
   inline EvaluationMode operator|(EvaluationMode a, EvaluationMode b)
   { return static_cast<EvaluationMode>(static_cast<int>(a) | static_cast<int>(b)); }
   
-
-  template<typename T, typename = typename std::enable_if<
-      std::is_base_of_v<OpValueBase,T>
-    >::type>
+  template<typename T>
+    requires std::is_base_of_v<OpValueBase,T>
   class AnalyticFunction : public FunctionBase<AnalyticExpr<T>>
   {
     public:

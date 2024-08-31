@@ -20,16 +20,14 @@ namespace codac2
   {
     public:
 
-      template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<SepBase,S> || std::is_same_v<std::shared_ptr<SepBase>,S>
-        >::type>
+      template<typename S>
+        requires IsSepBaseOrPtr<S>
       SepProj(const S& s, const std::vector<size_t>& proj_indices, double default_eps = 0.01)
         : SepProj(s, proj_indices, IntervalVector(size_of(s)-proj_indices.size()), default_eps)
       { }
 
-      template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<SepBase,S> || std::is_same_v<std::shared_ptr<SepBase>,S>
-        >::type>
+      template<typename S>
+        requires IsSepBaseOrPtr<S>
       SepProj(const S& s, const std::vector<size_t>& proj_indices, const IntervalVector& y, double default_eps = 0.01)
         : Sep<SepProj>(proj_indices.size()), _sep(s), _xi(proj_indices), _y(y), _default_eps(default_eps)
       {

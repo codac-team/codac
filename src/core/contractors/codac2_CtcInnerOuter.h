@@ -20,9 +20,8 @@ namespace codac2
   {
     public:
 
-      template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<SepBase,S> || std::is_base_of_v<S,std::shared_ptr<SepBase>>
-        >::type>
+      template<typename S>
+        requires IsSepBaseOrPtr<S>
       CtcInner(const S& s)
         : Ctc<CtcInner,IntervalVector>(size_of(s)), _seps(s)
       { }
@@ -42,9 +41,8 @@ namespace codac2
   {
     public:
 
-      template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<SepBase,S> || std::is_base_of_v<S,std::shared_ptr<SepBase>>
-        >::type>
+      template<typename S>
+        requires IsSepBaseOrPtr<S>
       CtcOuter(const S& s)
         : Ctc<CtcOuter,IntervalVector>(size_of(s)), _seps(s)
       { }

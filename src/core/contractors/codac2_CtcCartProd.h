@@ -13,6 +13,7 @@
 #include "codac2_IntervalVector.h"
 #include "codac2_CtcWrapper.h"
 #include "codac2_Collection.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -29,16 +30,14 @@ namespace codac2
         }()), _ctcs(ctcs)
       { }
 
-      template<typename C, typename = typename std::enable_if<(
-          (std::is_base_of_v<CtcBase<IntervalVector>,C> && !std::is_same_v<CtcCartProd,C>) || std::is_same_v<std::shared_ptr<CtcBase<IntervalVector>>,C>
-        ), void>::type>
+      template<typename C>
+        requires (IsCtcBaseOrPtr<C,IntervalVector> && !std::is_same_v<CtcCartProd,C>)
       CtcCartProd(const C& c)
         : Ctc<CtcCartProd,IntervalVector>(size_of(c)), _ctcs(c)
       { }
 
-      template<typename... C, typename = typename std::enable_if<(true && ... && (
-          (std::is_base_of_v<CtcBase<IntervalVector>,C> || std::is_same_v<std::shared_ptr<CtcBase<IntervalVector>>,C>)
-        )), void>::type>
+      template<typename... C>
+        requires (IsCtcBaseOrPtr<C,IntervalVector> && ...)
       CtcCartProd(const C&... c)
         : Ctc<CtcCartProd,IntervalVector>((0 + ... + size_of(c))), _ctcs(c...)
       { }
@@ -63,9 +62,8 @@ namespace codac2
       Collection<CtcBase<IntervalVector>> _ctcs;
   };
 
-  template<typename... C, typename = typename std::enable_if<(true && ... && (
-      (std::is_base_of_v<CtcBase<IntervalVector>,C> || std::is_same_v<std::shared_ptr<CtcBase<IntervalVector>>,C>)
-    )), void>::type>
+  template<typename... C>
+    requires (IsCtcBaseOrPtr<C,IntervalVector> && ...)
   inline CtcCartProd cart_prod(const C&... c)
   {
     return CtcCartProd(c...);

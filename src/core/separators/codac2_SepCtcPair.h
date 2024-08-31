@@ -20,10 +20,8 @@ namespace codac2
   {
     public:
 
-      template<typename C1, typename C2, typename = typename std::enable_if<(
-          (std::is_base_of_v<CtcBase<IntervalVector>,C1> || std::is_same_v<std::shared_ptr<CtcBase<IntervalVector>>,C1>) &&
-          (std::is_base_of_v<CtcBase<IntervalVector>,C2> || std::is_same_v<std::shared_ptr<CtcBase<IntervalVector>>,C2>)
-        )>::type>
+      template<typename C1, typename C2>
+        requires (IsCtcBaseOrPtr<C1,IntervalVector> && IsCtcBaseOrPtr<C2,IntervalVector>)
       SepCtcPair(const C1& ctc_in, const C2& ctc_out)
         : Sep<SepCtcPair>(size_of(ctc_in)), _ctc_in_out(ctc_in, ctc_out)
       {

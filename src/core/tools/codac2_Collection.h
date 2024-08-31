@@ -24,20 +24,16 @@ namespace codac2
       Collection()
       { }
 
-      template<typename... T_,
-        typename = typename std::enable_if<(true && ... && (
-          std::is_base_of<T,T_>::value // T_ should be some T class
-          && !std::is_same<Collection<T>,T_>::value
-        )), void>::type>
+      template<typename... T_>
+        requires ((std::is_base_of_v<T,T_> // T_ should be some T class
+          && !std::is_same_v<Collection<T>,T_>) && ...)
       Collection(const T_&... x)
       {
         (add_shared_ptr(std::make_shared<T_>(x)), ...);
       }
 
-      template<typename... T_,
-        typename = typename std::enable_if<(true && ... && (
-          std::is_same<std::shared_ptr<T>,std::shared_ptr<T_>>::value
-        )), void>::type>
+      template<typename... T_>
+        requires (std::is_same_v<std::shared_ptr<T>,std::shared_ptr<T_>> && ...)
       Collection(const std::shared_ptr<T_>&... x)
       {
         (add_shared_ptr(x), ...);
@@ -49,10 +45,8 @@ namespace codac2
           add_shared_ptr(std::dynamic_pointer_cast<T>(ci->copy()));
       }
 
-      template<typename T_,
-        typename = typename std::enable_if<
-          std::is_base_of<T,T_>::value
-        >::type>
+      template<typename T_>
+        requires std::is_base_of_v<T,T_>
       void add(const T_& x)
       {
         add_shared_ptr(std::make_shared<T>(x));

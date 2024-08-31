@@ -40,9 +40,8 @@ namespace codac2
 
       IntervalMatrix(std::initializer_list<std::initializer_list<Interval>> l);
 
-      template<typename... IV, typename = typename std::enable_if<(true && ... && 
-          std::is_same_v<IntervalVector,IV>
-        ), void>::type>
+      template<typename... IV>
+        requires (std::is_same_v<IntervalVector,IV> && ...)
       IntervalMatrix(const IV&... x)
         : MatrixBase<IntervalMatrix,Interval>(sizeof...(IV), std::get<0>(std::tie(x...)).size()),
           IntervalMatrixBase<IntervalMatrix,Matrix>(sizeof...(IV), std::get<0>(std::tie(x...)).size())

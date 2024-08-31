@@ -13,6 +13,7 @@
 #include "codac2_Sep.h"
 #include "codac2_SepWrapper.h"
 #include "codac2_Collection.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -24,9 +25,8 @@ namespace codac2
         : Sep<SepNot>(x.size()), _sep(SepWrapper_<IntervalVector>(x))
       { }
 
-      template<typename S, typename = typename std::enable_if<(
-          (std::is_base_of_v<SepBase,S> && !std::is_same_v<SepNot,S>) || std::is_same_v<std::shared_ptr<SepBase>,S>
-        ), void>::type>
+      template<typename S>
+        requires (IsSepBaseOrPtr<S> && !std::is_same_v<SepNot,S>)
       SepNot(const S& s)
         : Sep<SepNot>(size_of(s)), _sep(s)
       { }
@@ -45,9 +45,8 @@ namespace codac2
       const Collection<SepBase> _sep;
   };
 
-  template<typename S, typename = typename std::enable_if<
-      std::is_base_of_v<SepBase,S>
-    >::type>
+  template<typename S>
+    requires std::is_base_of_v<SepBase,S>
   SepNot operator!(const S& s)
   {
     return SepNot(s);

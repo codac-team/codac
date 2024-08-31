@@ -16,6 +16,7 @@
 #include "codac2_CtcInverseNotIn.h"
 #include "codac2_CtcInnerOuter.h"
 #include "codac2_SepCtcPair.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -30,9 +31,8 @@ namespace codac2
         : SepCtcPair(CtcInverseNotIn<Y,X>(f,y,with_centered_form), CtcInverse_<Y,X>(f,y,with_centered_form))
       { }
 
-      template<typename S, typename = typename std::enable_if<
-          std::is_same_v<Y,IntervalVector> && (std::is_base_of_v<SepBase,S> || std::is_same_v<std::shared_ptr<SepBase>,S>)
-        >::type>
+      template<typename S>
+        requires (std::is_same_v<IntervalVector,Y> && IsSepBaseOrPtr<S>)
       SepInverse(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const S& sep_y, bool with_centered_form = true)
         : SepCtcPair(CtcInverseNotIn<Y,X>(f,CtcInner(sep_y),with_centered_form), CtcInverse_<Y,X>(f,CtcOuter(sep_y),with_centered_form))
       { }

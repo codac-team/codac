@@ -30,16 +30,14 @@ namespace codac2
         }
       }
 
-      template<typename C, typename = typename std::enable_if<(
-          (std::is_base_of_v<CtcBase<X>,C> && !std::is_same_v<CtcUnion<X>,C>) || std::is_same_v<std::shared_ptr<CtcBase<X>>,C>
-        ), void>::type>
+      template<typename C>
+        requires (IsCtcBaseOrPtr<C,X> && !std::is_same_v<CtcUnion<X>,C>)
       CtcUnion(const C& c)
         : Ctc<CtcUnion<X>,X>(size_of(c)), _ctcs(c)
       { }
 
-      template<typename... C, typename = typename std::enable_if<(true && ... && (
-          (std::is_base_of_v<CtcBase<X>,C> || std::is_same_v<std::shared_ptr<CtcBase<X>>,C>)
-        )), void>::type>
+      template<typename... C>
+        requires (IsCtcBaseOrPtr<C,X> && ...)
       CtcUnion(const C&... c)
         : Ctc<CtcUnion<X>,X>(size_first_item(c...)), _ctcs(c...)
       {
@@ -61,9 +59,8 @@ namespace codac2
         x = result;
       }
 
-      template<typename C, typename = typename std::enable_if<
-          std::is_base_of_v<CtcBase<X>,C>
-        >::type>
+      template<typename C>
+        requires std::is_base_of_v<CtcBase<X>,C>
       CtcUnion<X>& operator|=(const C& c)
       {
         assert_release(c.size() == this->size());
@@ -83,28 +80,25 @@ namespace codac2
       Collection<CtcBase<X>> _ctcs;
   };
 
-  template<typename C1, typename C2, typename = typename std::enable_if<(
-      std::is_base_of_v<CtcBase<typename C1::ContractedType>,C1> &&
-      std::is_base_of_v<CtcBase<typename C1::ContractedType>,C2> &&
-      std::is_same_v<typename C1::ContractedType,typename C2::ContractedType>
-    )>>
+  template<typename C1, typename C2>
+    requires (std::is_same_v<typename C1::ContractedType,typename C2::ContractedType>
+      && std::is_base_of_v<CtcBase<typename C1::ContractedType>,C1>
+      && std::is_base_of_v<CtcBase<typename C1::ContractedType>,C2>)
   inline CtcUnion<typename C1::ContractedType> operator|(const C1& c1, const C2& c2)
   {
     return CtcUnion<typename C1::ContractedType>(c1,c2);
   }
 
-  template<typename C2, typename = typename std::enable_if<
-      std::is_base_of_v<CtcBase<IntervalVector>,C2>
-    >::type>
+  template<typename C2>
+    requires std::is_base_of_v<CtcBase<IntervalVector>,C2>
   inline CtcUnion<IntervalVector> operator|(const IntervalVector& c1, const C2& c2)
   {
     assert_release(c1.size() == c2.size());
     return CtcUnion<IntervalVector>(CtcWrapper_<IntervalVector>(c1),c2);
   }
 
-  template<typename C1, typename = typename std::enable_if<
-      std::is_base_of_v<CtcBase<IntervalVector>,C1>
-    >::type>
+  template<typename C1>
+    requires std::is_base_of_v<CtcBase<IntervalVector>,C1>
   inline CtcUnion<IntervalVector> operator|(const C1& c1, const IntervalVector& c2)
   {
     assert_release(c1.size() == c2.size());

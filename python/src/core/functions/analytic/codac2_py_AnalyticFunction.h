@@ -87,7 +87,7 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
         
         return std::make_unique<AnalyticFunction<T>>(args, expr.copy());
       }
-    ), ANALYTICFUNCTION_TTYPENAME_ANALYTICFUNCTION_CONST_FUNCTIONARGSLIST_REF_CONST_SHARED_PTR_ANALYTICEXPR_T_REF)
+    ), ANALYTICFUNCTION_T_ANALYTICFUNCTION_CONST_FUNCTIONARGSLIST_REF_CONST_SHARED_PTR_ANALYTICEXPR_T_REF)
 
     .def("input_size", &AnalyticFunction<T>::input_size,
       SIZET_FUNCTIONBASE_E_INPUT_SIZE_CONST)
@@ -104,10 +104,10 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
 
   using I = const Interval&; using IV = const IntervalVector&;
 
-  bind_(exported, "eval", eval, T_DOMAIN_ANALYTICFUNCTION_TTYPENAME_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
-  bind_(exported, "natural_eval", natural_eval, T_DOMAIN_ANALYTICFUNCTION_TTYPENAME_NATURAL_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
-  bind_(exported, "centered_eval", centered_eval, T_DOMAIN_ANALYTICFUNCTION_TTYPENAME_CENTERED_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
-  bind_(exported, "diff", diff, AUTO_ANALYTICFUNCTION_TTYPENAME_DIFF_CONST_ARGS_REF_VARIADIC_CONST);
+  bind_(exported, "eval", eval, T_DOMAIN_ANALYTICFUNCTION_T_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
+  bind_(exported, "natural_eval", natural_eval, T_DOMAIN_ANALYTICFUNCTION_T_NATURAL_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
+  bind_(exported, "centered_eval", centered_eval, T_DOMAIN_ANALYTICFUNCTION_T_CENTERED_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
+  bind_(exported, "diff", diff, AUTO_ANALYTICFUNCTION_T_DIFF_CONST_ARGS_REF_VARIADIC_CONST);
 
   exported
 

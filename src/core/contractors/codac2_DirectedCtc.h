@@ -12,6 +12,7 @@
 #include <string>
 #include "codac2_analytic_values.h"
 #include "codac2_arithmetic.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -231,17 +232,15 @@ namespace codac2
 
   struct VectorOp
   {
-    template<typename... X, typename = typename std::enable_if<(true && ... && (
-        std::is_base_of_v<Interval,X>
-      )), void>::type>
+    template<typename... X>
+      requires (std::is_base_of_v<Interval,X> && ...)
     static IntervalVector fwd(const X&... x)
     {
       return IntervalVector({x...});
     }
 
-    template<typename... X, typename = typename std::enable_if<(true && ... && (
-        std::is_same_v<ScalarOpValue,X>
-      )), void>::type>
+    template<typename... X>
+      requires (std::is_base_of_v<ScalarOpValue,X> && ...)
     static VectorOpValue fwd(const X&... x)
     {
       IntervalMatrix d(sizeof...(X),std::get<0>(std::tie(x...)).da.nb_cols());
@@ -260,6 +259,7 @@ namespace codac2
     }
 
     template<typename... X>
+      requires (std::is_base_of_v<Interval,X> && ...)
     static void bwd(const IntervalVector& y, X&... x)
     {
       size_t i = 0;
@@ -271,9 +271,8 @@ namespace codac2
   {
     static void fwd_i(IntervalMatrix& m, const IntervalVector& x, size_t i);
 
-    template<typename... X, typename = typename std::enable_if<(true && ... && (
-        std::is_base_of_v<Domain,X>
-      )), void>::type>
+    template<typename... X>
+      requires (std::is_base_of_v<Domain,X> && ...)
     static IntervalMatrix fwd(const X&... x)
     {
       throw std::runtime_error("MatrixOp not fully implemented yet");
@@ -283,9 +282,8 @@ namespace codac2
       return m;
     }
 
-    template<typename... X, typename = typename std::enable_if<(true && ... && (
-        std::is_same_v<VectorOpValue,X>
-      )), void>::type>
+    template<typename... X>
+      requires (std::is_base_of_v<VectorOpValue,X> && ...)
     static MatrixOpValue fwd(const X&... x)
     {
       throw std::runtime_error("MatrixOp not fully implemented yet");
@@ -298,6 +296,7 @@ namespace codac2
     }
 
     template<typename... X>
+      requires (std::is_base_of_v<IntervalVector,X> && ...)
     static void bwd(const IntervalMatrix& y, X&... x)
     {
       throw std::runtime_error("MatrixOp not fully implemented yet");

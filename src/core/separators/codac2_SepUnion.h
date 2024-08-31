@@ -21,16 +21,14 @@ namespace codac2
   {
     public:
 
-      template<typename S, typename = typename std::enable_if<(
-          (std::is_base_of_v<SepBase,S> && !std::is_same_v<SepUnion,S>) || std::is_same_v<std::shared_ptr<SepBase>,S>
-        ), void>::type>
+      template<typename S>
+        requires (IsSepBaseOrPtr<S> && !std::is_same_v<SepUnion,S>)
       SepUnion(const S& s)
         : Sep<SepUnion>(size_of(s)), _seps(s)
       { }
 
-      template<typename... S, typename = typename std::enable_if<(true && ... && (
-          (std::is_base_of_v<SepBase,S> || std::is_same_v<std::shared_ptr<SepBase>,S>)
-        )), void>::type>
+      template<typename... S>
+        requires (IsSepBaseOrPtr<S> && ...)
       SepUnion(const S&... s)
         : Sep<SepUnion>(size_first_item(s...)), _seps(s...)
       {
@@ -39,9 +37,8 @@ namespace codac2
 
       BoxPair separate(const IntervalVector& x) const;
 
-      template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<SepBase,S>
-        >::type>
+      template<typename S>
+        requires std::is_base_of_v<SepBase,S>
       SepUnion& operator|=(const S& s)
       {
         assert_release(s.size() == this->size());
@@ -61,27 +58,23 @@ namespace codac2
       Collection<SepBase> _seps;
   };
 
-  template<typename S1, typename S2, typename = typename std::enable_if<(
-      std::is_base_of_v<SepBase,S1> &&
-      std::is_base_of_v<SepBase,S2>
-    )>::type>
+  template<typename S1, typename S2>
+    requires (IsSepBaseOrPtr<S1> && IsSepBaseOrPtr<S2>)
   inline SepUnion operator|(const S1& s1, const S2& s2)
   {
     return SepUnion(s1,s2);
   }
 
-  template<typename S2, typename = typename std::enable_if<
-      std::is_base_of_v<SepBase,S2>
-    >::type>
+  template<typename S2>
+    requires IsSepBaseOrPtr<S2>
   inline SepUnion operator|(const IntervalVector& s1, const S2& s2)
   {
     assert_release(s1.size() == s2.size());
     return SepUnion(SepWrapper_<IntervalVector>(s1),s2);
   }
 
-  template<typename S1, typename = typename std::enable_if<
-      std::is_base_of_v<SepBase,S1>
-    >::type>
+  template<typename S1>
+    requires IsSepBaseOrPtr<S1>
   inline SepUnion operator|(const S1& s1, const IntervalVector& s2)
   {
     assert_release(s1.size() == s2.size());

@@ -20,9 +20,8 @@ namespace codac2
   {
     public:
 
-      template<typename C, typename = typename std::enable_if<
-          std::is_base_of_v<CtcBase<IntervalVector>,C> || std::is_same_v<std::shared_ptr<CtcBase<IntervalVector>>,C>
-        >::type>
+      template<typename C>
+        requires IsCtcBaseOrPtr<C,IntervalVector>
       CtcLazy(const C& c)
         : Ctc<CtcLazy,IntervalVector>(size_of(c)), _ctc(c),
           _r(1./std::pow(2,size_of(c)-1))

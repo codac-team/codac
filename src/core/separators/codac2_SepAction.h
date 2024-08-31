@@ -13,6 +13,7 @@
 #include "codac2_Sep.h"
 #include "codac2_Collection.h"
 #include "codac2_OctaSym.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -20,9 +21,8 @@ namespace codac2
   {
     public:
 
-      template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<SepBase,S> || std::is_same_v<std::shared_ptr<SepBase>,S>
-        >::type>
+      template<typename S>
+        requires IsSepBaseOrPtr<S>
       SepAction(const S& s, const OctaSym& a)
         : Sep<SepAction>(a.size()), _sep(s), _s(a), __s(a.invert())
       {
@@ -37,7 +37,8 @@ namespace codac2
       const OctaSym _s, __s;
   };
   
-  template<typename S, typename>
+  template<typename S>
+    requires IsSepBaseOrPtr<S>
   inline SepAction OctaSym::operator()(const S& s) const
   {
     return SepAction(s, *this);

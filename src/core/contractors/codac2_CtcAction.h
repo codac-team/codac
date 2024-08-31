@@ -13,6 +13,7 @@
 #include "codac2_OctaSym.h"
 #include "codac2_Ctc.h"
 #include "codac2_Collection.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -20,9 +21,8 @@ namespace codac2
   {
     public:
 
-      template<typename C, typename = typename std::enable_if<
-          std::is_base_of_v<CtcBase<IntervalVector>,C> || std::is_same_v<std::shared_ptr<CtcBase<IntervalVector>>,C>
-        >::type>
+      template<typename C>
+        requires IsCtcBaseOrPtr<C,IntervalVector>
       CtcAction(const C& c, const OctaSym& a)
         : Ctc<CtcAction,IntervalVector>(a.size()), _ctc(c), _s(a), __s(a.invert())
       {
@@ -37,7 +37,8 @@ namespace codac2
       const OctaSym _s, __s;
   };
   
-  template<typename C, typename>
+  template<typename C>
+    requires IsCtcBaseOrPtr<C,IntervalVector>
   inline CtcAction OctaSym::operator()(const C& c) const
   {
     return CtcAction(c, *this);

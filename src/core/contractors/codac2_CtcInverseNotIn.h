@@ -12,6 +12,7 @@
 #include <map>
 #include "codac2_CtcUnion.h"
 #include "codac2_CtcInverse.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -43,9 +44,8 @@ namespace codac2
         }
       }
 
-      template<typename C, typename = typename std::enable_if<
-          std::is_base_of_v<CtcBase<X>,C>
-        >::type>
+      template<typename C>
+        requires IsCtcBaseOrPtr<C,Y>
       CtcInverseNotIn(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const C& ctc_compl, bool with_centered_form = true)
         : CtcUnion<X>(f.args()[0]->size() /* f must have only one arg, see following assert */)
       {

@@ -13,6 +13,7 @@
 #include "codac2_Vector.h"
 #include "codac2_IntervalVector.h"
 #include "codac2_CtcWrapper.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -43,15 +44,13 @@ namespace codac2
 
       IntervalVector operator()(const IntervalVector& x) const;
 
-      template<typename C, typename = typename std::enable_if<
-          std::is_base_of_v<CtcBase<IntervalVector>,C>
-        >::type>
+      template<typename C>
+        requires IsCtcBaseOrPtr<C,IntervalVector>
       CtcAction operator()(const C& c) const;
       // -> is defined in CtcAction class
 
-      template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<SepBase,S>
-        >::type>
+      template<typename S>
+        requires IsSepBaseOrPtr<S>
       SepAction operator()(const S& s) const;
       // -> is defined in SepAction class
 
