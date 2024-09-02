@@ -58,8 +58,14 @@ jobs:
     - run: |
         docker run ${{ matrix.cfg.docker_flags }} -i -v "${PWD}/..:${PWD}/.." ${{ matrix.cfg.img }} /bin/bash -c "uname -a ; cat /etc/os-release ; lsb_release -a ; cd ${PWD} && pwd && \
         git config --global --add safe.directory ${PWD} && \
+        wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.bz2 && \
+        tar xvjf eigen-3.4.0.tar.bz2 && \
+        cd eigen-3.4.0 ; mkdir build ; cd build && \
+        cmake .. && \
+        sudo make install && \
+        cd ../.. && \
         if [ ${{ matrix.cfg.deb }} = true ]; then \
-        sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev dpkg-dev || true && \
+        sudo apt-get -q update && \
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb --no-check-certificate -nv && \
         sudo dpkg -i libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb && \
         rm -Rf libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb ; \
@@ -75,7 +81,6 @@ jobs:
         cd .. && \
         zip -q -r codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac && \
         mkdir -p codac_standalone/example ; cd codac_standalone && \
-        wget https://community.chocolatey.org/api/v2/package/eigen/3.4.0.20240224 --no-check-certificate -nv ; unzip -q 3.4.0.20240224 -d eigen ; rm -Rf 3.4.0.20240224 eigen/*.xml eigen/*.nuspec eigen/_* eigen/package eigen/tools && \
         if [ ${{ matrix.cfg.deb }} = true ]; then mkdir -p ibex/include ; mkdir -p ibex/lib ; mkdir -p ibex/share ; mkdir -p ibex/bin ; cp -Rf /usr/include/ibex* ibex/include/ ; cp -Rf /usr/lib/*ibex* ibex/lib/ ; cp -Rf /usr/share/*ibex* ibex/share/ ; cp -Rf /usr/share/pkgconfig ibex/share/ ; cp -Rf /usr/bin/ibex* ibex/bin/ ; \
         else cp -Rf ../ibex . ; \
         fi && \
