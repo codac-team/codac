@@ -58,12 +58,11 @@ jobs:
     - run: |
         docker run ${{ matrix.cfg.docker_flags }} -i -v "${PWD}/..:${PWD}/.." ${{ matrix.cfg.img }} /bin/bash -c "uname -a ; cat /etc/os-release ; lsb_release -a ; cd ${PWD} && pwd && \
         git config --global --add safe.directory ${PWD} && \
-        if [ ${{ matrix.cfg.desc }} = 'Ubuntu 20.04 arm64' ]; then \
+        echo "Installing recent version of G++" && \
         sudo apt install build-essential manpages-dev software-properties-common && \
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test && \
         sudo apt update && sudo apt install gcc-11 g++-11 && \
-        sudo update-alternatives --query gcc ; \
-        fi && \
+        sudo update-alternatives --query gcc && \
         wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.bz2 && \
         tar xvjf eigen-3.4.0.tar.bz2 && \
         cd eigen-3.4.0 ; mkdir build ; cd build && \
