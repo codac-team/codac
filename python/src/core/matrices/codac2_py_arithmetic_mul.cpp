@@ -41,6 +41,7 @@ void export_arithmetic_mul(py::module& m,
 
     //IntervalMatrix operator*(double x1, const IM& x2)
     py_IM.def("__rmul__", [](const IntervalMatrix& x2, double x1) { return x1*x2; }, py::is_operator());
+    py_IB.def("__rmul__", [](const IB& x2, double x1) { return x1*x2; }, py::is_operator());
 
   // ====== First operand: interval
 
@@ -56,6 +57,7 @@ void export_arithmetic_mul(py::module& m,
 
     //IntervalMatrix operator*(const Interval& x1, const IM& x2)
     py_IM.def("__rmul__", [](const IntervalMatrix& x2, const Interval& x1) { return x1*x2; }, py::is_operator());
+    py_IB.def("__rmul__", [](const IB& x2, const Interval& x1) { return x1*x2; }, py::is_operator());
 
   // ====== First operand: vector
 

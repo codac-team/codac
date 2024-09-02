@@ -10,9 +10,16 @@
 #pragma once
 
 #include <limits>
+#include "codac2_IntervalVector.h"
 
 namespace codac2
 {
+  // The following functions are used for templates
+  double _lb(const Interval& x) { return x.lb(); }
+  double _lb(const double& x)   { return x;      }
+  double _ub(const Interval& x) { return x.ub(); }
+  double _ub(const double& x)   { return x;      }
+
   template<typename T>
   class Approx
   {
@@ -31,18 +38,32 @@ namespace codac2
 
         if constexpr(std::is_same_v<T,Interval>)
         {
-          return ((std::fabs(x1.lb()-x2._x.lb()) < x2._eps) && x1.ub() == x2._x.ub())
-            || ((std::fabs(x1.ub()-x2._x.ub()) < x2._eps) && x1.lb() == x2._x.lb())
-            || ((std::fabs(x1.lb()-x2._x.lb()) < x2._eps) && std::fabs(x1.ub()-x2._x.ub()) < x2._eps);
+          return ((std::fabs(_lb(x1)-_lb(x2._x)) < x2._eps) && _ub(x1) == _ub(x2._x))
+            || ((std::fabs(_ub(x1)-_ub(x2._x)) < x2._eps) && _lb(x1) == _lb(x2._x))
+            || ((std::fabs(_lb(x1)-_lb(x2._x)) < x2._eps) && std::fabs(_ub(x1)-_ub(x2._x)) < x2._eps);
         }
 
         else
         {
-          for(size_t i = 0 ; i < x1.size() ; i++)
-            if(!(((std::fabs(x1[i].lb()-x2._x[i].lb()) < x2._eps) && x1[i].ub() == x2._x[i].ub())
-              || ((std::fabs(x1[i].ub()-x2._x[i].ub()) < x2._eps) && x1[i].lb() == x2._x[i].lb())
-              || ((std::fabs(x1[i].lb()-x2._x[i].lb()) < x2._eps) && std::fabs(x1[i].ub()-x2._x[i].ub()) < x2._eps)))
-              return false;
+          if constexpr(std::is_same_v<T,IntervalVector> || std::is_same_v<T,Vector>)
+          {
+            for(size_t i = 0 ; i < x1.size() ; i++)
+              if(!(((std::fabs(_lb(x1[i])-_lb(x2._x[i])) < x2._eps) && _ub(x1[i]) == _ub(x2._x[i]))
+                || ((std::fabs(_ub(x1[i])-_ub(x2._x[i])) < x2._eps) && _lb(x1[i]) == _lb(x2._x[i]))
+                || ((std::fabs(_lb(x1[i])-_lb(x2._x[i])) < x2._eps) && std::fabs(_ub(x1[i])-_ub(x2._x[i])) < x2._eps)))
+                return false;
+          }
+
+          else
+          {
+            for(size_t i = 0 ; i < x1.nb_rows() ; i++)
+              for(size_t j = 0 ; j < x1.nb_cols() ; j++)
+                if(!(((std::fabs(_lb(x1(i,j))-_lb(x2._x(i,j))) < x2._eps) && _ub(x1(i,j)) == _ub(x2._x(i,j)))
+                  || ((std::fabs(_ub(x1(i,j))-_ub(x2._x(i,j))) < x2._eps) && _lb(x1(i,j)) == _lb(x2._x(i,j)))
+                  || ((std::fabs(_lb(x1(i,j))-_lb(x2._x(i,j))) < x2._eps) && std::fabs(_ub(x1(i,j))-_ub(x2._x(i,j))) < x2._eps)))
+                  return false;
+          }
+
           return true;
         }
       }
@@ -67,7 +88,7 @@ namespace codac2
         os << "Approx(" << x._x << ")";
         return os;
       }
-
+    
     private:
 
       const T _x;

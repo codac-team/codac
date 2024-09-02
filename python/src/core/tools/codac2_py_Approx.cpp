@@ -48,5 +48,8 @@ void _export_Approx(py::module& m, const string& class_name)
 void export_Approx(py::module& m)
 {
   _export_Approx<Interval>(m, "Approx_Interval");
+  _export_Approx<Vector>(m, "Approx_Vector");
   _export_Approx<IntervalVector>(m, "Approx_IntervalVector");
+  _export_Approx<Matrix>(m, "Approx_Matrix");
+  _export_Approx<IntervalMatrix>(m, "Approx_IntervalMatrix");
 }

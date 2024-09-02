@@ -129,10 +129,16 @@ class Approx:
   def __init__(self, x, eps = float_info.epsilon*10):
     if isinstance(x, (float,Interval)):
       self.a = Approx_Interval(x,eps)
+    elif isinstance(x, (Vector)):
+      self.a = Approx_Vector(x,eps)
     elif isinstance(x, (IntervalVector)):
       self.a = Approx_IntervalVector(x,eps)
+    elif isinstance(x, (Matrix)):
+      self.a = Approx_Matrix(x,eps)
+    elif isinstance(x, (IntervalMatrix)):
+      self.a = Approx_IntervalMatrix(x,eps)
     else:
-      codac_error("Approx: can only build Approx from Interval or IntervalVector")
+      codac_error("Approx: can only build Approx for: Interval, Vector, IntervalVector, Matrix, IntervalMatrix")
 
   def __eq__(self, x):
     return self.a == x

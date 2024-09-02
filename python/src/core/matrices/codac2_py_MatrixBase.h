@@ -136,6 +136,7 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
             matlab::test_integer(p,q);
             return x.block(matlab::input_index(i),matlab::input_index(j),matlab::input_index(p),matlab::input_index(q));
           },
+        py::keep_alive<0,1>(),
         MATRIXBASEBLOCK_EIGENMATRIX_T_REFT_MATRIXBASE_ST_BLOCK_SIZET_SIZET_SIZET_SIZET)
 
       .def("col", [](S& x, size_t_type i) -> MatrixBaseBlock<EigenMatrix<T>&,T>
@@ -143,6 +144,7 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
             matlab::test_integer(i);
             return x.col(matlab::input_index(i));
           },
+        py::keep_alive<0,1>(),
         MATRIXBASEBLOCK_EIGENMATRIX_T_REFT_MATRIXBASE_ST_COL_SIZET)
 
       .def("row", [](S& x, size_t_type i) -> MatrixBaseBlock<EigenMatrix<T>&,T>
@@ -150,6 +152,7 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
             matlab::test_integer(i);
             return x.row(matlab::input_index(i));
           },
+        py::keep_alive<0,1>(),
         MATRIXBASEBLOCK_EIGENMATRIX_T_REFT_MATRIXBASE_ST_ROW_SIZET)
 
       .def("__call__", [](S& x, size_t_type i, size_t_type j) -> T&
