@@ -64,8 +64,14 @@ jobs:
         cmake .. && \
         sudo make install && \
         cd ../.. && \
+        if [ ${{ matrix.cfg.desc }} = 'Ubuntu 20.04 arm64' ]; then \
+        sudo apt install build-essential manpages-dev software-properties-common && \
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test && \
+        sudo apt update && sudo apt install gcc-11 g++-11 && \
+        sudo update-alternatives --query gcc && \
+        fi && \
         if [ ${{ matrix.cfg.deb }} = true ]; then \
-        sudo apt-get -q update && \
+        sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev dpkg-dev || true && \
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb --no-check-certificate -nv && \
         sudo dpkg -i libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb && \
         rm -Rf libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb ; \
