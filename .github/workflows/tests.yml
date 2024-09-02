@@ -41,6 +41,7 @@ jobs:
   
         # For documentation
         pip install sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme
+        pip install --upgrade setuptools
         sudo apt-get -y install doxygen graphviz
 
         # For Python wrapping
