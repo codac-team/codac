@@ -169,7 +169,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators
     ${CMAKE_CURRENT_SOURCE_DIR}/tools
   )
-  target_link_libraries(${PROJECT_NAME}-core PUBLIC Ibex::ibex)
+  target_link_libraries(${PROJECT_NAME}-core PUBLIC Ibex::ibex Eigen3::Eigen)
   
 ################################################################################
 # Installation of libcodac-core files
