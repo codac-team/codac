@@ -24,16 +24,16 @@ class TestSepProj(unittest.TestCase):
     #pave(IntervalVector([[-2,2],[-2,2]]), sep_proj, 0.1)
 
     b = IntervalVector([[0.2,0.4],[0.0,1]])
-    bs = sep_proj.separate(b,1e-3)
-    self.assertTrue(Approx(bs.outer,1e-2) == IntervalVector([[0.2,0.4],[0,0.94]]))
+    inner,outer = sep_proj.separate(b,1e-3)
+    self.assertTrue(Approx(outer,1e-2) == IntervalVector([[0.2,0.4],[0,0.94]]))
 
     b = IntervalVector([[-0.4,-0.2],[0.95,1.5]])
-    bs = sep_proj.separate(b,1e-3)
-    self.assertTrue(Approx(bs.outer,1e-2) == IntervalVector([[-0.4,-0.2],[0.95,1.15]]))
+    inner,outer = sep_proj.separate(b,1e-3)
+    self.assertTrue(Approx(outer,1e-2) == IntervalVector([[-0.4,-0.2],[0.95,1.15]]))
 
     b = IntervalVector([[0.65],[-0.5,-0.4]])
-    bs = sep_proj.separate(b,1e-3)
-    self.assertTrue(bs.inner.is_empty())
+    inner,outer = sep_proj.separate(b,1e-3)
+    self.assertTrue(inner.is_empty())
 
 if __name__ ==  '__main__':
   unittest.main()

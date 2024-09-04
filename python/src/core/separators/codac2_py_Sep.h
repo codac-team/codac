@@ -39,13 +39,15 @@ class pySep : public SepBase
       py::function overload = py::get_overload(this, "separate");
       assert_release(overload && "SepBase: separate method not found");
 
-      auto x_copy = IntervalVector(x);
-
-      auto obj = overload(x_copy); // calls the Python function
-      assert_release(py::isinstance<BoxPair>(obj) &&
+      auto obj = overload(x); // calls the Python function
+      assert_release((py::isinstance<BoxPair>(obj) || py::isinstance<py::list>(obj)) &&
         "SepBase: error with separate method, incorrect returned Python type");
 
-      return obj.cast<BoxPair>();
+      if(py::isinstance<BoxPair>(obj))
+        return obj.cast<BoxPair>();
+
+      else
+        return BoxPair(obj.cast<py::list>()[0].cast<IntervalVector>(), obj.cast<py::list>()[1].cast<IntervalVector>());
     }
 
     // Trampoline (need one for each virtual function)

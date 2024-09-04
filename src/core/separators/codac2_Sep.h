@@ -14,10 +14,30 @@
 
 namespace codac2
 {
-  struct BoxPair
+  class BoxPair
   {
-    IntervalVector inner;
-    IntervalVector outer;
+    public:
+
+      BoxPair(const BoxPair& x)
+        : _bp { x._bp }
+      { }
+
+      BoxPair(const IntervalVector& inner, const IntervalVector& outer)
+        : _bp { inner, outer }
+      { }
+
+      BoxPair& operator=(const BoxPair& x)
+      {
+        _bp = x._bp;
+        return *this;
+      }
+
+      IntervalVector& inner = _bp[0];
+      IntervalVector& outer = _bp[1];
+      
+      // Pybind11 needs iterators for __iter__ method, that are provided
+      // by std::array. The above references are aliases for ease of use.
+      std::array<IntervalVector,2> _bp;
   };
 
   inline std::ostream& operator<<(std::ostream& os, const BoxPair& x)

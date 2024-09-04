@@ -20,15 +20,15 @@ class TestSepCartProd(unittest.TestCase):
 
     x = IntervalVector([[0,8],[5.5,oo]])
     s3 = SepCartProd(s1,s2)
-    xs = s3.separate(x)
-    self.assertTrue(xs.inner == IntervalVector([[1,8],[6,oo]]))
-    self.assertTrue(xs.outer == IntervalVector([[0,1],[5.5,6]]))
+    inner,outer = s3.separate(x)
+    self.assertTrue(inner == IntervalVector([[1,8],[6,oo]]))
+    self.assertTrue(outer == IntervalVector([[0,1],[5.5,6]]))
 
     x = IntervalVector([[0,8],[5.5,oo]])
     s4 = cart_prod(s1,s2)
-    xs = s4.separate(x)
-    self.assertTrue(xs.inner == IntervalVector([[1,8],[6,oo]]))
-    self.assertTrue(xs.outer == IntervalVector([[0,1],[5.5,6]]))
+    inner,outer = s4.separate(x)
+    self.assertTrue(inner == IntervalVector([[1,8],[6,oo]]))
+    self.assertTrue(outer == IntervalVector([[0,1],[5.5,6]]))
 
 if __name__ ==  '__main__':
   unittest.main()

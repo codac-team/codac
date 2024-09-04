@@ -31,16 +31,19 @@ py::class_<SepBase,pySep> export_Sep(py::module& m)
   py::class_<BoxPair> exported_BoxPair(m, "BoxPair", BOXPAIR_MAIN);
   exported_BoxPair
 
-    .def_readwrite("inner", &BoxPair::inner)
-    .def_readwrite("outer", &BoxPair::outer)
-
     .def(py::init(
         [](const IntervalVector& inner, const IntervalVector& outer)
         {
-          BoxPair bp { inner,outer };
-          return std::make_unique<BoxPair>(bp);
+          return std::make_unique<BoxPair>(inner, outer);
         }),
+      BOXPAIR_BOXPAIR_CONST_INTERVALVECTOR_REF_CONST_INTERVALVECTOR_REF,
       "inner"_a, "outer"_a)
+
+    .def("__iter__", [](const BoxPair &x)
+        {
+          return py::make_iterator(x._bp.begin(), x._bp.end());
+        },
+      py::keep_alive<0, 1>() /*  keep object alive while iterator exists */)
 
     .def("__repr__", [](const BoxPair& x) {
           std::ostringstream stream;
@@ -49,8 +52,6 @@ py::class_<SepBase,pySep> export_Sep(py::module& m)
         },
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_BOXPAIR_REF)
   ;
-
-  py::implicitly_convertible<py::list,BoxPair>();
 
   py::class_<SepBase,pySep> py_sep(m, "SepBase");
   py_sep

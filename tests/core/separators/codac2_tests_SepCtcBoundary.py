@@ -29,24 +29,24 @@ class TestSepCtcBoundary(unittest.TestCase):
     #pave(IntervalVector([[-2,2],[-2,2]]), sep_diamond, 0.1)
 
     x = IntervalVector(2)
-    xs = sep_diamond.separate(IntervalVector(2))
-    self.assertTrue(xs.inner == IntervalVector(2))
-    self.assertTrue(xs.outer == IntervalVector([[-1,1],[-1,1]]))
+    inner,outer = sep_diamond.separate(IntervalVector(2))
+    self.assertTrue(inner == IntervalVector(2))
+    self.assertTrue(outer == IntervalVector([[-1,1],[-1,1]]))
 
     x = IntervalVector([[0,10],[0,10]])
-    xs = sep_diamond.separate(x)
-    self.assertTrue(xs.inner == x)
-    self.assertTrue(xs.outer == IntervalVector([[0,1],[0,1]]))
+    inner,outer = sep_diamond.separate(x)
+    self.assertTrue(inner == x)
+    self.assertTrue(outer == IntervalVector([[0,1],[0,1]]))
 
     x = IntervalVector([[0.2,10],[0.2,10]])
-    xs = sep_diamond.separate(x)
-    self.assertTrue(xs.inner == x)
-    self.assertTrue(xs.outer == IntervalVector([[0.2,0.8],[0.2,0.8]]))
+    inner,outer = sep_diamond.separate(x)
+    self.assertTrue(inner == x)
+    self.assertTrue(outer == IntervalVector([[0.2,0.8],[0.2,0.8]]))
 
     x = IntervalVector([[0.5,10],[0.5,10]])
-    xs = sep_diamond.separate(x)
-    self.assertTrue(xs.inner == x)
-    self.assertTrue(xs.outer == IntervalVector([[0.5],[0.5]]))
+    inner,outer = sep_diamond.separate(x)
+    self.assertTrue(inner == x)
+    self.assertTrue(outer == IntervalVector([[0.5],[0.5]]))
 
 if __name__ ==  '__main__':
   unittest.main()

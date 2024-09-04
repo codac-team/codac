@@ -22,20 +22,20 @@ class TestSepTransform(unittest.TestCase):
 
     #pave([[-5,5],[-5,5]], s2, 0.01)
 
-    xs = s2.separate(IntervalVector(2))
-    self.assertTrue(xs.inner == IntervalVector(2))
-    self.assertTrue(Approx(xs.outer,1e-1) == IntervalVector([[-3,-1],[-3,-1]]))
+    inner,outer = s2.separate(IntervalVector(2))
+    self.assertTrue(inner == IntervalVector(2))
+    self.assertTrue(Approx(outer,1e-1) == IntervalVector([[-3,-1],[-3,-1]]))
 
-    xs = s2.separate(IntervalVector([[-2.2,-1.8],[-2.2,-1.8]]))
-    self.assertTrue(xs.inner.is_empty())
-    self.assertTrue(xs.outer == IntervalVector([[-2.2,-1.8],[-2.2,-1.8]]))
+    inner,outer = s2.separate(IntervalVector([[-2.2,-1.8],[-2.2,-1.8]]))
+    self.assertTrue(inner.is_empty())
+    self.assertTrue(outer == IntervalVector([[-2.2,-1.8],[-2.2,-1.8]]))
 
     b = IntervalVector([[-2.5,-1.5],[-2,10]])
     #DefaultView.draw_box(b,Color.purple())
-    xs = s2.separate(b)
+    inner,outer = s2.separate(b)
     #DefaultView.draw_box(xs.inner,Color.green())
-    self.assertTrue(Approx(xs.inner,1e-1) == IntervalVector([[-2.5,-1.5],[-1.134,10]]))
-    self.assertTrue(Approx(xs.outer,1e-1) == IntervalVector([[-2.5,-1.5],[-2,-1]]))
+    self.assertTrue(Approx(inner,1e-1) == IntervalVector([[-2.5,-1.5],[-1.134,10]]))
+    self.assertTrue(Approx(outer,1e-1) == IntervalVector([[-2.5,-1.5],[-2,-1]]))
 
 if __name__ ==  '__main__':
   unittest.main()
