@@ -12,10 +12,38 @@ from codac import *
 
 class TestCtcInverse(unittest.TestCase):
 
+  # not supported (yet) in Python; # Contractors based on functions with two variables
   # not supported (yet) in Python; x = ScalarVar()
   # not supported (yet) in Python; y = ScalarVar()
   # not supported (yet) in Python; f = AnalyticFunction([x,y], x-y)
   # not supported (yet) in Python; c = CtcInverse(f, Interval(0.))
+
+  def tests_CtcInverse_1(self):
+
+    x = VectorVar(2)
+    f = AnalyticFunction([x], x[0]-x[1])
+    c = CtcInverse(f, 0)
+
+    b = IntervalVector(2)
+
+    c.contract(b)
+    self.assertTrue(b == IntervalVector(2))
+
+    b = IntervalVector([[1,2],[1,2]])
+    c.contract(b)
+    self.assertTrue(b == IntervalVector([[1,2],[1,2]]))
+
+    b = IntervalVector([[1,oo],[1,oo]])
+    c.contract(b)
+    self.assertTrue(b == IntervalVector([[1,oo],[1,oo]]))
+
+    b = IntervalVector([[10],[10]])
+    c.contract(b)
+    self.assertTrue(b == IntervalVector([[10],[10]]))
+
+    b = IntervalVector([[1,5],[8,9]])
+    c.contract(b)
+    self.assertTrue(b == IntervalVector.empty(2))
 
   def tests_CtcInverse_2(self):
 

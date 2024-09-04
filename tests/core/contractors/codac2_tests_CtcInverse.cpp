@@ -63,6 +63,35 @@ TEST_CASE("CtcInverse")
 
   {
     VectorVar x(2);
+    AnalyticFunction f { {x}, x[0]-x[1] };
+    CtcInverse_<Interval> c(f, {0});
+
+    //pave(IntervalVector({{-10,10},{-10,10}}), c, 0.1);
+
+    IntervalVector b(2);
+
+    c.contract(b);
+    CHECK(b == IntervalVector(2));
+
+    b = IntervalVector({{1,2},{1,2}});
+    c.contract(b);
+    CHECK(b == IntervalVector({{1,2},{1,2}}));
+
+    b = IntervalVector({{1,oo},{1,oo}});
+    c.contract(b);
+    CHECK(b == IntervalVector({{1,oo},{1,oo}}));
+
+    b = IntervalVector({{10},{10}});
+    c.contract(b);
+    CHECK(b == IntervalVector({{10},{10}}));
+
+    b = IntervalVector({{1,5},{8,9}});
+    c.contract(b);
+    CHECK(b == IntervalVector::empty(2));
+  }
+
+  {
+    VectorVar x(2);
     AnalyticFunction f { {x}, vec(x[0]-x[1]) };
     CtcInverse_<IntervalVector> c(f, {{0}});
 
