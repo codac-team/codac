@@ -47,7 +47,10 @@ class pySep : public SepBase
         return obj.cast<BoxPair>();
 
       else
+      {
+        assert_release(obj.cast<py::list>().size() == 2 && "SepBase: error with separate method, should return two boxes");
         return BoxPair(obj.cast<py::list>()[0].cast<IntervalVector>(), obj.cast<py::list>()[1].cast<IntervalVector>());
+      }
     }
 
     // Trampoline (need one for each virtual function)
