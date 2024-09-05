@@ -23,6 +23,13 @@ using namespace codac2;
 void CHECK_diff(const IntervalVector& x, const IntervalVector& y, bool compactness, const IntervalMatrix& result)
 {
   auto c = x.diff(y, compactness);
+
+  if(c.empty())
+  {
+    CHECK(result.is_empty());
+    return;
+  }
+
   for(const auto& ci : c)
   {
     bool found = false;

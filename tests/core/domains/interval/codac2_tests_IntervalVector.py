@@ -24,6 +24,10 @@ class TestIntervalVector(unittest.TestCase):
     y=IntervalVector(y)
     result_=IntervalMatrix(result)
     c = x.diff(y, compactness)
+
+    if not c:
+      return not result
+
     for ci in c:
       found = False
       for i in range(0,result_.nb_rows()):

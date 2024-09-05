@@ -51,7 +51,7 @@ namespace codac2
     *this |= ub;
   }
 
-  IntervalVector::IntervalVector(std::initializer_list<Interval> l)
+  IntervalVector::IntervalVector(initializer_list<Interval> l)
     : MatrixBase<IntervalVector,Interval>(l.size(),1),
       IntervalMatrixBase<IntervalVector,Vector>(l.size(),1),
       VectorBase<IntervalVector,IntervalMatrix,Interval>(l)
@@ -73,12 +73,12 @@ namespace codac2
     return (IntervalMatrixBase<IntervalVector,Vector>)x1 == (IntervalMatrixBase<IntervalVector,Vector>)x2;
   }
 
-  std::vector<IntervalVector> IntervalVector::complementary() const
+  vector<IntervalVector> IntervalVector::complementary() const
   {
     return IntervalVector(this->size()).diff(*this);
   }
 
-  std::vector<IntervalVector> IntervalVector::diff(const IntervalVector& y, bool compactness) const
+  vector<IntervalVector> IntervalVector::diff(const IntervalVector& y, bool compactness) const
   {
     // This code originates from the ibex-lib
     // See: ibex_TemplateVector.h
@@ -89,13 +89,16 @@ namespace codac2
     assert_release(y.size() == n);
 
     if(y == *this)
-      return { IntervalVector::empty(n) };
+      return { };
 
     IntervalVector x = *this;
     IntervalVector z = x & y;
 
     if(z.is_empty())
-      return { x };
+    {
+      if(x.is_empty()) return { };
+      else return { x };
+    }
 
     else
     {
@@ -104,10 +107,13 @@ namespace codac2
       if(compactness)
         for(size_t i = 0 ; i < n ; i++)
           if(z[i].is_degenerated() && !x[i].is_degenerated())
-            return { x };
+          {
+            if(x.is_empty()) return { };
+            else return { x };
+          }
     }
 
-    std::vector<IntervalVector> l;
+    vector<IntervalVector> l;
 
     for(size_t var = 0 ; var < n ; var++)
     {
@@ -123,7 +129,8 @@ namespace codac2
         v[var] = ci;
         for(size_t i = var+1 ; i < n ; i++)
           v[i] = x[i];
-        l.push_back(v);
+        if(!v.is_empty())
+          l.push_back(v);
       }
 
       x[var] = z[var];
@@ -138,7 +145,7 @@ namespace codac2
     return IntervalVector(n,Interval::empty());
   }
 
-  std::ostream& operator<<(std::ostream& os, const IntervalVector& x)
+  ostream& operator<<(ostream& os, const IntervalVector& x)
   {
     if(x.is_empty())
       return os << "( empty vector )";
