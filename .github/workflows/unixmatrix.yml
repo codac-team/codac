@@ -124,8 +124,8 @@ jobs:
         del /f /q ibex.2.8.9.20240417.nupkg
       if: runner.os=='Windows'
     - run: |
-        # Replace these 2 lines by the next ones to test a specific binary package of IBEX.
-        #sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+        sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+        # Replace this line by the next ones to test a specific binary package of IBEX.
         #sudo apt-get -q update ; sudo apt-get -y install libibex-dev libeigen3-dev dpkg-dev || true
         sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev dpkg-dev || true
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb --no-check-certificate -nv
