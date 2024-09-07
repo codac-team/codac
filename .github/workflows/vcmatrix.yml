@@ -57,7 +57,7 @@ jobs:
       if: runner.os=='Windows'
     - run: choco install -y -r --no-progress eigen --version=3.4.0.20240224 ${{ matrix.cfg.choco_flags }}
       if: runner.os=='Windows'
-    - run: wget https://packages.ensta-bretagne.fr/choco/doxygen.install.1.9.6.nupkg --no-check-certificate -nv & choco upgrade -y -r --no-progress -s . doxygen.install --version=1.9.6 & del /f /q doxygen.install.1.9.6.nupkg & choco install -y -r --no-progress graphviz & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects
+    - run: choco install -y -r --no-progress graphviz doxygen.install & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects
       if: runner.os=='Windows'
     - run: |
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex.2.8.9.20240417.nupkg --no-check-certificate -nv
