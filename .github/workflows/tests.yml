@@ -37,6 +37,9 @@ jobs:
         python -c "import sys; print(sys.version)"
         pip --version
 
+        sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+        sudo apt update
+
         sudo apt-get -y install flex bison libeigen3-dev
   
         # For documentation
