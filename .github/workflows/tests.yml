@@ -12,7 +12,7 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
-            - { os: ubuntu-24.04, gcc_v: 11, py_v_maj: 3, py_v_min: 12, desc: 'Ubuntu 24.04 GCC 10 Python 3.12 tests' }
+            - { os: ubuntu-24.04, gcc_v: 11, py_v_maj: 3, py_v_min: 12, desc: 'Ubuntu 24.04 GCC 11 Python 3.12 tests' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v4
@@ -36,6 +36,9 @@ jobs:
 
         python -c "import sys; print(sys.version)"
         pip --version
+
+        sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+        sudo apt update
 
         sudo apt-get -y install flex bison libeigen3-dev
   
