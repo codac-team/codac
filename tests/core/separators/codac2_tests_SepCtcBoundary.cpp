@@ -11,7 +11,7 @@
 #include <codac2_SepCtcBoundary.h>
 #include <codac2_CtcSegment.h>
 #include <codac2_CtcUnion.h>
-#include <codac2_Paver.h>
+#include <codac2_pave.h>
 
 using namespace std;
 using namespace codac2;

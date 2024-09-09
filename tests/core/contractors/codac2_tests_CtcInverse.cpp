@@ -10,7 +10,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_CtcInverse.h>
 #include <codac2_analytic_operations.h>
-#include <codac2_Paver.h>
 #include <codac2_Figure2D.h>
 #include <codac2_Approx.h>
 

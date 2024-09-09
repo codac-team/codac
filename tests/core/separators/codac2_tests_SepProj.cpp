@@ -12,7 +12,7 @@
 #include <codac2_analytic_operations.h>
 #include <codac2_AnalyticFunction.h>
 #include <codac2_SepInverse.h>
-#include <codac2_Paver.h>
+#include <codac2_pave.h>
 #include <codac2_Approx.h>
 
 using namespace std;

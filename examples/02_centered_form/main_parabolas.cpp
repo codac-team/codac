@@ -24,7 +24,8 @@ int main()
   AnalyticFunction h({a}, fa(a[0],a[1])-fb(a[2],a[3]));
   CtcInverse_<IntervalVector> ctc(h, {{0.},{0.},{0.}});
 
-  IntervalVector x0({{0,1},{0,1},{0,1},{0,1}});
+  // to be restored...
+  /*IntervalVector x0({{0,1},{0,1},{0,1},{0,1}});
   Paver p(x0);
 
   Figure2D g("(u1,v1)", GraphicOutput::VIBES);
@@ -41,5 +42,5 @@ int main()
     l_34.push_back(fb.eval_centered(li[2],li[3]));
   }
   export_to_ObjectFileFormat(l_12, "output_u1v1.off");
-  export_to_ObjectFileFormat(l_34, "output_u2v2.off");
+  export_to_ObjectFileFormat(l_34, "output_u2v2.off");*/
 }

@@ -9,7 +9,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_SepPolygon.h>
-#include <codac2_Paver.h>
+#include <codac2_pave.h>
 
 using namespace std;
 using namespace codac2;

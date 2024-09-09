@@ -17,7 +17,7 @@ using namespace std;
 using namespace codac2;
 
 shared_ptr<Figure2D> DefaultView::_default_fig = nullptr;
-Figure2D *DefaultView::_selected_fig = DefaultView::_default_fig.get();
+shared_ptr<Figure2D> DefaultView::_selected_fig = DefaultView::_default_fig;
 
 Figure2D::Figure2D(const std::string& name, GraphicOutput o, bool set_as_default_)
   : _name(name)
@@ -88,12 +88,12 @@ double Figure2D::scaled_unit() const
 
 bool Figure2D::is_default() const
 {
-  return DefaultView::_selected_fig == this;
+  return DefaultView::_selected_fig == this->weak_from_this().lock();
 }
 
 void Figure2D::set_as_default()
 {
-  DefaultView::set(this);
+  DefaultView::set(this->shared_from_this());
 }
 
 void Figure2D::draw_point(const Vector& c, const StyleProperties& s)

@@ -109,11 +109,11 @@ void export_StyleProperties(py::module& m)
       STYLEPROPERTIES_STYLEPROPERTIES_CONST_STRING_REF,
       "vibes_style"_a)
 
-    .def_static("inner", &StyleProperties::inner,
-      STATIC_STYLEPROPERTIES_STYLEPROPERTIES_INNER)
+    .def_static("inside", &StyleProperties::inside,
+      STATIC_STYLEPROPERTIES_STYLEPROPERTIES_INSIDE)
 
-    .def_static("outer", &StyleProperties::outer,
-      STATIC_STYLEPROPERTIES_STYLEPROPERTIES_OUTER)
+    .def_static("outside", &StyleProperties::outside,
+      STATIC_STYLEPROPERTIES_STYLEPROPERTIES_OUTSIDE)
 
     .def_static("boundary", &StyleProperties::boundary,
       STATIC_STYLEPROPERTIES_STYLEPROPERTIES_BOUNDARY)

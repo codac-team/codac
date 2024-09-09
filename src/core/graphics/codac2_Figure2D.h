@@ -56,7 +56,7 @@ namespace codac2
   using PavingOut = Paving<IntervalVector>;
   using PavingInOut = Paving<IntervalVector,IntervalVector>;
 
-  class Figure2D : public Figure2DInterface
+  class Figure2D : public Figure2DInterface, public std::enable_shared_from_this<Figure2D>
   {
     public:
 
@@ -115,20 +115,24 @@ namespace codac2
   {
     public:
 
-      static Figure2D* selected_fig()
+      static std::shared_ptr<Figure2D> selected_fig()
       {
-        if(_selected_fig == nullptr && _default_fig.get() == nullptr)
+        if(_selected_fig == nullptr)
         {
-          _default_fig = std::make_shared<Figure2D>("Codac - default view", GraphicOutput::VIBES);
-          _default_fig->set_window_properties({20.,20.}, {800.,800.});
-          _default_fig->set_axes(axis(0,{-10,10}),axis(1,{-10,10}));
-          _selected_fig = _default_fig.get();
+          if(_default_fig == nullptr)
+          {
+            _default_fig = std::make_shared<Figure2D>("Codac - default view", GraphicOutput::VIBES);
+            _default_fig->set_window_properties({20.,20.}, {800.,800.});
+            _default_fig->set_axes(axis(0,{-10,10}),axis(1,{-10,10}));
+          }
+
+          _selected_fig = _default_fig;
         }
-        
+
         return _selected_fig;
       }
 
-      static void set(Figure2D *fig)
+      static void set(std::shared_ptr<Figure2D> fig)
       {
         _selected_fig = fig;
       }
@@ -220,6 +224,6 @@ namespace codac2
       friend Figure2D;
 
       static std::shared_ptr<Figure2D> _default_fig;
-      static Figure2D *_selected_fig;
+      static std::shared_ptr<Figure2D> _selected_fig;
   };
 }

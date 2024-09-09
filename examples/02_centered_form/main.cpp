@@ -15,5 +15,5 @@ int main()
   ));
 
   CtcInverse_<IntervalVector> ctc(f, {0.,0.});
-  pave(IntervalVector({{0,2},{2,4},{0,10}}), ctc, 0.004);
+  draw_while_paving({{0,2},{2,4},{0,10}}, ctc, 0.004);
 }

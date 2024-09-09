@@ -86,7 +86,7 @@ py::class_<Vector> export_Vector(py::module& m);
 py::class_<Matrix> export_Matrix(py::module& m);
 
 // paver
-void export_Paver(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
+void export_pave(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
 
 // separators
 py::class_<SepBase,pySep> export_Sep(py::module& m);
@@ -174,7 +174,7 @@ PYBIND11_MODULE(_core, m)
   export_Figure2D(m);
 
   // paver
-  export_Paver(m,py_ctc_iv);
+  export_pave(m,py_ctc_iv);
 
   // separators
   auto py_sep = export_Sep(m);

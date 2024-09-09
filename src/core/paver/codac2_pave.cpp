@@ -91,14 +91,19 @@ namespace codac2
     fig.set_window_properties(fig.pos(), w);
   }
 
-  void draw_while_paving(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, Figure2D *fig)
+  void draw_while_paving(const IntervalVector& x0, shared_ptr<const CtcBase<IntervalVector>> c, double eps, std::shared_ptr<Figure2D> fig)
   {
-    assert_release(fig);
+    draw_while_paving(x0, *c, eps, fig);
+  }
+
+  void draw_while_paving(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, std::shared_ptr<Figure2D> fig)
+  {
     assert_release(eps > 0.);
     assert_release(c.size() >= 2 && "cannot reveal 1d contractors");
 
-    if(fig->is_default())
-      init_fig(*fig, x0);
+    if(!fig)
+      fig = DefaultView::selected_fig();
+    init_fig(*fig, x0);
 
     clock_t t_start = clock();
 
@@ -138,14 +143,19 @@ namespace codac2
     printf("Computation time: %.4fs, %zd boxes\n", (double)(clock()-t_start)/CLOCKS_PER_SEC, n);
   }
 
-  void draw_while_paving(const IntervalVector& x0, const SepBase& s, double eps, Figure2D *fig)
+  void draw_while_paving(const IntervalVector& x0, std::shared_ptr<const SepBase> s, double eps, std::shared_ptr<Figure2D> fig)
   {
-    assert_release(fig);
+    draw_while_paving(x0, *s, eps, fig);
+  }
+
+  void draw_while_paving(const IntervalVector& x0, const SepBase& s, double eps, std::shared_ptr<Figure2D> fig)
+  {
     assert_release(eps > 0.);
     assert_release(s.size() >= 2 && "cannot reveal 1d separators");
 
-    if(fig->is_default())
-      init_fig(*fig, x0);
+    if(!fig)
+      fig = DefaultView::selected_fig();
+    init_fig(*fig, x0);
     
     clock_t t_start = clock();
 
