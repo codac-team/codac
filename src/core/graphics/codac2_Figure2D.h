@@ -50,6 +50,12 @@ namespace codac2
 
   class DefaultView;
 
+  template<typename... X>
+    requires (std::is_same_v<X,IntervalVector> && ...)
+  class Paving;
+  using PavingOut = Paving<IntervalVector>;
+  using PavingInOut = Paving<IntervalVector,IntervalVector>;
+
   class Figure2D : public Figure2DInterface
   {
     public:
@@ -85,6 +91,15 @@ namespace codac2
       // Robots
       void draw_tank(const Vector& x, float size, const StyleProperties& s = StyleProperties());
       void draw_AUV(const Vector& x, float size, const StyleProperties& s = StyleProperties());
+
+      // Pavings
+      void draw_paving(const PavingOut& p,
+        const StyleProperties& bound_s = StyleProperties::boundary(),
+        const StyleProperties& out_s = StyleProperties::outside());
+      void draw_paving(const PavingInOut& p,
+        const StyleProperties& bound_s = StyleProperties::boundary(),
+        const StyleProperties& out_s = StyleProperties::outside(),
+        const StyleProperties& in_s = StyleProperties::inside());
 
     protected:
 
@@ -180,6 +195,23 @@ namespace codac2
       static void draw_AUV(const Vector& x, float size, const StyleProperties& s = StyleProperties())
       {
         selected_fig()->draw_AUV(x,size,s);
+      }
+
+      // Pavings
+
+      static void draw_paving(const PavingOut& p,
+        const StyleProperties& boundary_style = StyleProperties::boundary(),
+        const StyleProperties& outside_style = StyleProperties::outside())
+      {
+        selected_fig()->draw_paving(p, boundary_style, outside_style);
+      }
+
+      static void draw_paving(const PavingInOut& p,
+        const StyleProperties& boundary_style = StyleProperties::boundary(),
+        const StyleProperties& outside_style = StyleProperties::outside(),
+        const StyleProperties& inside_style = StyleProperties::inside())
+      {
+        selected_fig()->draw_paving(p, boundary_style, outside_style, inside_style);
       }
 
 

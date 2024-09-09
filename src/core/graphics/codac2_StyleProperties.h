@@ -68,8 +68,8 @@ namespace codac2
     StyleProperties(std::initializer_list<Color> colors);
     StyleProperties(const std::string& vibes_style);
 
-    static StyleProperties inner();
-    static StyleProperties outer();
+    static StyleProperties inside();
+    static StyleProperties outside();
     static StyleProperties boundary();
   };
 }

@@ -11,6 +11,7 @@
 #include "codac2_Figure2D_VIBes.h"
 #include "codac2_Figure2D_IPE.h"
 #include "codac2_math.h"
+#include "codac2_pave.h"
 
 using namespace std;
 using namespace codac2;
@@ -200,5 +201,58 @@ void Figure2D::draw_AUV(const Vector& x, float size, const StyleProperties& s)
   {
     assert_release(output_fig->j()+1 < x.size());
     output_fig->draw_AUV(x,size,s);
+  }
+}
+
+void Figure2D::draw_paving(const PavingOut& p,
+  const StyleProperties& boundary_style,const StyleProperties& outside_style)
+{
+  for(const auto& output_fig : _output_figures)
+  {
+    p.tree()->left()->visit([&]
+      (const PavingOut_Node& n)
+      {
+        const IntervalVector& outer = get<0>(n.boxes());
+
+        if(n.top() == p.tree())
+          output_fig->draw_box(get<0>(n.top()->boxes()), outside_style);
+
+        else
+        {
+          auto p = get<0>(n.top()->boxes()).bisect_largest();
+          IntervalVector hull = n.top()->left() == n.shared_from_this() ? p.first : p.second;
+
+          for(const auto& bi : hull.diff(outer))
+            output_fig->draw_box(bi, outside_style);
+        }
+
+        if(n.is_leaf())
+          output_fig->draw_box(outer, boundary_style);
+      });
+  }
+}
+
+void Figure2D::draw_paving(const PavingInOut& p, const StyleProperties& boundary_style,
+  const StyleProperties& outside_style, const StyleProperties& inside_style)
+{
+  for(const auto& output_fig : _output_figures)
+  {
+    p.tree()->visit([&]
+      (const PavingInOut_Node& n)
+      {
+        const IntervalVector& inner = get<0>(n.boxes());
+        const IntervalVector& outer = get<1>(n.boxes());
+
+        IntervalVector hull = inner | outer;
+
+        for(const auto& bi : hull.diff(inner))
+          output_fig->draw_box(bi, inside_style);
+
+        for(const auto& bi : hull.diff(outer))
+          output_fig->draw_box(bi, outside_style);
+        
+        if(n.is_leaf())
+          output_fig->draw_box(inner & outer, boundary_style);
+      });
   }
 }

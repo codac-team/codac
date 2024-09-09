@@ -48,6 +48,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalMatrixBase.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalVector.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalVector.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/codac2_Paving.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/codac2_Paving.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_ExprBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_ExprBase.h
@@ -103,8 +105,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_Vector.h
     ${CMAKE_CURRENT_SOURCE_DIR}/matrices/codac2_VectorBase.h
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_Paver.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_Paver.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_pave.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_pave.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_Sep.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepAction.cpp
@@ -157,6 +159,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors
     ${CMAKE_CURRENT_SOURCE_DIR}/domains
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving
     ${CMAKE_CURRENT_SOURCE_DIR}/functions
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set

@@ -58,7 +58,7 @@ StyleProperties::StyleProperties(const string& vibes_style)
   : stroke_color(Color::green()), fill_color(Color::none())
 { }
 
-StyleProperties StyleProperties::inner()
+StyleProperties StyleProperties::inside()
 {
   StyleProperties s;
   s.stroke_color = Color::dark_gray();
@@ -66,7 +66,7 @@ StyleProperties StyleProperties::inner()
   return s;
 }
 
-StyleProperties StyleProperties::outer()
+StyleProperties StyleProperties::outside()
 {
   StyleProperties s;
   s.stroke_color = Color::dark_gray();
