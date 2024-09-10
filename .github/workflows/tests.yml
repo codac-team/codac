@@ -89,7 +89,8 @@ jobs:
         make install
 
         cd python/python_package
-        /usr/bin/python3 setup.py develop --user
+        # cancelled on 2024/09/10: /usr/bin/python3 setup.py develop --user
+        pip install -e . 
         cd ../../
         
         make test
