@@ -93,6 +93,7 @@ jobs:
         pip install -e . 
         cd ../../
         
+        /usr/bin/python3 ../tests/core/domains/codac2_tests_BoolInterval.py
         make test
         /usr/bin/python3 -m unittest discover codac.tests
 
