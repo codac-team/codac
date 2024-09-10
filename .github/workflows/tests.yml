@@ -34,6 +34,7 @@ jobs:
         gcc --version
         g++ --version
 
+        pip install --upgrade --force-reinstall setuptools
         python -c "import sys; print(sys.version)"
         pip --version
 
@@ -44,7 +45,6 @@ jobs:
   
         # For documentation
         pip install sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme
-        pip install --upgrade setuptools
         sudo apt-get -y install doxygen graphviz
 
         # For Python wrapping
@@ -92,7 +92,6 @@ jobs:
         /usr/bin/python3 setup.py develop --user
         cd ../../
         
-        /usr/bin/python3 ../tests/core/domains/codac2_tests_BoolInterval.py
         make test
         /usr/bin/python3 -m unittest discover codac.tests
 
