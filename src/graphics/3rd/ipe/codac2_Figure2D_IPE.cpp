@@ -17,7 +17,24 @@ using namespace codac2;
 Figure2D_IPE::Figure2D_IPE(const Figure2D& fig)
   : OutputFigure2D(fig), _f(fig.name() + ".xml"),
     _f_temp_content(fig.name() + "_tmp.xml")
-{ }
+{
+  list<Color> codac_colors {
+    Color::none(),
+    Color::black(),
+    Color::white(),
+    Color::green(),
+    Color::blue(),
+    Color::cyan(),
+    Color::yellow(),
+    Color::red(),
+    Color::dark_gray(),
+    Color::purple(),
+    Color::dark_green()
+  };
+
+  for(const auto& ci : codac_colors)
+    _colors.emplace(ci.to_hex_str(""), ci);
+}
 
 Figure2D_IPE::~Figure2D_IPE()
 {

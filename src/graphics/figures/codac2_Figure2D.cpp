@@ -108,8 +108,9 @@ void Figure2D::draw_box(const IntervalVector& x, const StyleProperties& s)
 {
   assert_release(this->size() <= x.size());
 
-  for(const auto& output_fig : _output_figures)
-    output_fig->draw_box(x,s);
+  if(!x.is_empty())
+    for(const auto& output_fig : _output_figures)
+      output_fig->draw_box(x,s);
 }
 
 void Figure2D::draw_circle(const Vector& c, double r, const StyleProperties& s)
@@ -126,8 +127,9 @@ void Figure2D::draw_ring(const Vector& c, const Interval& r, const StyleProperti
   assert_release(this->size() <= c.size());
   assert_release(!r.is_empty() && r.lb() >= 0.);
 
-  for(const auto& output_fig : _output_figures)
-    output_fig->draw_ring(c,r,s);
+  if(!r.is_empty())
+    for(const auto& output_fig : _output_figures)
+      output_fig->draw_ring(c,r,s);
 }
 
 void Figure2D::draw_polyline(const vector<Vector>& x, const StyleProperties& s)

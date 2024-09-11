@@ -13,9 +13,9 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include "codac2_py_core.h"
 #include <codac2_Sep.h>
 #include <codac2_IntervalVector.h>
+#include "codac2_py_matlab.h"
 
 using namespace codac2;
 namespace py = pybind11;
@@ -27,8 +27,10 @@ class pySep : public SepBase
   public:
 
     pySep(size_t_type n)
-      : SepBase(n), _n(n)
-    { }
+      : SepBase(n)
+    {
+      matlab::test_integer(n);
+    }
 
     // Trampoline (need one for each virtual function)
     BoxPair separate(const IntervalVector& x) const override
@@ -63,8 +65,4 @@ class pySep : public SepBase
       auto obj = overload();
       return std::shared_ptr<SepBase>(obj.cast<SepBase*>(), [](auto p) { /* no delete */ });
     }
-
-  protected:
-
-    const size_t_type _n;
 };

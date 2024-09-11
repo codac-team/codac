@@ -1,7 +1,7 @@
 // Example from 
 // https://www.tuhh.de/ti3/rump/intlab/demos/html/dglobal.html#1
 
-#include <codac-core.h>
+#include <codac>
 
 using namespace std;
 using namespace codac2;

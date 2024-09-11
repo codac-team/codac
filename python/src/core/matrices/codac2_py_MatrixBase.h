@@ -13,8 +13,8 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include "codac2_py_core.h"
 #include <codac2_Vector.h>
+#include "codac2_py_matlab.h"
 
 using namespace std;
 using namespace codac2;

@@ -14,7 +14,8 @@
 using namespace codac2;
 namespace py = pybind11;
 
-PYBIND11_MODULE(unsupported, m)
+
+PYBIND11_MODULE(_unsupported, m)
 {
   m.doc() = "Python binding of Codac (unsupported)";
 

@@ -1,7 +1,7 @@
 // Example from the publication:
 // https://www.ensta-bretagne.fr/jaulin/paper_centeredActa.pdf
 
-#include <codac-core.h>
+#include <codac>
 
 using namespace std;
 using namespace codac2;

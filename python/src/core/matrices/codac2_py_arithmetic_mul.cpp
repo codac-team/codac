@@ -11,7 +11,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include "codac2_py_core.h"
 #include <codac2_arithmetic_mul.h>
 
 using namespace std;

@@ -24,9 +24,9 @@
   )
 
 
-  ################################################################################
-  # Generating docstring documentation from Doxygen
-  ################################################################################
+################################################################################
+# Generating docstring documentation from Doxygen
+################################################################################
 
   if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/../doc/api/xml)
     # The file generated_docstring.cpp contains all docstring of the library
@@ -42,162 +42,13 @@
     ${CMAKE_CURRENT_BINARY_DIR}/docstring)
 
 
-  ################################################################################
-  # Library for Python binding
-  ################################################################################
+################################################################################
+# Library for Python binding
+################################################################################
 
-  # Generating a library core.so containing the python binding:
-
-    pybind11_add_module(_core SHARED
-      codac2_py_core.cpp
-      codac2_py_core.h
-      
-      src/core/actions/codac2_py_OctaSym.cpp
-      
-      src/core/contractors/codac2_py_Ctc.cpp
-      src/core/contractors/codac2_py_Ctc.h
-      src/core/contractors/codac2_py_CtcAction.cpp
-      src/core/contractors/codac2_py_CtcCartProd.cpp
-      src/core/contractors/codac2_py_CtcFixpoint.cpp
-      src/core/contractors/codac2_py_CtcInnerOuter.cpp
-      src/core/contractors/codac2_py_CtcInter.cpp
-      src/core/contractors/codac2_py_CtcInverse.h
-      src/core/contractors/codac2_py_CtcInverseNotIn.h
-      src/core/contractors/codac2_py_CtcLazy.cpp
-      src/core/contractors/codac2_py_CtcNot.cpp
-      src/core/contractors/codac2_py_CtcPolar.cpp
-      src/core/contractors/codac2_py_CtcSegment.cpp
-      src/core/contractors/codac2_py_CtcUnion.cpp
-      src/core/contractors/codac2_py_CtcWrapper.cpp
-      src/core/contractors/codac2_py_DirectedCtc.cpp
-
-      src/core/domains/interval/codac2_py_Interval.cpp
-      src/core/domains/interval/codac2_py_Interval_operations.cpp
-      src/core/domains/interval/codac2_py_IntervalMatrix.cpp
-      src/core/domains/interval/codac2_py_IntervalMatrixBase.h
-      src/core/domains/interval/codac2_py_IntervalVector.cpp
-      src/core/domains/codac2_py_BoolInterval.cpp
-
-      src/core/functions/analytic/codac2_py_analytic_operations.cpp
-      src/core/functions/analytic/codac2_py_analytic_variables.cpp
-      src/core/functions/analytic/codac2_py_AnalyticFunction.h
-      src/core/functions/analytic/codac2_py_ExprWrapper.h
-
-      src/core/geometry/codac2_py_Edge.cpp
-      src/core/geometry/codac2_py_geometry.cpp
-      src/core/geometry/codac2_py_Polygon.cpp
-
-      src/core/graphics/codac2_py_Figure2D.cpp
-      src/core/graphics/codac2_py_StyleProperties.cpp
-
-      src/core/matrices/codac2_py_arithmetic_add.cpp
-      src/core/matrices/codac2_py_arithmetic_sub.cpp
-      src/core/matrices/codac2_py_arithmetic_mul.cpp
-      src/core/matrices/codac2_py_arithmetic_div.cpp
-      src/core/matrices/codac2_py_Matrix.cpp
-      src/core/matrices/codac2_py_MatrixBase.h
-      src/core/matrices/codac2_py_MatrixBaseBlock.h
-      src/core/matrices/codac2_py_Vector.cpp
-      src/core/matrices/codac2_py_VectorBase.h
-
-      src/core/paver/codac2_py_pave.cpp
-
-      src/core/separators/codac2_py_Sep.cpp
-      src/core/separators/codac2_py_Sep.h
-      src/core/separators/codac2_py_SepAction.cpp
-      src/core/separators/codac2_py_SepCartProd.cpp
-      src/core/separators/codac2_py_SepCtcBoundary.cpp
-      src/core/separators/codac2_py_SepCtcPair.cpp
-      src/core/separators/codac2_py_SepInter.cpp
-      src/core/separators/codac2_py_SepInverse.h
-      src/core/separators/codac2_py_SepNot.cpp
-      src/core/separators/codac2_py_SepPolygon.cpp
-      src/core/separators/codac2_py_SepProj.cpp
-      src/core/separators/codac2_py_SepTransform.cpp
-      src/core/separators/codac2_py_SepUnion.cpp
-      src/core/separators/codac2_py_SepWrapper.cpp
-
-      src/core/tools/codac2_py_Approx.cpp
-    )
-
-    target_include_directories(_core
-      PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/actions/
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/contractors/
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/domains/
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/domains/interval/
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/functions/
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/functions/analytic/
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/graphics/
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/matrices/
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/paver/
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/separators/
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core/tools/
-      ${CMAKE_CURRENT_BINARY_DIR}/docstring
-    )
-
-    target_link_libraries(_core
-      PRIVATE ${PROJECT_NAME}-core ${LIBS} Ibex::ibex
-    )
-
-    # Copy the generated library in the package folder
-    add_custom_command(TARGET _core POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:_core>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
-    )
-
-    # ex: from codac import core
-    #     core.Tube
-    # ex: from codac.core import Tube
-    #     Tube
-
-  # Generating a library graphics.so containing the python binding:
-
-    pybind11_add_module(graphics SHARED
-      codac2_py_graphics.cpp
-    )
-
-    target_include_directories(graphics
-      PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
-      ${CMAKE_CURRENT_BINARY_DIR}/docstring
-    )
-
-    target_link_libraries(graphics
-      PRIVATE ${PROJECT_NAME}-core ${LIBS} Ibex::ibex
-    )
-
-    # Copy the generated library in the package folder
-    add_custom_command(TARGET graphics POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:graphics>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
-    )
-
-  # Generating a library unsupported.so containing the python binding:
-
-    pybind11_add_module(unsupported SHARED
-      codac2_py_unsupported.cpp
-    )
-
-    target_include_directories(unsupported
-      PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
-      ${CMAKE_CURRENT_BINARY_DIR}/docstring
-    )
-
-    target_link_libraries(unsupported
-      PRIVATE ${PROJECT_NAME}-core ${LIBS} Ibex::ibex
-    )
-
-    # Copy the generated library in the package folder
-    add_custom_command(TARGET unsupported POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:unsupported>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
-    )
-
-  add_custom_target(pip_package)
-  add_custom_command(TARGET pip_package PRE_BUILD
-    COMMAND ${PYTHON_EXECUTABLE} ARGS setup.py bdist_wheel -d ${CMAKE_BINARY_DIR}
-    WORKING_DIRECTORY ${PYTHON_PACKAGE_DIR}
-  )
+  add_subdirectory(src/core)
+  add_subdirectory(src/graphics)
+  add_subdirectory(src/unsupported)
 
 
 ################################################################################

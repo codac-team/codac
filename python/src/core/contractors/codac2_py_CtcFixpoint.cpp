@@ -10,7 +10,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include "codac2_py_core.h"
 #include <codac2_template_tools.h>
 #include <codac2_CtcFixpoint.h>
 #include "codac2_py_Ctc.h"
@@ -32,7 +31,7 @@ void export_CtcFixpoint(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcI
           return std::make_unique<CtcFixpoint>(c.copy(),ratio);
         }),
       CTCFIXPOINT_CTCFIXPOINT_CONST_C_REF_DOUBLE,
-      "c"_a, "ratio"_a)
+      "c"_a, "ratio"_a=0.1)
 
     .def(CONTRACT_BOX_METHOD(CtcFixpoint,
       VOID_CTCFIXPOINT_CONTRACT_INTERVALVECTOR_REF_CONST))

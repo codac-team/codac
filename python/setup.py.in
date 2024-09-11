@@ -20,12 +20,18 @@ setup(
   description='${PROJECT_DESCRIPTION}',
   long_description='${PROJECT_LONG_DESCRIPTION}',
   ${FORCE_PYTHON_EXT}
-  packages=['${PYTHON_PACKAGE_NAME}', '${PYTHON_PACKAGE_NAME}.core', '${PYTHON_PACKAGE_NAME}.tests'],
+  packages=[
+      '${PYTHON_PACKAGE_NAME}',
+      '${PYTHON_PACKAGE_NAME}.core',
+      '${PYTHON_PACKAGE_NAME}.graphics',
+      '${PYTHON_PACKAGE_NAME}.unsupported',
+      '${PYTHON_PACKAGE_NAME}.tests'
+    ],
   package_data={
     '${PYTHON_PACKAGE_NAME}': [
       '_core${PYTHON_MODULE_EXTENSION}',
-      'graphics${PYTHON_MODULE_EXTENSION}',
-      'unsupported${PYTHON_MODULE_EXTENSION}',
+      '_graphics${PYTHON_MODULE_EXTENSION}',
+      '_unsupported${PYTHON_MODULE_EXTENSION}',
     ],
   },
   install_requires=[

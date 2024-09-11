@@ -13,9 +13,9 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include "codac2_py_core.h"
 #include <codac2_Ctc.h>
 #include <codac2_IntervalVector.h>
+#include "codac2_py_matlab.h"
 
 using namespace codac2;
 namespace py = pybind11;
@@ -30,8 +30,10 @@ class pyCtcIntervalVector : public CtcBase<IntervalVector>
   public:
 
     pyCtcIntervalVector(size_t_type n)
-      : CtcBase<IntervalVector>(n), _n(n)
-    { }
+      : CtcBase<IntervalVector>(n)
+    {
+      matlab::test_integer(n);
+    }
 
     // Trampoline (need one for each virtual function)
     virtual void contract(IntervalVector& x) const override
@@ -62,8 +64,4 @@ class pyCtcIntervalVector : public CtcBase<IntervalVector>
       auto obj = overload();
       return std::shared_ptr<CtcBase<IntervalVector>>(obj.cast<CtcBase<IntervalVector>*>(), [](auto p) { /* no delete */ });
     }
-
-  protected:
-
-    const size_t_type _n;
 };

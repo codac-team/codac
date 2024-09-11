@@ -12,7 +12,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include "codac2_py_core.h"
 #include <codac2_BoolInterval.h>
 #include "codac2_py_BoolInterval_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 

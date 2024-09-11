@@ -12,7 +12,7 @@
 #include "codac2_Paving.h"
 #include "codac2_Ctc.h"
 #include "codac2_Sep.h"
-#include "codac2_Figure2D.h"
+//#include "codac2_Figure2D.h"
 
 namespace codac2
 {
@@ -23,10 +23,4 @@ namespace codac2
   using PavingInOut = Paving<IntervalVector,IntervalVector>;
   using PavingInOut_Node = PavingNode<PavingInOut>;
   PavingInOut pave(const IntervalVector& x, const SepBase& s, double eps);
-
-  void draw_while_paving(const IntervalVector& x0, std::shared_ptr<const CtcBase<IntervalVector>> c, double eps, std::shared_ptr<Figure2D> fig = nullptr);
-  void draw_while_paving(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, std::shared_ptr<Figure2D> fig = nullptr);
-
-  void draw_while_paving(const IntervalVector& x0, std::shared_ptr<const SepBase> s, double eps, std::shared_ptr<Figure2D> fig = nullptr);
-  void draw_while_paving(const IntervalVector& x0, const SepBase& s, double eps, std::shared_ptr<Figure2D> fig = nullptr);
 }

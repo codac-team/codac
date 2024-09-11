@@ -460,7 +460,7 @@ namespace vibes {
     * \param params Optional attributes
     *
     * Draws a circle of radius \a r with center at (\a cx , \a cy ).
-    * This functions internally calls \fn drawEllipse
+    * This functions internally calls drawEllipse
     */
   inline void drawCircle(const double &cx, const double &cy, const double &r, Params params)
   {

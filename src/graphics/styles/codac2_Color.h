@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_StyleProperties.h
+ *  \file codac2_Color.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -10,6 +10,7 @@
 #pragma once
 
 #include <string>
+#include"codac2_assert.h"
 
 namespace codac2
 {
@@ -56,20 +57,5 @@ namespace codac2
     static Color dark_gray(float alpha = 1)  { return Color(112, 112, 112, (int)(alpha*255)); };
     static Color purple(float alpha = 1)     { return Color(154, 0,   170, (int)(alpha*255)); };
     static Color dark_green(float alpha = 1) { return Color(94,  158, 0,   (int)(alpha*255)); };
-  };
-
-  struct StyleProperties
-  {
-    Color stroke_color = Color::black();
-    Color fill_color = Color::none();
-
-    StyleProperties();
-    StyleProperties(const Color& stroke_color);
-    StyleProperties(std::initializer_list<Color> colors);
-    StyleProperties(const std::string& vibes_style);
-
-    static StyleProperties inside();
-    static StyleProperties outside();
-    static StyleProperties boundary();
   };
 }
