@@ -89,8 +89,8 @@ jobs:
         make install
 
         cd python/python_package
-        # cancelled on 2024/09/10: /usr/bin/python3 setup.py develop --user
-        pip install -e . 
+        /usr/bin/python3 setup.py develop --user
+        #pip install -e . 
         cd ../../
         
         /usr/bin/python3 ../tests/core/domains/codac2_tests_BoolInterval.py

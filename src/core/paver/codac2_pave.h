@@ -12,7 +12,6 @@
 #include "codac2_Paving.h"
 #include "codac2_Ctc.h"
 #include "codac2_Sep.h"
-//#include "codac2_Figure2D.h"
 
 namespace codac2
 {

@@ -9,5 +9,5 @@ f = AnalyticFunction([x], vec(
   2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
 ))
 
-ctc = CtcInverse(f, [[0],[0]], with_centered_form=True)
+ctc = CtcInverse(f, [[0],[0]])
 graphics.draw_while_paving([[0,2],[2,4],[0,10]], ctc, 0.004)
