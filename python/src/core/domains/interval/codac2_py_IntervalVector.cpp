@@ -94,10 +94,10 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
       "v"_a)
 
     .def("complementary", &IntervalVector::complementary,
-      VECTOR_INTERVALVECTOR_INTERVALVECTOR_COMPLEMENTARY_CONST)
+      LIST_INTERVALVECTOR_INTERVALVECTOR_COMPLEMENTARY_CONST)
 
     .def("diff", &IntervalVector::diff,
-      VECTOR_INTERVALVECTOR_INTERVALVECTOR_DIFF_CONST_INTERVALVECTOR_REF_BOOL_CONST,
+      LIST_INTERVALVECTOR_INTERVALVECTOR_DIFF_CONST_INTERVALVECTOR_REF_BOOL_CONST,
       "y"_a, "compactness"_a = true)
     
     .def_static("empty", [](size_t_type n)

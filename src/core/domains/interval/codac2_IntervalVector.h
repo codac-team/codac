@@ -64,9 +64,9 @@ namespace codac2
 
       friend bool operator==(const IntervalVector& x1, const IntervalVector& x2);
 
-      std::vector<IntervalVector> complementary() const;
+      std::list<IntervalVector> complementary() const;
 
-      std::vector<IntervalVector> diff(const IntervalVector& y, bool compactness = true) const;
+      std::list<IntervalVector> diff(const IntervalVector& y, bool compactness = true) const;
 
       static IntervalVector empty(size_t n);
 

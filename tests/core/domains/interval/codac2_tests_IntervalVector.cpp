@@ -420,7 +420,8 @@ TEST_CASE("IntervalVector")
   CHECK((IntervalVector(x2)-=x1) == -x3);
 
   IntervalVector b({{0,1},{0,1}});
-  auto c = b.complementary();
+  auto c_l = b.complementary();
+  std::vector<IntervalVector> c { std::begin(c_l), std::end(c_l) };
 
   CHECK(c.size() == 4);
   CHECK(c[0].size() == 2);
@@ -437,7 +438,9 @@ TEST_CASE("IntervalVector")
   CHECK(c[3][0] == Interval(0,1));
   CHECK(c[3][1] == Interval(1,oo));
 
-  c = IntervalVector::empty(2).complementary();
+  c_l = IntervalVector::empty(2).complementary();
+  c = std::vector<IntervalVector> { std::begin(c_l), std::end(c_l) };
+
   CHECK(c.size() == 1);
   CHECK(c[0].size() == 2);
   CHECK(c[0][0] == Interval(-oo,oo));

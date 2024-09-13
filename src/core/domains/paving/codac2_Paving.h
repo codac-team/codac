@@ -9,109 +9,17 @@
 
 #pragma once
 
+#include <map>
 #include <memory>
-#include "codac2_IntervalVector.h"
-#include "codac2_Domain.h"
+#include "codac2_PavingNode.h"
 
 namespace codac2
 {
-  template<typename... X>
-    requires (std::is_same_v<X,IntervalVector> && ...)
-  class Paving;
-  
   template<typename P>
   class PavingNode;
 
   template<typename P>
-  class PavingNode : public std::enable_shared_from_this<PavingNode<P>>
-  {
-    public:
-
-      explicit PavingNode(P& paving, const IntervalVector& x, std::shared_ptr<PavingNode<P>> top = nullptr)
-        : _paving(paving), _x(P::init_tuple(x)), _top(top)
-      { }
-
-      const typename P::PavingNodeTuple& boxes() const
-      {
-        return _x;
-      }
-
-      typename P::PavingNodeTuple& boxes()
-      {
-        return const_cast<typename P::PavingNodeTuple&>(const_cast<const PavingNode<P>*>(this)->boxes());
-      }
-
-      std::shared_ptr<const PavingNode<P>> top() const
-      {
-        return _top;
-      }
-
-      std::shared_ptr<PavingNode<P>> top()
-      {
-        return std::const_pointer_cast<PavingNode<P>>(const_cast<const PavingNode<P>*>(this)->top());
-      }
-
-      std::shared_ptr<const PavingNode<P>> left() const
-      {
-        return _left;
-      }
-
-      std::shared_ptr<PavingNode<P>> left()
-      {
-        return std::const_pointer_cast<PavingNode<P>>(const_cast<const PavingNode<P>*>(this)->left());
-      }
-
-      std::shared_ptr<const PavingNode<P>> right() const
-      {
-        return _right;
-      }
-
-      std::shared_ptr<PavingNode<P>> right()
-      {
-        return std::const_pointer_cast<PavingNode<P>>(const_cast<const PavingNode<P>*>(this)->right());
-      }
-
-      void visit(std::function<void(const PavingNode<P>&)> visitor) const
-      {
-        visitor(*this);
-        if(_left) left()->visit(visitor);
-        if(_right) right()->visit(visitor);
-      }
-
-      void visit(std::function<void(PavingNode<P>&)> visitor)
-      {
-        visitor(*this);
-        if(_left) left()->visit(visitor);
-        if(_right) right()->visit(visitor);
-      }
-
-      bool is_leaf() const
-      {
-        return not _left && not _right;
-      }
-
-      void bisect()
-      {
-        assert_release(is_leaf() && "only leaves can be bisected");
-        bool bisectable_node = true;
-        std::apply([&](auto &&... xs) { ((bisectable_node &= xs.is_bisectable()), ...); }, _x);
-        assert_release(bisectable_node);
-
-        IntervalVector x(std::get<0>(_x).size());
-        std::apply([&](auto &&... xs) { ((x &= xs), ...); }, _x);
-        auto p = x.bisect_largest();
-
-        _left = make_shared<PavingNode<P>>(_paving, p.first, this->shared_from_this());
-        _right = make_shared<PavingNode<P>>(_paving, p.second, this->shared_from_this());
-      }
-
-    protected:
-
-      P& _paving;
-      typename P::PavingNodeTuple _x;
-      std::shared_ptr<PavingNode<P>> _top = nullptr;
-      std::shared_ptr<PavingNode<P>> _left = nullptr, _right = nullptr;
-  };
+  class Subpaving;
 
   template<typename... X>
     requires (std::is_same_v<X,IntervalVector> && ...)
@@ -119,7 +27,10 @@ namespace codac2
   {
     public:
 
-      using PavingNodeTuple = std::tuple<X...>;
+      using Node_ = std::shared_ptr<const PavingNode<Paving<X...>>>;
+      using NodeTuple_ = std::tuple<X...>;
+      using NodeValue_ = std::function<std::list<IntervalVector>(Node_)>;
+      using ConnectedSubset_ = Subpaving<Paving<X...>>;
 
       Paving(size_t n)
         : Paving(IntervalVector(n))
@@ -146,15 +57,152 @@ namespace codac2
         return std::const_pointer_cast<PavingNode<Paving<X...>>>(const_cast<const Paving<X...>*>(this)->tree());
       }
 
+      std::list<Node_> intersecting_nodes(const IntervalVector& x, const NodeValue_& node_value, bool flat_intersections = false) const
+      {
+        std::list<Node_> l;
+
+        _tree->visit([&]
+          (Node_ n)
+          {
+            for(const auto& bi : node_value(n))
+            {
+              auto inter = bi & x;
+              if(!inter.is_empty() && (flat_intersections || !inter.is_flat()))
+              {
+                l.push_back(n);
+                break;
+              }
+            }
+
+            return n->hull().intersects(x);
+          });
+
+        return l;
+      }
+
+      std::list<Node_> neighbours(Node_ x, const NodeValue_& node_value_x, const NodeValue_& node_value_neighb) const
+      {
+        std::list<Node_> l;
+        auto x_boxes = node_value_x(x);
+
+        for(const auto& xi : x_boxes)
+        {
+          auto xi_neighbours = intersecting_nodes(xi, node_value_neighb, true);
+          l.splice(l.end(), xi_neighbours);
+        }
+
+        // Removing duplicates
+        l.sort(); l.unique();
+
+        // If the input node x contains only one box, it is removed from
+        // the neighbours list. Otherwise, "neighbours" may be contained 
+        // in x itself.
+        if(x_boxes.size() == 1 && x_boxes.front() == x->hull())
+         l.remove(x);
+
+        return l;
+      }
+
+      std::list<ConnectedSubset_> connected_subsets(const NodeValue_& node_value) const
+      {
+        return connected_subsets(IntervalVector(size()), node_value);
+      }
+
+      std::list<ConnectedSubset_> connected_subsets(const IntervalVector& x0, const NodeValue_& node_value) const
+      {
+        std::map<Node_,bool> m_visited_nodes;
+        std::list<Node_> l_nodes = intersecting_nodes(x0, node_value);
+
+        for(const auto& n : l_nodes)
+          m_visited_nodes.insert(std::make_pair(n, false));
+
+        std::list<ConnectedSubset_> l_subsets;
+
+        while(!l_nodes.empty())
+        {
+          auto current_node = l_nodes.front();
+          l_subsets.push_back(ConnectedSubset_({ current_node }, node_value));
+          m_visited_nodes[current_node] = true;
+          l_nodes.pop_front();
+
+          std::list<Node_> l_neighbouring_nodes_to_visit { current_node };
+
+          do
+          {
+            current_node = l_neighbouring_nodes_to_visit.front();
+            l_neighbouring_nodes_to_visit.pop_front();
+
+            for(const auto& ni : neighbours(current_node, node_value, node_value))
+            {
+              if(ni->hull().is_flat())
+              {
+                // At this point, some nodes may be flat due to bisections/contractions.
+                // They are removed from the resulting list representing the connected subset.
+                l_nodes.remove(ni);
+              }
+
+              else if(!m_visited_nodes[ni])
+              {
+                l_nodes.remove(ni);
+                l_neighbouring_nodes_to_visit.push_back(ni);
+                l_subsets.back().push_back(ni);
+                m_visited_nodes[ni] = true;
+              }
+            }
+
+          } while(!l_neighbouring_nodes_to_visit.empty());
+        }
+
+        assert([&]() -> bool { for(const auto& ni : m_visited_nodes) { if(!ni.second) return false; } return true; } ()
+          && "all the nodes should have been visited");
+        assert([&]() -> bool { size_t s = 0; for(const auto& si : l_subsets) s += si.size(); return s == m_visited_nodes.size(); } ()
+          && "the total number of nodes should match the sum of number of nodes of each subset");
+
+        return l_subsets;
+      }
+
     protected:
 
       friend class PavingNode<Paving<X...>>;
 
-      static PavingNodeTuple init_tuple(const IntervalVector& x)
+      static NodeTuple_ init_tuple(const IntervalVector& x)
       {
         return std::make_tuple(((X)x)...);
       }
 
       std::shared_ptr<PavingNode<Paving<X...>>> _tree; // must be a shared_ptr to allow enable_shared_from_this
+  };
+
+  class PavingOut;
+  using PavingOut_Node = PavingNode<Paving<IntervalVector>>;
+
+  class PavingOut : public Paving<IntervalVector>
+  {
+    public:
+
+      PavingOut(size_t n);
+      PavingOut(const IntervalVector& x);
+
+      std::list<PavingOut::ConnectedSubset_> connected_subsets(const PavingOut::NodeValue_& node_value = PavingOut::outer_approx);
+      std::list<PavingOut::ConnectedSubset_> connected_subsets(const IntervalVector& x0, const PavingOut::NodeValue_& node_value = PavingOut::outer_approx);
+
+      static const NodeValue_ outer_approx, outer_complem_approx;
+  };
+
+
+  class PavingInOut;
+  using PavingInOut_Node = PavingNode<Paving<IntervalVector,IntervalVector>>;
+
+  class PavingInOut : public Paving<IntervalVector,IntervalVector>
+  {
+    public:
+
+      PavingInOut(size_t n);
+      PavingInOut(const IntervalVector& x);
+
+      std::list<PavingInOut::ConnectedSubset_> connected_subsets(const PavingInOut::NodeValue_& node_value = PavingInOut::outer_approx);
+      std::list<PavingInOut::ConnectedSubset_> connected_subsets(const IntervalVector& x0, const PavingInOut::NodeValue_& node_value = PavingInOut::outer_approx);
+
+      static const NodeValue_ outer_approx, outer_complem_approx, inner_approx, bound_approx, all_approx;
   };
 }

@@ -29,6 +29,16 @@ int main()
     half_bat() | OctaSym({-1,2})(half_bat())
   };
 
+  double e = 0.1;
+
   DefaultView::set_window_properties({50,50},{1200,1200});
-  draw_while_paving({{-8,8},{-4,4}}, bat.create_sep(), 0.02);
+  draw_while_paving({{-8,8},{-4,4}}, bat.create_sep(), e);
+
+  auto p = pave({{-8,8},{-4,4}}, *bat.create_sep(), e);
+  for(const auto& ci : p.connected_subsets())
+    for(auto& bi : ci.contour(true))
+    {
+      bi.inflate(5e-3);
+      DefaultView::draw_box(bi, { Color::black(), Color::red(0.4) });
+    }
 }

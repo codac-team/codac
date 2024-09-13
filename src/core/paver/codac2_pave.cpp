@@ -63,9 +63,9 @@ namespace codac2
       n = l.front();
       l.pop_front();
 
-      auto xs = s.separate(get<1>(n->boxes()));
+      auto xs = s.separate(get<0>(n->boxes()));
       auto boundary = (xs.inner & xs.outer);
-      n->boxes() = { xs.inner, xs.outer };
+      n->boxes() = { xs.outer, xs.inner };
 
       if(!boundary.is_empty() && boundary.max_diam() > eps)
       {

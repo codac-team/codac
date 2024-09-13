@@ -212,24 +212,26 @@ void Figure2D::draw_paving(const PavingOut& p,
   for(const auto& output_fig : _output_figures)
   {
     p.tree()->left()->visit([&]
-      (const PavingOut_Node& n)
+      (std::shared_ptr<const PavingOut_Node> n)
       {
-        const IntervalVector& outer = get<0>(n.boxes());
+        const IntervalVector& outer = get<0>(n->boxes());
 
-        if(n.top() == p.tree())
-          output_fig->draw_box(get<0>(n.top()->boxes()), outside_style);
+        if(n->top() == p.tree())
+          output_fig->draw_box(get<0>(n->top()->boxes()), outside_style);
 
         else
         {
-          auto p = get<0>(n.top()->boxes()).bisect_largest();
-          IntervalVector hull = n.top()->left() == n.shared_from_this() ? p.first : p.second;
+          auto p = get<0>(n->top()->boxes()).bisect_largest();
+          IntervalVector hull = n->top()->left() == n ? p.first : p.second;
 
           for(const auto& bi : hull.diff(outer))
             output_fig->draw_box(bi, outside_style);
         }
 
-        if(n.is_leaf())
+        if(n->is_leaf())
           output_fig->draw_box(outer, boundary_style);
+
+        return true;
       });
   }
 }
@@ -240,10 +242,10 @@ void Figure2D::draw_paving(const PavingInOut& p, const StyleProperties& boundary
   for(const auto& output_fig : _output_figures)
   {
     p.tree()->visit([&]
-      (const PavingInOut_Node& n)
+      (std::shared_ptr<const PavingInOut_Node> n)
       {
-        const IntervalVector& inner = get<0>(n.boxes());
-        const IntervalVector& outer = get<1>(n.boxes());
+        const IntervalVector& outer = get<0>(n->boxes());
+        const IntervalVector& inner = get<1>(n->boxes());
 
         IntervalVector hull = inner | outer;
 
@@ -253,8 +255,10 @@ void Figure2D::draw_paving(const PavingInOut& p, const StyleProperties& boundary
         for(const auto& bi : hull.diff(outer))
           output_fig->draw_box(bi, outside_style);
         
-        if(n.is_leaf())
+        if(n->is_leaf())
           output_fig->draw_box(inner & outer, boundary_style);
+
+        return true;
       });
   }
 }

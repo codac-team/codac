@@ -15,11 +15,6 @@
 
 namespace codac2
 {
-  using PavingOut = Paving<IntervalVector>;
-  using PavingOut_Node = PavingNode<PavingOut>;
   PavingOut pave(const IntervalVector& x, const CtcBase<IntervalVector>& c, double eps);
-
-  using PavingInOut = Paving<IntervalVector,IntervalVector>;
-  using PavingInOut_Node = PavingNode<PavingInOut>;
   PavingInOut pave(const IntervalVector& x, const SepBase& s, double eps);
 }

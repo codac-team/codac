@@ -73,12 +73,12 @@ namespace codac2
     return (IntervalMatrixBase<IntervalVector,Vector>)x1 == (IntervalMatrixBase<IntervalVector,Vector>)x2;
   }
 
-  vector<IntervalVector> IntervalVector::complementary() const
+  list<IntervalVector> IntervalVector::complementary() const
   {
     return IntervalVector(this->size()).diff(*this);
   }
 
-  vector<IntervalVector> IntervalVector::diff(const IntervalVector& y, bool compactness) const
+  list<IntervalVector> IntervalVector::diff(const IntervalVector& y, bool compactness) const
   {
     // This code originates from the ibex-lib
     // See: ibex_TemplateVector.h
@@ -113,7 +113,7 @@ namespace codac2
           }
     }
 
-    vector<IntervalVector> l;
+    list<IntervalVector> l;
 
     for(size_t var = 0 ; var < n ; var++)
     {

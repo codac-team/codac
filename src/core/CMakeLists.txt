@@ -50,6 +50,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac2_IntervalVector.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/codac2_Paving.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/codac2_Paving.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/codac2_PavingNode.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/codac2_Subpaving.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_ExprBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_ExprBase.h
@@ -158,7 +160,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators
     ${CMAKE_CURRENT_SOURCE_DIR}/tools
   )
-  target_link_libraries(${PROJECT_NAME}-core PUBLIC Ibex::ibex Eigen3::Eigen)
+  target_link_libraries(${PROJECT_NAME}-core PUBLIC codac-graphics Ibex::ibex Eigen3::Eigen)
   
 
 ################################################################################

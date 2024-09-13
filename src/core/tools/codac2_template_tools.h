@@ -82,4 +82,20 @@ namespace codac2
   {
     return size_of(std::get<0>(std::make_tuple(x...)));
   }
+
+  // Removes duplicates when no comparison operator is available
+  template<typename T>
+  void remove_duplicates_from_list(std::list<T>& l)
+  {
+    typename std::list<T>::iterator it = l.begin();
+    while(it != l.end())
+    {
+      if(std::count(l.begin(), l.end(), *it) > 1)
+        l.erase(it++);
+      else
+        ++it;
+    }
+  }
 }
+
+

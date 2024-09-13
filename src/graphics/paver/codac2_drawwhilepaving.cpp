@@ -14,17 +14,24 @@ using namespace codac2;
 
 namespace codac2
 {
-  void init_fig(Figure2D& fig, const IntervalVector& x0)
+  void init_fig(std::shared_ptr<Figure2D>& fig, const IntervalVector& x0)
   {
-    fig.set_axes(axis(0,x0[0],"x_1"), axis(1,x0[1],"x_2"));
+    if(!fig)
+    {
+      fig = std::make_shared<Figure2D>(DEFAULT_FIG_NAME, GraphicOutput::VIBES);
+      fig->set_window_properties({20.,20.}, {800.,800.});
+      fig->set_as_default();
+    }
 
-    Vector w = fig.window_size();
+    fig->set_axes(axis(0,x0[0],"x_1"), axis(1,x0[1],"x_2"));
+
+    Vector w = fig->window_size();
     if(x0[0].diam() > x0[1].diam())
       w[1] *= x0[1].diam()/x0[0].diam();
     else
       w[0] *= x0[0].diam()/x0[1].diam();
 
-    fig.set_window_properties(fig.pos(), w);
+    fig->set_window_properties(fig->pos(), w);
   }
 
   void draw_while_paving(const IntervalVector& x0, shared_ptr<const CtcBase<IntervalVector>> c, double eps, std::shared_ptr<Figure2D> fig)
@@ -36,10 +43,10 @@ namespace codac2
   {
     assert_release(eps > 0.);
     assert_release(c.size() >= 2 && "cannot reveal 1d contractors");
-
+    
     if(!fig)
       fig = DefaultView::selected_fig();
-    init_fig(*fig, x0);
+    init_fig(fig, x0);
 
     clock_t t_start = clock();
 
@@ -91,7 +98,7 @@ namespace codac2
 
     if(!fig)
       fig = DefaultView::selected_fig();
-    init_fig(*fig, x0);
+    init_fig(fig, x0);
     
     clock_t t_start = clock();
 
