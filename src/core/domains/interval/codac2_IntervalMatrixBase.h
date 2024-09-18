@@ -317,9 +317,9 @@ namespace codac2
 
         for(size_t i = 0 ; i < this->size() ; i++)
           if(!(this->_e.data()+i)->overlaps(*(x._e.data()+i)))
-            return true;
+            return false;
 
-        return false;
+        return true;
       }
 
       bool is_subset(const S& x) const
