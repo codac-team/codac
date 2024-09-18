@@ -100,7 +100,7 @@ namespace codac2
         return sort ? sort_contour(l_bound) : l_bound;
       }
 
-      Vector next_pt(const IntervalVector& x, const Vector& pt) const
+      static Vector next_pt(const IntervalVector& x, const Vector& pt)
       {
         assert(!x.is_degenerated());
         assert(x.size() == 2 && pt.size() == 2);
@@ -128,7 +128,7 @@ namespace codac2
             if(it->contains(current_pt))
             {
               s.push_back(*it);
-              current_pt = next_pt(*it, current_pt);
+              current_pt = Subpaving<P>::next_pt(*it, current_pt);
               l.erase(it);
               break;
             }

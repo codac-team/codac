@@ -173,6 +173,7 @@ namespace codac2
       std::shared_ptr<PavingNode<Paving<X...>>> _tree; // must be a shared_ptr to allow enable_shared_from_this
   };
 
+
   class PavingOut;
   using PavingOut_Node = PavingNode<Paving<IntervalVector>>;
 
@@ -183,8 +184,8 @@ namespace codac2
       PavingOut(size_t n);
       PavingOut(const IntervalVector& x);
 
-      std::list<PavingOut::ConnectedSubset_> connected_subsets(const PavingOut::NodeValue_& node_value = PavingOut::outer_approx);
-      std::list<PavingOut::ConnectedSubset_> connected_subsets(const IntervalVector& x0, const PavingOut::NodeValue_& node_value = PavingOut::outer_approx);
+      std::list<PavingOut::ConnectedSubset_> connected_subsets(const PavingOut::NodeValue_& node_value = PavingOut::outer_approx) const;
+      std::list<PavingOut::ConnectedSubset_> connected_subsets(const IntervalVector& x0, const PavingOut::NodeValue_& node_value = PavingOut::outer_approx) const;
 
       static const NodeValue_ outer_approx, outer_complem_approx;
   };
@@ -200,8 +201,8 @@ namespace codac2
       PavingInOut(size_t n);
       PavingInOut(const IntervalVector& x);
 
-      std::list<PavingInOut::ConnectedSubset_> connected_subsets(const PavingInOut::NodeValue_& node_value = PavingInOut::outer_approx);
-      std::list<PavingInOut::ConnectedSubset_> connected_subsets(const IntervalVector& x0, const PavingInOut::NodeValue_& node_value = PavingInOut::outer_approx);
+      std::list<PavingInOut::ConnectedSubset_> connected_subsets(const PavingInOut::NodeValue_& node_value = PavingInOut::outer_approx) const;
+      std::list<PavingInOut::ConnectedSubset_> connected_subsets(const IntervalVector& x0, const PavingInOut::NodeValue_& node_value = PavingInOut::outer_approx) const;
 
       static const NodeValue_ outer_approx, outer_complem_approx, inner_approx, bound_approx, all_approx;
   };

@@ -31,6 +31,8 @@
     domains/interval/codac2_py_IntervalMatrix.cpp
     domains/interval/codac2_py_IntervalMatrixBase.h
     domains/interval/codac2_py_IntervalVector.cpp
+    domains/paving/codac2_py_Paving.cpp
+    domains/paving/codac2_py_Subpaving.cpp
     domains/codac2_py_BoolInterval.cpp
 
     functions/analytic/codac2_py_analytic_operations.cpp
@@ -81,6 +83,7 @@
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/contractors/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/functions/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/graphics/

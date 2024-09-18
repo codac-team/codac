@@ -27,12 +27,12 @@ namespace codac2
       : Paving<IntervalVector>(x)
     { }
 
-    std::list<PavingOut::ConnectedSubset_> PavingOut::connected_subsets(const PavingOut::NodeValue_& node_value)
+    std::list<PavingOut::ConnectedSubset_> PavingOut::connected_subsets(const PavingOut::NodeValue_& node_value) const
     {
       return Paving<IntervalVector>::connected_subsets(node_value);
     }
 
-    std::list<PavingOut::ConnectedSubset_> PavingOut::connected_subsets(const IntervalVector& x0, const PavingOut::NodeValue_& node_value)
+    std::list<PavingOut::ConnectedSubset_> PavingOut::connected_subsets(const IntervalVector& x0, const PavingOut::NodeValue_& node_value) const
     {
       return Paving<IntervalVector>::connected_subsets(x0, node_value);
     }
@@ -44,6 +44,12 @@ namespace codac2
       if(n->is_leaf())
         l.push_back(get<0>(n->boxes()));
       return l;
+    };
+
+    const PavingOut::NodeValue_ PavingOut::outer_complem_approx =
+      [](PavingOut::Node_ n)
+    {
+      return n->hull().diff(get<0>(n->boxes()));
     };
 
 
@@ -59,12 +65,12 @@ namespace codac2
       : Paving<IntervalVector,IntervalVector>(x)
     { }
 
-    std::list<PavingInOut::ConnectedSubset_> PavingInOut::connected_subsets(const PavingInOut::NodeValue_& node_value)
+    std::list<PavingInOut::ConnectedSubset_> PavingInOut::connected_subsets(const PavingInOut::NodeValue_& node_value) const
     {
       return Paving<IntervalVector,IntervalVector>::connected_subsets(node_value);
     }
 
-    std::list<PavingInOut::ConnectedSubset_> PavingInOut::connected_subsets(const IntervalVector& x0, const PavingInOut::NodeValue_& node_value)
+    std::list<PavingInOut::ConnectedSubset_> PavingInOut::connected_subsets(const IntervalVector& x0, const PavingInOut::NodeValue_& node_value) const
     {
       return Paving<IntervalVector,IntervalVector>::connected_subsets(x0, node_value);
     }
@@ -81,15 +87,13 @@ namespace codac2
     const PavingInOut::NodeValue_ PavingInOut::outer_complem_approx =
       [](PavingInOut::Node_ n)
     {
-      auto l = n->hull().diff(get<0>(n->boxes()));
-      return l;
+      return n->hull().diff(get<0>(n->boxes()));
     };
 
     const PavingInOut::NodeValue_ PavingInOut::inner_approx =
       [](PavingInOut::Node_ n)
     {
-      auto l = n->hull().diff(get<1>(n->boxes()));
-      return l;
+      return n->hull().diff(get<1>(n->boxes()));
     };
 
     const PavingInOut::NodeValue_ PavingInOut::bound_approx =

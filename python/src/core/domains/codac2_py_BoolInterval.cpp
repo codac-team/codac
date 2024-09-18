@@ -1,5 +1,5 @@
 /** 
- *  Interval Python binding
+ *  Codac binding (core)
  *  Originated from the former pyIbex library (Benoît Desrochers)
  * ----------------------------------------------------------------------------
  *  \date       2024
