@@ -1,8 +1,5 @@
 from codac import *
 
-
-
-
 # As an example, defining a custom separator as the complementary of another one
 
 class MySep(Sep):
