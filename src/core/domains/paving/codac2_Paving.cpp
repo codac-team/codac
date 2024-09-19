@@ -37,7 +37,7 @@ namespace codac2
       return Paving<PavingOut,IntervalVector>::connected_subsets(x0, node_value);
     }
 
-    const PavingOut::NodeValue_ PavingOut::outer_approx =
+    const PavingOut::NodeValue_ PavingOut::outer =
       [](PavingOut::Node_ n)
     {
       list<IntervalVector> l;
@@ -46,7 +46,7 @@ namespace codac2
       return l;
     };
 
-    const PavingOut::NodeValue_ PavingOut::outer_complem_approx =
+    const PavingOut::NodeValue_ PavingOut::outer_complem =
       [](PavingOut::Node_ n)
     {
       return n->hull().diff(get<0>(n->boxes()));
@@ -75,7 +75,7 @@ namespace codac2
       return Paving<PavingInOut,IntervalVector,IntervalVector>::connected_subsets(x0, node_value);
     }
 
-    const PavingInOut::NodeValue_ PavingInOut::outer_approx =
+    const PavingInOut::NodeValue_ PavingInOut::outer =
       [](PavingInOut::Node_ n)
     {
       auto l = n->hull().diff(get<1>(n->boxes()));
@@ -84,19 +84,19 @@ namespace codac2
       return l;
     };
 
-    const PavingInOut::NodeValue_ PavingInOut::outer_complem_approx =
+    const PavingInOut::NodeValue_ PavingInOut::outer_complem =
       [](PavingInOut::Node_ n)
     {
       return n->hull().diff(get<0>(n->boxes()));
     };
 
-    const PavingInOut::NodeValue_ PavingInOut::inner_approx =
+    const PavingInOut::NodeValue_ PavingInOut::inner =
       [](PavingInOut::Node_ n)
     {
       return n->hull().diff(get<1>(n->boxes()));
     };
 
-    const PavingInOut::NodeValue_ PavingInOut::bound_approx =
+    const PavingInOut::NodeValue_ PavingInOut::bound =
       [](PavingInOut::Node_ n)
     {
       list<IntervalVector> l;
@@ -105,7 +105,7 @@ namespace codac2
       return l;
     };
 
-    const PavingInOut::NodeValue_ PavingInOut::all_approx =
+    const PavingInOut::NodeValue_ PavingInOut::all =
       [](PavingInOut::Node_ n)
     {
       auto l = n->hull().diff(get<1>(n->boxes()));

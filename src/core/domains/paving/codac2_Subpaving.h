@@ -57,10 +57,10 @@ namespace codac2
       std::list<IntervalVector> contour(bool sort = false) const
       {
         if constexpr(std::is_same_v<PavingOut,P>)
-          return contour(PavingOut::outer_complem_approx, sort);
+          return contour(PavingOut::outer_complem, sort);
 
         else if constexpr(std::is_same_v<PavingInOut,P>)
-          return contour(PavingInOut::outer_complem_approx, sort);
+          return contour(PavingInOut::outer_complem, sort);
 
         else
         {

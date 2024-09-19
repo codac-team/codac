@@ -57,16 +57,16 @@ void export_Paving(py::module& m)
 
     .def("connected_subsets", (std::list<PavingOut::ConnectedSubset_>(PavingOut::*)(const PavingOut::NodeValue_&) const) &PavingOut::connected_subsets,
       LIST_PAVINGOUT_CONNECTEDSUBSET__PAVINGOUT_CONNECTED_SUBSETS_CONST_PAVINGOUT_NODEVALUE__REF_CONST,
-      "node_value"_a = PavingOut::outer_approx)
+      "node_value"_a = PavingOut::outer)
 
     .def("connected_subsets", (std::list<PavingOut::ConnectedSubset_>(PavingOut::*)(const IntervalVector&,const PavingOut::NodeValue_&) const) &PavingOut::connected_subsets,
       LIST_PAVINGOUT_CONNECTEDSUBSET__PAVINGOUT_CONNECTED_SUBSETS_CONST_INTERVALVECTOR_REF_CONST_PAVINGOUT_NODEVALUE__REF_CONST,
-      "x0"_a, "node_value"_a = PavingOut::outer_approx)
+      "x0"_a, "node_value"_a = PavingOut::outer)
 
-    .def_readonly_static("outer_approx", &PavingOut::outer_approx,
-      CONST_NODEVALUE__PAVINGOUT_OUTER_APPROX)
-    .def_readonly_static("outer_complem_approx", &PavingOut::outer_complem_approx,
-      CONST_NODEVALUE__PAVINGOUT_OUTER_COMPLEM_APPROX)
+    .def_readonly_static("outer", &PavingOut::outer,
+      CONST_NODEVALUE__PAVINGOUT_OUTER)
+    .def_readonly_static("outer_complem", &PavingOut::outer_complem,
+      CONST_NODEVALUE__PAVINGOUT_OUTER_COMPLEM)
 
   ;
 
@@ -82,22 +82,22 @@ void export_Paving(py::module& m)
 
     .def("connected_subsets", (std::list<PavingInOut::ConnectedSubset_>(PavingInOut::*)(const PavingInOut::NodeValue_&) const) &PavingInOut::connected_subsets,
       LIST_PAVINGINOUT_CONNECTEDSUBSET__PAVINGINOUT_CONNECTED_SUBSETS_CONST_PAVINGINOUT_NODEVALUE__REF_CONST,
-      "node_value"_a = PavingInOut::outer_approx)
+      "node_value"_a = PavingInOut::outer)
 
     .def("connected_subsets", (std::list<PavingInOut::ConnectedSubset_>(PavingInOut::*)(const IntervalVector&,const PavingInOut::NodeValue_&) const) &PavingInOut::connected_subsets,
       LIST_PAVINGINOUT_CONNECTEDSUBSET__PAVINGINOUT_CONNECTED_SUBSETS_CONST_INTERVALVECTOR_REF_CONST_PAVINGINOUT_NODEVALUE__REF_CONST,
-      "x0"_a, "node_value"_a = PavingInOut::outer_approx)
+      "x0"_a, "node_value"_a = PavingInOut::outer)
 
-    .def_readonly_static("outer_approx", &PavingInOut::outer_approx,
-      CONST_NODEVALUE__PAVINGINOUT_OUTER_APPROX)
-    .def_readonly_static("outer_complem_approx", &PavingInOut::outer_complem_approx,
-      CONST_NODEVALUE__PAVINGINOUT_OUTER_COMPLEM_APPROX)
-    .def_readonly_static("inner_approx", &PavingInOut::inner_approx,
-      CONST_NODEVALUE__PAVINGINOUT_INNER_APPROX)
-    .def_readonly_static("bound_approx", &PavingInOut::bound_approx,
-      CONST_NODEVALUE__PAVINGINOUT_BOUND_APPROX)
-    .def_readonly_static("all_approx", &PavingInOut::all_approx,
-      CONST_NODEVALUE__PAVINGINOUT_ALL_APPROX)
+    .def_readonly_static("outer", &PavingInOut::outer,
+      CONST_NODEVALUE__PAVINGINOUT_OUTER)
+    .def_readonly_static("outer_complem", &PavingInOut::outer_complem,
+      CONST_NODEVALUE__PAVINGINOUT_OUTER_COMPLEM)
+    .def_readonly_static("inner", &PavingInOut::inner,
+      CONST_NODEVALUE__PAVINGINOUT_INNER)
+    .def_readonly_static("bound", &PavingInOut::bound,
+      CONST_NODEVALUE__PAVINGINOUT_BOUND)
+    .def_readonly_static("all", &PavingInOut::all,
+      CONST_NODEVALUE__PAVINGINOUT_ALL)
 
   ;
 }

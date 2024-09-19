@@ -184,10 +184,10 @@ namespace codac2
       PavingOut(size_t n);
       PavingOut(const IntervalVector& x);
 
-      std::list<PavingOut::ConnectedSubset_> connected_subsets(const PavingOut::NodeValue_& node_value = PavingOut::outer_approx) const;
-      std::list<PavingOut::ConnectedSubset_> connected_subsets(const IntervalVector& x0, const PavingOut::NodeValue_& node_value = PavingOut::outer_approx) const;
+      std::list<PavingOut::ConnectedSubset_> connected_subsets(const PavingOut::NodeValue_& node_value = PavingOut::outer) const;
+      std::list<PavingOut::ConnectedSubset_> connected_subsets(const IntervalVector& x0, const PavingOut::NodeValue_& node_value = PavingOut::outer) const;
 
-      static const NodeValue_ outer_approx, outer_complem_approx;
+      static const NodeValue_ outer, outer_complem;
   };
 
 
@@ -201,9 +201,9 @@ namespace codac2
       PavingInOut(size_t n);
       PavingInOut(const IntervalVector& x);
 
-      std::list<PavingInOut::ConnectedSubset_> connected_subsets(const PavingInOut::NodeValue_& node_value = PavingInOut::outer_approx) const;
-      std::list<PavingInOut::ConnectedSubset_> connected_subsets(const IntervalVector& x0, const PavingInOut::NodeValue_& node_value = PavingInOut::outer_approx) const;
+      std::list<PavingInOut::ConnectedSubset_> connected_subsets(const PavingInOut::NodeValue_& node_value = PavingInOut::outer) const;
+      std::list<PavingInOut::ConnectedSubset_> connected_subsets(const IntervalVector& x0, const PavingInOut::NodeValue_& node_value = PavingInOut::outer) const;
 
-      static const NodeValue_ outer_approx, outer_complem_approx, inner_approx, bound_approx, all_approx;
+      static const NodeValue_ outer, outer_complem, inner, bound, all;
   };
 }
