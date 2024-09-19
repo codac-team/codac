@@ -22,29 +22,38 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-template<typename T,typename... X>
+template<typename T,typename P>
 void export_subpaving_base(py::class_<T>& c)
 {
+  c
 
-  //    Subpaving(const std::list<typename P::Node_>& l, const P::NodeValue_& node_value)
-  //    IntervalVector box() const
-  //    std::list<IntervalVector> boxes(bool non_flat = false) const
-  //    std::list<IntervalVector> contour(bool sort = false) const
-  //    std::list<IntervalVector> contour(const P::NodeValue_& node_complementary_value, bool sort = false) const
+    .def(py::init<const std::list<typename P::Node_>&,const typename P::NodeValue_&>(),
+      SUBPAVING_P_SUBPAVING_CONST_LIST_TYPENAME_P_NODE__REF_CONST_P_NODEVALUE__REF,
+      "l"_a, "node_value"_a)
+
+    .def("box", &T::box,
+      INTERVALVECTOR_SUBPAVING_P_BOX_CONST)
+
+    .def("boxes", &T::boxes,
+      LIST_INTERVALVECTOR_SUBPAVING_P_BOXES_BOOL_CONST,
+      "non_flat"_a = false)
+
+    .def("contour", (std::list<IntervalVector>(T::*)(bool) const) &T::contour,
+      LIST_INTERVALVECTOR_SUBPAVING_P_CONTOUR_BOOL_CONST,
+      "sort"_a = false)
+
+    .def("contour", (std::list<IntervalVector>(T::*)(const typename P::NodeValue_&, bool) const) &T::contour,
+      LIST_INTERVALVECTOR_SUBPAVING_P_CONTOUR_CONST_P_NODEVALUE__REF_BOOL_CONST,
+      "node_complementary_value"_a, "sort"_a = false)
+
+  ;
 }
 
 void export_Subpaving(py::module& m)
 {
   py::class_<SubpavingOut> exported_subpaving_out(m, "SubpavingOut", SUBPAVING_MAIN);
-  export_subpaving_base<SubpavingOut,IntervalVector>(exported_subpaving_out);
-  exported_subpaving_out
-
-  ;
+  export_subpaving_base<SubpavingOut,PavingOut>(exported_subpaving_out);
 
   py::class_<SubpavingInOut> exported_subpaving_inout(m, "SubpavingInOut", SUBPAVING_MAIN);
-  export_subpaving_base<SubpavingInOut,IntervalVector,IntervalVector>(exported_subpaving_inout);
-  exported_subpaving_inout
-
-  ;
-
+  export_subpaving_base<SubpavingInOut,PavingInOut>(exported_subpaving_inout);
 }

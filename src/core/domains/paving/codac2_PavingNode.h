@@ -120,6 +120,7 @@ namespace codac2
       void bisect()
       {
         assert_release(is_leaf() && "only leaves can be bisected");
+        
         bool bisectable_node = true;
         std::apply([&](auto &&... xs) { ((bisectable_node &= xs.is_bisectable()), ...); }, _x);
         assert_release(bisectable_node);

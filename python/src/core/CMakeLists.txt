@@ -32,6 +32,7 @@
     domains/interval/codac2_py_IntervalMatrixBase.h
     domains/interval/codac2_py_IntervalVector.cpp
     domains/paving/codac2_py_Paving.cpp
+    domains/paving/codac2_py_PavingNode.cpp
     domains/paving/codac2_py_Subpaving.cpp
     domains/codac2_py_BoolInterval.cpp
 

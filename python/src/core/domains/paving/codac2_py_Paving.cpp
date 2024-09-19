@@ -22,23 +22,23 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-template<typename T,typename... X>
-void export_paving_base(py::class_<T>& c)
+template<typename P,typename... X>
+void export_paving_base(py::class_<P>& c)
 {
   c
 
-    .def("size", &Paving<X...>::size,
-      SIZET_PAVING_X_SIZE_CONST)
+    .def("size", &Paving<P,X...>::size,
+      SIZET_PAVING_PX_SIZE_CONST)
 
-    .def("tree", (std::shared_ptr<PavingNode<Paving<X...>>>(Paving<X...>::*)()) &Paving<X...>::tree,
-      SHARED_PTR_PAVINGNODE_PAVING_X_VARIADIC_PAVING_X_TREE)
+    .def("tree", (std::shared_ptr<PavingNode<P>>(Paving<P,X...>::*)()) &Paving<P,X...>::tree,
+      SHARED_PTR_PAVINGNODE_P_PAVING_PX_TREE)
 
-    .def("intersecting_nodes", &Paving<X...>::intersecting_nodes,
-      LIST_NODE__PAVING_X_INTERSECTING_NODES_CONST_INTERVALVECTOR_REF_CONST_NODEVALUE__REF_BOOL_CONST
+    .def("intersecting_nodes", &Paving<P,X...>::intersecting_nodes,
+      LIST_NODE__PAVING_PX_INTERSECTING_NODES_CONST_INTERVALVECTOR_REF_CONST_NODEVALUE__REF_BOOL_CONST
       "x"_a, "node_value"_a, "flat_intersection"_a = false)
 
-    .def("neighbours", &Paving<X...>::neighbours,
-      LIST_NODE__PAVING_X_NEIGHBOURS_NODE__CONST_NODEVALUE__REF_CONST_NODEVALUE__REF_CONST
+    .def("neighbours", &Paving<P,X...>::neighbours,
+      LIST_NODE__PAVING_PX_NEIGHBOURS_NODE__CONST_NODEVALUE__REF_CONST_NODEVALUE__REF_CONST
       "x"_a, "node_value"_a, "node_value_neighb"_a)
   ;
 }
@@ -100,5 +100,4 @@ void export_Paving(py::module& m)
       CONST_NODEVALUE__PAVINGINOUT_ALL_APPROX)
 
   ;
-
 }
