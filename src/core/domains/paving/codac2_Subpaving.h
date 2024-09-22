@@ -24,36 +24,36 @@ namespace codac2
   class PavingNode;
 
   template<typename P>
-  class Subpaving : public std::list<typename P::Node_>
+  class Subpaving : public std::list<IntervalVector>
   {
     public:
 
-      Subpaving(const std::list<typename P::Node_>& l, const P::NodeValue_& node_value)
-        : std::list<typename P::Node_>(l), _node_value(node_value)
+      Subpaving(std::initializer_list<IntervalVector> l)
+        : std::list<IntervalVector>(l)
       {
-        assert_release(!l.empty());
+        assert_release(!this->empty());
+      }
+
+      Subpaving(const std::list<IntervalVector>& l)
+        : std::list<IntervalVector>(l)
+      {
+        assert_release(!this->empty());
       }
 
       IntervalVector box() const
       {
-        IntervalVector h = IntervalVector::empty(std::get<0>(this->front()->boxes()).size());
-        for(const auto& bi : boxes())
+        IntervalVector h = IntervalVector::empty(this->front().size());
+        for(const auto& bi : *this)
           h |= bi;
         return h;
       }
 
-      std::list<IntervalVector> boxes(bool non_flat = false) const
+      std::list<IntervalVector> boxes() const
       {
-        std::list<IntervalVector> l;
-        for(const auto& ni : *this)
-          for(const auto& bi : _node_value(ni))
-          {
-            if(!non_flat || !bi.is_flat())
-              l.push_back(bi);
-          }
-        return l;
+        return *this;
       }
 
+      #if 0
       std::list<IntervalVector> contour(bool sort = false) const
       {
         if constexpr(std::is_same_v<PavingOut,P>)
@@ -144,11 +144,7 @@ namespace codac2
         assert(nl == s.size());
         return s;
       }
-
-
-    protected:
-
-      const P::NodeValue_ _node_value;
+    #endif
   };
 
   using SubpavingOut = Subpaving<PavingOut>;

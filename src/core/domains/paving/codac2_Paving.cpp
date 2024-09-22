@@ -49,7 +49,29 @@ namespace codac2
     const PavingOut::NodeValue_ PavingOut::outer_complem =
       [](PavingOut::Node_ n)
     {
-      return n->hull().diff(get<0>(n->boxes()));
+      if(n->top())
+      {
+        if(!n->top()->top())
+        {
+          if(n->top()->left() == n)
+            return get<0>(n->top()->boxes()).diff(get<0>(n->boxes()));
+
+          else
+            return list<IntervalVector>();
+        }
+
+        else
+        {
+          auto top_subboxes = get<0>(n->top()->boxes()).bisect_largest();
+          if(n->top()->left() == n)
+            return top_subboxes.first.diff(get<0>(n->boxes()));
+          else
+            return top_subboxes.second.diff(get<0>(n->boxes()));
+        }
+      }
+
+      else
+        return list<IntervalVector>();
     };
 
 

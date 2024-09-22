@@ -33,13 +33,10 @@ void export_paving_base(py::class_<P>& c)
     .def("tree", (std::shared_ptr<PavingNode<P>>(Paving<P,X...>::*)()) &Paving<P,X...>::tree,
       SHARED_PTR_PAVINGNODE_P_PAVING_PX_TREE)
 
-    .def("intersecting_nodes", &Paving<P,X...>::intersecting_nodes,
-      LIST_NODE__PAVING_PX_INTERSECTING_NODES_CONST_INTERVALVECTOR_REF_CONST_NODEVALUE__REF_BOOL_CONST
-      "x"_a, "node_value"_a, "flat_intersection"_a = false)
-
-    .def("neighbours", &Paving<P,X...>::neighbours,
-      LIST_NODE__PAVING_PX_NEIGHBOURS_NODE__CONST_NODEVALUE__REF_CONST_NODEVALUE__REF_CONST
-      "x"_a, "node_value"_a, "node_value_neighb"_a)
+    .def("intersecting_boxes", &Paving<P,X...>::intersecting_boxes,
+      LIST_INTERVALVECTOR_PAVING_PX_INTERSECTING_BOXES_CONST_INTERVALVECTOR_REF_CONST_NODEVALUE__REF_CONST
+      "x"_a, "node_value"_a)
+    
   ;
 }
 

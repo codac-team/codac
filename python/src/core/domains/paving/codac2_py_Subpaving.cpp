@@ -27,24 +27,23 @@ void export_subpaving_base(py::class_<T>& c)
 {
   c
 
-    .def(py::init<const std::list<typename P::Node_>&,const typename P::NodeValue_&>(),
-      SUBPAVING_P_SUBPAVING_CONST_LIST_TYPENAME_P_NODE__REF_CONST_P_NODEVALUE__REF,
-      "l"_a, "node_value"_a)
+    .def(py::init<const std::list<IntervalVector>&>(),
+      SUBPAVING_P_SUBPAVING_CONST_LIST_INTERVALVECTOR_REF,
+      "l"_a)
 
     .def("box", &T::box,
       INTERVALVECTOR_SUBPAVING_P_BOX_CONST)
 
     .def("boxes", &T::boxes,
-      LIST_INTERVALVECTOR_SUBPAVING_P_BOXES_BOOL_CONST,
-      "non_flat"_a = false)
+      LIST_INTERVALVECTOR_SUBPAVING_P_BOXES_CONST)
 
-    .def("contour", (std::list<IntervalVector>(T::*)(bool) const) &T::contour,
+    /*.def("contour", (std::list<IntervalVector>(T::*)(bool) const) &T::contour,
       LIST_INTERVALVECTOR_SUBPAVING_P_CONTOUR_BOOL_CONST,
       "sort"_a = false)
 
     .def("contour", (std::list<IntervalVector>(T::*)(const typename P::NodeValue_&, bool) const) &T::contour,
       LIST_INTERVALVECTOR_SUBPAVING_P_CONTOUR_CONST_P_NODEVALUE__REF_BOOL_CONST,
-      "node_complementary_value"_a, "sort"_a = false)
+      "node_complementary_value"_a, "sort"_a = false)*/
 
   ;
 }

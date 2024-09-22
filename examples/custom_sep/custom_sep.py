@@ -38,7 +38,3 @@ c = p.connected_subsets()
 
 for bi in c[1].boxes():
   DefaultView.draw_box(bi,[Color.red(),Color.red()])
-
-#for bi in c.contour():
-#  bi.inflate(1e-2)
-#  DefaultView.draw_box(bi,[Color.black(),Color.black(0.2)])

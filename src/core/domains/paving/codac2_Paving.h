@@ -57,48 +57,22 @@ namespace codac2
         return std::const_pointer_cast<PavingNode<P>>(const_cast<const Paving<P,X...>*>(this)->tree());
       }
 
-      std::list<Node_> intersecting_nodes(const IntervalVector& x, const NodeValue_& node_value, bool flat_intersections = false) const
+      std::list<IntervalVector> intersecting_boxes(const IntervalVector& x, const NodeValue_& node_value) const
       {
-        std::list<Node_> l;
+        std::list<IntervalVector> l;
 
-        _tree->visit([&]
+        this->tree()->visit([&]
           (Node_ n)
           {
             for(const auto& bi : node_value(n))
             {
               auto inter = bi & x;
-              if(!inter.is_empty() && (flat_intersections || !inter.is_flat()))
-              {
-                l.push_back(n);
-                break;
-              }
+              if(bi.intersects(x))
+                l.push_back(bi);
             }
 
             return n->hull().intersects(x);
           });
-
-        return l;
-      }
-
-      std::list<Node_> neighbours(Node_ x, const NodeValue_& node_value_x, const NodeValue_& node_value_neighb) const
-      {
-        std::list<Node_> l;
-        auto x_boxes = node_value_x(x);
-
-        for(const auto& xi : x_boxes)
-        {
-          auto xi_neighbours = intersecting_nodes(xi, node_value_neighb, true);
-          l.splice(l.end(), xi_neighbours);
-        }
-
-        // Removing duplicates
-        l.sort(); l.unique();
-
-        // If the input node x contains only one box, it is removed from
-        // the neighbours list. Otherwise, "neighbours" may be contained 
-        // in x itself.
-        if(x_boxes.size() == 1 && x_boxes.front() == x->hull())
-         l.remove(x);
 
         return l;
       }
@@ -110,53 +84,39 @@ namespace codac2
 
       std::list<ConnectedSubset_> connected_subsets(const IntervalVector& x0, const NodeValue_& node_value) const
       {
-        std::map<Node_,bool> m_visited_nodes;
-        std::list<Node_> l_nodes = intersecting_nodes(x0, node_value);
-
-        for(const auto& n : l_nodes)
-          m_visited_nodes.insert(std::make_pair(n, false));
-
+        std::list<IntervalVector> l_boxes = intersecting_boxes(x0, node_value);
+        size_t nb_boxes = l_boxes.size();
         std::list<ConnectedSubset_> l_subsets;
 
-        while(!l_nodes.empty())
+        while(!l_boxes.empty())
         {
-          auto current_node = l_nodes.front();
-          l_subsets.push_back(ConnectedSubset_({ current_node }, node_value));
-          m_visited_nodes[current_node] = true;
-          l_nodes.pop_front();
+          auto current_box = l_boxes.front();
+          l_subsets.push_back({ current_box });
+          l_boxes.pop_front();
 
-          std::list<Node_> l_neighbouring_nodes_to_visit { current_node };
+          std::list<IntervalVector> l_neighbouring_boxes_to_visit { current_box };
 
           do
           {
-            current_node = l_neighbouring_nodes_to_visit.front();
-            l_neighbouring_nodes_to_visit.pop_front();
+            current_box = l_neighbouring_boxes_to_visit.front();
+            l_neighbouring_boxes_to_visit.pop_front();
 
-            for(const auto& ni : neighbours(current_node, node_value, node_value))
+            for(const auto& ni : intersecting_boxes(current_box, node_value))
             {
-              if(ni->hull().is_flat())
+              if(std::find(l_boxes.begin(), l_boxes.end(), ni) != l_boxes.end())
               {
-                // At this point, some nodes may be flat due to bisections/contractions.
-                // They are removed from the resulting list representing the connected subset.
-                l_nodes.remove(ni);
-              }
-
-              else if(!m_visited_nodes[ni])
-              {
-                l_nodes.remove(ni);
-                l_neighbouring_nodes_to_visit.push_back(ni);
+                l_boxes.remove(ni);
+                l_neighbouring_boxes_to_visit.push_back(ni);
                 l_subsets.back().push_back(ni);
-                m_visited_nodes[ni] = true;
               }
             }
 
-          } while(!l_neighbouring_nodes_to_visit.empty());
+          } while(!l_neighbouring_boxes_to_visit.empty());
         }
 
-        assert([&]() -> bool { for(const auto& ni : m_visited_nodes) { if(!ni.second) return false; } return true; } ()
-          && "all the nodes should have been visited");
-        assert([&]() -> bool { size_t s = 0; for(const auto& si : l_subsets) s += si.size(); return s == m_visited_nodes.size(); } ()
-          && "the total number of nodes should match the sum of number of nodes of each subset");
+        assert(l_boxes.empty() && "all the nodes should have been visited");
+        assert([&]() -> bool { size_t s = 0; for(const auto& si : l_subsets) s += si.size(); return s == nb_boxes; } ()
+          && "the total number of boxes should match the sum of number of boxes of each subset");
 
         return l_subsets;
       }
