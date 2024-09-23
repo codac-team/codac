@@ -2,7 +2,7 @@
  *  \file codac2_SepNot.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Benoit Desrochers
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */

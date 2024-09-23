@@ -133,7 +133,7 @@ namespace codac2
         _right = make_shared<PavingNode<P>>(_paving, p.second, this->shared_from_this());
       }
 
-      std::vector<IntervalVector> complementary_value(const P::NodeValue_& node_value) const
+      std::vector<IntervalVector> complementary_value(const typename P::NodeValue_& node_value) const
       {
         return hull().diff(node_value(_x));
       }
