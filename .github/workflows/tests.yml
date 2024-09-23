@@ -83,19 +83,19 @@ jobs:
         cd build
   
         # Building lib + tests
-        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON -DPYTHON_EXECUTABLE=/usr/bin/python3 ..
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON ..
         make
         #make doc # todo
         make install
 
         cd python/python_package
-        /usr/bin/python3 setup.py develop --user
+        python setup.py develop --user
         #pip install -e . 
         cd ../../
         
-        /usr/bin/python3 ../tests/core/domains/codac2_tests_BoolInterval.py
+        python ../tests/core/domains/codac2_tests_BoolInterval.py
         make test
-        /usr/bin/python3 -m unittest discover codac.tests
+        python -m unittest discover codac.tests
 
         ## Building the examples
 
