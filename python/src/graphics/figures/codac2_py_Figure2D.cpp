@@ -13,6 +13,7 @@
 #include <codac2_Figure2D.h>
 #include "codac2_py_Figure2D_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_matlab.h"
+#include <codac2_Paving.h>
 
 using namespace std;
 using namespace codac2;
@@ -191,6 +192,16 @@ void export_Figure2D(py::module& m)
     .def_static("draw_AUV", &DefaultView::draw_AUV,
       STATIC_VOID_DEFAULTVIEW_DRAW_AUV_CONST_VECTOR_REF_FLOAT_CONST_STYLEPROPERTIES_REF,
       "x"_a, "size"_a, "s"_a=StyleProperties())
+
+    // Pavings
+
+    .def_static("draw_paving", (void(*)(const PavingOut&,const StyleProperties&,const StyleProperties&))&DefaultView::draw_paving,
+      STATIC_VOID_DEFAULTVIEW_DRAW_PAVING_CONST_PAVINGOUT_REF_CONST_STYLEPROPERTIES_REF_CONST_STYLEPROPERTIES_REF,
+      "p"_a, "boundary_style"_a=StyleProperties::boundary(), "outside_style"_a=StyleProperties::outside())
+
+    .def_static("draw_paving", (void(*)(const PavingInOut&,const StyleProperties&,const StyleProperties&,const StyleProperties&))&DefaultView::draw_paving,
+      STATIC_VOID_DEFAULTVIEW_DRAW_PAVING_CONST_PAVINGINOUT_REF_CONST_STYLEPROPERTIES_REF_CONST_STYLEPROPERTIES_REF_CONST_STYLEPROPERTIES_REF,
+      "p"_a, "boundary_style"_a=StyleProperties::boundary(), "outside_style"_a=StyleProperties::outside(), "inside_style"_a=StyleProperties::inside())
 
   ;
 }

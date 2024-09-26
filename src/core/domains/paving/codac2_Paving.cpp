@@ -102,7 +102,7 @@ namespace codac2
     {
       auto l = n->hull().diff(get<1>(n->boxes()));
       if(n->is_leaf())
-        l.push_back(get<0>(n->boxes()) & get<1>(n->boxes()));
+        l.push_back(n->unknown());
       return l;
     };
 
@@ -123,7 +123,7 @@ namespace codac2
     {
       list<IntervalVector> l;
       if(n->is_leaf())
-        l.push_back(get<0>(n->boxes()) & get<1>(n->boxes()));
+        l.push_back(n->unknown());
       return l;
     };
 
@@ -133,7 +133,7 @@ namespace codac2
       auto l = n->hull().diff(get<1>(n->boxes()));
       l.splice(l.end(), n->hull().diff(get<0>(n->boxes())));
       if(n->is_leaf())
-        l.push_back(get<0>(n->boxes()) & get<1>(n->boxes()));
+        l.push_back(n->unknown());
       return l;
     };
 }

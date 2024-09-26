@@ -33,8 +33,15 @@ void export_pavingnode_base(py::class_<PN, std::shared_ptr<PN>>& c)
     .def("boxes", (typename P::NodeTuple_&(PN::*)()) &PN::boxes,
       P_NODETUPLE__REF_PAVINGNODE_P_BOXES)
 
+    .def("set_boxes", &PN::set_boxes,
+      VOID_PAVINGNODE_P_SET_BOXES_CONST_P_NODETUPLE__REF,
+      "x"_a)
+
     .def("hull", &PN::hull,
       INTERVALVECTOR_PAVINGNODE_P_HULL_CONST)
+
+    .def("unknown", &PN::unknown,
+      INTERVALVECTOR_PAVINGNODE_P_UNKNOWN_CONST)
 
     .def("top", (std::shared_ptr<PN>(PN::*)()) &PN::top,
       SHARED_PTR_PAVINGNODE_P_PAVINGNODE_P_TOP)

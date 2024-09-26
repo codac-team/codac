@@ -40,10 +40,22 @@ namespace codac2
         return const_cast<typename P::NodeTuple_&>(const_cast<const PavingNode<P>*>(this)->boxes());
       }
 
+      void set_boxes(const P::NodeTuple_& x)
+      {
+        _x = x;
+      }
+
       IntervalVector hull() const
       {
         IntervalVector h = std::get<0>(_x); 
         std::apply([&](auto &&... xs) { ((h |= xs), ...); }, _x);
+        return h;
+      }
+
+      IntervalVector unknown() const
+      {
+        IntervalVector h = std::get<0>(_x); 
+        std::apply([&](auto &&... xs) { ((h &= xs), ...); }, _x);
         return h;
       }
 
@@ -125,9 +137,7 @@ namespace codac2
         std::apply([&](auto &&... xs) { ((bisectable_node &= xs.is_bisectable()), ...); }, _x);
         assert_release(bisectable_node);
 
-        IntervalVector x(std::get<0>(_x).size());
-        std::apply([&](auto &&... xs) { ((x &= xs), ...); }, _x);
-        auto p = x.bisect_largest();
+        auto p = unknown().bisect_largest();
 
         _left = make_shared<PavingNode<P>>(_paving, p.first, this->shared_from_this());
         _right = make_shared<PavingNode<P>>(_paving, p.second, this->shared_from_this());
