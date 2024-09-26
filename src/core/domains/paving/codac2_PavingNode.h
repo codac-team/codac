@@ -40,7 +40,7 @@ namespace codac2
         return const_cast<typename P::NodeTuple_&>(const_cast<const PavingNode<P>*>(this)->boxes());
       }
 
-      void set_boxes(const P::NodeTuple_& x)
+      void set_boxes(const typename P::NodeTuple_& x)
       {
         _x = x;
       }
