@@ -34,7 +34,7 @@ void export_pavingnode_base(py::class_<PN, std::shared_ptr<PN>>& c)
       P_NODETUPLE__REF_PAVINGNODE_P_BOXES)
 
     .def("set_boxes", &PN::set_boxes,
-      VOID_PAVINGNODE_P_SET_BOXES_CONST_P_NODETUPLE__REF,
+      VOID_PAVINGNODE_P_SET_BOXES_CONST_TYPENAME_P_NODETUPLE__REF,
       "x"_a)
 
     .def("hull", &PN::hull,
