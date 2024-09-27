@@ -57,49 +57,48 @@ namespace codac2 {
     }
 
     Ellipsoid linear_mapping_guaranteed(const Ellipsoid &e, const Matrix &A, const Vector &b) {
-        // TODO à refaire avec la méthode d'andreas
         // compute A*e+b considering rounding error
-        Ellipsoid e_ = linear_mapping(e, A, b);
+        Ellipsoid e_res = linear_mapping(e, A, b);
 
         // compute rounding error as a small box
         IntervalVector mu_(e.mu);
         IntervalMatrix G_(e.G);
         IntervalMatrix A_(A);
         IntervalVector b_(b);
-        IntervalVector mu_res_ = A_ * mu_ + b_; // TODO multiplication IntervalMatrix*IntervalVector
-        IntervalMatrix G_res_ = A_ * G_;
+        IntervalVector mu_res_(A_._e * mu_._e + b_._e); // TODO multiplication IntervalMatrix*IntervalVector
         IntervalVector unit_box_(mu_.size(), Interval(-1, 1));
-        IntervalMatrix error_box_ = mu_res_ - mu_res_ + (A_ * G_ - G_res_) * unit_box_;
+        IntervalMatrix error_box_ = mu_res_ - IntervalVector(e_res.mu._e) +
+                (A_ * G_ - IntervalMatrix(e_res.G._e)) * unit_box_;
 
         // compute the max radius of error_box
-        double rho = error_box_.norm_2().upper(); // TODO norm 2 d'une boite
-
-        Ellipsoid elli_error(mu_res_, Eigen::Identity(mu_.size()) * rho); // = rho*unit_ball
-        return e_ + elli_error;
+        double rho = Interval(error_box_._e.norm()).ub(); // TODO norm 2 d'une boite
+        Ellipsoid elli_error(e.mu, Eigen::MatrixXd::Identity(e.size(),e.size()) * rho); // = rho*unit_ball
+        return e_res + elli_error;
     }
 
     Matrix nonlinear_mapping_base(const Matrix &G, const Matrix &J, const IntervalMatrix &J_box) {
         Matrix E_out = J * G;
         IntervalMatrix JE = IntervalMatrix(E_out);
-        IntervalMatrix JE_inv = JE.inverse(); // TODO inverse of interval matrix
+        IntervalMatrix JE_inv = JE._e.inverse(); // TODO inverse of interval matrix
         // TODO this is the rigorous version, but one could compute JE_inv = E_out.inv()
 
         // compute b_box
         IntervalVector unit_box(G.nb_rows(), Interval(-1, 1));
-        IntervalMatrix I_ = IntervalMatrix(Eigen::Identity(e.size()));
-        IntervalVector b_box = (JE_inv * J_box * IntervalMatrix(e.G) - I_) * unit_box;
+        IntervalMatrix I_ = IntervalMatrix(Eigen::MatrixXd::Identity(G.nb_rows(),G.nb_cols()));
+        IntervalVector b_box = (JE_inv * J_box * IntervalMatrix(G) - I_) * unit_box;
 
         // get max radius of b_box
-        double rho = b_box.norm_2().upper();  // TODO norm 2 d'une boite
+//        double rho = b_box.norm_2().upper();  // TODO norm 2 d'une boite
+        double rho = Interval(b_box._e.norm()).ub();
         return (1 + rho) * E_out;
     }
 
-    Ellipsoid nonlinear_mapping(const Ellipsoid &e, const AnalyticFunction<typename Wrapper<T>::Domain>& f) {
+    Ellipsoid nonlinear_mapping(const Ellipsoid &e, const AnalyticFunction<VectorOpValue>& f) {
         // compute the image of the center
-        Vector mu_res = f.centered_eval(e.mu);
+        Vector mu_res = f.eval(e.mu).mid();
 
         // compute the Jacobian of f at the center
-        Matrix J = f.diff(e.mu);
+        Matrix J = f.diff(e.mu).mid();
 
         // compute the Jacoiban of f over a box enclosing the ellipsoid
         IntervalVector enclosing_box = enclose_elli_by_box(e); // TODO import this function
@@ -114,21 +113,22 @@ namespace codac2 {
         return os << "mu : " << e.mu << "\n" << "G :\n" << e.G;
     }
 
-    bool stability_analysis(const AnalyticFunction<typename Wrapper<T>::Domain> &f, int alpha_max)
+    bool stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max)
     {
         // get the Jacobian of f at the origin
-        Vector origin(Eigen::zeros(f.domain().size()));
-        Matrix J = f.diff(origin);
+        int n = f.args().size();
+        IntervalVector origin(Eigen::MatrixXd::Zero(n,n));
+        IntervalMatrix J = f.diff(IntervalVector(origin));
 
         // solve the axis aligned discrete lyapunov equation J.T * P * J − P = −J.T * J
-        Matrix P; //TODO
-        Matrix G0 = sqrt(P.inv());
+        IntervalMatrix P(n,n); //TODO
+        IntervalMatrix G0 = (P._e.inverse()).sqrt();
         int alpha = 0;
         bool res = false;
 
-        while alpha < alpha_max
+        while(alpha <= alpha_max)
         {
-            Ellipsoid e(origin,pow(10,-alpha) * G0);
+            Ellipsoid e(origin.mid(),(pow(10,-alpha) * G0).mid());
             Ellipsoid e_out = nonlinear_mapping(e,f);
 
             res = inclusion_test(e,e_out);
@@ -146,17 +146,32 @@ namespace codac2 {
 
     bool inclusion_test(const Ellipsoid &e1, const Ellipsoid &e2){
         // check if e1 included in e2
-
-        // Identity matrix with the same size as Y
-        IntervalMatrix I(Eigen::Idendity(e2.G.nb_rows()));
-        IntervalMatrix G2_inv = e2.G.inverse(); // TODO pas garantie
-        IntervalVector D = I - e1.G.transpose()*G2_inv.transpose()*G2_inv*e1.G;
+        IntervalMatrix G1(e1.G._e);
+        IntervalMatrix G2(e2.G._e);
+        IntervalMatrix G2_inv = G2._e.inverse();
+        IntervalMatrix I(Eigen::MatrixXd::Identity(e2.G.nb_rows(),e2.G.nb_cols()));
+        IntervalMatrix D(I._e - G1._e.transpose()*G2_inv._e.transpose()*G2_inv._e*G1._e);
 
         // cholesky decomposition of D
         //TODO
 
+        return false;
+    }
+
+    IntervalVector enclose_elli_by_box(const Ellipsoid& e)
+    {
+        // |xi|<||Gamma_i| (i_th column bcs symetric)
+        // xi = Gamma_i*y with |y|<1, y = Gamma_inv*x in the unit circle
+        IntervalVector res(e.size());
+        for(int i=0; i<int(e.size()); i++){
+            double m = e.G._e.col(i).norm();
+//            res[i] = Interval(-m, m);
+            res[i] = Interval(-m, m);
+        }
         return res;
     }
+
+
     // Old implementations:
 
 #if 0
