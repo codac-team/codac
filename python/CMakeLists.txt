@@ -50,6 +50,13 @@
   add_subdirectory(src/graphics)
   add_subdirectory(src/unsupported)
 
+  
+  add_custom_target(pip_package)
+  add_custom_command(TARGET pip_package PRE_BUILD
+    COMMAND ${PYTHON_EXECUTABLE} ARGS setup.py bdist_wheel -d ${CMAKE_BINARY_DIR}
+    WORKING_DIRECTORY ${PYTHON_PACKAGE_DIR}
+  )
+
 
 ################################################################################
 # Tests related to the binding

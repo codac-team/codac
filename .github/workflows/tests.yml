@@ -12,7 +12,7 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
-            - { os: ubuntu-24.04, gcc_v: 11, py_v_maj: 3, py_v_min: 12, desc: 'Ubuntu 24.04 GCC 11 Python 3.12 tests' }
+            - { os: ubuntu-24.04, gcc_v: 11, py_v_maj: 3, py_v_min: 10, desc: 'Ubuntu 24.04 GCC 11 Python 3.10 tests' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v4
@@ -24,10 +24,9 @@ jobs:
       with:
         python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
     - run: |
-        # Installing gcc-11
+        # Installing gcc
         sudo apt install build-essential manpages-dev software-properties-common
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-        sudo apt update && sudo apt install gcc-11 g++-11
 
         sudo apt-get -q update ; sudo apt-get -y install gcc-${{ matrix.cfg.gcc_v }} g++-${{ matrix.cfg.gcc_v }} || true
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${{ matrix.cfg.gcc_v }} 100 --slave /usr/bin/g++ g++ /usr/bin/g++-${{ matrix.cfg.gcc_v }}
@@ -83,19 +82,19 @@ jobs:
         cd build
   
         # Building lib + tests
-        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON -DPYTHON_EXECUTABLE=/usr/bin/python3 ..
-        make
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON ..
+        make -j 4
         #make doc # todo
         make install
 
         cd python/python_package
-        /usr/bin/python3 setup.py develop --user
+        python setup.py develop --user
         #pip install -e . 
         cd ../../
         
-        /usr/bin/python3 ../tests/core/domains/codac2_tests_BoolInterval.py
+        python ../tests/core/domains/codac2_tests_BoolInterval.py
         make test
-        /usr/bin/python3 -m unittest discover codac.tests
+        python -m unittest discover codac.tests
 
         ## Building the examples
 

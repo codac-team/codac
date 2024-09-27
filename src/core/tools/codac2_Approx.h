@@ -15,10 +15,10 @@
 namespace codac2
 {
   // The following functions are used for templates
-  double _lb(const Interval& x) { return x.lb(); }
-  double _lb(const double& x)   { return x;      }
-  double _ub(const Interval& x) { return x.ub(); }
-  double _ub(const double& x)   { return x;      }
+  inline double _lb(const Interval& x) { return x.lb(); }
+  inline double _lb(const double& x)   { return x;      }
+  inline double _ub(const Interval& x) { return x.ub(); }
+  inline double _ub(const double& x)   { return x;      }
 
   template<typename T>
   class Approx

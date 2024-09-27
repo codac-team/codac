@@ -49,6 +49,7 @@ void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval
 py::class_<IntervalVector> export_IntervalVector(py::module& m);
 py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m);
 void export_Paving(py::module& m);
+void export_PavingNode(py::module& m);
 void export_Subpaving(py::module& m);
 
 // functions
@@ -152,6 +153,7 @@ PYBIND11_MODULE(_core, m)
   export_arithmetic_div(m, py_V, py_IV, py_M, py_IM, py_B, py_IB);
   
   export_Paving(m);
+  export_PavingNode(m);
   export_Subpaving(m);
 
   // function

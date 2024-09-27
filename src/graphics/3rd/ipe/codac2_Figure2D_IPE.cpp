@@ -156,6 +156,13 @@ void Figure2D_IPE::draw_pie(const Vector& c, const Interval& r, const Interval& 
   // Not implemented yet
 }
 
+void Figure2D_IPE::draw_ellipse(const Vector& c, const Vector& ab, double theta, const StyleProperties& s)
+{
+  assert(c.size() == 2);
+  assert(ab.size() == 2);
+  // Not implemented yet
+}
+
 void Figure2D_IPE::draw_tank(const Vector& x, float size, const StyleProperties& s)
 {
   assert(_fig.size() <= x.size()+1);

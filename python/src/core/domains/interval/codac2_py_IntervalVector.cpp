@@ -130,5 +130,9 @@ py::class_<IntervalVector> export_IntervalVector(py::module& m)
     INTERVALVECTOR_CART_PROD_CONST_X_REF_VARIADIC);
   // The variadic version of this function is defined in __init__.py file
 
+  m.def("hull", &codac2::hull,
+    INTERVALVECTOR_HULL_CONST_LIST_INTERVALVECTOR_REF,
+    "l"_a);
+
   return exported_intervalvector_class;
 }
