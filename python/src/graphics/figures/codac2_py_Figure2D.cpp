@@ -122,6 +122,10 @@ void export_Figure2D(py::module& m)
       VOID_FIGURE2D_DRAW_PIE_CONST_VECTOR_REF_CONST_INTERVAL_REF_CONST_INTERVAL_REF_CONST_STYLEPROPERTIES_REF,
       "c"_a, "r"_a, "theta"_a, "s"_a=StyleProperties())
 
+    .def("draw_ellipse", &Figure2D::draw_ellipse,
+      STATIC_VOID_DEFAULTVIEW_DRAW_ELLIPSE_CONST_VECTOR_REF_CONST_VECTOR_REF_DOUBLE_CONST_STYLEPROPERTIES_REF,
+      "c"_a, "ab"_a, "theta"_a, "s"_a=StyleProperties())
+
     // Robots
 
     .def("draw_tank", &Figure2D::draw_tank,

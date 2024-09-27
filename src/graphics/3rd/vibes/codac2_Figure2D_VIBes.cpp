@@ -120,6 +120,13 @@ void Figure2D_VIBes::draw_pie(const Vector& c, const Interval& r, const Interval
   vibes::drawPie(c[i()],c[j()], r.lb(),r.ub(), 180.*theta.lb()/codac2::pi,180.*theta.ub()/codac2::pi, to_vibes_style(s), _params);
 }
 
+void Figure2D_VIBes::draw_ellipse(const Vector& c, const Vector& ab, double theta, const StyleProperties& s)
+{
+  assert(c.size() == 2);
+  assert(ab.size() == 2);
+  vibes::drawEllipse(c[0],c[1], ab[0],ab[1], 180.*theta/codac2::pi, to_vibes_style(s), _params);
+}
+
 void Figure2D_VIBes::draw_tank(const Vector& x, float size, const StyleProperties& s)
 {
   assert(_fig.size() <= x.size()+1);

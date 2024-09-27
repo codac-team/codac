@@ -182,6 +182,15 @@ void Figure2D::draw_pie(const Vector& c, const Interval& r, const Interval& thet
     output_fig->draw_pie(c,r_,theta_,s);
 }
 
+void Figure2D::draw_ellipse(const Vector& c, const Vector& ab, double theta, const StyleProperties& s)
+{
+  assert_release(c.size() == 2);
+  assert_release(ab.size() == 2);
+
+  for(const auto& output_fig : _output_figures)
+    output_fig->draw_ellipse(c,ab,theta,s);
+}
+
 void Figure2D::draw_tank(const Vector& x, float size, const StyleProperties& s)
 {
   assert_release(this->size() <= x.size()+1);
