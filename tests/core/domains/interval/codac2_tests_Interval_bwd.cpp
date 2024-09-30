@@ -353,7 +353,7 @@ TEST_CASE("Interval bwd operations")
 }
 
 #include <codac2_IntervalMatrix.h>
-#include <codac2_DirectedCtc.h>
+#include <codac2_directed_ctc.h>
 
 TEST_CASE("bwd mul operations")
 {

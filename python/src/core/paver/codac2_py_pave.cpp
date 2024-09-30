@@ -22,9 +22,17 @@ void export_pave(py::module& m)
 {
   m.def("pave", (PavingOut (*)(const IntervalVector&,const CtcBase<IntervalVector>&,double))&codac2::pave,
     PAVINGOUT_PAVE_CONST_INTERVALVECTOR_REF_CONST_CTCBASE_INTERVALVECTOR_REF_DOUBLE,
-    "x0"_a, "c"_a, "eps"_a);
+    "x"_a, "c"_a, "eps"_a);
 
   m.def("pave", (PavingInOut (*)(const IntervalVector&,const SepBase&,double))&codac2::pave,
     PAVINGINOUT_PAVE_CONST_INTERVALVECTOR_REF_CONST_SEPBASE_REF_DOUBLE,
-    "x0"_a, "s"_a, "eps"_a);
+    "x"_a, "s"_a, "eps"_a);
+
+  m.def("sivia_", (PavingInOut (*)(const IntervalVector&,const AnalyticFunction<ScalarOpValue>&,const Interval&,double))&codac2::sivia,
+    PAVINGINOUT_SIVIA_CONST_INTERVALVECTOR_REF_CONST_ANALYTICFUNCTION_Y_REF_CONST_TYPENAME_Y_DOMAIN_REF_DOUBLE,
+    "x"_a, "f"_a, "y"_a, "eps"_a);
+
+  m.def("sivia_", (PavingInOut (*)(const IntervalVector&,const AnalyticFunction<VectorOpValue>&,const IntervalVector&,double))&codac2::sivia,
+    PAVINGINOUT_SIVIA_CONST_INTERVALVECTOR_REF_CONST_ANALYTICFUNCTION_Y_REF_CONST_TYPENAME_Y_DOMAIN_REF_DOUBLE,
+    "x"_a, "f"_a, "y"_a, "eps"_a);
 }
