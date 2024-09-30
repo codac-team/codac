@@ -147,21 +147,47 @@ namespace codac2 {
 //        cout << "The method is not able to conclude on the stability" << endl;
 //        return false;
 //    }
-//
-//    bool inclusion_test(const Ellipsoid &e1, const Ellipsoid &e2){
-//        // check if e1 included in e2
-//        IntervalMatrix G1(e1.G._e);
-//        IntervalMatrix G2(e2.G._e);
-//        IntervalMatrix G2_inv = G2._e.inverse();
-//        IntervalMatrix I(Eigen::MatrixXd::Identity(e2.G.nb_rows(),e2.G.nb_cols()));
-//        IntervalMatrix D(I._e - G1._e.transpose()*G2_inv._e.transpose()*G2_inv._e*G1._e);
-//
-//        // cholesky decomposition of D
-//        //TODO
-//
-//        return false;
-//    }
-//
+
+    bool concentric_inclusion_test(const Ellipsoid &e1, const Ellipsoid &e2) {
+        assert(e1.size() == e2.size());
+        assert((e1.mu._e - e2.mu._e).norm() < 1e-10); // check if the centers are the same
+
+        // check if e1 included in e2
+        auto G2_inv = e2.G._e.inverse();
+        Matrix I(Eigen::MatrixXd::Identity(e2.G.nb_rows(), e2.G.nb_cols()));
+        IntervalMatrix D(I._e - e1.G._e.transpose() * G2_inv.transpose() * G2_inv * e1.G._e);
+
+        // cholesky decomposition of D
+        IntervalMatrix L(e1.size(), e1.size()); // matrix of the Cholesky decomposition
+
+        Interval S(0, 0);
+        Interval U(0, 0);
+
+        for (int j = 0; j < L.nb_cols(); j++) // for every column
+        {
+            S = Interval(0, 0);
+            for (int k = 0; k < j; k++)
+                S += L(j, k) * L(j, k);
+            U = D(j, j) - S;
+            if (U.lb() < 0) {
+                return false;
+            }
+            L(j,j) = sqrt(U);
+
+            // now the rest of the column
+            for (int i = j + 1; i<L.nb_rows();
+            i++)
+            {
+                S = Interval(0, 0);
+                for (int k = 0; k < j; k++)
+                    S += L(j,k) * L(i,k);
+                L(i,j) = (D(i,j) - S) / L(j,j);
+                L(j,i) = Interval(0, 0);
+            }
+        }
+        return true;
+    }
+
     IntervalVector enclose_elli_by_box(const Ellipsoid& e)
     {
         // |xi|<||Gamma_i| (i_th column bcs symetric)
@@ -169,7 +195,6 @@ namespace codac2 {
         IntervalVector res(e.size());
         for(int i=0; i<int(e.size()); i++){
             double m = e.G._e.col(i).norm();
-//            res[i] = Interval(-m, m);
             res[i] = Interval(-m, m);
         }
         return res;
