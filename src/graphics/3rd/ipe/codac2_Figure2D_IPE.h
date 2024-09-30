@@ -15,6 +15,7 @@
 #include "codac2_OutputFigure2D.h"
 #include "codac2_Vector.h"
 #include "codac2_IntervalVector.h"
+#include "codac2_Ellipsoid.h"
 #include "vibes.h"
 
 namespace codac2
@@ -38,6 +39,7 @@ namespace codac2
       void draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s = StyleProperties());
       void draw_polygone(const std::vector<Vector>& x, const StyleProperties& s = StyleProperties());
       void draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s = StyleProperties());
+      void draw_ellipse(const Vector& c, const Vector& ab, double theta, const StyleProperties& s = StyleProperties());
 
       // Robots
       void draw_tank(const Vector& x, float size, const StyleProperties& s = StyleProperties());

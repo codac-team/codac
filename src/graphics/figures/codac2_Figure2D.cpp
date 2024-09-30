@@ -182,6 +182,32 @@ void Figure2D::draw_pie(const Vector& c, const Interval& r, const Interval& thet
     output_fig->draw_pie(c,r_,theta_,s);
 }
 
+void Figure2D::draw_ellipse(const Vector& c, const Vector& ab, double theta, const StyleProperties& s)
+{
+  assert_release(c.size() == 2);
+  assert_release(ab.size() == 2);
+
+  for(const auto& output_fig : _output_figures)
+    output_fig->draw_ellipse(c,ab,theta,s);
+}
+
+void Figure2D::draw_ellipsoid(const Ellipsoid& e, const StyleProperties& s)
+{
+  assert_release(this->size() <= e.size());
+
+  // <===== ici, définir le code de projection d'ellipsoide en 2d
+
+  // La figure 2d est définie comme une projection d'un espace de grande dimension,
+  // les dimensions de la figure sont données par:
+  //   output_fig->i() // (dimension 1)
+  //   output_fig->j() // (dimension 2)
+
+  // ...
+
+  //for(const auto& output_fig : _output_figures)
+  //  output_fig->draw_ellipse( ... ,s); // utiliser draw_ellipse à la place, une fois les paramètres estimés
+}
+
 void Figure2D::draw_tank(const Vector& x, float size, const StyleProperties& s)
 {
   assert_release(this->size() <= x.size()+1);

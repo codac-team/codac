@@ -20,5 +20,11 @@ using namespace pybind11::literals;
 
 void export_pave(py::module& m)
 {
+  m.def("pave", (PavingOut (*)(const IntervalVector&,const CtcBase<IntervalVector>&,double))&codac2::pave,
+    PAVINGOUT_PAVE_CONST_INTERVALVECTOR_REF_CONST_CTCBASE_INTERVALVECTOR_REF_DOUBLE,
+    "x0"_a, "c"_a, "eps"_a);
 
+  m.def("pave", (PavingInOut (*)(const IntervalVector&,const SepBase&,double))&codac2::pave,
+    PAVINGINOUT_PAVE_CONST_INTERVALVECTOR_REF_CONST_SEPBASE_REF_DOUBLE,
+    "x0"_a, "s"_a, "eps"_a);
 }

@@ -132,4 +132,13 @@ namespace codac2
     }
     return x_;
   }
+
+  inline IntervalVector hull(const std::list<IntervalVector>& l)
+  {
+    assert_release(!l.empty());
+    IntervalVector h(l.front());
+    for(const auto& li : l)
+      h |= li;
+    return h;
+  }
 }
