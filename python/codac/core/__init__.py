@@ -206,3 +206,19 @@ def cart_prod(*args):
     return cart_prod_sep(lst)
   else:
     codac_error("cart_prod: invalid input arguments")
+
+
+def sivia(x,f,y,eps):
+
+  if isinstance(f.f, AnalyticFunction_Scalar):
+    if not isinstance(y, (list,float,Interval)):
+      codac_error("Provided function is scalar, the output 'y' should be an interval")
+    return sivia_(x, f.f, Interval(y), eps)
+
+  if isinstance(f.f, AnalyticFunction_Vector):
+    if not isinstance(y, (list,Vector,IntervalVector)):
+      codac_error("Provided function is vectorial, the output 'y' should be an interval vector")
+    return sivia_(x, f.f, IntervalVector(y), eps)
+
+  else:
+    codac_error("sivia: can only compute sivia from scalar or vector functions")

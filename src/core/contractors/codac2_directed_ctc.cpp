@@ -1,5 +1,5 @@
 /** 
- *  codac2_DirectedCtc.cpp
+ *  codac2_directed_ctc.cpp
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -8,7 +8,7 @@
  */
 
 #include <cassert>
-#include "codac2_DirectedCtc.h"
+#include "codac2_directed_ctc.h"
 #include "codac2_MatrixBase.h"
 #include "codac2_IntervalVector.h"
 #include "codac2_IntervalMatrix.h"
@@ -1004,7 +1004,7 @@ using namespace codac2;
 
   Interval DetOp::fwd(const IntervalMatrix& x)
   {
-    assert_release(x.nb_rows() == x.nb_cols() && "can only compute determinants for a square matrix");
+    assert_release(x.is_squared() && "can only compute determinants for a square matrix");
     assert_release((x.nb_rows() == 1 || x.nb_rows() == 2) && "determinant not yet computable for n×n matrices, n>2");
 
     if(x.nb_rows() == 1) // 1×1 matrix
@@ -1029,7 +1029,7 @@ using namespace codac2;
 
   void DetOp::bwd(const Interval& y, IntervalMatrix& x)
   {
-    assert_release(x.nb_rows() == x.nb_cols() && "can only compute determinants for a square matrix");
+    assert_release(x.is_squared() && "can only compute determinants for a square matrix");
     assert_release((x.nb_rows() == 1 || x.nb_rows() == 2) && "determinant not yet computable for n×n matrices, n>2");
 
     if(x.nb_rows() == 1) // 1×1 matrix

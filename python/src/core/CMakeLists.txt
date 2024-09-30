@@ -24,7 +24,8 @@
     contractors/codac2_py_CtcSegment.cpp
     contractors/codac2_py_CtcUnion.cpp
     contractors/codac2_py_CtcWrapper.cpp
-    contractors/codac2_py_DirectedCtc.cpp
+    contractors/codac2_py_directed_ctc.cpp
+    contractors/codac2_py_linear_ctc.cpp
 
     domains/interval/codac2_py_Interval.cpp
     domains/interval/codac2_py_Interval_operations.cpp

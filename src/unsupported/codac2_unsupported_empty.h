@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_empty.h
+ *  \file codac2_unsupported_empty.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -11,5 +11,8 @@
 
 namespace codac2
 {
-  
+  namespace unsupported
+  {
+    
+  }
 }

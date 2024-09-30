@@ -71,6 +71,12 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
   {
     pyclass
 
+    .def("is_squared", [](const S& x)
+        {
+          return x.is_squared();
+        },
+      BOOL_MATRIXBASE_ST_IS_SQUARED_CONST)
+
     .def("__getitem__", [](const S& x, const py::tuple& ij) -> const T&
         {
           if constexpr(FOR_MATLAB)

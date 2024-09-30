@@ -34,8 +34,10 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcSegment.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcSegment.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcWrapper.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_DirectedCtc.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_DirectedCtc.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_directed_ctc.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_directed_ctc.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_linear_ctc.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_linear_ctc.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/codac2_BoolInterval.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/codac2_Domain.h

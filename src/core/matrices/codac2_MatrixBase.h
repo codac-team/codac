@@ -135,6 +135,11 @@ namespace codac2
         return _e.cols();
       }
 
+      bool is_squared() const
+      {
+        return nb_rows() == nb_cols();
+      }
+
       #define minmax_item(op) \
         T m = *_e.data(); /* first element */ \
         for(size_t i = 1 ; i < size() ; i++) \
