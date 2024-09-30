@@ -100,4 +100,22 @@ int main()
     bool res4 = concentric_inclusion_test(e5, e6);
     cout << "Inclusion test e5 in e6: " << res4 << endl;
 
+    // ----------------------------------------------------------
+    // guaranteed and non guaranteed linear mappings
+    // ----------------------------------------------------------
+    Matrix A({{0.9,0.5},{-.5,1.1}});
+    Vector b({0.1,0.2});
+
+    Ellipsoid e7 = linear_mapping(e1, A, b);
+    Ellipsoid e8 = linear_mapping_guaranteed(e1, A, b);
+
+    cout << "\nLinear Mapping - Image ellipsoid e7:" << endl;
+    cout << e7 << endl;
+
+    cout << "\nLinear Mapping Guaranteed - Image ellipsoid e8:" << endl;
+    cout << e8 << endl;
+
+    cout << "\nDifference between e7 and e8:" << endl;
+    cout << "mu diff norm is " << (e7.mu._e - e8.mu._e).norm() << endl;
+    cout << "G diff norm is " << (e7.G._e - e8.G._e).norm() << endl;
 }

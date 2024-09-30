@@ -76,7 +76,7 @@ namespace codac2 {
 
         // compute the max radius of error_box
         double rho = Interval(error_box_.norm()).ub(); // TODO norm 2 d'une boite à verifier
-        Ellipsoid elli_error(e.mu, Eigen::MatrixXd::Identity(e.size(),e.size()) * rho); // = rho*unit_ball
+        Ellipsoid elli_error(Vector(e.size()), Eigen::MatrixXd::Identity(e.size(),e.size()) * rho); // = rho*unit_ball
         return e_res + elli_error;
     }
 
@@ -125,7 +125,7 @@ namespace codac2 {
 //        IntervalMatrix J = f.diff(IntervalVector(origin));
 //
 //        // solve the axis aligned discrete lyapunov equation J.T * P * J − P = −J.T * J
-//        IntervalMatrix P(n,n); //TODO
+//        IntervalMatrix P(n,n); // TODO solve the Lyapunov equation !!!
 //        IntervalMatrix G0 = (P._e.inverse()).sqrt();
 //        int alpha = 0;
 //        bool res = false;
