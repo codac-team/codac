@@ -46,9 +46,9 @@ namespace codac2 {
 
 //    template<typename T>
 //    requires std::is_base_of_v<OpValueBase, T>
-    bool stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max);
+//    bool stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max);
 
-    bool inclusion_test(const Ellipsoid &e1, const Ellipsoid &e2);
+//    bool inclusion_test(const Ellipsoid &e1, const Ellipsoid &e2);
 
     IntervalVector enclose_elli_by_box(const Ellipsoid& e);
 }

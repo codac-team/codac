@@ -22,7 +22,8 @@ int main()
     cout << e2 << endl;
 
     cout << "non Linear Mapping" << endl;
+    VectorVar x(2);
     AnalyticFunction h {
-            {x,y}, vec(x[0]+0.5*sin(x[1]),-0.5*sin(x[0])+0.9)};
-    Ellipsoid e3 = nonlinear_mapping(e1, f);
+            {x}, vec(x[0]+0.5*sin(x[1]),-0.5*sin(x[0])+0.9)};
+    Ellipsoid e3 = nonlinear_mapping(e1, h);
 }
