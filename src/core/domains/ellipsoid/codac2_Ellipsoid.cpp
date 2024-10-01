@@ -29,6 +29,12 @@ namespace codac2 {
         return mu.size();
     }
 
+    Vector Ellipsoid::sample() const{
+        Vector xi(Eigen::VectorXd::Random(this->size()));
+        double rand_norm =  ((double) rand() / (RAND_MAX));
+        return this->mu._e + this->G._e * xi._e / xi._e.norm() * rand_norm;
+    }
+
     Ellipsoid operator+(const Ellipsoid &e1, const Ellipsoid &e2) {
         assert_release(e1.size() == e2.size());
 
@@ -49,7 +55,7 @@ namespace codac2 {
     }
 
     Ellipsoid linear_mapping(const Ellipsoid &e, const Matrix &A, const Vector &b) {
-        // compute A*e+b
+        // return A*e+b | non-rigorous operations
         auto mu_res = A._e * e.mu._e + b._e;
         auto G_res = A._e * e.G._e;
         Ellipsoid res(mu_res, G_res);
@@ -57,7 +63,7 @@ namespace codac2 {
     }
 
     Ellipsoid linear_mapping_guaranteed(const Ellipsoid &e, const Matrix &A, const Vector &b) {
-        // compute A*e+b considering rounding error
+        // compute en outer enclosure of A*e+b, considering the rounding error
         Ellipsoid e_res = linear_mapping(e, A, b);
 
         // compute rounding error as a small box
@@ -65,51 +71,100 @@ namespace codac2 {
         IntervalVector mu_res_(e_res.mu);
         IntervalMatrix G_(e.G);
         IntervalMatrix G_res_(e_res.G);
-
         IntervalMatrix A_(A);
         IntervalVector b_(b);
         IntervalVector unit_box_(mu_.size(), Interval(-1, 1));
+
         auto mu_res_guaranteed = A_._e * mu_._e + b_._e;
         auto G_res_guaranteed = A_._e * G_._e;
         auto error_box_ = mu_res_guaranteed - mu_res_._e +
                 (G_res_guaranteed - G_res_._e) * unit_box_._e;
 
-        // compute the max radius of error_box
-        double rho = Interval(error_box_.norm()).ub(); // TODO norm 2 d'une boite à verifier
-        Ellipsoid elli_error(Vector(e.size()), Eigen::MatrixXd::Identity(e.size(),e.size()) * rho); // = rho*unit_ball
+
+        double rho = Interval(error_box_.norm()).ub(); // max radius of error_box
+        Ellipsoid elli_error(Vector(e.size()),
+                             Eigen::MatrixXd::Identity(e.size(),e.size()) * rho); // = rho*unit_ball
         return e_res + elli_error;
     }
 
-    Matrix nonlinear_mapping_base(const Matrix &G, const Matrix &J, const IntervalMatrix &J_box) {
+    Matrix nonlinear_mapping_base(const Matrix &G, const Matrix &J, const IntervalMatrix &J_box, const Vector& trig, const Vector& q) {
+        /* nonsingular main case from
+         * Rauh, A., & Jaulin, L. (2021).
+         * "A computationally inexpensive algorithm for determining outer
+         * and inner enclosures of nonlinear mappings of ellipsoidal domains.
+         * International Journal of Applied Mathematics and Computer Science, 31(3).*/
+
         Matrix JG = J * G;
         IntervalMatrix G_(G);
         IntervalMatrix JG_ = IntervalMatrix(JG);
-        //  IntervalMatrix JG_inv_ = JE._e.inverse(); // not working with eigen
-        IntervalMatrix JG_inv_(JG._e.inverse()); // nonrigourous inversion
-
-        // compute b_box
         IntervalVector unit_box(G.nb_rows(), Interval(-1, 1));
-        IntervalMatrix I_ = IntervalMatrix(Eigen::MatrixXd::Identity(G.nb_rows(),G.nb_cols()));
-        auto b_box = (JG_inv_._e * J_box._e * G_._e - I_._e) * unit_box._e;
 
-        // get max radius of b_box
-        double rho = Interval(b_box.norm()).ub(); // TODO norm 2 d'une boite à verifier
-        return (1 + rho) * JG;
+        // normal case
+        IntervalMatrix I_ = IntervalMatrix(Eigen::MatrixXd::Identity(G.nb_rows(),G.nb_cols()));
+        IntervalMatrix JG_inv_(JG._e.inverse()); // non rigourous inversion
+        Matrix M(JG);
+        auto W = JG_inv_._e;
+        auto Z = I_._e;
+
+        // check for singularities
+        if(std::abs(JG._e.determinant()) < trig[1])
+        {
+            /* degenerated case from
+             * Louedec, M., Jaulin, L., & Viel, C. (2024).
+             * "Outer enclosures of nonlinear mapping with degenerate ellipsoids."
+             * IFAC ACNDC June 2024*/
+            assert(trig.size() == 2);
+            assert(q.size() == G.nb_rows());
+
+            // SVD decomposition of JG = U*E*V.T
+            Eigen::BDCSVD<Eigen::MatrixXd> bdcsvd(JG._e,Eigen::ComputeFullU);
+            IntervalMatrix U_(bdcsvd.matrixU()); // which is also the right part
+            Vector Sv(bdcsvd.singularValues()); // vectors of singular values
+
+            // select new singular values
+            int dim = G.nb_rows();
+            IntervalVector s_box(U_._e.transpose()*J_box._e*G_._e*unit_box._e);
+            IntervalMatrix S_(Eigen::MatrixXd::Zero(dim,dim)); // diagonal matrix of the new singular value
+            IntervalMatrix S_pinv_(Eigen::MatrixXd::Zero(dim,dim)); // pseudo inverse of S
+            for(int i=0;i<dim;i++){
+                if (Sv[i]>trig[2]){ // normal size singular values
+                    S_(i,i) = Interval(Sv[i]);
+                    S_pinv_(i,i) = 1/S_(i,i);
+                }else{ // for very small singular values (0 included) use s_box
+                    double val = s_box[i].ub();
+                    S_(i,i) = Interval(q[i]*val);
+                    S_pinv_(i,i)=1/S_(i,i);
+                    }
+                }
+            M = (U_*S_).mid();
+            W = S_pinv_._e*U_._e.transpose();
+            Z = W*JG_._e;
+        }
+
+//        auto b_box = (JG_inv_._e * J_box._e * G_._e - I_._e) * unit_box._e;
+        auto b_box = (W * J_box._e * G_._e - Z) * unit_box._e;
+        double rho = Interval(b_box.norm()).ub(); // max radius of b_box
+        return (1 + rho) * M;
     }
 
-    Ellipsoid nonlinear_mapping(const Ellipsoid &e, const AnalyticFunction<VectorOpValue>& f) {
-        // compute the image of the center
-        Vector mu_res = f.eval(e.mu).mid();
+    Ellipsoid nonlinear_mapping(const Ellipsoid &e, const AnalyticFunction<VectorOpValue>& f)
+    {
+        return nonlinear_mapping(e,f,Vector({1e-10,1e-9}),Vector(Eigen::VectorXd::Ones(e.size())));
+    }
 
-        // compute the Jacobian of f at the center
-        Matrix J = f.diff(e.mu).mid();
+    Ellipsoid nonlinear_mapping(const Ellipsoid &e, const AnalyticFunction<VectorOpValue>& f,const Vector& trig, const Vector& q) {
+        assert(e.size() == f.input_size());
+        assert(trig.size() == 2);
+        assert(q.size() == e.size());
 
-        // compute the Jacoiban of f over a box enclosing the ellipsoid
-        IntervalVector enclosing_box = enclose_elli_by_box(e); // TODO import this function
+        Vector mu_res = f.eval(e.mu).mid();  // compute the image of the center
+        Matrix J = f.diff(e.mu).mid(); // compute the Jacobian of f at the center
 
+        // compute the Jacobian of f over a box enclosing the ellipsoid
+        IntervalVector enclosing_box = enclose_elli_by_box(e);
         IntervalMatrix J_box = f.diff(enclosing_box);
 
-        Matrix E_out = nonlinear_mapping_base(e.G, J, J_box);
+        Matrix E_out = nonlinear_mapping_base(e.G, J, J_box,trig,q);
         return Ellipsoid(mu_res, E_out);
     }
 
@@ -163,7 +218,7 @@ namespace codac2 {
         Interval S(0, 0);
         Interval U(0, 0);
 
-        for (int j = 0; j < L.nb_cols(); j++) // for every column
+        for (int j = 0; j < (int)e1.size(); j++) // for every column
         {
             S = Interval(0, 0);
             for (int k = 0; k < j; k++)
@@ -175,7 +230,7 @@ namespace codac2 {
             L(j,j) = sqrt(U);
 
             // now the rest of the column
-            for (int i = j + 1; i<L.nb_rows();
+            for (int i = j + 1; i<(int)e1.size();
             i++)
             {
                 S = Interval(0, 0);

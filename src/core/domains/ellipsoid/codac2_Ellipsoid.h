@@ -14,6 +14,7 @@
 #include "codac2_AnalyticFunction.h"
 
 namespace codac2 {
+
     class Ellipsoid {
     public:
 
@@ -22,6 +23,8 @@ namespace codac2 {
         Ellipsoid(const Vector &mu_, const Matrix &G_);
 
         size_t size() const;
+
+        Vector sample() const;
 
     public:
 
@@ -36,9 +39,16 @@ namespace codac2 {
 
     Ellipsoid linear_mapping_guaranteed(const Ellipsoid &e, const Matrix &A, const Vector &b);
 
-    Ellipsoid nonlinear_mapping_base(const Ellipsoid &e, const Matrix &J, const IntervalMatrix &J_box);
+
+    Ellipsoid nonlinear_mapping_base(const Ellipsoid &e, const Matrix &J, const IntervalMatrix &J_box,
+                                     const Vector& trig1,
+                                     const Vector& q);
 
     Ellipsoid nonlinear_mapping(const Ellipsoid &e, const AnalyticFunction<VectorOpValue> &f);
+    Ellipsoid nonlinear_mapping(const Ellipsoid &e, const AnalyticFunction<VectorOpValue> &f,
+                                const Vector& trig,const Vector& q);
+
+
 
     std::ostream &operator<<(std::ostream &os, const Ellipsoid &e);
 
@@ -47,4 +57,5 @@ namespace codac2 {
     bool concentric_inclusion_test(const Ellipsoid &e1, const Ellipsoid &e2);
 
     IntervalVector enclose_elli_by_box(const Ellipsoid& e);
+
 }
