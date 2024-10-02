@@ -8,6 +8,7 @@
  */
 
 #include <unsupported/Eigen/MatrixFunctions>
+#include <unsupported/Eigen/KroneckerProduct>
 #include "codac2_Ellipsoid.h"
 #include "codac2_template_tools.h"
 
@@ -30,6 +31,7 @@ namespace codac2 {
     }
 
     Vector Ellipsoid::sample() const{
+        // chose a ramdom point in the ellipsoid
         Vector xi(Eigen::VectorXd::Random(this->size()));
         double rand_norm =  ((double) rand() / (RAND_MAX));
         return this->mu._e + this->G._e * xi._e / xi._e.norm() * rand_norm;
@@ -63,7 +65,7 @@ namespace codac2 {
     }
 
     Ellipsoid linear_mapping_guaranteed(const Ellipsoid &e, const Matrix &A, const Vector &b) {
-        // compute en outer enclosure of A*e+b, considering the rounding error
+        // compute en outer enclosure of A*e+b, considering the rounding error with pessimism
         Ellipsoid e_res = linear_mapping(e, A, b);
 
         // compute rounding error as a small box
@@ -79,7 +81,6 @@ namespace codac2 {
         auto G_res_guaranteed = A_._e * G_._e;
         auto error_box_ = mu_res_guaranteed - mu_res_._e +
                 (G_res_guaranteed - G_res_._e) * unit_box_._e;
-
 
         double rho = Interval(error_box_.norm()).ub(); // max radius of error_box
         Ellipsoid elli_error(Vector(e.size()),
@@ -107,7 +108,7 @@ namespace codac2 {
         auto Z = I_._e;
 
         // check for singularities
-        if(std::abs(JG._e.determinant()) < trig[1])
+        if(std::abs(JG._e.determinant()) < trig[0])
         {
             /* degenerated case from
              * Louedec, M., Jaulin, L., & Viel, C. (2024).
@@ -127,7 +128,7 @@ namespace codac2 {
             IntervalMatrix S_(Eigen::MatrixXd::Zero(dim,dim)); // diagonal matrix of the new singular value
             IntervalMatrix S_pinv_(Eigen::MatrixXd::Zero(dim,dim)); // pseudo inverse of S
             for(int i=0;i<dim;i++){
-                if (Sv[i]>trig[2]){ // normal size singular values
+                if (Sv[i]>trig[1]){ // normal size singular values
                     S_(i,i) = Interval(Sv[i]);
                     S_pinv_(i,i) = 1/S_(i,i);
                 }else{ // for very small singular values (0 included) use s_box
@@ -141,7 +142,6 @@ namespace codac2 {
             Z = W*JG_._e;
         }
 
-//        auto b_box = (JG_inv_._e * J_box._e * G_._e - I_._e) * unit_box._e;
         auto b_box = (W * J_box._e * G_._e - Z) * unit_box._e;
         double rho = Interval(b_box.norm()).ub(); // max radius of b_box
         return (1 + rho) * M;
@@ -153,6 +153,8 @@ namespace codac2 {
     }
 
     Ellipsoid nonlinear_mapping(const Ellipsoid &e, const AnalyticFunction<VectorOpValue>& f,const Vector& trig, const Vector& q) {
+        // compute an outer ellipsoidal enclosure of f(e)
+
         assert(e.size() == f.input_size());
         assert(trig.size() == 2);
         assert(q.size() == e.size());
@@ -172,47 +174,50 @@ namespace codac2 {
         return os << "mu : " << e.mu << "\n" << "G :\n" << e.G;
     }
 
-//    bool stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max)
-//    {
-//        // get the Jacobian of f at the origin
-//        int n = f.args().size();
-//        IntervalVector origin(Eigen::MatrixXd::Zero(n,n));
-//        IntervalMatrix J = f.diff(IntervalVector(origin));
-//
-//        // solve the axis aligned discrete lyapunov equation J.T * P * J − P = −J.T * J
-//        IntervalMatrix P(n,n); // TODO solve the Lyapunov equation !!!
-//        IntervalMatrix G0 = (P._e.inverse()).sqrt();
-//        int alpha = 0;
-//        bool res = false;
-//
-//        while(alpha <= alpha_max)
-//        {
-//            Ellipsoid e(origin.mid(),(pow(10,-alpha) * G0).mid());
-//            Ellipsoid e_out = nonlinear_mapping(e,f);
-//
-//            res = inclusion_test(e,e_out);
-//            if(res)
-//            {
-//                cout << "The system is stable" << endl;
-//                cout << "Domain of attraction :\n" << e_out << endl;
-//                return true;
-//            }
-//            alpha++;
-//        }
-//        cout << "The method is not able to conclude on the stability" << endl;
-//        return false;
-//    }
+    bool stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max, Ellipsoid &e, Ellipsoid &e_out)
+    {
+        // get the Jacobian of f at the origin
+        int n = f.input_size();
+        Vector origin(Eigen::VectorXd::Zero(n));
+        Matrix J = f.diff(IntervalVector(origin)).mid();
+
+        // solve the axis aligned discrete lyapunov equation J.T * P * J − P = −J.T * J
+        Matrix P = solve_discrete_lyapunov(J.transpose(),J.transpose()*J); // TODO solve the Lyapunov equation !!!
+        Matrix G0((P._e.inverse()).sqrt());
+        int alpha = 0;
+        bool res = false;
+
+        while(alpha <= alpha_max)
+        {
+            e = Ellipsoid(origin, std::pow(10,-alpha) * G0);
+            e_out = nonlinear_mapping(e,f);
+            cout << "\nwith alpha = " << alpha << endl;
+            cout << "e is\n" << e << endl;
+            cout << "e_out is\n" << e_out << endl;
+
+            res = concentric_inclusion_test(e_out,e);
+            if(res)
+            {
+                cout << "The system is stable" << endl;
+                cout << "Domain of attraction :\n" << e_out << endl;
+                return true;
+            }
+            alpha++;
+        }
+        cout << "The method is not able to conclude on the stability" << endl;
+        return false;
+    }
 
     bool concentric_inclusion_test(const Ellipsoid &e1, const Ellipsoid &e2) {
+        // check if e1 included in e2, assuming that the centers are the same
         assert(e1.size() == e2.size());
         assert((e1.mu._e - e2.mu._e).norm() < 1e-10); // check if the centers are the same
 
-        // check if e1 included in e2
         auto G2_inv = e2.G._e.inverse();
         Matrix I(Eigen::MatrixXd::Identity(e2.G.nb_rows(), e2.G.nb_cols()));
         IntervalMatrix D(I._e - e1.G._e.transpose() * G2_inv.transpose() * G2_inv * e1.G._e);
 
-        // cholesky decomposition of D
+        // cholesky decomposition of D = L*L^T
         IntervalMatrix L(e1.size(), e1.size()); // matrix of the Cholesky decomposition
 
         Interval S(0, 0);
@@ -220,16 +225,17 @@ namespace codac2 {
 
         for (int j = 0; j < (int)e1.size(); j++) // for every column
         {
+            // diagonal element
             S = Interval(0, 0);
             for (int k = 0; k < j; k++)
                 S += L(j, k) * L(j, k);
             U = D(j, j) - S;
             if (U.lb() < 0) {
-                return false;
+                return false; // cannot guarantee that D is positive definite
             }
             L(j,j) = sqrt(U);
 
-            // now the rest of the column
+            // then the rest of the column
             for (int i = j + 1; i<(int)e1.size();
             i++)
             {
@@ -245,6 +251,7 @@ namespace codac2 {
 
     IntervalVector enclose_elli_by_box(const Ellipsoid& e)
     {
+        // compute the tightest axis aligned box containing e
         // |xi|<||Gamma_i| (i_th column bcs symetric)
         // xi = Gamma_i*y with |y|<1, y = Gamma_inv*x in the unit circle
         IntervalVector res(e.size());
@@ -255,6 +262,21 @@ namespace codac2 {
         return res;
     }
 
+    Matrix solve_discrete_lyapunov(const Matrix& a,const Matrix& q)
+    {
+        // implementation of the scipy solver for the discrete lyapunov equation (real matrix only)
+        // works well under dimension 10
+        // https://github.com/scipy/scipy/blob/v1.14.1/scipy/linalg/_solvers.py#L235-L323
+        // Solves the discrete Lyapunov equation :math:`AXA^H - X + Q = 0`
+        assert(a.nb_rows() == a.nb_cols());
+        assert(a.nb_rows() == q.nb_rows());
+        assert(a.nb_cols() == q.nb_cols());
+
+        Eigen::MatrixXd lhs = Eigen::KroneckerProduct(a._e, a._e);
+        lhs = Eigen::MatrixXd::Identity(lhs.rows(),lhs.cols()) - lhs;
+        Eigen::MatrixXd x = lhs.colPivHouseholderQr().solve((Eigen::VectorXd)q._e.reshaped());
+        return Matrix(x.reshaped(q.nb_rows(),q.nb_cols()));
+    }
 
     // Old implementations:
 

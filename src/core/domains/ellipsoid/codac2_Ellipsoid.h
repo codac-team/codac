@@ -52,10 +52,12 @@ namespace codac2 {
 
     std::ostream &operator<<(std::ostream &os, const Ellipsoid &e);
 
-//    bool stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max);
+    bool stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max, Ellipsoid &e, Ellipsoid &e_out);
 
     bool concentric_inclusion_test(const Ellipsoid &e1, const Ellipsoid &e2);
 
     IntervalVector enclose_elli_by_box(const Ellipsoid& e);
+
+    Matrix solve_discrete_lyapunov(const Matrix& a,const Matrix& q);
 
 }
