@@ -12,29 +12,23 @@
 using namespace std;
 using namespace codac2;
 
-string Color::to_hex_str(const string& prefix) const
-{
-  if(hex_str.empty())
+Color::Color(float r_, float g_, float b_, float alpha_)
+  : r(r_), g(g_), b(b_), alpha(alpha_),
+  hex_str([&]
   {
-    hex_str = prefix;
-   
-    char char_r[255];
-    sprintf(char_r, "%.2X", (int)(r * 255));
-    hex_str.append(char_r);
-    char char_g[255];
-    sprintf(char_g, "%.2X", (int)(g * 255));
-    hex_str.append(char_g);
-    char char_b[255];
-    sprintf(char_b, "%.2X", (int)(b * 255));
-    hex_str.append(char_b);
-
+    std::stringstream s;
+    s << std::hex << std::setfill('0');
+    s << std::setw(2) << (int)(r*255) << std::setw(2) << (int)(g*255) << std::setw(2) << (int)(b*255);
     if(alpha != 1.)
-    {
-      char char_alpha[255];
-      sprintf(char_alpha, "%.2X", (int)(alpha * 255));
-      hex_str.append(char_alpha);
-    }
-  }
+      s << std::setw(2) << (int)(alpha*255);
+    return s.str();
+  }())
+{ 
+  assert(r_ >= 0. && r_ <= 1. && g_ >= 0. && g_ <= 1. && b_ >= 0. && b_ <= 1. && alpha_ >= 0. && alpha_ <= 1.);
+}
 
-  return hex_str;
+Color::Color(int r_, int g_, int b_, int alpha_)
+  : Color((float)(r_/255.), (float)(g_/255.), (float)(b_/255.), (float)(alpha_/255.))
+{
+  assert(r_ >= 0 && r_ <= 255 && g_ >= 0 && g_ <= 255 && b_ >= 0 && b_ <= 255 && alpha_ >= 0 && alpha_ <= 255);
 }
