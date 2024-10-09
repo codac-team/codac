@@ -143,5 +143,5 @@ void Figure2D_VIBes::draw_AUV(const Vector& x, float size, const StyleProperties
 
 string Figure2D_VIBes::to_vibes_style(const StyleProperties& s)
 {
-  return "#" + s.stroke_color.hex_str + "[#" + s.fill_color.hex_str + "]";
+  return "" + s.stroke_color.hex_str + "[" + s.fill_color.hex_str + "]";
 }

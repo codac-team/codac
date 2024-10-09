@@ -21,7 +21,7 @@ Color::Color(float r_, float g_, float b_, float alpha_)
     s << std::setw(2) << (int)(r*255) << std::setw(2) << (int)(g*255) << std::setw(2) << (int)(b*255);
     if(alpha != 1.)
       s << std::setw(2) << (int)(alpha*255);
-    return s.str();
+    return "#"+s.str();
   }())
 { 
   assert(r_ >= 0. && r_ <= 1. && g_ >= 0. && g_ <= 1. && b_ >= 0. && b_ <= 1. && alpha_ >= 0. && alpha_ <= 1.);
