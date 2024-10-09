@@ -10,6 +10,7 @@
 #pragma once
 
 #include <string>
+#include <iomanip>
 #include"codac2_assert.h"
 
 namespace codac2
@@ -20,31 +21,14 @@ namespace codac2
    */
   struct Color
   {
-    float r;          ///< red, value between 0. and 1.
-    float g;          ///< green, value between 0. and 1.
-    float b;          ///< blue, value between 0. and 1.
-    float alpha = 1.; ///< opacity, value between 0. (transparent) and 1. (opaque)
-    mutable std::string hex_str;
+    float r;              ///< red, value between 0. and 1.
+    float g;              ///< green, value between 0. and 1.
+    float b;              ///< blue, value between 0. and 1.
+    float alpha = 1.;     ///< opacity, value between 0. (transparent) and 1. (opaque)
+    std::string hex_str;  ///< represents an RGB value in a HTML standard
 
-    explicit Color(int r_, int g_, int b_, int alpha_ = 255)
-      : r(r_/255.), g(g_/255.), b(b_/255.), alpha(alpha_/255.)
-    {
-      assert(r_ >= 0 && r_ <= 255 && g_ >= 0 && g_ <= 255 && b_ >= 0 && b_ <= 255 && alpha_ >= 0 && alpha_ <= 255);
-    }
-
-    explicit Color(float r_, float g_, float b_, float alpha_ = 1.)
-      : r(r_), g(g_), b(b_), alpha(alpha_)
-    { 
-      assert(r_ >= 0. && r_ <= 1. && g_ >= 0. && g_ <= 1. && b_ >= 0. && b_ <= 1. && alpha_ >= 0. && alpha_ <= 1.);
-    }
-
-    /**
-     * \brief Represents an RGB value in a HTML standard
-     *
-     * \param prefix optional characters ("#" by default)
-     * \return the HTML string
-     */
-    std::string to_hex_str(const std::string& prefix = "#") const;
+    explicit Color(float r_, float g_, float b_, float alpha_ = 1.);
+    explicit Color(int r_, int g_, int b_, int alpha_ = 255);
 
     static Color none()                      { return Color(255, 255, 255, 0               ); };
     static Color black(float alpha = 1)      { return Color(0,   0,   0,   (int)(alpha*255)); };
