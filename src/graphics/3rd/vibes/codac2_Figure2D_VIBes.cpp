@@ -58,7 +58,7 @@ void Figure2D_VIBes::center_viewbox(const Vector& c, const Vector& r)
 void Figure2D_VIBes::draw_point(const Vector& c, const StyleProperties& s)
 {
   assert(_fig.size() <= c.size());
-  vibes::drawBox(c[i()],c[j()], to_vibes_style(s), _params);
+  vibes::drawPoint(c[i()],c[j()],2, to_vibes_style(s), _params);
 }
 
 void Figure2D_VIBes::draw_box(const IntervalVector& x, const StyleProperties& s)
