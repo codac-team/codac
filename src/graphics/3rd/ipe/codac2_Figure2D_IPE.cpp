@@ -98,9 +98,7 @@ void Figure2D_IPE::draw_point(const Vector& c, const StyleProperties& s)
   _f_temp_content << "\n \
     <use layer=\"alpha\" \n \
     name=\"mark/fdisk(sfx)\"  \n \
-    pos=\"";
-  _f_temp_content << scale_x(c[i()])<< " " << scale_y(c[j()])<<"\"";
-  _f_temp_content << "\n \
+    pos=\"" << scale_x(c[i()]) << " " << scale_y(c[j()]) << "\" \n \
     stroke=\"codac_color_" << s.stroke_color.hex_str.substr(1) << "\" \n \
     fill=\"codac_color_" << s.fill_color.hex_str.substr(1) << "\" \n \
     opacity=\"" << (int)(10*round(10.*s.fill_color.alpha)) << "%\" \n \
