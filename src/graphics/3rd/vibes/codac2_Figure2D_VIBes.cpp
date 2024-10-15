@@ -117,7 +117,9 @@ void Figure2D_VIBes::draw_pie(const Vector& c, const Interval& r, const Interval
 {
   assert(_fig.size() <= c.size());
   assert(r.lb() >= 0.);
-  vibes::drawPie(c[i()],c[j()], r.lb(),r.ub(), 180.*theta.lb()/codac2::pi,180.*theta.ub()/codac2::pi, to_vibes_style(s), _params);
+  // Corrected a bug in VIBEs in case of r=[0,..] (only one edge of the pie is drawn) or r=[..,oo] (the pie disappears when zoomed in)
+  Interval r_ { r & Interval(1e-8,1e5)};
+  vibes::drawPie(c[i()],c[j()], r_.lb(),r_.ub(), 180.*theta.lb()/codac2::pi,180.*theta.ub()/codac2::pi, to_vibes_style(s), _params);
 }
 
 void Figure2D_VIBes::draw_ellipse(const Vector& c, const Vector& ab, double theta, const StyleProperties& s)
