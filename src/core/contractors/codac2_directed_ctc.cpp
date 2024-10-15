@@ -809,7 +809,7 @@ using namespace codac2;
 
     IntervalMatrix d(1,x1.da.nb_cols());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d(0,i) = (-x1.a*x2.da(0,i)/(sqr(x2.a)+sqr(x1.a)))+(-x2.a*x1.da(0,i)/(sqr(x2.a)+sqr(x1.a)));
+      d(0,i) = (-x1.a*x2.da(0,i)/(sqr(x2.a)+sqr(x1.a)))+(x2.a*x1.da(0,i)/(sqr(x2.a)+sqr(x1.a)));
 
     return {
       fwd(x1.m, x2.m),
