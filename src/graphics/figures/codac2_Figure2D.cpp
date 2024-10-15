@@ -110,7 +110,12 @@ void Figure2D::draw_box(const IntervalVector& x, const StyleProperties& s)
 
   if(!x.is_empty())
     for(const auto& output_fig : _output_figures)
-      output_fig->draw_box(x,s);
+    {
+      if(x.max_diam() == 0.)
+        output_fig->draw_point({x[0].lb(),x[1].lb()}, s);
+      else
+        output_fig->draw_box(x,s);
+    }
 }
 
 void Figure2D::draw_circle(const Vector& c, double r, const StyleProperties& s)
