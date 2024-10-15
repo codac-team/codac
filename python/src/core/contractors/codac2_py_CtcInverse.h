@@ -41,6 +41,9 @@ void export_CtcInverse(py::module& m, const std::string& export_name, py::class_
 
     .def(CONTRACT_BOX_METHOD(CtcInverse_<T>,
       VOID_CTCINVERSE_Y_CONTRACT_X_REF_VARIADIC_CONST))
+
+    .def("function", &CtcInverse_<T>::function,
+      CONST_ANALYTICFUNCTION_TYPENAME_WRAPPER_Y_DOMAIN_REF_CTCINVERSE_Y_FUNCTION_CONST)
     
   ;
 }

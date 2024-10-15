@@ -23,6 +23,7 @@ class TestCtcInverse(unittest.TestCase):
     x = VectorVar(2)
     f = AnalyticFunction([x], x[0]-x[1])
     c = CtcInverse(f, 0)
+    self.assertTrue(c.function().input_size() == 2)
 
     b = IntervalVector(2)
 

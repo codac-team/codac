@@ -92,6 +92,9 @@ class CtcInverse(Ctc):
   def copy(self):
     return self.c.copy()
 
+  def function(self):
+    return self.c.function()
+
 
 class CtcInverseNotIn(Ctc):
 
