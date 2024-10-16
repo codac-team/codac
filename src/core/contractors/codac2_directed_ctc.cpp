@@ -379,9 +379,7 @@ using namespace codac2;
     };
   }
 
-  //#include "codac2_ibex.h"
-  //#include <ibex_IntervalVector.h> // for ibex::bwd_mul
-
+  #include "codac2_linear_ctc.h"
   #include "codac2_GaussJordan.h"
 
   void MulOp::bwd(const IntervalVector& y, IntervalMatrix& x1, IntervalVector& x2)
@@ -389,15 +387,15 @@ using namespace codac2;
     assert(x1.nb_rows() == y.size());
     assert(x1.nb_cols() == x2.size());
 
-    if(false && x1.nb_rows() == x1.nb_cols())
+    /*if(x1.is_squared()) // not working for any x1
     {
-      //CtcGaussElim ctc_ge;
-      //CtcLinearPrecond ctc_gep(ctc_ge);
-      //IntervalVector y_(y);
-      //ctc_gep.contract(x1,x2,y_);
+      CtcGaussElim ctc_ge;
+      CtcLinearPrecond ctc_gep(ctc_ge);
+      IntervalVector y_(y);
+      ctc_gep.contract(x1,x2,y_);
     }
 
-    else
+    else*/
     {
       IntervalMatrix Q = gauss_jordan(x1.mid());
       IntervalVector b_tilde = Q*y;
@@ -422,12 +420,6 @@ using namespace codac2;
           }
         }
       }
-
-      //ibex::IntervalVector ibex_y(to_ibex(y)), ibex_x2(to_ibex(x2));
-      //ibex::IntervalMatrix ibex_x1(to_ibex(x1));
-      //ibex::bwd_mul(ibex_y, ibex_x1, ibex_x2, 0.05);
-      //x1 &= to_codac(ibex_x1);
-      //x2 &= to_codac(ibex_x2);
     }
   }
 
