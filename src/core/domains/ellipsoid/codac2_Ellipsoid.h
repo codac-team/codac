@@ -26,7 +26,7 @@ namespace codac2
       size_t size() const;
 
       /**
-       * \brief Returns a random vector inside the ellipsoid
+       * \brief Returns a random vector inside this ellipsoid
        *
        * \note The seed of the pseudo-random number generator is 
        *       voluntarily initialized outside this function, on demand.
@@ -34,6 +34,13 @@ namespace codac2
        * \return random value
        */
       Vector rand() const;
+      
+      /**
+       * \brief Compute the tightest axis-aligned box containing this ellipsoid
+       *
+       * \return hull box
+       */
+      IntervalVector hull_box() const;
 
     public:
 
@@ -65,7 +72,6 @@ namespace codac2
 
     bool concentric_inclusion_test(const Ellipsoid &e1, const Ellipsoid &e2);
 
-    IntervalVector enclose_elli_by_box(const Ellipsoid& e);
 
     Matrix solve_discrete_lyapunov(const Matrix& a,const Matrix& q);
 

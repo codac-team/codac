@@ -37,6 +37,16 @@ namespace codac2 {
         return this->mu._e + this->G._e * xi._e / xi._e.norm() * rand_norm;
     }
 
+    IntervalVector Ellipsoid::hull_box() const
+    {
+        IntervalVector hull(size());
+        for(size_t i=0; i< size(); i++){
+            double m = G._e.col(i).norm();
+            hull[i] = Interval(-m, m);
+        }
+        return hull;
+    }
+
     Ellipsoid operator+(const Ellipsoid &e1, const Ellipsoid &e2) {
         assert_release(e1.size() == e2.size());
 
@@ -163,8 +173,7 @@ namespace codac2 {
         Matrix J = f.diff(e.mu).mid(); // compute the Jacobian of f at the center
 
         // compute the Jacobian of f over a box enclosing the ellipsoid
-        IntervalVector enclosing_box = enclose_elli_by_box(e);
-        IntervalMatrix J_box = f.diff(enclosing_box);
+        IntervalMatrix J_box = f.diff(e.hull_box());
 
         Matrix E_out = nonlinear_mapping_base(e.G, J, J_box,trig,q);
         return Ellipsoid(mu_res, E_out);
@@ -247,19 +256,6 @@ namespace codac2 {
             }
         }
         return true;
-    }
-
-    IntervalVector enclose_elli_by_box(const Ellipsoid& e)
-    {
-        // compute the tightest axis aligned box containing e
-        // |xi|<||Gamma_i| (i_th column bcs symetric)
-        // xi = Gamma_i*y with |y|<1, y = Gamma_inv*x in the unit circle
-        IntervalVector res(e.size());
-        for(int i=0; i<int(e.size()); i++){
-            double m = e.G._e.col(i).norm();
-            res[i] = Interval(-m, m);
-        }
-        return res;
     }
 
     Matrix solve_discrete_lyapunov(const Matrix& a,const Matrix& q)
