@@ -33,6 +33,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/contractors/codac2_tests_CtcInverseNotIn
   core/contractors/codac2_tests_CtcLazy
   core/contractors/codac2_tests_CtcSegment
+  core/contractors/codac2_tests_linear_ctc
 
   core/domains/codac2_tests_BoolInterval
   core/domains/interval/codac2_tests_Interval

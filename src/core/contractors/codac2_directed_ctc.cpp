@@ -1,5 +1,5 @@
 /** 
- *  codac2_DirectedCtc.cpp
+ *  codac2_directed_ctc.cpp
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -8,7 +8,7 @@
  */
 
 #include <cassert>
-#include "codac2_DirectedCtc.h"
+#include "codac2_directed_ctc.h"
 #include "codac2_MatrixBase.h"
 #include "codac2_IntervalVector.h"
 #include "codac2_IntervalMatrix.h"
@@ -379,9 +379,7 @@ using namespace codac2;
     };
   }
 
-  //#include "codac2_ibex.h"
-  //#include <ibex_IntervalVector.h> // for ibex::bwd_mul
-
+  #include "codac2_linear_ctc.h"
   #include "codac2_GaussJordan.h"
 
   void MulOp::bwd(const IntervalVector& y, IntervalMatrix& x1, IntervalVector& x2)
@@ -389,15 +387,15 @@ using namespace codac2;
     assert(x1.nb_rows() == y.size());
     assert(x1.nb_cols() == x2.size());
 
-    if(false && x1.nb_rows() == x1.nb_cols())
+    /*if(x1.is_squared()) // not working for any x1
     {
-      //CtcGaussElim ctc_ge;
-      //CtcLinearPrecond ctc_gep(ctc_ge);
-      //IntervalVector y_(y);
-      //ctc_gep.contract(x1,x2,y_);
+      CtcGaussElim ctc_ge;
+      CtcLinearPrecond ctc_gep(ctc_ge);
+      IntervalVector y_(y);
+      ctc_gep.contract(x1,x2,y_);
     }
 
-    else
+    else*/
     {
       IntervalMatrix Q = gauss_jordan(x1.mid());
       IntervalVector b_tilde = Q*y;
@@ -422,12 +420,6 @@ using namespace codac2;
           }
         }
       }
-
-      //ibex::IntervalVector ibex_y(to_ibex(y)), ibex_x2(to_ibex(x2));
-      //ibex::IntervalMatrix ibex_x1(to_ibex(x1));
-      //ibex::bwd_mul(ibex_y, ibex_x1, ibex_x2, 0.05);
-      //x1 &= to_codac(ibex_x1);
-      //x2 &= to_codac(ibex_x2);
     }
   }
 
@@ -809,7 +801,7 @@ using namespace codac2;
 
     IntervalMatrix d(1,x1.da.nb_cols());
     for(size_t i = 0 ; i < d.size() ; i++)
-      d(0,i) = (-x1.a*x2.da(0,i)/(sqr(x2.a)+sqr(x1.a)))+(-x2.a*x1.da(0,i)/(sqr(x2.a)+sqr(x1.a)));
+      d(0,i) = (-x1.a*x2.da(0,i)/(sqr(x2.a)+sqr(x1.a)))+(x2.a*x1.da(0,i)/(sqr(x2.a)+sqr(x1.a)));
 
     return {
       fwd(x1.m, x2.m),
@@ -1004,7 +996,7 @@ using namespace codac2;
 
   Interval DetOp::fwd(const IntervalMatrix& x)
   {
-    assert_release(x.nb_rows() == x.nb_cols() && "can only compute determinants for a square matrix");
+    assert_release(x.is_squared() && "can only compute determinants for a square matrix");
     assert_release((x.nb_rows() == 1 || x.nb_rows() == 2) && "determinant not yet computable for n×n matrices, n>2");
 
     if(x.nb_rows() == 1) // 1×1 matrix
@@ -1029,7 +1021,7 @@ using namespace codac2;
 
   void DetOp::bwd(const Interval& y, IntervalMatrix& x)
   {
-    assert_release(x.nb_rows() == x.nb_cols() && "can only compute determinants for a square matrix");
+    assert_release(x.is_squared() && "can only compute determinants for a square matrix");
     assert_release((x.nb_rows() == 1 || x.nb_rows() == 2) && "determinant not yet computable for n×n matrices, n>2");
 
     if(x.nb_rows() == 1) // 1×1 matrix

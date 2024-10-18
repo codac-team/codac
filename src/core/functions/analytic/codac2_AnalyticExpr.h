@@ -14,7 +14,7 @@
 #include <utility>
 #include "codac2_ExprBase.h"
 #include "codac2_Domain.h"
-#include "codac2_DirectedCtc.h"
+#include "codac2_directed_ctc.h"
 #include "codac2_FunctionArgsList.h"
 
 namespace codac2

@@ -13,7 +13,7 @@
 #include <memory>
 #include <utility>
 #include "codac2_Domain.h"
-#include "codac2_DirectedCtc.h"
+#include "codac2_directed_ctc.h"
 
 namespace codac2
 {

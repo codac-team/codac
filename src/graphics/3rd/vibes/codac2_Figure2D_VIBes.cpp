@@ -58,7 +58,7 @@ void Figure2D_VIBes::center_viewbox(const Vector& c, const Vector& r)
 void Figure2D_VIBes::draw_point(const Vector& c, const StyleProperties& s)
 {
   assert(_fig.size() <= c.size());
-  vibes::drawBox(c[i()],c[j()], to_vibes_style(s), _params);
+  vibes::drawPoint(c[i()],c[j()],2, to_vibes_style(s), _params);
 }
 
 void Figure2D_VIBes::draw_box(const IntervalVector& x, const StyleProperties& s)
@@ -117,7 +117,8 @@ void Figure2D_VIBes::draw_pie(const Vector& c, const Interval& r, const Interval
 {
   assert(_fig.size() <= c.size());
   assert(r.lb() >= 0.);
-  vibes::drawPie(c[i()],c[j()], r.lb(),r.ub(), 180.*theta.lb()/codac2::pi,180.*theta.ub()/codac2::pi, to_vibes_style(s), _params);
+  // Corrected a bug in VIBEs in case of r=[..,oo] (the pie disappears when zoomed in)
+  vibes::drawPie(c[i()],c[j()], r.lb(),(r.ub()>1e5?1e5:r.ub()), 180.*theta.lb()/codac2::pi,180.*theta.ub()/codac2::pi, to_vibes_style(s), _params);
 }
 
 void Figure2D_VIBes::draw_ellipse(const Vector& c, const Vector& ab, double theta, const StyleProperties& s)
@@ -143,5 +144,5 @@ void Figure2D_VIBes::draw_AUV(const Vector& x, float size, const StyleProperties
 
 string Figure2D_VIBes::to_vibes_style(const StyleProperties& s)
 {
-  return s.stroke_color.to_hex_str() + "[" + s.fill_color.to_hex_str() + "]";
+  return s.stroke_color.hex_str + "[" + s.fill_color.hex_str + "]";
 }

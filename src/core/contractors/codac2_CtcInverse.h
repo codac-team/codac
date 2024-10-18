@@ -119,6 +119,11 @@ namespace codac2
         _f.intersect_from_args(v, x...); // updating input values
       }
 
+      const AnalyticFunction<typename Wrapper<Y>::Domain>& function() const
+      {
+        return _f;
+      }
+
     protected:
 
       const AnalyticFunction<typename Wrapper<Y>::Domain> _f;

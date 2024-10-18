@@ -33,7 +33,8 @@ Figure2D_IPE::Figure2D_IPE(const Figure2D& fig)
   };
 
   for(const auto& ci : codac_colors)
-    _colors.emplace(ci.to_hex_str(""), ci);
+    // substr is needed to remove the "#" at the beginning of hex_str (deprecated by IPE)
+    _colors.emplace(ci.hex_str.substr(1), ci);
 }
 
 Figure2D_IPE::~Figure2D_IPE()
@@ -75,22 +76,34 @@ void Figure2D_IPE::center_viewbox(const Vector& c, const Vector& r)
 
 void Figure2D_IPE::begin_path(const StyleProperties& s)
 {
-  _colors.emplace(s.stroke_color.to_hex_str(""), s.stroke_color);
-  _colors.emplace(s.fill_color.to_hex_str(""), s.fill_color);
+  // substr is needed to remove the "#" at the beginning of hex_str (deprecated by IPE)
+  _colors.emplace(s.stroke_color.hex_str.substr(1), s.stroke_color);
+  _colors.emplace(s.fill_color.hex_str.substr(1), s.fill_color);
 
   _f_temp_content << "\n \
     <path layer=\"alpha\" \n \
-    stroke=\"codac_color_" << s.stroke_color.to_hex_str("") << "\" \n \
-    fill=\"codac_color_" << s.fill_color.to_hex_str("") << "\" \n \
+    stroke=\"codac_color_" << s.stroke_color.hex_str.substr(1) << "\" \n \
+    fill=\"codac_color_" << s.fill_color.hex_str.substr(1) << "\" \n \
     opacity=\"" << (int)(10*round(10.*s.fill_color.alpha)) << "%\" \n \
     stroke-opacity=\"" << (int)(10*round(10.*s.stroke_color.alpha)) << "%\" \n \
-    pen=\"ultrafat\"> \n ";
+    pen=\"normal\"> \n ";
 }
 
 void Figure2D_IPE::draw_point(const Vector& c, const StyleProperties& s)
 {
   assert(_fig.size() <= c.size());
-  // Not implemented yet
+  _colors.emplace(s.stroke_color.hex_str.substr(1), s.stroke_color);
+  _colors.emplace(s.fill_color.hex_str.substr(1), s.fill_color);
+
+  _f_temp_content << "\n \
+    <use layer=\"alpha\" \n \
+    name=\"mark/fdisk(sfx)\"  \n \
+    pos=\"" << scale_x(c[i()]) << " " << scale_y(c[j()]) << "\" \n \
+    stroke=\"codac_color_" << s.stroke_color.hex_str.substr(1) << "\" \n \
+    fill=\"codac_color_" << s.fill_color.hex_str.substr(1) << "\" \n \
+    opacity=\"" << (int)(10*round(10.*s.fill_color.alpha)) << "%\" \n \
+    stroke-opacity=\"" << (int)(10*round(10.*s.stroke_color.alpha)) << "%\" \n \
+    size=\"normal\"/>";
 }
 
 void Figure2D_IPE::draw_box(const IntervalVector& x, const StyleProperties& s)

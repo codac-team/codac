@@ -4,8 +4,8 @@
 
   list(APPEND CODAC_UNSUPPORTED_SRC
     
-    ${CMAKE_CURRENT_SOURCE_DIR}/codac2_empty.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/codac2_empty.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/codac2_unsupported_empty.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/codac2_unsupported_empty.h
   )
 
 ################################################################################

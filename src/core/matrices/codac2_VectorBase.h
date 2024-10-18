@@ -47,6 +47,8 @@ namespace codac2
         : MatrixBase<S,T>(x)
       { }
 
+      bool is_squared() const = delete;
+
       T& operator[](size_t i)
       {
         return const_cast<T&>(const_cast<const VectorBase<S,M,T>*>(this)->operator[](i));

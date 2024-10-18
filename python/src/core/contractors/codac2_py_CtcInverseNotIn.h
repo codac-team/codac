@@ -38,10 +38,6 @@ void export_CtcInverseNotIn(py::module& m, const std::string& export_name, py::c
   }
 
   exported
-  
-    .def("contract", &CtcInverseNotIn<T>::contract,
-      VOID_CTCINVERSE_Y_CONTRACT_X_REF_VARIADIC_CONST,
-      "x"_a)
 
     .def(CONTRACT_BOX_METHOD(CtcInverseNotIn<T>,
       VOID_CTCINVERSENOTIN_YX_CONTRACT_X_REF_CONST))

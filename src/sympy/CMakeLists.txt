@@ -3,8 +3,8 @@
 # ==================================================================
 
   list(APPEND CODAC_SYMPY_SRC
-    ${CMAKE_CURRENT_SOURCE_DIR}/codac2_sympy.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/codac2_sympy.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/codac2_sympy_empty.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/codac2_sympy_empty.h
   )
 
 ################################################################################

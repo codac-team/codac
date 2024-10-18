@@ -28,6 +28,7 @@ void export_Color(py::module& m)
     .def_readwrite("g", &Color::g)
     .def_readwrite("b", &Color::b)
     .def_readwrite("alpha", &Color::alpha)
+    .def_readwrite("hex_str", &Color::hex_str)
 
     .def(py::init<int,int,int,int>(),
       COLOR_COLOR_INT_INT_INT_INT,
@@ -36,10 +37,6 @@ void export_Color(py::module& m)
     .def(py::init<float,float,float,float>(),
       COLOR_COLOR_FLOAT_FLOAT_FLOAT_FLOAT,
       "r"_a, "g"_a, "b"_a, "alpha"_a=1.)
-
-    .def("to_hex_str", &Color::to_hex_str,
-      STRING_COLOR_TO_HEX_STR_CONST_STRING_REF_CONST,
-      "prefix"_a="#")
 
     // Predefined colors
 

@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_empty.cpp
+ *  \file codac2_unsupported_empty.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -7,9 +7,12 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
-#include "codac2_empty.h"
+#pragma once
 
 namespace codac2
 {
-  
+  namespace unsupported
+  {
+    
+  }
 }

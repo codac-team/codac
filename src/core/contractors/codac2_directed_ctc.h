@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_DirectedCtc.h
+ *  \file codac2_directed_ctc.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou

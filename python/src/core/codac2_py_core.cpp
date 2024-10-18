@@ -40,7 +40,8 @@ void export_CtcPolar(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInte
 void export_CtcSegment(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcUnion(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcWrapper(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
-void export_DirectedCtc(py::module& m);
+void export_directed_ctc(py::module& m);
+void export_linear_ctc(py::module& m);
 
 // domains
 void export_BoolInterval(py::module& m);
@@ -132,7 +133,8 @@ PYBIND11_MODULE(_core, m)
   export_CtcSegment(m, py_ctc_iv);
   export_CtcUnion(m, py_ctc_iv);
   export_CtcWrapper(m, py_ctc_iv);
-  export_DirectedCtc(m);
+  export_directed_ctc(m);
+  export_linear_ctc(m);
 
   // matrices
   auto py_M = export_Matrix(m);

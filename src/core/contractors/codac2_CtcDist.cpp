@@ -9,7 +9,7 @@
 
 #include <tuple>
 #include "codac2_CtcDist.h"
-#include "codac2_DirectedCtc.h"
+#include "codac2_directed_ctc.h"
 
 using namespace std;
 using namespace codac2;

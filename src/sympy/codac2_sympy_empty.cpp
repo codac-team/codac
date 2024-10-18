@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_empty.h
+ *  \file codac2_sympy_empty.cpp
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -7,9 +7,12 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
-#pragma once
+#include "codac2_sympy_empty.h"
 
 namespace codac2
 {
-  
+  namespace sympy
+  {
+    
+  }
 }

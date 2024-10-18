@@ -14,6 +14,7 @@
 #include <memory>
 #include "codac2_Figure2DInterface.h"
 #include "codac2_OutputFigure2D.h"
+#include "codac2_Paving.h"
 
 #define DEFAULT_FIG_NAME "Codac - default view"
 
@@ -230,7 +231,14 @@ namespace codac2
         const StyleProperties& boundary_style = StyleProperties::boundary(),
         const StyleProperties& outside_style = StyleProperties::outside())
       {
-        auto_init();
+        if(auto_init())
+        {
+          double rx = p.tree()->hull()[0].diam(), ry = p.tree()->hull()[1].diam();
+          _default_fig->set_window_properties({20.,20.}, 
+            rx > ry ? Vector({800.,800.*ry/rx}) : Vector({800.*rx/ry,800.}));
+          _default_fig->set_axes(axis(0,p.tree()->hull()[0]),axis(1,p.tree()->hull()[1]));
+        }
+
         selected_fig()->draw_paving(p, boundary_style, outside_style);
       }
 
@@ -239,7 +247,14 @@ namespace codac2
         const StyleProperties& outside_style = StyleProperties::outside(),
         const StyleProperties& inside_style = StyleProperties::inside())
       {
-        auto_init();
+        if(auto_init())
+        {
+          double rx = p.tree()->hull()[0].diam(), ry = p.tree()->hull()[1].diam();
+          _default_fig->set_window_properties({20.,20.}, 
+            rx > ry ? Vector({800.,800.*ry/rx}) : Vector({800.*rx/ry,800.}));
+          _default_fig->set_axes(axis(0,p.tree()->hull()[0]),axis(1,p.tree()->hull()[1]));
+        }
+
         selected_fig()->draw_paving(p, boundary_style, outside_style, inside_style);
       }
 
@@ -262,7 +277,7 @@ namespace codac2
 
     protected:
 
-      static void auto_init()
+      static bool auto_init()
       {
         if(!_default_fig && !_selected_fig)
         {
@@ -270,7 +285,10 @@ namespace codac2
           _default_fig->set_window_properties({20.,20.}, {800.,800.});
           _default_fig->set_axes(axis(0,{-10,10}),axis(1,{-10,10}));
           _selected_fig = _default_fig;
+          return true;
         }
+
+        return false;
       }
 
       friend Figure2D;

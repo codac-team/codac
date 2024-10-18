@@ -10,8 +10,8 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include <codac2_DirectedCtc.h>
-#include "codac2_py_DirectedCtc_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include <codac2_directed_ctc.h>
+#include "codac2_py_directed_ctc_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 
 using namespace std;
 using namespace codac2;
@@ -19,7 +19,7 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-void export_DirectedCtc(py::module& m)
+void export_directed_ctc(py::module& m)
 {
   py::class_<AddOp>(m, "AddOp")
 
