@@ -15,6 +15,8 @@
 
 namespace codac2
 {
+  // eps: accuracy of the paving algorithm, the undefined boxes will have their max_diam <= eps
+  
   void draw_while_paving(const IntervalVector& x0, std::shared_ptr<const CtcBase<IntervalVector>> c, double eps, std::shared_ptr<Figure2D> fig = nullptr);
   void draw_while_paving(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, std::shared_ptr<Figure2D> fig = nullptr);
 

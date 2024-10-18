@@ -124,7 +124,7 @@ namespace codac2
 
       if(!boundary.is_empty())
       {
-        if(boundary.max_diam() < eps)
+        if(boundary.max_diam() <= eps)
         {
           n_boundary++;
           fig->draw_box(boundary, StyleProperties::boundary());
