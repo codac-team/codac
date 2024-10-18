@@ -62,9 +62,9 @@ namespace codac2
 
     Ellipsoid operator+(const Ellipsoid &e1, const Ellipsoid &e2);
 
-    Ellipsoid linear_mapping(const Ellipsoid &e, const Matrix &A, const Vector &b);
+    Ellipsoid unreliable_linear_mapping(const Ellipsoid &e, const Matrix &A, const Vector &b);
 
-    Ellipsoid linear_mapping_guaranteed(const Ellipsoid &e, const Matrix &A, const Vector &b);
+    Ellipsoid linear_mapping(const Ellipsoid &e, const Matrix &A, const Vector &b);
 
 
     Ellipsoid nonlinear_mapping_base(const Ellipsoid &e, const Matrix &J, const IntervalMatrix &J_box,

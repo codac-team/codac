@@ -106,7 +106,7 @@ namespace codac2 {
         );
     }
 
-    Ellipsoid linear_mapping(const Ellipsoid &e, const Matrix &A, const Vector &b) {
+    Ellipsoid unreliable_linear_mapping(const Ellipsoid &e, const Matrix &A, const Vector &b) {
         // return A*e+b | non-rigorous operations
         auto mu_res = A._e * e.mu._e + b._e;
         auto G_res = A._e * e.G._e;
@@ -114,9 +114,9 @@ namespace codac2 {
         return res;
     }
 
-    Ellipsoid linear_mapping_guaranteed(const Ellipsoid &e, const Matrix &A, const Vector &b) {
+    Ellipsoid linear_mapping(const Ellipsoid &e, const Matrix &A, const Vector &b) {
         // compute en outer enclosure of A*e+b, considering the rounding error with pessimism
-        Ellipsoid e_res = linear_mapping(e, A, b);
+        Ellipsoid e_res = unreliable_linear_mapping(e, A, b);
 
         // compute rounding error as a small box
         IntervalVector mu_(e.mu);
@@ -205,6 +205,7 @@ namespace codac2 {
     Ellipsoid nonlinear_mapping(const Ellipsoid &e, const AnalyticFunction<VectorOpValue>& f,const Vector& trig, const Vector& q) {
         // compute an outer ellipsoidal enclosure of f(e)
 
+        assert_release(f.args().size() == 1 && "f must have only one arg");
         assert_release(e.size() == f.input_size());
         assert_release(trig.size() == 2);
         assert_release(q.size() == e.size());
@@ -224,6 +225,8 @@ namespace codac2 {
 
     BoolInterval stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max, Ellipsoid &e, Ellipsoid &e_out)
     {
+        assert_release(f.args().size() == 1 && "f must have only one arg");
+        
         // get the Jacobian of f at the origin
         int n = f.input_size();
         Vector origin(Eigen::VectorXd::Zero(n));
