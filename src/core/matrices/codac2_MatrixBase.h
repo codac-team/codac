@@ -161,6 +161,16 @@ namespace codac2
         minmax_item(max);
       }
 
+      T norm() const
+      {
+        return _e.norm();
+      }
+
+      T squared_norm() const
+      {
+        return _e.squaredNorm();
+      }
+
       friend bool operator==(const MatrixBase<S,T>& x1, const MatrixBase<S,T>& x2)
       {
         if(x1.nb_rows() != x2.nb_rows() || x1.nb_cols() != x2.nb_cols())

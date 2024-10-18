@@ -65,6 +65,18 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
         },
       T_MATRIXBASE_ST_MAX_COEFF_CONST)
 
+    .def("norm", [](const S& x)
+        {
+          return x.norm();
+        },
+      T_MATRIXBASE_ST_NORM_CONST)
+
+    .def("squared_norm", [](const S& x)
+        {
+          return x.squared_norm();
+        },
+      T_MATRIXBASE_ST_SQUARED_NORM_CONST)
+
   ;
 
   if constexpr(!VECTOR_INHERITANCE)
