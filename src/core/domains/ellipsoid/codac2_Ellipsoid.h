@@ -62,25 +62,30 @@ namespace codac2
 
     Ellipsoid operator+(const Ellipsoid &e1, const Ellipsoid &e2);
 
+    // return A*e+b | non-rigorous operations
     Ellipsoid unreliable_linear_mapping(const Ellipsoid &e, const Matrix &A, const Vector &b);
 
+    // compute en outer enclosure of A*e+b, considering the rounding error with pessimism
     Ellipsoid linear_mapping(const Ellipsoid &e, const Matrix &A, const Vector &b);
 
+        /* nonsingular main case from
+         * Rauh, A., & Jaulin, L. (2021).
+         * "A computationally inexpensive algorithm for determining outer
+         * and inner enclosures of nonlinear mappings of ellipsoidal domains.
+         * International Journal of Applied Mathematics and Computer Science, 31(3).*/
 
     Ellipsoid nonlinear_mapping_base(const Ellipsoid &e, const Matrix &J, const IntervalMatrix &J_box,
                                      const Vector& trig1,
                                      const Vector& q);
 
     Ellipsoid nonlinear_mapping(const Ellipsoid &e, const AnalyticFunction<VectorOpValue> &f);
+
+    // compute an outer ellipsoidal enclosure of f(e)
     Ellipsoid nonlinear_mapping(const Ellipsoid &e, const AnalyticFunction<VectorOpValue> &f,
                                 const Vector& trig,const Vector& q);
 
 
 
     std::ostream &operator<<(std::ostream &os, const Ellipsoid &e);
-
-    BoolInterval stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max, Ellipsoid &e, Ellipsoid &e_out);
-
-    Matrix solve_discrete_lyapunov(const Matrix& a,const Matrix& q);
 
 }

@@ -32,7 +32,7 @@ int main() {
     for (int i = 0; i < N; i++) {
         Matrix A = h.diff(e2.mu).mid();
         Vector b(h.eval(e2.mu).mid()._e - A._e * e2.mu._e);
-        e2 = linear_mapping(e2, A, b);
+        e2 = unreliable_linear_mapping(e2, A, b);
         fig1.draw_ellipsoid(e2, {Color::green(), Color::green(0.3)});
     }
     cout << "\nLinear Mapping - Image ellipsoid e2 (green):" << endl;
@@ -128,8 +128,8 @@ int main() {
               {-.5, 1.1}});
     Vector b({0.1, 0.2});
 
-    Ellipsoid e7 = linear_mapping(e1, A, b);
-    Ellipsoid e8 = linear_mapping_guaranteed(e1, A, b);
+    Ellipsoid e7 = unreliable_linear_mapping(e1, A, b);
+    Ellipsoid e8 = linear_mapping(e1, A, b);
 
     cout << "\nLinear Mapping - Image ellipsoid e7:" << endl;
     cout << e7 << endl;

@@ -8,7 +8,6 @@
  */
 
 #include <unsupported/Eigen/MatrixFunctions>
-#include <unsupported/Eigen/KroneckerProduct>
 #include "codac2_Ellipsoid.h"
 #include "codac2_template_tools.h"
 
@@ -23,7 +22,7 @@ namespace codac2 {
 
     Ellipsoid::Ellipsoid(const Vector &mu_, const Matrix &G_)
             : mu(mu_), G(G_) {
-        assert_release(mu_.size() == G_.nb_cols() && mu_.size() == G_.nb_rows());
+        assert_release(mu_.size() == G_.nb_cols() && G_.is_squared());
     }
 
     size_t Ellipsoid::size() const {
@@ -49,19 +48,21 @@ namespace codac2 {
 
     BoolInterval Ellipsoid::is_concentric_subset(const Ellipsoid& e) const
     {
-        assert_release(size() == e.size());
-        
-        if((mu._e - e.mu._e).norm() > 1e-10)
-            return BoolInterval::FALSE; // check if the centers are the same
+        size_t n = size();
+        assert_release(n == e.size());
 
-        auto I = Matrix::eye(size(),size());
+        
+        if((mu._e - e.mu._e).norm() > 1e-10) // check if the centers are the same
+            return BoolInterval::FALSE; // not concentric
+
+        auto I = Matrix::eye(n,n);
         auto G2_inv = e.G._e.inverse();
         IntervalMatrix D(I._e - G._e.transpose() * G2_inv.transpose() * G2_inv * G._e);
 
         // cholesky decomposition of D = L*L^T
-        IntervalMatrix L(size(),size()); // matrix of the Cholesky decomposition
+        IntervalMatrix L(n,n); // matrix of the Cholesky decomposition
 
-        for (size_t j = 0; j < size(); j++) // for every column
+        for (size_t j = 0; j < n; j++) // for every column
         {
             // diagonal element
             Interval s = 0.;
@@ -74,7 +75,7 @@ namespace codac2 {
             L(j,j) = sqrt(u);
 
             // then the rest of the column
-            for (size_t i = j + 1; i<size();
+            for (size_t i = j + 1; i<n;
             i++)
             {
                 s = 0.;
@@ -100,50 +101,52 @@ namespace codac2 {
         auto Q2 = e2.G._e * e2.G._e.transpose();
 
         double beta = std::sqrt(Q1.trace() / Q2.trace());
-        return Ellipsoid(
-                e1.mu._e + e2.mu._e,
-                ((1. + (1. / beta)) * Q1 + (1. + beta) * Q2).sqrt()
-        );
+        return {
+                e1.mu._e + e2.mu._e, // mu
+                ((1. + (1. / beta)) * Q1 + (1. + beta) * Q2).sqrt() // G
+        };
     }
 
     Ellipsoid unreliable_linear_mapping(const Ellipsoid &e, const Matrix &A, const Vector &b) {
-        // return A*e+b | non-rigorous operations
-        auto mu_res = A._e * e.mu._e + b._e;
-        auto G_res = A._e * e.G._e;
-        Ellipsoid res(mu_res, G_res);
-        return res;
+        assert_release(A.is_squared());
+        assert_release(e.size() == A.nb_cols());
+        assert_release(b.size() == A.nb_rows());
+        return {
+            A._e * e.mu._e + b._e, // mu
+            A._e * e.G._e // G
+        };
     }
 
     Ellipsoid linear_mapping(const Ellipsoid &e, const Matrix &A, const Vector &b) {
-        // compute en outer enclosure of A*e+b, considering the rounding error with pessimism
+        size_t n = e.size();
+
+        assert_release(A.is_squared());
+        assert_release(n == A.nb_cols());
+        assert_release(n == b.size());
+
         Ellipsoid e_res = unreliable_linear_mapping(e, A, b);
 
+        auto e_mu_ = e.mu._e.template cast<Interval>();
+        auto e_res_mu_ = e_res.mu._e.template cast<Interval>();
+        auto e_res_G_ = e_res.G._e.template cast<Interval>();
+        auto e_G_ = e.G._e.template cast<Interval>();
+        auto A_ = A._e.template cast<Interval>();
+        auto b_ = b._e.template cast<Interval>();
+        IntervalVector unit_box_(n, {-1,1});
+
         // compute rounding error as a small box
-        IntervalVector mu_(e.mu);
-        IntervalVector mu_res_(e_res.mu);
-        IntervalMatrix G_(e.G);
-        IntervalMatrix G_res_(e_res.G);
-        IntervalMatrix A_(A);
-        IntervalVector b_(b);
-        IntervalVector unit_box_(mu_.size(), Interval(-1, 1));
+        auto mu_res_guaranteed = A_ * e_mu_ + b_;
+        auto G_res_guaranteed = A_ * e_G_;
+        auto error_box_ = mu_res_guaranteed - e_res_mu_ +
+                (G_res_guaranteed - e_res_G_) * unit_box_._e;
 
-        auto mu_res_guaranteed = A_._e * mu_._e + b_._e;
-        auto G_res_guaranteed = A_._e * G_._e;
-        auto error_box_ = mu_res_guaranteed - mu_res_._e +
-                (G_res_guaranteed - G_res_._e) * unit_box_._e;
-
-        double rho = Interval(error_box_.norm()).ub(); // max radius of error_box
-        Ellipsoid elli_error(Vector(e.size()),
-                             Eigen::MatrixXd::Identity(e.size(),e.size()) * rho); // = rho*unit_ball
+        double rho = error_box_.norm().ub(); // max radius of error_box
+        Ellipsoid elli_error(Vector::zeros(n),
+                             Matrix::eye(n,n) * rho); // = rho*unit_ball
         return e_res + elli_error;
     }
 
     Matrix nonlinear_mapping_base(const Matrix &G, const Matrix &J, const IntervalMatrix &J_box, const Vector& trig, const Vector& q) {
-        /* nonsingular main case from
-         * Rauh, A., & Jaulin, L. (2021).
-         * "A computationally inexpensive algorithm for determining outer
-         * and inner enclosures of nonlinear mappings of ellipsoidal domains.
-         * International Journal of Applied Mathematics and Computer Science, 31(3).*/
 
         Matrix JG = J * G;
         IntervalMatrix G_(G);
@@ -193,84 +196,35 @@ namespace codac2 {
         }
 
         auto b_box = (W * J_box._e * G_._e - Z) * unit_box._e;
-        double rho = Interval(b_box.norm()).ub(); // max radius of b_box
+        double rho = b_box.norm().ub(); // max radius of b_box
         return (1 + rho) * M;
     }
 
     Ellipsoid nonlinear_mapping(const Ellipsoid &e, const AnalyticFunction<VectorOpValue>& f)
     {
-        return nonlinear_mapping(e,f,Vector({1e-10,1e-9}),Vector(Eigen::VectorXd::Ones(e.size())));
+        return nonlinear_mapping(e,f,Vector({1e-10,1e-9}),Vector::ones(e.size()));
     }
 
     Ellipsoid nonlinear_mapping(const Ellipsoid &e, const AnalyticFunction<VectorOpValue>& f,const Vector& trig, const Vector& q) {
-        // compute an outer ellipsoidal enclosure of f(e)
 
         assert_release(f.args().size() == 1 && "f must have only one arg");
         assert_release(e.size() == f.input_size());
         assert_release(trig.size() == 2);
         assert_release(q.size() == e.size());
 
-        Vector mu_res = f.eval(e.mu).mid();  // compute the image of the center
         Matrix J = f.diff(e.mu).mid(); // compute the Jacobian of f at the center
 
         // compute the Jacobian of f over a box enclosing the ellipsoid
         IntervalMatrix J_box = f.diff(e.hull_box());
 
-        return Ellipsoid(mu_res, nonlinear_mapping_base(e.G, J, J_box,trig,q));
+        return {
+            f.eval(e.mu).mid(), // mu: compute the image of the center
+            nonlinear_mapping_base(e.G, J, J_box,trig,q) // G
+        };
     }
 
     std::ostream &operator<<(std::ostream &os, const Ellipsoid &e) {
         return os << "mu : " << e.mu << "\n" << "G :\n" << e.G;
-    }
-
-    BoolInterval stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max, Ellipsoid &e, Ellipsoid &e_out)
-    {
-        assert_release(f.args().size() == 1 && "f must have only one arg");
-        
-        // get the Jacobian of f at the origin
-        int n = f.input_size();
-        Vector origin(Eigen::VectorXd::Zero(n));
-        Matrix J = f.diff(IntervalVector(origin)).mid();
-
-        // solve the axis aligned discrete lyapunov equation J.T * P * J − P = −J.T * J
-        Matrix P = solve_discrete_lyapunov(J.transpose(),J.transpose()*J); // TODO solve the Lyapunov equation !!!
-        Matrix G0((P._e.inverse()).sqrt());
-        int alpha = 0;
-
-        while(alpha <= alpha_max)
-        {
-            e = Ellipsoid(origin, std::pow(10,-alpha) * G0);
-            e_out = nonlinear_mapping(e,f);
-            cout << "\nwith alpha = " << alpha << endl;
-            cout << "e is\n" << e << endl;
-            cout << "e_out is\n" << e_out << endl;
-
-            if(e_out.is_concentric_subset(e) == BoolInterval::TRUE)
-            {
-                cout << "The system is stable" << endl;
-                cout << "Domain of attraction :\n" << e_out << endl;
-                return BoolInterval::TRUE;
-            }
-            alpha++;
-        }
-        cout << "The method is not able to conclude on the stability" << endl;
-        return BoolInterval::UNKNOWN;
-    }
-
-    Matrix solve_discrete_lyapunov(const Matrix& a,const Matrix& q)
-    {
-        // implementation of the scipy solver for the discrete lyapunov equation (real matrix only)
-        // works well under dimension 10
-        // https://github.com/scipy/scipy/blob/v1.14.1/scipy/linalg/_solvers.py#L235-L323
-        // Solves the discrete Lyapunov equation :math:`AXA^H - X + Q = 0`
-        assert(a.nb_rows() == a.nb_cols());
-        assert(a.nb_rows() == q.nb_rows());
-        assert(a.nb_cols() == q.nb_cols());
-
-        Eigen::MatrixXd lhs = Eigen::KroneckerProduct(a._e, a._e);
-        lhs = Eigen::MatrixXd::Identity(lhs.rows(),lhs.cols()) - lhs;
-        Eigen::MatrixXd x = lhs.colPivHouseholderQr().solve((Eigen::VectorXd)q._e.reshaped());
-        return Matrix(x.reshaped(q.nb_rows(),q.nb_cols()));
     }
 
     // Old implementations:

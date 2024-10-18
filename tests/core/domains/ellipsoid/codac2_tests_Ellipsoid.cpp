@@ -53,7 +53,7 @@ TEST_CASE("Ellipsoids")
 
     Matrix A = h.diff(e.mu).mid();
     Vector b(h.eval(e.mu).mid()._e - A._e*e.mu._e);
-    Ellipsoid e2 = linear_mapping(e, A, b);
+    Ellipsoid e2 = unreliable_linear_mapping(e, A, b);
     Vector mu2({1 , -0.168294});
     Matrix G2({{0.0500001 , 0.00500001},{-0.00540302 , 0.0450001}});
     CHECK(e2.size() == 2);
@@ -79,8 +79,8 @@ TEST_CASE("Ellipsoids")
     Matrix A2({{0.9,0.5},{-.5,1.1}});
     Vector b2({0.1,0.2});
 
-    Ellipsoid e7 = linear_mapping(e, A2, b2);
-    Ellipsoid e8 = linear_mapping_guaranteed(e, A2, b2);
+    Ellipsoid e7 = unreliable_linear_mapping(e, A2, b2);
+    Ellipsoid e8 = linear_mapping(e, A2, b2);
     CHECK((e7.mu._e - e8.mu._e).norm()<1e-6);
     CHECK((e7.G._e - e8.G._e).norm()<0.04);
 
