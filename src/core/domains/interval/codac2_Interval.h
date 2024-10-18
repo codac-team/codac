@@ -72,14 +72,21 @@ namespace codac2
        * 
        * \param array the array of doubles
        */
-      Interval(std::array<double,1> array);
+      explicit Interval(std::array<double,1> array);
 
       /**
        * \brief Create an interval \f$[a,b]\f$ from a fixed-sized array of size 2
        * 
        * \param array the array of doubles
        */
-      Interval(std::array<double,2> array);
+      explicit Interval(std::array<double,2> array);
+
+      /**
+       * \brief Create an interval as the hull of a list of values
+       * 
+       * \param l list of values contained in the resulting interval
+       */
+      Interval(std::initializer_list<double> l);
 
       /**
        * \brief Sets the value of this interval to x
@@ -90,6 +97,16 @@ namespace codac2
        * \return a reference to this
        */
       Interval& init(const Interval& x);
+
+      /**
+       * \brief Sets the bounds as the hull of a list of values
+       * 
+       * \note This function is separated from the constructor for py binding purposes.
+       * 
+       * \param l list of values contained in the resulting interval
+       * \return a reference to this
+       */
+      Interval& init_from_list(const std::list<double>& l);
 
       /**
        * \brief Sets this to x
@@ -145,6 +162,19 @@ namespace codac2
        * \return midpoint
        */
       double mid() const;
+
+      /**
+       * \brief Returns a random value inside the interval
+       *
+       * \note The seed of the pseudo-random number generator is 
+       *       voluntarily initialized outside this function, on demand.
+       * 
+       * \note In case of infinite bounds, only floating point values
+       *       can be returned.
+       *
+       * \return random value
+       */
+      double rand() const;
 
       /**
        * \brief Returns the radius of this

@@ -12,24 +12,19 @@
 #include <map>
 #include "codac2_CtcUnion.h"
 #include "codac2_CtcInverse.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
-  class CtcNot : public Ctc_<IntervalVector>
+  class CtcNot : public Ctc<CtcNot,IntervalVector>
   {
     public:
 
-      template<typename C, typename = typename std::enable_if<
-          std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>
-        >::type>
+      template<typename C>
+        requires IsCtcBaseOrPtr<C,IntervalVector>
       CtcNot(const C& c)
-        : Ctc_<IntervalVector>(size_of(c))
+        : Ctc<CtcNot,IntervalVector>(size_of(c))
       { }
-
-      std::shared_ptr<Ctc> copy() const
-      {
-        return std::make_shared<CtcNot>(*this);
-      }
 
       void contract(IntervalVector& x) const
       {

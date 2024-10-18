@@ -12,14 +12,9 @@
 using namespace std;
 using namespace codac2;
 
-std::shared_ptr<Sep> SepCartProd::copy() const
-{
-  return std::make_shared<SepCartProd>(*this);
-}
-
 BoxPair SepCartProd::separate(const IntervalVector& x) const
 {
-  assert(x.size() == this->size());
+  assert_release(x.size() == this->size());
   auto x_in = x, x_out = x;
 
   size_t i = 0;
@@ -27,8 +22,8 @@ BoxPair SepCartProd::separate(const IntervalVector& x) const
   {
     IntervalVector xi = x.subvector(i,i+si->size()-1);
     auto xi_sep = si->separate(xi);
-    x_in.put(i,xi_sep.in);
-    x_out.put(i,xi_sep.out);
+    x_in.put(i,xi_sep.inner);
+    x_out.put(i,xi_sep.outer);
     i += si->size();
   }
 

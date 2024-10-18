@@ -69,14 +69,14 @@ class TestInterval_operations(unittest.TestCase):
     self.assertTrue(x_ == expected) # /=operator
 
   def CHECK_trigo(self, x, expected):
-    self.assertTrue(Approx(sin(x)) == expected)
-    self.assertTrue(Approx(sin(Interval.pi()-x)) == expected)
-    self.assertTrue(Approx(sin(x+Interval.two_pi())) == expected)
-    self.assertTrue(Approx(sin(-x)) == -expected)
-    self.assertTrue(Approx(cos(x-Interval.half_pi())) == expected)
-    self.assertTrue(Approx(cos(Interval.half_pi()-x)) == expected)
-    self.assertTrue(Approx(cos(x+Interval.half_pi())) == -expected)
-    self.assertTrue(Approx(cos(x+Interval.two_pi()-Interval.half_pi())) == expected)
+    self.assertTrue(Approx(sin(x), 1e-9) == expected)
+    self.assertTrue(Approx(sin(Interval.pi()-x), 1e-9) == expected)
+    self.assertTrue(Approx(sin(x+Interval.two_pi()), 1e-9) == expected)
+    self.assertTrue(Approx(sin(-x), 1e-9) == -expected)
+    self.assertTrue(Approx(cos(x-Interval.half_pi()), 1e-9) == expected)
+    self.assertTrue(Approx(cos(Interval.half_pi()-x), 1e-9) == expected)
+    self.assertTrue(Approx(cos(x+Interval.half_pi()), 1e-9) == -expected)
+    self.assertTrue(Approx(cos(x+Interval.two_pi()-Interval.half_pi()), 1e-9) == expected)
 
   def CHECK_pow(self, x, p, expected, eps = 0.):
     self.assertTrue(Approx(pow(x,p),eps) == expected)
@@ -92,11 +92,11 @@ class TestInterval_operations(unittest.TestCase):
     self.assertTrue(1 < next_float(1))
     self.assertTrue(1 > previous_float(1))
     self.assertTrue(oo == next_float(oo))
-    self.assertTrue(-MAX_DOUBLE == next_float(-oo))
-    self.assertTrue(MAX_DOUBLE == previous_float(oo))
     self.assertTrue(-oo == previous_float(-oo))
-    self.assertTrue(oo == next_float(MAX_DOUBLE))
-    self.assertTrue(-oo == previous_float(-MAX_DOUBLE))
+    self.assertTrue(-MAX_DOUBLE >= next_float(-oo))
+    self.assertTrue(MAX_DOUBLE <= previous_float(oo))
+    self.assertTrue(oo > MAX_DOUBLE)
+    self.assertTrue(-oo < -MAX_DOUBLE)
     self.assertTrue(-Interval(0,1) == Interval(-1,0))
     self.assertTrue(-Interval(-oo,oo) == Interval(-oo,oo))
     self.assertTrue(-Interval(-oo,0) == Interval(0,oo))

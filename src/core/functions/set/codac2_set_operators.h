@@ -30,12 +30,12 @@ namespace codac2
 {
   struct InterSetOp
   {
-    static std::shared_ptr<Ctc_<IntervalVector>> create_ctc(const std::shared_ptr<Ctc_<IntervalVector>>& s1, const std::shared_ptr<Ctc_<IntervalVector>>& s2)
+    static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const std::shared_ptr<CtcBase<IntervalVector>>& s1, const std::shared_ptr<CtcBase<IntervalVector>>& s2)
     {
       return std::make_shared<CtcInter<IntervalVector>>(s1,s2);
     }
 
-    static std::shared_ptr<Sep> create_sep(const std::shared_ptr<Sep>& s1, const std::shared_ptr<Sep>& s2)
+    static std::shared_ptr<SepBase> create_sep(const std::shared_ptr<SepBase>& s1, const std::shared_ptr<SepBase>& s2)
     {
       return std::make_shared<SepInter>(s1,s2);
     }
@@ -43,12 +43,12 @@ namespace codac2
 
   struct UnionSetOp
   {
-    static std::shared_ptr<Ctc_<IntervalVector>> create_ctc(const std::shared_ptr<Ctc_<IntervalVector>>& s1, const std::shared_ptr<Ctc_<IntervalVector>>& s2)
+    static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const std::shared_ptr<CtcBase<IntervalVector>>& s1, const std::shared_ptr<CtcBase<IntervalVector>>& s2)
     {
       return std::make_shared<CtcUnion<IntervalVector>>(s1,s2);
     }
 
-    static std::shared_ptr<Sep> create_sep(const std::shared_ptr<Sep>& s1, const std::shared_ptr<Sep>& s2)
+    static std::shared_ptr<SepBase> create_sep(const std::shared_ptr<SepBase>& s1, const std::shared_ptr<SepBase>& s2)
     {
       return std::make_shared<SepUnion>(s1,s2);
     }
@@ -56,24 +56,24 @@ namespace codac2
 
   struct ProjSetOp
   {
-    static std::shared_ptr<Ctc_<IntervalVector>> create_ctc(const std::shared_ptr<Ctc_<IntervalVector>>& s1, const std::vector<size_t>& proj_indices, double eps)
+    static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const std::shared_ptr<CtcBase<IntervalVector>>& s1, const std::vector<size_t>& proj_indices, double eps)
     {
       throw std::logic_error("CtcProj not yet available");
       return nullptr;
     }
 
-    static std::shared_ptr<Ctc_<IntervalVector>> create_ctc(const std::shared_ptr<Ctc_<IntervalVector>>& s1, const std::vector<size_t>& proj_indices, const IntervalVector& y, double eps)
+    static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const std::shared_ptr<CtcBase<IntervalVector>>& s1, const std::vector<size_t>& proj_indices, const IntervalVector& y, double eps)
     {
       throw std::logic_error("CtcProj not yet available");
       return nullptr;
     }
 
-    static std::shared_ptr<Sep> create_sep(const std::shared_ptr<Sep>& s1, const std::vector<size_t>& proj_indices, double eps)
+    static std::shared_ptr<SepBase> create_sep(const std::shared_ptr<SepBase>& s1, const std::vector<size_t>& proj_indices, double eps)
     {
       return std::make_shared<SepProj>(s1,proj_indices,eps);
     }
 
-    static std::shared_ptr<Sep> create_sep(const std::shared_ptr<Sep>& s1, const std::vector<size_t>& proj_indices, const IntervalVector& y, double eps)
+    static std::shared_ptr<SepBase> create_sep(const std::shared_ptr<SepBase>& s1, const std::vector<size_t>& proj_indices, const IntervalVector& y, double eps)
     {
       return std::make_shared<SepProj>(s1,proj_indices,y,eps);
     }
@@ -81,12 +81,12 @@ namespace codac2
 
   struct CartProdSetOp
   {
-    static std::shared_ptr<Ctc_<IntervalVector>> create_ctc(const std::shared_ptr<Ctc_<IntervalVector>>& s1, const std::shared_ptr<Ctc_<IntervalVector>>& s2)
+    static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const std::shared_ptr<CtcBase<IntervalVector>>& s1, const std::shared_ptr<CtcBase<IntervalVector>>& s2)
     {
       return std::make_shared<CtcCartProd>(s1,s2);
     }
 
-    static std::shared_ptr<Sep> create_sep(const std::shared_ptr<Sep>& s1, const std::shared_ptr<Sep>& s2)
+    static std::shared_ptr<SepBase> create_sep(const std::shared_ptr<SepBase>& s1, const std::shared_ptr<SepBase>& s2)
     {
       return std::make_shared<SepCartProd>(s1,s2);
     }
@@ -94,12 +94,12 @@ namespace codac2
 
   struct InverseSetOp
   {
-    static std::shared_ptr<Ctc_<IntervalVector>> create_ctc(const AnalyticFunction<VectorOpValue>& f, const std::shared_ptr<Ctc_<IntervalVector>>& s1)
+    static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const AnalyticFunction<VectorOpValue>& f, const std::shared_ptr<CtcBase<IntervalVector>>& s1)
     {
       return std::make_shared<CtcInverse_<IntervalVector,IntervalVector>>(f,s1);
     }
 
-    static std::shared_ptr<Sep> create_sep(const AnalyticFunction<VectorOpValue>& f, const std::shared_ptr<Sep>& s1)
+    static std::shared_ptr<SepBase> create_sep(const AnalyticFunction<VectorOpValue>& f, const std::shared_ptr<SepBase>& s1)
     {
       return std::make_shared<SepInverse<IntervalVector>>(f,s1);
     }
@@ -107,12 +107,12 @@ namespace codac2
 
   struct NotSetOp
   {
-    static std::shared_ptr<Ctc_<IntervalVector>> create_ctc(const std::shared_ptr<Ctc_<IntervalVector>>& s1)
+    static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const std::shared_ptr<CtcBase<IntervalVector>>& s1)
     {
       return std::make_shared<CtcNot>(s1);
     }
 
-    static std::shared_ptr<Sep> create_sep(const std::shared_ptr<Sep>& s1)
+    static std::shared_ptr<SepBase> create_sep(const std::shared_ptr<SepBase>& s1)
     {
       return std::make_shared<SepNot>(s1);
     }
@@ -120,12 +120,12 @@ namespace codac2
 
   struct ActionSetOp
   {
-    static std::shared_ptr<Ctc_<IntervalVector>> create_ctc(const OctaSym& a, const std::shared_ptr<Ctc_<IntervalVector>>& s1)
+    static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const OctaSym& a, const std::shared_ptr<CtcBase<IntervalVector>>& s1)
     {
       return std::make_shared<CtcAction>(s1,a);
     }
 
-    static std::shared_ptr<Sep> create_sep(const OctaSym& a, const std::shared_ptr<Sep>& s1)
+    static std::shared_ptr<SepBase> create_sep(const OctaSym& a, const std::shared_ptr<SepBase>& s1)
     {
       return std::make_shared<SepAction>(s1,a);
     }

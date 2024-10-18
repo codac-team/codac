@@ -2,7 +2,7 @@
  *  \file codac2_SepNot.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Benoit Desrochers
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -13,45 +13,40 @@
 #include "codac2_Sep.h"
 #include "codac2_SepWrapper.h"
 #include "codac2_Collection.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
-  class SepNot : public Sep
+  class SepNot : public Sep<SepNot>
   {
     public:
 
-      SepNot(const IntervalVector& s)
-        : Sep(s.size()), _sep(SepWrapper_<IntervalVector>(s))
+      SepNot(const IntervalVector& x)
+        : Sep<SepNot>(x.size()), _sep(SepWrapper_<IntervalVector>(x))
       { }
 
-      template<typename S, typename = typename std::enable_if<(
-          (std::is_base_of_v<Sep,S> && !std::is_same_v<SepNot,S>) || std::is_same_v<std::shared_ptr<Sep>,S>
-        ), void>::type>
+      template<typename S>
+        requires (IsSepBaseOrPtr<S> && !std::is_same_v<SepNot,S>)
       SepNot(const S& s)
-        : Sep(size_of(s)), _sep(s)
+        : Sep<SepNot>(size_of(s)), _sep(s)
       { }
-
-      std::shared_ptr<Sep> copy() const
-      {
-        return std::make_shared<SepNot>(*this);
-      }
 
       BoxPair separate(const IntervalVector& x) const
       {
-        assert(x.size() == this->size());
+        assert_release(x.size() == this->size());
+        
         auto x_sep = _sep.front().separate(x);
-        assert((x_sep.out | x_sep.in) == x);
-        return { x_sep.out , x_sep.in };
+        assert((x_sep.outer | x_sep.inner) == x);
+        return { x_sep.outer , x_sep.inner };
       }
 
     protected:
 
-      const Collection<Sep> _sep;
+      const Collection<SepBase> _sep;
   };
 
-  template<typename S, typename = typename std::enable_if<
-      std::is_base_of_v<Sep,S>
-    >::type>
+  template<typename S>
+    requires std::is_base_of_v<SepBase,S>
   SepNot operator!(const S& s)
   {
     return SepNot(s);

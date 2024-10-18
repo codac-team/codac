@@ -13,81 +13,55 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include "codac2_py_core.h"
 #include <codac2_Ctc.h>
 #include <codac2_IntervalVector.h>
+#include "codac2_py_matlab.h"
 
 using namespace codac2;
 namespace py = pybind11;
-using namespace pybind11::literals;
+using namespace py::literals;
 
 
-class pyCtcIntervalVector : public Ctc_<IntervalVector>
+#define CONTRACT_BOX_METHOD(clss,doc) \
+  "contract", [](const clss& c, IntervalVector& x) -> const IntervalVector& { c.contract(x); return x; }, doc, "x"_a
+
+class pyCtcIntervalVector : public CtcBase<IntervalVector>
 {
   public:
 
     pyCtcIntervalVector(size_t_type n)
-      : Ctc_<IntervalVector>(n)
-    { }
-
-    // Trampoline (need one for each virtual function)
-    void contract(IntervalVector& x) const override
+      : CtcBase<IntervalVector>(n)
     {
-      pybind11::gil_scoped_acquire gil; // Acquire the GIL while in this scope
-
-      // Try to look up the overloaded method on the Python side
-      pybind11::function overload = pybind11::get_overload(this, "contract");
-
-      if(overload) // method is found
-      {
-        auto x_copy = IntervalVector(x);
-        auto obj = overload(x_copy); // calls the Python function
-
-        if(pybind11::isinstance<IntervalVector>(obj))
-        {
-          // Checks if it returned a correct Python type
-          x &= obj.cast<IntervalVector>(); // casts it and assigns it to the value
-          return; // Return true; value should be used
-        }
-
-        else
-        {
-          assert(false && "Ctc: error with contract method");
-        }
-      }
-
-      else
-      {
-        assert(false && "Ctc: contract method not found");
-      }
+      matlab::test_integer(n);
     }
 
     // Trampoline (need one for each virtual function)
-    virtual std::shared_ptr<Ctc> copy() const override
+    virtual void contract(IntervalVector& x) const override
     {
-      pybind11::gil_scoped_acquire gil; // Acquire the GIL while in this scope
+      py::gil_scoped_acquire gil; // Acquire the GIL while in this scope
 
       // Try to look up the overloaded method on the Python side
-      pybind11::function overload = pybind11::get_overload(this, "copy");
+      py::function overload = py::get_overload(this, "contract");
+      assert_release(overload && "Ctc: contract method not found");
 
-      if(overload) // method is found
-      {
-        auto obj = overload();
+      auto obj = overload(x);
+      assert_release(py::isinstance<IntervalVector>(obj) &&
+        "Ctc: error with contract method, it should return an IntervalVector");
 
-        if(pybind11::isinstance<std::shared_ptr<Ctc>>(obj))
-          return obj.cast<std::shared_ptr<Ctc>>();
+      IntervalVector contracted_x = obj.cast<IntervalVector>();
+      x &= obj.cast<IntervalVector>();
+    }
 
-        else
-        {
-          assert(false && "Ctc: error with copy method");
-          return nullptr;
-        }
-      }
+    // Trampoline (need one for each virtual function)
+    virtual std::shared_ptr<CtcBase<IntervalVector>> copy() const override
+    {
+      py::gil_scoped_acquire gil; // Acquire the GIL while in this scope
 
-      else
-      {
-        assert(false && "Ctc: copy method not found");
-        return nullptr;
-      }
+      // Try to look up the overloaded method on the Python side
+      py::function overload = py::get_overload(this, "copy");
+      assert_release(overload && "CtcBase<IntervalVector>: copy method not found");
+
+      auto obj = overload();
+      return std::shared_ptr<CtcBase<IntervalVector>>(obj.cast<CtcBase<IntervalVector>*>(), [](auto p) { /* no delete */ });
     }
 };

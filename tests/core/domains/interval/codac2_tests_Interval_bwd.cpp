@@ -353,7 +353,7 @@ TEST_CASE("Interval bwd operations")
 }
 
 #include <codac2_IntervalMatrix.h>
-#include <codac2_DirectedCtc.h>
+#include <codac2_directed_ctc.h>
 
 TEST_CASE("bwd mul operations")
 {
@@ -377,7 +377,7 @@ TEST_CASE("bwd mul operations")
   Matrix invM = M.inverse();
 
   Vector b2(4,1.0);
-  Vector bounds=invM*b2;
+  Vector bounds = invM * b2;
   double _x2[2][2]={ {bounds[0],bounds[1]}, {bounds[2],bounds[3]} };
   IntervalVector x2(2,_x2);
 

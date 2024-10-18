@@ -73,14 +73,14 @@ void CHECK_div_scalar(const Interval& x, double y, const Interval& expected)
 
 void CHECK_trigo(const Interval& x, const Interval& expected)
 {
-  CHECK(Approx(sin(x)) == expected);
-  CHECK(Approx(sin(Interval::pi()-x)) == expected);
-  CHECK(Approx(sin(x+Interval::two_pi())) == expected);
-  CHECK(Approx(sin(-x)) == -expected);
-  CHECK(Approx(cos(x-Interval::half_pi())) == expected);
-  CHECK(Approx(cos(Interval::half_pi()-x)) == expected);
-  CHECK(Approx(cos(x+Interval::half_pi())) == -expected);
-  CHECK(Approx(cos(x+Interval::two_pi()-Interval::half_pi())) == expected);
+  CHECK(Approx(sin(x), 1e-9) == expected);
+  CHECK(Approx(sin(Interval::pi()-x), 1e-9) == expected);
+  CHECK(Approx(sin(x+Interval::two_pi()), 1e-9) == expected);
+  CHECK(Approx(sin(-x), 1e-9) == -expected);
+  CHECK(Approx(cos(x-Interval::half_pi()), 1e-9) == expected);
+  CHECK(Approx(cos(Interval::half_pi()-x), 1e-9) == expected);
+  CHECK(Approx(cos(x+Interval::half_pi()), 1e-9) == -expected);
+  CHECK(Approx(cos(x+Interval::two_pi()-Interval::half_pi()), 1e-9) == expected);
 }
 
 void CHECK_pow(const Interval& x, int p, const Interval& expected, double eps = 0.)
@@ -298,8 +298,3 @@ TEST_CASE("Interval operations")
   CHECK(root(Interval(-4,1),2) == Interval(0,1));
   CHECK(Approx(root(Interval(-8,1),3)) == Interval(-2,1));
 }
-
-#if 0
-// Tests from the IBEX lib that are not considered in this file:
-
-#endif

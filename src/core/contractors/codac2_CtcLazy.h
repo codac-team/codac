@@ -12,27 +12,26 @@
 #include "codac2_CtcWrapper.h"
 #include "codac2_Collection.h"
 #include "codac2_IntervalVector.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
-  class CtcLazy : public Ctc_<IntervalVector>
+  class CtcLazy : public Ctc<CtcLazy,IntervalVector>
   {
     public:
 
-      template<typename C, typename = typename std::enable_if<
-          std::is_base_of_v<Ctc_<IntervalVector>,C>
-        >::type>
+      template<typename C>
+        requires IsCtcBaseOrPtr<C,IntervalVector>
       CtcLazy(const C& c)
-        : Ctc_<IntervalVector>(c.size()), _ctc(c),
-          _r(1./std::pow(2,c.size()-1))
+        : Ctc<CtcLazy,IntervalVector>(size_of(c)), _ctc(c),
+          _r(1./std::pow(2,size_of(c)-1))
       { }
 
-      std::shared_ptr<Ctc> copy() const;
       void contract(IntervalVector& x) const;
 
     protected:
 
-      const Collection<Ctc_<IntervalVector>> _ctc;
+      const Collection<CtcBase<IntervalVector>> _ctc;
       const double _r;
   };
 }

@@ -2,7 +2,7 @@
  *  codac2_SepUnion.cpp
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Benoit Desrochers
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -12,22 +12,18 @@
 using namespace std;
 using namespace codac2;
 
-std::shared_ptr<Sep> SepUnion::copy() const
-{
-  return std::make_shared<SepUnion>(*this);
-}
-
 BoxPair SepUnion::separate(const IntervalVector& x) const
 {
-  assert(x.size() == this->size());
+  assert_release(x.size() == this->size());
+  
   auto x_in = x;
   auto x_out = IntervalVector::empty(x.size());
 
   for(const auto& si : _seps)
   {
-    auto x_sep = si->separate(x);
-    x_out |= x_sep.out;
-    x_in &= x_sep.in;
+    auto x_sep = si->separate(x_in);
+    x_out |= x_sep.outer;
+    x_in &= x_sep.inner;
   }
 
   assert((x_in | x_out) == x);

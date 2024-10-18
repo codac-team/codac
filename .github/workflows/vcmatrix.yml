@@ -57,7 +57,7 @@ jobs:
       if: runner.os=='Windows'
     - run: choco install -y -r --no-progress eigen --version=3.4.0.20240224 ${{ matrix.cfg.choco_flags }}
       if: runner.os=='Windows'
-    - run: wget https://packages.ensta-bretagne.fr/choco/doxygen.install.1.9.6.nupkg --no-check-certificate -nv & choco upgrade -y -r --no-progress -s . doxygen.install --version=1.9.6 & del /f /q doxygen.install.1.9.6.nupkg & choco install -y -r --no-progress graphviz & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects
+    - run: choco install -y -r --no-progress graphviz doxygen.install & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects
       if: runner.os=='Windows'
     - run: |
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex.2.8.9.20240417.nupkg --no-check-certificate -nv
@@ -65,12 +65,10 @@ jobs:
         del /f /q ibex.2.8.9.20240417.nupkg
     - run: |
         mkdir build ; cd build
-        cmake -E env CXXFLAGS=" /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /wd4267 /wd4244 /wd4305 /wd4996" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=ON ..
+        cmake -E env CXXFLAGS=" /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /wd4267 /wd4244 /wd4305 /wd4996" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D WITH_CAPD=OFF -D WITH_PYTHON=ON ..
         cmake --build . -j 4 --config Release --target install
         cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
         cd ..
-      shell: bash
-    - run: pip install --no-deps --no-index *.whl ; python -c "import sys; print(sys.version)" #; python examples/02_centered_form/main.py ; pip install numpy --prefer-binary #; python -m unittest discover codac.tests
       shell: bash
     - uses: xresloader/upload-to-github-release@v1
       env:
@@ -79,4 +77,13 @@ jobs:
         file: "*.whl"
         overwrite: true
         tag_name: autotagname-${{ github.sha }}
-      if: (github.event_name != 'pull_request')&&((github.ref_name == 'master')||(github.ref_name == 'codac4matlab'))
+      if: (github.event_name!='pull_request')&&((github.ref_name=='master')||(github.ref_name=='codac4matlab'))
+    - run: |
+        pip install --no-deps --no-index *.whl
+        python -c "import sys; print(sys.version)" ; python examples/02_centered_form/main.py
+        pip install numpy --prefer-binary
+        python -m unittest discover codac.tests
+        cd build && ctest -C Release -V --output-on-failure
+        cd ..
+      shell: bash
+      if: (github.ref_name!='codac4matlab')

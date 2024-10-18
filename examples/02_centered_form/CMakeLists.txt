@@ -5,7 +5,7 @@
   cmake_minimum_required(VERSION 3.0.2)
   project(codac_example LANGUAGES CXX)
 
-  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD 20)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Adding IBEX
@@ -24,7 +24,7 @@
   # to specify its path with the CMAKE_PREFIX_PATH option, e.g.
   # set(CMAKE_PREFIX_PATH "~/eigen/build_install")
 
-  find_package(Eigen3 REQUIRED NO_MODULE)
+  find_package(Eigen3 3.4 REQUIRED NO_MODULE)
   message(STATUS "Found Eigen3 version ${Eigen3_VERSION}")
 
 # Adding Codac
@@ -40,5 +40,5 @@
 
   add_executable(${PROJECT_NAME} main.cpp)
   target_compile_options(${PROJECT_NAME} PUBLIC ${CODAC_CXX_FLAGS})
-  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES} Ibex::ibex ${CODAC_LIBRARIES})
+  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS})
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES} Ibex::ibex Eigen3::Eigen)

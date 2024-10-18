@@ -30,10 +30,12 @@ namespace codac2
       T fwd_eval(ValuesMap& v, size_t total_input_size) const
       {
         return AnalyticExpr<T>::init_value(v, T(
-            _x.mid(), _x,
+            // the mid is not considered for const values in centered form expression:
+            _x,
+            _x,
             // the derivative of a const value is zero:
             IntervalMatrix::zeros(_x.size(),total_input_size),
-            // the definition domain is necesarily met at this point
+            // the definition domain is necesarily met at this point:
             true
           ));
       }

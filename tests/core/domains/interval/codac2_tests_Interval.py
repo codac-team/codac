@@ -15,6 +15,7 @@
 import unittest
 from codac import *
 import sys
+import math
 
 class TestInterval(unittest.TestCase):
 
@@ -34,6 +35,15 @@ class TestInterval(unittest.TestCase):
     self.assertTrue(Interval(0,oo) == Interval(0,oo))
     self.assertTrue(Interval.empty() == Interval.empty())
     self.assertTrue(Interval(0,0) == Interval(0,0))
+
+    self.assertTrue(Interval([1.]) == Interval(1.));
+    self.assertTrue(Interval([2,3]) == Interval(2,3));
+    self.assertTrue(Interval([3,2]) == Interval.empty());
+    self.assertTrue(Interval([-oo]) == Interval.empty());
+    self.assertTrue(Interval([oo]) == Interval.empty());
+    self.assertTrue(Interval([oo,0]) == Interval.empty());
+    self.assertTrue(Interval([-oo,oo]) == Interval(-oo,oo));
+    self.assertTrue(Interval([oo,-oo]) == Interval.empty());
 
     x = Interval() ; y = Interval() ; z = Interval()
 
@@ -127,6 +137,21 @@ class TestInterval(unittest.TestCase):
     self.assertTrue(x.mid() == sys.float_info.max)
     self.assertTrue(x.rad() == oo)
     self.assertTrue(x.diam() == oo)
+
+    x = Interval(-1,1)
+    for i in range(10):
+      self.assertTrue(x.contains(x.rand()))
+    x = Interval(-oo,0);
+    for i in range(10):
+      self.assertTrue(x.contains(x.rand()))
+    x = Interval(0,oo);
+    for i in range(10):
+      self.assertTrue(x.contains(x.rand()))
+    x = Interval(-oo,oo);
+    for i in range(10):
+      self.assertTrue(x.contains(x.rand()))
+    x = Interval.empty()
+    self.assertTrue(math.isnan(x.rand()))
 
     self.assertTrue(Interval(0,1).is_subset(Interval(0,2)))
     self.assertTrue(not Interval(0,1).is_subset(Interval(1,2)))

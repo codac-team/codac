@@ -20,23 +20,23 @@ namespace codac2
     virtual ~OpValueBase() = default;
   };
 
-  template<typename T>
+  template<typename T, typename M>
   struct OpValue : public OpValueBase
   {
     using Domain = T;
 
     T m;
     T a;
-    IntervalMatrix da;
+    M da;
     bool def_domain;
 
     OpValue() = delete;
 
-    OpValue(const T& m_, const T& a_, const IntervalMatrix& da_, bool def_domain_)
+    OpValue(const T& m_, const T& a_, const M& da_, bool def_domain_)
       : m(m_), a(a_), da(da_), def_domain(def_domain_)
     { }
 
-    OpValue<T>& operator&=(const OpValue<T>& x)
+    OpValue<T,M>& operator&=(const OpValue<T,M>& x)
     {
       a &= x.a;
       // restore this? da &= x.da;
@@ -45,9 +45,9 @@ namespace codac2
     }
   };
 
-  using ScalarOpValue = OpValue<Interval>;
-  using VectorOpValue = OpValue<IntervalVector>;
-  using MatrixOpValue = OpValue<IntervalMatrix>;
+  using ScalarOpValue = OpValue<Interval,IntervalMatrix>;
+  using VectorOpValue = OpValue<IntervalVector,IntervalMatrix>;
+  using MatrixOpValue = OpValue<IntervalMatrix,IntervalMatrix>;
 
   template<typename T>
   struct Wrapper
@@ -81,5 +81,15 @@ namespace codac2
   template<>
   struct Wrapper<IntervalVector> {
     using Domain = VectorOpValue;
+  };
+
+  template<>
+  struct Wrapper<Matrix> {
+    using Domain = MatrixOpValue;
+  };
+
+  template<>
+  struct Wrapper<IntervalMatrix> {
+    using Domain = MatrixOpValue;
   };
 }

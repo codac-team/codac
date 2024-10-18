@@ -34,6 +34,7 @@ def normalize_label(str_label):
     .replace("or>>", "ORIN")
 
   return normalize_template_label(str_label) \
+    .replace("constexpr ", "") \
     .replace("codac::", "") \
     .replace("codac2::", "") \
     .replace("std::", "") \
@@ -42,25 +43,30 @@ def normalize_label(str_label):
     .replace("::", "_") \
     .replace("\"\"_", "LITT") \
     .replace("~", "TILD_") \
-    .replace("or+", "ORPLUS") \
-    .replace("or-", "ORMINUS") \
-    .replace("or*", "ORMUL") \
-    .replace("or/", "ORDIV") \
-    .replace("or[]", "ORCOMPO") \
-    .replace("or()", "ORCALL") \
-    .replace("or&=", "ORANDEQ") \
-    .replace("or|=", "OROREQ") \
-    .replace("or&", "ORAND") \
-    .replace("or|", "OROR") \
-    .replace("or==", "OREQ") \
-    .replace("or!=", "ORNEQ") \
-    .replace("or=", "ORAFF") \
+    .replace("operator+", "OPERATORPLUS") \
+    .replace("operator-", "OPERATORMINUS") \
+    .replace("operator*", "OPERATORMUL") \
+    .replace("operator/", "OPERATORDIV") \
+    .replace("operator[]", "OPERATORCOMPO") \
+    .replace("operator()", "OPERATORCALL") \
+    .replace("operator&=", "OPERATORANDEQ") \
+    .replace("operator|=", "OPERATOROREQ") \
+    .replace("operator&", "OPERATORAND") \
+    .replace("operator|", "OPERATOROR") \
+    .replace("operator==", "OPERATOREQ") \
+    .replace("operator!=", "OPERATORNEQ") \
+    .replace("operator=", "OPERATORAFF") \
+    .replace("operator!", "OPERATORNOT") \
     .replace("&", "_REF") \
-    .replace("__REF", "_REF") \
-    .replace("PTR", "REF") \
+    .replace("*", "_PTR") \
     .replace("=", "EQ") \
     .replace("size_t", "SIZET") \
-    .replace("...", "_VARIADIC")
+    .replace("...", "_VARIADIC") \
+    .replace("(", "_") \
+    .replace(")", "_") \
+    .replace("__REF", "_REF") \
+    .replace("__PTR", "_PTR") \
+    .replace("-1", "MINUSONE")
 
 def docstring_varname(memberdef):
 
@@ -107,9 +113,12 @@ for xml_doc in files:
   with open(sys.argv[2] + "/" + get_originate_file(class_compound), 'a', encoding='utf-8') as f:
 
     print("/// Class " + class_name, file=f)
-    print("const char* "
+    #print("const char* "
+    #   + normalize_label(class_name + "_MAIN").upper()
+    #   + " = R\"Docstring documentation will be available in next release.\";", file=f)
+    print("#define "
        + normalize_label(class_name + "_MAIN").upper()
-       + " = R\"_docs(Docstring documentation will be available in next release.)_docs\";", file=f)
+       + " \"Docstring documentation will be available in next release.\"", file=f)
 
 
   # Members documentation (ex: methods, functions, etc.)
@@ -138,8 +147,12 @@ for xml_doc in files:
         print("// Friend member is not documented here.\n", file=f)
         continue
 
-      print("const char* "
+      #print("const char* "
+      #   + docstring_varname(memberdef)
+      #   + " = R\"Docstring documentation will be available in next release.\";", file=f)
+
+      print("#define "
          + docstring_varname(memberdef)
-         + " = R\"_docs(Docstring documentation will be available in next release.)_docs\";", file=f)
+         + " \"Docstring documentation will be available in next release.\"", file=f)
 
       print("\n", file=f)

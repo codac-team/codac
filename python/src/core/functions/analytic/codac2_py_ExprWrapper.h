@@ -14,7 +14,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include "codac2_py_core.h"
 #include "codac2_analytic_operations.h"
 #include "codac2_analytic_variables.h"
 #include "codac2_AnalyticExpr.h"
@@ -79,6 +78,11 @@ struct ExprWrapper<ScalarOpValue> : public ExprWrapperBase
 using ScalarExpr = ExprWrapper<ScalarOpValue>;
 
 // Scalar operations
+
+inline const ScalarExpr& operator+(const ScalarExpr& e1)
+{
+  return e1;
+}
 
 inline ScalarExpr operator+(const ScalarExpr& e1, const ScalarExpr& e2)
 {
@@ -146,6 +150,11 @@ using VectorExpr = ExprWrapper<VectorOpValue>;
 
 // Vector operations
 
+inline const VectorExpr& operator+(const VectorExpr& e1)
+{
+  return e1;
+}
+
 inline VectorExpr operator+(const VectorExpr& e1, const VectorExpr& e2)
 {
   return VectorExpr(e1.e+e2.e);
@@ -164,6 +173,16 @@ inline VectorExpr operator-(const VectorExpr& e1, const VectorExpr& e2)
 inline VectorExpr operator*(const ScalarExpr& e1, const VectorExpr& e2)
 {
   return VectorExpr(e1.e*e2.e);
+}
+
+inline VectorExpr operator*(const VectorExpr& e1, const ScalarExpr& e2)
+{
+  return VectorExpr(e1.e*e2.e);
+}
+
+inline VectorExpr operator/(const VectorExpr& e1, const ScalarExpr& e2)
+{
+  return VectorExpr(e1.e/e2.e);
 }
 
 inline void export_ExprWrapperBase(py::module& m)
@@ -186,36 +205,35 @@ inline void export_ScalarExpr(py::module& m)
     .def("copy", &ScalarExpr::copy)
     .def("raw_copy", &ScalarExpr::raw_copy)
 
-    .def("__add__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1+e2; })
-    .def("__add__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1+e2; })
-    .def("__radd__", [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1+e2; })
-    .def("__add__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1+e2; })
-    .def("__radd__", [](const ScalarExpr& e1, const Interval& e2)   { return e1+e2; })
+    .def("__pos__",  [](const ScalarExpr& e1) { return e1; }, py::is_operator())
+    .def(py::self + py::self)
+    .def("__radd__", [](const ScalarExpr& e1, const ScalarVar& e2)  { return e2+e1; }, py::is_operator())
+    .def("__add__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1+e2; }, py::is_operator())
+    .def("__radd__", [](const ScalarExpr& e1, const Interval& e2)   { return e2+e1; }, py::is_operator())
 
-    .def("__neg__",  [](const ScalarExpr& e1)                       { return -e1;   })
-    .def("__sub__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1-e2; })
-    .def("__sub__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1-e2; })
-    .def("__rsub__", [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1-e2; })
-    .def("__sub__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1-e2; })
-    .def("__rsub__", [](const ScalarExpr& e1, const Interval& e2)   { return e1-e2; })
+    .def(- py::self)
+    .def(py::self - py::self)
+    .def("__sub__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1-e2; }, py::is_operator())
+    .def("__sub__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1-e2; }, py::is_operator())
+    .def("__rsub__", [](const ScalarExpr& e1, const Interval& e2)   { return e2-e1; }, py::is_operator())
 
-    .def("__mul__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1*e2; })
-    .def("__mul__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1*e2; })
-    .def("__rmul__", [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1*e2; })
-    .def("__mul__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1*e2; })
-    .def("__rmul__", [](const ScalarExpr& e1, const Interval& e2)   { return e1*e2; })
-    .def("__mul__",  [](const ScalarExpr& e1, const VectorExpr& e2) { return e1*e2; })
-    .def("__mul__",  [](const ScalarExpr& e1, const VectorVar& e2)  { return e1*e2; })
+    .def(py::self * py::self)
+    .def("__mul__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1*e2; }, py::is_operator())
+    .def("__mul__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1*e2; }, py::is_operator())
+    .def("__rmul__", [](const ScalarExpr& e1, const Interval& e2)   { return e2*e1; }, py::is_operator())
+    .def("__mul__",  [](const ScalarExpr& e1, const VectorExpr& e2) { return e1*e2; }, py::is_operator())
 
-    .def("__div__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1/e2; })
-    .def("__div__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1/e2; })
-    .def("__rdiv__", [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1/e2; })
-    .def("__div__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1/e2; })
-    .def("__rdiv__", [](const ScalarExpr& e1, const Interval& e2)   { return e1/e2; })
+    .def("__truediv__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1/e2; }, py::is_operator())
+    .def("__truediv__",  [](const ScalarExpr& e1, const ScalarVar& e2)  { return e1/e2; }, py::is_operator())
+    .def("__truediv__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1/e2; }, py::is_operator())
+    .def("__rtruediv__", [](const ScalarExpr& e1, const Interval& e2)   { return e2/e1; }, py::is_operator())
 
   ;
 
+  py::implicitly_convertible<int,ScalarExpr>();
+  py::implicitly_convertible<double,ScalarExpr>();
   py::implicitly_convertible<Interval,ScalarExpr>();
+  py::implicitly_convertible<ScalarVar,ScalarExpr>();
 }
 
 inline void export_VectorExpr(py::module& m)
@@ -232,23 +250,29 @@ inline void export_VectorExpr(py::module& m)
     .def("copy", &VectorExpr::copy)
     .def("raw_copy", &VectorExpr::raw_copy)
 
-    .def("__add__",  [](const VectorExpr& e1, const VectorExpr& e2)     { return e1+e2; })
-    .def("__add__",  [](const VectorExpr& e1, const VectorVar& e2)      { return e1+e2; })
-    .def("__radd__", [](const VectorExpr& e1, const VectorVar& e2)      { return e1+e2; })
-    .def("__add__",  [](const VectorExpr& e1, const IntervalVector& e2) { return e1+e2; })
-    .def("__radd__", [](const VectorExpr& e1, const IntervalVector& e2) { return e1+e2; })
+    .def("__pos__",  [](const VectorExpr& e1)                           { return e1; }, py::is_operator())
+    .def(py::self + py::self)
+    .def("__add__",  [](const VectorExpr& e1, const VectorVar& e2)      { return e1+e2; }, py::is_operator())
+    .def("__add__",  [](const VectorExpr& e1, const IntervalVector& e2) { return e1+e2; }, py::is_operator())
+    .def("__radd__", [](const VectorExpr& e1, const IntervalVector& e2) { return e1+e2; }, py::is_operator())
 
-    .def("__neg__",  [](const VectorExpr& e1)                           { return -e1;   })
-    .def("__sub__",  [](const VectorExpr& e1, const VectorExpr& e2)     { return e1-e2; })
-    .def("__sub__",  [](const VectorExpr& e1, const VectorVar& e2)      { return e1-e2; })
-    .def("__rsub__", [](const VectorExpr& e1, const VectorVar& e2)      { return e1-e2; })
-    .def("__sub__",  [](const VectorExpr& e1, const IntervalVector& e2) { return e1-e2; })
-    .def("__rsub__", [](const VectorExpr& e1, const IntervalVector& e2) { return e1-e2; })
+    .def(- py::self)
+    .def(py::self - py::self)
+    .def("__sub__",  [](const VectorExpr& e1, const VectorVar& e2)      { return e1-e2; }, py::is_operator())
+    .def("__sub__",  [](const VectorExpr& e1, const IntervalVector& e2) { return e1-e2; }, py::is_operator())
+    .def("__rsub__", [](const VectorExpr& e1, const IntervalVector& e2) { return e2-e1; }, py::is_operator())
 
-    .def("__rmul__", [](const VectorExpr& e1, const ScalarExpr& e2)     { return e2*e1; })
-    .def("__rmul__", [](const VectorExpr& e1, const ScalarVar& e2)      { return e2*e1; })
+    .def("__mul__",  [](const VectorExpr& e1, const ScalarExpr& e2)     { return e1*e2; }, py::is_operator())
+    .def("__rmul__", [](const VectorExpr& e1, const ScalarExpr& e2)     { return e2*e1; }, py::is_operator())
+    .def("__mul__",  [](const VectorExpr& e1, const Interval& e2)       { return e1*e2; }, py::is_operator())
+    .def("__rmul__", [](const VectorExpr& e1, const Interval& e2)       { return e2*e1; }, py::is_operator())
+
+    .def("__truediv__",  [](const VectorExpr& e1, const ScalarExpr& e2) { return e1/e2; }, py::is_operator())
+    .def("__truediv__",  [](const VectorExpr& e1, const Interval& e2)   { return e1/e2; }, py::is_operator())
 
   ;
 
+  py::implicitly_convertible<Vector,VectorExpr>();
   py::implicitly_convertible<IntervalVector,VectorExpr>();
+  py::implicitly_convertible<VectorVar,VectorExpr>();
 }

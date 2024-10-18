@@ -10,36 +10,42 @@
 #pragma once
 
 #include <type_traits>
+#include "codac2_IntervalVector.h"
 #include "codac2_CtcWrapper.h"
 #include "codac2_Collection.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
-  class CtcCartProd : public Ctc_<IntervalVector>
+  class CtcCartProd : public Ctc<CtcCartProd,IntervalVector>
   {
     public:
 
-      template<typename C, typename = typename std::enable_if<(
-          (std::is_base_of_v<Ctc_<IntervalVector>,C> && !std::is_same_v<CtcCartProd,C>) || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>
-        ), void>::type>
+      CtcCartProd(const Collection<CtcBase<IntervalVector>>& ctcs)
+        : Ctc<CtcCartProd,IntervalVector>([ctcs] {
+            size_t n = 0;
+            for(const auto& ci : ctcs)
+              n += ci->size();
+            return n;
+        }()), _ctcs(ctcs)
+      { }
+
+      template<typename C>
+        requires (IsCtcBaseOrPtr<C,IntervalVector> && !std::is_same_v<CtcCartProd,C>)
       CtcCartProd(const C& c)
-        : Ctc_<IntervalVector>(size_of(c)), _ctcs(c)
+        : Ctc<CtcCartProd,IntervalVector>(size_of(c)), _ctcs(c)
       { }
 
-      template<typename... C, typename = typename std::enable_if<(true && ... && (
-          (std::is_base_of_v<Ctc_<IntervalVector>,C> || std::is_same_v<std::shared_ptr<Ctc_<IntervalVector>>,C>)
-        )), void>::type>
+      template<typename... C>
+        requires (IsCtcBaseOrPtr<C,IntervalVector> && ...)
       CtcCartProd(const C&... c)
-        : Ctc_<IntervalVector>((0 + ... + size_of(c))), _ctcs(c...)
+        : Ctc<CtcCartProd,IntervalVector>((0 + ... + size_of(c))), _ctcs(c...)
       { }
-
-      std::shared_ptr<Ctc> copy() const
-      {
-        return std::make_shared<CtcCartProd>(*this);
-      }
 
       void contract(IntervalVector& x) const
       {
+        assert_release(x.size() == this->size());
+
         size_t i = 0;
         for(const auto& ci : _ctcs)
         {
@@ -53,12 +59,11 @@ namespace codac2
 
     protected:
 
-      Collection<Ctc_<IntervalVector>> _ctcs;
+      Collection<CtcBase<IntervalVector>> _ctcs;
   };
 
-  template<typename... C, typename = typename std::enable_if<(true && ... && (
-      std::is_base_of_v<Ctc_<IntervalVector>,C>
-    )), void>::type>
+  template<typename... C>
+    requires (IsCtcBaseOrPtr<C,IntervalVector> && ...)
   inline CtcCartProd cart_prod(const C&... c)
   {
     return CtcCartProd(c...);

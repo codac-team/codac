@@ -13,30 +13,32 @@
 #include "codac2_Sep.h"
 #include "codac2_Collection.h"
 #include "codac2_OctaSym.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
-  class SepAction : public Sep
+  class SepAction : public Sep<SepAction>
   {
     public:
 
-      template<typename S, typename = typename std::enable_if<
-          std::is_base_of_v<Sep,S> || std::is_same_v<std::shared_ptr<Sep>,S>
-        >::type>
+      template<typename S>
+        requires IsSepBaseOrPtr<S>
       SepAction(const S& s, const OctaSym& a)
-        : Sep(a.size()), _sep(s), _s(a), __s(a.invert())
-      { }
+        : Sep<SepAction>(a.size()), _sep(s), _s(a), __s(a.invert())
+      {
+        assert_release(size_of(s) == a.size());
+      }
 
-      std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
 
     protected:
 
-      const Collection<Sep> _sep;
+      const Collection<SepBase> _sep;
       const OctaSym _s, __s;
   };
   
-  template<typename S, typename>
+  template<typename S>
+    requires IsSepBaseOrPtr<S>
   inline SepAction OctaSym::operator()(const S& s) const
   {
     return SepAction(s, *this);

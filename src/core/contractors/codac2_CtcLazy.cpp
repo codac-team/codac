@@ -12,11 +12,6 @@
 using namespace std;
 using namespace codac2;
 
-std::shared_ptr<Ctc> CtcLazy::copy() const
-{
-  return std::make_shared<CtcLazy>(*this);
-}
-
 void CtcLazy::contract(IntervalVector& x) const
 {
   double v = x.volume();

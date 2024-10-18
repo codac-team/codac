@@ -12,10 +12,10 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include "codac2_py_core.h"
 #include <codac2_Interval.h>
 #include <codac2_Interval_operations.h>
 #include "codac2_py_Interval_operations_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include "codac2_py_matlab.h"
 
 using namespace std;
 using namespace codac2;

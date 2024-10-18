@@ -13,41 +13,46 @@
 #include "codac2_Sep.h"
 #include "codac2_Collection.h"
 #include "codac2_SepWrapper.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
-  class SepCartProd : public Sep
+  class SepCartProd : public Sep<SepCartProd>
   {
     public:
 
-      template<typename S, typename = typename std::enable_if<(
-          (std::is_base_of_v<Sep,S> && !std::is_same_v<SepCartProd,S>) || std::is_same_v<std::shared_ptr<Sep>,S>
-        ), void>::type>
-      SepCartProd(const S& s)
-        : Sep(size_of(s)), _seps(s)
+      SepCartProd(const Collection<SepBase>& seps)
+        : Sep<SepCartProd>([seps] {
+            size_t n = 0;
+            for(const auto& si : seps)
+              n += si->size();
+            return n;
+        }()), _seps(seps)
       { }
 
-      template<typename... S, typename = typename std::enable_if<(true && ... && (
-          (std::is_base_of_v<Sep,S> || std::is_same_v<std::shared_ptr<Sep>,S>)
-        )), void>::type>
+      template<typename S>
+        requires (IsSepBaseOrPtr<S> && !std::is_same_v<SepCartProd,S>)
+      SepCartProd(const S& s)
+        : Sep<SepCartProd>(size_of(s)), _seps(s)
+      { }
+
+      template<typename... S>
+        requires (IsSepBaseOrPtr<S> && ...)
       SepCartProd(const S&... s)
-        : Sep((0 + ... + size_of(s))), _seps(s...)
+        : Sep<SepCartProd>((0 + ... + size_of(s))), _seps(s...)
       { }
       
-      std::shared_ptr<Sep> copy() const;
       BoxPair separate(const IntervalVector& x) const;
 
     protected:
 
-      Collection<Sep> _seps;
+      Collection<SepBase> _seps;
   };
 
-  template<typename S1, typename S2, typename = typename std::enable_if<(
-      std::is_base_of_v<Sep,S1> &&
-      std::is_base_of_v<Sep,S2>
-    )>::type>
-  inline SepCartProd cart_prod(const S1& s1, const S2& s2)
+  template<typename... S>
+    requires (IsSepBaseOrPtr<S> && ...)
+  inline SepCartProd cart_prod(const S&... s)
   {
-    return SepCartProd(s1,s2);
+    return SepCartProd(s...);
   }
 }

@@ -46,8 +46,10 @@ jobs:
             #- { os: windows-2019, shell: cmd, arch: x86, bitness: 32, runtime: mingw8, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 8.1.0 x86' }
             #- { os: windows-2019, shell: cmd, arch: x64, bitness: 64, runtime: mingw7, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 7.3.0 x64' }
             #- { os: windows-2019, shell: cmd, arch: x86, bitness: 32, runtime: mingw7, cmake_params: '-G "MinGW Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 7.3.0 x86' }
+            - { os: ubuntu-24.04, shell: bash, arch: amd64, bitness: 64, runtime: noble, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 24.04 amd64' }
             - { os: ubuntu-22.04, shell: bash, arch: amd64, bitness: 64, runtime: jammy, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 22.04 amd64' }
-            - { os: ubuntu-20.04, shell: bash, arch: amd64, bitness: 64, runtime: focal, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 20.04 amd64' }
+            # Problems related to C++20?
+            #- { os: ubuntu-20.04, shell: bash, arch: amd64, bitness: 64, runtime: focal, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 20.04 amd64' }
             - { os: macos-14, shell: bash, arch: arm64, bitness: 64, runtime: sonoma, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Sonoma arm64' }
             - { os: macos-14, shell: bash, arch: x86_64, bitness: 64, runtime: sonoma, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', cross: true, desc: 'macOS Sonoma x86_64 (cross)' }
             - { os: macos-13, shell: bash, arch: arm64, bitness: 64, runtime: ventura, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', cross: true, desc: 'macOS Ventura arm64 (cross)' }
@@ -72,7 +74,7 @@ jobs:
         echo "CHOCO_PACKAGE_REV=" >> $GITHUB_ENV
         echo "VERBOSE=1" >> $GITHUB_ENV
       shell: bash
-    - run: if [ -z "$CHOCO_PACKAGE_REV" ]; then echo "PACKAGE_VERSION=$SOFTWARE_VERSION" >> $GITHUB_ENV ; else echo "PACKAGE_VERSION=$SOFTWARE_VERSION.$CHOCO_PACKAGE_REV" >> $GITHUB_ENV ; fi
+    - run: if [ -z "$CHOCO_PACKAGE_REV" ]; then echo "PACKAGE_VERSION=${SOFTWARE_VERSION/.dev*/-dev.$(date +%Y%m%d)}" >> $GITHUB_ENV ; else echo "PACKAGE_VERSION=$SOFTWARE_VERSION.$CHOCO_PACKAGE_REV" >> $GITHUB_ENV ; fi
       shell: bash
       if: runner.os=='Windows'
     - run: echo "PACKAGE_VERSION=$SOFTWARE_VERSION-${DEBIAN_PACKAGE_REV}${{ matrix.cfg.runtime }}$PACKAGE_REV" >> $GITHUB_ENV
@@ -123,8 +125,8 @@ jobs:
         del /f /q ibex.2.8.9.20240417.nupkg
       if: runner.os=='Windows'
     - run: |
-        # Replace these 2 lines by the next ones to test a specific binary package of IBEX.
-        #sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+        sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+        # Replace this line by the next ones to test a specific binary package of IBEX.
         #sudo apt-get -q update ; sudo apt-get -y install libibex-dev libeigen3-dev dpkg-dev || true
         sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev dpkg-dev || true
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb --no-check-certificate -nv
@@ -171,13 +173,13 @@ jobs:
     - run: |
         if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         cd codac_standalone/example
-        #cmake ${{ matrix.cfg.cmake_params }} .
-        #cmake --build . --config Release
-        #file ./${{ matrix.cfg.test_config }}my_project
-        #./${{ matrix.cfg.test_config }}my_project
+        cmake ${{ matrix.cfg.cmake_params }} .
+        cmake --build . --config Release
+        file ./${{ matrix.cfg.test_config }}my_project
+        ./${{ matrix.cfg.test_config }}my_project
         cd ../..
       shell: bash
-      if: matrix.cfg.cross!=true
+      if: (matrix.cfg.cross!=true)&&(github.ref_name!='codac4matlab')
     - run: |
         source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH
         cd packages/choco
@@ -194,7 +196,7 @@ jobs:
         mv -f codac.$PACKAGE_VERSION.nupkg ../../../
         cd ../../..
         checksum -f=codac.$PACKAGE_VERSION.nupkg -t=sha256
-        choco install -y -r --no-progress --ignore-dependencies -s . codac --params "'/url:./codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
+        choco install -y -r --no-progress --ignore-dependencies -s . codac --pre --params "'/url:./codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
         if [ ${{ matrix.cfg.runtime }} != mingw11 ] || [ ${{ matrix.cfg.arch }} != x64 ]; then rm -Rf codac.$PACKAGE_VERSION.nupkg ; fi # To avoid upload conflicts of the same file...
         checksum -f=codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip -t=sha256
       shell: bash
@@ -218,15 +220,15 @@ jobs:
         file: "*.zip;*.nupkg;*.deb"
         overwrite: true
         tag_name: autotagname-${{ github.sha }}
-      if: (github.event_name != 'pull_request')&&((github.ref_name == 'master')||(github.ref_name == 'codac4matlab'))
+      if: (github.event_name != 'pull_request')&&(github.ref_name == 'master')
     - run: |
         if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         rm -Rf codac
         cd tests/test_codac
-        #cmake ${{ matrix.cfg.cmake_params }} .
-        #cmake --build . --config Release
-        #file ./${{ matrix.cfg.test_config }}my_project
-        #./${{ matrix.cfg.test_config }}my_project
+        cmake ${{ matrix.cfg.cmake_params }} .
+        cmake --build . --config Release
+        file ./${{ matrix.cfg.test_config }}my_project
+        ./${{ matrix.cfg.test_config }}my_project
         cd ../..
       shell: bash
-      if: matrix.cfg.cross!=true
+      if: (matrix.cfg.cross!=true)&&(github.ref_name!='codac4matlab')

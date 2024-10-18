@@ -1,4 +1,4 @@
-#include <codac-core.h>
+#include <codac>
 
 using namespace std;
 using namespace codac2;
@@ -24,10 +24,11 @@ int main()
   AnalyticFunction h({a}, fa(a[0],a[1])-fb(a[2],a[3]));
   CtcInverse_<IntervalVector> ctc(h, {{0.},{0.},{0.}});
 
-  IntervalVector x0({{0,1},{0,1},{0,1},{0,1}});
+  // to be restored...
+  /*IntervalVector x0({{0,1},{0,1},{0,1},{0,1}});
   Paver p(x0);
 
-  Figure g("(u1,v1)", GraphicOutputMode::VIBES);
+  Figure2D g("(u1,v1)", GraphicOutput::VIBES);
   g.set_axes(axis(0,x0[0]), axis(1,x0[1]));
   g.set_window_properties({100,100},{600,600});
   p.set_figure(&g);
@@ -41,5 +42,5 @@ int main()
     l_34.push_back(fb.eval_centered(li[2],li[3]));
   }
   export_to_ObjectFileFormat(l_12, "output_u1v1.off");
-  export_to_ObjectFileFormat(l_34, "output_u2v2.off");
+  export_to_ObjectFileFormat(l_34, "output_u2v2.off");*/
 }

@@ -15,6 +15,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_IntervalVector.h>
 #include <codac2_Approx.h>
+#include <codac2_arithmetic.h>
 
 using namespace std;
 using namespace codac2;
@@ -22,13 +23,21 @@ using namespace codac2;
 void CHECK_diff(const IntervalVector& x, const IntervalVector& y, bool compactness, const IntervalMatrix& result)
 {
   auto c = x.diff(y, compactness);
+
+  if(c.empty())
+  {
+    CHECK(result.is_empty());
+    return;
+  }
+
   for(const auto& ci : c)
   {
     bool found = false;
-    for(int i = 0 ; i < result.rows() ; i++)
-      if(ci == result.row(i).transpose())
+    for(size_t i = 0 ; i < result.nb_rows() ; i++)
+      if(ci == IntervalMatrix(result.row(i)).transpose().col(0))
       {
-        found = true; break;
+        found = true;
+        break;
       }
     CHECK(found);
   }
@@ -138,6 +147,25 @@ TEST_CASE("IntervalVector")
     CHECK(x[1] == Interval(3,4));
   }
 
+  {
+    Interval xi(-5,6);
+    IntervalVector x({xi});
+    CHECK(x.size() == 1);
+    CHECK(x[0] == Interval(-5,6));
+  }
+
+  {
+    IntervalVector x({Interval(4.0397,5.40),Interval(1.9089,2.45)});
+    CHECK(x[0] == Interval(4.0397,5.40));
+    CHECK(x[1] == Interval(1.9089,2.45));
+  }
+
+  {
+    IntervalVector x({{4.0397,5.40},{1.9089,2.45}});
+    CHECK(x[0] == Interval(4.0397,5.40));
+    CHECK(x[1] == Interval(1.9089,2.45));
+  }
+
   CHECK(IntervalVector({{0,1},{2,3},{4,5}}).subvector(0,1) == IntervalVector({{0,1},{2,3}}));
   CHECK(IntervalVector({{0,1},{2,3},{4,5}}).subvector(1,2) == IntervalVector({{2,3},{4,5}}));
   CHECK(IntervalVector({{0,1},{2,3},{4,5}}).subvector(1,1) == IntervalVector({{2,3}}));
@@ -145,8 +173,12 @@ TEST_CASE("IntervalVector")
   CHECK(IntervalVector({{0,1},{2,3},{4,5}}).subvector(0,2) == IntervalVector({{0,1},{2,3},{4,5}}));
   CHECK(IntervalVector::empty(3).subvector(1,2).is_empty());
 
-  //CHECK(cart_prod(IntervalVector({{0,1},{2,3},{4,5}}),IntervalVector::empty(3)).is_empty());
-  //CHECK(cart_prod(IntervalVector::empty(3),IntervalVector({{0,1},{2,3},{4,5}})).is_empty());
+  CHECK(cart_prod(IntervalVector({{0,1},{2,3},{4,5}}),IntervalVector::empty(3)).is_empty());
+  CHECK(cart_prod(IntervalVector::empty(3),IntervalVector({{0,1},{2,3},{4,5}})).is_empty());
+  CHECK(cart_prod(IntervalVector({{0,1},{2,3},{4,5}})) == IntervalVector({{0,1},{2,3},{4,5}}));
+  CHECK(cart_prod(IntervalVector::empty(3)) == IntervalVector::empty(3));
+  CHECK(cart_prod(IntervalVector({{0,1},{2,3},{4,5}}),IntervalVector({{8,9}})) == IntervalVector({{0,1},{2,3},{4,5},{8,9}}));
+  CHECK(cart_prod(25.,IntervalVector({{0,1},{2,3},{4,5}}),IntervalVector({{8,9}}),Vector::ones(3)) == IntervalVector({{25},{0,1},{2,3},{4,5},{8,9},{1},{1},{1}}));
 
   CHECK(((IntervalVector({{0,2},{4,6}})) &=IntervalVector({{1,3},{5,7}})) == IntervalVector({{1,2},{5,6}}));
   CHECK(((IntervalVector({{0,2},{4,6}})) & IntervalVector({{1,3},{5,7}})) == IntervalVector({{1,2},{5,6}}));
@@ -388,7 +420,8 @@ TEST_CASE("IntervalVector")
   CHECK((IntervalVector(x2)-=x1) == -x3);
 
   IntervalVector b({{0,1},{0,1}});
-  auto c = b.complementary();
+  auto c_l = b.complementary();
+  std::vector<IntervalVector> c { std::begin(c_l), std::end(c_l) };
 
   CHECK(c.size() == 4);
   CHECK(c[0].size() == 2);
@@ -405,7 +438,9 @@ TEST_CASE("IntervalVector")
   CHECK(c[3][0] == Interval(0,1));
   CHECK(c[3][1] == Interval(1,oo));
 
-  c = IntervalVector::empty(2).complementary();
+  c_l = IntervalVector::empty(2).complementary();
+  c = std::vector<IntervalVector> { std::begin(c_l), std::end(c_l) };
+
   CHECK(c.size() == 1);
   CHECK(c[0].size() == 2);
   CHECK(c[0][0] == Interval(-oo,oo));

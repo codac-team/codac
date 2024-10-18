@@ -14,8 +14,10 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
-#include <cassert>
+#include <initializer_list>
+#include <limits>
 #include "codac2_Interval.h"
+#include "codac2_assert.h"
 
 using namespace std;
 
@@ -45,9 +47,23 @@ namespace codac2
     : ibex::Interval(array)
   { }
 
+  Interval::Interval(std::initializer_list<double> l)
+    : Interval()
+  {
+    init_from_list(l);
+  }
+
   Interval& Interval::init(const Interval& x)
   {
     *this = x;
+    return *this;
+  }
+
+  Interval& Interval::init_from_list(const std::list<double>& l)
+  {
+    assert_release((l.size() == 1 || l.size() == 2)
+      && "'Interval' can only be defined by one or two 'double' values.");
+    *this = Interval(*l.begin(),*std::prev(l.end()));
     return *this;
   }
 
@@ -80,6 +96,16 @@ namespace codac2
   double Interval::mid() const
   {
     return ibex::Interval::mid();
+  }
+
+  double Interval::rand() const
+  {
+    if(is_empty())
+      return std::numeric_limits<double>::quiet_NaN();
+
+    double a = max(next_float(-oo),lb());
+    double b = min(previous_float(oo),ub());
+    return a + (((double)std::rand())/(double)RAND_MAX)*(b-a);
   }
 
   double Interval::rad() const
@@ -190,6 +216,7 @@ namespace codac2
 
   pair<Interval,Interval> Interval::bisect(float ratio) const
   {
+    assert_release(Interval(0,1).interior_contains(ratio));
     auto p = ibex::Interval::bisect(ratio);
     return { p.first, p.second };
   }

@@ -25,8 +25,8 @@ namespace codac2
       SetFunction(const FunctionArgsList& args, const std::shared_ptr<SetExpr>& y)
         : FunctionBase<SetExpr>(args, y)
       {
-        if(!y->belongs_to_args_list(this->args()))
-          throw std::invalid_argument("Invalid argument: variable not present in input arguments");
+        assert_release(y->belongs_to_args_list(this->args()) && 
+          "Invalid arguments: variable not present in input arguments");
       }
 
       SetFunction(const SetFunction& f)
@@ -36,22 +36,22 @@ namespace codac2
       template<typename... Args>
       auto create_ctc(const Args&... x)
       {
-        std::vector<std::shared_ptr<Ctc_<IntervalVector>>> ref_x(sizeof...(Args));
+        std::vector<std::shared_ptr<CtcBase<IntervalVector>>> ref_x(sizeof...(Args));
         size_t i = 0;
         ((ref_x[i++] = create_arg_ctc_copy(x)), ...);
-        if(args().size() != ref_x.size())
-          throw std::invalid_argument("Invalid argument: wrong number of input arguments");
+        assert_release(args().size() == ref_x.size() && 
+          "Invalid arguments: wrong number of input arguments");
         return this->expr()->create_ctc(args(), ref_x);
       }
 
       template<typename... Args>
       auto create_sep(const Args&... x)
       {
-        std::vector<std::shared_ptr<Sep>> ref_x(sizeof...(Args));
+        std::vector<std::shared_ptr<SepBase>> ref_x(sizeof...(Args));
         size_t i = 0;
         ((ref_x[i++] = create_arg_sep_copy(x)), ...);
-        if(args().size() != ref_x.size())
-          throw std::invalid_argument("Invalid argument: wrong number of input arguments");
+        assert_release(args().size() == ref_x.size() && 
+          "Invalid arguments: wrong number of input arguments");
         return this->expr()->create_sep(args(), ref_x);
       }
 
@@ -61,8 +61,8 @@ namespace codac2
         auto expr_copy = expr()->copy();
         size_t i = 0;
         (expr_copy->replace_expr(_args[i++]->unique_id(), this->__get_copy(x)), ...);
-        if(i != this->args().size())
-          throw std::invalid_argument("Invalid argument: wrong number of input arguments");
+        assert_release(i == this->args().size() && 
+          "Invalid arguments: wrong number of input arguments");
         return std::dynamic_pointer_cast<SetExpr>(expr_copy);
       }
 
@@ -76,7 +76,7 @@ namespace codac2
     protected:
 
       template<typename A>
-      std::shared_ptr<Ctc_<IntervalVector>> create_arg_ctc_copy(const A& x)
+      std::shared_ptr<CtcBase<IntervalVector>> create_arg_ctc_copy(const A& x)
       {
         if constexpr(std::is_base_of_v<Domain,A>)
         {
@@ -84,18 +84,18 @@ namespace codac2
           return sx.copy();
         }
 
-        else if constexpr(std::is_base_of_v<Ctc_<IntervalVector>,A>)
+        else if constexpr(std::is_base_of_v<CtcBase<IntervalVector>,A>)
           return x.copy();
 
         else
         {
-          throw std::invalid_argument("Invalid argument: unknown input type");
+          assert_release(false && "Invalid argument: unknown input type");
           return nullptr;
         }
       }
 
       template<typename A>
-      std::shared_ptr<Sep> create_arg_sep_copy(const A& x)
+      std::shared_ptr<SepBase> create_arg_sep_copy(const A& x)
       {
         if constexpr(std::is_base_of_v<Domain,A>)
         {
@@ -103,12 +103,12 @@ namespace codac2
           return sx.copy();
         }
 
-        else if constexpr(std::is_base_of_v<Sep,A>)
+        else if constexpr(std::is_base_of_v<SepBase,A>)
           return x.copy();
 
         else
         {
-          throw std::invalid_argument("Invalid argument: unknown input type");
+          assert_release(false && "Invalid argument: unknown input type");
           return nullptr;
         }
       }

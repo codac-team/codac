@@ -8,19 +8,15 @@
  */
 
 #include "codac2_SepEllipse.h"
+#include "codac2_arithmetic.h"
 
 using namespace std;
 using namespace codac2;
 
 SepEllipse::SepEllipse(const Vector& q)
-  : Sep(2), _ctc(CtcEllipse(q))
+  : Sep<SepEllipse>(2), _ctc(CtcEllipse(q))
 {
-  assert(q.size() == 6);
-}
-
-std::shared_ptr<Sep> SepEllipse::copy() const
-{
-  return std::make_shared<SepEllipse>(*this);
+  assert_release(q.size() == 6);
 }
 
 bool test_ellipse(const Vector& x, const Vector& q)
@@ -36,7 +32,8 @@ bool test_ellipse(const Vector& x, const Vector& q)
 
 BoxPair SepEllipse::separate(const IntervalVector& x) const
 {
-  assert(x.size() == this->size());
+  assert_release(x.size() == this->size());
+
   IntervalVector p(x), x_in(x), x_out(x);
   _ctc.contract(p);
 

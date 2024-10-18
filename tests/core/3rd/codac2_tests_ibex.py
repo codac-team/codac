@@ -11,7 +11,9 @@ import unittest
 from codac import *
 
 class TestIbex(unittest.TestCase):
-  pass # IBEX is not available in Python
+
+  def tests_ibex(self):
+     self.assertTrue(True) # IBEX is not available in Python
 
 if __name__ ==  '__main__':
   unittest.main()

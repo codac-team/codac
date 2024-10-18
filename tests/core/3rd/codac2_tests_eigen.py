@@ -11,7 +11,9 @@ import unittest
 from codac import *
 
 class TestEigen(unittest.TestCase):
-  pass
+
+  def tests_eigen(self):
+     self.assertTrue(True)
 
 if __name__ ==  '__main__':
   unittest.main()

@@ -16,6 +16,7 @@
 #include <codac2_IntervalMatrix.h>
 #include <codac2_IntervalVector.h>
 #include <codac2_Approx.h>
+#include <codac2_arithmetic.h>
 
 using namespace std;
 using namespace codac2;
@@ -65,10 +66,10 @@ TEST_CASE("IntervalMatrix")
     IntervalMatrix m1(2,3);
     IntervalMatrix m2(2,3);
 
-    CHECK(m1.rows() == 2);
-    CHECK(m1.cols() == 3);
-    CHECK(m2.rows() == 2);
-    CHECK(m2.cols() == 3);
+    CHECK(m1.nb_rows() == 2);
+    CHECK(m1.nb_cols() == 3);
+    CHECK(m2.nb_rows() == 2);
+    CHECK(m2.nb_cols() == 3);
 
     m1(0,0) = 1.;
     m1(0,1) = 2.;
@@ -106,8 +107,8 @@ TEST_CASE("IntervalMatrix")
 
   {
     IntervalMatrix m(2,3);
-    CHECK(m.rows() == 2);
-    CHECK(m.cols() == 3);
+    CHECK(m.nb_rows() == 2);
+    CHECK(m.nb_cols() == 3);
     CHECK(m(0,0) == Interval(-oo,oo));
     CHECK(m(0,1) == Interval(-oo,oo));
     CHECK(m(0,2) == Interval(-oo,oo));
@@ -124,14 +125,14 @@ TEST_CASE("IntervalMatrix")
     double _r1[][2] = {{0,1},{0,2},{0,3}};
     double _r2[][2] = {{-1,0},{-2,0},{-3,0}};
     auto r1_0 = IntervalVector(3,_r1);
-    CHECK(r1_0.cols() == 1);
-    CHECK(r1_0.rows() == 3);
+    CHECK(r1_0.nb_cols() == 1);
+    CHECK(r1_0.nb_rows() == 3);
     auto r1 = IntervalVector(3,_r1).transpose();
-    CHECK(r1.cols() == 3);
-    CHECK(r1.rows() == 1);
+    CHECK(r1.nb_cols() == 3);
+    CHECK(r1.nb_rows() == 1);
     auto r2 = IntervalVector(3,_r2).transpose();
-    CHECK(r2.cols() == 3);
-    CHECK(r2.rows() == 1);
+    CHECK(r2.nb_cols() == 3);
+    CHECK(r2.nb_rows() == 1);
     CHECK(r1 == IntervalMatrix({
       { {0,1}, {0,2}, {0,3} }
     }));
@@ -146,16 +147,16 @@ TEST_CASE("IntervalMatrix")
     IntervalVector c2(2,_c2);
     IntervalVector c3(2,_c3);
 
-    CHECK(m1.rows() == 2);
-    CHECK(m1.cols() == 3);
-    CHECK(m1.row(0) == r1);
-    CHECK(m1.row(1) == r2);
-    CHECK(m1.row(0) == r1);
-    CHECK(m1.row(1) == r2);
+    CHECK(m1.nb_rows() == 2);
+    CHECK(m1.nb_cols() == 3);
+    CHECK((m1.row(0) == r1));
+    CHECK((m1.row(1) == r2));
+    CHECK((m1.row(0) == r1));
+    CHECK((m1.row(1) == r2));
 
-    CHECK(m1.col(0) == c1);
-    CHECK(m1.col(1) == c2);
-    CHECK(m1.col(2) == c3);
+    CHECK((m1.col(0) == c1));
+    CHECK((m1.col(1) == c2));
+    CHECK((m1.col(2) == c3));
     CHECK(m1(0,0) == Interval(0,1));
     CHECK(m1(0,1) == Interval(0,2));
     CHECK(m1(0,2) == Interval(0,3));
@@ -171,8 +172,8 @@ TEST_CASE("IntervalMatrix")
     Interval x(-1,2);
     IntervalMatrix m(2,3,x);
 
-    CHECK(m.rows() == 2);
-    CHECK(m.cols() == 3);
+    CHECK(m.nb_rows() == 2);
+    CHECK(m.nb_cols() == 3);
     for(size_t i = 0 ; i < 2 ; i++)
       for(size_t j = 0 ; j < 3 ; j++)
         CHECK(m(i,j) == x);
@@ -199,8 +200,20 @@ TEST_CASE("IntervalMatrix")
   }
 
   {
-    CHECK(IntervalMatrix::empty(2,3).rows() == 2);
-    CHECK(IntervalMatrix::empty(2,3).cols() == 3);
+    IntervalMatrix m(2,3);
+    // accessor (row,col)
+    m(0,0) = Interval(0,1);
+    m(0,1) = Interval(0,2);
+    m(0,2) = Interval(0,3);
+    m(1,0) = Interval(-1,0);
+    m(1,1) = Interval(-2,0);
+    m(1,2) = Interval(-3,0);
+    CHECK(m == M1());
+  }
+
+  {
+    CHECK(IntervalMatrix::empty(2,3).nb_rows() == 2);
+    CHECK(IntervalMatrix::empty(2,3).nb_cols() == 3);
 
     CHECK(IntervalMatrix(IntervalMatrix::empty(2,3)) == IntervalMatrix::empty(2,3));
     CHECK((IntervalMatrix(2,3)=IntervalMatrix::empty(2,3)) == IntervalMatrix::empty(2,3));
@@ -380,8 +393,8 @@ TEST_CASE("IntervalMatrix")
     IntervalMatrix m1(M1());
     IntervalMatrix m2(M2());
     IntervalMatrix m3(m1*m2);
-    CHECK(m3.rows() == 2);
-    CHECK(m3.cols() == 2);
+    CHECK(m3.nb_rows() == 2);
+    CHECK(m3.nb_cols() == 2);
 
     for(size_t i = 0 ; i < 2 ; i++)
       for(size_t j = 0 ; j < 2 ; j++)
@@ -406,14 +419,26 @@ TEST_CASE("IntervalMatrix")
       { {0,0},{1,1} }
     });
 
-    IntervalMatrix M2 = 2*Matrix::eye(2,2);
+    IntervalMatrix M2 = 2.*Matrix::eye(2,2);
     CHECK(M2 == IntervalMatrix{
       { {2,2},{0,0} },
       { {0,0},{2,2} }
     });
 
-    IntervalMatrix M3 = Interval(-1,1)*Matrix::eye(2,2);
-    CHECK(M3 == IntervalMatrix{
+    Matrix M3_degenerate = -1.*Matrix::eye(2,2);
+    CHECK(M3_degenerate == Matrix{
+      { -1,0 },
+      { 0,-1 }
+    });
+
+    IntervalMatrix M3_Matrix = Interval(-1,1)*Matrix::eye(2,2);
+    CHECK(M3_Matrix == IntervalMatrix{
+      { {-1,1},{0,0} },
+      { {0,0},{-1,1} }
+    });
+
+    IntervalMatrix M3_IntervalMatrix = Interval(-1,1)*IntervalMatrix::eye(2,2);
+    CHECK(M3_IntervalMatrix == IntervalMatrix{
       { {-1,1},{0,0} },
       { {0,0},{-1,1} }
     });
@@ -433,7 +458,7 @@ TEST_CASE("IntervalMatrix")
       0,2,0,4,
       0,0,2,5,
       1,1,1,6 };
-    CHECK(res == (Matrix(4,4,_expected)));
+    CHECK((res == Matrix(4,4,_expected)));
   }
 
   {
@@ -446,7 +471,7 @@ TEST_CASE("IntervalMatrix")
       { 8,4 }
     };
 
-    CHECK((m1 | m2) == IntervalMatrix{
+    CHECK((IntervalMatrix(m1) | m2) == IntervalMatrix{
       { {-1,0},{2,7} },
       { {3,8},{4,10} }
     });
@@ -485,6 +510,111 @@ TEST_CASE("IntervalMatrix")
   }
 }
 
+TEST_CASE("IntervalMatrix - mixing types")
+{
+  {
+    Matrix m1 {
+      { {1},{2} },
+      { {3},{4} }
+    };
+
+    // Interval - Matrix
+    CHECK((Interval(-1,1) * m1) == IntervalMatrix{
+      { {-1,1},{-2,2} },
+      { {-3,3},{-4,4} }
+    });
+
+    // Matrix - Interval
+    CHECK((m1 / Interval(2)) == IntervalMatrix{
+      { {1./2.},{2./2.} },
+      { {3./2.},{4./2.} }
+    });
+
+    IntervalVector v1({
+      {-1},
+      {-2}
+    });
+
+    IntervalVector iv1({
+      {-1,1},
+      {-1,1}
+    });
+
+    // Matrix - IntervalVector
+    CHECK((m1 * iv1) == IntervalVector{
+      { {-3,3} },
+      { {-7,7} }
+    });
+
+    // double - IntervalVector
+    CHECK(((double)-3 * iv1) == IntervalVector{
+      { {-3,3} },
+      { {-3,3} }
+    });
+
+    // Interval - Vector
+    CHECK((Interval(-1,1) * v1) == IntervalVector{
+      { {-1,1} },
+      { {-2,2} }
+    });
+
+    IntervalMatrix im1 {
+      { {-1,1},{-2,2} },
+      { {-3,3},{-4,4} }
+    };
+
+    // Matrix - IntervalMatrix
+    CHECK((m1 + im1) == IntervalMatrix{
+      { {0,2},{0,4} },
+      { {0,6},{0,8} }
+    });
+
+    // IntervalMatrix - Matrix
+    CHECK((im1 + m1) == IntervalMatrix{
+      { {0,2},{0,4} },
+      { {0,6},{0,8} }
+    });
+
+    // IntervalMatrix - Matrix block
+    CHECK((im1 + m1.block(0,0,2,2)) == IntervalMatrix{
+      { {0,2},{0,4} },
+      { {0,6},{0,8} }
+    });
+
+    // Matrix block - IntervalMatrix
+    CHECK((m1.block(0,0,2,2) + im1) == IntervalMatrix{
+      { {0,2},{0,4} },
+      { {0,6},{0,8} }
+    });
+
+    // Matrix - IntervalMatrix
+    CHECK((m1 - im1) == IntervalMatrix{
+      { {0,2},{0,4} },
+      { {0,6},{0,8} }
+    });
+
+    // IntervalMatrix - Matrix
+    CHECK((im1 - m1) == IntervalMatrix{
+      { {-2,0},{-4,0} },
+      { {-6,0},{-8,0} }
+    });
+
+    // Matrix - col of IntervalMatrix
+    CHECK((m1 * im1.col(0)) == IntervalMatrix({
+      { {-7,7} },
+      { {-15,15} }
+    }));
+
+    // Row of Matrix - col of Matrix
+    CHECK((m1.row(1) * m1.col(0)) == Matrix({{15}}));
+
+    // Row of Matrix - col of IntervalMatrix
+    CHECK((m1.row(1) * im1.col(0)) == IntervalMatrix({{{-15,15}}}));
+
+    // Row of IntervalMatrix - col of IntervalMatrix
+    CHECK((im1.row(1) * im1.col(0)) == IntervalMatrix({{{-15,15}}}));
+  }
+}
 
 #if 0
 // Tests from the IBEX lib that are not considered in this file:

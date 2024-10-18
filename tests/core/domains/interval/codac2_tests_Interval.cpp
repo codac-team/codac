@@ -20,7 +20,7 @@
 using namespace std;
 using namespace codac2;
 
-TEST_CASE("Interval")
+TEST_CASE("Interval - tests from IBEX")
 {
   CHECK(Interval() == Interval(-oo,oo));
   CHECK(Interval(1.0) == Interval(1.0,1.0));
@@ -38,6 +38,15 @@ TEST_CASE("Interval")
   CHECK(Interval(0,oo) == Interval(0,oo));
   CHECK(Interval::empty() == Interval::empty());
   CHECK(Interval(0,0) == Interval(0,0));
+
+  CHECK(Interval({1.}) == Interval(1.));
+  CHECK(Interval({2,3}) == Interval(2,3));
+  CHECK(Interval({3,2}) == Interval::empty());
+  CHECK(Interval({-oo}) == Interval::empty());
+  CHECK(Interval({oo}) == Interval::empty());
+  CHECK(Interval({oo,0}) == Interval::empty());
+  CHECK(Interval({-oo,oo}) == Interval(-oo,oo));
+  CHECK(Interval({oo,-oo}) == Interval::empty());
 
   CHECK(5._i == Interval(5.));
   CHECK(-3._i == Interval(-3.));
@@ -135,6 +144,21 @@ TEST_CASE("Interval")
   CHECK(x.rad() == oo);
   CHECK(x.diam() == oo);
 
+  x = Interval(-1,1);
+  for(size_t i = 0 ; i < 10 ; i++)
+    CHECK(x.contains(x.rand()));
+  x = Interval(-oo,0);
+  for(size_t i = 0 ; i < 10 ; i++)
+    CHECK(x.contains(x.rand()));
+  x = Interval(0,oo);
+  for(size_t i = 0 ; i < 10 ; i++)
+    CHECK(x.contains(x.rand()));
+  x = Interval(-oo,oo);
+  for(size_t i = 0 ; i < 10 ; i++)
+    CHECK(x.contains(x.rand()));
+  x = Interval::empty();
+  CHECK(std::isnan(x.rand()));
+
   CHECK(Interval(0,1).is_subset(Interval(0,2)));
   CHECK(!Interval(0,1).is_subset(Interval(1,2)));
   CHECK(!Interval(0,1).is_strict_interior_subset(Interval(0,2)));
@@ -207,6 +231,30 @@ TEST_CASE("Interval")
   Interval b = Interval(1,3) & Interval(6,7); // [b] is empty
   Interval c = a+b;
   CHECK(c.is_empty());
+}
+
+TEST_CASE("Interval - other tests")
+{
+  Interval x;
+
+  auto a = x.bisect(0.5);
+  CHECK(a.first == Interval(-oo,0));
+  CHECK(a.second == Interval(0,oo));
+
+  x = Interval(0,oo);
+  a = x.bisect(0.5);
+  CHECK(a.first == Interval(0,codac2::previous_float(oo)));
+  CHECK(a.second == Interval(codac2::previous_float(oo),oo));
+
+  x = Interval(-oo,0);
+  a = x.bisect(0.5);
+  CHECK(a.first == Interval(-oo,codac2::next_float(-oo)));
+  CHECK(a.second == Interval(codac2::next_float(-oo),0));
+
+  x = Interval(0,10);
+  a = x.bisect(0.2);
+  CHECK(Approx(a.first,1e-7) == Interval(0,2));
+  CHECK(Approx(a.second,1e-7) == Interval(2,10));
 }
 
 #if 0
