@@ -9,7 +9,7 @@ int main() {
     // ----------------------------------------------------------
 
     Figure2D fig1("Linear and nonlinear mappings", GraphicOutput::VIBES);
-    fig1.set_axes(FigureAxis(0, {0, 1.5}), FigureAxis(1, {-1., 0.5}));
+    fig1.set_axes(axis(0, {0, 1.5}), axis(1, {-1., 0.5}));
     fig1.set_window_properties({0, 100}, {500, 500});
 
     // initial ellipsoid
@@ -84,9 +84,9 @@ int main() {
     fig3.set_window_properties({1200, 100}, {500, 500});
     fig4.set_window_properties({0, 600}, {500, 500});
 
-    fig2.set_axes(FigureAxis(0, {-3, 3}), FigureAxis(1, {-3, 3}));
-    fig3.set_axes(FigureAxis(1, {-3, 3}), FigureAxis(2, {-3, 3}));
-    fig4.set_axes(FigureAxis(0, {-3, 3}), FigureAxis(2, {-3, 3}));
+    fig2.set_axes(axis(0, {-3, 3}), axis(1, {-3, 3}));
+    fig3.set_axes(axis(1, {-3, 3}), axis(2, {-3, 3}));
+    fig4.set_axes(axis(0, {-3, 3}), axis(2, {-3, 3}));
 
     fig2.draw_ellipsoid(e4, {Color::blue(), Color::blue(0.3)});
     fig3.draw_ellipsoid(e4, {Color::blue(), Color::blue(0.3)});
@@ -146,7 +146,7 @@ int main() {
     // ----------------------------------------------------------
 
     Figure2D fig5("singular mappings and degenerated ellipsoids", GraphicOutput::VIBES);
-    fig5.set_axes(FigureAxis(0, {-0.5, 2}), FigureAxis(1, {-1.5, 1.}));
+    fig5.set_axes(axis(0, {-0.5, 2}), axis(1, {-1.5, 1.}));
     fig5.set_window_properties({700, 600}, {500, 500});
 
     Ellipsoid e9(Vector({0., 0.5}), Matrix({{0.25, 0.},
@@ -210,7 +210,7 @@ int main() {
         cout << "\nStability analysis: the method is not able to conclude" << endl;
     }
     Figure2D fig6("Stability analysis - pendulum example", GraphicOutput::VIBES);
-    fig6.set_axes(FigureAxis(0, {-0.1, 0.1}), FigureAxis(1, {-0.1, 0.1}));
+    fig6.set_axes(axis(0, {-0.1, 0.1}), axis(1, {-0.1, 0.1}));
     fig6.set_window_properties({1200, 600}, {500, 500});
     fig6.draw_ellipsoid(e13, {Color::red(), Color::red(0.3)});
     fig6.draw_ellipsoid(e13_out, {Color::green(), Color::green(0.3)});

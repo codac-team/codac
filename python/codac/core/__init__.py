@@ -225,3 +225,12 @@ def sivia(x,f,y,eps):
 
   else:
     codac_error("sivia: can only compute sivia from scalar or vector functions")
+
+
+def nonlinear_mapping(e,f):
+
+  if isinstance(f.f, AnalyticFunction_Vector):
+    return nonlinear_mapping_(e, f.f)
+
+  else:
+    codac_error("nonlinear_mapping: can only compute from vector functions")

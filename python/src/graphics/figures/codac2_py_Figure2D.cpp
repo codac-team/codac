@@ -123,8 +123,12 @@ void export_Figure2D(py::module& m)
       "c"_a, "r"_a, "theta"_a, "s"_a=StyleProperties())
 
     .def("draw_ellipse", &Figure2D::draw_ellipse,
-      STATIC_VOID_DEFAULTVIEW_DRAW_ELLIPSE_CONST_VECTOR_REF_CONST_VECTOR_REF_DOUBLE_CONST_STYLEPROPERTIES_REF,
+      VOID_FIGURE2D_DRAW_ELLIPSE_CONST_VECTOR_REF_CONST_VECTOR_REF_DOUBLE_CONST_STYLEPROPERTIES_REF,
       "c"_a, "ab"_a, "theta"_a, "s"_a=StyleProperties())
+
+    .def("draw_ellipsoid", &Figure2D::draw_ellipsoid,
+      VOID_FIGURE2D_DRAW_ELLIPSOID_CONST_ELLIPSOID_REF_CONST_STYLEPROPERTIES_REF,
+      "e"_a, "s"_a=StyleProperties())
 
     // Robots
 
@@ -186,6 +190,14 @@ void export_Figure2D(py::module& m)
     .def_static("draw_pie", &DefaultView::draw_pie,
       STATIC_VOID_DEFAULTVIEW_DRAW_PIE_CONST_VECTOR_REF_CONST_INTERVAL_REF_CONST_INTERVAL_REF_CONST_STYLEPROPERTIES_REF,
       "c"_a, "r"_a, "theta"_a, "s"_a=StyleProperties())
+
+    .def_static("draw_ellipse", &DefaultView::draw_ellipse,
+      STATIC_VOID_DEFAULTVIEW_DRAW_ELLIPSE_CONST_VECTOR_REF_CONST_VECTOR_REF_DOUBLE_CONST_STYLEPROPERTIES_REF,
+      "c"_a, "ab"_a, "theta"_a, "s"_a=StyleProperties())
+
+    .def_static("draw_ellipsoid", &DefaultView::draw_ellipsoid,
+      STATIC_VOID_DEFAULTVIEW_DRAW_ELLIPSOID_CONST_ELLIPSOID_REF_CONST_STYLEPROPERTIES_REF,
+      "e"_a, "s"_a=StyleProperties())
 
     // Robots
 

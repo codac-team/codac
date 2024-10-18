@@ -27,6 +27,7 @@
     contractors/codac2_py_directed_ctc.cpp
     contractors/codac2_py_linear_ctc.cpp
 
+    domains/ellipsoid/codac2_py_Ellipsoid.cpp
     domains/interval/codac2_py_Interval.cpp
     domains/interval/codac2_py_Interval_operations.cpp
     domains/interval/codac2_py_IntervalMatrix.cpp

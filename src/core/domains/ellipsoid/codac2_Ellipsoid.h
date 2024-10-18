@@ -153,21 +153,21 @@ namespace codac2
   /**
    * \brief (Rigorous?) non-linear evaluation f(e), from Jacobian information
    *
-   * \param e input ellipsoid
+   * \param G (?)
    * \param J approximated Jacobian matrix of f
    * \param J_box reliable enclosure of the Jacobian matrix of f
    * \param trig (?)
    * \param q (?)
    * \return a (rigorous?) outer enclosure of the non-linear mapping
    */
-  Ellipsoid nonlinear_mapping_base(const Ellipsoid& e, const Matrix& J, const IntervalMatrix& J_box,
-                                   const Vector& trig, const Vector& q);
+  Matrix nonlinear_mapping_base(const Matrix& G, const Matrix& J, const IntervalMatrix& J_box,
+                                const Vector& trig, const Vector& q);
 
   /**
    * \brief Streams out an Ellipsoid
    * 
    * \param os the stream to be updated
-   * \param x the ellipsoid stream out
+   * \param e the ellipsoid stream out
    * \return a reference to the updated stream
    */
   std::ostream& operator<<(std::ostream& os, const Ellipsoid& e);
