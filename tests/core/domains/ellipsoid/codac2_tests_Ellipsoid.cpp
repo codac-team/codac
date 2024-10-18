@@ -71,14 +71,10 @@ TEST_CASE("Ellipsoids")
     Ellipsoid e5_ = e5();
     Ellipsoid e6_ = e6();
 
-    bool res1 = concentric_inclusion_test(e5_, e4_);
-    bool res2 = concentric_inclusion_test(e4_, e5_);
-    bool res3 = concentric_inclusion_test(e6_, e4_);
-    bool res4 = concentric_inclusion_test(e5_, e6_);
-    CHECK(res1 == true);
-    CHECK(res2 == false);
-    CHECK(res3 == false);
-    CHECK(res4 == false);
+    CHECK(e5_.is_concentric_subset(e4_) == BoolInterval::TRUE);
+    CHECK(e4_.is_concentric_subset(e5_) == BoolInterval::UNKNOWN);
+    CHECK(e6_.is_concentric_subset(e4_) == BoolInterval::UNKNOWN);
+    CHECK(e5_.is_concentric_subset(e6_) == BoolInterval::UNKNOWN);
 
     Matrix A2({{0.9,0.5},{-.5,1.1}});
     Vector b2({0.1,0.2});

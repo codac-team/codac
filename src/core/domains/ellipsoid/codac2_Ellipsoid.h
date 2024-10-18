@@ -12,6 +12,7 @@
 #include "codac2_Matrix.h"
 #include "codac2_Vector.h"
 #include "codac2_AnalyticFunction.h"
+#include "codac2_BoolInterval.h"
 
 namespace codac2
 {
@@ -42,6 +43,16 @@ namespace codac2
        */
       IntervalVector hull_box() const;
 
+
+      /**
+       * \brief Compute if the provided ellipsoid is a subset of this ellipsoid,
+       *        provided that the two ellipsoids share the same center
+       *
+       * \param e the second ellipsoid of same dimension
+       * \return a BoolInterval
+       */
+      BoolInterval is_concentric_subset(const Ellipsoid& e) const;
+
     public:
 
       Vector mu;
@@ -68,10 +79,7 @@ namespace codac2
 
     std::ostream &operator<<(std::ostream &os, const Ellipsoid &e);
 
-    bool stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max, Ellipsoid &e, Ellipsoid &e_out);
-
-    bool concentric_inclusion_test(const Ellipsoid &e1, const Ellipsoid &e2);
-
+    BoolInterval stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max, Ellipsoid &e, Ellipsoid &e_out);
 
     Matrix solve_discrete_lyapunov(const Matrix& a,const Matrix& q);
 

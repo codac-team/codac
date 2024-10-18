@@ -113,17 +113,13 @@ int main() {
     // inclusion tests
     // ----------------------------------------------------------
 
-    bool res1 = concentric_inclusion_test(e5, e4);
-    cout << "\nInclusion test e5 in e4: " << res1 << endl;
+    cout << "\nInclusion test e5 in e4: " << e5.is_concentric_subset(e4) << endl;
 
-    bool res2 = concentric_inclusion_test(e4, e5);
-    cout << "Inclusion test e4 in e5: " << res2 << endl;
+    cout << "Inclusion test e4 in e5: " << e4.is_concentric_subset(e5) << endl;
 
-    bool res3 = concentric_inclusion_test(e6, e4);
-    cout << "Inclusion test e4 in e6: " << res3 << endl;
+    cout << "Inclusion test e4 in e6: " << e6.is_concentric_subset(e4) << endl;
 
-    bool res4 = concentric_inclusion_test(e5, e6);
-    cout << "Inclusion test e5 in e6: " << res4 << endl;
+    cout << "Inclusion test e5 in e6: " << e5.is_concentric_subset(e6) << endl;
 
     // ----------------------------------------------------------
     // guaranteed and non guaranteed linear mappings
@@ -200,8 +196,8 @@ int main() {
     Ellipsoid e13(Vector(2), Matrix(2,2));
     Ellipsoid e13_out(Vector(2), Matrix(2,2));
     int alpha_max = 1;
-    bool res = stability_analysis(h4,alpha_max, e13, e13_out);
-    if(res)
+    
+    if(stability_analysis(h4,alpha_max, e13, e13_out) == BoolInterval::TRUE)
     {
         cout << "\nStability analysis: the system is stable" << endl;
         cout << "Ellipsoidal domain of attraction e13 (red):" << endl;

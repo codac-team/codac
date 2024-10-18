@@ -47,6 +47,46 @@ namespace codac2 {
         return hull;
     }
 
+    BoolInterval Ellipsoid::is_concentric_subset(const Ellipsoid& e) const
+    {
+        assert_release(size() == e.size());
+        
+        if((mu._e - e.mu._e).norm() > 1e-10)
+            return BoolInterval::FALSE; // check if the centers are the same
+
+        auto I = Matrix::eye(size(),size());
+        auto G2_inv = e.G._e.inverse();
+        IntervalMatrix D(I._e - G._e.transpose() * G2_inv.transpose() * G2_inv * G._e);
+
+        // cholesky decomposition of D = L*L^T
+        IntervalMatrix L(size(),size()); // matrix of the Cholesky decomposition
+
+        for (size_t j = 0; j < size(); j++) // for every column
+        {
+            // diagonal element
+            Interval s = 0.;
+            for (size_t k = 0; k < j; k++)
+                s += L(j, k) * L(j, k);
+            Interval u = D(j, j) - s;
+            if (u.lb() < 0) {
+                return BoolInterval::UNKNOWN; // cannot guarantee that D is positive definite
+            }
+            L(j,j) = sqrt(u);
+
+            // then the rest of the column
+            for (size_t i = j + 1; i<size();
+            i++)
+            {
+                s = 0.;
+                for (size_t k = 0; k < j; k++)
+                    s += L(j,k) * L(i,k);
+                L(i,j) = (D(i,j) - s) / L(j,j);
+                L(j,i) = 0.;
+            }
+        }
+        return BoolInterval::TRUE;
+    }
+
     Ellipsoid operator+(const Ellipsoid &e1, const Ellipsoid &e2) {
         assert_release(e1.size() == e2.size());
 
@@ -165,9 +205,9 @@ namespace codac2 {
     Ellipsoid nonlinear_mapping(const Ellipsoid &e, const AnalyticFunction<VectorOpValue>& f,const Vector& trig, const Vector& q) {
         // compute an outer ellipsoidal enclosure of f(e)
 
-        assert(e.size() == f.input_size());
-        assert(trig.size() == 2);
-        assert(q.size() == e.size());
+        assert_release(e.size() == f.input_size());
+        assert_release(trig.size() == 2);
+        assert_release(q.size() == e.size());
 
         Vector mu_res = f.eval(e.mu).mid();  // compute the image of the center
         Matrix J = f.diff(e.mu).mid(); // compute the Jacobian of f at the center
@@ -175,15 +215,14 @@ namespace codac2 {
         // compute the Jacobian of f over a box enclosing the ellipsoid
         IntervalMatrix J_box = f.diff(e.hull_box());
 
-        Matrix E_out = nonlinear_mapping_base(e.G, J, J_box,trig,q);
-        return Ellipsoid(mu_res, E_out);
+        return Ellipsoid(mu_res, nonlinear_mapping_base(e.G, J, J_box,trig,q));
     }
 
     std::ostream &operator<<(std::ostream &os, const Ellipsoid &e) {
         return os << "mu : " << e.mu << "\n" << "G :\n" << e.G;
     }
 
-    bool stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max, Ellipsoid &e, Ellipsoid &e_out)
+    BoolInterval stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max, Ellipsoid &e, Ellipsoid &e_out)
     {
         // get the Jacobian of f at the origin
         int n = f.input_size();
@@ -194,7 +233,6 @@ namespace codac2 {
         Matrix P = solve_discrete_lyapunov(J.transpose(),J.transpose()*J); // TODO solve the Lyapunov equation !!!
         Matrix G0((P._e.inverse()).sqrt());
         int alpha = 0;
-        bool res = false;
 
         while(alpha <= alpha_max)
         {
@@ -204,58 +242,16 @@ namespace codac2 {
             cout << "e is\n" << e << endl;
             cout << "e_out is\n" << e_out << endl;
 
-            res = concentric_inclusion_test(e_out,e);
-            if(res)
+            if(e_out.is_concentric_subset(e) == BoolInterval::TRUE)
             {
                 cout << "The system is stable" << endl;
                 cout << "Domain of attraction :\n" << e_out << endl;
-                return true;
+                return BoolInterval::TRUE;
             }
             alpha++;
         }
         cout << "The method is not able to conclude on the stability" << endl;
-        return false;
-    }
-
-    bool concentric_inclusion_test(const Ellipsoid &e1, const Ellipsoid &e2) {
-        // check if e1 included in e2, assuming that the centers are the same
-        assert(e1.size() == e2.size());
-        assert((e1.mu._e - e2.mu._e).norm() < 1e-10); // check if the centers are the same
-
-        auto G2_inv = e2.G._e.inverse();
-        Matrix I(Eigen::MatrixXd::Identity(e2.G.nb_rows(), e2.G.nb_cols()));
-        IntervalMatrix D(I._e - e1.G._e.transpose() * G2_inv.transpose() * G2_inv * e1.G._e);
-
-        // cholesky decomposition of D = L*L^T
-        IntervalMatrix L(e1.size(), e1.size()); // matrix of the Cholesky decomposition
-
-        Interval S(0, 0);
-        Interval U(0, 0);
-
-        for (int j = 0; j < (int)e1.size(); j++) // for every column
-        {
-            // diagonal element
-            S = Interval(0, 0);
-            for (int k = 0; k < j; k++)
-                S += L(j, k) * L(j, k);
-            U = D(j, j) - S;
-            if (U.lb() < 0) {
-                return false; // cannot guarantee that D is positive definite
-            }
-            L(j,j) = sqrt(U);
-
-            // then the rest of the column
-            for (int i = j + 1; i<(int)e1.size();
-            i++)
-            {
-                S = Interval(0, 0);
-                for (int k = 0; k < j; k++)
-                    S += L(j,k) * L(i,k);
-                L(i,j) = (D(i,j) - S) / L(j,j);
-                L(j,i) = Interval(0, 0);
-            }
-        }
-        return true;
+        return BoolInterval::UNKNOWN;
     }
 
     Matrix solve_discrete_lyapunov(const Matrix& a,const Matrix& q)
