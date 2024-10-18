@@ -2,7 +2,7 @@
  *  \file codac2_Ellipsoid_utils.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Morgan Louedec
+ *  \author     Morgan Louédec
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -13,7 +13,23 @@
 
 namespace codac2
 {
-  BoolInterval stability_analysis(const AnalyticFunction<VectorOpValue> &f, int alpha_max, Ellipsoid &e, Ellipsoid &e_out);
+  /**
+   * \brief ...
+   *
+   * \param f ...
+   * \param alpha_max ...
+   * \param e ...
+   * \param e_out ...
+   * \return ...
+   */
+  BoolInterval stability_analysis(const AnalyticFunction<VectorOpValue>& f, int alpha_max, Ellipsoid& e, Ellipsoid& e_out);
 
-  Matrix solve_discrete_lyapunov(const Matrix& a,const Matrix& q);
+  /**
+   * \brief ...
+   *
+   * \param a ...
+   * \param q ...
+   * \return ...
+   */
+  Matrix solve_discrete_lyapunov(const Matrix& a, const Matrix& q);
 }

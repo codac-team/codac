@@ -2,7 +2,7 @@
  *  codac2_Ellipsoid.cpp
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Morgan Louedec
+ *  \author     Morgan Louédec
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -148,7 +148,12 @@ namespace codac2 {
 
     Matrix nonlinear_mapping_base(const Matrix &G, const Matrix &J, const IntervalMatrix &J_box, const Vector& trig, const Vector& q) {
 
-        Matrix JG = J * G;
+        size_t n = G.nb_cols();
+
+        assert(G.is_squared() && J.is_squared() && J_box.is_squared());
+        assert(n == J.nb_cols() && n == J_box.nb_cols() && n == q.size());
+
+        Matrix JG = J * G; // note: reliability may be lost here!
         IntervalMatrix G_(G);
         IntervalMatrix JG_ = IntervalMatrix(JG);
         IntervalVector unit_box(G.nb_rows(), Interval(-1, 1));
@@ -223,9 +228,13 @@ namespace codac2 {
         };
     }
 
-    std::ostream &operator<<(std::ostream &os, const Ellipsoid &e) {
-        return os << "mu : " << e.mu << "\n" << "G :\n" << e.G;
-    }
+  ostream& operator<<(ostream& os, const Ellipsoid& e)
+  {
+    os << "Ellipsoid:\n"
+      << "  mu=" << e.mu << "\n"
+      << "   G=\n" << e.G;
+    return os;
+  }
 
     // Old implementations:
 

@@ -2,7 +2,7 @@
  *  codac2_Ellipsoid.cpp
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Morgan Louedec
+ *  \author     Morgan Louédec
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
