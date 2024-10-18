@@ -2,7 +2,7 @@
 on:
     push:
         branches:
-            - master
+            - codac2
             - codac4matlab
         tags: '' # Restrict to blank tags
     pull_request:
@@ -77,7 +77,7 @@ jobs:
         file: "*.whl"
         overwrite: true
         tag_name: autotagname-${{ github.sha }}
-      if: (github.event_name!='pull_request')&&((github.ref_name=='master')||(github.ref_name=='codac4matlab'))
+      if: (github.event_name!='pull_request')&&((github.ref_name=='codac2')||(github.ref_name=='codac4matlab'))
     - run: |
         pip install --no-deps --no-index *.whl
         python -c "import sys; print(sys.version)" ; python examples/02_centered_form/main.py

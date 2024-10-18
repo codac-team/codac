@@ -17,7 +17,7 @@ jobs:
       with:
         draft: true
         tag_name: autotagname-${{ github.sha }}
-      if: (github.event_name != 'pull_request')&&(github.ref_name == 'master')
+      if: (github.event_name != 'pull_request')&&(github.ref_name == 'codac2')
 
  unixmatrix:
     runs-on: ${{ matrix.cfg.os }}
@@ -220,7 +220,7 @@ jobs:
         file: "*.zip;*.nupkg;*.deb"
         overwrite: true
         tag_name: autotagname-${{ github.sha }}
-      if: (github.event_name != 'pull_request')&&(github.ref_name == 'master')
+      if: (github.event_name != 'pull_request')&&(github.ref_name == 'codac2')
     - run: |
         if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         rm -Rf codac
