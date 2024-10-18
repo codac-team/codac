@@ -1,0 +1,44 @@
+from setuptools import setup, Distribution, Extension
+import distutils
+from distutils.util import get_platform
+from glob import glob
+
+# Force External module
+class BinaryDistribution(Distribution):
+  def has_ext_modules(self):
+    return True
+  
+  def is_pure(self):
+    return False
+
+setup(
+  name='${PYTHON_PACKAGE_NAME}',
+  version='${PROJECT_VERSION_FULL}',
+  author='Simon Rohou, Benoit Desrochers',
+  author_email='simon.rohou@ensta-bretagne.fr',
+  url='http://codac.io',
+  description='${PROJECT_DESCRIPTION}',
+  long_description='${PROJECT_LONG_DESCRIPTION}',
+  ${FORCE_PYTHON_EXT}
+  packages=['${PYTHON_PACKAGE_NAME}', '${PYTHON_PACKAGE_NAME}.tests'],
+  package_data={
+    '${PYTHON_PACKAGE_NAME}': [
+      'core${PYTHON_MODULE_EXTENSION}',
+      'unsupported${PYTHON_MODULE_EXTENSION}',
+      'codac2${PYTHON_MODULE_EXTENSION}',
+      #'graphics${PYTHON_MODULE_EXTENSION}',
+    ],
+  },
+  install_requires=[
+    'pip>=19.0.0',
+    'vibes'
+  ],
+  license="LGPLv3+",
+  classifiers=[
+    "Development Status :: 3 - Alpha",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+  ],
+  include_package_data=True,
+  zip_safe=False
+)

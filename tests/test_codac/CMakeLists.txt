@@ -1,13 +1,17 @@
-cmake_minimum_required(VERSION 3.0.2)
+# ==================================================================
+#  codac / basics example - cmake configuration file
+# ==================================================================
+
+  cmake_minimum_required(VERSION 3.0.2)
   project(my_project LANGUAGES CXX)
 
-  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD 20)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Adding IBEX
 
-  # In case you installed IBEX in a local directory, you need
-  # to specify its path with the CMAKE_PREFIX_PATH option, e.g.
+  # In case you installed IBEX in a local directory, you need 
+  # to specify its path with the CMAKE_PREFIX_PATH option.
   # set(CMAKE_PREFIX_PATH "~/ibex-lib/build_install")
   set(CMAKE_PREFIX_PATH "../ibex")
 
@@ -22,14 +26,14 @@ cmake_minimum_required(VERSION 3.0.2)
   # set(CMAKE_PREFIX_PATH "~/eigen/build_install")
   set(CMAKE_PREFIX_PATH "../eigen")
 
-  find_package(Eigen3 REQUIRED NO_MODULE)
+  find_package(Eigen3 3.4 REQUIRED NO_MODULE)
   message(STATUS "Found Eigen3 version ${Eigen3_VERSION}")
 
 # Adding Codac
 
-  # In case you installed Codac in a local directory, you need
-  # to specify its path with the CMAKE_PREFIX_PATH option, e.g.
-  # set(CMAKE_PREFIX_PATH "~/codac-lib/build_install")
+  # In case you installed Codac in a local directory, you need 
+  # to specify its path with the CMAKE_PREFIX_PATH option.
+  # set(CMAKE_PREFIX_PATH "~/codac/build_install")
   set(CMAKE_PREFIX_PATH "../codac")
 
   find_package(CODAC REQUIRED)
@@ -39,5 +43,5 @@ cmake_minimum_required(VERSION 3.0.2)
 
   add_executable(${PROJECT_NAME} main.cpp)
   target_compile_options(${PROJECT_NAME} PUBLIC ${CODAC_CXX_FLAGS})
-  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES} Ibex::ibex)
+  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS})
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES} Ibex::ibex Eigen3::Eigen)

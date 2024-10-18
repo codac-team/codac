@@ -86,7 +86,9 @@ function( version_from_git )
     return()
   endif()
 
-  if( git_tag MATCHES "^v(0|[1-9][0-9]*)[.](0|[1-9][0-9]*)[.](0|[1-9][0-9]*)(-[.0-9A-Za-z-]+)?([+][.0-9A-Za-z-]+)?$" )
+  # This did not match e.g. v2.0.0.dev1, needed for Python pre-release versions...
+  #if( git_tag MATCHES "^v(0|[1-9][0-9]*)[.](0|[1-9][0-9]*)[.](0|[1-9][0-9]*)(-[.0-9A-Za-z-]+)?([+][.0-9A-Za-z-]+)?$" )
+  if( git_tag MATCHES "^v(0|[1-9][0-9]*)[.](0|[1-9][0-9]*)[.](0|[1-9][0-9]*)(\\.dev[0-9]+|-[^.][.0-9A-Za-z-]+)?([+][.0-9A-Za-z-]+)?$" )
     set( version_major "${CMAKE_MATCH_1}" )
     set( version_minor "${CMAKE_MATCH_2}" )
     set( version_patch "${CMAKE_MATCH_3}" )
@@ -148,7 +150,7 @@ function( version_from_git )
   endif()
 
   # Log the results
-  if( ARG_LOG )
+  #if( ARG_LOG )
     message( STATUS
       "[MunkeiVersionFromGit] Version: ${version}
      Git tag:     [${git_tag}]
@@ -156,9 +158,12 @@ function( version_from_git )
      Decorated:   [${git_describe}]
      Identifiers: [${identifiers}]
      Metadata:    [${metadata}]
-     SemVer:      [${semver}]"
+     SemVer:      [${semver}]
+     Major:       [${version_major}]
+     Minor:       [${version_minor}]
+     Patch:       [${version_patch}]"
       )
-  endif( ARG_LOG )
+  #endif( ARG_LOG )
 
   # Set parent scope variables
   set( GIT_TAG       ${git_tag}       PARENT_SCOPE )

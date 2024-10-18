@@ -7,7 +7,7 @@ if [ ! -e "ibex-lib/README.md" ]; then
   cd ibex-lib ;
   mkdir build && cd build ;
   cmake -E env CXXFLAGS="-fPIC" CFLAGS="-fPIC" cmake -DCMAKE_INSTALL_PREFIX=$HOME/ibex-lib/build_install -DCMAKE_BUILD_TYPE=Debug .. ;
-  make ;
+  make -j 4 ;
 else
   echo 'Using cached directory.' ;
 fi

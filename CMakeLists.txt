@@ -17,7 +17,7 @@
   if(NOT VERSION_ID)
     set(PROJECT_VERSION_FULL ${PROJECT_VERSION})
   else()
-    set(PROJECT_VERSION_FULL "${PROJECT_VERSION}-${VERSION_ID}")
+    set(PROJECT_VERSION_FULL "${PROJECT_VERSION}${VERSION_ID}")
   endif()
   message(STATUS "Full project version is ${PROJECT_VERSION_FULL}")
 
@@ -54,14 +54,14 @@
 # Compilation configuration
 ################################################################################
 
-#  # Check that the compiler supports c++11
+#  # Check that the compiler supports c++20
 #  include(CheckCXXCompilerFlag)
-#  check_cxx_compiler_flag("-std=c++17" COMPILER_SUPPORTS_CXX17)
-#
-#  if(COMPILER_SUPPORTS_CXX17)
-#    add_compile_options(-std=c++17)
+#  check_cxx_compiler_flag("-std=c++2a" COMPILER_SUPPORTS_CXX20)
+#  
+#  if(COMPILER_SUPPORTS_CXX20)
+#    add_compile_options(-std=c++2a)
 #  else()
-#    message(FATAL_ERROR "Codac needs a compiler with C++17 support")
+#    message(FATAL_ERROR "Codac needs a compiler with C++20 support")
 #  endif()
 
 #  if(WIN32)
@@ -70,24 +70,9 @@
 #  endif()
 
   #if(NOT CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD 20)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
   #endif()
-
-
-################################################################################
-# Optional binary tree activation for all tubes (for tests purposes mainly)
-################################################################################
-  
-  # Binary trees allow to speed up some computations. They can be activated
-  # upon request according to the application. For tests purposes, the following
-  # forces the use of binary trees for all computations.
-  option(WITH_TUBE_TREE "Binary trees for fast tube evaluations" OFF)
-
-  if(WITH_TUBE_TREE)
-    message(STATUS "[binary trees] Using binary trees for fast tube evaluations")
-    add_definitions(-DUSE_TUBE_TREE)
-  endif()
 
 
 ################################################################################
@@ -103,10 +88,9 @@
 # Looking for Eigen3
 ################################################################################
 
-  find_package(Eigen3 REQUIRED NO_MODULE)
+  find_package(Eigen3 3.4 REQUIRED NO_MODULE)
   message(STATUS "Found Eigen3 version ${Eigen3_VERSION}")
   add_definitions(${EIGEN3_DEFINITIONS})
-  include_directories(${EIGEN3_INCLUDE_DIRS})
 
 
 ################################################################################
@@ -128,7 +112,11 @@
 ################################################################################
 # Compile sources
 ################################################################################
-
+  
+  if(FAST_RELEASE)
+    add_compile_definitions(FAST_RELEASE=1)
+  endif()
+  
   add_subdirectory(src) # C++ sources
   add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
 
@@ -147,11 +135,15 @@
   # Note: place this tests block before the add_subdirectory(python),
   # otherwise python tests will not be taken into account. 
   option(BUILD_TESTS "Build test" OFF)
+  if(${CMAKE_VERSION} VERSION_LESS "3.14.0")
+    # Disable tests due to FetchContent_MakeAvailable which needs CMake >= 3.14.
+    set(BUILD_TESTS OFF CACHE BOOL "Build test" FORCE)
+  endif()
   if(BUILD_TESTS)
     include(CTest)
     add_custom_target(check
                       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure $(ARGS)
-                      DEPENDS codac COMMENT "Running the tests")
+                      DEPENDS ${PROJECT_NAME} COMMENT "Running the tests")
 
     add_subdirectory(tests)
   endif()

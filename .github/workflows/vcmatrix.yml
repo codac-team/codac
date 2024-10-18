@@ -1,8 +1,9 @@
 # This file generates Python wheels for Windows
-# (and zip for having Codac and IBEX binaries for several Visual Studio versions)
 on:
     push:
-        branches: 'master'
+        branches:
+            - master
+            - codac4matlab
         tags: '' # Restrict to blank tags
     pull_request:
 
@@ -26,11 +27,11 @@ jobs:
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 10, desc: 'Windows Visual Studio 2019 x64 Python 3.10' }
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 9, desc: 'Windows Visual Studio 2019 x64 Python 3.9' }
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 8, desc: 'Windows Visual Studio 2019 x64 Python 3.8' }
-            # Should be Visual Studio 2015 for Python 3.5-3.7, but need Visual Studio 2017 for C++17 compatibility...?
-            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 17" -T v141 -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 7, desc: 'Windows Visual Studio 2017 x86 Python 3.7' }
-            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 17" -T v141 -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 6, desc: 'Windows Visual Studio 2017 x86 Python 3.6' }
-            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 17" -T v141 -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 7, desc: 'Windows Visual Studio 2017 x64 Python 3.7' }
-            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 17" -T v141 -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 6, desc: 'Windows Visual Studio 2017 x64 Python 3.6' }
+            # Should be Visual Studio 2015 for Python 3.5-3.7, but need Visual Studio 2019 for C++20 compatibility...?
+            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 7, desc: 'Windows Visual Studio 2019 x86 Python 3.7' }
+            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 6, desc: 'Windows Visual Studio 2019 x86 Python 3.6' }
+            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 7, desc: 'Windows Visual Studio 2019 x64 Python 3.7' }
+            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 17" -T v142 -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 6, desc: 'Windows Visual Studio 2019 x64 Python 3.6' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v4
@@ -56,7 +57,7 @@ jobs:
       if: runner.os=='Windows'
     - run: choco install -y -r --no-progress eigen --version=3.4.0.20240224 ${{ matrix.cfg.choco_flags }}
       if: runner.os=='Windows'
-    - run: wget https://packages.ensta-bretagne.fr/choco/doxygen.install.1.9.6.nupkg --no-check-certificate -nv & choco upgrade -y -r --no-progress -s . doxygen.install --version=1.9.6 & del /f /q doxygen.install.1.9.6.nupkg & choco install -y -r --no-progress graphviz & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects
+    - run: choco install -y -r --no-progress graphviz doxygen.install & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects
       if: runner.os=='Windows'
     - run: |
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex.2.8.9.20240417.nupkg --no-check-certificate -nv
@@ -64,12 +65,10 @@ jobs:
         del /f /q ibex.2.8.9.20240417.nupkg
     - run: |
         mkdir build ; cd build
-        cmake -E env CXXFLAGS=" /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /wd4267 /wd4244 /wd4305 /wd4996" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=ON ..
+        cmake -E env CXXFLAGS=" /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /wd4267 /wd4244 /wd4305 /wd4996" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D WITH_CAPD=OFF -D WITH_PYTHON=ON ..
         cmake --build . -j 4 --config Release --target install
         cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
         cd ..
-      shell: bash
-    - run: pip install *.whl ; python -c "import sys; print(sys.version)" ; python examples/tuto/01_getting_started/01_getting_started.py ; pip install numpy --prefer-binary ; python -m unittest discover codac.tests
       shell: bash
     - uses: xresloader/upload-to-github-release@v1
       env:
@@ -78,4 +77,13 @@ jobs:
         file: "*.whl"
         overwrite: true
         tag_name: autotagname-${{ github.sha }}
-      if: (github.event_name != 'pull_request')&&(github.ref_name == 'master')
+      if: (github.event_name!='pull_request')&&((github.ref_name=='master')||(github.ref_name=='codac4matlab'))
+    - run: |
+        pip install --no-deps --no-index *.whl
+        python -c "import sys; print(sys.version)" ; python examples/02_centered_form/main.py
+        pip install numpy --prefer-binary
+        python -m unittest discover codac.tests
+        cd build && ctest -C Release -V --output-on-failure
+        cd ..
+      shell: bash
+      if: (github.ref_name!='codac4matlab')

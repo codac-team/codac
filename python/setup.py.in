@@ -14,19 +14,24 @@ class BinaryDistribution(Distribution):
 setup(
   name='${PYTHON_PACKAGE_NAME}',
   version='${PROJECT_VERSION_FULL}',
-  author='Simon Rohou, Benoit Desrochers',
+  author='Simon Rohou, Benoit Desrochers, Fabrice Le Bars',
   author_email='simon.rohou@ensta-bretagne.fr',
   url='http://codac.io',
   description='${PROJECT_DESCRIPTION}',
   long_description='${PROJECT_LONG_DESCRIPTION}',
   ${FORCE_PYTHON_EXT}
-  packages=['${PYTHON_PACKAGE_NAME}', '${PYTHON_PACKAGE_NAME}.tests'],
+  packages=[
+      '${PYTHON_PACKAGE_NAME}',
+      '${PYTHON_PACKAGE_NAME}.core',
+      '${PYTHON_PACKAGE_NAME}.graphics',
+      '${PYTHON_PACKAGE_NAME}.unsupported',
+      '${PYTHON_PACKAGE_NAME}.tests'
+    ],
   package_data={
     '${PYTHON_PACKAGE_NAME}': [
-      'core${PYTHON_MODULE_EXTENSION}',
-      'unsupported${PYTHON_MODULE_EXTENSION}',
-      'codac2${PYTHON_MODULE_EXTENSION}',
-      #'graphics${PYTHON_MODULE_EXTENSION}',
+      '_core${PYTHON_MODULE_EXTENSION}',
+      '_graphics${PYTHON_MODULE_EXTENSION}',
+      '_unsupported${PYTHON_MODULE_EXTENSION}',
     ],
   },
   install_requires=[
