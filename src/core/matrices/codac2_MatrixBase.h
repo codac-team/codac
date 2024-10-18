@@ -161,6 +161,16 @@ namespace codac2
         minmax_item(max);
       }
 
+      T norm() const
+      {
+        return _e.norm();
+      }
+
+      T squared_norm() const
+      {
+        return _e.squaredNorm();
+      }
+
       friend bool operator==(const MatrixBase<S,T>& x1, const MatrixBase<S,T>& x2)
       {
         if(x1.nb_rows() != x2.nb_rows() || x1.nb_cols() != x2.nb_cols())
@@ -268,6 +278,14 @@ namespace codac2
       {
         assert_release(r >= 0 && c >= 0);
         return EigenMatrix<T>::Identity(r,c);
+      }
+
+      // Note that this static function is not called "rand"
+      // because of ambiguity with the member function "rand"
+      static S random(size_t r, size_t c)
+      {
+        assert_release(r >= 0 && c >= 0);
+        return EigenMatrix<T>::Random(r,c);
       }
 
       template<typename S_,typename T_>

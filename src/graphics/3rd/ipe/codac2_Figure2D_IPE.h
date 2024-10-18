@@ -15,6 +15,7 @@
 #include "codac2_OutputFigure2D.h"
 #include "codac2_Vector.h"
 #include "codac2_IntervalVector.h"
+#include "codac2_Ellipsoid.h"
 #include "vibes.h"
 
 namespace codac2

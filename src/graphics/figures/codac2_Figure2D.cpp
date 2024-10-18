@@ -196,6 +196,45 @@ void Figure2D::draw_ellipse(const Vector& c, const Vector& ab, double theta, con
     output_fig->draw_ellipse(c,ab,theta,s);
 }
 
+void Figure2D::draw_ellipsoid(const Ellipsoid &e, const StyleProperties &s) {
+    assert_release(this->size() <= e.size());
+    for (const auto &output_fig: _output_figures) {
+        Matrix G_draw(2, 2);
+        Vector mu_draw(2);
+        // 2d projection of the ellipsoid
+        if (e.size() > 2) {
+            // affine space of the projection
+            Vector d(Eigen::VectorXd::Zero(e.mu.nb_rows()));
+            Matrix T(Eigen::MatrixXd::Zero(e.G.nb_rows(), 2));
+            T(output_fig->i(), 0) = 1;
+            T(output_fig->j(), 1) = 1;
+
+            // project ellipsoid E(mu,Q) = {x in R^n | (x-mu).T*G.{-T}*G^{-1}*(x-mu)<1}
+            // on the affine plan A = {x|x=d+Tt} [Pope -2008]
+            // reduce the dimensions of mu and Q
+
+            auto TTG = T._e.transpose() * e.G._e;
+            Eigen::BDCSVD<Eigen::MatrixXd> bdcsvd(TTG, Eigen::ComputeFullU);
+            Matrix U(bdcsvd.matrixU());
+            Matrix E((Eigen::MatrixXd) bdcsvd.singularValues().asDiagonal());
+            G_draw = U._e * E._e;
+            mu_draw = T._e.transpose() * (d._e + T._e * T._e.transpose() * (e.mu._e - d._e));
+        } else {
+            G_draw = e.G;
+            mu_draw = e.mu;
+        }
+
+        // draw the 2d ellipsoid
+        Eigen::JacobiSVD<Eigen::MatrixXd> jsvd(G_draw._e, Eigen::ComputeThinU);
+        Matrix U(jsvd.matrixU());
+        Vector ab(jsvd.singularValues());
+
+        double theta = atan2(U(1, 0), U(0, 0)).mid();
+
+        output_fig->draw_ellipse(mu_draw, ab, theta, s);
+    }
+}
+
 void Figure2D::draw_tank(const Vector& x, float size, const StyleProperties& s)
 {
   assert_release(this->size() <= x.size()+1);
@@ -268,7 +307,7 @@ void Figure2D::draw_paving(const PavingInOut& p, const StyleProperties& boundary
 
         for(const auto& bi : hull.diff(outer))
           output_fig->draw_box(bi, outside_style);
-        
+
         if(n->is_leaf())
           output_fig->draw_box(inner & outer, boundary_style);
 

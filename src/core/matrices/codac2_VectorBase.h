@@ -93,16 +93,30 @@ namespace codac2
         return diag;
       }
 
+      static S zeros(size_t r, size_t c) = delete;
+
       static S zeros(size_t n)
       {
         assert_release(n >= 0);
         return EigenMatrix<T>::Zero(n,1);
       }
 
+      static S ones(size_t r, size_t c) = delete;
+
       static S ones(size_t n)
       {
         assert_release(n >= 0);
         return EigenMatrix<T>::Ones(n,1);
+      }
+
+      static S random(size_t r, size_t c) = delete;
+
+      // Note that this static function is not called "rand"
+      // because of ambiguity with the member function "rand"
+      static S random(size_t n)
+      {
+        assert_release(n >= 0);
+        return EigenMatrix<T>::Random(n,1);
       }
 
   };
