@@ -2,7 +2,7 @@
  *  \file codac2_Ellipsoid.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     
+ *  \author     Morgan Louedec
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -13,24 +13,33 @@
 #include "codac2_Vector.h"
 #include "codac2_AnalyticFunction.h"
 
-namespace codac2 {
-
-    class Ellipsoid {
+namespace codac2
+{
+  class Ellipsoid
+  {
     public:
 
-        Ellipsoid(size_t n);
+      Ellipsoid(size_t n);
 
-        Ellipsoid(const Vector &mu_, const Matrix &G_);
+      Ellipsoid(const Vector &mu_, const Matrix &G_);
 
-        size_t size() const;
+      size_t size() const;
 
-        Vector sample() const;
+      /**
+       * \brief Returns a random vector inside the ellipsoid
+       *
+       * \note The seed of the pseudo-random number generator is 
+       *       voluntarily initialized outside this function, on demand.
+       *
+       * \return random value
+       */
+      Vector rand() const;
 
     public:
 
-        Vector mu;
-        Matrix G;
-    };
+      Vector mu;
+      Matrix G;
+  };
 
 
     Ellipsoid operator+(const Ellipsoid &e1, const Ellipsoid &e2);

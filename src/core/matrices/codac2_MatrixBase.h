@@ -270,6 +270,14 @@ namespace codac2
         return EigenMatrix<T>::Identity(r,c);
       }
 
+      // Note that this static function is not called "rand"
+      // because of ambiguity with the member function "rand"
+      static S random(size_t r, size_t c)
+      {
+        assert_release(r >= 0 && c >= 0);
+        return EigenMatrix<T>::Random(r,c);
+      }
+
       template<typename S_,typename T_>
       friend std::ostream& operator<<(std::ostream& os, const MatrixBase<S_,T_>& x);
 

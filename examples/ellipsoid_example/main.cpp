@@ -50,7 +50,7 @@ int main() {
     // particle cloud (draw the evolution of 200 points in the ellipsoid)
     int Np = 200;
     for (int i = 0; i < Np; i++) {
-        Vector x0 = e1.sample();
+        Vector x0 = e1.rand();
         fig1.draw_box(IntervalVector(x0).inflate(0.0001), {Color::black(), Color::black(0.3)});
         for (int j = 0; j < N; j++) {
             x0 = h.eval(x0).mid();
@@ -102,7 +102,7 @@ int main() {
 
     // particle cloud (draw the evolution of 200 points in the ellipsoid e5)
     for (int i = 0; i < Np; i++) {
-        IntervalVector x5(e5.sample());
+        IntervalVector x5(e5.rand());
         x5.inflate(0.001);
         fig2.draw_box(x5, {Color::black(), Color::black(0.3)});
         fig3.draw_box(x5, {Color::black(), Color::black(0.3)});
@@ -179,12 +179,12 @@ int main() {
 
     // particle cloud (draw the evolution of 200 points in the ellipsoid)
     for (int i = 0; i < Np; i++) {
-        Vector x0 = e9.sample();
+        Vector x0 = e9.rand();
         fig5.draw_box(IntervalVector(x0).inflate(0.0001), {Color::black(), Color::black(0.3)});
         x0 = h2.eval(x0).mid();
         fig5.draw_box(IntervalVector(x0).inflate(0.0001), {Color::black(), Color::black(0.3)});
 
-        x0 = e10.sample();
+        x0 = e10.rand();
         fig5.draw_box(IntervalVector(x0).inflate(0.0001), {Color::black(), Color::black(0.3)});
         x0 = h3.eval(x0).mid();
         fig5.draw_box(IntervalVector(x0).inflate(0.0001), {Color::black(), Color::black(0.3)});

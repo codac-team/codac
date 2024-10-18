@@ -2,7 +2,7 @@
  *  codac2_Ellipsoid.cpp
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     
+ *  \author     Morgan Louedec
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -30,10 +30,10 @@ namespace codac2 {
         return mu.size();
     }
 
-    Vector Ellipsoid::sample() const{
-        // chose a ramdom point in the ellipsoid
-        Vector xi(Eigen::VectorXd::Random(this->size()));
-        double rand_norm =  ((double) rand() / (RAND_MAX));
+    Vector Ellipsoid::rand() const
+    {
+        auto xi = Vector::random(this->size());
+        double rand_norm =  ((double) std::rand() / (RAND_MAX));
         return this->mu._e + this->G._e * xi._e / xi._e.norm() * rand_norm;
     }
 

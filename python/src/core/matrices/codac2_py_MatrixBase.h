@@ -195,9 +195,17 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
       .def_static("eye", [](size_t_type r, size_t_type c)
           {
             matlab::test_integer(r,c);
-            return S::ones(r,c);
+            return S::eye(r,c);
           },
         STATIC_S_MATRIXBASE_ST_EYE_SIZET_SIZET,
+        "r"_a, "c"_a)
+      
+      .def_static("random", [](size_t_type r, size_t_type c)
+          {
+            matlab::test_integer(r,c);
+            return S::random(r,c);
+          },
+        STATIC_S_MATRIXBASE_ST_RANDOM_SIZET_SIZET,
         "r"_a, "c"_a)
 
     ;
