@@ -360,7 +360,7 @@ using namespace codac2;
 
   void MulOp::bwd(const IntervalVector& y, IntervalVector& x1, Interval& x2)
   {
-    MulOp::bwd(y, x1, x2);
+    MulOp::bwd(y, x2, x1);
   }
 
   IntervalVector MulOp::fwd(const IntervalMatrix& x1, const IntervalVector& x2)
