@@ -1,4 +1,4 @@
-from codac._core import *
+from codac4matlab._core import *
 from sys import float_info
 
 

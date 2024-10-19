@@ -26,10 +26,10 @@ for PYBIN in /opt/python/cp3*/bin; do
     auditwheel repair "$whl" -w /io/wheelhouse/
   done
   
-  "${PYBIN}/python" -m pip install codac --no-deps --no-index -f /io/wheelhouse
+  "${PYBIN}/python" -m pip install codac4matlab --no-deps --no-index -f /io/wheelhouse
   "${PYBIN}/python" -m pip install numpy --prefer-binary
   "${PYBIN}/python" ../examples/02_centered_form/main.py
-  "${PYBIN}/python" -m unittest discover codac.tests
+  "${PYBIN}/python" -m unittest discover codac4matlab.tests
   
   make test ARGS="-V --output-on-failure"
   echo "start of Testing/Temporary/LastTest.log"

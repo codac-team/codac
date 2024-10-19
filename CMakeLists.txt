@@ -12,7 +12,7 @@
   #set(CMAKE_C_COMPILER "gcc-7")
   #set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
 
-  project(codac VERSION ${VERSION} LANGUAGES CXX)
+  project(codac4matlab VERSION ${VERSION} LANGUAGES CXX)
 
   if(NOT VERSION_ID)
     set(PROJECT_VERSION_FULL ${PROJECT_VERSION})
