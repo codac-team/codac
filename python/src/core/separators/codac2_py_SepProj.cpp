@@ -27,14 +27,13 @@ void export_SepProj(py::module& m, py::class_<SepBase,pySep>& pysep)
     .def(py::init(
         [](const SepBase& s, std::vector<size_t_type> proj_indices, double default_eps)
         {
-          std::transform(std::begin(proj_indices),std::end(proj_indices),std::begin(proj_indices),
-            [](size_t_type x)
-            {
-              matlab::test_integer(x);
-              return matlab::input_index(x);
-            });
-
-          return std::make_unique<SepProj>(s.copy(), proj_indices, default_eps);
+          std::vector<size_t> proj_indices_size_t(proj_indices.size());
+          for(size_t i = 0 ; i < proj_indices.size() ; i++)
+          {
+            matlab::test_integer(proj_indices[i]);
+            proj_indices_size_t[i] = matlab::input_index(proj_indices[i]);
+          }
+          return std::make_unique<SepProj>(s.copy(), proj_indices_size_t, default_eps);
         }),
       SEPPROJ_SEPPROJ_CONST_S_REF_CONST_VECTOR_SIZET_REF_DOUBLE,
       "s"_a, "proj_indices"_a, "default_eps"_a=0.01)
@@ -42,14 +41,13 @@ void export_SepProj(py::module& m, py::class_<SepBase,pySep>& pysep)
     .def(py::init(
         [](const SepBase& s, std::vector<size_t_type> proj_indices, const IntervalVector& y, double default_eps)
         {
-          std::transform(std::begin(proj_indices),std::end(proj_indices),std::begin(proj_indices),
-            [](size_t_type x)
-            {
-              matlab::test_integer(x);
-              return matlab::input_index(x);
-            });
-
-          return std::make_unique<SepProj>(s.copy(), proj_indices, y, default_eps);
+          std::vector<size_t> proj_indices_size_t(proj_indices.size());
+          for(size_t i = 0 ; i < proj_indices.size() ; i++)
+          {
+            matlab::test_integer(proj_indices[i]);
+            proj_indices_size_t[i] = matlab::input_index(proj_indices[i]);
+          }
+          return std::make_unique<SepProj>(s.copy(), proj_indices_size_t, y, default_eps);
         }),
       SEPPROJ_SEPPROJ_CONST_S_REF_CONST_VECTOR_SIZET_REF_CONST_INTERVALVECTOR_REF_DOUBLE,
       "s"_a, "proj_indices"_a, "y"_a, "default_eps"_a=0.01)
