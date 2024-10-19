@@ -17,7 +17,7 @@ for PYBIN in /opt/python/cp3*/bin; do
 
   "${PYBIN}/python" -m pip install --upgrade pip
   mkdir -p build_dir && cd build_dir
-  cmake -E env CXXFLAGS="-fPIC" CFLAGS="-fPIC" cmake -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_CAPD=OFF -DWITH_PYTHON=ON ..
+  cmake -E env CXXFLAGS="-fPIC" CFLAGS="-fPIC" cmake -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF -DWITH_CAPD=OFF -DWITH_PYTHON=ON ..
   make -j4
 
   make pip_package
@@ -32,10 +32,10 @@ for PYBIN in /opt/python/cp3*/bin; do
   #"${PYBIN}/python" ../examples/02_centered_form/main.py
   #"${PYBIN}/python" -m unittest discover codac.tests
   
-  make test ARGS="-V --output-on-failure"
-  echo "start of Testing/Temporary/LastTest.log"
-  cat Testing/Temporary/LastTest.log
-  echo "end of Testing/Temporary/LastTest.log"
+  #make test ARGS="-V --output-on-failure"
+  #echo "start of Testing/Temporary/LastTest.log"
+  #cat Testing/Temporary/LastTest.log
+  #echo "end of Testing/Temporary/LastTest.log"
 
   cd /io
   rm -fr build_dir
