@@ -21,8 +21,8 @@ using namespace pybind11::literals;
 
 vector<size_t> test_and_convert(const vector<size_t_type>& indices)
 {
-  if constexpr(FOR_MATLAB)
-  {
+  #if FOR_MATLAB
+  
     vector<size_t> indices_size_t(indices.size());
 
     for(size_t i = 0 ; i < indices.size() ; i++)
@@ -30,10 +30,12 @@ vector<size_t> test_and_convert(const vector<size_t_type>& indices)
       matlab::test_integer(indices[i]);
       indices_size_t[i] = matlab::input_index(indices[i]);
     }
-  }
 
-  else // same types: size_t_type == size_t
+  #else // same types: size_t_type == size_t
+
     return indices;
+
+  #endif
 }
 
 void export_SepProj(py::module& m, py::class_<SepBase,pySep>& pysep)
