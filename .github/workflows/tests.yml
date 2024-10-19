@@ -1,7 +1,8 @@
 # Unit tests
 on:
     push:
-        branches: '**'
+        branches-ignore:
+          - codac2_codac4matlab
         tags: '' # Restrict to blank tags
     pull_request:
 
