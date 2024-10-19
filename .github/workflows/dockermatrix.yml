@@ -4,6 +4,7 @@ on:
         branches: 'codac2'
         tags: '' # Restrict to blank tags
     pull_request:
+        branches: 'codac2'
 
 jobs:
  dockermatrix:
