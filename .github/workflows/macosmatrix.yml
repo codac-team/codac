@@ -20,6 +20,7 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
+            - { os: macos-14, shell: bash, arch: arm64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 13, desc: 'macOS Sonoma Python 3.13 arm64' }
             - { os: macos-14, shell: bash, arch: arm64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 12, desc: 'macOS Sonoma Python 3.12 arm64' }
             - { os: macos-14, shell: bash, arch: arm64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 11, desc: 'macOS Sonoma Python 3.11 arm64' }
             - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 10, cross: true, desc: 'macOS Monterey Python 3.10 arm64 (cross)' }
@@ -27,6 +28,7 @@ jobs:
             - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 8, cross: true, desc: 'macOS Monterey Python 3.8 arm64 (cross)' }
             - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: 'm-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 7, cross: true, desc: 'macOS Monterey Python 3.7 arm64 (cross)' }
             - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: 'm-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 6, cross: true, desc: 'macOS Monterey Python 3.6 arm64 (cross)' }
+            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 13, desc: 'macOS Monterey Python 3.13 x86_64' }
             - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 12, desc: 'macOS Monterey Python 3.12 x86_64' }
             - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 11, desc: 'macOS Monterey Python 3.11 x86_64' }
             - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Monterey Python 3.10 x86_64' }
