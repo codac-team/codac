@@ -16,6 +16,7 @@ for PYBIN in /opt/python/cp3*/bin; do
   #fi
 
   "${PYBIN}/python" -m pip install --upgrade pip
+  "${PYBIN}/python" -m pip install --upgrade wheel setuptools
   mkdir -p build_dir && cd build_dir
   cmake -E env CXXFLAGS="-fPIC" CFLAGS="-fPIC" cmake -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_CAPD=OFF -DWITH_PYTHON=ON ..
   make -j4
@@ -27,8 +28,8 @@ for PYBIN in /opt/python/cp3*/bin; do
   done
   
   "${PYBIN}/python" -m pip install codac --no-deps --no-index -f /io/wheelhouse
-  "${PYBIN}/python" -m pip install numpy --prefer-binary
   "${PYBIN}/python" ../examples/02_centered_form/main.py
+  "${PYBIN}/python" -m pip install numpy --prefer-binary
   "${PYBIN}/python" -m unittest discover codac.tests
   
   make test ARGS="-V --output-on-failure"

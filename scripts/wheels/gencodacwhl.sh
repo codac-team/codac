@@ -10,7 +10,7 @@ for PY_V_MIN in 6 7; do
 	done
 done
 
-for PY_V_MIN in 8 9 10 11 12; do
+for PY_V_MIN in 8 9 10 11 12 13; do
 	for CPCFG in "-macosx_10_16_x86_64" "-macosx_11_0_arm64" "-manylinux_2_17_x86_64.manylinux2014_x86_64" "-win32" "-win_amd64"; do
 	 rm -Rf codac-$PACKAGE_VERSION-cp$PY_V_MAJ$PY_V_MIN-cp$PY_V_MAJ$PY_V_MIN$CPCFG.whl ; wget https://github.com/codac-team/codac/releases/download/v$PACKAGE_VERSION/codac-$PACKAGE_VERSION-cp$PY_V_MAJ$PY_V_MIN-cp$PY_V_MAJ$PY_V_MIN$CPCFG.whl --no-check-certificate -nv
 	done
