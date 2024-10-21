@@ -31,6 +31,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcUnion.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolar.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolar.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcProj.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcProj.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcSegment.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcSegment.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcWrapper.h
@@ -98,6 +100,9 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_pave.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_pave.h
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/proj/codac2_ProjBase.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/proj/codac2_ProjBase.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_Sep.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepAction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepAction.h
@@ -159,6 +164,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes
     ${CMAKE_CURRENT_SOURCE_DIR}/matrices
     ${CMAKE_CURRENT_SOURCE_DIR}/paver
+    ${CMAKE_CURRENT_SOURCE_DIR}/proj
     ${CMAKE_CURRENT_SOURCE_DIR}/separators
     ${CMAKE_CURRENT_SOURCE_DIR}/tools
   )

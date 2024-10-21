@@ -21,6 +21,7 @@
     contractors/codac2_py_CtcLazy.cpp
     contractors/codac2_py_CtcNot.cpp
     contractors/codac2_py_CtcPolar.cpp
+    contractors/codac2_py_CtcProj.cpp
     contractors/codac2_py_CtcSegment.cpp
     contractors/codac2_py_CtcUnion.cpp
     contractors/codac2_py_CtcWrapper.cpp
