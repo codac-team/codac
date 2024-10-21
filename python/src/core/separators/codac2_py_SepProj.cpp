@@ -64,7 +64,7 @@ void export_SepProj(py::module& m, py::class_<SepBase,pySep>& pysep)
       "x"_a)
 
     .def("separate", (BoxPair(SepProj::*)(const IntervalVector&,double) const) &SepProj::separate,
-      BOXPAIR_SEPPROJ_SEPARATE_CONST_INTERVALVECTOR_REF_CONST,
+      BOXPAIR_SEPPROJ_SEPARATE_CONST_INTERVALVECTOR_REF_DOUBLE_CONST,
       "x"_a, "eps"_a)
   ;
 }
