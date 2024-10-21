@@ -36,6 +36,7 @@ git config --global --add safe.directory /io && \
 cd /io && \
 \
 python3 -m pip install \$PIP_OPTIONS --upgrade pip && \
+python3 -m pip install \$PIP_OPTIONS --upgrade wheel setuptools && \
 mkdir -p build_dir_\$(lsb_release -cs) && cd build_dir_\$(lsb_release -cs) && \
 cmake -E env CXXFLAGS=\"-fPIC\" CFLAGS=\"-fPIC\" cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_CAPD=OFF -DWITH_PYTHON=ON .. && \
 make -j4 && \
@@ -54,13 +55,14 @@ done ; \
 #done ; \\
 \
 python3 -m pip install \$PIP_OPTIONS codac --no-deps --no-index -f /io/wheelhouse && \
-python3 -m ../examples/02_centered_form/main.py && \
+python3 ../examples/02_centered_form/main.py && \
 # Prerequisites for numpy. \\
 sudo apt-get -y install libatlas3-base || true && \
 sudo apt-get -y install libopenblas0-pthread || true && \
 sudo apt-get -y install libgfortran5 || true && \
 python3 -m pip install \$PIP_OPTIONS numpy --prefer-binary --extra-index-url https://www.piwheels.org/simple && \
-#(cd \"\$HOME\"; python3 -m unittest discover codac.tests) && \\
+#python3 -m unittest discover codac.tests && \\
+\
 if [ \"\$(lsb_release -cs)\" = \"buster\" ]; then \
  echo \"TESTS DISABLED FOR BUSTER DUE TO CATCH2\" ; \
 else \
