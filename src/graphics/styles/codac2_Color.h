@@ -29,6 +29,7 @@ namespace codac2
 
     explicit Color(float r_, float g_, float b_, float alpha_ = 1.);
     explicit Color(int r_, int g_, int b_, int alpha_ = 255);
+    explicit Color(const std::string& hex_str_);
 
     static Color none()                      { return Color(255, 255, 255, 0               ); };
     static Color black(float alpha = 1)      { return Color(0,   0,   0,   (int)(alpha*255)); };
