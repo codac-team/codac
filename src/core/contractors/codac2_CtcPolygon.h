@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_SepPolygon.h
+ *  \file codac2_CtcPolygon.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou, Benoit Desrochers
@@ -10,15 +10,16 @@
 #pragma once
 
 #include "codac2_Polygon.h"
-#include "codac2_SepCtcBoundary.h"
+#include "codac2_CtcCtcBoundary.h"
+#include "codac2_CtcUnion.h"
 
 namespace codac2
 {
-  class SepPolygon : public SepCtcBoundary
+  class CtcPolygon : public CtcCtcBoundary
   {
     public:
 
-      SepPolygon(const Polygon& p);
-      BoxPair separate(const IntervalVector& x) const;
+      CtcPolygon(const Polygon& p);
+      void contract(IntervalVector& x) const;
   };
 }
