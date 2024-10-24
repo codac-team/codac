@@ -13,6 +13,7 @@
     contractors/codac2_py_Ctc.h
     contractors/codac2_py_CtcAction.cpp
     contractors/codac2_py_CtcCartProd.cpp
+    contractors/codac2_py_CtcCtcBoundary.cpp
     contractors/codac2_py_CtcEmpty.cpp
     contractors/codac2_py_CtcFixpoint.cpp
     contractors/codac2_py_CtcInnerOuter.cpp
@@ -23,6 +24,7 @@
     contractors/codac2_py_CtcLazy.cpp
     contractors/codac2_py_CtcNot.cpp
     contractors/codac2_py_CtcPolar.cpp
+    contractors/codac2_py_CtcPolygon.cpp
     contractors/codac2_py_CtcProj.cpp
     contractors/codac2_py_CtcSegment.cpp
     contractors/codac2_py_CtcUnion.cpp

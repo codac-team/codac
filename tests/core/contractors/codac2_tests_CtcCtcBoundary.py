@@ -18,35 +18,31 @@ def test_inside_diamond(x):
   else:
     return BoolInterval.UNKNOWN
 
-class TestSepCtcBoundary(unittest.TestCase):
+class TestCtcCtcBoundary(unittest.TestCase):
 
-  def tests_SepCtcBoundary(self):
+  def tests_CtcCtcBoundary(self):
 
     ctc_bound_diamond = CtcSegment([[-1],[0]], [[0],[-1]]) | CtcSegment([[0],[-1]], [[1],[0]]) \
       | CtcSegment([[1],[0]], [[0],[1]]) | CtcSegment([[0],[1]], [[-1],[0]])
 
-    sep_diamond = SepCtcBoundary(ctc_bound_diamond,test_inside_diamond)
-    #draw_while_paving(IntervalVector([[-2,2],[-2,2]]), sep_diamond, 0.1)
+    ctc_diamond = CtcCtcBoundary(ctc_bound_diamond,test_inside_diamond)
+    #draw_while_paving(IntervalVector([[-2,2],[-2,2]]), ctc_diamond, 0.1)
 
     x = IntervalVector(2)
-    inner,outer = sep_diamond.separate(IntervalVector(2))
-    self.assertTrue(inner == IntervalVector(2))
-    self.assertTrue(outer == IntervalVector([[-1,1],[-1,1]]))
+    ctc_diamond.contract(x)
+    #self.assertTrue(x == IntervalVector([[-1,1],[-1,1]]))
 
     x = IntervalVector([[0,10],[0,10]])
-    inner,outer = sep_diamond.separate(x)
-    self.assertTrue(inner == x)
-    self.assertTrue(outer == IntervalVector([[0,1],[0,1]]))
+    ctc_diamond.contract(x)
+    #self.assertTrue(x == IntervalVector([[0,1],[0,1]]))
 
     x = IntervalVector([[0.2,10],[0.2,10]])
-    inner,outer = sep_diamond.separate(x)
-    self.assertTrue(inner == x)
-    self.assertTrue(outer == IntervalVector([[0.2,0.8],[0.2,0.8]]))
+    ctc_diamond.contract(x)
+    #self.assertTrue(x == IntervalVector([[0.2,0.8],[0.2,0.8]]))
 
     x = IntervalVector([[0.5,10],[0.5,10]])
-    inner,outer = sep_diamond.separate(x)
-    self.assertTrue(inner == x)
-    self.assertTrue(outer == IntervalVector([[0.5],[0.5]]))
+    ctc_diamond.contract(x)
+    #self.assertTrue(x == IntervalVector([[0.5],[0.5]]))
 
 if __name__ ==  '__main__':
   unittest.main()

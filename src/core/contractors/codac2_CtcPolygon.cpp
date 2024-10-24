@@ -1,5 +1,5 @@
 /** 
- *  SepPolygon.cpp
+ *  CtcPolygon.cpp
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou, Benoit Desrochers
@@ -8,7 +8,7 @@
  */
 
 #include <list>
-#include "codac2_SepPolygon.h"
+#include "codac2_CtcPolygon.h"
 #include "codac2_CtcUnion.h"
 #include "codac2_CtcSegment.h"
 #include "codac2_geometry.h"
@@ -17,8 +17,8 @@ using namespace std;
 
 namespace codac2
 {
-  SepPolygon::SepPolygon(const Polygon& p)
-    : SepCtcBoundary(
+  CtcPolygon::CtcPolygon(const Polygon& p)
+    : CtcCtcBoundary(
 
       // Contractor on the boundary
       [p]
@@ -38,8 +38,8 @@ namespace codac2
     )
   { }
 
-  BoxPair SepPolygon::separate(const IntervalVector& x) const
+  void CtcPolygon::contract(IntervalVector& x) const
   {
-    return SepCtcBoundary::separate(x);
+    CtcCtcBoundary::contract(x);
   }
 }

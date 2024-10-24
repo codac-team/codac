@@ -28,10 +28,12 @@ list(APPEND SRC_TESTS # listing files without extension
 
   core/contractors/codac2_tests_CtcAction
   core/contractors/codac2_tests_CtcCartProd
+  core/contractors/codac2_tests_CtcCtcBoundary
   core/contractors/codac2_tests_CtcFixpoint
   core/contractors/codac2_tests_CtcInverse
   core/contractors/codac2_tests_CtcInverseNotIn
   core/contractors/codac2_tests_CtcLazy
+  core/contractors/codac2_tests_CtcPolygon
   core/contractors/codac2_tests_CtcSegment
   core/contractors/codac2_tests_linear_ctc
 
