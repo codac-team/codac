@@ -22,8 +22,8 @@ namespace codac2
         : _bp { x._bp }
       { }
 
-      BoxPair(const IntervalVector& inner, const IntervalVector& outer)
-        : _bp { inner, outer }
+      BoxPair(const IntervalVector& inner_, const IntervalVector& outer_)
+        : _bp { inner_, outer_ }
       { }
 
       BoxPair& operator=(const BoxPair& x)
@@ -50,13 +50,13 @@ namespace codac2
   {
     public:
 
-      SepBase(size_t n)
+      SepBase(Index n)
         : _n(n)
       {
         assert(n > 0);
       }
 
-      size_t size() const
+      Index size() const
       {
         return _n;
       }
@@ -66,7 +66,7 @@ namespace codac2
 
     protected:
 
-      const size_t _n;
+      const Index _n;
   };
 
   template<typename S>
@@ -74,7 +74,7 @@ namespace codac2
   {
     public:
 
-      Sep(size_t n)
+      Sep(Index n)
         : SepBase(n)
       { }
 

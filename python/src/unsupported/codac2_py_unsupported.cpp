@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  Codac binding (core)
+ *  Codac binding (unsupported)
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Simon Rohou, Benoît Desrochers

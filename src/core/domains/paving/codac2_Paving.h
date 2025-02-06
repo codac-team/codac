@@ -32,7 +32,7 @@ namespace codac2
       using NodeValue_ = std::function<std::list<IntervalVector>(Node_)>;
       using ConnectedSubset_ = Subpaving<P>;
 
-      Paving(size_t n)
+      Paving(Index n)
         : Paving(IntervalVector(n))
       {
         assert_release(n > 0);
@@ -42,7 +42,7 @@ namespace codac2
         : _tree(std::make_shared<PavingNode<P>>(*static_cast<P*>(this), x))
       { }
 
-      size_t size() const
+      Index size() const
       {
         return std::get<0>(_tree->boxes()).size();
       }
@@ -85,7 +85,7 @@ namespace codac2
       std::list<ConnectedSubset_> connected_subsets(const IntervalVector& x0, const NodeValue_& node_value) const
       {
         std::list<IntervalVector> l_boxes = intersecting_boxes(x0, node_value);
-        size_t nb_boxes = l_boxes.size();
+        [[maybe_unused]] Index nb_boxes = l_boxes.size();
         std::list<ConnectedSubset_> l_subsets;
 
         while(!l_boxes.empty())
@@ -115,7 +115,7 @@ namespace codac2
         }
 
         assert(l_boxes.empty() && "all the nodes should have been visited");
-        assert([&]() -> bool { size_t s = 0; for(const auto& si : l_subsets) s += si.size(); return s == nb_boxes; } ()
+        assert([&]() -> bool { Index s = 0; for(const auto& si : l_subsets) s += si.size(); return s == nb_boxes; } ()
           && "the total number of boxes should match the sum of number of boxes of each subset");
 
         return l_subsets;
@@ -141,7 +141,7 @@ namespace codac2
   {
     public:
 
-      PavingOut(size_t n);
+      PavingOut(Index n);
       PavingOut(const IntervalVector& x);
 
       std::list<PavingOut::ConnectedSubset_> connected_subsets(const PavingOut::NodeValue_& node_value = PavingOut::outer) const;
@@ -158,7 +158,7 @@ namespace codac2
   {
     public:
 
-      PavingInOut(size_t n);
+      PavingInOut(Index n);
       PavingInOut(const IntervalVector& x);
 
       std::list<PavingInOut::ConnectedSubset_> connected_subsets(const PavingInOut::NodeValue_& node_value = PavingInOut::outer) const;

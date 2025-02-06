@@ -14,12 +14,12 @@ using namespace std;
 using namespace codac2;
 
 
-const size_t& OutputFigure2D::i() const
+const Index& OutputFigure2D::i() const
 {
-  return _fig.axes()[0].dim_id;
+  return _fig.i();
 }
 
-const size_t& OutputFigure2D::j() const
+const Index& OutputFigure2D::j() const
 {
-  return _fig.axes()[1].dim_id;
+  return _fig.j();
 }

@@ -16,7 +16,7 @@ BoxPair SepCtcBoundary::separate(const IntervalVector& x) const
 {
   assert_release(x.size() == this->size());
   
-  size_t attempt_nb = 5;
+  Index attempt_nb = 5;
   IntervalVector x_boundary(x);
   _ctc_boundary.front().contract(x_boundary);
 
@@ -29,7 +29,7 @@ BoxPair SepCtcBoundary::separate(const IntervalVector& x) const
 
     Vector m = b.mid(); // first try: midpoint of the box
     BoolInterval d;
-    size_t k = 0;
+    Index k = 0;
 
     do
     {

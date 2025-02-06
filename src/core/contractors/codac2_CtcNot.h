@@ -26,9 +26,9 @@ namespace codac2
         : Ctc<CtcNot,IntervalVector>(size_of(c))
       { }
 
-      void contract(IntervalVector& x) const
+      void contract([[maybe_unused]] IntervalVector& x) const
       {
-        /* does nothing: no inner information */
+        /* nothing can be done: no inner information */
       }
   };
 }

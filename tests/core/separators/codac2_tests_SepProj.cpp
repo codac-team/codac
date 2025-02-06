@@ -9,7 +9,6 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_SepProj.h>
-#include <codac2_analytic_operations.h>
 #include <codac2_AnalyticFunction.h>
 #include <codac2_SepInverse.h>
 #include <codac2_pave.h>
@@ -22,7 +21,7 @@ TEST_CASE("SepProj")
 {
   VectorVar x(3);
   AnalyticFunction f_ellipsoid({x}, 2*sqr(x[0])+x[0]*x[1]+x[0]*x[2]+sqr(x[1])+sqr(x[2]));
-  SepInverse<Interval> sep_ellipsoid(f_ellipsoid, {0.7,1});
+  SepInverse sep_ellipsoid(f_ellipsoid, {0.7,1});
   SepProj sep_proj(sep_ellipsoid, {0,1}, {{0.1,0.2}});
 
   // todo: test with SepProj sep_proj(sep_ellipsoid, {0,1}, {{-oo,oo}});

@@ -30,14 +30,14 @@ namespace codac2
   {
     public:
 
-      CtcEllipse(const Vector& q);
+      CtcEllipse(const IntervalVector& q);
       void contract(IntervalVector& x) const;
-      const Vector& q() const;
+      const IntervalVector& q() const;
 
     protected:
 
       IntervalVector contract_ith(const OctaSym& i, const IntervalVector& x) const;
 
-      const Vector _q;
+      const IntervalVector _q;
   };
 }

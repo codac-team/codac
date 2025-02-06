@@ -15,7 +15,9 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
-            - { os: ubuntu-24.04, gcc_v: 11, py_v_maj: 3, py_v_min: 10, desc: 'Ubuntu 24.04 GCC 11 Python 3.10 tests' }
+            - { os: ubuntu-24.04, gcc_v: 11, py_v_maj: 3, py_v_min: 10, with_capd: OFF, desc: 'Ubuntu 24.04 GCC 11 Python 3.10 tests' }
+            - { os: ubuntu-24.04, gcc_v: 13, py_v_maj: 3, py_v_min: 12, with_capd: ON, desc: 'Ubuntu 24.04 GCC 13 Python 3.10 CAPD tests' }
+            - { os: ubuntu-22.04, gcc_v: 11, py_v_maj: 3, py_v_min: 10, with_capd: ON, desc: 'Ubuntu 22.04 GCC 11 Python 3.10 CAPD tests' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v4
@@ -43,11 +45,14 @@ jobs:
         sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
         sudo apt update
 
-        sudo apt-get -y install flex bison libeigen3-dev
+        sudo apt-get -y install flex bison # libeigen3-dev
   
         # For documentation
         pip install sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme
         sudo apt-get -y install doxygen graphviz
+
+        # Doxygen might need to be upgraded
+        git clone --depth 1 -b Release_1_13_0 https://github.com/doxygen/doxygen.git ; cd doxygen ; mkdir build ; cd build ; cmake .. ; sudo cmake --build . -j 4 --config Release --target install ; cd ../..
 
         # For Python wrapping
         #pip install wheel
@@ -68,6 +73,7 @@ jobs:
 
         # CAPD
         # cancelled on 2023/05/09: bash scripts/dependencies/install_capd.sh
+        if [ "${{ matrix.cfg.with_capd }}" = "ON" ]; then git clone --depth 1 -b master https://github.com/CAPDGroup/CAPD.git ; cd CAPD ; mkdir build ; cd build ; cmake .. ; cmake -E env CXXFLAGS="-fPIC" CFLAGS="-fPIC" sudo cmake --build . -j 4 --config Release --target install ; cd ../.. ; fi
 
         # Environment variables
         export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/codac/build_install
@@ -80,12 +86,12 @@ jobs:
         cd $ORIGIN_DIR
         pwd
         ls
-        git submodule init ; git submodule update # for pybind11 submodule
+        git submodule init ; git submodule update # for pybind11/eigen submodules
         mkdir build -p
         cd build
   
         # Building lib + tests
-        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON ..
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DWITH_CAPD=${{ matrix.cfg.with_capd }} -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON ..
         make -j 4
         #make doc # todo
         make install
@@ -96,6 +102,13 @@ jobs:
         cd ../../
         
         python ../tests/core/domains/codac2_tests_BoolInterval.py
+
+        ./tests/codac2_tests_core_contractors_CtcInverse
+        ./tests/codac2_tests_core_contractors_CtcPolygon
+        ./tests/codac2_tests_core_contractors_linear_ctc
+        ./tests/codac2_tests_core_domains_ellipsoid_Ellipsoid
+        ./tests/codac2_tests_core_domains_interval_Interval
+
         make test
         python -m unittest discover codac.tests
 

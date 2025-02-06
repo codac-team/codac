@@ -35,24 +35,24 @@ TEST_CASE("SepPolygon - tests from Codac1")
   {
     SepPolygon s({
       // external border
-      {{6,-6},{7,9}},
-      {{7,9},{0,5}},
-      {{0,5},{-9,8}},
-      {{-9,8},{-8,-9}},
-      {{-8,-9},{6,-6}},
+      Edge({{6,-6},{7,9}}),
+      Edge({{7,9},{0,5}}),
+      Edge({{0,5},{-9,8}}),
+      Edge({{-9,8},{-8,-9}}),
+      Edge({{-8,-9},{6,-6}}),
       // hole
-      {{-2,3},{3.5,2}},
-      {{3.5,2},{1.5,0.5}},
-      {{1.5,0.5},{3,-4}},
-      {{3,-4},{-3,-3}},
-      {{-3,-3},{-2,3}}
+      Edge({{-2,3},{3.5,2}}),
+      Edge({{3.5,2},{1.5,0.5}}),
+      Edge({{1.5,0.5},{3,-4}}),
+      Edge({{3,-4},{-3,-3}}),
+      Edge({{-3,-3},{-2,3}})
     });
     
     //pave(IntervalVector({{-10,10},{-10,10}}), s, 0.1);
 
     // Check a box inside the hole
     {
-      IntervalVector x = IntervalVector({{0},{0}}).inflate(0.5);
+      IntervalVector x = IntervalVector({0,0}).inflate(0.5);
       //DefaultView::draw_box(x,Color::purple());
       auto xs = s.separate(x);
       CHECK(xs.inner == x);
@@ -61,7 +61,7 @@ TEST_CASE("SepPolygon - tests from Codac1")
 
     // Check a box inside the polygon
     {
-      IntervalVector x = IntervalVector({{5},{-5}}).inflate(0.5);
+      IntervalVector x = IntervalVector({5,-5}).inflate(0.5);
       //DefaultView::draw_box(x,Color::purple());
       auto xs = s.separate(x);
       CHECK(xs.inner.is_empty());
@@ -70,7 +70,7 @@ TEST_CASE("SepPolygon - tests from Codac1")
 
     // Check a box outside the polygon
     {
-      IntervalVector x = IntervalVector({{-1},{8}}).inflate(0.5);
+      IntervalVector x = IntervalVector({-1,8}).inflate(0.5);
       //DefaultView::draw_box(x,Color::purple());
       auto xs = s.separate(x);
       CHECK(xs.inner == x);
@@ -83,7 +83,7 @@ TEST_CASE("SepPolygon - tests from Codac1")
 
     // Check a box inside the polygon
     {
-      IntervalVector x = IntervalVector({{5},{-5}}).inflate(0.5);
+      IntervalVector x = IntervalVector({5,-5}).inflate(0.5);
       auto xs = s.separate(x);
       CHECK(xs.inner.is_empty());
       CHECK(xs.outer == x);
@@ -91,7 +91,7 @@ TEST_CASE("SepPolygon - tests from Codac1")
 
     // Check a box outside the polygon
     {
-      IntervalVector x = IntervalVector({{-1},{8}}).inflate(0.5);
+      IntervalVector x = IntervalVector({-1,8}).inflate(0.5);
       auto xs = s.separate(x);
       CHECK(xs.inner == x);
       CHECK(xs.outer.is_empty());

@@ -66,3 +66,6 @@ wheelhouse/
 # VSCode files
 *.vscode
 .idea/
+
+# Graphics files
+examples/**/*.xml

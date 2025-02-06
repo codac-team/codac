@@ -18,7 +18,7 @@ namespace codac2
 {
   #if defined FAST_RELEASE & defined NDEBUG
 
-    #define assert_release(ignore_test,ignore_message) ((void)0)
+    #define assert_release(ignore_test) ((void)0)
 
   #else
 

@@ -18,5 +18,5 @@ h = AnalyticFunction([a],
      IntervalVector([[2],[0],[0.55]]),IntervalVector([[2],[1],[-0.45]]),IntervalVector([[2],[2],[0.55]]))
 )
 
-ctc = CtcInverse(h, [[0],[0],[0]])
+ctc = CtcInverse(h, [0,0,0])
 draw_while_paving([[0,1],[0,1],[0,1],[0,1]], ctc, 0.001)

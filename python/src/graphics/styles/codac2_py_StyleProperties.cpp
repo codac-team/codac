@@ -1,5 +1,5 @@
 /** 
- *  Codac binding (core)
+ *  Codac binding (graphics)
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -45,10 +45,6 @@ void export_StyleProperties(py::module& m)
         }),
       STYLEPROPERTIES_STYLEPROPERTIES_INITIALIZER_LIST_COLOR,
       "v"_a)
-  
-    .def(py::init<const std::string&>(),
-      STYLEPROPERTIES_STYLEPROPERTIES_CONST_STRING_REF,
-      "vibes_style"_a)
 
     .def_static("inside", &StyleProperties::inside,
       STATIC_STYLEPROPERTIES_STYLEPROPERTIES_INSIDE)

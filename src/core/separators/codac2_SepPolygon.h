@@ -11,7 +11,6 @@
 
 #include "codac2_Polygon.h"
 #include "codac2_SepCtcBoundary.h"
-#include "codac2_CtcUnion.h"
 
 namespace codac2
 {

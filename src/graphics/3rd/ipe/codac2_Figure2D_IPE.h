@@ -2,7 +2,7 @@
  *  \file codac2_Figure2D_IPE.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Maël Godard
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -15,6 +15,7 @@
 #include "codac2_OutputFigure2D.h"
 #include "codac2_Vector.h"
 #include "codac2_IntervalVector.h"
+#include "codac2_Ellipsoid.h"
 #include "vibes.h"
 
 namespace codac2
@@ -28,7 +29,26 @@ namespace codac2
       void update_axes();
       void update_window_properties();
       void center_viewbox(const Vector& c, const Vector& r);
-      void begin_path(const StyleProperties& s);
+      void begin_path(const StyleProperties& s,bool tip);
+
+      /* For future doc:
+      https://github.com/codac-team/codac/pull/126#discussion_r1829030491
+      Pour les véhicules (draw_tank et draw_AUV) le header par défaut du begin_path n'est pas suffisant.
+      J'ai donc ajouté cette fonction qui fait le même travail que le begin_path, avec en plus le champ
+      "matrix" complété.
+      Ce champ contient 6 valeurs : les 4 premières sont la matrice de transformation 2D, rotation et
+      dilatation, "par colonne" (i.e. m11, m21, m12, m22) et les 2 autres valeurs sont la translation.
+      Le tout permet de scale le véhicule, l'orienter et le déplacer au bon endroit.
+      Cette fonction écrit dans le xml quelque chose dans le style :
+         <path layer="alpha" 
+         stroke="codac_color_000000" 
+         fill="codac_color_ffd32a" 
+         opacity="100%" 
+         stroke-opacity="100%" 
+         pen="heavier" 
+         matrix="0.00948009 11.9048 -11.9047 0.00948009 166.667 166.667">
+      */
+      void begin_path_with_matrix(const Vector& x, float length, const StyleProperties& s);
 
       // Geometric shapes
       void draw_point(const Vector& c, const StyleProperties& s = StyleProperties());

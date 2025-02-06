@@ -1,6 +1,5 @@
 from codac4matlab._core import *
-from sys import float_info
-
+import sys
 
 def codac_error(message):
   print(f'''
@@ -17,25 +16,39 @@ You need help? Submit an issue on: https://github.com/codac-team/codac/issues
 
 class AnalyticFunction:
 
-  def __init__(self, args, e):
-    if isinstance(e, (int,float,Interval,ScalarVar,ScalarExpr)):
-      self.f = AnalyticFunction_Scalar(args,e)
-    elif isinstance(e, (Vector,IntervalVector,VectorVar,VectorExpr)):
-      self.f = AnalyticFunction_Vector(args,e)
+  def __init__(self, args, e=None):
+    if e:
+      if isinstance(e, (int,float,Interval,ScalarVar,ScalarExpr)):
+        self.f = AnalyticFunction_Scalar(args,ScalarExpr(e))
+      elif isinstance(e, (Vector,IntervalVector,VectorVar,VectorExpr)):
+        self.f = AnalyticFunction_Vector(args,VectorExpr(e))
+      elif isinstance(e, list):
+        lst=[]
+        for e_i in e:
+          if isinstance(e_i, (int,float,Interval,ScalarVar,ScalarExpr)):
+            lst.append(ScalarExpr(e_i))
+          else:
+            codac_error("AnalyticFunction: invalid vectorial expression")
+        self.f = AnalyticFunction_Vector(args,lst)
+      else:
+        codac_error("AnalyticFunction: can only build functions from scalar or vector expressions")
     else:
-      codac_error("AnalyticFunction: can only build functions from scalar or vector expressions")
+      if isinstance(args, (AnalyticFunction_Scalar,AnalyticFunction_Vector)):
+        self.f = args
+      else:
+        codac_error("AnalyticFunction: invalid function argument")
 
   def input_size(self):
     return self.f.input_size()
 
+  def real_eval(self,*args):
+    return self.f.real_eval(*args)
+
+  def eval(self,m,*args):
+    return self.f.eval(m,*args)
+
   def eval(self,*args):
     return self.f.eval(*args)
-
-  def natural_eval(self,*args):
-    return self.f.natural_eval(*args)
-
-  def centered_eval(self,*args):
-    return self.f.centered_eval(*args)
 
   def diff(self,*args):
     return self.f.diff(*args)
@@ -44,9 +57,9 @@ class AnalyticFunction:
     lst=[]
     for arg in args:
       if isinstance(arg, (int,float,Interval,ScalarVar,ScalarExpr)):
-        lst.append(ScalarExpr(arg).raw_copy())
+        lst.append(ScalarExpr(arg))
       elif isinstance(arg, (Vector,IntervalVector,VectorVar,VectorExpr)):
-        lst.append(VectorExpr(arg).raw_copy())
+        lst.append(VectorExpr(arg))
       else:
         codac_error("AnalyticFunction: invalid input arguments")
     return self.f(lst)
@@ -119,28 +132,12 @@ class CtcInverseNotIn(Ctc):
     return self.c.copy()
 
 
-class SepInverse(Sep):
-
-  def __init__(self, f, y, with_centered_form = True):
-    Sep.__init__(self, f.input_size())
-    if isinstance(f.f, AnalyticFunction_Scalar):
-      self.s = SepInverse_Interval(f.f,Interval(y),with_centered_form)
-    elif isinstance(f.f, AnalyticFunction_Vector):
-      self.s = SepInverse_IntervalVector(f.f,IntervalVector(y),with_centered_form)
-    else:
-      codac_error("SepInverse: can only build SepInverse from scalar or vector functions")
-
-  def separate(self,x):
-    return self.s.separate(x)
-
-  def copy(self):
-    return super().copy()
-
-
 class Approx:
 
-  def __init__(self, x, eps = float_info.epsilon*10):
-    if isinstance(x, (float,Interval)):
+  def __init__(self, x, eps = sys.float_info.epsilon*10):
+    if isinstance(x, (int,float)):
+      self.a = Approx_double(x,eps)
+    elif isinstance(x, (Interval)):
       self.a = Approx_Interval(x,eps)
     elif isinstance(x, (Vector)):
       self.a = Approx_Vector(x,eps)
@@ -151,7 +148,8 @@ class Approx:
     elif isinstance(x, (IntervalMatrix)):
       self.a = Approx_IntervalMatrix(x,eps)
     else:
-      codac_error("Approx: can only build Approx for: Interval, Vector, IntervalVector, Matrix, IntervalMatrix")
+      codac_error("Approx: can only build Approx for: \
+        double, Interval, Vector, IntervalVector, Matrix, IntervalMatrix")
 
   def __eq__(self, x):
     return self.a == x
@@ -178,7 +176,7 @@ def cart_prod(*args):
       if mode != -1 and mode != 0:
         codac_error("cart_prod: invalid input arguments, was expecting a " + mode_str[mode] + ", got a scalar domain")
       mode = 0
-      lst.append(IntervalVector(1,Interval(arg)))
+      lst.append(IntervalVector([Interval(arg)]))
 
     elif isinstance(arg, (list,Vector,IntervalVector)):
       if mode != -1 and mode != 0:
@@ -192,7 +190,7 @@ def cart_prod(*args):
       mode = 1
       lst.append(arg)
 
-    elif isinstance(arg, Sep):
+    elif isinstance(arg, (Sep,SepBase)):
       if mode != -1 and mode != 2:
         codac_error("cart_prod: invalid input arguments, was expecting a " + mode_str[mode] + ", got a separator")
       mode = 2
@@ -211,17 +209,49 @@ def cart_prod(*args):
     codac_error("cart_prod: invalid input arguments")
 
 
-def sivia(x,f,y,eps):
+class AnalyticTraj:
 
-  if isinstance(f.f, AnalyticFunction_Scalar):
-    if not isinstance(y, (list,float,Interval)):
-      codac_error("Provided function is scalar, the output 'y' should be an interval")
-    return sivia_(x, f.f, Interval(y), eps)
+  def __init__(self, f, t):
+    if isinstance(f, AnalyticFunction):
+      self.__init__(f.f,t)
+    elif isinstance(f, AnalyticFunction_Scalar):
+      self.traj = AnalyticTraj_Scalar(f,t)
+    elif isinstance(f, AnalyticFunction_Vector):
+      self.traj = AnalyticTraj_Vector(f,t)
+    else:
+      codac_error("AnalyticTraj: can only build this trajectory from an AnalyticFunction_[Scalar/Vector]")
 
-  if isinstance(f.f, AnalyticFunction_Vector):
-    if not isinstance(y, (list,Vector,IntervalVector)):
-      codac_error("Provided function is vectorial, the output 'y' should be an interval vector")
-    return sivia_(x, f.f, IntervalVector(y), eps)
+  # Methods from TrajBase:
 
-  else:
-    codac_error("sivia: can only compute sivia from scalar or vector functions")
+  def size(self):
+    return self.traj.size()
+
+  def is_empty(self):
+    return self.traj.is_empty()
+
+  def tdomain(self):
+    return self.traj.tdomain()
+
+  def truncate_tdomain(self, new_tdomain):
+    return self.traj.truncate_tdomain(new_tdomain)
+    
+  def codomain(self):
+    return self.traj.codomain()
+    
+  def __call__(self, t):
+    return self.traj(t)
+    
+  def nan_value(self):
+    return self.traj.nan_value()
+    
+  def sampled(self, dt):
+    return self.traj.sampled(dt)
+    
+  def primitive(self, y0, t):
+    return self.traj.primitive(y0, t)
+    
+  def as_function(self):
+    return AnalyticFunction(self.traj.as_function())
+    
+  # Methods from AnalyticTraj:
+  #   none

@@ -8,9 +8,10 @@
  */
 
 #include <catch2/catch_test_macros.hpp>
+#include <codac2_Vector.h>
+#include <codac2_Matrix.h>
 #include <codac2_IntervalVector.h>
 #include <codac2_IntervalMatrix.h>
-#include <codac2_arithmetic_add.h>
 
 using namespace std;
 using namespace codac2;
@@ -39,7 +40,7 @@ TEST_CASE("arithmetic add")
   CHECK(IntervalVector({{-1,1},{-2,2},{-3,3}})+Vector({1,2,3}) == IntervalVector({{0,2},{0,4},{0,6}}));
 
   // inline IntervalVector operator+(const IntervalVector& x1, const IntervalVector& x2)
-  CHECK(IntervalVector({{-1,1},{-2,2},{-3,3}})+IntervalVector({{1},{2},{3}}) == IntervalVector({{0,2},{0,4},{0,6}}));
+  CHECK(IntervalVector({{-1,1},{-2,2},{-3,3}})+IntervalVector({1,2,3}) == IntervalVector({{0,2},{0,4},{0,6}}));
 
   // IntervalMatrix operator+(const IM& x1, const M& x2)
   CHECK(IntervalMatrix({{{-1,1},{-2,2}},{{-3,3},{-4,4}}})+Matrix({{1,2},{3,4}}) == IntervalMatrix({{{0,2},{0,4}},{{0,6},{0,8}}}));

@@ -1,0 +1,33 @@
+.strike {
+  text-decoration: line-through;
+}
+
+.sidebar-tree .current > .reference {
+  background: none;
+}
+
+.sidebar-tree .current-page > .reference {
+  background: var(--color-sidebar-item-background--current);
+  font-weight: normal;
+}
+
+a.sidebar-brand {
+  padding: 2rem 0rem;
+  padding-right: 1rem;
+}
+
+.sidebar-logo {
+  max-width: 120%;
+  float: right;
+}
+
+.announcement-content {
+  font-size: 0.8rem;
+}
+
+
+/* Removes empty space below blocks of code in tabs */
+.sphinx-tabs-panel div[class^="highlight"] {
+  margin-bottom: 0;
+  margin-top: 0;
+}

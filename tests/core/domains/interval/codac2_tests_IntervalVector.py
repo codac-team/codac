@@ -8,7 +8,7 @@
 #
 # ----------------------------------------------------------------------------
 #  \date       2024
-#  \author     Gilles Chabert, (Simon Rohou)
+#  \author     Gilles Chabert, Simon Rohou
 #  \copyright  Copyright 2024 Codac Team
 #  \license    GNU Lesser General Public License (LGPL)
 
@@ -27,10 +27,10 @@ class TestIntervalVector(unittest.TestCase):
 
     if not c:
       return not result
-
+    
     for ci in c:
       found = False
-      for i in range(0,result_.nb_rows()):
+      for i in range(0,result_.rows()):
         if IntervalMatrix(ci).transpose() == IntervalMatrix(result_.row(i)):
           found = True
           break
@@ -50,7 +50,7 @@ class TestIntervalVector(unittest.TestCase):
     x = IntervalVector(2)
     x[0] = Interval(0,1)
     x[1] = Interval(0,1)
-    self.assertTrue(x == IntervalVector(2,Interval(0,1)))
+    self.assertTrue(x == IntervalVector([[0,1],[0,1]]))
     self.assertTrue(x == IntervalVector(x))
     #self.assertTrue(x == (IntervalVector(2)=x))
 
@@ -92,7 +92,7 @@ class TestIntervalVector(unittest.TestCase):
 
     x = IntervalVector(1)
     x[0] = Interval(1,2)
-    x.resize(3)
+    x.resize_save_values(3)
     self.assertTrue(x.size() == 3)
     self.assertTrue(x[0] == Interval(1,2))
     self.assertTrue(x[1] == Interval(-oo,oo))
@@ -100,14 +100,14 @@ class TestIntervalVector(unittest.TestCase):
 
     x = IntervalVector(1)
     x[0] = Interval(1,2)
-    x.resize(1)
+    x.resize_save_values(1)
     self.assertTrue(x.size() == 1)
     self.assertTrue(x[0] == Interval(1,2))
 
     x = IntervalVector(2)
     x[0] = Interval(1,2)
     x.set_empty()
-    x.resize(3)
+    x.resize_save_values(3)
     self.assertTrue(x.size() == 3)
     self.assertTrue(x.is_empty())
     self.assertTrue(x[2] == Interval(-oo,oo))
@@ -115,7 +115,7 @@ class TestIntervalVector(unittest.TestCase):
     x = IntervalVector(5)
     x[0] = Interval(1,2)
     x[1] = Interval(3,4)
-    x.resize(2)
+    x.resize_save_values(2)
     self.assertTrue(x.size() == 2)
     self.assertTrue(x[0] == Interval(1,2))
     self.assertTrue(x[1] == Interval(3,4))
@@ -219,8 +219,8 @@ class TestIntervalVector(unittest.TestCase):
 
     self.assertTrue(not IntervalVector([[0,1],[2,3],[4,5]]).is_flat())
     self.assertTrue(IntervalVector.empty(3).is_flat())
-    self.assertTrue(IntervalVector(1,Interval(0,0)).is_flat())
-    self.assertTrue(not IntervalVector(1,Interval(0,1)).is_flat())
+    self.assertTrue(IntervalVector([[0,0]]).is_flat())
+    self.assertTrue(not IntervalVector([[0,1]]).is_flat())
     self.assertTrue(IntervalVector([[0,1],[2,2],[3,4]]).is_flat())
     self.assertTrue(IntervalVector([[0,1],[2,3],[4,4]]).is_flat())
     self.assertTrue(not IntervalVector.empty(3).is_unbounded())

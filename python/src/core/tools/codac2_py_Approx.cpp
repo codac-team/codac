@@ -12,7 +12,10 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <codac2_Interval.h>
+#include <codac2_Vector.h>
 #include <codac2_IntervalVector.h>
+#include <codac2_Matrix.h>
+#include <codac2_IntervalMatrix.h>
 #include <codac2_Approx.h>
 #include "codac2_py_Approx_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_doc.h"
@@ -46,9 +49,12 @@ void _export_Approx(py::module& m, const string& class_name)
 
 void export_Approx(py::module& m)
 {
+  _export_Approx<double>(m, "Approx_double");
   _export_Approx<Interval>(m, "Approx_Interval");
   _export_Approx<Vector>(m, "Approx_Vector");
   _export_Approx<IntervalVector>(m, "Approx_IntervalVector");
+  _export_Approx<Row>(m, "Approx_Row");
+  _export_Approx<IntervalRow>(m, "Approx_IntervalRow");
   _export_Approx<Matrix>(m, "Approx_Matrix");
   _export_Approx<IntervalMatrix>(m, "Approx_IntervalMatrix");
 }

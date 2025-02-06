@@ -9,7 +9,6 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_AnalyticFunction.h>
-#include <codac2_analytic_operations.h>
 #include <codac2_Approx.h>
 #include <codac2_math.h>
 
@@ -18,10 +17,10 @@ using namespace codac2;
 
 TEST_CASE("AnalyticFunction")
 {
-  std::array<EvaluationMode,3> modes {
-    EvaluationMode::NATURAL,
-    EvaluationMode::CENTERED,
-    EvaluationMode::NATURAL | EvaluationMode::NATURAL
+  std::array<EvalMode,3> modes {
+    EvalMode::NATURAL,
+    EvalMode::CENTERED,
+    EvalMode::NATURAL | EvalMode::NATURAL
   };
 
   for(const auto& m : modes) // try all available evaluation modes
@@ -71,16 +70,15 @@ TEST_CASE("AnalyticFunction")
       AnalyticFunction f({x}, vec(x,x));
 
       AnalyticFunction fvec({x}, vec(x,x));
-      CHECK(Approx(f.eval(m, 1)) == IntervalVector({{1},{1}}));
+      CHECK(Approx(f.eval(m, 1)) == IntervalVector({1,1}));
     }
 
     {
-      // todo: remove call to "const_value" method
-      CHECK(AnalyticFunction({}, const_value(+Interval(4,5))).eval(m) == Interval(4,5));
-      CHECK(AnalyticFunction({}, const_value(+4)).eval(m) == 4);
-      CHECK(AnalyticFunction({}, const_value(+4.)).eval(m) == 4.);
-      CHECK(AnalyticFunction({}, const_value(Vector({2,9}))).eval(m) == Vector({2,9}));
-      CHECK(AnalyticFunction({}, const_value(IntervalVector(3))).eval(m) == IntervalVector({{-oo,oo},{-oo,oo},{-oo,oo}}));
+      CHECK(AnalyticFunction({}, +Interval(4,5)).eval(m) == Interval(4,5));
+      CHECK(AnalyticFunction({}, +4).eval(m) == 4);
+      CHECK(AnalyticFunction({}, +4.).eval(m) == 4.);
+      CHECK(AnalyticFunction({}, Vector({2,9})).eval(m) == Vector({2,9}));
+      CHECK(AnalyticFunction({}, IntervalVector(3)).eval(m) == IntervalVector({{-oo,oo},{-oo,oo},{-oo,oo}}));
 
       ScalarVar x1;
       ScalarVar x2;
@@ -112,9 +110,9 @@ TEST_CASE("AnalyticFunction")
       // .def("__rmul__", {}(const ScalarVar& e1, const Interval& e2);
       CHECK(AnalyticFunction({x1}, Interval(6.)*x1).eval(m, 5.) == 30.);
       // .def("__mul__",  {}(const ScalarVar& e1, const VectorVar& e2);
-      CHECK(AnalyticFunction({v1,v2}, v1[0]*v2).eval(m, Vector({5.,10.}),IntervalVector(2,3.)) == Vector(2,15.));
+      CHECK(AnalyticFunction({v1,v2}, v1[0]*v2).eval(m, Vector({5.,10.}),IntervalVector({3,3})) == Vector({15,15}));
       // .def("__mul__",  {}(const ScalarVar& e1, const IntervalVector& e2);
-      CHECK(AnalyticFunction({x1}, x1*IntervalVector({{-2,3},{0,1}})).centered_eval(5.) == IntervalVector({{-10,15},{0,5}}));
+      CHECK(AnalyticFunction({x1}, x1*IntervalVector({{-2,3},{0,1}})).eval(EvalMode::CENTERED,5.) == IntervalVector({{-10,15},{0,5}}));
       // .def("__truediv__",  {}(const ScalarVar& e1, const ScalarVar& e2);
       CHECK(Approx(AnalyticFunction({x1,x2}, x1/x2).eval(m, 1.,10.)) == 0.1);
       // .def("__truediv__",  {}(const ScalarVar& e1, const Interval& e2);
@@ -123,23 +121,24 @@ TEST_CASE("AnalyticFunction")
       CHECK(Approx(AnalyticFunction({x1}, Interval(2.)/x1).eval(m, 10.)) == 0.2);
 
       // ======> VectorVar
+      CHECK(-IntervalVector({-5.,-6.}) == Vector({5.,6.}));
       
       //.def("__pos__",  {}(const VectorVar& e1);
       CHECK(AnalyticFunction({v1}, +v1).eval(m, Vector({5.,6.})) == Vector({5.,6.}));
       //.def("__add__",  {}(const VectorVar& e1, const VectorVar& e2);
       CHECK(AnalyticFunction({v1,v2}, v1+v2).eval(m, Vector({5.,6.}),Vector({2.,3.})) == Vector({7.,9.}));
       //.def("__add__",  {}(const VectorVar& e1, const IntervalVector& e2);
-      CHECK(AnalyticFunction({v1}, v1+IntervalVector({{2},{3}})).eval(m, Vector({5.,6.})) == IntervalVector({{7.},{9.}}));
+      CHECK(AnalyticFunction({v1}, v1+IntervalVector({2,3})).eval(m, Vector({5.,6.})) == IntervalVector({7.,9.}));
       //.def("__radd__", {}(const VectorVar& e1, const IntervalVector& e2);
-      CHECK(AnalyticFunction({v1}, IntervalVector({{2},{3}})+v1).eval(m, Vector({5.,6.})) == IntervalVector({{7.},{9.}}));
+      CHECK(AnalyticFunction({v1}, IntervalVector({2,3})+v1).eval(m, Vector({5.,6.})) == IntervalVector({7.,9.}));
       //.def("__neg__",  {}(const VectorVar& e1);
       CHECK(AnalyticFunction({v1}, -v1).eval(m, Vector({5.,6.})) == -Vector({5.,6.}));
       //.def("__sub__",  {}(const VectorVar& e1, const VectorVar& e2);
       CHECK(AnalyticFunction({v1,v2}, v1-v2).eval(m, Vector({5.,6.}),Vector({2.,3.})) == Vector({3.,3.}));
       //.def("__sub__",  {}(const VectorVar& e1, const IntervalVector& e2);
-      CHECK(AnalyticFunction({v1}, v1-IntervalVector({{2},{3}})).eval(m, Vector({5.,6.})) == IntervalVector({{3.},{3.}}));
+      CHECK(AnalyticFunction({v1}, v1-IntervalVector({2,3})).eval(m, Vector({5.,6.})) == IntervalVector({3.,3.}));
       //.def("__rsub__", {}(const VectorVar& e1, const IntervalVector& e2);
-      CHECK(AnalyticFunction({v1}, IntervalVector({{2},{3}})-v1).eval(m, Vector({5.,6.})) == IntervalVector({{-3.},{-3.}}));
+      CHECK(AnalyticFunction({v1}, IntervalVector({2,3})-v1).eval(m, Vector({5.,6.})) == IntervalVector({-3.,-3.}));
 
       // ======> ScalarExpr
       
@@ -148,135 +147,230 @@ TEST_CASE("AnalyticFunction")
       //.def(py::self + py::self);
       CHECK(Approx(AnalyticFunction({x1}, cos(x1)+cos(x1)).eval(m, Interval(0.))) == Interval(2.));
       //.def("__add__",  {}(const ScalarExpr& e1, const ScalarVar& e2);
-      CHECK(Approx(AnalyticFunction({x1}, cos(x1)+x1).eval(m, codac2::pi)) == codac2::pi-1);
+      CHECK(Approx(AnalyticFunction({x1}, cos(x1)+x1).eval(m, PI)) == PI-1);
       //.def("__radd__", {}(const ScalarExpr& e1, const ScalarVar& e2);
-      CHECK(Approx(AnalyticFunction({x1}, x1+cos(x1)).eval(m, codac2::pi)) == codac2::pi-1);
+      CHECK(Approx(AnalyticFunction({x1}, x1+cos(x1)).eval(m, PI)) == PI-1);
       //.def("__add__",  {}(const ScalarExpr& e1, const Interval& e2);
-      CHECK(Approx(AnalyticFunction({x1}, cos(x1)+Interval(10.)).eval(m, codac2::pi)) == Interval(9));
+      CHECK(Approx(AnalyticFunction({x1}, cos(x1)+Interval(10.)).eval(m, PI)) == Interval(9));
       //.def("__radd__", {}(const ScalarExpr& e1, const Interval& e2);
-      CHECK(Approx(AnalyticFunction({x1}, 10+cos(x1)).eval(m, codac2::pi)) == Interval(9));
+      CHECK(Approx(AnalyticFunction({x1}, 10+cos(x1)).eval(m, PI)) == Interval(9));
       //.def(- py::self);
       CHECK(Approx(AnalyticFunction({x1}, -cos(x1)).eval(m, Interval(0.))) == Interval(-1.));
       //.def(py::self - py::self);
       CHECK(Approx(AnalyticFunction({x1}, cos(x1)-cos(x1)).eval(m, Interval(0.))) == Interval(0.));
       //.def("__sub__",  {}(const ScalarExpr& e1, const ScalarVar& e2);
-      CHECK(Approx(AnalyticFunction({x1}, cos(x1)-x1).eval(m, codac2::pi)) == -codac2::pi-1);
+      CHECK(Approx(AnalyticFunction({x1}, cos(x1)-x1).eval(m, PI)) == -PI-1);
       //.def("__rsub__", {}(const ScalarExpr& e1, const ScalarVar& e2);
-      CHECK(Approx(AnalyticFunction({x1}, x1-cos(x1)).eval(m, codac2::pi)) == codac2::pi+1);
+      CHECK(Approx(AnalyticFunction({x1}, x1-cos(x1)).eval(m, PI)) == PI+1);
       //.def("__sub__",  {}(const ScalarExpr& e1, const Interval& e2);
-      CHECK(Approx(AnalyticFunction({x1}, cos(x1)-Interval(10.)).eval(m, codac2::pi)) == -Interval(11));
+      CHECK(Approx(AnalyticFunction({x1}, cos(x1)-Interval(10.)).eval(m, PI)) == -Interval(11));
       //.def("__rsub__", {}(const ScalarExpr& e1, const Interval& e2);
-      CHECK(Approx(AnalyticFunction({x1}, 10-cos(x1)).eval(m, codac2::pi)) == Interval(11));
+      CHECK(Approx(AnalyticFunction({x1}, 10-cos(x1)).eval(m, PI)) == Interval(11));
       //.def(py::self * py::self);
       CHECK(Approx(AnalyticFunction({x1}, cos(x1)*cos(x1)).eval(m, Interval(0.))) == Interval(1.));
       //.def("__mul__",  {}(const ScalarExpr& e1, const ScalarVar& e2);
-      CHECK(Approx(AnalyticFunction({x1}, cos(x1)*x1).eval(m, codac2::pi)) == -1*codac2::pi);
+      CHECK(Approx(AnalyticFunction({x1}, cos(x1)*x1).eval(m, PI)) == -1*PI);
       //.def("__rmul__", {}(const ScalarExpr& e1, const ScalarVar& e2);
-      CHECK(Approx(AnalyticFunction({x1}, x1*cos(x1)).eval(m, codac2::pi)) == -1*codac2::pi);
+      CHECK(Approx(AnalyticFunction({x1}, x1*cos(x1)).eval(m, PI)) == -1*PI);
       //.def("__mul__",  {}(const ScalarExpr& e1, const Interval& e2);
-      CHECK(Approx(AnalyticFunction({x1}, cos(x1)*Interval(10.)).eval(m, codac2::pi),1e-9) == -Interval(10));
+      CHECK(Approx(AnalyticFunction({x1}, cos(x1)*Interval(10.)).eval(m, PI),1e-9) == -Interval(10));
       //.def("__rmul__", {}(const ScalarExpr& e1, const Interval& e2);
-      CHECK(Approx(AnalyticFunction({x1}, Interval(10.)*cos(x1)).eval(m, codac2::pi),1e-9) == -10);
+      CHECK(Approx(AnalyticFunction({x1}, Interval(10.)*cos(x1)).eval(m, PI),1e-9) == -10);
       //.def("__mul__",  {}(const ScalarExpr& e1, const VectorExpr& e2);
-      CHECK(Approx(AnalyticFunction({v1,v2}, cos(v1[0])*(v2+v2)).eval(m, Vector({codac2::pi,-1}),Vector({2,3})),1e-9) == IntervalVector({{-4},{-6}}));
+      CHECK(Approx(AnalyticFunction({v1,v2}, cos(v1[0])*(v2+v2)).eval(m, Vector({PI,-1}),Vector({2,3})),1e-9) == IntervalVector({-4,-6}));
       //.def("__truediv__",  {}(const ScalarExpr& e1, const ScalarExpr& e2);
       CHECK(Approx(AnalyticFunction({x1}, cos(x1)/cos(x1)).eval(m, Interval(0.))) == Interval(1.));
       //.def("__truediv__",  {}(const ScalarExpr& e1, const ScalarVar& e2);
-      CHECK(Approx(AnalyticFunction({x1}, cos(x1)/x1).eval(m, codac2::pi)) == -1/codac2::pi);
+      CHECK(Approx(AnalyticFunction({x1}, cos(x1)/x1).eval(m, PI)) == -1/PI);
       //.def("__rtruediv__", {}(const ScalarExpr& e1, const ScalarVar& e2);
-      CHECK(Approx(AnalyticFunction({x1}, x1/cos(x1)).eval(m, codac2::pi)) == -codac2::pi);
+      CHECK(Approx(AnalyticFunction({x1}, x1/cos(x1)).eval(m, PI)) == -PI);
       //.def("__truediv__",  {}(const ScalarExpr& e1, const Interval& e2);
-      CHECK(Approx(AnalyticFunction({x1}, cos(x1)/Interval(4.)).eval(m, codac2::pi)) == -1./4);
+      CHECK(Approx(AnalyticFunction({x1}, cos(x1)/Interval(4.)).eval(m, PI)) == -1./4);
       //.def("__rtruediv__", {}(const ScalarExpr& e1, const Interval& e2);
-      CHECK(Approx(AnalyticFunction({x1}, 4./cos(x1)).eval(m, codac2::pi)) == -4);
+      CHECK(Approx(AnalyticFunction({x1}, 4./cos(x1)).eval(m, PI)) == -4);
 
       // ======> VectorExpr
 
       //.def("__pos__",  {}(const VectorExpr& e1);
       CHECK(Approx(AnalyticFunction({v1}, +(v1+v1)).eval(m, IntervalVector({{0.},{-oo,5}}))) == 
-        (m == EvaluationMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,10}})));
+        (m == EvalMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,10}})));
       //.def(py::self + py::self);
       CHECK(Approx(AnalyticFunction({v1}, v1+v1).eval(m, IntervalVector({{0.},{-oo,5}}))) == 
-        (m == EvaluationMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,10}})));
+        (m == EvalMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,10}})));
       //.def("__radd__", {}(const VectorExpr& e1, const VectorVar& e2);
       CHECK(Approx(AnalyticFunction({v1}, (v1+v1)+v1).eval(m, IntervalVector({{0.},{-oo,5}}))) == 
-        (m == EvaluationMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,15}})));
+        (m == EvalMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,15}})));
       //.def("__radd__", {}(const VectorExpr& e1, const IntervalVector& e2);
       CHECK(Approx(AnalyticFunction({v1}, v1+(v1+v1)).eval(m, IntervalVector({{0.},{-oo,5}}))) == 
-        (m == EvaluationMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,15}})));
+        (m == EvalMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,15}})));
       //.def(- py::self);
       CHECK(Approx(AnalyticFunction({v1}, -(v1+v1)).eval(m, IntervalVector({{0.},{-oo,5}}))) == 
-        (m == EvaluationMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-10,oo}})));
+        (m == EvalMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-10,oo}})));
       //.def(py::self - py::self);
-      CHECK(Approx(AnalyticFunction({v1,v2}, (v1-v2)).eval(m, IntervalVector({{2},{3}}),Vector({1,5}))) == IntervalVector({{1},{-2}}));
+      CHECK(Approx(AnalyticFunction({v1,v2}, (v1-v2)).eval(m, IntervalVector({2,3}),Vector({1,5}))) == IntervalVector({1,-2}));
       //.def("__sub__",  {}(const VectorExpr& e1, const VectorVar& e2);
-      CHECK(Approx(AnalyticFunction({v1,v2}, (v1-v2)-v1).eval(m, IntervalVector({{2},{3}}),Vector({1,5}))) == IntervalVector({{-1},{-5}}));
+      CHECK(Approx(AnalyticFunction({v1,v2}, (v1-v2)-v1).eval(m, IntervalVector({2,3}),Vector({1,5}))) == IntervalVector({-1,-5}));
       //.def("__rsub__", {}(const VectorExpr& e1, const VectorVar& e2);
-      CHECK(Approx(AnalyticFunction({v1,v2}, v2-(v1-v2)).eval(m, IntervalVector({{2},{3}}),Vector({1,5}))) == IntervalVector({{0},{7}}));
+      CHECK(Approx(AnalyticFunction({v1,v2}, v2-(v1-v2)).eval(m, IntervalVector({2,3}),Vector({1,5}))) == IntervalVector({0,7}));
       //.def("__sub__",  {}(const VectorExpr& e1, const IntervalVector& e2);
-      CHECK(Approx(AnalyticFunction({v1,v2}, (v1-v2)-IntervalVector({{2},{3}})).eval(m, IntervalVector({{2},{3}}),Vector({1,5}))) == IntervalVector({{-1},{-5}}));
+      CHECK(Approx(AnalyticFunction({v1,v2}, (v1-v2)-IntervalVector({2,3})).eval(m, IntervalVector({2,3}),Vector({1,5}))) == IntervalVector({-1,-5}));
       //.def("__rsub__", {}(const VectorExpr& e1, const IntervalVector& e2);
-      CHECK(Approx(AnalyticFunction({v1,v2}, Vector({1,5})-(v1-v2)).eval(m, IntervalVector({{2},{3}}),Vector({1,5}))) == IntervalVector({{0},{7}}));
+      CHECK(Approx(AnalyticFunction({v1,v2}, Vector({1,5})-(v1-v2)).eval(m, IntervalVector({2,3}),Vector({1,5}))) == IntervalVector({0,7}));
       //.def("__rmul__", {}(const VectorExpr& e1, const ScalarExpr& e2);
-      CHECK(Approx(AnalyticFunction({v1,v2}, cos(v1[0])*(v2+v2)).eval(m, Vector({codac2::pi,-1}),Vector({2,3})),1e-9) == IntervalVector({{-4},{-6}}));
+      CHECK(Approx(AnalyticFunction({v1,v2}, cos(v1[0])*(v2+v2)).eval(m, Vector({PI,-1}),Vector({2,3})),1e-9) == IntervalVector({-4,-6}));
       //.def("__rmul__", {}(const VectorExpr& e1, const ScalarVar& e2);
-      CHECK(Approx(AnalyticFunction({x1}, x1*vec(3*x1,2*x1)).eval(m, 3),1e-9) == IntervalVector({{27},{18}}));
+      CHECK(Approx(AnalyticFunction({x1}, x1*vec(3*x1,2*x1)).eval(m, 3),1e-9) == IntervalVector({27,18}));
     }
   }
 
+  {
+    VectorVar x(2);
+    AnalyticFunction f({x}, x[0]*(x[0]+x[1])+sqr(x[1]));
+    CHECK(f.diff(Vector({2,3}))(0,0) == 7);
+    CHECK(f.diff(Vector({2,3}))(0,1) == 8);
+  }
+
+  { // int values
+    ScalarVar x, y;
+    AnalyticFunction f({x,y}, x*(x+y)+sqr(y));
+    CHECK(f.diff(2,3)(0,0) == 7);
+    CHECK(f.diff(2,3)(0,1) == 8);
+  }
+
+  { // double values
+    ScalarVar x, y;
+    AnalyticFunction f({x,y}, x*(x+y)+sqr(y));
+    CHECK(f.diff(2.,3.)(0,0) == 7);
+    CHECK(f.diff(2.,3.)(0,1) == 8);
+  }
+
+  { // Interval values
+    ScalarVar x, y;
+    AnalyticFunction f({x,y}, x*(x+y)+sqr(y));
+    CHECK(f.diff(Interval(2.),Interval(3.))(0,0) == 7);
+    CHECK(f.diff(Interval(2.),Interval(3.))(0,1) == 8);
+  }
+
+  {
+    ScalarVar x;
+    AnalyticFunction f({x}, x-x);
+    CHECK(f.eval(EvalMode::NATURAL,Interval(-1,1)) == Interval(-2,2));
+    CHECK(f.eval(EvalMode::CENTERED,Interval(-1,1)) == Interval(0));
+    CHECK(f.eval(Interval(-1,1)) == Interval(0));
+  }
+
+  {
+    // Scalar outputs
     {
-      VectorVar x(2);
-      AnalyticFunction f({x}, x[0]*(x[0]+x[1])+sqr(x[1]));
-      CHECK(f.diff(Vector({2,3}))(0,0) == 7);
-      CHECK(f.diff(Vector({2,3}))(0,1) == 8);
-    }
+      AnalyticFunction f1({}, (int)3);
+      CHECK(f1.eval() == Interval(3));
 
-    { // int values
-      ScalarVar x, y;
-      AnalyticFunction f({x,y}, x*(x+y)+sqr(y));
-      CHECK(f.diff(2,3)(0,0) == 7);
-      CHECK(f.diff(2,3)(0,1) == 8);
-    }
+      AnalyticFunction f2({}, (double)3.);
+      CHECK(f2.eval() == Interval(3));
 
-    { // double values
-      ScalarVar x, y;
-      AnalyticFunction f({x,y}, x*(x+y)+sqr(y));
-      CHECK(f.diff(2.,3.)(0,0) == 7);
-      CHECK(f.diff(2.,3.)(0,1) == 8);
-    }
+      AnalyticFunction f3({}, Interval(3.));
+      CHECK(f3.eval() == Interval(3));
 
-    { // Interval values
-      ScalarVar x, y;
-      AnalyticFunction f({x,y}, x*(x+y)+sqr(y));
-      CHECK(f.diff(Interval(2.),Interval(3.))(0,0) == 7);
-      CHECK(f.diff(Interval(2.),Interval(3.))(0,1) == 8);
-    }
-
-    {
       ScalarVar x;
-      AnalyticFunction f({x}, x-x);
-      CHECK(f.natural_eval(Interval(-1,1)) == Interval(-2,2));
-      CHECK(f.centered_eval(Interval(-1,1)) == Interval(0));
-      CHECK(f.eval(Interval(-1,1)) == Interval(0));
+      AnalyticFunction f4({x}, x*x);
+      CHECK(f4.eval(2.) == Interval(4));
     }
 
-    // Subvector on variables
+    // Vectorial outputs
     {
-      VectorVar p(2);
-      VectorVar x(4);
-      AnalyticFunction f({p}, p[0]*p[1]);
-      AnalyticFunction g({x}, f(x.subvector(0,1)) + f(x.subvector(2,3)));
+      AnalyticFunction f1({}, { (int)3 });
+      CHECK(f1.eval() == IntervalVector({3}));
 
-      IntervalVector a(4);
+      AnalyticFunction f2({}, { (double)3. });
+      CHECK(f2.eval() == IntervalVector({3}));
 
-      a = IntervalVector({{1},{2},{3},{4}});
-      CHECK(g.natural_eval(a) == 14);
-      CHECK(g.centered_eval(a) == 14);
-      CHECK(g.eval(a) == 14);
+      AnalyticFunction f3({}, { Interval(3.) });
+      CHECK(f3.eval() == IntervalVector({3}));
 
-      a = IntervalVector({{0},{2},{5},{4}});
-      CHECK(g.natural_eval(a) == 20);
-      CHECK(g.centered_eval(a) == 20);
-      CHECK(g.eval(a) == 20);
+      ScalarVar x;
+      AnalyticFunction f4({x}, { x*x });
+      CHECK(f4.eval(2.) == IntervalVector({4}));
+
+      AnalyticFunction f_2args({x}, { x*x,x*x });
+      CHECK(f_2args.eval(1.) == IntervalVector::constant(2,{1}));
+      AnalyticFunction f_3args({x}, { x,x*x,1 });
+      CHECK(f_3args.eval(1.) == IntervalVector::constant(3,{1}));
+      AnalyticFunction f_4args({x}, { x,x*x,1,x });
+      CHECK(f_4args.eval(1.) == IntervalVector::constant(4,{1}));
+      AnalyticFunction f_5args({x}, { x,x*x,1,x,x });
+      CHECK(f_5args.eval(1.) == IntervalVector::constant(5,{1}));
+      AnalyticFunction f_6args({x}, { x,x*x,1,x,x,1*x });
+      CHECK(f_6args.eval(1.) == IntervalVector::constant(6,{1}));
+      AnalyticFunction f_7args({x}, { x,x*x,1,x,x,1*x,x*x });
+      CHECK(f_7args.eval(1.) == IntervalVector::constant(7,{1}));
+      AnalyticFunction f_8args({x}, { x,x*x,1,x,x,1*x,x*x,1 });
+      CHECK(f_8args.eval(1.) == IntervalVector::constant(8,{1}));
+      AnalyticFunction f_9args({x}, { x,x*x,1,x,x,1*x,x*x,1,x });
+      CHECK(f_9args.eval(1.) == IntervalVector::constant(9,{1}));
+      AnalyticFunction f_10args({x}, { x,x*x,1,x,x,1*x,x*x,1,x,1*x });
+      CHECK(f_10args.eval(1.) == IntervalVector::constant(10,{1}));
     }
+  }
+
+  // Subvector on variables
+  {
+    VectorVar p(2);
+    VectorVar x(4);
+    AnalyticFunction f({p}, p[0]*p[1]);
+    AnalyticFunction g({x}, f(x.subvector(0,1)) + f(x.subvector(2,3)));
+
+    IntervalVector a(4);
+
+    a = IntervalVector({1,2,3,4});
+    CHECK(g.eval(EvalMode::NATURAL,a) == 14);
+    CHECK(g.eval(EvalMode::CENTERED,a) == 14);
+    CHECK(g.eval(a) == 14);
+
+    a = IntervalVector({0,2,5,4});
+    CHECK(g.eval(EvalMode::NATURAL,a) == 20);
+    CHECK(g.eval(EvalMode::CENTERED,a) == 20);
+    CHECK(g.eval(a) == 20);
+  }
+
+  // Sign, floor, ceil, min, max
+  {
+    ScalarVar x1, x2;
+
+    {
+      AnalyticFunction f({x1,x2}, 2*max(x1,x2+1));
+      CHECK(f.eval(0.,1.) == 4.);
+      CHECK(f.eval(2.,1.) == 4.);
+      CHECK(f.eval(3.,1.) == 6.);
+    }
+
+    {
+      AnalyticFunction f({x1,x2}, 2*min(x1,x2+1));
+      CHECK(f.eval(0.,1.) == 0.);
+      CHECK(f.eval(2.,1.) == 4.);
+      CHECK(f.eval(3.,1.) == 4.);
+    }
+
+    {
+      AnalyticFunction f({x1}, 2*sign(x1+1));
+      CHECK(f.eval(0.) == 2.);
+      CHECK(sign(Interval::zero()) == Interval(-1,1));
+      CHECK(sign(Interval(-0,0)) == Interval(-1,1));
+      CHECK(f.eval(-1.) == Interval(-2,2));
+      CHECK(f.eval(-2.) == -2.);
+    }
+
+    {
+      AnalyticFunction f({x1}, 2*floor(x1));
+      CHECK(f.eval(0.) == 0.);
+      CHECK(f.eval(1.5) == 2.);
+      CHECK(f.eval(-1.5) == -4.);
+    }
+
+    {
+      AnalyticFunction f({x1}, 2*ceil(x1));
+      CHECK(f.eval(0.) == 0.);
+      CHECK(f.eval(1.5) == 4.);
+      CHECK(f.eval(-1.5) == -2.);
+    }
+  }
 }

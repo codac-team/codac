@@ -20,14 +20,14 @@ StyleProperties::StyleProperties(const Color& stroke_color_)
 { }
 
 StyleProperties::StyleProperties(std::initializer_list<Color> colors)
-  : stroke_color(*colors.begin()), fill_color(*std::prev(colors.end()))
+  : stroke_color(*colors.begin())
 {
   assert(colors.size() <= 2);
+  if (colors.size() == 1)
+    fill_color = Color::none();
+  else
+    fill_color = *std::prev(colors.end());
 }
-
-StyleProperties::StyleProperties(const string& vibes_style)
-  : stroke_color(Color::green()), fill_color(Color::none())
-{ }
 
 StyleProperties StyleProperties::inside()
 {

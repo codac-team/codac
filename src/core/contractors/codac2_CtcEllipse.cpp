@@ -62,7 +62,7 @@ void CtcEllipse0::contract(IntervalVector& x) const
   }
 }
 
-CtcEllipse::CtcEllipse(const Vector& q)
+CtcEllipse::CtcEllipse(const IntervalVector& q)
   : Ctc<CtcEllipse,IntervalVector>(2), _q(q)
 {
   assert_release(q.size() == 6);
@@ -76,7 +76,7 @@ void CtcEllipse::contract(IntervalVector& x) const
     | contract_ith({1,-2}, x) | contract_ith({-1, 2}, x);
 }
 
-const Vector& CtcEllipse::q() const
+const IntervalVector& CtcEllipse::q() const
 {
   return _q;
 }

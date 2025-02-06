@@ -1,0 +1,72 @@
+# Configuration file for the Sphinx documentation builder.
+#
+# For the full list of built-in configuration values, see the documentation:
+# https://www.sphinx-doc.org/en/master/usage/configuration.html
+
+# -- Project information -----------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+
+project = 'Codac'
+copyright = 'Codac Team'
+author = 'Simon Rohou, Benoît Desrochers, Fabrice Le Bars and others'
+version = u'${PROJECT_VERSION}'
+
+# -- General configuration ---------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+
+extensions = [
+    'sphinx_rtd_theme',
+    'sphinx_math_dollar',
+    'sphinx.ext.mathjax',
+    'sphinx_tabs.tabs',
+]
+
+templates_path = ['_templates']
+exclude_patterns = []
+
+
+# -- Options for HTML output -------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+
+html_static_path = ['_static']
+html_theme = "furo"
+html_logo = "_static/logos/logo_codac.svg"
+html_favicon = "_static/logos/logo_codac.ico"
+
+# These paths are either relative to html_static_path
+# or fully qualified paths (eg. https://...)
+html_css_files = [
+    'css/custom.css',
+]
+
+html_theme_options = {
+
+    "sidebar_hide_name": True,
+
+    "light_css_variables": {
+        "color-brand-primary": "white",
+        "color-brand-content": "#1F506B",
+
+        "color-sidebar-background": "#3281AC",
+        "color-sidebar-caption-text": "white",
+        "color-sidebar-item-background--current": "var(--color-brand-content)",
+        "color-sidebar-item-background--hover": "#3B9ACC",
+        "color-sidebar-item-expander-background--hover": "#3B9ACC",
+        "color-sidebar-link-text": "white",
+        "sidebar-caption-font-size": "120%",
+
+        "color-link--visited": "var(--color-link)",
+
+        "header-height": "2rem",
+    },
+
+    "announcement": "You are currently reading the new Codac documentation, which is currently in preparation.",
+}
+
+# See https://www.sympy.org/sphinx-math-dollar/
+mathjax3_config = {
+  "tex": {
+    "inlineMath": [['\\(', '\\)']],
+    "displayMath": [["\\[", "\\]"]],
+  }
+}

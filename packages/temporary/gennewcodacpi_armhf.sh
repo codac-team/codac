@@ -23,11 +23,12 @@ else \
  PIP_OPTIONS= ; \
  #python3 -m pip install \$PIP_OPTIONS --upgrade \"auditwheel==5.1.2\" ; \\
 fi && \
-sudo apt-get -q update --allow-releaseinfo-change ; sudo apt-get -y install libeigen3-dev python3-dev patchelf || true && \
+#sudo apt-get -q update --allow-releaseinfo-change ; sudo apt-get -y install libeigen3-dev python3-dev patchelf || true && \\
+sudo apt-get -q update --allow-releaseinfo-change ; sudo apt-get -y install python3-dev patchelf || true && \
 python3 -m pip install \$PIP_OPTIONS --upgrade patchelf --prefer-binary --extra-index-url https://www.piwheels.org/simple && \
 python3 -m pip install \$PIP_OPTIONS --upgrade auditwheel --prefer-binary --extra-index-url https://www.piwheels.org/simple && \
-# wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex_armhf_\$(lsb_release -cs).zip --no-check-certificate -nv is causing illegal instruction on a Mac M1... \\
-curl -L -O https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex_armhf_\$(lsb_release -cs).zip --insecure && \
+# wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20241117/ibex_armhf_\$(lsb_release -cs).zip --no-check-certificate -nv is causing illegal instruction on a Mac M1... \\
+curl -L -O https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20241117/ibex_armhf_\$(lsb_release -cs).zip --insecure && \
 unzip -q ibex_armhf_\$(lsb_release -cs).zip && \
 rm -Rf ibex_armhf_\$(lsb_release -cs).zip && \
 sudo cp -Rf ibex/* /usr/local/ && \

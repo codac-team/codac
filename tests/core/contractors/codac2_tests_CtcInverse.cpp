@@ -9,9 +9,10 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_CtcInverse.h>
-#include <codac2_analytic_operations.h>
 #include <codac2_Figure2D.h>
 #include <codac2_Approx.h>
+#include <codac2_pave.h>
+#include <codac2_Subpaving.h>
 
 using namespace std;
 using namespace codac2;
@@ -81,9 +82,9 @@ TEST_CASE("CtcInverse")
     c.contract(b);
     CHECK(b == IntervalVector({{1,oo},{1,oo}}));
 
-    b = IntervalVector({{10},{10}});
+    b = IntervalVector({10,10});
     c.contract(b);
-    CHECK(b == IntervalVector({{10},{10}}));
+    CHECK(b == IntervalVector({10,10}));
 
     b = IntervalVector({{1,5},{8,9}});
     c.contract(b);
@@ -93,7 +94,7 @@ TEST_CASE("CtcInverse")
   {
     VectorVar x(2);
     AnalyticFunction f { {x}, vec(x[0]-x[1]) };
-    CtcInverse_<IntervalVector> c(f, {{0}});
+    CtcInverse_<IntervalVector> c(f, {0});
 
     //pave(IntervalVector({{-10,10},{-10,10}}), c, 0.1);
 
@@ -110,9 +111,9 @@ TEST_CASE("CtcInverse")
     c.contract(b);
     CHECK(b == IntervalVector({{1,oo},{1,oo}}));
 
-    b = IntervalVector({{10},{10}});
+    b = IntervalVector({10,10});
     c.contract(b);
-    CHECK(b == IntervalVector({{10},{10}}));
+    CHECK(b == IntervalVector({10,10}));
 
     b = IntervalVector({{1,5},{8,9}});
     c.contract(b);
@@ -166,4 +167,38 @@ TEST_CASE("CtcInverse")
       //DefaultView::draw_box(b,Color::blue());
     }
   }
+}
+
+TEST_CASE("ParabolasExample")
+{
+  ScalarVar u;
+  ScalarVar v;
+  VectorVar a(4);
+  VectorVar a0(3); VectorVar a1(3); VectorVar a2(3);
+  VectorVar b0(3); VectorVar b1(3); VectorVar b2(3);
+
+  AnalyticFunction b({u,a0,a1,a2}, sqr(1-u)*a0+2*u*(1-u)*a1+sqr(u)*a2);
+  AnalyticFunction f({u,v,a0,a1,a2,b0,b1,b2}, (1-v)*b(u,a0,a1,a2)+v*b(u,b0,b1,b2));
+
+  AnalyticFunction h({a},
+     f(a[0],a[1],
+       Vector({0,0,0}),Vector({1,0,1}),Vector({2,0,0}),
+       Vector({0,2,0}),Vector({1,2,1}),Vector({2,2,0}))
+    -f(a[2],a[3],
+      Vector({0,0,0.55}),Vector({0,1,-0.45}),Vector({0,2,0.55}),
+      Vector({2,0,0.55}),Vector({2,1,-0.45}),Vector({2,2,0.55}))
+  );
+
+  CtcInverse_ ctc(h, IntervalVector::zero(3));
+  IntervalVector x0 {{0,1},{0,1},{0,0.2},{0,0.2}};
+  //draw_while_paving(x0, ctc, 0.001);
+  auto p = pave(x0, ctc, 0.01);
+  auto cs = p.connected_subsets();
+  CHECK(cs.size() == 1);
+  CHECK(Approx(cs.begin()->box(),1e-4) == IntervalVector({
+    {0.13244,0.201099},
+    {0.131459,0.202575},
+    {0.132274,0.200001},
+    {0.132283,0.200001}
+  }));
 }

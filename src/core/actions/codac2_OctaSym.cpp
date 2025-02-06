@@ -15,22 +15,12 @@
 using namespace std;
 using namespace codac2;
 
-Interval sign(int a)
-{
-  return (a > 0) ? 1 : ((a < 0) ? -1 : 0);
-}
-
-int isign(int a)
-{
-  return (a > 0) ? 1 : ((a < 0) ? -1 : 0);
-}
-
 OctaSym::OctaSym(const vector<int>& s)
   : std::vector<int>(s)
 {
-  for(const auto& i : s)
+  for([[maybe_unused]] const auto& i : s)
   {
-    assert_release((size_t)std::abs(i) > 0 && (size_t)std::abs(i) <= size());
+    assert_release(std::abs(i) > 0 && std::abs(i) <= size());
   }
 }
 
@@ -51,15 +41,6 @@ OctaSym OctaSym::operator*(const OctaSym& s) const
   assert_release(size() == s.size());
   OctaSym a(*this);
   for(size_t i = 0 ; i < a.size() ; i++)
-    a[i] = isign(s[i])*(*this)[std::abs((int)s[i])-1];
+    a[i] = _sign(s[i])*(*this)[std::abs((int)s[i])-1];
   return a;
-}
-
-IntervalVector OctaSym::operator()(const IntervalVector& x) const
-{
-  assert_release((size_t)x.size() == size());
-  IntervalVector x_(size());
-  for(size_t i = 0 ; i < size() ; i++)
-    x_[i] = sign((*this)[i])*x[std::abs((*this)[i])-1];
-  return x_;
 }

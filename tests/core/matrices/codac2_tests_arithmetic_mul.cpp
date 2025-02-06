@@ -8,9 +8,10 @@
  */
 
 #include <catch2/catch_test_macros.hpp>
+#include <codac2_Vector.h>
+#include <codac2_Matrix.h>
 #include <codac2_IntervalVector.h>
 #include <codac2_IntervalMatrix.h>
-#include <codac2_arithmetic_mul.h>
 
 using namespace std;
 using namespace codac2;
@@ -65,19 +66,39 @@ TEST_CASE("arithmetic mul")
 
   // Matrix operator*(const M& x1, const M_& x2)
   CHECK(Matrix({{1,2},{3,4}})*Matrix({{5,6},{7,8}}) == Matrix({{19,22},{43,50}}));
-  CHECK(Matrix({{1,2},{3,4}}).block(0,0,2,2)*Matrix({{5,6},{7,8}}) == Matrix({{19,22},{43,50}}));
-  CHECK(Matrix({{1,2},{3,4}})*Matrix({{5,6},{7,8}}).block(0,0,2,2) == Matrix({{19,22},{43,50}}));
-  CHECK(Matrix({{1,2},{3,4}}).block(0,0,2,2)*Matrix({{5,6},{7,8}}).block(0,0,2,2) == Matrix({{19,22},{43,50}}));
+  CHECK(
+    Matrix( // <--- this explicit cast should be removed
+    Matrix({{1,2},{3,4}}).block(0,0,2,2))*Matrix({{5,6},{7,8}}) == Matrix({{19,22},{43,50}}));
+  CHECK(Matrix({{1,2},{3,4}})*
+    Matrix( // <--- this explicit cast should be removed
+    Matrix({{5,6},{7,8}}).block(0,0,2,2)) == Matrix({{19,22},{43,50}}));
+  CHECK(
+    Matrix( // <--- this explicit cast should be removed
+    Matrix({{1,2},{3,4}}).block(0,0,2,2))*
+    Matrix( // <--- this explicit cast should be removed
+    Matrix({{5,6},{7,8}}).block(0,0,2,2)) == Matrix({{19,22},{43,50}}));
 
   // IntervalVector operator*(const M& x1, const IntervalVector& x2)
   CHECK(Matrix({{1,2},{3,4}})*IntervalVector({5,6}) == IntervalVector({17,39}));
-  CHECK(Matrix({{1,2},{3,4}}).block(0,0,2,2)*IntervalVector({5,6}) == IntervalVector({17,39}));
+  CHECK(
+    Matrix( // <--- this explicit cast should be removed
+    Matrix({{1,2},{3,4}}).block(0,0,2,2))*IntervalVector({5,6}) == IntervalVector({17,39}));
 
   // IntervalMatrix operator*(const M& x1, const IM& x2)
-  CHECK(Matrix({{1,2},{3,4}})*IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}) == IntervalMatrix({{{19,22},{22,25}},{{43,50},{50,57}}}));
-  CHECK(Matrix({{1,2},{3,4}}).block(0,0,2,2)*IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}) == IntervalMatrix({{{19,22},{22,25}},{{43,50},{50,57}}}));
-  CHECK(Matrix({{1,2},{3,4}})*IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}).block(0,0,2,2) == IntervalMatrix({{{19,22},{22,25}},{{43,50},{50,57}}}));
-  CHECK(Matrix({{1,2},{3,4}}).block(0,0,2,2)*IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}).block(0,0,2,2) == IntervalMatrix({{{19,22},{22,25}},{{43,50},{50,57}}}));
+  CHECK(IntervalMatrix( // <--- this explicit cast should be removed
+    Matrix({{1,2},{3,4}}))*IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}) == IntervalMatrix({{{19,22},{22,25}},{{43,50},{50,57}}}));
+  CHECK(
+    IntervalMatrix( // <--- this explicit cast should be removed
+    Matrix({{1,2},{3,4}}).block(0,0,2,2))*IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}) == IntervalMatrix({{{19,22},{22,25}},{{43,50},{50,57}}}));
+  CHECK(IntervalMatrix( // <--- this explicit cast should be removed
+    Matrix({{1,2},{3,4}}))*
+    IntervalMatrix( // <--- this explicit cast should be removed
+    IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}).block(0,0,2,2)) == IntervalMatrix({{{19,22},{22,25}},{{43,50},{50,57}}}));
+  CHECK(
+    IntervalMatrix( // <--- this explicit cast should be removed
+    Matrix({{1,2},{3,4}}).block(0,0,2,2))*
+    IntervalMatrix( // <--- this explicit cast should be removed
+    IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}).block(0,0,2,2)) == IntervalMatrix({{{19,22},{22,25}},{{43,50},{50,57}}}));
 
   // inline IntervalVector operator*(const IntervalVector& x1, double x2)
   CHECK(IntervalVector({{-1,1},{-2,2}})*2. == IntervalVector({{-2,2},{-4,4}}));
@@ -94,14 +115,32 @@ TEST_CASE("arithmetic mul")
   CHECK(IntervalMatrix({{{1,2},{2,3}},{{3,4},{4,5}}}).block(0,0,2,2)*Interval(-1,1) == IntervalMatrix({{{-2,2},{-3,3}},{{-4,4},{-5,5}}}));
 
   // IntervalVector operator*(const IM& x1, const Vector& x2)
-  CHECK(IntervalMatrix({{{1,2},{2,3}},{{3,4},{4,5}}})*Vector({5,6}) == IntervalVector({{17,28},{39,50}}));
-  CHECK(IntervalMatrix({{{1,2},{2,3}},{{3,4},{4,5}}}).block(0,0,2,2)*Vector({5,6}) == IntervalVector({{17,28},{39,50}}));
+  CHECK(IntervalMatrix({{{1,2},{2,3}},{{3,4},{4,5}}})*Vector({5,6})
+    .template cast<Interval>() // <--- this explicit cast should be removed
+     == IntervalVector({{17,28},{39,50}}));
+  CHECK(
+    IntervalMatrix( // <--- this explicit cast should be removed
+    IntervalMatrix({{{1,2},{2,3}},{{3,4},{4,5}}}).block(0,0,2,2))*Vector({5,6})
+    .template cast<Interval>() // <--- this explicit cast should be removed
+     == IntervalVector({{17,28},{39,50}}));
 
   // IntervalMatrix operator*(const IM& x1, const M& x2)
-  CHECK(IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}})*Matrix({{1,2},{3,4}}) == IntervalMatrix({{{23,27},{34,40}},{{31,35},{46,52}}}));
-  CHECK(IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}).block(0,0,2,2)*Matrix({{1,2},{3,4}}) == IntervalMatrix({{{23,27},{34,40}},{{31,35},{46,52}}}));
-  CHECK(IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}})*Matrix({{1,2},{3,4}}).block(0,0,2,2) == IntervalMatrix({{{23,27},{34,40}},{{31,35},{46,52}}}));
-  CHECK(IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}).block(0,0,2,2)*Matrix({{1,2},{3,4}}).block(0,0,2,2) == IntervalMatrix({{{23,27},{34,40}},{{31,35},{46,52}}}));
+  CHECK(IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}})*
+    IntervalMatrix( // <--- this explicit cast should be removed
+    Matrix({{1,2},{3,4}})) == IntervalMatrix({{{23,27},{34,40}},{{31,35},{46,52}}}));
+  CHECK(
+    IntervalMatrix( // <--- this explicit cast should be removed
+    IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}).block(0,0,2,2))*
+    IntervalMatrix( // <--- this explicit cast should be removed
+    Matrix({{1,2},{3,4}})) == IntervalMatrix({{{23,27},{34,40}},{{31,35},{46,52}}}));
+  CHECK(IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}})*
+    IntervalMatrix( // <--- this explicit cast should be removed
+    Matrix({{1,2},{3,4}}).block(0,0,2,2)) == IntervalMatrix({{{23,27},{34,40}},{{31,35},{46,52}}}));
+  CHECK(
+    IntervalMatrix( // <--- this explicit cast should be removed
+    IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}).block(0,0,2,2))*
+    IntervalMatrix( // <--- this explicit cast should be removed
+    Matrix({{1,2},{3,4}}).block(0,0,2,2)) == IntervalMatrix({{{23,27},{34,40}},{{31,35},{46,52}}}));
 
   // IntervalVector operator*(const IM& x1, const IntervalVector& x2)
   CHECK(IntervalMatrix({{{1,2},{2,3}},{{3,4},{4,5}}})*IntervalVector({{5,6},{7,8}}) == IntervalVector({{19,36},{43,64}}));
@@ -109,7 +148,13 @@ TEST_CASE("arithmetic mul")
 
   // IntervalMatrix operator*(const IM& x1, const IM_& x2)
   CHECK(IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}})*IntervalMatrix({{{1,2},{2,3}},{{3,4},{4,5}}}) == IntervalMatrix({{{23,40},{34,53}},{{31,52},{46,69}}}));
-  CHECK(IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}).block(0,0,2,2)*IntervalMatrix({{{1,2},{2,3}},{{3,4},{4,5}}}) == IntervalMatrix({{{23,40},{34,53}},{{31,52},{46,69}}}));
-  CHECK(IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}})*IntervalMatrix({{{1,2},{2,3}},{{3,4},{4,5}}}).block(0,0,2,2) == IntervalMatrix({{{23,40},{34,53}},{{31,52},{46,69}}}));
-  CHECK(IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}).block(0,0,2,2)*IntervalMatrix({{{1,2},{2,3}},{{3,4},{4,5}}}).block(0,0,2,2) == IntervalMatrix({{{23,40},{34,53}},{{31,52},{46,69}}}));
+  CHECK(
+    IntervalMatrix( // <--- this explicit cast should be removed
+    IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}}).block(0,0,2,2))*IntervalMatrix({{{1,2},{2,3}},{{3,4},{4,5}}}) == IntervalMatrix({{{23,40},{34,53}},{{31,52},{46,69}}}));
+  CHECK(IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}})*
+    IntervalMatrix( // <--- this explicit cast should be removed
+    IntervalMatrix({{{1,2},{2,3}},{{3,4},{4,5}}}).block(0,0,2,2)) == IntervalMatrix({{{23,40},{34,53}},{{31,52},{46,69}}}));
+  CHECK(
+    IntervalMatrix( // <--- this explicit cast should be removed
+    IntervalMatrix({{{5,6},{6,7}},{{7,8},{8,9}}})).block(0,0,2,2)*IntervalMatrix({{{1,2},{2,3}},{{3,4},{4,5}}}).block(0,0,2,2) == IntervalMatrix({{{23,40},{34,53}},{{31,52},{46,69}}}));
 }

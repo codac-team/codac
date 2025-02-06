@@ -34,7 +34,7 @@ void export_OctaSym(py::module& m)
         {
           vector<int> v(l.size());
 
-          size_t i = 0;
+          Index i = 0;
           for(const auto& li : l)
           {
             matlab::test_integer(li);
@@ -57,7 +57,7 @@ void export_OctaSym(py::module& m)
     .def(py::self != py::self)
 
     .def("__call__", [](const OctaSym& a, const IntervalVector& x) { return a(x); },
-      INTERVALVECTOR_OCTASYM_OPERATORCALL_CONST_INTERVALVECTOR_REF_CONST,
+      MAT_TMINUSONE1_OCTASYM_OPERATORCALL_CONST_MAT_TMINUSONE1_REF_CONST,
       "x"_a)
 
     .def("__call__", [](const OctaSym& a, const pyCtcIntervalVector& c) { return CtcAction(c.copy(),a); },

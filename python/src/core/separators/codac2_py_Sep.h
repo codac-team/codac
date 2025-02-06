@@ -26,7 +26,7 @@ class pySep : public SepBase
 {
   public:
 
-    pySep(size_t_type n)
+    pySep(Index_type n)
       : SepBase(n)
     {
       matlab::test_integer(n);
@@ -63,6 +63,8 @@ class pySep : public SepBase
       assert(overload && "SepBase: copy method not found");
 
       auto obj = overload();
-      return std::shared_ptr<SepBase>(obj.cast<SepBase*>(), [](auto p) { /* no delete */ });
+      return std::shared_ptr<SepBase>(obj.cast<SepBase*>(),
+        []([[maybe_unused]] auto p)
+        { /* no delete */ });
     }
 };

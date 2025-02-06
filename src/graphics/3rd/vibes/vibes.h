@@ -7,7 +7,7 @@
 // This file is part of VIBes' C++ API
 //
 // Copyright (c) 2013-2015 Vincent Drevelle, Jeremy Nicola, Simon Rohou,
-//                         Benoit Desrochers
+//                         Benoit Desrochers, Maël Godard
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -221,8 +221,12 @@ namespace vibes {
   /// Start VIBes in file saving mode. All commands are saved to the specified file.
   void beginDrawing(const std::string &fileName);
 
+  /// Start VIBes in connected mode: connects to the VIBes viewer if needed.
+  void beginDrawingIfNeeded();
+
   /// Close connection to the viewer or the drawing file.
   void endDrawing();
+
 
   /** @} */ // end of group connection
 
@@ -460,7 +464,7 @@ namespace vibes {
     * \param params Optional attributes
     *
     * Draws a circle of radius \a r with center at (\a cx , \a cy ).
-    * This functions internally calls drawEllipse
+    * This functions internally calls \fn drawEllipse
     */
   inline void drawCircle(const double &cx, const double &cy, const double &r, Params params)
   {

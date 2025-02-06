@@ -10,15 +10,17 @@
 
 #pragma once
 
+#include <codac2_Index.h>
+
 #define FOR_MATLAB true
 
 namespace codac2
 {
   #if FOR_MATLAB
-    using size_t_type = double;
+    using Index_type = double;
     using int_type = double;
   #else
-    using size_t_type = size_t;
+    using Index_type = Index;
     using int_type = int;
   #endif
 
@@ -40,7 +42,7 @@ namespace codac2
     }
 
     template<typename I>
-    size_t input_index(const I& x)
+    Index input_index(const I& x)
     {
       if constexpr(FOR_MATLAB)
         return x-1;

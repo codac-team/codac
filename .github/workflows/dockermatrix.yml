@@ -14,7 +14,7 @@ on:
 
 jobs:
  dockermatrix:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.cfg.os }}
     defaults:
         run:
             shell: ${{ matrix.cfg.shell }}
@@ -22,22 +22,22 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
-            - { img: 'lebarsfa/manylinux2014_x86_64-for-codac', shell: bash, arch: x86_64, bitness: 64, runtime: manylinux2014, cmake_flags: '-fPIC', desc: 'CentOS manylinux2014 x86_64' }
-            - { img: 'lebarsfa/manylinux2014_aarch64-for-codac', shell: bash, arch: aarch64, bitness: 64, runtime: manylinux2014, cmake_flags: '-fPIC', docker_flags: '--platform linux/arm64', desc: 'CentOS manylinux2014 aarch64' }
-            - { img: 'lebarsfa/pi-64:noble-for-codac', shell: bash, arch: arm64, bitness: 64, runtime: noble, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 24.04 arm64' }
-            - { img: 'lebarsfa/pi-64:jammy-for-codac', shell: bash, arch: arm64, bitness: 64, runtime: jammy, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 22.04 arm64' }
+            - { img: 'lebarsfa/manylinux2014_x86_64-for-codac', os: ubuntu-latest, shell: bash, arch: x86_64, bitness: 64, runtime: manylinux2014, cmake_flags: '-fPIC', desc: 'CentOS manylinux2014 x86_64' }
+            - { img: 'lebarsfa/manylinux2014_aarch64-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: aarch64, bitness: 64, runtime: manylinux2014, cmake_flags: '-fPIC', docker_flags: '--platform linux/arm64', desc: 'CentOS manylinux2014 aarch64' }
+            - { img: 'lebarsfa/pi-64:noble-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: arm64, bitness: 64, runtime: noble, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 24.04 arm64' }
+            - { img: 'lebarsfa/pi-64:jammy-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: arm64, bitness: 64, runtime: jammy, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 22.04 arm64' }
             # Problems related to C++20?
-            #- { img: 'lebarsfa/pi-64:focal-for-codac', shell: bash, arch: arm64, bitness: 64, runtime: focal, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 20.04 arm64' }
-            - { img: 'lebarsfa/amd64:bookworm-for-codac', shell: bash, arch: amd64, bitness: 64, runtime: bookworm, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bookworm amd64' }
-            - { img: 'lebarsfa/pi-64:bookworm-for-codac', shell: bash, arch: arm64, bitness: 64, runtime: bookworm, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bookworm arm64' }
-            - { img: 'lebarsfa/pi:bookworm-for-codac', shell: bash, arch: armhf, bitness: 32, runtime: bookworm, cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Bookworm armv6hf' }
-            - { img: 'lebarsfa/amd64:bullseye-for-codac', shell: bash, arch: amd64, bitness: 64, runtime: bullseye, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bullseye amd64' }
-            - { img: 'lebarsfa/pi-64:bullseye-for-codac', shell: bash, arch: arm64, bitness: 64, runtime: bullseye, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bullseye arm64' }
-            - { img: 'lebarsfa/pi:bullseye-for-codac', shell: bash, arch: armhf, bitness: 32, runtime: bullseye, cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Bullseye armv6hf' }
+            #- { img: 'lebarsfa/pi-64:focal-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: arm64, bitness: 64, runtime: focal, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 20.04 arm64' }
+            - { img: 'lebarsfa/amd64:bookworm-for-codac', os: ubuntu-latest, shell: bash, arch: amd64, bitness: 64, runtime: bookworm, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bookworm amd64' }
+            - { img: 'lebarsfa/pi-64:bookworm-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: arm64, bitness: 64, runtime: bookworm, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bookworm arm64' }
+            - { img: 'lebarsfa/pi:bookworm-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: armhf, bitness: 32, runtime: bookworm, cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Bookworm armv6hf' }
+            - { img: 'lebarsfa/amd64:bullseye-for-codac', os: ubuntu-latest, shell: bash, arch: amd64, bitness: 64, runtime: bullseye, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bullseye amd64' }
+            - { img: 'lebarsfa/pi-64:bullseye-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: arm64, bitness: 64, runtime: bullseye, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bullseye arm64' }
+            - { img: 'lebarsfa/pi:bullseye-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: armhf, bitness: 32, runtime: bullseye, cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Bullseye armv6hf' }
             # Problems related to C++20?
-            #- { img: 'lebarsfa/amd64:buster-for-codac', shell: bash, arch: amd64, bitness: 64, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Debian Buster amd64' }
-            #- { img: 'lebarsfa/pi-64:buster-for-codac', shell: bash, arch: arm64, bitness: 64, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Debian Buster arm64' }
-            #- { img: 'lebarsfa/pi:buster-for-codac', shell: bash, arch: armhf, bitness: 32, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Buster armv6hf' }
+            #- { img: 'lebarsfa/amd64:buster-for-codac', os: ubuntu-latest, shell: bash, arch: amd64, bitness: 64, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Debian Buster amd64' }
+            #- { img: 'lebarsfa/pi-64:buster-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: arm64, bitness: 64, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Debian Buster arm64' }
+            #- { img: 'lebarsfa/pi:buster-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: armhf, bitness: 32, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Buster armv6hf' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v4
@@ -59,22 +59,23 @@ jobs:
     - run: echo "PACKAGE_VERSION=$SOFTWARE_VERSION-${DEBIAN_PACKAGE_REV}${{ matrix.cfg.runtime }}$PACKAGE_REV" >> $GITHUB_ENV
       shell: bash
       if: matrix.cfg.deb==true
-    - run: |
-        sudo apt-get -y install qemu binfmt-support qemu-user-static || true
-        #docker run --rm --privileged multiarch/qemu-user-static:register --reset
-        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-      if: (matrix.cfg.arch!='amd64')&&(matrix.cfg.arch!='x86_64')&&(matrix.cfg.arch!='i386')
+    #- run: |
+    #    sudo apt-get -y install qemu binfmt-support qemu-user-static || true
+    #    #docker run --rm --privileged multiarch/qemu-user-static:register --reset
+    #    docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    #  if: (matrix.cfg.arch!='amd64')&&(matrix.cfg.arch!='x86_64')&&(matrix.cfg.arch!='i386')
     - run: |
         docker run ${{ matrix.cfg.docker_flags }} -i -v "${PWD}/..:${PWD}/.." ${{ matrix.cfg.img }} /bin/bash -c "uname -a ; cat /etc/os-release ; lsb_release -a ; cd ${PWD} && pwd && \
         git config --global --add safe.directory ${PWD} && \
-        if [ ${{ matrix.cfg.deb }} = true ]; then \
+        if [ \"${{ matrix.cfg.deb }}\" = \"true\" ]; then \
         sudo sh -c 'echo \"deb [trusted=yes] https://packages.ensta-bretagne.fr/\$(if [ -z \"\$(. /etc/os-release && echo \$UBUNTU_CODENAME)\" ]; then echo debian/\$(. /etc/os-release && echo \$VERSION_CODENAME); else echo ubuntu/\$(. /etc/os-release && echo \$UBUNTU_CODENAME); fi) ./\" > /etc/apt/sources.list.d/ensta-bretagne.list' && \
-        sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev dpkg-dev || true && \
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb --no-check-certificate -nv && \
-        sudo dpkg -i libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb && \
-        rm -Rf libibex-dev-2.8.9.20240417-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb ; \
+        #sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev dpkg-dev || true && \\
+        sudo apt-get -q update ; sudo apt-get -y install dpkg-dev || true && \
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20241117/libibex-dev-2.8.9.20241117-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb --no-check-certificate -nv && \
+        sudo dpkg -i libibex-dev-2.8.9.20241117-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb && \
+        rm -Rf libibex-dev-2.8.9.20241117-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb ; \
         else \
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv && \
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20241117/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv && \
         unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip && \
         rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip && \
         sudo cp -Rf ibex/* /usr/ ; \
@@ -85,7 +86,7 @@ jobs:
         cd .. && \
         zip -q -r codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac && \
         mkdir -p codac_standalone/example ; cd codac_standalone && \
-        if [ ${{ matrix.cfg.deb }} = true ]; then mkdir -p ibex/include ; mkdir -p ibex/lib ; mkdir -p ibex/share ; mkdir -p ibex/bin ; cp -Rf /usr/include/ibex* ibex/include/ ; cp -Rf /usr/lib/*ibex* ibex/lib/ ; cp -Rf /usr/share/*ibex* ibex/share/ ; cp -Rf /usr/share/pkgconfig ibex/share/ ; cp -Rf /usr/bin/ibex* ibex/bin/ ; \
+        if [ \"${{ matrix.cfg.deb }}\" = \"true\" ]; then mkdir -p ibex/include ; mkdir -p ibex/lib ; mkdir -p ibex/share ; mkdir -p ibex/bin ; cp -Rf /usr/include/ibex* ibex/include/ ; cp -Rf /usr/lib/*ibex* ibex/lib/ ; cp -Rf /usr/share/*ibex* ibex/share/ ; cp -Rf /usr/share/pkgconfig ibex/share/ ; cp -Rf /usr/bin/ibex* ibex/bin/ ; \
         else cp -Rf ../ibex . ; \
         fi && \
         cp -Rf ../codac . ; cp -Rf ../tests/test_codac/* ./example/ ; cd .. ; zip -q -r codac_standalone_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_standalone && \
@@ -95,7 +96,7 @@ jobs:
         file ./${{ matrix.cfg.test_config }}my_project && \
         ./${{ matrix.cfg.test_config }}my_project && \
         cd ../.. && \
-        if [ ${{ matrix.cfg.deb }} = true ]; then \
+        if [ \"${{ matrix.cfg.deb }}\" = \"true\" ]; then \
         cd packages && \
         chmod +x ./genlibcodac-dev.sh && \
         ./genlibcodac-dev.sh \$(if [ -z \"\$(. /etc/os-release && echo \$UBUNTU_CODENAME)\" ]; then echo debian; else echo ubuntu; fi) ${{ matrix.cfg.runtime }} \$(dpkg --print-architecture) $SOFTWARE_VERSION $DEBIAN_PACKAGE_REV $PACKAGE_REV && \

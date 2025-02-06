@@ -17,7 +17,7 @@ namespace codac2
 {
   // PavingOut class
 
-    PavingOut::PavingOut(size_t n)
+    PavingOut::PavingOut(Index n)
       : Paving<PavingOut,IntervalVector>(n)
     {
       assert_release(n > 0);
@@ -77,7 +77,7 @@ namespace codac2
 
   // PavingInOut class
 
-    PavingInOut::PavingInOut(size_t n)
+    PavingInOut::PavingInOut(Index n)
       : Paving<PavingInOut,IntervalVector,IntervalVector>(n)
     {
       assert_release(n > 0);

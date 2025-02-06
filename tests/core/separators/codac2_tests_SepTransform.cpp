@@ -20,7 +20,7 @@ TEST_CASE("SepTransform")
 {
   {
     VectorVar x(2);
-    SepInverse<Interval> s1(AnalyticFunction({x}, sqr(x[0])+sqr(x[1])), Interval(0,1));
+    SepInverse s1(AnalyticFunction({x}, sqr(x[0])+sqr(x[1])), Interval(0,1));
     SepTransform s2(s1,
       AnalyticFunction({x}, vec(x[0]+2,x[1]+2)),
       AnalyticFunction({x}, vec(x[0]-2,x[1]-2)));

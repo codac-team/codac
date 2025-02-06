@@ -9,12 +9,15 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_Vector.h>
-#include <codac2_arithmetic.h>
 
 using namespace std;
 using namespace codac2;
 
 TEST_CASE("Vector")
 {
-  
+  size_t i = 0;
+  Vector a(3), b {{-1},{2},{-3}};
+  for(const auto& bi : b)
+    a[i++] = bi;
+  CHECK(a == b);
 }

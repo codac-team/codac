@@ -20,21 +20,25 @@
 
 namespace codac2
 {
-  template<typename Y>
   class SepInverse : public SepCtcPair
   {
     using X = IntervalVector;
 
     public:
 
-      SepInverse(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const Y& y, bool with_centered_form = true)
-        : SepCtcPair(CtcInverseNotIn<Y,X>(f,y,with_centered_form), CtcInverse_<Y,X>(f,y,with_centered_form))
+      template<typename T>
+      SepInverse(const AnalyticFunction<T>& f, const typename T::Domain& y, bool with_centered_form = true)
+        : SepCtcPair(
+            CtcInverseNotIn<typename T::Domain,X>(f,y,with_centered_form),
+            CtcInverse_<typename T::Domain,X>(f,y,with_centered_form))
       { }
 
-      template<typename S>
-        requires (std::is_same_v<IntervalVector,Y> && IsSepBaseOrPtr<S>)
-      SepInverse(const AnalyticFunction<typename Wrapper<Y>::Domain>& f, const S& sep_y, bool with_centered_form = true)
-        : SepCtcPair(CtcInverseNotIn<Y,X>(f,CtcInner(sep_y),with_centered_form), CtcInverse_<Y,X>(f,CtcOuter(sep_y),with_centered_form))
+      template<typename T,typename S>
+        requires (std::is_same_v<T,VectorType> && IsSepBaseOrPtr<S>)
+      SepInverse(const AnalyticFunction<T>& f, const S& sep_y, bool with_centered_form = true)
+        : SepCtcPair(
+            CtcInverseNotIn<typename T::Domain,X>(f,CtcInner(sep_y),with_centered_form),
+            CtcInverse_<typename T::Domain,X>(f,CtcOuter(sep_y),with_centered_form))
       { }
   };
 }

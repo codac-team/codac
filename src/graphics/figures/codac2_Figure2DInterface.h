@@ -14,6 +14,9 @@
 #include "codac2_Vector.h"
 #include "codac2_IntervalVector.h"
 #include "codac2_StyleProperties.h"
+#include "codac2_Ellipsoid.h"
+#include "codac2_SampledTraj.h"
+#include "codac2_AnalyticTraj.h"
 
 namespace codac2
 {

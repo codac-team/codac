@@ -47,7 +47,7 @@ py::class_<SepBase,pySep> export_Sep(py::module& m)
     .def("__repr__", [](const BoxPair& x) {
           std::ostringstream stream;
           stream << x;
-          return string(stream.str()); 
+          return std::string(stream.str()); 
         },
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_BOXPAIR_REF)
   ;
@@ -55,11 +55,11 @@ py::class_<SepBase,pySep> export_Sep(py::module& m)
   py::class_<SepBase,pySep> py_sep(m, "SepBase");
   py_sep
 
-    .def(py::init<size_t>(),
-      SEPBASE_SEPBASE_SIZET)
+    .def(py::init<Index>(),
+      SEPBASE_SEPBASE_INDEX)
 
     .def("size", &SepBase::size,
-      SIZET_SEPBASE_SIZE_CONST)
+      INDEX_SEPBASE_SIZE_CONST)
 
     .def("copy", [](SepBase& s)
         {

@@ -26,7 +26,7 @@ namespace codac2
       CtcAction(const C& c, const OctaSym& a)
         : Ctc<CtcAction,IntervalVector>(a.size()), _ctc(c), _s(a), __s(a.invert())
       {
-        assert_release(size_of(c) == a.size());
+        assert_release(size_of(c) == (Index)a.size());
       }
 
       void contract(IntervalVector& x) const;

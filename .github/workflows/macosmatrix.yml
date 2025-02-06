@@ -55,12 +55,12 @@ jobs:
       if: matrix.cfg.py_v_maj!=''
     - run: echo "VERBOSE=1" >> $GITHUB_ENV
       shell: bash
-    - run: brew install eigen
-      if: runner.os=='macOS'
+    #- run: brew install eigen
+    #  if: runner.os=='macOS'
     - run: brew install graphviz ; brew install --formula doxygen ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects
       if: runner.os=='macOS'
     - run: |
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20240417/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20241117/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
         unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
         rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
         sudo cp -Rf ibex/* /usr/local/

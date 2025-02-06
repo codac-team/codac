@@ -56,24 +56,24 @@ namespace codac2
 
   struct ProjSetOp
   {
-    static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const std::shared_ptr<CtcBase<IntervalVector>>& s1, const std::vector<size_t>& proj_indices, double eps)
+    static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const std::shared_ptr<CtcBase<IntervalVector>>& s1, const std::vector<Index>& proj_indices, double eps)
     {
       throw std::logic_error("CtcProj not yet available");
       return nullptr;
     }
 
-    static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const std::shared_ptr<CtcBase<IntervalVector>>& s1, const std::vector<size_t>& proj_indices, const IntervalVector& y, double eps)
+    static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const std::shared_ptr<CtcBase<IntervalVector>>& s1, const std::vector<Index>& proj_indices, const IntervalVector& y, double eps)
     {
       throw std::logic_error("CtcProj not yet available");
       return nullptr;
     }
 
-    static std::shared_ptr<SepBase> create_sep(const std::shared_ptr<SepBase>& s1, const std::vector<size_t>& proj_indices, double eps)
+    static std::shared_ptr<SepBase> create_sep(const std::shared_ptr<SepBase>& s1, const std::vector<Index>& proj_indices, double eps)
     {
       return std::make_shared<SepProj>(s1,proj_indices,eps);
     }
 
-    static std::shared_ptr<SepBase> create_sep(const std::shared_ptr<SepBase>& s1, const std::vector<size_t>& proj_indices, const IntervalVector& y, double eps)
+    static std::shared_ptr<SepBase> create_sep(const std::shared_ptr<SepBase>& s1, const std::vector<Index>& proj_indices, const IntervalVector& y, double eps)
     {
       return std::make_shared<SepProj>(s1,proj_indices,y,eps);
     }
@@ -94,14 +94,14 @@ namespace codac2
 
   struct InverseSetOp
   {
-    static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const AnalyticFunction<VectorOpValue>& f, const std::shared_ptr<CtcBase<IntervalVector>>& s1)
+    static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const AnalyticFunction<VectorType>& f, const std::shared_ptr<CtcBase<IntervalVector>>& s1)
     {
       return std::make_shared<CtcInverse_<IntervalVector,IntervalVector>>(f,s1);
     }
 
-    static std::shared_ptr<SepBase> create_sep(const AnalyticFunction<VectorOpValue>& f, const std::shared_ptr<SepBase>& s1)
+    static std::shared_ptr<SepBase> create_sep(const AnalyticFunction<VectorType>& f, const std::shared_ptr<SepBase>& s1)
     {
-      return std::make_shared<SepInverse<IntervalVector>>(f,s1);
+      return std::make_shared<SepInverse>(f,s1);
     }
   };
 

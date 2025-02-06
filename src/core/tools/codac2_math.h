@@ -9,8 +9,30 @@
 
 #pragma once
 
+#include <numbers>
+#include <cmath>
+
 namespace codac2
 {
-  constexpr double pi = 3.141592653589793238462643383279;
-  // To be replaced by C++20 implementation providing portable pi value.
+  constexpr double PI = std::numbers::pi; // Need C++20
+
+  inline int sign(double x)
+  {
+    return (x > 0) ? 1 : ((x < 0) ? -1 : 0);
+  }
+
+  inline int integer(double x)
+  {
+    return (int)x;
+  }
+  
+  inline double pow(double v, double p)
+  {
+    return v < 0 ? -std::pow(-v,p) : std::pow(v,p);
+  }
+  
+  inline double root(double v, double p)
+  {
+    return pow(v, 1./p);
+  }
 }

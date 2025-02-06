@@ -8,8 +8,8 @@
  */
 
 #include "codac2_CtcSegment.h"
-#include "codac2_directed_ctc.h"
-#include "codac2_arithmetic.h"
+#include "codac2_det.h"
+#include "codac2_arith_sub.h"
 
 using namespace std;
 using namespace codac2;

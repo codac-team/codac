@@ -37,7 +37,7 @@ namespace codac2
       auto create_ctc(const Args&... x)
       {
         std::vector<std::shared_ptr<CtcBase<IntervalVector>>> ref_x(sizeof...(Args));
-        size_t i = 0;
+        Index i = 0;
         ((ref_x[i++] = create_arg_ctc_copy(x)), ...);
         assert_release(args().size() == ref_x.size() && 
           "Invalid arguments: wrong number of input arguments");
@@ -48,7 +48,7 @@ namespace codac2
       auto create_sep(const Args&... x)
       {
         std::vector<std::shared_ptr<SepBase>> ref_x(sizeof...(Args));
-        size_t i = 0;
+        Index i = 0;
         ((ref_x[i++] = create_arg_sep_copy(x)), ...);
         assert_release(args().size() == ref_x.size() && 
           "Invalid arguments: wrong number of input arguments");
@@ -59,7 +59,7 @@ namespace codac2
       std::shared_ptr<SetExpr> operator()(const X&... x) const
       {
         auto expr_copy = expr()->copy();
-        size_t i = 0;
+        Index i = 0;
         (expr_copy->replace_expr(_args[i++]->unique_id(), this->__get_copy(x)), ...);
         assert_release(i == this->args().size() && 
           "Invalid arguments: wrong number of input arguments");

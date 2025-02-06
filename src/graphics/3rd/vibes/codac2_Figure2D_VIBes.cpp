@@ -118,31 +118,31 @@ void Figure2D_VIBes::draw_pie(const Vector& c, const Interval& r, const Interval
   assert(_fig.size() <= c.size());
   assert(r.lb() >= 0.);
   // Corrected a bug in VIBEs in case of r=[..,oo] (the pie disappears when zoomed in)
-  vibes::drawPie(c[i()],c[j()], r.lb(),(r.ub()>1e5?1e5:r.ub()), 180.*theta.lb()/codac2::pi,180.*theta.ub()/codac2::pi, to_vibes_style(s), _params);
+  vibes::drawPie(c[i()],c[j()], r.lb(),(r.ub()>1e5?1e5:r.ub()), 180.*theta.lb()/PI,180.*theta.ub()/PI, to_vibes_style(s), _params);
 }
 
 void Figure2D_VIBes::draw_ellipse(const Vector& c, const Vector& ab, double theta, const StyleProperties& s)
 {
   assert(c.size() == 2);
   assert(ab.size() == 2);
-  vibes::drawEllipse(c[0],c[1], ab[0],ab[1], 180.*theta/codac2::pi, to_vibes_style(s), _params);
+  vibes::drawEllipse(c[0],c[1], ab[0],ab[1], 180.*theta/PI, to_vibes_style(s), _params);
 }
 
 void Figure2D_VIBes::draw_tank(const Vector& x, float size, const StyleProperties& s)
 {
   assert(_fig.size() <= x.size()+1);
   assert(j()+1 < x.size());
-  vibes::drawTank(x[i()],x[j()],180.*x[j()+1]/codac2::pi, size, to_vibes_style(s), _params);
+  vibes::drawTank(x[i()],x[j()],180.*x[j()+1]/PI, size, to_vibes_style(s), _params);
 }
 
 void Figure2D_VIBes::draw_AUV(const Vector& x, float size, const StyleProperties& s)
 {
   assert(_fig.size() <= x.size()+1);
   assert(j()+1 < x.size());
-  vibes::drawAUV(x[i()],x[j()],180.*x[j()+1]/codac2::pi, size, to_vibes_style(s), _params);
+  vibes::drawAUV(x[i()],x[j()],180.*x[j()+1]/PI, size, to_vibes_style(s), _params);
 }
 
 string Figure2D_VIBes::to_vibes_style(const StyleProperties& s)
 {
-  return s.stroke_color.hex_str + "[" + s.fill_color.hex_str + "]";
+  return s.stroke_color.hex_str() + "[" + s.fill_color.hex_str() + "]";
 }

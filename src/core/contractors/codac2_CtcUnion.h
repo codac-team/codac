@@ -21,7 +21,7 @@ namespace codac2
   {
     public:
 
-      explicit CtcUnion(size_t n)
+      explicit CtcUnion(Index n)
         : Ctc<CtcUnion<X>,X>(n)
       {
         if constexpr(std::is_same_v<X,Interval>)

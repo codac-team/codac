@@ -8,13 +8,21 @@ int main()
   VectorVar x(2);
 
   AnalyticFunction f_half_wing {
-    {x}, vec(x[0],sqr(x[0]/7.)+sqr(x[1]/3.)) };
+    {x},
+    { x[0],sqr(x[0]/7.)+sqr(x[1]/3.) }
+  };
   AnalyticFunction f_half_head {
-    {x}, vec(0.75+3*x[0]-x[1]) };
+    {x},
+    { 0.75+3*x[0]-x[1] }
+  };
   AnalyticFunction f_half_neck {
-    {x}, vec(9-8*x[0]-x[1], (6.*sqrt(10.)/7.)+(1.5-0.5*x[0])-(6.*sqrt(10.)/14.)*sqrt(4-sqr(x[0]-1))-x[1]) };
+    {x},
+    { 9-8*x[0]-x[1], (6.*sqrt(10.)/7.)+(1.5-0.5*x[0])-(6.*sqrt(10.)/14.)*sqrt(4-sqr(x[0]-1))-x[1] }
+  };
   AnalyticFunction f_half_legs {
-    {x}, vec(((x[0]/2)-((3*sqrt(33)-7)/112)*sqr(x[0]))-3+sqrt(1-sqr(abs(x[0]-2)-1))-x[1]) };
+    {x},
+    { ((x[0]/2)-((3*sqrt(33)-7)/112)*sqr(x[0]))-3+sqrt(1-sqr(abs(x[0]-2)-1))-x[1] }
+  };
 
   SetFunction half_bat {
     { /* no arguments */ }, 

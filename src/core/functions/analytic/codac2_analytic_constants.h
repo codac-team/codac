@@ -9,6 +9,9 @@
 
 #pragma once
 
+#include "codac2_Index.h"
+#include "codac2_ValueType.h"
+
 namespace codac2
 {
   template<typename T>
@@ -20,24 +23,31 @@ namespace codac2
         : _x(x)
       { }
 
-      ConstValueExpr(const ConstValueExpr<T>& e) = default;
-
       std::shared_ptr<ExprBase> copy() const
       {
         return std::make_shared<ConstValueExpr<T>>(*this);
       }
 
-      T fwd_eval(ValuesMap& v, size_t total_input_size) const
+      T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
       {
-        return AnalyticExpr<T>::init_value(v, T(
-            // the mid is not considered for const values in centered form expression:
-            _x,
-            _x,
-            // the derivative of a const value is zero:
-            IntervalMatrix::zeros(_x.size(),total_input_size),
-            // the definition domain is necesarily met at this point:
-            true
-          ));
+        if(natural_eval)
+          return AnalyticExpr<T>::init_value(v, T(
+              // the mid is not considered for const values in centered form expression:
+              _x,
+              // the definition domain is necesarily met at this point:
+              true
+            ));
+
+        else
+          return AnalyticExpr<T>::init_value(v, T(
+              // the mid is not considered for const values in centered form expression:
+              _x,
+              _x,
+              // the derivative of a const value is zero:
+              IntervalMatrix::zero(_x.size(),total_input_size),
+              // the definition domain is necesarily met at this point:
+              true
+            ));
       }
       
       void bwd_eval(ValuesMap& v) const
@@ -45,10 +55,10 @@ namespace codac2
         AnalyticExpr<T>::value(v).a &= _x;
       }
 
-      void replace_expr(const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_expr([[maybe_unused]] const ExprID& old_expr_id, [[maybe_unused]] const std::shared_ptr<ExprBase>& new_expr)
       { }
 
-      virtual bool belongs_to_args_list(const FunctionArgsList& args) const
+      virtual bool belongs_to_args_list([[maybe_unused]] const FunctionArgsList& args) const
       {
         return true;
       }
@@ -59,8 +69,8 @@ namespace codac2
   };
 
   template<typename T>
-  std::shared_ptr<AnalyticExpr<typename Wrapper<T>::Domain>> const_value(const T& x)
+  inline AnalyticExprWrapper<typename ValueType<T>::Type> const_value(const T& x)
   {
-    return std::make_shared<ConstValueExpr<typename Wrapper<T>::Domain>>(x);
+    return { std::make_shared<ConstValueExpr<typename ValueType<T>::Type>>(x) };
   }
 }

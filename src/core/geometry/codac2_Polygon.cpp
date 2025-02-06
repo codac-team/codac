@@ -27,7 +27,7 @@ namespace codac2
         assert_release(vertices.size() > 1);
         vector<Edge> edges;
 
-        size_t i = 0;
+        Index i = 0;
         for(const auto& vi : vertices)
         {
           assert_release(vi.size() == 2);
@@ -63,7 +63,7 @@ namespace codac2
   {
     assert_release(p.size() == 2);
 
-    size_t i = 0;
+    Index i = 0;
     Edge transect { Vector({next_float(-oo),p[1]}), p };
 
     for(const auto& edge_k : _edges)

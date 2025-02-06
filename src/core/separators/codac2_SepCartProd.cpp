@@ -17,7 +17,7 @@ BoxPair SepCartProd::separate(const IntervalVector& x) const
   assert_release(x.size() == this->size());
   auto x_in = x, x_out = x;
 
-  size_t i = 0;
+  Index i = 0;
   for(const auto& si : _seps)
   {
     IntervalVector xi = x.subvector(i,i+si->size()-1);

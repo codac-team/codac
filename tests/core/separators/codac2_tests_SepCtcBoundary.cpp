@@ -28,12 +28,12 @@ BoolInterval test_inside_diamond(const Vector& x)
 
 TEST_CASE("SepCtcBoundary")
 {
-  auto ctc_diamond = CtcSegment({{-1},{0}}, {{0},{-1}}) | CtcSegment({{0},{-1}}, {{1},{0}})
-    | CtcSegment({{1},{0}}, {{0},{1}}) | CtcSegment({{0},{1}}, {{-1},{0}});
+  auto ctc_bound_diamond = CtcSegment({-1,0}, {0,-1}) | CtcSegment({0,-1}, {1,0})
+    | CtcSegment({1,0}, {0,1}) | CtcSegment({0,1}, {-1,0});
 
-  SepCtcBoundary sep_diamond(ctc_diamond,test_inside_diamond);
+  SepCtcBoundary sep_diamond(ctc_bound_diamond,test_inside_diamond);
 
-  //pave(IntervalVector({{-2,2},{-2,2}}), sep_diamond, 0.1);
+  //draw_while_paving(IntervalVector({{-2,2},{-2,2}}), sep_diamond, 0.1);
 
   IntervalVector x(2);
   auto xs = sep_diamond.separate(IntervalVector(2));
@@ -61,5 +61,5 @@ TEST_CASE("SepCtcBoundary")
   //DefaultView::draw_box(xs.inner,Color::dark_green());
   //DefaultView::draw_box(xs.outer,Color::blue());
   CHECK(xs.inner == x);
-  CHECK(xs.outer == IntervalVector({{0.5},{0.5}}));
+  CHECK(xs.outer == IntervalVector({0.5,0.5}));
 }

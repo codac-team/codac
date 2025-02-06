@@ -2,28 +2,27 @@
  *  codac2_GaussJordan.cpp
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou
+ *  \author     Luc Jaulin, Simon Rohou, Damien Massé
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
+#include <iostream>
 #include "codac2_GaussJordan.h"
 
 using namespace std;
 
 namespace codac2
 {
-  typedef Eigen::Matrix<double,Dynamic,Dynamic> Mat;
-
-  Mat rising(const Mat& R_, const Mat& U_, const Mat& A)
+  Matrix rising(const Matrix& R_, const Matrix& U_, const Matrix& A)
   {
-    Mat R = R_, U = U_;
-    size_t n = A.rows(), m = A.cols();
-    size_t p = m-n;
+    Matrix R = R_, U = U_;
+    Index n = A.rows(), m = A.cols();
+    Index p = m-n;
 
-    for(int i = n-1 ; i > 0 ; i--)
+    for(Index i = n-1 ; i > 0 ; i--)
     {
-      Mat K = U(i,i+p)*Mat::Identity(n,n);
+      Matrix K = U(i,i+p)*Matrix::Identity(n,n);
       K.block(0,i,i,1) = -U.block(0,i+p,i,1);
       R = K*R;
       U = R*A;
@@ -32,28 +31,31 @@ namespace codac2
     return R;
   }
 
-  Mat precond(const Mat& P, const Mat& L, const Mat& U)
+  Matrix precond(const Matrix& P, const Matrix& L, const Matrix& U)
   {
-    Mat A = P.inverse()*L*U;
-    Mat R = (P.inverse()*L).inverse();
+    auto P_inv = P.inverse();
+    Matrix A = P_inv*(L*U);
+    Matrix R = (P_inv*L).inverse();
     return rising(R,U,A);
   }
 
   Matrix gauss_jordan(const Matrix& A)
   {
-    size_t n = A.nb_rows(), m = A.nb_cols();
-    Eigen::FullPivLU<Mat> lu(A._e);
+    Index n = A.rows(), m = A.cols();
+    Eigen::FullPivLU<Matrix> lu(A);
 
-    Mat L = Mat::Identity(n,n);
+    Matrix L = Matrix::Identity(n,n);
     if(std::pow(L.determinant(),2) < 1e-5)
     {
-      cout << "[Matrix gauss_jordan(const Matrix& A)] -> eye matrix" << endl;
+      cout << "[Matrix gauss_jordan(const Matrix& A)] -> eye Matrix" << endl;
       return Matrix::eye(n,n);
     }
-    L.block(0,0,n,m).triangularView<Eigen::StrictlyLower>() = lu.matrixLU();
 
-    Mat P = lu.permutationP();
-    Mat U = lu.matrixLU().triangularView<Eigen::Upper>();
+    L.block(0,0,n,std::min(m,n)).triangularView<Eigen::StrictlyLower>() = 
+        lu.matrixLU().block(0,0,n,std::min(m,n));
+
+    Matrix P = lu.permutationP();
+    Matrix U = lu.matrixLU().triangularView<Eigen::Upper>();
 
     return precond(P,L,U);
   }

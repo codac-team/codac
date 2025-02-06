@@ -18,8 +18,8 @@ TEST_CASE("SepCartProd")
 {
   {
     VectorVar v(1);
-    SepInverse<IntervalVector> s1(AnalyticFunction({v}, v), IntervalVector({{-1,1}}));
-    SepInverse<IntervalVector> s2(AnalyticFunction({v}, v), IntervalVector({{5,6}}));
+    SepInverse s1(AnalyticFunction({v}, v), IntervalVector({{-1,1}}));
+    SepInverse s2(AnalyticFunction({v}, v), IntervalVector({{5,6}}));
 
     {
       IntervalVector x({{0,8},{5.5,oo}});

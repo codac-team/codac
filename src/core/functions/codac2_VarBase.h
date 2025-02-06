@@ -20,6 +20,6 @@ namespace codac2
       virtual const ExprID& unique_id() const = 0;
       virtual std::shared_ptr<VarBase> arg_copy() const = 0;
       virtual ~VarBase() = default;
-      virtual size_t size() const = 0;
+      virtual Index size() const = 0;
   };
 }

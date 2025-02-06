@@ -2,7 +2,7 @@
 #  Codac - cmake configuration file
 # ==================================================================
 
-  cmake_minimum_required(VERSION 3.0.2)
+  cmake_minimum_required(VERSION 3.14...3.25)
 
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/scripts/CMakeModules/)
   include(version_from_git)
@@ -28,15 +28,6 @@
   set(PROJECT_HOMEPAGE_URL "http://codac.io")
   message(STATUS "Configuring build for ${PROJECT_NAME} ${PROJECT_VERSION}")
 
-  if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
-    message(STATUS "Configuring ${PROJECT_NAME} in DEBUG mode as none was specified.")
-    if(MSVC)
-      add_compile_options(/MD) # Temporary fix to avoid debug vs release inconsistencies...
-    else()
-      add_compile_options(-O3)
-    endif()
-  endif()
 
 ################################################################################
 # Options for directories
@@ -54,6 +45,65 @@
 # Compilation configuration
 ################################################################################
 
+  if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+    if(MSVC)
+      add_compile_options(/MD) # Temporary fix to avoid debug vs release inconsistencies...
+    else()
+      add_compile_options(-O3)
+    endif()
+  endif()
+  
+  if(FAST_RELEASE)
+    add_compile_definitions(FAST_RELEASE)
+  endif()
+  
+  if(NOT WIN32)
+    string(ASCII 27 Esc)
+    set(COLOR_RED "${Esc}[31m")
+    set(COLOR_BLUE "${Esc}[36m")
+    set(COLOR_RESET "${Esc}[m")
+  else()
+    set(COLOR_RED "")
+    set(COLOR_BLUE "")
+    set(COLOR_RESET "")
+  endif()
+
+  message(STATUS "${COLOR_BLUE}Configuring ${PROJECT_NAME} in ${CMAKE_BUILD_TYPE} mode.${COLOR_RESET}")
+
+  if(FAST_RELEASE)
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+      message(STATUS "${COLOR_RED}Option FAST_RELEASE cannot be used in Debug mode.${COLOR_RESET}")
+    else()
+      message(STATUS "${COLOR_BLUE}Option FAST_RELEASE enabled.${COLOR_RESET}")
+    endif()
+  else()
+    message(STATUS "Note: in Release build mode, the option FAST_RELEASE=ON would allow faster computations if enabled.")
+  endif()
+
+  if(MSVC)
+    add_compile_options(/W4)
+  else()
+    add_compile_options(-Wall -Wextra -Wpedantic)
+  endif()
+
+  # Temporary attempts to fix errors similar to: 
+  # _ number of sections exceeded object file format limit.
+  # _ out of memory allocating XXX bytes.
+  # _ string table overflow.
+  # _ .obj: file too big.
+  if(MSVC)
+    add_compile_options(/bigobj)
+  elseif(MINGW)
+    add_compile_options(-Wa,-mbig-obj)
+    if (CMAKE_SIZEOF_VOID_P EQUAL 4)
+      add_compile_options(-g0)
+    endif()
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+      add_compile_options(-Os)
+    endif()
+  endif()
+
 #  # Check that the compiler supports c++20
 #  include(CheckCXXCompilerFlag)
 #  check_cxx_compiler_flag("-std=c++2a" COMPILER_SUPPORTS_CXX20)
@@ -62,11 +112,6 @@
 #    add_compile_options(-std=c++2a)
 #  else()
 #    message(FATAL_ERROR "Codac needs a compiler with C++20 support")
-#  endif()
-
-#  if(WIN32)
-#    # We need this for strdup under Windows (see issue #287 of ibex-lib repo)
-#    add_definitions(-U__STRICT_ANSI__)
 #  endif()
 
   #if(NOT CMAKE_CXX_STANDARD)
@@ -88,7 +133,7 @@
 # Looking for Eigen3
 ################################################################################
 
-  find_package(Eigen3 3.4 REQUIRED NO_MODULE)
+  add_subdirectory(3rd/eigen)
   message(STATUS "Found Eigen3 version ${Eigen3_VERSION}")
   add_definitions(${EIGEN3_DEFINITIONS})
 
@@ -100,22 +145,13 @@
   option(WITH_CAPD "Using CAPD for accurate integration of ODEs" OFF)
 
   if(WITH_CAPD)
-    # This looks for capd.pc file
-    include(FindPkgConfig)
-    pkg_search_module(PKG_CAPD REQUIRED capd capd-gui mpcapd mpcapd-gui)
-    include_directories(${PKG_CAPD_INCLUDE_DIRS})
-    #message(STATUS "[capd2codac] PKG_CAPD_INCLUDE_DIRS = ${PKG_CAPD_INCLUDE_DIRS}")
-    #message(STATUS "[capd2codac] PKG_CAPD_LDFLAGS = ${PKG_CAPD_LDFLAGS}")
+    find_package(CAPD REQUIRED)
   endif()
 
 
 ################################################################################
 # Compile sources
 ################################################################################
-  
-  if(FAST_RELEASE)
-    add_compile_definitions(FAST_RELEASE=1)
-  endif()
   
   add_subdirectory(src) # C++ sources
   add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)

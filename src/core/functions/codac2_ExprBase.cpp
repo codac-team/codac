@@ -12,7 +12,7 @@
 using namespace std;
 using namespace codac2;
 
-size_t ExprID::_id_counter = 0;
+Index ExprID::_id_counter = 0;
 
 ExprID::ExprID()
   : _id(ExprID::_id_counter)
@@ -20,7 +20,7 @@ ExprID::ExprID()
   ExprID::_id_counter ++;
 }
 
-size_t ExprID::id() const
+Index ExprID::id() const
 {
   return _id;
 }

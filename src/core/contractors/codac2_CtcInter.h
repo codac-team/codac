@@ -21,6 +21,15 @@ namespace codac2
   {
     public:
 
+      explicit CtcInter(Index n)
+        : Ctc<CtcInter<X>,X>(n)
+      {
+        if constexpr(std::is_same_v<X,Interval>)
+        {
+          assert(n == 1);
+        }
+      }
+
       template<typename C>
         requires (IsCtcBaseOrPtr<C,X> && !std::is_same_v<CtcInter<X>,C>)
       CtcInter(const C& c)

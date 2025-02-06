@@ -9,7 +9,6 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_CtcInverseNotIn.h>
-#include <codac2_analytic_operations.h>
 #include <codac2_pave.h>
 #include <codac2_Figure2D.h>
 #include <codac2_Approx.h>
@@ -28,7 +27,7 @@ TEST_CASE("CtcInverseNotIn")
 
     VectorVar x(2);
     AnalyticFunction f { {x}, vec(x[0]-x[1]) };
-    CtcInverseNotIn<IntervalVector> c(f, {{0}});
+    CtcInverseNotIn<IntervalVector> c(f, {0});
 
     //pave(IntervalVector({{-10,10},{-10,10}}), c, 0.1);
 
@@ -45,9 +44,9 @@ TEST_CASE("CtcInverseNotIn")
     c.contract(b);
     CHECK(b == IntervalVector({{1,oo},{1,oo}}));
 
-    b = IntervalVector({{10},{10}});
+    b = IntervalVector({10,10});
     c.contract(b);
-    CHECK(b == IntervalVector({{10},{10}}));
+    CHECK(b == IntervalVector({10,10}));
 
     b = IntervalVector({{1,5},{8,9}});
     c.contract(b);

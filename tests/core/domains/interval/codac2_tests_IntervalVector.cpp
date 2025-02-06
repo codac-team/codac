@@ -7,15 +7,15 @@
  *
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Gilles Chabert, (Simon Rohou)
+ *  \author     Gilles Chabert, Simon Rohou
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_IntervalVector.h>
+#include <codac2_IntervalMatrix.h>
 #include <codac2_Approx.h>
-#include <codac2_arithmetic.h>
 
 using namespace std;
 using namespace codac2;
@@ -33,7 +33,7 @@ void CHECK_diff(const IntervalVector& x, const IntervalVector& y, bool compactne
   for(const auto& ci : c)
   {
     bool found = false;
-    for(size_t i = 0 ; i < result.nb_rows() ; i++)
+    for(Index i = 0 ; i < result.rows() ; i++)
       if(ci == IntervalMatrix(result.row(i)).transpose().col(0))
       {
         found = true;
@@ -58,7 +58,7 @@ TEST_CASE("IntervalVector")
     IntervalVector x(2);
     x[0] = Interval(0,1);
     x[1] = Interval(0,1);
-    CHECK(x == IntervalVector(2,Interval(0,1)));
+    CHECK(x == IntervalVector({{0,1},{0,1}}));
     CHECK(x == IntervalVector(x));
     CHECK(x == (IntervalVector(2)=x));
   }
@@ -112,7 +112,7 @@ TEST_CASE("IntervalVector")
   {
     IntervalVector x(1);
     x[0] = Interval(1,2);
-    x.resize(3);
+    x.resize_save_values(3);
     CHECK(x.size() == 3);
     CHECK(x[0] == Interval(1,2));
     CHECK(x[1] == Interval(-oo,oo));
@@ -122,7 +122,7 @@ TEST_CASE("IntervalVector")
   {
     IntervalVector x(1);
     x[0] = Interval(1,2);
-    x.resize(1);
+    x.resize_save_values(1);
     CHECK(x.size() == 1);
     CHECK(x[0] == Interval(1,2));
   }
@@ -131,7 +131,7 @@ TEST_CASE("IntervalVector")
     IntervalVector x(2);
     x[0] = Interval(1,2);
     x.set_empty();
-    x.resize(3);
+    x.resize_save_values(3);
     CHECK(x.size() == 3);
     CHECK(x.is_empty());
     CHECK(x[2] == Interval(-oo,oo));
@@ -141,7 +141,7 @@ TEST_CASE("IntervalVector")
     IntervalVector x(5);
     x[0] = Interval(1,2);
     x[1] = Interval(3,4);
-    x.resize(2);
+    x.resize_save_values(2);
     CHECK(x.size() == 2);
     CHECK(x[0] == Interval(1,2));
     CHECK(x[1] == Interval(3,4));
@@ -239,8 +239,8 @@ TEST_CASE("IntervalVector")
 
   CHECK(!IntervalVector({{0,1},{2,3},{4,5}}).is_flat());
   CHECK(IntervalVector::empty(3).is_flat());
-  CHECK(IntervalVector(1,Interval(0,0)).is_flat());
-  CHECK(!IntervalVector(1,Interval(0,1)).is_flat());
+  CHECK(IntervalVector({{0,0}}).is_flat());
+  CHECK(!IntervalVector({{0,1}}).is_flat());
   CHECK(IntervalVector({{0,1},{2,2},{3,4}}).is_flat());
   CHECK(IntervalVector({{0,1},{2,3},{4,4}}).is_flat());
   CHECK(!IntervalVector::empty(3).is_unbounded());

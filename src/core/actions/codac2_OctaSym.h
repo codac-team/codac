@@ -10,7 +10,7 @@
 #pragma once
 
 #include <vector>
-#include "codac2_Vector.h"
+#include "codac2_matrices.h"
 #include "codac2_IntervalVector.h"
 #include "codac2_CtcWrapper.h"
 #include "codac2_template_tools.h"
@@ -42,7 +42,20 @@ namespace codac2
 
       OctaSym operator*(const OctaSym& s) const;
 
-      IntervalVector operator()(const IntervalVector& x) const;
+      int _sign(int a) const
+      {
+        return (a > 0) ? 1 : ((a < 0) ? -1 : 0);
+      }
+
+      template<typename T>
+      Mat<T,-1,1> operator()(const Mat<T,-1,1>& x) const
+      {
+        assert_release(x.size() == (Index)size());
+        Mat<T,-1,1> x_(size());
+        for(size_t i = 0 ; i < size() ; i++)
+          x_[i] = _sign((*this)[i])*x[std::abs((*this)[i])-1];
+        return x_;
+      }
 
       template<typename C>
         requires IsCtcBaseOrPtr<C,IntervalVector>

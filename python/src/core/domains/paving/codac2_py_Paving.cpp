@@ -28,7 +28,7 @@ void export_paving_base(py::class_<P>& c)
   c
 
     .def("size", &Paving<P,X...>::size,
-      SIZET_PAVING_PX_SIZE_CONST)
+      INDEX_PAVING_PX_SIZE_CONST)
 
     .def("tree", (std::shared_ptr<PavingNode<P>>(Paving<P,X...>::*)()) &Paving<P,X...>::tree,
       SHARED_PTR_PAVINGNODE_P_PAVING_PX_TREE)
@@ -46,8 +46,8 @@ void export_Paving(py::module& m)
   export_paving_base<PavingOut,IntervalVector>(exported_paving_out);
   exported_paving_out
   
-    .def(py::init<size_t>(),
-      PAVINGOUT_PAVINGOUT_SIZET)
+    .def(py::init<Index>(),
+      PAVINGOUT_PAVINGOUT_INDEX)
 
     .def(py::init<const IntervalVector&>(),
       PAVINGOUT_PAVINGOUT_CONST_INTERVALVECTOR_REF)
@@ -61,9 +61,9 @@ void export_Paving(py::module& m)
       "x0"_a, "node_value"_a = PavingOut::outer)
 
     .def_readonly_static("outer", &PavingOut::outer,
-      CONST_NODEVALUE__PAVINGOUT_OUTER)
+      STATIC_CONST_NODEVALUE__PAVINGOUT_OUTER)
     .def_readonly_static("outer_complem", &PavingOut::outer_complem,
-      CONST_NODEVALUE__PAVINGOUT_OUTER_COMPLEM)
+      STATIC_CONST_NODEVALUE__PAVINGOUT_OUTER_COMPLEM)
 
   ;
 
@@ -71,8 +71,8 @@ void export_Paving(py::module& m)
   export_paving_base<PavingInOut,IntervalVector,IntervalVector>(exported_paving_inout);
   exported_paving_inout
   
-    .def(py::init<size_t>(),
-      PAVINGINOUT_PAVINGINOUT_SIZET)
+    .def(py::init<Index>(),
+      PAVINGINOUT_PAVINGINOUT_INDEX)
 
     .def(py::init<const IntervalVector&>(),
       PAVINGINOUT_PAVINGINOUT_CONST_INTERVALVECTOR_REF)
@@ -86,15 +86,15 @@ void export_Paving(py::module& m)
       "x0"_a, "node_value"_a = PavingInOut::outer)
 
     .def_readonly_static("outer", &PavingInOut::outer,
-      CONST_NODEVALUE__PAVINGINOUT_OUTER)
+      STATIC_CONST_NODEVALUE__PAVINGINOUT_OUTER)
     .def_readonly_static("outer_complem", &PavingInOut::outer_complem,
-      CONST_NODEVALUE__PAVINGINOUT_OUTER_COMPLEM)
+      STATIC_CONST_NODEVALUE__PAVINGINOUT_OUTER_COMPLEM)
     .def_readonly_static("inner", &PavingInOut::inner,
-      CONST_NODEVALUE__PAVINGINOUT_INNER)
+      STATIC_CONST_NODEVALUE__PAVINGINOUT_INNER)
     .def_readonly_static("bound", &PavingInOut::bound,
-      CONST_NODEVALUE__PAVINGINOUT_BOUND)
+      STATIC_CONST_NODEVALUE__PAVINGINOUT_BOUND)
     .def_readonly_static("all", &PavingInOut::all,
-      CONST_NODEVALUE__PAVINGINOUT_ALL)
+      STATIC_CONST_NODEVALUE__PAVINGINOUT_ALL)
 
   ;
 }

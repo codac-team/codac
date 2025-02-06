@@ -14,9 +14,25 @@
 #include <codac2_Matrix.h>
 #include <codac2_IntervalMatrix.h>
 
-#include "codac2_py_MatrixBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
-#include "codac2_py_Matrix_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
-#include "codac2_py_IntervalMatrix_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_doc.h"
+#include "codac2_py_Matrix_addons_Base_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+//#include "codac2_py_Matrix_addons_IntervalMatrix_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_Matrix_addons_IntervalMatrixBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_Matrix_addons_IntervalVector_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+//#include "codac2_py_Matrix_addons_Matrix_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_Matrix_addons_MatrixBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_Matrix_addons_Vector_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_Matrix_addons_VectorBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_MatrixBase_addons_Base_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+//#include "codac2_py_MatrixBase_addons_IntervalMatrix_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_MatrixBase_addons_IntervalMatrixBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_MatrixBase_addons_IntervalVector_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+//#include "codac2_py_MatrixBase_addons_Matrix_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+//#include "codac2_py_MatrixBase_addons_MatrixBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_MatrixBase_addons_Vector_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_MatrixBase_addons_VectorBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_matrices_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_Matrix_docs.h"
 
 #include "codac2_py_MatrixBase.h"
 
@@ -27,64 +43,48 @@ using namespace pybind11::literals;
 
 py::class_<Matrix> export_Matrix(py::module& m)
 {
-  py::class_<Matrix> exported_matrix_class(m, "Matrix", MATRIX_MAIN);
+  py::class_<Matrix> exported_matrix_class(m, "Matrix", DOC_TO_BE_DEFINED);
   export_MatrixBase<Matrix,double,false>(m, exported_matrix_class);
 
   exported_matrix_class
 
     .def(py::init(
-        [](size_t_type r, size_t_type c)
+        [](Index_type r, Index_type c)
         {
           matlab::test_integer(r,c);
           return std::make_unique<Matrix>(r,c);
         }),
-      MATRIX_MATRIX_SIZET_SIZET,
+      DOC_TO_BE_DEFINED,
       "r"_a, "c"_a)
 
-    .def(py::init(
-        [](size_t_type r, size_t_type c, double x)
-        {
-          matlab::test_integer(r,c);
-          return std::make_unique<Matrix>(r,c,x);
-        }),
-      MATRIX_MATRIX_SIZET_SIZET_DOUBLE,
-      "r"_a, "c"_a, "x"_a)
-
     .def(py::init<const Matrix&>(),
-      MATRIX_MATRIX_CONST_MATRIXBASE_MATRIXDOUBLE_REF,
+      DOC_TO_BE_DEFINED,
       "x"_a)
 
     .def(py::init<const Vector&>(),
-      MATRIX_MATRIX_CONST_VECTOR_REF,
-      "x"_a)
-
-    .def(py::init<const MatrixBaseBlock<EigenMatrix<double>&,double>&>(),
-      MATRIX_MATRIX_CONST_MATRIXBASEBLOCK_QDOUBLE_REF,
+      DOC_TO_BE_DEFINED,
       "x"_a)
 
     .def(py::init( // this constructor must be the last one to be declared
         [](const std::vector<Vector>& v)
         {
           assert_release(!std::empty(v));
-          auto iv = std::make_unique<Matrix>(v.size(),v[0].size());
+          auto m = std::make_unique<Matrix>(v.size(),v[0].size());
           for(size_t i = 0 ; i < v.size() ; i++)
           {
-            assert_release(v[i].size() == iv->nb_cols() && "Vector objects of different size");
-            iv->row(i) = v[i].transpose();
+            assert_release(v[i].size() == m->cols() && "Vector objects of different size");
+            m->row(i) = v[i].transpose();
           }
-          return iv;
+          return m;
         }),
-      MATRIX_MATRIX_INITIALIZER_LIST_INITIALIZER_LIST_DOUBLE,
+      DOC_TO_BE_DEFINED,
       "v"_a)
 
-    .def("transpose", &Matrix::transpose,
-      MATRIX_MATRIX_TRANSPOSE_CONST)
-
-    .def("diag_matrix", &Matrix::diag_matrix,
-      MATRIX_MATRIX_DIAG_MATRIX_CONST)
-
-    .def("inverse", &Matrix::inverse,
-      MATRIX_MATRIX_INVERSE_CONST)
+    .def("inverse", [](const Matrix& x)
+        {
+          return x.inverse().eval();
+        },
+      DOC_TO_BE_DEFINED)
 
   ;
 

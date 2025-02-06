@@ -204,7 +204,7 @@ TEST_CASE("Interval - tests from IBEX")
 
   x = Interval(2.7629416257693772963,2.7629416257693835135);
   y = x;
-  static double m = x.mid();
+  double m = x.mid();
   Interval x2 = x+m;
   Interval x3 = x2-m;
   CHECK(x3.is_superset(y));

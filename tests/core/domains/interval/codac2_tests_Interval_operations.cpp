@@ -7,7 +7,7 @@
  *
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Gilles Chabert, (Simon Rohou)
+ *  \author     Gilles Chabert, Simon Rohou
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */

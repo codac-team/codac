@@ -19,7 +19,7 @@ namespace codac2
   {
     public:
 
-      explicit SetVar(size_t n)
+      explicit SetVar(Index n)
         : _n(n)
       { }
 
@@ -38,7 +38,7 @@ namespace codac2
         return std::make_shared<SetVar>(*this);
       }
 
-      size_t size() const
+      Index size() const
       {
         return _n;
       }
@@ -61,7 +61,7 @@ namespace codac2
 
       std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const FunctionArgsList& args, const std::vector<std::shared_ptr<CtcBase<IntervalVector>>>& x) const
       {
-        for(size_t i = 0 ; i < args.size() ; i++)
+        for(Index i = 0 ; i < args.size() ; i++)
           if(args[i]->unique_id() == unique_id())
             return x[i];
         assert(false);
@@ -70,7 +70,7 @@ namespace codac2
 
       std::shared_ptr<SepBase> create_sep(const FunctionArgsList& args, const std::vector<std::shared_ptr<SepBase>>& x) const
       {
-        for(size_t i = 0 ; i < args.size() ; i++)
+        for(Index i = 0 ; i < args.size() ; i++)
           if(args[i]->unique_id() == unique_id())
             return x[i];
         assert(false);
@@ -79,6 +79,6 @@ namespace codac2
 
     protected:
 
-      size_t _n;
+      Index _n;
   };
 }

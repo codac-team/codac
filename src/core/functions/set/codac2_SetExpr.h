@@ -94,11 +94,11 @@ namespace codac2
   {
     public:
 
-      SetOperationExpr(std::shared_ptr<SetExpr> x, const std::vector<size_t>& proj_indices, double eps)
+      SetOperationExpr(std::shared_ptr<SetExpr> x, const std::vector<Index>& proj_indices, double eps)
         : OperationExprBase<SetExpr>(x), _proj_indices(proj_indices), _y(nullptr), _eps(eps)
       { }
 
-      SetOperationExpr(std::shared_ptr<SetExpr> x, const std::vector<size_t>& proj_indices, const IntervalVector& y, double eps)
+      SetOperationExpr(std::shared_ptr<SetExpr> x, const std::vector<Index>& proj_indices, const IntervalVector& y, double eps)
         : OperationExprBase<SetExpr>(x), _proj_indices(proj_indices), _y(std::make_shared<IntervalVector>(y)), _eps(eps)
       { }
 
@@ -137,7 +137,7 @@ namespace codac2
 
     protected:
 
-      const std::vector<size_t> _proj_indices;
+      const std::vector<Index> _proj_indices;
       const std::shared_ptr<IntervalVector> _y;
       const double _eps;
   };
@@ -147,7 +147,7 @@ namespace codac2
   {
     public:
 
-      SetOperationExpr(const AnalyticFunction<VectorOpValue>& f, std::shared_ptr<SetExpr> x)
+      SetOperationExpr(const AnalyticFunction<VectorType>& f, std::shared_ptr<SetExpr> x)
         : OperationExprBase<SetExpr>(x), _f(f)
       { }
 
@@ -182,7 +182,7 @@ namespace codac2
 
     protected:
 
-      const AnalyticFunction<VectorOpValue> _f;
+      const AnalyticFunction<VectorType> _f;
   };
 
   template<>

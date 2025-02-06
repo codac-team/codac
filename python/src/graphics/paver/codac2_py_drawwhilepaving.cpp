@@ -1,5 +1,5 @@
 /** 
- *  Codac binding (core)
+ *  Codac binding (graphics)
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou

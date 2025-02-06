@@ -11,6 +11,7 @@
 
 #include <memory>
 #include <iostream>
+#include "codac2_Index.h"
 #include "codac2_assert.h"
 
 namespace codac2
@@ -41,13 +42,13 @@ namespace codac2
     
       using ContractedType = X;
 
-      CtcBase(size_t n)
+      CtcBase(Index n)
         : _n(n)
       {
         assert(n > 0);
       }
 
-      size_t size() const
+      Index size() const
       {
         return _n;
       }
@@ -58,7 +59,7 @@ namespace codac2
 
     protected:
 
-      const size_t _n;
+      const Index _n;
   };
 
   template<typename C,typename X_>
@@ -66,7 +67,7 @@ namespace codac2
   {
     public:
     
-      Ctc(size_t n)
+      Ctc(Index n)
         : CtcBase<X_>(n)
       { }
 

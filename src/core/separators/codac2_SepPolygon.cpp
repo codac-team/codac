@@ -9,6 +9,7 @@
 
 #include <list>
 #include "codac2_SepPolygon.h"
+#include "codac2_CtcUnion.h"
 #include "codac2_CtcSegment.h"
 #include "codac2_geometry.h"
 

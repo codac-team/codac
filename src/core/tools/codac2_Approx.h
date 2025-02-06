@@ -10,77 +10,68 @@
 #pragma once
 
 #include <limits>
+#include "codac2_matrices.h"
+#include "codac2_Vector.h"
 #include "codac2_IntervalVector.h"
+#include "codac2_Row.h"
+#include "codac2_IntervalRow.h"
+#include "codac2_Matrix.h"
+#include "codac2_IntervalMatrix.h"
 
 namespace codac2
 {
-  // The following functions are used for templates
-  inline double _lb(const Interval& x) { return x.lb(); }
-  inline double _lb(const double& x)   { return x;      }
-  inline double _ub(const Interval& x) { return x.ub(); }
-  inline double _ub(const double& x)   { return x;      }
+  #define DEFAULT_EPS std::numeric_limits<double>::epsilon()*10
 
   template<typename T>
   class Approx
   {
     public:
 
-      explicit Approx(const T& x, double eps = std::numeric_limits<double>::epsilon()*10)
-        : _x(x ), _eps(eps)
+      explicit Approx(const T& x, double eps = DEFAULT_EPS)
+        : _x(x), _eps(eps)
+      { }
+
+      template<typename OtherDerived>
+      explicit Approx(const Eigen::MatrixBase<OtherDerived>& x, double eps = DEFAULT_EPS)
+        : _x(x.eval()), _eps(eps)
       { }
 
       friend bool operator==(const T& x1, const Approx<T>& x2)
       {
-        if(x1.size() != x2._x.size())
+        if constexpr(std::is_same_v<T,double>)
+          return std::fabs(x1-x2._x) < x2._eps;
+
+        else if(x1.size() != x2._x.size())
           return false;
-        if(x1 == x2._x)
+
+        else if(x1 == x2._x)
           return true;
 
-        if constexpr(std::is_same_v<T,Interval>)
+        else if constexpr(std::is_same_v<T,Interval>)
         {
-          return ((std::fabs(_lb(x1)-_lb(x2._x)) < x2._eps) && _ub(x1) == _ub(x2._x))
-            || ((std::fabs(_ub(x1)-_ub(x2._x)) < x2._eps) && _lb(x1) == _lb(x2._x))
-            || ((std::fabs(_lb(x1)-_lb(x2._x)) < x2._eps) && std::fabs(_ub(x1)-_ub(x2._x)) < x2._eps);
+          return (x1.lb() == x2._x.lb() || x1.lb() == Approx<double>(x2._x.lb(),x2._eps))
+              && (x1.ub() == x2._x.ub() || x1.ub() == Approx<double>(x2._x.ub(),x2._eps));
+        }
+
+        else if constexpr(std::is_same_v<T,Vector>
+          || std::is_same_v<T,IntervalVector>
+          || std::is_same_v<T,Row>
+          || std::is_same_v<T,IntervalRow>
+          || std::is_same_v<T,Matrix>
+          || std::is_same_v<T,IntervalMatrix>)
+        {
+          for(Index i = 0 ; i < x1.rows() ; i++)
+            for(Index j = 0 ; j < x1.cols() ; j++)
+              if(!(x1(i,j) == Approx<typename T::Scalar>(x2._x(i,j), x2._eps)))
+                return false;
+          return true;
         }
 
         else
         {
-          if constexpr(std::is_same_v<T,IntervalVector> || std::is_same_v<T,Vector>)
-          {
-            for(size_t i = 0 ; i < x1.size() ; i++)
-              if(!(((std::fabs(_lb(x1[i])-_lb(x2._x[i])) < x2._eps) && _ub(x1[i]) == _ub(x2._x[i]))
-                || ((std::fabs(_ub(x1[i])-_ub(x2._x[i])) < x2._eps) && _lb(x1[i]) == _lb(x2._x[i]))
-                || ((std::fabs(_lb(x1[i])-_lb(x2._x[i])) < x2._eps) && std::fabs(_ub(x1[i])-_ub(x2._x[i])) < x2._eps)))
-                return false;
-          }
-
-          else
-          {
-            for(size_t i = 0 ; i < x1.nb_rows() ; i++)
-              for(size_t j = 0 ; j < x1.nb_cols() ; j++)
-                if(!(((std::fabs(_lb(x1(i,j))-_lb(x2._x(i,j))) < x2._eps) && _ub(x1(i,j)) == _ub(x2._x(i,j)))
-                  || ((std::fabs(_ub(x1(i,j))-_ub(x2._x(i,j))) < x2._eps) && _lb(x1(i,j)) == _lb(x2._x(i,j)))
-                  || ((std::fabs(_lb(x1(i,j))-_lb(x2._x(i,j))) < x2._eps) && std::fabs(_ub(x1(i,j))-_ub(x2._x(i,j))) < x2._eps)))
-                  return false;
-          }
-
-          return true;
+          assert_release(false && "Approx::operator== unhandled case");
+          return false;
         }
-      }
-
-      friend bool operator==(const Approx<T>& x1, const T& x2)
-      {
-        return operator==(x2, x1);
-      }
-
-      friend bool operator!=(const T& x1, const Approx<T>& x2)
-      {
-        return !operator==(x1, x2);
-      }
-
-      friend bool operator!=(const Approx<T>& x1, const T& x2)
-      {
-        return !operator==(x2, x1);
       }
 
       friend std::ostream& operator<<(std::ostream& os, const Approx<T>& x)

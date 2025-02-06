@@ -22,24 +22,25 @@ using namespace pybind11::literals;
 template<typename T>
 void export_CtcInverseNotIn(py::module& m, const std::string& export_name, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& pyctc)
 {
-  py::class_<CtcInverseNotIn<T>> exported(m, export_name.c_str(), pyctc, CTCINVERSE_MAIN);
+  using D = typename T::Domain;
+  py::class_<CtcInverseNotIn<D>> exported(m, export_name.c_str(), pyctc, CTCINVERSE_MAIN);
 
   exported
-    .def(py::init<const AnalyticFunction<OpValue<T,IntervalMatrix>>&, const T&, bool>(),
+    .def(py::init<const AnalyticFunction<T>&, const D&, bool>(),
       "f"_a, "y"_a, "with_centered_form"_a = true,
-      CTCINVERSENOTIN_YX_CTCINVERSENOTIN_CONST_ANALYTICFUNCTION_TYPENAME_WRAPPER_Y_DOMAIN_REF_CONST_Y_REF_BOOL);
+      CTCINVERSENOTIN_YX_CTCINVERSENOTIN_CONST_ANALYTICFUNCTION_TYPENAME_VALUETYPE_Y_TYPE_REF_CONST_Y_REF_BOOL);
 
-  if constexpr(std::is_same_v<T,IntervalVector>) // separators only associated with interval vectors
+  if constexpr(std::is_same_v<T,VectorType>) // separators only associated with interval vectors
   {
     exported
-    .def(py::init<const AnalyticFunction<OpValue<T,IntervalMatrix>>&, const pyCtcIntervalVector&, bool>(),
+    .def(py::init<const AnalyticFunction<T>&, const pyCtcIntervalVector&, bool>(),
       "f"_a, "c"_a, "with_centered_form"_a = true,
-      CTCINVERSENOTIN_YX_CTCINVERSENOTIN_CONST_ANALYTICFUNCTION_TYPENAME_WRAPPER_Y_DOMAIN_REF_CONST_C_REF_BOOL);
+      CTCINVERSENOTIN_YX_CTCINVERSENOTIN_CONST_ANALYTICFUNCTION_TYPENAME_VALUETYPE_Y_TYPE_REF_CONST_C_REF_BOOL);
   }
 
   exported
 
-    .def(CONTRACT_BOX_METHOD(CtcInverseNotIn<T>,
+    .def(CONTRACT_BOX_METHOD(CtcInverseNotIn<D>,
       VOID_CTCINVERSENOTIN_YX_CONTRACT_X_REF_CONST))
     
   ;

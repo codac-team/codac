@@ -23,7 +23,7 @@ namespace codac2
 
       SepCartProd(const Collection<SepBase>& seps)
         : Sep<SepCartProd>([seps] {
-            size_t n = 0;
+            Index n = 0;
             for(const auto& si : seps)
               n += si->size();
             return n;

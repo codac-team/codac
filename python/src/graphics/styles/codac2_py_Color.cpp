@@ -1,5 +1,5 @@
 /** 
- *  Codac binding (core)
+ *  Codac binding (graphics)
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -19,24 +19,59 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
+
 void export_Color(py::module& m)
 {
+
+  py::enum_<Model>(m, "Model")
+    .value("RGB", Model::RGB)
+    .value("HSV", Model::HSV)
+  ;
+
   py::class_<Color> exported_color(m, "Color", COLOR_MAIN);
   exported_color
+    
+    .def(py::init<>(),COLOR_COLOR)
 
-    .def_readwrite("r", &Color::r)
-    .def_readwrite("g", &Color::g)
-    .def_readwrite("b", &Color::b)
-    .def_readwrite("alpha", &Color::alpha)
-    .def_readwrite("hex_str", &Color::hex_str)
+    .def(py::init<const std::array<float,3>&,Model>(),
+      COLOR_COLOR_CONST_ARRAY_FLOAT3_REF_MODEL,
+      "xyz"_a, "m_"_a=Model::RGB)
 
-    .def(py::init<int,int,int,int>(),
-      COLOR_COLOR_INT_INT_INT_INT,
-      "r"_a, "g"_a, "b"_a, "alpha"_a=255)
+    .def(py::init<const std::array<float,4>&,Model>(),
+      COLOR_COLOR_CONST_ARRAY_FLOAT4_REF_MODEL,
+      "xyza"_a, "m_"_a=Model::RGB)
 
-    .def(py::init<float,float,float,float>(),
-      COLOR_COLOR_FLOAT_FLOAT_FLOAT_FLOAT,
-      "r"_a, "g"_a, "b"_a, "alpha"_a=1.)
+    .def(py::init<const std::string&>(),
+      COLOR_COLOR_CONST_STRING_REF,
+      "hex_str"_a)
+
+    .def("model", &Color::model,
+      CONST_MODEL_REF_COLOR_MODEL_CONST)
+
+
+    // Other formats
+
+    .def("hex_str", &Color::hex_str,
+      STRING_COLOR_HEX_STR_CONST)
+
+    .def("vec", &Color::vec,
+      VECTOR_COLOR_VEC_CONST)
+
+    // Conversions
+
+    .def("rgb", &Color::rgb,
+      COLOR_COLOR_RGB_CONST)
+
+    .def("hsv", &Color::hsv,
+      COLOR_COLOR_HSV_CONST)
+
+    // Overload flux operator
+
+    .def("__str__", [](const Color& c) {
+      std::ostringstream oss;
+      oss << c;
+      return oss.str();
+    })
 
     // Predefined colors
 
@@ -74,5 +109,15 @@ void export_Color(py::module& m)
     .def_static("dark_gray", &Color::dark_gray,
       STATIC_COLOR_COLOR_DARK_GRAY_FLOAT,
       "alpha"_a=1.)
+
+    .def_static("purple", &Color::purple,
+      STATIC_COLOR_COLOR_PURPLE_FLOAT,
+      "alpha"_a=1.)
+
+    .def_static("dark_green", &Color::dark_green,
+      STATIC_COLOR_COLOR_DARK_GREEN_FLOAT,
+      "alpha"_a=1.)
   ;
+
+  py::implicitly_convertible<py::list, Color>();
 }

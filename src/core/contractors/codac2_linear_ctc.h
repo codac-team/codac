@@ -11,9 +11,11 @@
 #pragma once
 
 #include <string>
-#include "codac2_arithmetic.h"
 #include "codac2_Collection.h"
 #include "codac2_template_tools.h"
+#include "codac2_Matrix.h"
+#include "codac2_IntervalVector.h"
+#include "codac2_IntervalMatrix.h"
 
 namespace codac2
 {
@@ -177,17 +179,17 @@ namespace codac2
        */
       void contract(IntervalMatrix& A, IntervalVector& x, IntervalVector& b) const
       {
-        assert_release(A.is_squared() && A.nb_rows() == x.size() && A.nb_rows() == b.size());
+        assert_release(A.is_squared() && A.rows() == x.size() && A.rows() == b.size());
 
-        auto A0 = A.mid();
-        auto A0_inv = A0._e.inverse();
-        IntervalMatrix Ap(A0_inv.template cast<Interval>()*A._e);
-        IntervalVector bp(A0_inv.template cast<Interval>()*b._e);
+        IntervalMatrix A0 = A.mid();
+        IntervalMatrix A0_inv = A.mid().inverse().template cast<Interval>();
+        IntervalMatrix Ap = A0_inv*A;
+        IntervalVector bp = A0_inv*b;
 
         _ctc_no_precond.front().contract(Ap,x,bp);
 
-        b &= IntervalVector(A0._e.template cast<Interval>()*bp._e);
-        A &= IntervalMatrix(A0._e.template cast<Interval>()*Ap._e);
+        b &= A0*bp;
+        A &= A0*Ap;
       }
 
       virtual std::shared_ptr<CtcLinearBase> copy() const

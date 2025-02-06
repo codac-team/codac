@@ -20,7 +20,7 @@ class TestVector(unittest.TestCase):
   def tests_vector_specific_to_python(self):
 
     x = Vector([1,2,3])
-    y = Vector.zeros(3)
+    y = Vector.zero(3)
 
     i = 0
     for xi in x: # using __iter__

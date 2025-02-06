@@ -26,7 +26,7 @@ namespace codac2
       SepAction(const S& s, const OctaSym& a)
         : Sep<SepAction>(a.size()), _sep(s), _s(a), __s(a.invert())
       {
-        assert_release(size_of(s) == a.size());
+        assert_release(size_of(s) == (Index)a.size());
       }
 
       BoxPair separate(const IntervalVector& x) const;

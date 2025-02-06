@@ -24,6 +24,10 @@ void export_CtcUnion(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInte
   py::class_<CtcUnion<IntervalVector>> exported(m, "CtcUnion", pyctc, CTCUNION_MAIN);
   exported
 
+    .def(py::init<Index>(),
+      CTCUNION_X_CTCUNION_INDEX,
+      "n"_a)
+
     .def(py::init(
         [](const CtcBase<IntervalVector>& c)
         {

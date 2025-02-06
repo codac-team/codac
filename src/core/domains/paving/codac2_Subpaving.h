@@ -114,7 +114,7 @@ namespace codac2
         assert_release(!l.empty());
         assert_release(l.front().size() == 2 && "only 2d contours can be sorted");
 
-        const size_t nl = l.size();
+        const Index nl = l.size();
 
         Vector current_pt = l.front().ub(), first_pt = current_pt;
         std::list<IntervalVector> s { l.front() };

@@ -1,6 +1,9 @@
 // The following is originated from the former codac::CtcPolar
 // by Benoit Desrochers
 
+  #include "codac2_arith_add.h"
+  #include "codac2_sqr.h"
+
   // Implements interval modulo with double period: x = y mod(p)
 
     bool bwd_imod2(Interval& x, Interval& y, const Interval& p)
@@ -109,10 +112,10 @@
     a4 &= a3;
     a3 &= a4;
 
-    bwd_sqr(a4, rho);
-    bwd_add(a3, a2, a1);
-    bwd_sqr(a1, x);
-    bwd_sqr(a2, y);
+    SqrOp::bwd(a4, rho);
+    AddOp::bwd(a3, a2, a1);
+    SqrOp::bwd(a1, x);
+    SqrOp::bwd(a2, y);
 
     Interval x1 = rho*cos(theta);
     Interval y1 = rho*sin(theta);

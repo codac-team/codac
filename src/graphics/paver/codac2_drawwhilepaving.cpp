@@ -54,7 +54,7 @@ namespace codac2
       fig->draw_box(x0, StyleProperties::outside());
 
     list<IntervalVector> l { x0 };
-    size_t n = 0;
+    Index n = 0;
 
     while(!l.empty())
     {
@@ -83,7 +83,7 @@ namespace codac2
       }
     }
 
-    printf("Computation time: %.4fs, %zd boxes\n", (double)(clock()-t_start)/CLOCKS_PER_SEC, n);
+    printf("Computation time: %.4fs, %ld boxes\n", (double)(clock()-t_start)/CLOCKS_PER_SEC, n);
   }
 
   void draw_while_paving(const IntervalVector& x0, std::shared_ptr<const SepBase> s, double eps, std::shared_ptr<Figure2D> fig)
@@ -103,7 +103,6 @@ namespace codac2
     clock_t t_start = clock();
 
     list<IntervalVector> l { x0 };
-    size_t n_inner = 0, n_boundary = 0;
 
     while(!l.empty())
     {
@@ -114,10 +113,7 @@ namespace codac2
       auto boundary = x_sep.inner & x_sep.outer;
 
       for(const auto& bi : x.diff(x_sep.inner))
-      {
-        n_inner++;
         fig->draw_box(bi, StyleProperties::inside());
-      }
 
       for(const auto& bi : x.diff(x_sep.outer))
         fig->draw_box(bi, StyleProperties::outside());
@@ -125,10 +121,7 @@ namespace codac2
       if(!boundary.is_empty())
       {
         if(boundary.max_diam() <= eps)
-        {
-          n_boundary++;
           fig->draw_box(boundary, StyleProperties::boundary());
-        }
 
         else
         {
@@ -138,7 +131,6 @@ namespace codac2
       }
     }
     
-    printf("Computation time: %.4fs, %zd inner boxes, %zd boundary boxes\n",
-      (double)(clock()-t_start)/CLOCKS_PER_SEC, n_inner, n_boundary);
+    printf("Computation time: %.4fs\n", (double)(clock()-t_start)/CLOCKS_PER_SEC);
   }
 }

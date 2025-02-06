@@ -16,6 +16,8 @@
 
 namespace codac2
 {
+  /// \cond SepWrapper_<T>
+
   template<typename T>
   class SepWrapper_ : public Sep<SepWrapper_<T>>
   {
@@ -29,6 +31,8 @@ namespace codac2
 
       const T _y;
   };
+
+  /// \endcond
 
   template<>
   class SepWrapper_<IntervalVector> : public SepCtcPair

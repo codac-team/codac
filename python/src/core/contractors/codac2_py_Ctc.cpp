@@ -25,22 +25,16 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-/*py::class_<Ctc,pyCtc> export_Ctc(py::module& m)
+py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py::module& m)
 {
-  py::class_<Ctc,pyCtc> py_ctc(m, "CtcBase");
-  return py_ctc;
-}*/
-
-py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py::module& m/*, py::class_<Ctc,pyCtc>& py_ctc*/)
-{
-  py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector> py_ctc_iv(m, "CtcIntervalVector"/*, py_ctc*/);
+  py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector> py_ctc_iv(m, "CtcIntervalVector");
   py_ctc_iv
 
-    .def(py::init<size_t>(),
-      CTCBASE_X_CTCBASE_SIZET)
+    .def(py::init<Index>(),
+      CTCBASE_X_CTCBASE_INDEX)
 
     .def("size", &CtcBase<IntervalVector>::size,
-      SIZET_CTCBASE_X_SIZE_CONST)
+      INDEX_CTCBASE_X_SIZE_CONST)
 
     .def("copy", [](const CtcBase<IntervalVector>& c)
         {

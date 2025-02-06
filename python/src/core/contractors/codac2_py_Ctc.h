@@ -29,7 +29,7 @@ class pyCtcIntervalVector : public CtcBase<IntervalVector>
 {
   public:
 
-    pyCtcIntervalVector(size_t_type n)
+    pyCtcIntervalVector(Index_type n)
       : CtcBase<IntervalVector>(n)
     {
       matlab::test_integer(n);
@@ -62,6 +62,8 @@ class pyCtcIntervalVector : public CtcBase<IntervalVector>
       assert_release(overload && "CtcBase<IntervalVector>: copy method not found");
 
       auto obj = overload();
-      return std::shared_ptr<CtcBase<IntervalVector>>(obj.cast<CtcBase<IntervalVector>*>(), [](auto p) { /* no delete */ });
+      return std::shared_ptr<CtcBase<IntervalVector>>(obj.cast<CtcBase<IntervalVector>*>(),
+        []([[maybe_unused]] auto p)
+        { /* no delete */ });
     }
 };
