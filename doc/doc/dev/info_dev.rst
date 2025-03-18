@@ -1,10 +1,5 @@
 .. _sec-manual-dev:
 
-.. warning::
-  
-  Several changes are currently performed on the library.
-  This page may not be up to date.
-
 ##########################
 Information for developers
 ##########################
