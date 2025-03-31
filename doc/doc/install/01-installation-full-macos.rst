@@ -18,7 +18,7 @@ Install `Homebrew package manager <https://brew.sh/>`_ and build tools:
   brew install wget autoconf automake libtool
   brew install --cask cmake
 
-Download and extract *e.g.* ``codac_standalone_arm64_monterey.zip`` (for macOS 12 Monterey on a Mac with Apple silicon (arm64 processor), use ``codac_standalone_x86_64_monterey.zip`` for a Mac with an Intel processor (x86_64 processor), see https://support.apple.com/en-us/116943) from `<https://github.com/codac-team/codac/releases/tag/v1.5.7/>`_, then in ``example`` folder run:
+Download and extract *e.g.* ``codac_standalone_arm64_ventura.zip`` (for macOS 13 Ventura on a Mac with Apple silicon (arm64 processor), use ``codac_standalone_x86_64_ventura.zip`` for a Mac with an Intel processor (x86_64 processor), see https://support.apple.com/en-us/116943) from `<https://github.com/codac-team/codac/releases/tag/v1.5.7/>`_, then in ``example`` folder run:
 
 .. code-block:: bash
 

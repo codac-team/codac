@@ -18,6 +18,14 @@ A Debian package is available for the last release 1.5.7 of the library:
   sudo apt update
   sudo apt install libcodac-dev
 
+.. note::
+
+  If not already done, you will need this to create C++ programs:
+
+  .. code-block:: bash
+
+    sudo apt install build-essential cmake
+
 Then, check your installation :ref:`with the instructions of this page <sec-start-cpp-project>`.
 
 .. warning::
