@@ -19,8 +19,8 @@ In case you want to use Codac only with Python, then the installation procedure 
   
   # You may have to upgrade pip (19.0.0 required at least)
   pip3 install --upgrade pip 
-  pip3 install codac==1.6
-  # latest release of Codac v1 is 1.6
+  pip3 install codac==1.5.7
+  # latest release of Codac v1 is 1.5.7
 
 
 .. role:: gbg
