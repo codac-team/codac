@@ -2,7 +2,7 @@
 #  codac / robotics example - cmake configuration file
 # ==================================================================
 
-  cmake_minimum_required(VERSION 3.0.2)
+  cmake_minimum_required(VERSION 3.5)
   project(codac_lie_02 LANGUAGES CXX)
 
 # Adding IBEX

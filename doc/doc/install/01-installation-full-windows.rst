@@ -12,12 +12,12 @@ Quick start
 
 .. rubric:: Using MinGW
 
-Check https://community.chocolatey.org/packages/codac.
+Check https://community.chocolatey.org/packages/codac/1.5.7.
 
 
 .. rubric:: Using Visual Studio
 
-Download and extract *e.g.* ``codac_standalone_x64_vc17.zip`` (for Visual Studio 2022) from `<https://github.com/codac-team/codac/releases/tag/v1.6>`_, open ``example\CMakelists.txt``, choose ``x64-Release`` configuration in Visual Studio (instead of ``x64-Debug``), double-click on ``main.cpp`` in the Solution Explorer and then click on the green Start button, finally check that "My first tube:Tube [0, 10]" appears.
+Download and extract *e.g.* ``codac_standalone_x64_vc17.zip`` (for Visual Studio 2022) from `<https://github.com/codac-team/codac/releases/tag/v1.5.7>`_, open ``example\CMakelists.txt``, choose ``x64-Release`` configuration in Visual Studio (instead of ``x64-Debug``), double-click on ``main.cpp`` in the Solution Explorer and then click on the green Start button, finally check that "My first tube:Tube [0, 10]" appears.
 
 Optionally, download and run `<https://github.com/ENSTABretagneRobotics/VIBES/releases/download/0.2.3/VIBes-0.2.3-win32.exe>`_ before running the project, and check that a tube appears in :ref:`VIBes viewer <sec-installation-graphics>`.
 

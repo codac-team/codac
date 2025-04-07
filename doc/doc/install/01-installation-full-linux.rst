@@ -10,13 +10,21 @@ Installing Codac v1 on Linux for C++ use
 Install from package (latest release, for Ubuntu (amd64, arm64), Debian (arm64, armhf) and possibly others)
 -----------------------------------------------------------------------------------------------------------
 
-A Debian package is available for the last release 1.6 of the library:
+A Debian package is available for the last release 1.5.7 of the library:
 
 .. code-block:: bash
 
   sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
   sudo apt update
   sudo apt install libcodac-dev
+
+.. note::
+
+  If not already done, you will need this to create C++ programs:
+
+  .. code-block:: bash
+
+    sudo apt install build-essential cmake
 
 Then, check your installation :ref:`with the instructions of this page <sec-start-cpp-project>`.
 
@@ -38,7 +46,7 @@ Then, check your installation :ref:`with the instructions of this page <sec-star
 
 .. note::
 
-  Standalone archives exist also for all the supported configurations, e.g. for a Raspberry Pi running Raspberry Pi OS Bookworm 32 bit, download and extract ``codac_standalone_armhf_bookworm.zip`` from `<https://github.com/codac-team/codac/releases/latest/>`_, then in the ``example`` folder run:
+  Standalone archives exist also for all the supported configurations, e.g. for a Raspberry Pi running Raspberry Pi OS Bookworm 32 bit, download and extract ``codac_standalone_armhf_bookworm.zip`` from `<https://github.com/codac-team/codac/releases/tag/v1.5.7>`_, then in the ``example`` folder run:
 
   .. code-block:: bash
 

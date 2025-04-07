@@ -32,7 +32,7 @@ For the compilation of your project, you can use CMake with the following file :
 
 .. code-block:: cmake
 
-    cmake_minimum_required(VERSION 3.0.2)
+    cmake_minimum_required(VERSION 3.5)
     project(my_project LANGUAGES CXX)
 
     set(CMAKE_CXX_STANDARD 17)
