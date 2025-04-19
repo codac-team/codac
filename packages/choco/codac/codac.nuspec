@@ -8,7 +8,7 @@
     <title>Codac</title>
     <authors>Codac Team</authors>
     <projectUrl>http://codac.io/</projectUrl>
-    <iconUrl>https://avatars.githubusercontent.com/u/77788511</iconUrl>
+    <iconUrl>https://rawcdn.githack.com/lebarsfa/Packages/50595b5a73d25531d2ee33f47c8fb9a43590bd1a/choco/icons/codac.png</iconUrl>
     <licenseUrl>https://github.com/codac-team/codac/blob/master/COPYING.LESSER</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/codac-team/codac</projectSourceUrl>
