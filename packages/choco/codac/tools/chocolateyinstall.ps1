@@ -50,7 +50,7 @@ else {
 	}
 	Install-ChocolateyZipPackage @packageArgs
 
-	# Analyze url to guess what to add to Windows PATH...
+	# Analyze url to guess what to add to Windows PATH or registry...
 	if ($url -match "x86") {
 		$arch = "x86"
 	}
@@ -92,14 +92,14 @@ else {
 	}
 }
 
-if (!$pp['NoRegistry']) {
+$cmakepathtoadd = "$root\share\$CMakePackageName\cmake"
+if ((!$pp['NoRegistry']) -and (Test-Path $cmakepathtoadd)) {
 	New-Item "$CMakeSystemRepositoryPath\$CMakePackageName" -ItemType directory -Force
-	New-ItemProperty -Name "$CMakePackageName$CMakePackageVer`_$arch" -PropertyType String -Value "$root\share\$CMakePackageName\cmake" -Path "$CMakeSystemRepositoryPath\$CMakePackageName" -Force
+	New-ItemProperty -Name "$CMakePackageName$CMakePackageVer`_$arch" -PropertyType String -Value $cmakepathtoadd -Path "$CMakeSystemRepositoryPath\$CMakePackageName" -Force
 }
 $pathtoadd = "$root\bin"
-if (($pp['Path']) -and !([environment]::GetEnvironmentVariable("Path","Machine") -match [regex]::escape($pathtoadd))) {
-	$newpath = [environment]::GetEnvironmentVariable("Path","Machine") + ";$pathtoadd"
-	[environment]::SetEnvironmentVariable("Path",$newpath,"Machine")
+if ((!$pp['NoPath']) -and (Test-Path $pathtoadd)) {
+	Install-ChocolateyPath $pathtoadd -PathType 'Machine'
 }
 
 for ($i = 1; $i -le 99; $i++) {
@@ -118,7 +118,7 @@ for ($i = 1; $i -le 99; $i++) {
 		}
 		Install-ChocolateyZipPackage @packageArgs
 
-		# Analyze url to guess what to add to Windows PATH...
+		# Analyze url to guess what to add to Windows PATH or registry...
 		if ($url -match "x86") {
 			$arch = "x86"
 		}
@@ -159,14 +159,14 @@ for ($i = 1; $i -le 99; $i++) {
 			$runtime = "mingw"
 		}
 
-		if (!$pp['NoRegistry']) {
+		$cmakepathtoadd = "$root\share\$CMakePackageName\cmake"
+		if ((!$pp['NoRegistry']) -and (Test-Path $cmakepathtoadd)) {
 			New-Item "$CMakeSystemRepositoryPath\$CMakePackageName" -ItemType directory -Force
-			New-ItemProperty -Name "$CMakePackageName$CMakePackageVer`_$arch" -PropertyType String -Value "$root\share\$CMakePackageName\cmake" -Path "$CMakeSystemRepositoryPath\$CMakePackageName" -Force
+			New-ItemProperty -Name "$CMakePackageName$CMakePackageVer`_$arch" -PropertyType String -Value $cmakepathtoadd -Path "$CMakeSystemRepositoryPath\$CMakePackageName" -Force
 		}
 		$pathtoadd = "$root\bin"
-		if (($pp['Path']) -and !([environment]::GetEnvironmentVariable("Path","Machine") -match [regex]::escape($pathtoadd))) {
-			$newpath = [environment]::GetEnvironmentVariable("Path","Machine") + ";$pathtoadd"
-			[environment]::SetEnvironmentVariable("Path",$newpath,"Machine")
+		if ((!$pp['NoPath']) -and (Test-Path $pathtoadd)) {
+			Install-ChocolateyPath $pathtoadd -PathType 'Machine'
 		}
 	}
 }

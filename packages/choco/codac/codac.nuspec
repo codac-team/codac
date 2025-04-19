@@ -33,9 +33,9 @@ The following package parameters can be set:
 - `/urlX:URL` - Same as above, with X in [1,99], except this will not disable the installation of the MinGW libraries compatible with the corresponding MinGW Chocolatey package dependency.
 - `/checksumX:SHA256` - SHA256 checksum of the binary package specified by the `/urlX` parameter. If needed, use the standard parameter `choco install --ignore-checksums ...` for trusted sources.
 - `/InstallDir:INSTALLDIR` - Installation directory.
-- `/Path` - Will try to update Windows `PATH`.
+- `/NoPath` - Will not try to update Windows `PATH`.
 - `/NoRegistry` - Will not try to update Windows registry.
-To pass package parameters, use `--params "''"` (e.g. `choco install codac --params "'/Path /NoRegistry'"`), and to install another binary package, try e.g.
+To pass package parameters, use `--params "''"` (e.g. `choco install codac --params "'/NoPath /NoRegistry'"`), and to install another binary package, try e.g.
 ```
 choco install -y chocolatey-core.extension
 choco install -y --ignore-dependencies codac --params "'/url:https://github.com/codac-team/codac/releases/download/v1/codac_x64_vc17.zip'"
