@@ -5,12 +5,15 @@
 # Generating a library unsupported.so containing the python binding:
 
   pybind11_add_module(_unsupported SHARED
+    peibos/codac2_py_Parallelepiped.cpp
+    peibos/codac2_py_peibos.cpp
     codac2_py_unsupported.cpp
   )
 
   target_include_directories(_unsupported
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../../docstring
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../../../include 
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../core/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
   )

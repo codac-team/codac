@@ -1,0 +1,42 @@
+/** 
+ *  Codac binding (graphics)
+ * ----------------------------------------------------------------------------
+ *  \date       202
+ *  \author     Maël Godard
+ *  \copyright  Copyright 2024 Codac Team
+ *  \license    GNU Lesser General Public License (LGPL)
+ */
+
+#include <pybind11/pybind11.h>
+#include <pybind11/operators.h>
+#include <pybind11/stl.h>
+#include <codac2_template_tools.h>
+#include <codac2_Vector.h>
+#include <codac2_AnalyticFunction.h>
+#include <codac2_Parallelepiped.h>
+#include <codac2_peibos.h>
+#include "codac2_py_peibos_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+
+using namespace std;
+using namespace codac2;
+namespace py = pybind11;
+using namespace pybind11::literals;
+
+void export_peibos(py::module& m)
+{
+  m.def("PEIBOS2D", 
+    [](const py::object& f, const py::object& psi_0, vector<vector<int>> generators, double epsilon, Vector offset)
+    {
+      return PEIBOS2D(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, offset);
+    },
+    VECTOR_PARALLELEPIPED_PEIBOS2D_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_VECTOR_VECTOR_INT_DOUBLE_VECTOR,
+    "f"_a, "psi_0"_a, "generators"_a, "epsilon"_a, "offset"_a=Vector::zero(2));
+
+  m.def("PEIBOS3D", 
+    [](const py::object& f, const py::object& psi_0, vector<vector<int>> generators, double epsilon, Vector offset)
+    {
+      return PEIBOS3D(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, offset);
+    },
+    VECTOR_PARALLELEPIPED_PEIBOS3D_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_VECTOR_VECTOR_INT_DOUBLE_VECTOR,
+    "f"_a, "psi_0"_a, "generators"_a, "epsilon"_a, "offset"_a=Vector::zero(3));
+}

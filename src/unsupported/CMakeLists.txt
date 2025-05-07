@@ -4,9 +4,22 @@
 
   list(APPEND CODAC_UNSUPPORTED_SRC
     
+    ${CMAKE_CURRENT_SOURCE_DIR}/peibos/codac2_Parallelepiped.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/peibos/codac2_Parallelepiped.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/peibos/codac2_peibos.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/peibos/codac2_peibos.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/codac2_unsupported_empty.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/codac2_unsupported_empty.h
+    
   )
+
+if (WITH_CAPD)
+  list(APPEND CODAC_UNSUPPORTED_SRC
+    ${CMAKE_CURRENT_SOURCE_DIR}/peibos/codac2_peibos_capd.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/peibos/codac2_peibos_capd.cpp
+    )
+  set(CODAC_LIBRARIES ${CODAC_LIBRARIES} ${PROJECT_NAME}-capd capd::capd)
+endif()
 
 ################################################################################
 # Create the target for libcodac-unsupported
@@ -18,14 +31,12 @@
   #endif()
 
   add_library(${PROJECT_NAME}-unsupported ${CODAC_UNSUPPORTED_SRC})
-  target_include_directories(${PROJECT_NAME}-unsupported PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/ipe
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/vibes
-    ${CMAKE_CURRENT_SOURCE_DIR}/figures
-    ${CMAKE_CURRENT_SOURCE_DIR}/paver
-    ${CMAKE_CURRENT_SOURCE_DIR}/styles
-  )
-  target_link_libraries(${PROJECT_NAME}-unsupported PUBLIC ${PROJECT_NAME}-core Ibex::ibex Eigen3::Eigen)
+
+  target_link_libraries(${PROJECT_NAME}-unsupported PUBLIC ${CODAC_LIBRARIES} Ibex::ibex Eigen3::Eigen)
+
+  if (WITH_CAPD)
+    target_include_directories(${PROJECT_NAME}-unsupported PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../extensions/capd)
+  endif()
   
 
 ################################################################################
@@ -34,7 +45,6 @@
   
   set(CODAC_PKG_CONFIG_CFLAGS "${CODAC_PKG_CONFIG_CFLAGS} -I\${includedir}/${PROJECT_NAME}-unsupported" PARENT_SCOPE)
   set(CODAC_PKG_CONFIG_LIBS "${CODAC_PKG_CONFIG_LIBS} -l${PROJECT_NAME}-unsupported" PARENT_SCOPE)
-
 
 ################################################################################
 # Installation of libcodac-unsupported files
