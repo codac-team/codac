@@ -19,24 +19,6 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-vector<Index> test_and_convert(const vector<Index_type>& indices)
-{
-  #if FOR_MATLAB
-  
-    vector<Index> indices_Index(indices.size());
-
-    for(Index i = 0 ; i < indices.size() ; i++)
-    {
-      matlab::test_integer(indices[i]);
-      indices_Index[i] = matlab::input_index(indices[i]);
-    }
-
-  #else // same types: Index_type == Index
-
-    return indices;
-
-  #endif
-}
 
 void export_SepProj(py::module& m, py::class_<SepBase,pySep>& pysep)
 {
@@ -46,7 +28,7 @@ void export_SepProj(py::module& m, py::class_<SepBase,pySep>& pysep)
     .def(py::init(
         [](const SepBase& s, vector<Index_type> proj_indices, double default_eps)
         {
-          return make_unique<SepProj>(s.copy(), test_and_convert(proj_indices), default_eps);
+          return make_unique<SepProj>(s.copy(), matlab::convert_indices(proj_indices), default_eps);
         }),
       SEPPROJ_SEPPROJ_CONST_S_REF_CONST_VECTOR_INDEX_REF_DOUBLE,
       "s"_a, "proj_indices"_a, "default_eps"_a=0.01)
@@ -54,7 +36,7 @@ void export_SepProj(py::module& m, py::class_<SepBase,pySep>& pysep)
     .def(py::init(
         [](const SepBase& s, vector<Index_type> proj_indices, const IntervalVector& y, double default_eps)
         {
-          return make_unique<SepProj>(s.copy(), test_and_convert(proj_indices), y, default_eps);
+          return make_unique<SepProj>(s.copy(), matlab::convert_indices(proj_indices), y, default_eps);
         }),
       SEPPROJ_SEPPROJ_CONST_S_REF_CONST_VECTOR_INDEX_REF_CONST_INTERVALVECTOR_REF_DOUBLE,
       "s"_a, "proj_indices"_a, "y"_a, "default_eps"_a=0.01)
