@@ -95,7 +95,7 @@ void export_SepCartProd(py::module& m, py::class_<SepBase,pySep>& pysep)
       {
         Collection<SepBase> c;
         for(const auto& si : l)
-          c.add_shared_ptr(si.get().copy());
+          c.push_back(si.get().copy());
         return SepCartProd(c);
       },
     SEPCARTPROD_CART_PROD_CONST_S_REF_VARIADIC);

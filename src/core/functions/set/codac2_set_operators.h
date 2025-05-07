@@ -96,7 +96,7 @@ namespace codac2
   {
     static std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const AnalyticFunction<VectorType>& f, const std::shared_ptr<CtcBase<IntervalVector>>& s1)
     {
-      return std::make_shared<CtcInverse_<IntervalVector,IntervalVector>>(f,s1);
+      return std::make_shared<CtcInverse<IntervalVector,IntervalVector>>(f,s1);
     }
 
     static std::shared_ptr<SepBase> create_sep(const AnalyticFunction<VectorType>& f, const std::shared_ptr<SepBase>& s1)

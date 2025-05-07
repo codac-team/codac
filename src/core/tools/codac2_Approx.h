@@ -17,6 +17,7 @@
 #include "codac2_IntervalRow.h"
 #include "codac2_Matrix.h"
 #include "codac2_IntervalMatrix.h"
+#include "codac2_Polygon.h"
 
 namespace codac2
 {
@@ -86,4 +87,77 @@ namespace codac2
       const double _eps;
   };
   
+  template<>
+  class Approx<Segment>
+  {
+    public:
+
+      explicit Approx(const Segment& x, double eps = DEFAULT_EPS)
+        : _x(x), _eps(eps)
+      { }
+
+      friend bool operator==(const Segment& p1, const Approx<Segment>& p2)
+      {
+        return (Approx<IntervalVector>(p1[0], p2._eps) == p2._x[0] && Approx<IntervalVector>(p1[1], p2._eps) == p2._x[1])
+          || (Approx<IntervalVector>(p1[1], p2._eps) == p2._x[0] && Approx<IntervalVector>(p1[0], p2._eps) == p2._x[1]);
+      }
+
+      friend std::ostream& operator<<(std::ostream& os, const Approx<Segment>& x)
+      {
+        os << "Approx(" << x._x << ")";
+        return os;
+      }
+    
+    private:
+
+      const Segment _x;
+      const double _eps;
+  };
+  
+  template<>
+  class Approx<Polygon>
+  {
+    public:
+
+      explicit Approx(const Polygon& x, double eps = DEFAULT_EPS)
+        : _x(x), _eps(eps)
+      { }
+
+      friend bool operator==(const Polygon& p1, const Approx<Polygon>& p2)
+      {
+        size_t n = p1.edges().size();
+        if(p2._x.edges().size() != n)
+          return false;
+
+        size_t i; // looking for same reference of first value
+        for(i = 0 ; i < n ; i++)
+          if(Approx<Segment>(p1.edges()[0], p2._eps) == p2._x.edges()[i])
+            break;
+
+        int way = 1;
+        if(n > 1)
+          way = (Approx<Segment>(p1.edges()[1], p2._eps) == p2._x.edges()[(i+1)%n]) ? 1 : -1;
+        assert(way == 1 || (way == -1 && p1.edges()[1] == p2._x.edges()[(i-1+2*n)%n]));
+
+        for(size_t j = 0 ; j < n ; j++)
+          if(Approx<Segment>(p1.edges()[j], p2._eps) != p2._x.edges()[(i+way*j+2*n)%n])
+            return false;
+
+        return true;
+      }
+
+      friend std::ostream& operator<<(std::ostream& os, const Approx<Polygon>& x)
+      {
+        os << "Approx(" << x._x << ")";
+        return os;
+      }
+    
+    private:
+
+      const Polygon _x;
+      const double _eps;
+  };
+
+  Approx(const Polygon&, double) -> 
+    Approx<Polygon>;
 }

@@ -18,7 +18,7 @@ TEST_CASE("CtcAction")
 {
   {
     VectorVar x(2);
-    CtcInverse_<IntervalVector> c1(AnalyticFunction({x}, x-IntervalVector({{1,5},{8,6}})), IntervalVector({0.,0.}));
+    CtcInverse c1(AnalyticFunction({x}, x-IntervalVector({{1,5},{8,6}})), IntervalVector({0.,0.}));
 
     IntervalVector b(2);
     c1.contract(b);

@@ -19,8 +19,8 @@
 using namespace std;
 using namespace codac2;
 
-shared_ptr<Figure2D> DefaultView::_default_fig = nullptr;
-shared_ptr<Figure2D> DefaultView::_selected_fig = DefaultView::_default_fig;
+shared_ptr<Figure2D> DefaultFigure::_default_fig = nullptr;
+shared_ptr<Figure2D> DefaultFigure::_selected_fig = DefaultFigure::_default_fig;
 
 Figure2D::Figure2D(const std::string& name, GraphicOutput o, bool set_as_default_)
   : _name(name)
@@ -99,14 +99,30 @@ double Figure2D::scaled_unit() const
   return std::max(_axes[0].limits.diam(),_axes[1].limits.diam()) / _window_size.max_coeff();
 }
 
+void Figure2D::auto_scale()
+{
+  Vector w = this->window_size();
+  if(_axes[0].limits.diam() > _axes[1].limits.diam())
+    w[1] *= _axes[1].limits.diam()/_axes[0].limits.diam();
+  else
+    w[0] *= _axes[0].limits.diam()/_axes[1].limits.diam();
+
+  this->set_window_properties(this->pos(), w);
+}
+
 bool Figure2D::is_default() const
 {
-  return DefaultView::_selected_fig == this->weak_from_this().lock();
+  return DefaultFigure::_selected_fig == this->weak_from_this().lock();
 }
 
 void Figure2D::set_as_default()
 {
-  DefaultView::set(this->shared_from_this());
+  DefaultFigure::set(this->shared_from_this());
+}
+
+void Figure2D::set_tdomain(const Interval& tdomain)
+{
+  _tdomain = tdomain;
 }
 
 void Figure2D::draw_point(const Vector& c, const StyleProperties& s)
@@ -157,6 +173,15 @@ void Figure2D::draw_line(const Vector& p1, const Vector& p2, const StyleProperti
   draw_polyline({p1,p2}, s);
 }
 
+void Figure2D::draw_line(const Segment& e, const StyleProperties& s)
+{
+  draw_polyline({e[0].mid(),e[1].mid()}, s);
+  if(!e[0].is_degenerated())
+    draw_point(e[0].mid(),s); // revealing thick points
+  if(!e[1].is_degenerated())
+    draw_point(e[1].mid(),s); // revealing thick points
+}
+
 void Figure2D::draw_arrow(const Vector& p1, const Vector& p2, float tip_length, const StyleProperties& s)
 {
   assert_release(p1.size() == p2.size());
@@ -166,7 +191,7 @@ void Figure2D::draw_arrow(const Vector& p1, const Vector& p2, float tip_length, 
 
 void Figure2D::draw_polyline(const vector<Vector>& x, const StyleProperties& s)
 {
-  draw_polyline(x, 1e-3*scaled_unit(), s);
+  draw_polyline(x, 0., s);
 }
 
 void Figure2D::draw_polyline(const vector<Vector>& x, float tip_length, const StyleProperties& s)
@@ -182,16 +207,34 @@ void Figure2D::draw_polyline(const vector<Vector>& x, float tip_length, const St
     output_fig->draw_polyline(x,tip_length,s);
 }
 
-void Figure2D::draw_polygone(const vector<Vector>& x, const StyleProperties& s)
+void Figure2D::draw_polygon(const Polygon& x, const StyleProperties& s)
 {
   assert_release(x.size() > 1);
-  for([[maybe_unused]] const auto& xi : x)
+
+  vector<Vector> w;
+  for(const auto& xi : x.sorted_vertices())
   {
     assert_release(this->size() <= xi.size());
+    if(!xi.is_degenerated())
+      draw_point(xi.mid(),s); // revealing thick points
+    w.push_back(xi.mid());
   }
 
   for(const auto& output_fig : _output_figures)
-    output_fig->draw_polygone(x,s);
+    output_fig->draw_polygon(w,s);
+}
+
+void Figure2D::draw_parallelepiped(const Vector& z, const Matrix& A, const StyleProperties& s)
+{
+  assert_release(A.is_squared() && A.rows() == z.size());
+  assert_release(z.size() == 2);
+
+  auto a1 = A.col(0), a2 = A.col(1);
+
+  draw_polygon(vector<Vector>({
+      Vector(z+a1+a2), Vector(z-a1+a2),
+      Vector(z-a1-a2), Vector(z+a1-a2)
+    }), s);
 }
 
 void Figure2D::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s)
@@ -258,11 +301,14 @@ void Figure2D::draw_ellipsoid(const Ellipsoid &e, const StyleProperties &s)
 void Figure2D::draw_trajectory(const SampledTraj<Vector>& x, const StyleProperties& s)
 {
   assert_release(this->size() <= x.size());
-  std::vector<Vector> values(x.nb_samples());
-  size_t i = 0;
+
+  std::vector<Vector> values;
   for(const auto& [ti,xi] : x)
-    values[i++] = xi;
-  draw_polyline(values,s);
+    if(_tdomain.contains(ti))
+      values.push_back(xi);
+
+  if(values.size() > 1)
+    draw_polyline(values,s);
 }
 
 void Figure2D::draw_trajectory(const AnalyticTraj<VectorType>& x, const StyleProperties& s)
@@ -277,16 +323,34 @@ void Figure2D::draw_trajectory(const SampledTraj<Vector>& x, const ColorMap& cma
   double range = x.tdomain().diam();
 
   for(auto it = x.begin(); std::next(it) != x.end(); ++it)
-  {
-    draw_polyline(
-      { it->second, std::next(it)->second },
-      cmap.color((it->first - x.begin()->first) / range));
-  }
+    if(_tdomain.contains(it->first))
+      draw_polyline(
+        { it->second, std::next(it)->second },
+        cmap.color((it->first - x.begin()->first) / range));
 }
 
 void Figure2D::draw_trajectory(const AnalyticTraj<VectorType>& x, const ColorMap& cmap)
 {
   draw_trajectory(x.sampled(x.tdomain().diam()/1e4), cmap);
+}
+
+void Figure2D::plot_trajectory(const SampledTraj<double>& x, const StyleProperties& s)
+{
+  std::vector<Vector> values;
+  for(const auto& [ti,xi] : x)
+    if(_tdomain.contains(ti))
+      values.push_back({ti,xi});
+
+  if(values.size() > 1)
+  {
+    _axes[0].limits = x.tdomain();
+    _axes[1].limits = x.codomain();
+
+    for(const auto& output_fig : _output_figures)
+      output_fig->update_axes();
+
+    draw_polyline(values,s);
+  }
 }
 
 void Figure2D::draw_tank(const Vector& x, float size, const StyleProperties& s)
@@ -310,6 +374,18 @@ void Figure2D::draw_AUV(const Vector& x, float size, const StyleProperties& s)
   {
     assert_release(output_fig->j()+1 < x.size());
     output_fig->draw_AUV(x,size,s);
+  }
+}
+
+void Figure2D::draw_motor_boat(const Vector& x, float size, const StyleProperties& s)
+{
+  assert_release(this->size() <= x.size()+1);
+  assert_release(size >= 0.);
+
+  for(const auto& output_fig : _output_figures)
+  {
+    assert_release(output_fig->j()+1 < x.size());
+    output_fig->draw_motor_boat(x,size,s);
   }
 }
 

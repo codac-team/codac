@@ -53,12 +53,12 @@ int main()
   cout << "\n\nafter time=" << T << " the image is: " << result;
   cout << "\ndiam(image): " << diam(result) << endl << endl;
 
-  DefaultView::set_axes(axis(0,{-2,1.5}),axis(1,{-2,3}));
+  DefaultFigure::set_axes(axis(0,{-2,1.5}),axis(1,{-2,3}));
 
   for (float t=0.;t<20.;t+=0.05)
-    DefaultView::draw_box(to_codac(solution(t)));
+    DefaultFigure::draw_box(to_codac(solution(t)));
 
-  DefaultView::draw_box(to_codac(c),Color::green());
-  DefaultView::draw_box(to_codac(result),Color::red());
+  DefaultFigure::draw_box(to_codac(c),Color::green());
+  DefaultFigure::draw_box(to_codac(result),Color::red());
   
 }

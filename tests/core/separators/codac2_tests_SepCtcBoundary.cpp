@@ -37,29 +37,29 @@ TEST_CASE("SepCtcBoundary")
 
   IntervalVector x(2);
   auto xs = sep_diamond.separate(IntervalVector(2));
-  //DefaultView::draw_box(xs.inner,Color::dark_green());
-  //DefaultView::draw_box(xs.outer,Color::blue());
+  //DefaultFigure::draw_box(xs.inner,Color::dark_green());
+  //DefaultFigure::draw_box(xs.outer,Color::blue());
   CHECK(xs.inner == IntervalVector(2));
   CHECK(xs.outer == IntervalVector({{-1,1},{-1,1}}));
 
   x = IntervalVector({{0,10},{0,10}});
   xs = sep_diamond.separate(x);
-  //DefaultView::draw_box(xs.inner,Color::dark_green());
-  //DefaultView::draw_box(xs.outer,Color::blue());
+  //DefaultFigure::draw_box(xs.inner,Color::dark_green());
+  //DefaultFigure::draw_box(xs.outer,Color::blue());
   CHECK(xs.inner == x);
   CHECK(xs.outer == IntervalVector({{0,1},{0,1}}));
 
   x = IntervalVector({{0.2,10},{0.2,10}});
   xs = sep_diamond.separate(x);
-  //DefaultView::draw_box(xs.inner,Color::dark_green());
-  //DefaultView::draw_box(xs.outer,Color::blue());
+  //DefaultFigure::draw_box(xs.inner,Color::dark_green());
+  //DefaultFigure::draw_box(xs.outer,Color::blue());
   CHECK(xs.inner == x);
   CHECK(xs.outer == IntervalVector({{0.2,0.8},{0.2,0.8}}));
 
   x = IntervalVector({{0.5,10},{0.5,10}});
   xs = sep_diamond.separate(x);
-  //DefaultView::draw_box(xs.inner,Color::dark_green());
-  //DefaultView::draw_box(xs.outer,Color::blue());
+  //DefaultFigure::draw_box(xs.inner,Color::dark_green());
+  //DefaultFigure::draw_box(xs.outer,Color::blue());
   CHECK(xs.inner == x);
   CHECK(xs.outer == IntervalVector({0.5,0.5}));
 }

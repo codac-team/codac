@@ -18,6 +18,18 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
+// does not work.. template<typename OtherDerived1,typename OtherDerived2,typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
+// does not work..   requires (
+// does not work..        IsIntervalDomain<U>
+// does not work..     && (!IsIntervalDomain<typename OtherDerived1::Scalar>)
+// does not work..     && (!IsIntervalDomain<typename OtherDerived2::Scalar>)
+// does not work..     && OtherDerived1::RowsAtCompileTime == R
+// does not work..     && OtherDerived2::RowsAtCompileTime == R
+// does not work..     && OtherDerived1::ColsAtCompileTime == C
+// does not work..     && OtherDerived2::ColsAtCompileTime == C)
+// does not work.. Matrix(MatrixBase<OtherDerived1> lb, MatrixBase<OtherDerived2> ub)
+// does not work..   : Matrix<U,R,C>(lb)
+
 template<typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsIntervalDomain<U>
 Matrix(const Matrix<double,R,C>& lb, const Matrix<double,R,C>& ub)
@@ -215,8 +227,7 @@ inline auto& inflate(const MatrixBase<OtherDerived>& r)
   return *this;
 }
 
-template<typename OtherDerived,typename U=Scalar>
-  requires IsIntervalDomain<U>
+template<typename OtherDerived>
 inline auto& operator&=(const MatrixBase<OtherDerived>& x)
 {
   assert_release(this->size() == x.size());
@@ -236,8 +247,7 @@ inline auto& operator&=(const MatrixBase<OtherDerived>& x)
   return *this;
 }
 
-template<typename OtherDerived,typename U=Scalar>
-  requires IsIntervalDomain<U>
+template<typename OtherDerived>
 inline auto& operator|=(const MatrixBase<OtherDerived>& x)
 {
   assert_release(this->size() == x.size());
@@ -254,16 +264,14 @@ inline auto& operator|=(const MatrixBase<OtherDerived>& x)
   return *this;
 }
 
-template<typename OtherDerived,typename U=Scalar>
-  requires IsIntervalDomain<U>
+template<typename OtherDerived>
 inline auto operator&(const MatrixBase<OtherDerived>& x) const
 {
   auto y = *this;
   return y &= x;
 }
 
-template<typename OtherDerived,typename U=Scalar>
-  requires IsIntervalDomain<U>
+template<typename OtherDerived>
 inline auto operator|(const MatrixBase<OtherDerived>& x) const
 {
   auto y = *this;

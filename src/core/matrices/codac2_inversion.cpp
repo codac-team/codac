@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_Inversion.cpp
+ *  \file codac2_inversion.cpp
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Damien Massé
@@ -63,12 +63,5 @@ namespace codac2
          }
       }
       return res;
-  }
-
-  IntervalMatrix inverse_enclosure(const IntervalMatrix &A) {
-     assert_release(A.is_squared());
-     Index N=A.rows();
-     return inverse_correction<LEFT_INV>(A, 
-	(A.mid()).fullPivLu().solve(Matrix::Identity(N,N)));
   }
 }

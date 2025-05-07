@@ -2,7 +2,7 @@
  *  OctaSym class
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou, Luc Jaulin
+ *  \author     Simon Rohou, Luc Jaulin, Maël Godard
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -43,4 +43,12 @@ OctaSym OctaSym::operator*(const OctaSym& s) const
   for(size_t i = 0 ; i < a.size() ; i++)
     a[i] = _sign(s[i])*(*this)[std::abs((int)s[i])-1];
   return a;
+}
+
+Matrix OctaSym::permutation_matrix() const
+{ 
+  Matrix m = Matrix::zero(size(),size());
+  for(size_t i = 0 ; i < size() ; i++)
+    m(i,std::abs((*this)[i])-1) = _sign((*this)[i]);
+  return m;
 }

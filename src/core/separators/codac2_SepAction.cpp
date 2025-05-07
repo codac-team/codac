@@ -16,6 +16,6 @@ BoxPair SepAction::separate(const IntervalVector& x) const
 {
   assert_release(x.size() == this->size());
   IntervalVector _x(_s(x));
-  auto x_sep = _sep.front().separate(_x);
+  auto x_sep = _sep.front()->separate(_x);
   return { __s(x_sep.inner), __s(x_sep.outer) };
 }

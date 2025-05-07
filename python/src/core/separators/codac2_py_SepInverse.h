@@ -38,15 +38,15 @@ void export_SepInverse_type(py::class_<SepInverse>& exported)
       SEPINVERSE_SEPINVERSE_CONST_ANALYTICFUNCTION_T_REF_CONST_TYPENAME_T_DOMAIN_REF_BOOL,
       "f"_a, "y"_a, "with_centered_form"_a = true);
 
-  if constexpr(std::is_same_v<T,IntervalVector>) // separators only associated with interval vectors
+  if constexpr(std::is_same_v<T,VectorType>) // separators only associated with interval vectors
   {
     exported
     .def(py::init(
-        [](const py::object& f, const pySep& s, bool with_centered_form)
+        [](const py::object& f, const SepBase& s, bool with_centered_form)
         {
           return std::make_unique<SepInverse>(
             cast<AnalyticFunction<T>>(f),
-            s, with_centered_form);
+            s.copy(), with_centered_form);
         }
       ),
       SEPINVERSE_SEPINVERSE_CONST_ANALYTICFUNCTION_T_REF_CONST_S_REF_BOOL,

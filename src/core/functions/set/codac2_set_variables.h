@@ -19,8 +19,8 @@ namespace codac2
   {
     public:
 
-      explicit SetVar(Index n)
-        : _n(n)
+      explicit SetVar(Index n, const std::string& name = "?")
+        : VarBase(name), _n(n)
       { }
 
       virtual const ExprID& unique_id() const
@@ -43,7 +43,7 @@ namespace codac2
         return _n;
       }
 
-      void replace_expr(const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_arg(const ExprID& old_arg_id, const std::shared_ptr<ExprBase>& new_expr)
       { }
       
       operator std::shared_ptr<SetExpr>() const

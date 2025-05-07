@@ -186,7 +186,7 @@ namespace codac2
         IntervalMatrix Ap = A0_inv*A;
         IntervalVector bp = A0_inv*b;
 
-        _ctc_no_precond.front().contract(Ap,x,bp);
+        _ctc_no_precond.front()->contract(Ap,x,bp);
 
         b &= A0*bp;
         A &= A0*Ap;

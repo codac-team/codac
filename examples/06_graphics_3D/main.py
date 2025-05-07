@@ -1,3 +1,5 @@
+# The generated .obj files can be visualized on https://3dviewer.net
+
 from codac import *
 
 x = VectorVar(3)

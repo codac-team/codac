@@ -68,7 +68,7 @@ namespace codac2
 
       const Index _n;
   };
-
+  
   template<typename S>
   class Sep : public SepBase
   {
@@ -83,4 +83,21 @@ namespace codac2
         return std::make_shared<S>(*dynamic_cast<const S*>(this));
       }
   };
+  
+  template<class S>
+  concept IsSepBaseOrPtr = (std::is_base_of_v<SepBase,S>
+    || std::is_base_of_v<S,std::shared_ptr<SepBase>>);
+
+
+  template<typename S>
+    requires (IsSepBaseOrPtr<S>)
+  struct is_interval_based<S> : std::false_type {};
+
+  template<typename S>
+    requires (IsSepBaseOrPtr<S>)
+  struct is_ctc<S> : std::false_type {};
+
+  template<typename S>
+    requires (IsSepBaseOrPtr<S>)
+  struct is_sep<S> : std::true_type {};
 }

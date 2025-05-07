@@ -2,7 +2,7 @@
  *  \file codac2_vector.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Damien Massé
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -18,6 +18,20 @@ namespace codac2
 {
   struct VectorOp
   {
+    template<typename... X>
+    static inline std::string str(const X&... x)
+    {
+      std::string s = (("\t" + x->str() + ",\n") + ...);
+      s.pop_back(); s.pop_back(); // removes last separation
+      return "[\n" + s + "\n]";
+    }
+
+    template<typename... X>
+    static std::pair<Index,Index> output_shape([[maybe_unused]] const X&... x)
+    {
+      return { sizeof...(X), 1 };
+    }
+
     template<typename... X>
       requires (std::is_base_of_v<Interval,X> && ...)
     static inline IntervalVector fwd(const X&... x)
@@ -42,6 +56,9 @@ namespace codac2
       requires (std::is_base_of_v<ScalarType,X> && ...)
     static inline VectorType fwd_centered(const X&... x)
     {
+      if(centered_form_not_available_for_args(x...))
+        return fwd_natural(x...);
+
       IntervalMatrix d(sizeof...(X),std::get<0>(std::tie(x...)).da.cols());
       Index i = 0;
       ((d.row(i++) = x.da), ...);

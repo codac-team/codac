@@ -125,6 +125,11 @@ namespace codac2
       return e;
     }
 
+    ScalarExpr to_ScalarExpr(const ScalarVar& e)
+    {
+      return std::dynamic_pointer_cast<AnalyticExpr<ScalarType>>(e.copy());
+    }
+
     template<typename T>
       requires std::is_same_v<typename ValueType<T>::Type,ScalarType>
     ScalarExpr to_ScalarExpr(const T& e)

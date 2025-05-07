@@ -25,4 +25,24 @@ TEST_CASE("Matrix")
   	{ 1, 3 },
   	{ 6, 9 }
   }));
+
+  Matrix y({
+    { -1.2, 3.9  },
+    { -6.2, -9.0 }
+  });
+
+  CHECK(floor(y) == Matrix({
+    { -2, 3  },
+    { -7, -9 }
+  }));
+
+  CHECK(ceil(y) == Matrix({
+    { -1, 4  },
+    { -6, -9 }
+  }));
+
+  CHECK(round(y) == Matrix({
+    { -1, 4  },
+    { -6, -9 }
+  }));
 }

@@ -22,12 +22,10 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
-            - { img: 'lebarsfa/manylinux2014_x86_64-for-codac', os: ubuntu-latest, shell: bash, arch: x86_64, bitness: 64, runtime: manylinux2014, cmake_flags: '-fPIC', desc: 'CentOS manylinux2014 x86_64' }
-            - { img: 'lebarsfa/manylinux2014_aarch64-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: aarch64, bitness: 64, runtime: manylinux2014, cmake_flags: '-fPIC', docker_flags: '--platform linux/arm64', desc: 'CentOS manylinux2014 aarch64' }
+            - { img: 'lebarsfa/manylinux_2_28_x86_64-for-codac', os: ubuntu-latest, shell: bash, arch: x86_64, bitness: 64, runtime: manylinux_2_28, cmake_flags: '-fPIC', desc: 'CentOS manylinux_2_28 x86_64' }
+            - { img: 'lebarsfa/manylinux_2_28_aarch64-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: aarch64, bitness: 64, runtime: manylinux_2_28, cmake_flags: '-fPIC', docker_flags: '--platform linux/arm64', desc: 'CentOS manylinux_2_28 aarch64' }
             - { img: 'lebarsfa/pi-64:noble-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: arm64, bitness: 64, runtime: noble, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 24.04 arm64' }
             - { img: 'lebarsfa/pi-64:jammy-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: arm64, bitness: 64, runtime: jammy, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 22.04 arm64' }
-            # Problems related to C++20?
-            #- { img: 'lebarsfa/pi-64:focal-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: arm64, bitness: 64, runtime: focal, cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 20.04 arm64' }
             - { img: 'lebarsfa/amd64:bookworm-for-codac', os: ubuntu-latest, shell: bash, arch: amd64, bitness: 64, runtime: bookworm, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bookworm amd64' }
             - { img: 'lebarsfa/pi-64:bookworm-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: arm64, bitness: 64, runtime: bookworm, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bookworm arm64' }
             - { img: 'lebarsfa/pi:bookworm-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: armhf, bitness: 32, runtime: bookworm, cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Bookworm armv6hf' }

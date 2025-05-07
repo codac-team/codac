@@ -6,13 +6,13 @@ mkdir -p ~/Downloads/newcodac
 
 cd ~/Downloads/newcodac
 sudo rm -Rf codac*
-#git clone https://github.com/lebarsfa/codac
-git clone https://github.com/codac-team/codac
+#git clone -b codac2 https://github.com/lebarsfa/codac
+git clone -b codac2 https://github.com/codac-team/codac
 cd codac
 git submodule init
 git submodule update
 
-for DIST in bookworm bullseye buster; do
+for DIST in bookworm bullseye; do
 
 docker pull lebarsfa/pi:$DIST-for-codac
 docker run --rm -v `pwd`:/io lebarsfa/pi:$DIST-for-codac /bin/bash -c "uname -a ; cat /etc/os-release ; lsb_release -a ; \
@@ -23,9 +23,9 @@ else \
  PIP_OPTIONS= ; \
  #python3 -m pip install \$PIP_OPTIONS --upgrade \"auditwheel==5.1.2\" ; \\
 fi && \
-#sudo apt-get -q update --allow-releaseinfo-change ; sudo apt-get -y install libeigen3-dev python3-dev patchelf || true && \\
-sudo apt-get -q update --allow-releaseinfo-change ; sudo apt-get -y install python3-dev patchelf || true && \
-python3 -m pip install \$PIP_OPTIONS --upgrade patchelf --prefer-binary --extra-index-url https://www.piwheels.org/simple && \
+#sudo apt-get -q update --allow-releaseinfo-change ; sudo apt-get -y install libeigen3-dev python3-dev patchelf python3-pip python3-wheel python3-setuptools || true && \\
+sudo apt-get -q update --allow-releaseinfo-change ; sudo apt-get -y install python3-dev patchelf python3-pip python3-wheel python3-setuptools || true && \
+python3 -m pip install \$PIP_OPTIONS --upgrade patchelf --prefer-binary --extra-index-url https://www.piwheels.org/simple || true && \
 python3 -m pip install \$PIP_OPTIONS --upgrade auditwheel --prefer-binary --extra-index-url https://www.piwheels.org/simple && \
 # wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20241117/ibex_armhf_\$(lsb_release -cs).zip --no-check-certificate -nv is causing illegal instruction on a Mac M1... \\
 curl -L -O https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20241117/ibex_armhf_\$(lsb_release -cs).zip --insecure && \
@@ -36,14 +36,19 @@ sudo cp -Rf ibex/* /usr/local/ && \
 git config --global --add safe.directory /io && \
 cd /io && \
 \
-python3 -m pip install \$PIP_OPTIONS --upgrade pip && \
-python3 -m pip install \$PIP_OPTIONS --upgrade wheel setuptools && \
+# Issues when some packages are upgraded or not...? \\
+python3 -m pip install \$PIP_OPTIONS --upgrade pip --prefer-binary --extra-index-url https://www.piwheels.org/simple && \
+# Without wheel upgrade from pip, the architecture might be wrong for bookworm (and possibly earlier) when building the .whl... \\
+python3 -m pip install \$PIP_OPTIONS --upgrade wheel --prefer-binary --extra-index-url https://www.piwheels.org/simple && \
+# With setuptools upgrade from pip, building the .whl might fail for bullseye... \\
+#python3 -m pip install \$PIP_OPTIONS --upgrade setuptools --prefer-binary --extra-index-url https://www.piwheels.org/simple && \\
 mkdir -p build_dir_\$(lsb_release -cs) && cd build_dir_\$(lsb_release -cs) && \
-cmake -E env CXXFLAGS=\"-fPIC\" CFLAGS=\"-fPIC\" cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_CAPD=OFF -DWITH_PYTHON=ON .. && \
+cmake -E env CXXFLAGS=\"-fPIC\" CFLAGS=\"-fPIC\" cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_CAPD=OFF -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF .. && \
 make -j4 && \
 \
 make pip_package && \
 echo \"copy wheel and clean build_dir_\$(lsb_release -cs)\" && \
+mkdir -p /io/wheelhouse || true && \
 for whl in *.whl; do \
  # auditwheel might fail, so instead just copy... \\
  auditwheel repair \"\$whl\" -w /io/wheelhouse/ || cp -f \"\$whl\" /io/wheelhouse/\"\$whl\" ; \
@@ -62,6 +67,7 @@ sudo apt-get -y install libatlas3-base || true && \
 sudo apt-get -y install libopenblas0-pthread || true && \
 sudo apt-get -y install libgfortran5 || true && \
 python3 -m pip install \$PIP_OPTIONS numpy --prefer-binary --extra-index-url https://www.piwheels.org/simple && \
+#sudo apt-get -y install python3-numpy || true && \\
 python3 -m unittest discover codac.tests && \
 \
 if [ \"\$(lsb_release -cs)\" = \"buster\" ]; then \

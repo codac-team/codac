@@ -15,12 +15,18 @@ class TestSepPolygon(unittest.TestCase):
   def tests_SepPolygon(self):
 
     # Polygon, defined as a list of vertices
-    s = SepPolygon([[3,-1],[3,4],[5,6],[-1,1]])
+    p = Polygon([[3,-1],[3,4],[5,6],[-1,1]])
+    s = SepPolygon(p)
+    c = CtcPolygon(p)
 
     x = IntervalVector(2)
     inner,outer = s.separate(IntervalVector(2))
     self.assertTrue(inner == IntervalVector(2))
     self.assertTrue(outer == IntervalVector([[-1,5],[-1,6]]))
+
+    y = IntervalVector(2)
+    c.contract(y)
+    self.assertTrue(y == IntervalVector([[-1,5],[-1,6]]))
 
     x = IntervalVector([[3.02,3.16],[2.5,3.2]]) # possible bug
     inner,outer = s.separate(x)
@@ -46,12 +52,12 @@ class TestSepPolygon(unittest.TestCase):
       [[-3,-3], [-2,3]]
     ])
 
-    #pave(IntervalVector([[-10,10],[-10,10]]), s, 0.1)
+    #draw_while_paving(IntervalVector([[-10,10],[-10,10]]), s, 0.1)
 
     # Check a box inside the hole
 
     x = IntervalVector([[0],[0]]).inflate(0.5)
-    #DefaultView.draw_box(x,Color::purple())
+    #DefaultFigure.draw_box(x,Color::purple())
     inner,outer = s.separate(x)
     self.assertTrue(inner == x)
     self.assertTrue(outer.is_empty())
@@ -59,7 +65,7 @@ class TestSepPolygon(unittest.TestCase):
     # Check a box inside the polygon
 
     x = IntervalVector([[5],[-5]]).inflate(0.5)
-    #DefaultView.draw_box(x,Color::purple())
+    #DefaultFigure.draw_box(x,Color::purple())
     inner,outer = s.separate(x)
     self.assertTrue(inner.is_empty())
     self.assertTrue(outer == x)
@@ -67,7 +73,7 @@ class TestSepPolygon(unittest.TestCase):
     # Check a box outside the polygon
 
     x = IntervalVector([[-1],[8]]).inflate(0.5)
-    #DefaultView.draw_box(x,Color::purple())
+    #DefaultFigure.draw_box(x,Color::purple())
     inner,outer = s.separate(x)
     self.assertTrue(inner == x)
     self.assertTrue(outer.is_empty())

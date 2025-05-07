@@ -30,25 +30,25 @@ TEST_CASE("SepProj")
 
   {
     IntervalVector b({{0.2,0.4},{0.0,1}});
-    //DefaultView::draw_box(b, Color::blue());
+    //DefaultFigure::draw_box(b, Color::blue());
     auto bs = sep_proj.separate(b,1e-3);
-    //DefaultView::draw_box(bs.inner, Color::green());
-    //DefaultView::draw_box(bs.outer, Color::black());
+    //DefaultFigure::draw_box(bs.inner, Color::green());
+    //DefaultFigure::draw_box(bs.outer, Color::black());
     CHECK(Approx(bs.outer,1e-2) == IntervalVector({{0.2,0.4},{0,0.94}}));
   }
 
   {
     IntervalVector b({{-0.4,-0.2},{0.95,1.5}});
-    //DefaultView::draw_box(b, Color::blue());
+    //DefaultFigure::draw_box(b, Color::blue());
     auto bs = sep_proj.separate(b,1e-3);
-    //DefaultView::draw_box(bs.inner, Color::green());
-    //DefaultView::draw_box(bs.outer, Color::black());
+    //DefaultFigure::draw_box(bs.inner, Color::green());
+    //DefaultFigure::draw_box(bs.outer, Color::black());
     CHECK(Approx(bs.outer,1e-2) == IntervalVector({{-0.4,-0.2},{0.95,1.15}}));
   }
 
   {
     IntervalVector b({{0.65},{-0.5,-0.4}});
-    //DefaultView::draw_box(b, Color::blue());
+    //DefaultFigure::draw_box(b, Color::blue());
     auto bs = sep_proj.separate(b,1e-3);
     CHECK(bs.inner.is_empty());
   }

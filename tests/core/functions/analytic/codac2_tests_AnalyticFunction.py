@@ -3,13 +3,18 @@
 #  Codac tests
 # ----------------------------------------------------------------------------
 #  \date       2024
-#  \author     Simon Rohou
+#  \author     Simon Rohou, Damien Massé
 #  \copyright  Copyright 2024 Codac Team
 #  \license    GNU Lesser General Public License (LGPL)
 
+import sys, os
 import unittest
 import math
 from codac import *
+
+def create_f():
+  x = ScalarVar()
+  return AnalyticFunction([x], x*cos(x))
 
 class TestAnalyticFunction(unittest.TestCase):
 
@@ -52,6 +57,14 @@ class TestAnalyticFunction(unittest.TestCase):
       self.assertTrue(Approx(test_eval(f,Interval(2))) == 6)
       f = AnalyticFunction([x], pow(x,2))
       self.assertTrue(Approx(test_eval(f,Interval(3))) == 9)
+      f = AnalyticFunction([x], x^2)
+      self.assertTrue(Approx(test_eval(f,Interval(3))) == 9)
+      f = AnalyticFunction([x], (0.+x)^(1.*x))
+      self.assertTrue(Approx(test_eval(f,Interval(3))) == 27)
+      f = AnalyticFunction([x], x**2)
+      self.assertTrue(Approx(test_eval(f,Interval(3))) == 9)
+      f = AnalyticFunction([x], (0.+x)**(1.*x))
+      self.assertTrue(Approx(test_eval(f,Interval(3))) == 27)
       f = AnalyticFunction([x], cos(x))
       self.assertTrue(Approx(test_eval(f,Interval(0))) == 1)    
 
@@ -328,6 +341,79 @@ class TestAnalyticFunction(unittest.TestCase):
     self.assertTrue(f.eval(1.5) == 4.)
     self.assertTrue(f.eval(-1.5) == -2.)
 
+
+    # Issue #201
+    # Input argument is a py::list instead of a Vector
+    x1 = VectorVar(2)
+    f = AnalyticFunction([x1], 2.*x1)
+    self.assertTrue(f.eval([2,3]) == IntervalVector([[4],[6]]))
+    self.assertTrue(f.eval([[2,3],[4,5]]) == IntervalVector([[4,6],[8,10]]))
+
+
+    I = Matrix([[0,2],[-1,0]])
+    x = VectorVar(2)
+    f = AnalyticFunction([x], I*x)
+    self.assertTrue(f.eval(IntervalVector([[0,1],[2,3]])) == IntervalVector([[4,6],[-1,0]]))
+
+    I = Matrix([[1,0],[0,1]])
+    x = VectorVar(2)
+    f = AnalyticFunction([x], I*I*x)
+    self.assertTrue(f.eval(IntervalVector([[-1,1],[2,3]])) == IntervalVector([[-1,1],[2,3]]))
+
+    A = MatrixVar(2,2)
+    x = VectorVar(2)
+    h = AnalyticFunction([A], A*A)
+    f = AnalyticFunction([x,A], h(A)*x)
+    g = AnalyticFunction([x], f(x,Matrix([[0,2],[-1,0]])))
+    self.assertTrue(g.eval(IntervalVector([[-1,1],[2,3]])) == IntervalVector([[-2,2],[-6,-4]]))
+
+    A = MatrixVar(2,2)
+    f_det = AnalyticFunction([A], A(0,0)*A(1,1)-A(1,0)*A(0,1))
+    self.assertTrue(f_det.eval(Matrix([[1,2],[3,4]])) == -2)
+    self.assertTrue(f_det.eval(IntervalMatrix([[[0,1],[1,2]],[[2,3],[3,4]]])) == Interval(-6,2))
+
+    f = create_f()
+    self.assertTrue(Approx(f.eval(PI)) == -PI)
+
+    x = ScalarVar()
+    f = AnalyticFunction([x],sqrt(x))
+    self.assertTrue(Interval(0.).is_subset([0,oo]))
+    self.assertTrue(Interval(0.,10.).is_subset([0,oo]))
+    self.assertTrue(Approx(f.eval(EvalMode.NATURAL, 0.)) == 0.)
+    self.assertTrue(Approx(f.eval(EvalMode.NATURAL, 1e-10),1e-3) == 0.)
+    # Cannot compute in pure centered form due to the
+    # definition domain of the derivative of sqrt:
+    self.assertTrue(f.eval(EvalMode.CENTERED, 0.).is_empty())
+    self.assertTrue(Approx(f.eval(EvalMode.CENTERED, 1e-10),1e-3) == 0.)
+    self.assertTrue(Approx(f.eval(0.)) == 0.)
+    self.assertTrue(Approx(f.eval(1e-10),1e-3) == 0.)
+
+    x1,x2,x3 = VectorVar(2),VectorVar(2),VectorVar(2)
+    f = AnalyticFunction([x1,x2,x3], mat(+x1,-x2,2*x3))
+    self.assertTrue(f.eval(EvalMode.NATURAL, Vector([1,2]),Vector([-1,8]),IntervalVector([[-1,1],[2,oo]]))
+      == IntervalMatrix([[1,1,[-2,2]],[2,-8,[4,oo]]]))
+  
+    x1 = VectorVar(2)
+    f = AnalyticFunction([x1],det(mat(+x1,2*x1)))
+    self.assertTrue(Approx(f.eval(EvalMode.NATURAL, IntervalVector([[0.9,1.1],[0.4,0.5]])),1e-9) == Interval(-0.38,0.38))
+    self.assertTrue(Approx(f.eval(EvalMode.CENTERED, IntervalVector([[0.9,1.1],[0.4,0.5]])),1e-9) == Interval(-0.04,0.04))
+
+    M1 = MatrixVar(2,3)
+    M2 = MatrixVar(3,2)
+    f = AnalyticFunction([M1,M2], M1*M2-M1*M2)
+    self.assertTrue(Approx(f.eval(EvalMode.NATURAL, 
+			Matrix([[1,0,1],[0,1,0]]),
+			IntervalMatrix([[[-0.2,0.2],[-0.1,0.1]],
+					[[0.2,0.4],[-0.4,-0.1]],
+					[[1.0,2.0],[-0.2,-0.1]]])),1e-9)
+			== IntervalMatrix([[[-1.4,1.4],[-0.3,0.3]],
+					   [[-0.2,0.2],[-0.3,0.3]]]))
+    self.assertTrue(Approx(f.eval(EvalMode.CENTERED, 
+			Matrix([[1,0,1],[0,1,0]]),
+			IntervalMatrix([[[-0.2,0.2],[-0.1,0.1]],
+					[[0.2,0.4],[-0.4,-0.1]],
+					[[1.0,2.0],[-0.2,-0.1]]])),1e-9)
+			== Matrix([[0,0],[0,0]]))
 
 if __name__ ==  '__main__':
   unittest.main()

@@ -19,7 +19,11 @@ namespace codac2
 {
   /**
    * \struct ColorMap
-   * \brief Represents a set of RGB values
+   * \brief Represents a set of RGB or HSV values
+   * 
+   * This class is used to represent a set of RGB or HSV values to create a color map. It inherits from std::map<float,Color>
+   * 
+   * Once a ColorMap is created, Colors can be added to it as for a std::map.
    */
   struct ColorMap : public std::map<float,Color>
   {
@@ -28,12 +32,32 @@ namespace codac2
 
     public:
       
+      /**
+       * \brief Constructor from a model
+       * 
+       * \param m_ Color model (RGB or HSV). It defines the interpolation space
+       */
       explicit ColorMap(Model m_ = Model::RGB);
 
+      /**
+       * \brief Getter for the color model
+       * 
+       * \return The color model (RGB or HSV)
+       */
       const Model& model() const { return m; }
 
+      /**
+       * \brief Getter for the color at a given value
+       * 
+       * \param r Value between 0 and 1
+       */
       Color color (float r) const;
 
+      /**
+       * \brief Haxby color map
+       * 
+       * Haxby color map
+       */
       static ColorMap haxby()
       {
         ColorMap cmap( Model::RGB );
@@ -56,6 +80,11 @@ namespace codac2
         return cmap;
       }
 
+      /**
+       * \brief Basic color map
+       * 
+       * Default color map
+       */
       static ColorMap basic() // Can't use default as name
       {
         ColorMap cmap( Model::RGB );
@@ -94,6 +123,11 @@ namespace codac2
         return cmap;
       }
 
+      /**
+       * \brief Blue tube color map
+       * 
+       * Default color map for tubes
+       */
       static ColorMap blue_tube()
       {
         ColorMap cmap( Model::RGB );
@@ -102,6 +136,11 @@ namespace codac2
         return cmap;
       }
 
+      /**
+       * \brief Red tube color map
+       * 
+       * Color map for tubes
+       */
       static ColorMap red_tube()
       {
         ColorMap cmap( Model::RGB );
@@ -110,6 +149,11 @@ namespace codac2
         return cmap;
       }
 
+      /**
+       * \brief Rainbow color map
+       * 
+       * Rainbow color map
+       */
       static ColorMap rainbow()
       {
         ColorMap cmap( Model::HSV );

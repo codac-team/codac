@@ -131,13 +131,18 @@ namespace codac2
 
       void bisect()
       {
+        bisect([](const IntervalVector& x) { return x.bisect_largest(); });
+      }
+
+      void bisect(std::function<std::pair<IntervalVector,IntervalVector>(const IntervalVector&)> bisect_fnc)
+      {
         assert_release(is_leaf() && "only leaves can be bisected");
         
         bool bisectable_node = true;
         std::apply([&](auto &&... xs) { ((bisectable_node &= xs.is_bisectable()), ...); }, _x);
         assert_release(bisectable_node);
 
-        auto p = unknown().bisect_largest();
+        auto p = bisect_fnc(unknown());
 
         _left = make_shared<PavingNode<P>>(_paving, p.first, this->shared_from_this());
         _right = make_shared<PavingNode<P>>(_paving, p.second, this->shared_from_this());

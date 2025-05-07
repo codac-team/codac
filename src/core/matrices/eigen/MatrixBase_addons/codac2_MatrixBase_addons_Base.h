@@ -44,3 +44,8 @@ inline Scalar max_coeff() const
 {
   minmax_item(max);
 }
+
+inline bool is_nan() const
+{
+  return this->array().isNaN().any();
+}

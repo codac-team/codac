@@ -18,7 +18,7 @@ BoxPair SepTransform::separate(const IntervalVector& x) const
   assert(x.size() == this->size());
 
   IntervalVector y = _f.eval(x);
-  auto ys = _sep.front().separate(y);
+  auto ys = _sep.front()->separate(y);
   
   IntervalVector x_in = x & _f_inv.eval(ys.inner);
   _ctc_inv.contract_(ys.inner, x_in);

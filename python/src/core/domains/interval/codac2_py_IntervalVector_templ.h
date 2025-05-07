@@ -91,21 +91,4 @@ void export_IntervalVector_(py::module& m, py::class_<IV>& pyclass)
 
   py::implicitly_convertible<py::list,IV>();
   py::implicitly_convertible<V,IV>();
-
-  if constexpr(std::is_same_v<IntervalVector,IV>)
-  {
-    m.def("cart_prod_boxes", [](const std::list<IV>& l)
-        {
-          IV c = *l.begin();
-          for(auto it = std::next(l.cbegin()); it != l.cend(); it++)
-            c = cart_prod(c,*it);
-          return c;
-        },
-      INTERVALVECTOR_CART_PROD_CONST_X_REF_VARIADIC);
-    // The variadic version of this function is defined in __init__.py file
-  }
-
-  m.def("hull", [](const std::list<IV>& l) { return hull(l); },
-    AUTO_HULL_CONST_LIST_EIGEN_MATRIX_SCALARROWSATCOMPILETIMECOLSATCOMPILETIME_REF,
-    "l"_a);
 }

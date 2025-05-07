@@ -16,7 +16,7 @@
 
 namespace codac2
 {
-  template<typename X>
+  template<typename X=IntervalVector>
   class CtcInter : public Ctc<CtcInter<X>,X>
   {
     public:
@@ -47,7 +47,11 @@ namespace codac2
       void contract(X& x) const
       {
         for(const auto& ci : _ctcs)
+        {
           ci->contract(x);
+          if(x.is_empty())
+            return;
+        }
       }
 
       template<typename C>
@@ -55,14 +59,14 @@ namespace codac2
       CtcInter<X>& operator&=(const C& c)
       {
         assert_release(c.size() == this->size());
-        _ctcs.add_shared_ptr(std::make_shared<C>(c));
+        _ctcs.push_object_back(c);
         return *this;
       }
 
       CtcInter<X>& operator&=(const std::shared_ptr<CtcBase<X>>& c)
       {
         assert_release(c->size() == this->size());
-        _ctcs.add_shared_ptr(c);
+        _ctcs.push_back(c);
         return *this;
       }
 
@@ -85,7 +89,7 @@ namespace codac2
   inline CtcInter<IntervalVector> operator&(const IntervalVector& c1, const C2& c2)
   {
     assert_release(c1.size() == c2.size());
-    return CtcInter<IntervalVector>(CtcWrapper_<IntervalVector>(c1),c2);
+    return CtcInter<IntervalVector>(CtcWrapper(c1),c2);
   }
 
   template<typename C1>
@@ -93,6 +97,6 @@ namespace codac2
   inline CtcInter<IntervalVector> operator&(const C1& c1, const IntervalVector& c2)
   {
     assert_release(c1.size() == c2.size());
-    return CtcInter<IntervalVector>(c1,CtcWrapper_<IntervalVector>(c2));
+    return CtcInter<IntervalVector>(c1,CtcWrapper(c2));
   }
 }

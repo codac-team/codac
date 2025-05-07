@@ -19,7 +19,7 @@ inline Index min_coeff_index() const
 {
   Index r,c;
   this->minCoeff(&r,&c);
-  assert(c == 0);
+  assert((C == 1 && c == 0) || (R == 1 && r == 0));
   return r;
 }
 
@@ -29,6 +29,6 @@ inline Index max_coeff_index() const
 {
   Index r,c;
   this->maxCoeff(&r,&c);
-  assert(c == 0);
+  assert((C == 1 && c == 0) || (R == 1 && r == 0));
   return r;
 }

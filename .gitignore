@@ -69,3 +69,4 @@ wheelhouse/
 
 # Graphics files
 examples/**/*.xml
+*.ipe

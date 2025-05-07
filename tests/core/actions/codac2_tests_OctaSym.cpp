@@ -25,4 +25,7 @@ TEST_CASE("OctaSym")
   OctaSym b({2,-1});
   CHECK(b.invert() == OctaSym({-2,1}));
   CHECK(b*b == OctaSym({-1,-2}));
+
+  OctaSym c({-2,1,3});
+  CHECK(c.permutation_matrix() == Matrix({{0,-1,0},{1,0,0},{0,0,1}}));
 }

@@ -51,9 +51,9 @@ namespace codac2
         return std::make_shared<SetOperationExpr<C,X...>>(*this);
       }
 
-      void replace_expr(const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_arg(const ExprID& old_arg_id, const std::shared_ptr<ExprBase>& new_expr)
       {
-        return OperationExprBase<X...>::replace_expr(old_expr_id, new_expr);
+        return OperationExprBase<X...>::replace_arg(old_arg_id, new_expr);
       }
 
       virtual bool belongs_to_args_list(const FunctionArgsList& args) const
@@ -111,9 +111,9 @@ namespace codac2
         return std::make_shared<SetOperationExpr<ProjSetOp,SetExpr>>(*this);
       }
 
-      void replace_expr(const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_arg(const ExprID& old_arg_id, const std::shared_ptr<ExprBase>& new_expr)
       {
-        return OperationExprBase<SetExpr>::replace_expr(old_expr_id, new_expr);
+        return OperationExprBase<SetExpr>::replace_arg(old_arg_id, new_expr);
       }
 
       virtual bool belongs_to_args_list(const FunctionArgsList& args) const
@@ -160,9 +160,9 @@ namespace codac2
         return std::make_shared<SetOperationExpr<InverseSetOp,SetExpr>>(*this);
       }
 
-      void replace_expr(const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_arg(const ExprID& old_arg_id, const std::shared_ptr<ExprBase>& new_expr)
       {
-        return OperationExprBase<SetExpr>::replace_expr(old_expr_id, new_expr);
+        return OperationExprBase<SetExpr>::replace_arg(old_arg_id, new_expr);
       }
 
       virtual bool belongs_to_args_list(const FunctionArgsList& args) const
@@ -203,9 +203,9 @@ namespace codac2
         return std::make_shared<SetOperationExpr<ActionSetOp,SetExpr>>(*this);
       }
 
-      void replace_expr(const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_arg(const ExprID& old_arg_id, const std::shared_ptr<ExprBase>& new_expr)
       {
-        return OperationExprBase<SetExpr>::replace_expr(old_expr_id, new_expr);
+        return OperationExprBase<SetExpr>::replace_arg(old_arg_id, new_expr);
       }
 
       virtual bool belongs_to_args_list(const FunctionArgsList& args) const

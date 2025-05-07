@@ -2,7 +2,7 @@
  *  \file codac2_max.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Damien Massé
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -17,6 +17,18 @@ namespace codac2
 {
   struct MaxOp
   {
+    template<typename X1,typename X2>
+    static std::string str(const X1& x1, const X2& x2)
+    {
+      return "max(" + x1->str() + "," + x2->str() + ")";
+    }
+
+    template<typename X1, typename X2>
+    static std::pair<Index,Index> output_shape([[maybe_unused]] const X1& s1, [[maybe_unused]] const X2& s2)
+    {
+      return {1,1};
+    }
+
     static Interval fwd(const Interval& x1, const Interval& x2);
     static ScalarType fwd_natural(const ScalarType& x1, const ScalarType& x2);
     static ScalarType fwd_centered(const ScalarType& x1, const ScalarType& x2);
@@ -42,11 +54,22 @@ namespace codac2
 
   inline ScalarType MaxOp::fwd_centered(const ScalarType& x1, const ScalarType& x2)
   {
+    if(centered_form_not_available_for_args(x1,x2))
+      return fwd_natural(x1,x2);
+    
+    assert(x1.da.rows() == 1);
+    assert(x1.da.rows() == x2.da.rows() && x1.da.cols() == x2.da.cols());
+
+    IntervalMatrix d(1,x1.da.cols());
+    for(Index i = 0 ; i < d.size() ; i++)
+      d(0,i) = chi(x1.a-x2.a, x2.da(0,i), x1.da(0,i));
+
     return {
       fwd(x1.m, x2.m),
       fwd(x1.a, x2.a),
-      IntervalMatrix(0,0), // not supported yet for auto diff
+      d,
       x1.def_domain && x2.def_domain
+        && (x1.a != x2.a) // def domain of the derivative of max
     };
   }
 

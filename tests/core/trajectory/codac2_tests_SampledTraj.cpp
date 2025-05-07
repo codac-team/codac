@@ -59,9 +59,9 @@ TEST_CASE("SampledTraj")
   CHECK(Approx(x_sampled(5.5)) == Vector({0.5,-1}));
   CHECK(x_sampled(Interval(1,4)) == IntervalVector({{-1,1},{0,1}}));
 
-  //DefaultView::set_window_properties({75,75},{700,700});
-  //DefaultView::draw_trajectory(x, Color::blue());
-  //DefaultView::draw_trajectory(x_sampled, Color::red());
+  //DefaultFigure::set_window_properties({75,75},{700,700});
+  //DefaultFigure::draw_trajectory(x, Color::blue());
+  //DefaultFigure::draw_trajectory(x_sampled, Color::red());
 }
 
 TEST_CASE("SampledTraj as operator (1d case)")

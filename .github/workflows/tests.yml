@@ -91,7 +91,7 @@ jobs:
         cd build
   
         # Building lib + tests
-        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DWITH_CAPD=${{ matrix.cfg.with_capd }} -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON ..
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DWITH_CAPD=${{ matrix.cfg.with_capd }} -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON ..
         make -j 4
         #make doc # todo
         make install

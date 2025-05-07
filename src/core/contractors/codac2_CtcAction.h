@@ -13,7 +13,6 @@
 #include "codac2_OctaSym.h"
 #include "codac2_Ctc.h"
 #include "codac2_Collection.h"
-#include "codac2_template_tools.h"
 
 namespace codac2
 {

@@ -2,23 +2,23 @@
 
 set -e -x
 
-wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20241117/ibex_$(uname -m)_manylinux2014.zip --no-check-certificate -nv
-unzip -q ibex_$(uname -m)_manylinux2014.zip
-rm -Rf ibex_$(uname -m)_manylinux2014.zip
+wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20241117/ibex_$(uname -m)_manylinux_2_28.zip --no-check-certificate -nv
+unzip -q ibex_$(uname -m)_manylinux_2_28.zip
+rm -Rf ibex_$(uname -m)_manylinux_2_28.zip
 sudo cp -Rf ibex/* /usr/local/
 
 git config --global --add safe.directory /io
 cd /io
 for PYBIN in /opt/python/cp3*/bin; do
   
-  #if [ "${PYBIN}" = "/opt/python/cp310-cp310/bin" ]; then
-  #  continue
-  #fi
+  if [ "${PYBIN}" = "/opt/python/cp36-cp36m/bin" ] || [ "${PYBIN}" = "/opt/python/cp37-cp37m/bin" ]; then
+    continue
+  fi
 
   "${PYBIN}/python" -m pip install --upgrade pip
   "${PYBIN}/python" -m pip install --upgrade wheel setuptools
   mkdir -p build_dir && cd build_dir
-  cmake -E env CXXFLAGS="-fPIC" CFLAGS="-fPIC" cmake -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_CAPD=OFF -DWITH_PYTHON=ON ..
+  cmake -E env CXXFLAGS="-fPIC" CFLAGS="-fPIC" cmake -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_CAPD=OFF -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF ..
   make -j4
 
   make pip_package

@@ -295,4 +295,16 @@ namespace codac2
   {
     return gaol::ceil(x);
   }
+
+  inline Interval chi(const Interval& x, const Interval& y, const Interval& z)
+  {
+    if(x.ub() <= 0)
+      return y;
+    
+    else if(x.lb() > 0)
+      return z;
+
+    else
+      return y | z;
+  }
 }

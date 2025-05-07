@@ -13,7 +13,6 @@
 #include "codac2_Sep.h"
 #include "codac2_Collection.h"
 #include "codac2_SepWrapper.h"
-#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -50,7 +49,7 @@ namespace codac2
   };
 
   template<typename... S>
-    requires (IsSepBaseOrPtr<S> && ...)
+    requires  ((is_sep_v<S>) || ...) && ((!is_ctc_v<S>) && ...)
   inline SepCartProd cart_prod(const S&... s)
   {
     return SepCartProd(s...);

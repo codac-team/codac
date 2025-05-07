@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_Inversion.h
+ *  \file codac2_inversion.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Damien Massé
@@ -17,31 +17,19 @@ namespace codac2
 {
   enum LeftOrRightInv { LEFT_INV, RIGHT_INV };
 
-  /** \brief Compute an upper bound of A+A^2+A^3+..., with A a matrix of intervals
-   *  as an "error term" (use only bounds on coefficients)
-   *  
-   *  The function also returns mrad, which gives an idea of the “magnification” of
-   *  the matrix during calculation (in particular, if mrad = oo, then the inversion
-   *  calculation (e.g., performed by Eigen) has somehow failed and some coefficients
-   *  of the output interval matrix are [-oo,+oo]).
+  /**
+   * \brief Correct the approximation of the inverse \f$\mathbf{B}\approx\mathbf{A}^{-1}\f$ of
+   * a square matrix \f$\mathbf{A}\f$ by providing a reliable enclosure \f$[\mathbf{A}^{-1}]\f$.
    *
-   *  \pre A is a square matrix
-   *
-   *  \param A a matrix of intervals (supposed around 0)
-   *  \param mrad the maximum radius of the result added (output argument)
-   *  \return the enclosure. May include (-oo,oo) 
-   */
-  IntervalMatrix infinite_sum_enclosure(const IntervalMatrix& A, double &mrad);
-
-  /** \brief Correct the approximate inverse of a matrix
-   *
-   *  \pre A and B are square matrices
+   * \pre \f$\mathbf{A}\f$ and \f$\mathbf{B}\f$ are square matrices, possibly interval matrices.
    * 
-   *  \tparam O if LEFT_INV, use the inverse of BA (otherwise use the inverse of AB,
-   *   left inverse is normally better)
-   *  \param A a matrix expression
-   *  \param B a (almost punctual) approximation of its inverse,
-   *  \return the enclosure
+   * \tparam O If ``LEFT_INV``, use the inverse of \f$\mathbf{BA}\f$
+   *           (otherwise use the inverse of \f$\mathbf{AB}\f$, left inverse is normally better).
+   *           In Python/Matlab, this template parameter is provided as a last boolean argument,
+   *           and is ``left_inv = True`` by default.
+   * \param A A matrix expression, possibly interval.
+   * \param B An (almost punctual) approximation of its inverse.
+   * \return The enclosure of the inverse.
    */
   template<LeftOrRightInv O=LEFT_INV,typename OtherDerived,typename OtherDerived_>
   inline IntervalMatrix inverse_correction(const Eigen::MatrixBase<OtherDerived>& A, const Eigen::MatrixBase<OtherDerived_>& B)
@@ -85,31 +73,45 @@ namespace codac2
     return  res;
   }
 
-  /** \brief Enclosure of the inverse of a (non-singular) matrix expression
+  /**
+   * \brief Enclosure of the inverse of a (non-singular) matrix expression,
+   * possibly an interval matrix.
    *
-   *  \pre A is a square matrix
+   * \pre \f$\mathbf{A}\f$ is a square matrix.
    *
-   *  \param A a matrix expression
-   *  \return the enclosure. Can have (-oo,oo) coefficients if A is singular
-   *  or almost singular
+   * \param A A matrix expression, possibly interval.
+   * \return The enclosure of the inverse. Can have \f$(-\infty,\infty)\f$ coefficients if
+   * \f$\mathbf{A}\f$ is singular or almost singular, if the inversion "failed".
    */
   template<typename OtherDerived>
   inline IntervalMatrix inverse_enclosure(const Eigen::MatrixBase<OtherDerived>& A)
   {
     assert_release(A.is_squared());
-    Index N=A.rows();
-    return inverse_correction<LEFT_INV>(A, 
-      A.fullPivLu().solve(Matrix::Identity(N,N)));
+    Index N = A.rows();
+
+    if constexpr(std::is_same_v<typename OtherDerived::Scalar,Interval>)
+      return inverse_correction<LEFT_INV>(A, 
+        (A.mid()).fullPivLu().solve(Matrix::Identity(N,N)));
+
+    else
+      return inverse_correction<LEFT_INV>(A, 
+        A.fullPivLu().solve(Matrix::Identity(N,N)));
   }
 
-
-  /** \brief Enclosure of the inverse of a matrix of intervals
+  /**
+   * \brief Compute an upper bound of \f$\left([\mathbf{A}]+[\mathbf{A}]^2+[\mathbf{A}]^3+\dots\right)\f$,
+   * with \f$[\mathbf{A}]\f$ a matrix of intervals as an "error term" (uses only bounds on coefficients).
+   *  
+   * The function also returns ``mrad``, which gives an idea of the *magnification* of
+   * the matrix during calculation. In particular, if ``mrad`` = \f$\infty\f$, then the inversion
+   * calculation (*e.g.*, performed by Eigen) has somehow failed and some coefficients
+   * of the output interval matrix are \f$[-\infty,\infty]\f$.
    *
-   *  \pre A is a square matrix
+   * \pre \f$[\mathbf{A}]\f$ is a square matrix.
    *
-   *  \param A a matrix of intervals
-   *  \return the enclosure. Can have (-oo,oo) coefficients if the 
-   *  inversion "failed"
+   * \param A A matrix of intervals (supposed around \f$\mathbf{0}\f$).
+   * \param mrad The maximum radius of the result added (output argument).
+   * \return The sum enclosure. May be unbounded.
    */
-  IntervalMatrix inverse_enclosure(const IntervalMatrix &A);
+  IntervalMatrix infinite_sum_enclosure(const IntervalMatrix& A, double& mrad);
 }

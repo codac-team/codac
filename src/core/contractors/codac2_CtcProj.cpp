@@ -35,7 +35,7 @@ namespace codac2
       l_stack.pop_front();
 
       IntervalVector w_ctc(w);
-      _ctc.front().contract(w_ctc);
+      _ctc.front()->contract(w_ctc);
 
       // If the guess box may contain some values
       if(!w_ctc.is_empty())

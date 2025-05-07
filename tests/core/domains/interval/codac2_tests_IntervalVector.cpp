@@ -173,13 +173,6 @@ TEST_CASE("IntervalVector")
   CHECK(IntervalVector({{0,1},{2,3},{4,5}}).subvector(0,2) == IntervalVector({{0,1},{2,3},{4,5}}));
   CHECK(IntervalVector::empty(3).subvector(1,2).is_empty());
 
-  CHECK(cart_prod(IntervalVector({{0,1},{2,3},{4,5}}),IntervalVector::empty(3)).is_empty());
-  CHECK(cart_prod(IntervalVector::empty(3),IntervalVector({{0,1},{2,3},{4,5}})).is_empty());
-  CHECK(cart_prod(IntervalVector({{0,1},{2,3},{4,5}})) == IntervalVector({{0,1},{2,3},{4,5}}));
-  CHECK(cart_prod(IntervalVector::empty(3)) == IntervalVector::empty(3));
-  CHECK(cart_prod(IntervalVector({{0,1},{2,3},{4,5}}),IntervalVector({{8,9}})) == IntervalVector({{0,1},{2,3},{4,5},{8,9}}));
-  CHECK(cart_prod(25.,IntervalVector({{0,1},{2,3},{4,5}}),IntervalVector({{8,9}}),Vector::ones(3)) == IntervalVector({{25},{0,1},{2,3},{4,5},{8,9},{1},{1},{1}}));
-
   CHECK(((IntervalVector({{0,2},{4,6}})) &=IntervalVector({{1,3},{5,7}})) == IntervalVector({{1,2},{5,6}}));
   CHECK(((IntervalVector({{0,2},{4,6}})) & IntervalVector({{1,3},{5,7}})) == IntervalVector({{1,2},{5,6}}));
 

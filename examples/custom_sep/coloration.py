@@ -72,6 +72,6 @@ def coloration(n):
 
 
 p.tree().visit(coloration)
-DefaultView.set_window_properties([50,50],[800,800])
-DefaultView.set_axes(axis(0,[-4,2]), axis(1,[-3,3]))
-DefaultView.draw_paving(p)
+DefaultFigure.set_window_properties([50,50],[800,800])
+DefaultFigure.set_axes(axis(0,[-4,2]), axis(1,[-3,3]))
+DefaultFigure.draw_paving(p)

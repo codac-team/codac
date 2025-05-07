@@ -18,6 +18,6 @@ void CtcFixpoint::contract(IntervalVector& x) const
 
   do {
     v = x.volume();
-    _ctc.front().contract(x);
+    _ctc.front()->contract(x);
   } while(x.volume()/v < (1-_r));
 }

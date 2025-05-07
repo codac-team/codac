@@ -49,7 +49,7 @@ class TestCtcPolygon(unittest.TestCase):
     # Check a box inside the hole
 
     x = IntervalVector([[0],[0]]).inflate(0.5)
-    #DefaultView.draw_box(x,Color::purple())
+    #DefaultFigure.draw_box(x,Color::purple())
     c.contract(x)
     self.assertTrue(x.is_empty())
 
@@ -57,14 +57,14 @@ class TestCtcPolygon(unittest.TestCase):
 
     x = IntervalVector([[5],[-5]]).inflate(0.5)
     _x = IntervalVector(x)
-    #DefaultView.draw_box(x,Color::purple())
+    #DefaultFigure.draw_box(x,Color::purple())
     c.contract(x)
     self.assertTrue(x == _x)
 
     # Check a box outside the polygon
 
     x = IntervalVector([[-1],[8]]).inflate(0.5)
-    #DefaultView.draw_box(x,Color::purple())
+    #DefaultFigure.draw_box(x,Color::purple())
     c.contract(x)
     self.assertTrue(x.is_empty())
 

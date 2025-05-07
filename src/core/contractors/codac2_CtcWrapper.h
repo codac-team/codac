@@ -14,12 +14,12 @@
 namespace codac2
 {
   template<typename X>
-  class CtcWrapper_ : public Ctc<CtcWrapper_<X>,X>
+  class CtcWrapper : public Ctc<CtcWrapper<X>,X>
   {
     public:
 
-      CtcWrapper_(const X& y)
-        : Ctc<CtcWrapper_<X>,X>(y.size()), _y(y)
+      CtcWrapper(const X& y)
+        : Ctc<CtcWrapper<X>,X>(y.size()), _y(y)
       { }
 
       void contract(X& x) const

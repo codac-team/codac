@@ -27,16 +27,12 @@ jobs:
             - { os: macos-13, shell: bash, arch: arm64, runtime: ventura, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 10, cross: true, desc: 'macOS Ventura Python 3.10 arm64 (cross)' }
             - { os: macos-13, shell: bash, arch: arm64, runtime: ventura, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 9, cross: true, desc: 'macOS Ventura Python 3.9 arm64 (cross)' }
             - { os: macos-13, shell: bash, arch: arm64, runtime: ventura, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 8, cross: true, desc: 'macOS Ventura Python 3.8 arm64 (cross)' }
-            - { os: macos-13, shell: bash, arch: arm64, runtime: ventura, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: 'm-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 7, cross: true, desc: 'macOS Ventura Python 3.7 arm64 (cross)' }
-            - { os: macos-13, shell: bash, arch: arm64, runtime: ventura, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: 'm-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 6, cross: true, desc: 'macOS Ventura Python 3.6 arm64 (cross)' }
             - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 13, desc: 'macOS Ventura Python 3.13 x86_64' }
             - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 12, desc: 'macOS Ventura Python 3.12 x86_64' }
             - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 11, desc: 'macOS Ventura Python 3.11 x86_64' }
             - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Ventura Python 3.10 x86_64' }
             - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 9, desc: 'macOS Ventura Python 3.9 x86_64' }
             - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 8, desc: 'macOS Ventura Python 3.8 x86_64' }
-            - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: 'm-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 7, desc: 'macOS Ventura Python 3.7 x86_64' }
-            - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: 'm-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 6, desc: 'macOS Ventura Python 3.6 x86_64' } # Was 10.14 because of error $MACOSX_DEPLOYMENT_TARGET mismatch: now "10.9" but "10.14" during configure. Now 10.16 due to C++20 problems...
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v4
@@ -57,7 +53,7 @@ jobs:
       shell: bash
     #- run: brew install eigen
     #  if: runner.os=='macOS'
-    - run: brew install graphviz ; brew install --formula doxygen ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects
+    - run: brew install graphviz ; brew install --formula doxygen ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects furo sphinx-math-dollar
       if: runner.os=='macOS'
     - run: |
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20241117/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
@@ -67,7 +63,7 @@ jobs:
       shell: bash
     - run: |
         mkdir build ; cd build
-        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=${{ matrix.cfg.arch }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D WITH_CAPD=OFF -D WITH_PYTHON=ON ..
+        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=${{ matrix.cfg.arch }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D WITH_CAPD=OFF -D WITH_PYTHON=ON -D PYBIND11_FINDPYTHON=OFF ..
         cmake --build . -j 4 --config Release --target install
         cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
         cd ..

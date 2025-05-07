@@ -94,7 +94,7 @@ void export_CtcCartProd(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcI
       {
         Collection<CtcBase<IntervalVector>> c;
         for(const auto& ci : l)
-          c.add_shared_ptr(ci.get().copy());
+          c.push_back(ci.get().copy());
         return CtcCartProd(c);
       },
     CTCCARTPROD_CART_PROD_CONST_C_REF_VARIADIC);

@@ -27,16 +27,39 @@ void export_Polygon(py::module& m)
       POLYGON_POLYGON_CONST_VECTOR_VECTOR_REF,
       "vertices"_a)
 
-    .def(py::init<const std::vector<Edge>&>(),
-      POLYGON_POLYGON_CONST_VECTOR_EDGE_REF,
+    .def(py::init<const std::vector<Segment>&>(),
+      POLYGON_POLYGON_CONST_VECTOR_SEGMENT_REF,
       "edges"_a)
 
     .def("edges", &Polygon::edges,
-      CONST_VECTOR_EDGE_REF_POLYGON_EDGES_CONST)
+      CONST_VECTOR_SEGMENT_REF_POLYGON_EDGES_CONST)
+
+    .def("unsorted_vertices", &Polygon::unsorted_vertices,
+      LIST_INTERVALVECTOR_POLYGON_UNSORTED_VERTICES_CONST)
+
+    .def("sorted_vertices", &Polygon::sorted_vertices,
+      VECTOR_INTERVALVECTOR_POLYGON_SORTED_VERTICES_CONST)
+
+    .def("is_empty", &Polygon::is_empty,
+      BOOL_POLYGON_IS_EMPTY_CONST)
 
     .def("contains", &Polygon::contains,
-      BOOLINTERVAL_POLYGON_CONTAINS_CONST_VECTOR_REF_CONST,
+      BOOLINTERVAL_POLYGON_CONTAINS_CONST_INTERVALVECTOR_REF_CONST,
       "p"_a)
+    
+    .def(py::self == py::self,
+      BOOL_POLYGON_OPERATOREQ_CONST_POLYGON_REF_CONST,
+      "p"_a)
+
+    .def("__repr__", [](const Polygon& x) {
+          std::ostringstream stream;
+          stream << x;
+          return string(stream.str()); 
+        },
+      OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_POLYGON_REF)
+
+    .def_static("empty", &Polygon::empty,
+      STATIC_POLYGON_POLYGON_EMPTY)
 
   ;
 

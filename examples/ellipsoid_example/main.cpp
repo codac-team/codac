@@ -7,17 +7,16 @@ int main() {
     // ----------------------------------------------------------
     // linear and nonlinear mappings
     // ----------------------------------------------------------
+    cout << "Linear and nonlinear mappings:" << endl;
 
     Figure2D fig1("Linear and nonlinear mappings", GraphicOutput::VIBES);
-    fig1.set_axes(axis(0, {0, 1.5}), axis(1, {-1., 0.5}));
+    fig1.set_axes(axis(0, {-0.1, 1.3}), axis(1, {-1.2, 0.2}));
     fig1.set_window_properties({0, 100}, {500, 500});
 
     // initial ellipsoid
-    Ellipsoid e1(
-        {1., 0.}, // mu
-        {{0.05, 0.0}, // G
-         {0.,   0.05}}
-    );
+    Vector mu({1., 0.});
+    Matrix G({{0.05, 0.0},{0.,   0.05}});
+    Ellipsoid e1(mu,G);
     fig1.draw_ellipsoid(e1, {Color::red(), Color::red(0.3)});
     cout << "Initial ellipsoid e1 (red):" << endl;
     cout << e1 << endl;
@@ -90,9 +89,10 @@ int main() {
     fig3.set_window_properties({1200, 100}, {500, 500});
     fig4.set_window_properties({0, 600}, {500, 500});
 
-    fig2.set_axes(axis(0, {-3, 3}), axis(1, {-3, 3}));
-    fig3.set_axes(axis(1, {-3, 3}), axis(2, {-3, 3}));
-    fig4.set_axes(axis(0, {-3, 3}), axis(2, {-3, 3}));
+    fig2.set_axes(axis(0, {-3.1, 3.1}), axis(1, {-3.1, 3.1}));
+    fig2.set_axes(axis(0, {-3.1, 3.1}), axis(1, {-3.1, 3.1}));
+    fig3.set_axes(axis(1, {-3.1, 3.1}), axis(2, {-3.1, 3.1}));
+    fig4.set_axes(axis(0, {-3.1, 3.1}), axis(2, {-3.1, 3.1}));
 
     fig2.draw_ellipsoid(e4, {Color::blue(), Color::blue(0.3)});
     fig3.draw_ellipsoid(e4, {Color::blue(), Color::blue(0.3)});
@@ -127,8 +127,70 @@ int main() {
     cout << "Inclusion test e5 in e6: " << e5.is_concentric_subset(e6) << endl;
 
     // ----------------------------------------------------------
+    // test the non inclusion (e4 in e6)
+    // ----------------------------------------------------------
+    cout << "\nNon-inclusion test, e4 in e6:" << endl;
+
+    // step 1 identify the direction of non inclusion
+    Eigen::MatrixXd G4 = e4.G; // shape matrix
+    Eigen::MatrixXd G6 = e6.G; // shape matrix
+    Eigen::MatrixXd G6_inv = G6.inverse();
+    Eigen::MatrixXd D = Eigen::MatrixXd::Identity(3,3)- G4.transpose()*G6_inv.transpose()*G6_inv*G4;
+
+    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(D);
+    Eigen::VectorXd eigenvalues = es.eigenvalues();
+
+    // get the eigenvector of D associated with the minimum eigenvalue (negative real part)
+    Eigen::VectorXd v;
+    double min_eigenvalue = FLT_MAX ;
+    for (int i = 0; i < eigenvalues.size(); i++){
+        if (eigenvalues(i) < min_eigenvalue){
+            min_eigenvalue = eigenvalues(i);
+            v = es.eigenvectors().col(i); // the vector associated to the smallest eigenvalue
+        }
+    }
+    cout << "The vector associated with the non-inclusion between e4 and e6 is v=" << v << endl;
+
+    // step 2 - select the less included point and draw it on the figures
+    Eigen::VectorXd p = e4.mu+e4.G*v;
+    cout << "the red point p=" << p << " is the less included point" << endl;
+    fig2.draw_point(p, {Color::red(),Color::red()});
+    fig3.draw_point(p, {Color::red(),Color::red()});
+    fig4.draw_point(p, {Color::red(),Color::red()});
+
+    // step 3
+    // consider  x2 = x + 0.5*min_eigenvalue* (x-mu4)/norm2(x-mu4)
+    // x2 is not on borders of e4 and e6
+    // let us prove by intervals that x2 is in e4 and out of e6
+    // by proving (x2-mu6).T@G6^(-T)@G6^(-1)@(x2-mu6) > 1
+    // and (x2-mu4).T@G4^(-T)@G4^(-1)@(x2-mu4) < 1
+
+    Eigen::VectorXd p2 = e4.mu -min_eigenvalue/(1-min_eigenvalue)*(p-e4.mu);
+    fig2.draw_point(p2, {Color::green(),Color::green()});
+    fig3.draw_point(p2, {Color::green(),Color::green()});
+    fig4.draw_point(p2, {Color::green(),Color::green()});
+
+    IntervalVector w(p2);
+    w -= IntervalVector(e6.mu);
+    IntervalMatrix Q(G6_inv);
+    Q = Q.transpose()*Q;
+    IntervalMatrix res = w.transpose()*Q*w; //  (x2-mu6).T@G6^(-T)@G6^(-1)@(x2-mu6) > 1
+
+    Eigen::MatrixXd G4_inv = G4.inverse();
+    IntervalMatrix Qx(G4_inv);
+    Qx = Qx.transpose()*Qx;
+    IntervalMatrix res2 = w.transpose()*Qx*w; // (x2-mu4).T@G4^(-T)@G4^(-1)@(x2-mu4) < 1
+
+    if(res(0,0).lb() > 1. and res2(0,0).ub() < 1.){
+        cout << "the green point p2="<<p2<<" is guaranteed out of the ellipsoid e6" << endl;
+        cout << "it also is guaranteed in the ellipsoid e4" << endl;
+        cout << "so the non inclusion between e6 and e4 is guaranteed" << endl;
+    }
+
+    // ----------------------------------------------------------
     // guaranteed and non guaranteed linear mappings
     // ----------------------------------------------------------
+    cout << "\nGuaranteed mappings:" << endl;
     Matrix A({{0.9, 0.5},
               {-.5, 1.1}});
     Vector b({0.1, 0.2});
@@ -149,6 +211,7 @@ int main() {
     // ----------------------------------------------------------
     // singular case for nonlinear mapping
     // ----------------------------------------------------------
+    cout << "\nSingular case for nonlinear mapping:" << endl;
 
     Figure2D fig5("singular mappings and degenerated ellipsoids", GraphicOutput::VIBES);
     fig5.set_axes(axis(0, {-0.5, 2}), axis(1, {-1.5, 1.}));
@@ -198,6 +261,7 @@ int main() {
     // ----------------------------------------------------------
     // stability analysis
     // ----------------------------------------------------------
+    cout << "\nStability analysis:" << endl;
 
     // pendulum example
     AnalyticFunction h4{
@@ -229,23 +293,4 @@ int main() {
     fig6.set_window_properties({1200, 600}, {500, 500});
     fig6.draw_ellipsoid(e13, {Color::red(), Color::red(0.3)});
     fig6.draw_ellipsoid(e13_out, {Color::green(), Color::green(0.3)});
-
-//    // high dimensional rov example
-//    VectorVar m(6);
-//    double T = 0.1;
-//    double s = 10;
-//    double kpd = 0.1;
-//    double kdd = 0.1;
-//    double kpp = 0.2;
-//    double kdp = 0.7;
-//    double dd = 5;
-//
-//    AnalyticFunction h5{
-//            {m}, vec(m[0] + T * m[3] ,
-//                     m[1] + T * m[4] ,
-//                     m[2] + T* (m[6]-m[5]),
-//                     m[3] + T*s*atan(-kpd*m[0]-kdd*m[3]),
-//                     m[4] + T*s*atan(-kpd*m[1]-kdd*m[4]),
-//                     m[5] + T*s*atan(kpp/2*m[2]-kdp*m[5])/(m[0]+dd),
-//                     m[6] + T*s*atan(-kpp/2*m[2]-kdp*m[6])/(m[1]+dd))};
 }

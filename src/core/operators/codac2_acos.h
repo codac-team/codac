@@ -2,7 +2,7 @@
  *  \file codac2_acos.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Damien Massé
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -17,6 +17,18 @@ namespace codac2
 {
   struct AcosOp
   {
+    template<typename X1>
+    static std::string str(const X1& x1)
+    {
+      return "acos(" + x1->str() + ")";
+    }
+
+    template<typename X1>
+    static std::pair<Index,Index> output_shape([[maybe_unused]] const X1& x1)
+    {
+      return {1,1};
+    }
+
     static Interval fwd(const Interval& x1);
     static ScalarType fwd_natural(const ScalarType& x1);
     static ScalarType fwd_centered(const ScalarType& x1);
@@ -72,4 +84,5 @@ namespace codac2
   {
     x1 &= cos(y);
   }
+
 }

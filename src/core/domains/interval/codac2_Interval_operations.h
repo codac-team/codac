@@ -250,6 +250,16 @@ namespace codac2
    * \return the operation result
    */
   Interval ceil(const Interval& x);
+
+  /**
+   * \brief Return \f$[y]\f$ if \f$x^+ <= 0\f$, \f$[z]\f$ if \f$x^- > 0\f$, \f$[y]\sqcup[z]\f$ else
+   * 
+   * \param x interval value
+   * \param y interval value
+   * \param z interval value
+   * \return the operation result
+   */
+  Interval chi(const Interval& x, const Interval& y, const Interval& z);
 }
 
 #include "codac2_Interval_operations_impl.h"

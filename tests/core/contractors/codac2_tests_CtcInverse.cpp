@@ -13,6 +13,8 @@
 #include <codac2_Approx.h>
 #include <codac2_pave.h>
 #include <codac2_Subpaving.h>
+#include <codac2_CtcWrapper.h>
+#include <codac2_drawwhilepaving.h>
 
 using namespace std;
 using namespace codac2;
@@ -22,7 +24,7 @@ TEST_CASE("CtcInverse")
   {
     ScalarVar x,y;
     AnalyticFunction f { {x,y}, x-y };
-    CtcInverse<Interval> c(f, Interval(0.));
+    CtcInverse_<Interval> c(f, Interval(0.));
     CHECK(c.function().input_size() == 2);
 
     Interval a,b;
@@ -65,7 +67,7 @@ TEST_CASE("CtcInverse")
   {
     VectorVar x(2);
     AnalyticFunction f { {x}, x[0]-x[1] };
-    CtcInverse_<Interval> c(f, {0});
+    CtcInverse c(f, {0});
 
     //pave(IntervalVector({{-10,10},{-10,10}}), c, 0.1);
 
@@ -94,7 +96,7 @@ TEST_CASE("CtcInverse")
   {
     VectorVar x(2);
     AnalyticFunction f { {x}, vec(x[0]-x[1]) };
-    CtcInverse_<IntervalVector> c(f, {0});
+    CtcInverse c(f, {0.});
 
     //pave(IntervalVector({{-10,10},{-10,10}}), c, 0.1);
 
@@ -123,48 +125,84 @@ TEST_CASE("CtcInverse")
   {
     VectorVar x(2);
     AnalyticFunction f { {x}, vec(x[0],sqr(x[0]/7.)+sqr(x[1]/3.)) };
-    CtcInverse_<IntervalVector> c(f, {{0,oo},{1}});
+    CtcInverse c(f, {{0,oo},{1,1}});
 
     //pave(IntervalVector({{-10,10},{-10,10}}), c, 0.1);
 
     {
       IntervalVector b({{0,0.8},{-2.28,-1.56}});
-      //DefaultView::draw_box(b);
+      //DefaultFigure::draw_box(b);
       c.contract(b);
       CHECK(b == IntervalVector::empty(2));
-      //DefaultView::draw_box(b,Color::blue());
+      //DefaultFigure::draw_box(b,Color::blue());
     }
 
     {
       IntervalVector b({{4,5.4},{-0.05,2.45}});
-      //DefaultView::draw_box(b);
+      //DefaultFigure::draw_box(b);
       c.contract(b);
       CHECK(Approx(b,1e-2) == IntervalVector({{4.0397,5.40},{1.9089,2.45}}));
-      //DefaultView::draw_box(b,Color::blue());
+      //DefaultFigure::draw_box(b,Color::blue());
     }
 
     {
       IntervalVector b({{6.25,6.7},{0.9,1.85}});
-      //DefaultView::draw_box(b);
+      //DefaultFigure::draw_box(b);
       c.contract(b);
       CHECK(Approx(b,1e-2) == IntervalVector({{6.25,6.67},{0.9,1.351}}));
-      //DefaultView::draw_box(b,Color::blue());
+      //DefaultFigure::draw_box(b,Color::blue());
     }
 
     {
       IntervalVector b({{-6,-5},{0,2}});
-      //DefaultView::draw_box(b);
+      //DefaultFigure::draw_box(b);
       c.contract(b);
       CHECK(b == IntervalVector::empty(2));
-      //DefaultView::draw_box(b,Color::blue());
+      //DefaultFigure::draw_box(b,Color::blue());
     }
 
     {
       IntervalVector b({{2,3},{-1,1}});
-      //DefaultView::draw_box(b);
+      //DefaultFigure::draw_box(b);
       c.contract(b);
       CHECK(b == IntervalVector::empty(2));
-      //DefaultView::draw_box(b,Color::blue());
+      //DefaultFigure::draw_box(b,Color::blue());
+    }
+  }
+  
+  {
+    VectorVar x(2);
+    AnalyticFunction f { {x}, vec(x[0],sqr(x[0]/7.)+sqr(x[1]/3.)) };
+    CtcInverse c(f, CtcWrapper(IntervalVector({{0,oo},{1}})));
+
+    {
+      IntervalVector b({{0,0.8},{-2.28,-1.56}});
+      c.contract(b);
+      CHECK(b == IntervalVector::empty(2));
+    }
+
+    {
+      IntervalVector b({{4,5.4},{-0.05,2.45}});
+      c.contract(b);
+      CHECK(Approx(b,1e-2) == IntervalVector({{4.0397,5.40},{1.9089,2.45}}));
+    }
+
+    {
+      IntervalVector b({{6.25,6.7},{0.9,1.85}});
+      c.contract(b);
+      CHECK(Approx(b,1e-2) == IntervalVector({{6.25,6.67},{0.9,1.351}}));
+    }
+
+    {
+      IntervalVector b({{-6,-5},{0,2}});
+      c.contract(b);
+      CHECK(b == IntervalVector::empty(2));
+    }
+
+    {
+      IntervalVector b({{2,3},{-1,1}});
+      c.contract(b);
+      CHECK(b == IntervalVector::empty(2));
     }
   }
 }
@@ -189,16 +227,22 @@ TEST_CASE("ParabolasExample")
       Vector({2,0,0.55}),Vector({2,1,-0.45}),Vector({2,2,0.55}))
   );
 
-  CtcInverse_ ctc(h, IntervalVector::zero(3));
-  IntervalVector x0 {{0,1},{0,1},{0,0.2},{0,0.2}};
+  CtcInverse ctc(h, IntervalVector::zero(3));
+  IntervalVector x0 {{0,1},{0,1},{0.05,0.18},{0.05,0.18}};
+
   //draw_while_paving(x0, ctc, 0.001);
+  //DefaultFigure::set_axes(axis(0,{0.11,0.23}), axis(1,{0.1,0.22}));
+
   auto p = pave(x0, ctc, 0.01);
   auto cs = p.connected_subsets();
   CHECK(cs.size() == 1);
   CHECK(Approx(cs.begin()->box(),1e-4) == IntervalVector({
-    {0.13244,0.201099},
-    {0.131459,0.202575},
-    {0.132274,0.200001},
-    {0.132283,0.200001}
+    {0.149199,0.182388},
+    {0.148306,0.1826},
+    {0.148054,0.18},
+    {0.148732,0.18}
   }));
+
+  //for(const auto& bi : cs)
+  //  DefaultFigure::draw_box(bi.box().subvector(0,1));
 }

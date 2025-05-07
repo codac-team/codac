@@ -13,7 +13,6 @@
 #include "codac2_Sep.h"
 #include "codac2_SepWrapper.h"
 #include "codac2_Collection.h"
-#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -22,7 +21,7 @@ namespace codac2
     public:
 
       SepNot(const IntervalVector& x)
-        : Sep<SepNot>(x.size()), _sep(SepWrapper_<IntervalVector>(x))
+        : Sep<SepNot>(x.size()), _sep(SepWrapper(x))
       { }
 
       template<typename S>
@@ -35,7 +34,7 @@ namespace codac2
       {
         assert_release(x.size() == this->size());
         
-        auto x_sep = _sep.front().separate(x);
+        auto x_sep = _sep.front()->separate(x);
         assert((x_sep.outer | x_sep.inner) == x);
         return { x_sep.outer , x_sep.inner };
       }

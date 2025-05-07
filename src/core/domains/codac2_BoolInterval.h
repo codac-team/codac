@@ -13,11 +13,19 @@
 
 namespace codac2
 {
+  /**
+   * \enum BoolInterval
+   * \brief Enumeration representing a boolean interval.
+   * 
+   * The logical operators ``&`` and ``|`` can be used to combine ``BoolInterval`` values.
+   */
   enum class BoolInterval
   {
-    EMPTY = 0x01 & 0x02,
     FALSE = 0x01,
     TRUE = 0x02,
+    /** ``EMPTY`` is equivalent to the operation ``TRUE & FALSE``. */
+    EMPTY = 0x00,
+    /** ``UNKNOWN`` is equivalent to the operation ``TRUE | FALSE``. */
     UNKNOWN = 0x01 | 0x02
   };
 

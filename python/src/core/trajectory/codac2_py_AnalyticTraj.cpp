@@ -11,6 +11,7 @@
 #include <sstream>
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
+#include <pybind11/stl.h>
 #include <codac2_AnalyticTraj.h>
 #include <codac2_SampledTraj.h>
 #include "codac2_py_AnalyticTraj_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
@@ -28,7 +29,7 @@ template<typename O>
 void _export_AnalyticTraj(py::module& m, const string& class_name)
 {
   py::class_<AnalyticTraj<O>> exported_class(m, class_name.c_str(), ANALYTICTRAJ_MAIN);
-  export_TrajBase<AnalyticTraj<O>>(exported_class);
+  export_TrajBase<AnalyticTraj<O>,typename O::Scalar>(exported_class);
 
   exported_class
 

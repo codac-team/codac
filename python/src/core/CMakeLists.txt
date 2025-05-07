@@ -14,7 +14,9 @@
     contractors/codac2_py_Ctc.h
     contractors/codac2_py_CtcAction.cpp
     contractors/codac2_py_CtcCartProd.cpp
+    contractors/codac2_py_CtcCross.cpp
     contractors/codac2_py_CtcCtcBoundary.cpp
+    contractors/codac2_py_CtcDist.cpp
     contractors/codac2_py_CtcEmpty.cpp
     contractors/codac2_py_CtcFixpoint.cpp
     contractors/codac2_py_CtcInnerOuter.cpp
@@ -24,6 +26,7 @@
     contractors/codac2_py_CtcInverseNotIn.h
     contractors/codac2_py_CtcLazy.cpp
     contractors/codac2_py_CtcNot.cpp
+    contractors/codac2_py_CtcPointCloud.cpp
     contractors/codac2_py_CtcPolar.cpp
     contractors/codac2_py_CtcPolygon.cpp
     contractors/codac2_py_CtcProj.cpp
@@ -50,15 +53,19 @@
     functions/analytic/codac2_py_AnalyticFunction.h
     functions/analytic/codac2_py_AnalyticExprWrapper.h
 
-    geometry/codac2_py_Edge.cpp
+    geometry/codac2_py_ConvexPolygon.cpp
     geometry/codac2_py_geometry.cpp
     geometry/codac2_py_Polygon.cpp
+    geometry/codac2_py_Segment.cpp
 
+    matrices/codac2_py_cart_prod.cpp
     matrices/codac2_py_arithmetic_add.cpp
     matrices/codac2_py_arithmetic_sub.cpp
     matrices/codac2_py_arithmetic_mul.cpp
     matrices/codac2_py_arithmetic_div.cpp
+    matrices/codac2_py_hull.cpp
     matrices/codac2_py_inversion.cpp
+    matrices/codac2_py_IntvFullPivLU.cpp
     matrices/codac2_py_Matrix.cpp
     matrices/codac2_py_MatrixBase.h
     matrices/codac2_py_MatrixBlock.h
@@ -73,6 +80,8 @@
     separators/codac2_py_Sep.h
     separators/codac2_py_SepAction.cpp
     separators/codac2_py_SepCartProd.cpp
+    separators/codac2_py_SepChi.cpp
+    separators/codac2_py_SepCross.cpp
     separators/codac2_py_SepCtcBoundary.cpp
     separators/codac2_py_SepCtcPair.cpp
     separators/codac2_py_SepInter.cpp
@@ -85,6 +94,7 @@
     separators/codac2_py_SepWrapper.cpp
 
     tools/codac2_py_Approx.cpp
+    tools/codac2_py_transformations.cpp
 
     trajectory/codac2_py_AnalyticTraj.cpp
     trajectory/codac2_py_SampledTraj.cpp
@@ -114,11 +124,6 @@
   target_link_libraries(_core
     PRIVATE ${PROJECT_NAME}-core ${LIBS} Ibex::ibex
   )
-
-  if(APPLE)
-    set_target_properties(_core
-      PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
-  endif(APPLE)
 
   # Copy the generated library in the package folder
   add_custom_command(TARGET _core POST_BUILD

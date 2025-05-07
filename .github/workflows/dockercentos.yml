@@ -10,7 +10,7 @@ on:
 
 jobs:
  dockercentos:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.cfg.os }}
     defaults:
         run:
             shell: ${{ matrix.cfg.shell }}
@@ -18,8 +18,8 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
-            - { img: 'lebarsfa/manylinux2014_x86_64-for-codac', shell: bash, arch: x86_64, bitness: 64, runtime: manylinux2014, desc: 'CentOS manylinux2014 x86_64' }
- #           - { img: 'lebarsfa/manylinux2014_aarch64-for-codac', shell: bash, arch: aarch64, bitness: 64, runtime: manylinux2014, docker_flags: '--platform linux/arm64', desc: 'CentOS manylinux2014 aarch64' }
+            - { img: 'lebarsfa/manylinux_2_28_x86_64-for-codac', os: ubuntu-latest, shell: bash, arch: x86_64, bitness: 64, runtime: manylinux_2_28, desc: 'CentOS manylinux_2_28 x86_64' }
+            - { img: 'lebarsfa/manylinux_2_28_aarch64-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: aarch64, bitness: 64, runtime: manylinux_2_28, docker_flags: '--platform linux/arm64', desc: 'CentOS manylinux_2_28 aarch64' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v4
@@ -27,11 +27,11 @@ jobs:
         submodules: true
         fetch-depth: 0
         clean: false
-    - run: |
-        sudo apt-get -y install qemu binfmt-support qemu-user-static || true
-        #docker run --rm --privileged multiarch/qemu-user-static:register --reset
-        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-      if: (matrix.cfg.arch!='x86_64')&&(matrix.cfg.arch!='i386')
+    #- run: |
+    #    sudo apt-get -y install qemu binfmt-support qemu-user-static || true
+    #    #docker run --rm --privileged multiarch/qemu-user-static:register --reset
+    #    docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    #  if: (matrix.cfg.arch!='x86_64')&&(matrix.cfg.arch!='i386')
     - run: |
         chmod a+x scripts/docker/*.sh
         if [ ${{ github.ref_name }} = 'codac2_codac4matlab' ] || [ ${{ github.event.pull_request.base.ref }} = 'codac2_codac4matlab' ]; then docker run ${{ matrix.cfg.docker_flags }} --rm -v `pwd`:/io ${{ matrix.cfg.img }} /io/scripts/docker/build_pybinding_codac4matlab.sh

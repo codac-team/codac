@@ -17,7 +17,7 @@ using namespace codac2;
 void CtcSegment::contract(IntervalVector& x) const
 {
   assert_release(x.size() == 2 && "only 2d segments are supported");
-  IntervalVector a(_a), b(_b); // variables that may be contracted
+  IntervalVector a(_ab[0]), b(_ab[1]); // variables that may be contracted
   x &= a | b; // boxed domain of the segment
   IntervalVector c = a-x, d = b-a;
   DetOp::bwd(0.,d,c);

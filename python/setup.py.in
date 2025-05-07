@@ -15,7 +15,7 @@ setup(
   name='${PYTHON_PACKAGE_NAME}',
   version='${PROJECT_VERSION_FULL}',
   author='Simon Rohou, Benoit Desrochers, Fabrice Le Bars',
-  author_email='simon.rohou@ensta-bretagne.fr',
+  author_email='simon.rohou@ensta.fr',
   url='http://codac.io',
   description='${PROJECT_DESCRIPTION}',
   long_description='${PROJECT_LONG_DESCRIPTION}',

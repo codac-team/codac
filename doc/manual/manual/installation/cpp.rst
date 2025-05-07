@@ -6,6 +6,8 @@
 C++ installation
 ================
 
+  Main authors: `Fabrice Le Bars <https://www.ensta-bretagne.fr/lebars/>`_, `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+
 This page describes how to install the C++ library on Linux, Windows, and macOS. Follow the steps outlined for your operating system.
 
 
@@ -76,7 +78,7 @@ Steps
 
 2. **Install the IBEX dependency**:
    
-   Codac still uses some features of the `IBEX library <https://ibex-team.github.io/ibex-lib/install.html>`_ that you have to install first. The last version of IBEX is maintained on `this unofficial development repository <https://github.com/lebarsfa/ibex-lib/tree/master>`_:
+   Codac still uses some features of the `IBEX library <https://ibex-team.github.io/ibex-lib/install-cmake.html>`_ that you have to install first (currently, the only thing Codac uses from IBEX is a wrapper of the `GAOL library <https://github.com/goualard-f/GAOL>`_). The last version of IBEX is maintained on `this unofficial development repository <https://github.com/lebarsfa/ibex-lib/tree/master>`_:
 
    .. code-block:: bash
 
@@ -199,7 +201,7 @@ Optionally, for Python binding (*e.g.* ``choco install python --version=3.10.4``
   choco install doxygen.install --version=1.13
   choco install graphviz
   python -m pip install --upgrade pip
-  pip install --upgrade wheel setuptools sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs
+  pip install --upgrade wheel setuptools sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs breathe
 
 The logic to follow will then be similar to Linux (note that for Visual Studio, commands such as ``make install`` need to be replaced with something similar to:
 

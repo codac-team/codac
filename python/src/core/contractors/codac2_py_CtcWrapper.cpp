@@ -21,15 +21,15 @@ using namespace pybind11::literals;
 
 void export_CtcWrapper(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& pyctc)
 {
-  py::class_<CtcWrapper_<IntervalVector>> exported(m, "CtcWrapper", pyctc, CTCWRAPPER__MAIN);
+  py::class_<CtcWrapper<IntervalVector>> exported(m, "CtcWrapper", pyctc, CTCWRAPPER_MAIN);
   exported
 
     .def(py::init<const IntervalVector&>(),
-      CTCWRAPPER__X_CTCWRAPPER__CONST_X_REF,
+      CTCWRAPPER_X_CTCWRAPPER_CONST_X_REF,
       "y"_a)
 
-    .def(CONTRACT_BOX_METHOD(CtcWrapper_<IntervalVector>,
-      VOID_CTCWRAPPER__X_CONTRACT_X_REF_CONST))
+    .def(CONTRACT_BOX_METHOD(CtcWrapper<IntervalVector>,
+      VOID_CTCWRAPPER_X_CONTRACT_X_REF_CONST))
     
   ;
 }

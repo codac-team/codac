@@ -18,8 +18,8 @@ TEST_CASE("CtcCartProd")
 {
   {
     VectorVar v(1);
-    CtcInverse_<IntervalVector> c1(AnalyticFunction({v}, v), IntervalVector({{-1,1}}));
-    CtcInverse_<IntervalVector> c2(AnalyticFunction({v}, v), IntervalVector({{5,6}}));
+    CtcInverse c1(AnalyticFunction({v}, v), IntervalVector({{-1,1}}));
+    CtcInverse c2(AnalyticFunction({v}, v), IntervalVector({{5,6}}));
 
     IntervalVector a(1),b(1);
     c1.contract(a);

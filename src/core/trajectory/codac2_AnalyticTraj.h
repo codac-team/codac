@@ -31,6 +31,11 @@ namespace codac2
         return AnalyticFunction<O>::output_size();
       }
 
+      virtual std::pair<Index,Index> shape() const
+      {
+        return AnalyticFunction<O>::output_shape();
+      }
+
       virtual bool is_empty() const
       {
         return _tdomain.is_empty();

@@ -12,6 +12,7 @@
 #include <codac2_pave.h>
 #include <codac2_Figure2D.h>
 #include <codac2_Approx.h>
+#include <codac2_CtcWrapper.h>
 
 using namespace std;
 using namespace codac2;
@@ -88,6 +89,42 @@ TEST_CASE("CtcInverseNotIn")
       CHECK(b == IntervalVector({{2,3},{-1,1}}));
     }
   }
+
+  // disabled: {
+  // disabled:   VectorVar x(2);
+  // disabled:   AnalyticFunction f { {x}, vec(x[0],sqr(x[0]/7.)+sqr(x[1]/3.)) };
+  // disabled:   CtcInverseNotIn<IntervalVector> c(f, CtcWrapper(IntervalVector({{0,oo},{1,1}})));
+  // disabled:   
+  // disabled:   {
+  // disabled:     IntervalVector b({{0,0.8},{-2.28,-1.56}});
+  // disabled:     c.contract(b);
+  // disabled:     CHECK(b == IntervalVector({{0,0.8},{-2.28,-1.56}}));
+  // disabled:   }
+  // disabled:   
+  // disabled:   {
+  // disabled:     IntervalVector b({{4,5.4},{-0.05,2.45}});
+  // disabled:     c.contract(b);
+  // disabled:     CHECK(Approx(b,1e-2) == IntervalVector({{4,5.4},{-0.05,2.45}}));
+  // disabled:   }
+  // disabled:   
+  // disabled:   {
+  // disabled:     IntervalVector b({{6.25,6.7},{0.9,1.85}});
+  // disabled:     c.contract(b);
+  // disabled:     CHECK(Approx(b,1e-2) == IntervalVector({{6.25,6.70},{0.9,1.85}}));
+  // disabled:   }
+  // disabled:   
+  // disabled:   {
+  // disabled:     IntervalVector b({{-6,-5},{0,2}});
+  // disabled:     c.contract(b);
+  // disabled:     CHECK(b == IntervalVector({{-6,-5},{0,2}}));
+  // disabled:   }
+  // disabled:   
+  // disabled:   {
+  // disabled:     IntervalVector b({{2,3},{-1,1}});
+  // disabled:     c.contract(b);
+  // disabled:     CHECK(b == IntervalVector({{2,3},{-1,1}}));
+  // disabled:   }
+  // disabled: }
 
   {
     ScalarVar v;

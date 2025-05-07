@@ -3,7 +3,7 @@
 Ellipsoids
 ==========
 
-*Main author:* `Morgan Louédec <https://morgan-louedec.fr/>`_
+  Main author: `Morgan Louédec <https://morgan-louedec.fr>`_
 
 .. toctree::
 

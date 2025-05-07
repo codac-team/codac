@@ -99,6 +99,32 @@ class TestCtcInverse(unittest.TestCase):
     c.contract(b)
     self.assertTrue(b == IntervalVector.empty(2))
   
+  def tests_CtcInverse_4(self):
+
+    x = VectorVar(2)
+    f = AnalyticFunction([x], vec(x[0],sqr(x[0]/7.)+sqr(x[1]/3.)))
+    c = CtcInverse(f, CtcWrapper([[0,oo],[1]]))
+
+    b = IntervalVector([[0,0.8],[-2.28,-1.56]])
+    c.contract(b)
+    self.assertTrue(b == IntervalVector.empty(2))
+
+    b = IntervalVector([[4,5.4],[-0.05,2.45]])
+    c.contract(b)
+    self.assertTrue(Approx(b,1e-2) == IntervalVector([[4.0397,5.40],[1.9089,2.45]]))
+
+    b = IntervalVector([[6.25,6.7],[0.9,1.85]])
+    c.contract(b)
+    self.assertTrue(Approx(b,1e-2) == IntervalVector([[6.25,6.67],[0.9,1.351]]))
+
+    b = IntervalVector([[-6,-5],[0,2]])
+    c.contract(b)
+    self.assertTrue(b == IntervalVector.empty(2))
+
+    b = IntervalVector([[2,3],[-1,1]])
+    c.contract(b)
+    self.assertTrue(b == IntervalVector.empty(2))
+  
   def tests_ParabolasExample(self):
 
     u = ScalarVar()
@@ -120,13 +146,12 @@ class TestCtcInverse(unittest.TestCase):
     )
 
     ctc = CtcInverse(h, [0,0,0])
-    x0 = [[0,1],[0,1],[0,0.2],[0,0.2]]
+    x0 = [[0,1],[0,1],[0.05,0.18],[0.05,0.18]]
     #draw_while_paving(x0, ctc, 0.001)
     p = pave(x0, ctc, 0.01)
     cs = p.connected_subsets()
     self.assertTrue(len(cs) == 1)
-    self.assertTrue(Approx(cs[0].box(),1e-4) == [[0.13244,0.201099],[0.131459,0.202575],[0.132274,0.200001],[0.132283,0.200001]])
-
+    self.assertTrue(Approx(cs[0].box(),1e-4) == [[0.149199,0.182388],[0.148306,0.1826],[0.148054,0.18],[0.148732,0.18]])
 
 if __name__ ==  '__main__':
   unittest.main()

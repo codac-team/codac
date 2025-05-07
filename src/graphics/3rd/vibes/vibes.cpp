@@ -34,6 +34,7 @@
 // Vibes properties key,value system implementation
 //
 
+
 namespace vibes {
     std::string Value::toJSONString() const {
         std::ostringstream ss;
@@ -652,6 +653,27 @@ namespace vibes
     fflush(channel.get());
   }
 
+  void drawText(const double &top_left_x, const double &top_left_y, const string& text,
+                const double &scale, Params params)
+  {
+      beginDrawingIfNeeded();
+      Params msg;
+      Vec2d top_left_xy = { top_left_x, top_left_y };
+      msg["action"]="draw";
+      msg["figure"]=params.pop("figure",current_fig);
+      msg["shape"]=(params, "type","text",
+                            "text",text,
+                            "position",top_left_xy,
+                            "scale", scale);
+      fputs(Value(msg).toJSONString().append("\n\n").c_str(), channel.get());
+      fflush(channel.get());
+  }
+
+  void drawText(const double &top_left_x, const double &top_left_y, const string& text, Params params)
+  {
+      drawText(top_left_x,top_left_y,text,1.,params);
+  }
+
   void drawVehicle(const double &cx, const double &cy, const double &rot, const double &length, Params params)
   {
       beginDrawingIfNeeded();
@@ -684,6 +706,22 @@ namespace vibes
       fflush(channel.get());
   }
 
+  void drawMotorBoat(const double &cx, const double &cy, const double &rot, const double &length, Params params)
+  {
+      beginDrawingIfNeeded();
+      Vec2d vc = { cx, cy };
+      Params msg;
+      msg["action"] = "draw";
+      msg["figure"] = params.pop("figure",current_fig);
+      msg["shape"] = (params, "type", "vehicle_motor_boat",
+                              "center", vc,
+                              "length", length,
+                              "orientation", rot);
+
+      fputs(Value(msg).toJSONString().append("\n\n").c_str(), channel.get());
+      fflush(channel.get());
+  }
+
   void drawTank(const double &cx, const double &cy, const double &rot, const double &length, Params params)
   {
       beginDrawingIfNeeded();
@@ -700,11 +738,16 @@ namespace vibes
       fflush(channel.get());
   }
 
-  void drawRaster(const std::string& rasterFilename, const double &xlb, const double &yub, const double &xres, const double &yres, Params params)
+  void drawRaster(const std::string& rasterFilename, const double &xlb, const double &yub, const double &width, const double &height, Params params)
+  {
+    drawRaster(rasterFilename, xlb, yub, width, height, 0., params);
+  }
+
+  void drawRaster(const std::string& rasterFilename, const double &xlb, const double &yub, const double &width, const double &height, const double & rot, Params params)
   {
     beginDrawingIfNeeded();
     Vec2d ul_corner = { xlb, yub };
-    Vec2d scale = { xres, yres };
+    Vec2d size = { width, height };
 
     Params msg;
     msg["action"] = "draw";
@@ -712,7 +755,8 @@ namespace vibes
     msg["shape"] = (params, "type", "raster",
                             "filename", rasterFilename,
                             "ul_corner", ul_corner,
-                            "scale", scale
+                            "size", size,
+                            "rot", rot
                    );
 
     fputs(Value(msg).toJSONString().append("\n\n").c_str(), channel.get());

@@ -15,7 +15,7 @@ int main()
     }
   };
 
-  CtcInverse_ ctc(f, IntervalVector::zero(2));
+  CtcInverse ctc(f, IntervalVector::zero(2));
   IntervalVector x0({{-10,10},{0,20},{1,1},{2,2}});
 
   shared_ptr<Figure2D> g = make_shared<Figure2D>("Evans", GraphicOutput::VIBES);

@@ -24,12 +24,11 @@ namespace codac2
   {
     public:
 
-      using TrajType = ValueType<T>::Type;
-
       TrajBase()
       { }
 
       virtual Index size() const = 0;
+      virtual std::pair<Index,Index> shape() const = 0;
       virtual bool is_empty() const = 0;
       virtual Interval tdomain() const = 0;
       virtual void truncate_tdomain(const Interval& new_tdomain) = 0;
@@ -39,7 +38,7 @@ namespace codac2
 
       auto nan_value() const
       {
-        if constexpr(std::is_same_v<TrajType,ScalarType>)
+        if constexpr(std::is_same_v<T,double> || std::is_same_v<typename ValueType<T>::Type,ScalarType>)
           return std::numeric_limits<double>::quiet_NaN();
 
         else
@@ -57,6 +56,17 @@ namespace codac2
         for(double t = tdom.lb() ; t < tdom.ub() ; t+=dt)
           straj.set(t, (*this)(t));
         straj.set(tdom.ub(), (*this)(tdom.ub()));
+        return straj;
+      }
+
+      template<typename Q>
+      SampledTraj<T> sampled_as(const SampledTraj<Q>& x) const
+      {
+        assert_release(x.tdomain().is_subset(this->tdomain()));
+        
+        SampledTraj<T> straj;
+        for(const auto& [ti,dump] : x)
+          straj.set(ti, (*this)(ti));
         return straj;
       }
 
@@ -86,6 +96,6 @@ namespace codac2
       }
 
       // Implementation in codac2_Trajectory_operator.h
-      AnalyticFunction<TrajType> as_function() const;
+      AnalyticFunction<typename ValueType<T>::Type> as_function() const;
   };
 }

@@ -39,21 +39,21 @@ TEST_CASE("CtcCtcBoundary")
 
   IntervalVector x(2);
   ctc_diamond.contract(x);
-  //DefaultView::draw_box(x,Color::dark_green());
+  //DefaultFigure::draw_box(x,Color::dark_green());
   CHECK(x == IntervalVector({{-1,1},{-1,1}}));
 
   x = IntervalVector({{0,10},{0,10}});
   ctc_diamond.contract(x);
-  //DefaultView::draw_box(x,Color::blue());
+  //DefaultFigure::draw_box(x,Color::blue());
   CHECK(x == IntervalVector({{0,1},{0,1}}));
 
   x = IntervalVector({{0.2,10},{0.2,10}});
   ctc_diamond.contract(x);
-  //DefaultView::draw_box(x,Color::blue());
+  //DefaultFigure::draw_box(x,Color::blue());
   CHECK(x == IntervalVector({{0.2,0.8},{0.2,0.8}}));
 
   x = IntervalVector({{0.5,10},{0.5,10}});
   ctc_diamond.contract(x);
-  //DefaultView::draw_box(x,Color::blue());
+  //DefaultFigure::draw_box(x,Color::blue());
   CHECK(x == IntervalVector({0.5,0.5}));
 }

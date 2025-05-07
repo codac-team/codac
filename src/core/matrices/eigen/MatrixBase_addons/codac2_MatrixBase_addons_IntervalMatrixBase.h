@@ -99,7 +99,6 @@ template<typename U=Scalar>
   requires IsIntervalDomain<U>
 inline auto rand() const
 {
-  srand(time(NULL));
   degenerate_mat(rand);
 }
 

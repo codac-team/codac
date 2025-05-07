@@ -2,7 +2,7 @@
  *  \file codac2_analytic_constants.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Damien Massé
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -55,10 +55,37 @@ namespace codac2
         AnalyticExpr<T>::value(v).a &= _x;
       }
 
-      void replace_expr([[maybe_unused]] const ExprID& old_expr_id, [[maybe_unused]] const std::shared_ptr<ExprBase>& new_expr)
+      std::pair<Index,Index> output_shape() const
+      {
+        if constexpr(std::is_same_v<T,ScalarType>)
+          return {1,1};
+
+        if constexpr(std::is_same_v<T,VectorType>)
+          return {_x.size(),1};
+
+        if constexpr(std::is_same_v<T,MatrixType>)
+          return {_x.rows(),_x.cols()};
+
+        assert_release(false && "unknow output shape for constant");
+      }
+
+      void replace_arg([[maybe_unused]] const ExprID& old_arg_id, [[maybe_unused]] const std::shared_ptr<ExprBase>& new_expr)
       { }
 
       virtual bool belongs_to_args_list([[maybe_unused]] const FunctionArgsList& args) const
+      {
+        return true;
+      }
+
+      virtual std::string str(bool in_parentheses = false) const
+      {
+        std::ostringstream s;
+        if(_x.is_degenerated()) s << _x.mid();
+        else s << _x;
+        return in_parentheses ? "(" + s.str() + ")" : s.str();
+      }
+
+      virtual bool is_str_leaf() const
       {
         return true;
       }

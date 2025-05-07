@@ -26,7 +26,12 @@ void export_CtcSegment(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIn
   exported
 
     .def(py::init<const IntervalVector&,const IntervalVector&>(),
-      CTCSEGMENT_CTCSEGMENT_CONST_INTERVALVECTOR_REF_CONST_INTERVALVECTOR_REF)
+      CTCSEGMENT_CTCSEGMENT_CONST_INTERVALVECTOR_REF_CONST_INTERVALVECTOR_REF,
+      "a"_a, "b"_a)
+
+    .def(py::init<const Segment&>(),
+      CTCSEGMENT_CTCSEGMENT_CONST_SEGMENT_REF,
+      "ab"_a)
 
     .def(CONTRACT_BOX_METHOD(CtcSegment,
       VOID_CTCSEGMENT_CONTRACT_INTERVALVECTOR_REF_CONST))

@@ -13,7 +13,6 @@
 #include "codac2_Sep.h"
 #include "codac2_Collection.h"
 #include "codac2_SepWrapper.h"
-#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -42,14 +41,14 @@ namespace codac2
       SepInter& operator&=(const S& s)
       {
         assert_release(s.size() == this->size());
-        _seps.add_shared_ptr(std::make_shared<S>(s));
+        _seps.push_object_back(s);
         return *this;
       }
 
       SepInter& operator&=(const std::shared_ptr<SepBase>& s)
       {
         assert_release(s->size() == this->size());
-        _seps.add_shared_ptr(s);
+        _seps.push_back(s);
         return *this;
       }
 
@@ -70,7 +69,7 @@ namespace codac2
   inline SepInter operator&(const IntervalVector& s1, const S2& s2)
   {
     assert_release(s1.size() == s2.size());
-    return SepInter(SepWrapper_<IntervalVector>(s1),s2);
+    return SepInter(SepWrapper(s1),s2);
   }
 
   template<typename S1>
@@ -78,6 +77,6 @@ namespace codac2
   inline SepInter operator&(const S1& s1, const IntervalVector& s2)
   {
     assert_release(s1.size() == s2.size());
-    return SepInter(s1,SepWrapper_<IntervalVector>(s2));
+    return SepInter(s1,SepWrapper(s2));
   }
 }

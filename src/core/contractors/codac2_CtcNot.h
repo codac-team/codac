@@ -12,7 +12,6 @@
 #include <map>
 #include "codac2_CtcUnion.h"
 #include "codac2_CtcInverse.h"
-#include "codac2_template_tools.h"
 
 namespace codac2
 {

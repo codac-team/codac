@@ -11,6 +11,7 @@
 
 #include "codac2_Ctc.h"
 #include "codac2_IntervalVector.h"
+#include "codac2_Segment.h"
 
 namespace codac2
 {
@@ -19,15 +20,19 @@ namespace codac2
     public:
 
       CtcSegment(const IntervalVector& a, const IntervalVector& b)
-        : Ctc<CtcSegment,IntervalVector>(2), _a(a), _b(b)
+        : Ctc<CtcSegment,IntervalVector>(2), _ab(Segment(a,b))
       {
         assert_release(a.size() == 2 && b.size() == 2 && "only 2d segments are supported");
       }
+
+      CtcSegment(const Segment& ab)
+        : Ctc<CtcSegment,IntervalVector>(2), _ab(ab)
+      { }
 
       void contract(IntervalVector& x) const;
 
     protected:
 
-      const IntervalVector _a, _b;
+      const Segment _ab;
   };
 }

@@ -2,7 +2,7 @@
  *  \file codac2_arith_mul.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Damien Massé
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -24,6 +24,27 @@ namespace codac2
 {
   struct MulOp
   {
+    template<typename X1,typename X2>
+    static std::string str(const X1& x1, const X2& x2)
+    {
+      return x1->str(!x1->is_str_leaf()) + "*" + x2->str(!x2->is_str_leaf());
+    }
+    
+    template<typename X1, typename X2>
+    static std::pair<Index,Index> output_shape(const X1& s1, const X2& s2)
+    {
+      auto shape1=s1->output_shape();
+      auto shape2=s2->output_shape();
+      if (shape1.first==1 && shape1.second==1) {
+        return shape2;
+      } else if (shape2.first==1 && shape2.second==1) {
+        return shape1;
+      } else {
+        assert_release(shape1.second==shape2.first);
+        return std::pair(shape1.first, shape2.second);
+      }
+    }
+
     static Interval fwd(const Interval& x1, const Interval& x2);
     static ScalarType fwd_natural(const ScalarType& x1, const ScalarType& x2);
     static ScalarType fwd_centered(const ScalarType& x1, const ScalarType& x2);
@@ -43,10 +64,20 @@ namespace codac2
     //static ScalarType fwd(const RowType& x1, const VectorType& x2); // RowType not yet defined
     static void bwd(const Interval& y, IntervalRow& x1, IntervalVector& x2);
 
+    static IntervalMatrix fwd(const Interval& x1, const IntervalMatrix& x2);
+    static MatrixType fwd_natural(const ScalarType& x1, const MatrixType& x2);
+    static MatrixType fwd_centered(const ScalarType& x1, const MatrixType& x2);
+    static void bwd(const IntervalMatrix& y, Interval& x1, IntervalMatrix& x2);
+
     static IntervalVector fwd(const IntervalMatrix& x1, const IntervalVector& x2);
     static VectorType fwd_natural(const MatrixType& x1, const VectorType& x2);
     static VectorType fwd_centered(const MatrixType& x1, const VectorType& x2);
     static void bwd(const IntervalVector& y, IntervalMatrix& x1, IntervalVector& x2);
+
+    static IntervalMatrix fwd(const IntervalMatrix& x1, const IntervalMatrix& x2);
+    static MatrixType fwd_natural(const MatrixType& x1, const MatrixType& x2);
+    static MatrixType fwd_centered(const MatrixType& x1, const MatrixType& x2);
+    static void bwd(const IntervalMatrix& y, IntervalMatrix& x1, IntervalMatrix& x2);
   };
 
   // operator*
@@ -70,10 +101,22 @@ namespace codac2
     return { std::make_shared<AnalyticOperationExpr<MulOp,VectorType,VectorType,ScalarType>>(x1,x2) };
   }
 
+  inline MatrixExpr
+  operator*(const ScalarExpr& x1, const MatrixExpr& x2)
+  {
+    return { std::make_shared<AnalyticOperationExpr<MulOp,MatrixType,ScalarType,MatrixType>>(x1,x2) };
+  }
+
   inline VectorExpr
   operator*(const MatrixExpr& x1, const VectorExpr& x2)
   {
     return { std::make_shared<AnalyticOperationExpr<MulOp,VectorType,MatrixType,VectorType>>(x1,x2) };
+  }
+
+  inline MatrixExpr
+  operator*(const MatrixExpr& x1, const MatrixExpr& x2)
+  {
+    return { std::make_shared<AnalyticOperationExpr<MulOp,MatrixType,MatrixType,MatrixType>>(x1,x2) };
   }
 
   // Inline functions
@@ -193,32 +236,42 @@ namespace codac2
   //  // RowType not yet defined
   //}
 
-  inline void MulOp::bwd(const Interval& y, IntervalRow& x1, IntervalVector& x2)
+  inline IntervalMatrix MulOp::fwd(const Interval& x1, const IntervalMatrix& x2)
   {
-    assert(x1.size() == x2.size());
+    return x1 * x2;
+  }
 
-    const Index n = x1.size();
-    std::vector<Interval> sums(n), prods(n);
+  inline MatrixType MulOp::fwd_natural(const ScalarType& x1, const MatrixType& x2)
+  {
+    return {
+      fwd(x1.a, x2.a),
+      x1.def_domain && x2.def_domain
+    };
+  }
 
-    // Forward propagation
+  inline MatrixType MulOp::fwd_centered(const ScalarType& x1, const MatrixType& x2)
+  {
+    if(centered_form_not_available_for_args(x1,x2))
+      return fwd_natural(x1,x2);
 
-      for(Index i = 0 ; i < n ; i++)
-      {
-        prods[i] = x1[i]*x2[i];
-        sums[i] = prods[i];
-        if(i > 0) sums[i] += sums[i-1];
-      }
+    assert(x2.da.cols() == x1.da.cols());
+    IntervalMatrix d(x2.da.rows(),x2.da.cols());
+    for (Index j=0; j<d.cols(); j++) 
+      for (Index i=0; i<d.rows(); i++) {
+        d(i,j) = x1.da(0,j)*x2.a.reshaped<Eigen::ColMajor>()[i]+x1.a*x2.da(i,j);
+    }
+    
+    return {
+      fwd(x1.m, x2.m),
+      fwd(x1.a, x2.a),
+      d, 
+      x1.def_domain && x2.def_domain
+    };
+  }
 
-    // Backward propagation
-
-      sums[n-1] &= y;
-
-      for(Index i = n-1 ; i >= 0 ; i--)
-      {
-        if(i > 0) AddOp::bwd(sums[i],sums[i-1],prods[i]);
-        else prods[0] &= sums[0];
-        MulOp::bwd(prods[i],x1[i],x2[i]);
-      }
+  inline void MulOp::bwd([[maybe_unused]] const IntervalMatrix& y, [[maybe_unused]] Interval& x1, [[maybe_unused]] IntervalMatrix& x2)
+  {
+    // todo
   }
 
   inline IntervalVector MulOp::fwd(const IntervalMatrix& x1, const IntervalVector& x2)
@@ -240,75 +293,68 @@ namespace codac2
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
     
+    assert(x2.da.cols() == x1.da.cols());
+    IntervalMatrix d = IntervalMatrix::zero(x1.a.rows(),x1.da.cols());
+    for (Index j=0; j<d.cols(); j++) 
+      for (Index i=0; i<d.rows(); i++) {
+        for (Index k=0; k<x2.a.size(); k++) {
+          d(i,j) += x1.da(i+k*x1.a.rows(),j)*x2.a[k]+x1.a(i,k)*x2.da(k,j);
+        }
+    }
+    
     return {
-      fwd(x1.a, /* <<----- x1.m */ x2.m),
+      fwd(x1.m, x2.m),
       fwd(x1.a, x2.a),
-      IntervalMatrix::zero(x1.a.rows(),x1.a.cols()), // todo
+      d, 
       x1.def_domain && x2.def_domain
     };
   }
 
-  inline void MulOp::bwd(const IntervalVector& y, IntervalMatrix& x1, IntervalVector& x2)
+  inline IntervalMatrix MulOp::fwd(const IntervalMatrix& x1, const IntervalMatrix& x2)
   {
-    assert(x1.rows() == y.size());
-    assert(x1.cols() == x2.size());
+    assert(x1.cols() == x2.rows());
+    return x1 * x2;
+  }
 
-    /*if(x1.is_squared()) // not working for any squared x1
-    {
-      CtcGaussElim ctc_ge;
-      CtcLinearPrecond ctc_gep(ctc_ge);
-      IntervalVector y_(y);
-      ctc_gep.contract(x1,x2,y_);
-    }*/
+  inline MatrixType MulOp::fwd_natural(const MatrixType& x1, const MatrixType& x2)
+  {
+    return {
+      fwd(x1.a, x2.a),
+      x1.def_domain && x2.def_domain
+    };
+  }
 
-    if(x1.rows() > x1.cols())
-    {
-      Index last_row = 0;
-      Index i = 0;
-
-      do
+  inline MatrixType MulOp::fwd_centered(const MatrixType& x1, const MatrixType& x2)
+  {
+    if(centered_form_not_available_for_args(x1,x2))
+      return fwd_natural(x1,x2);
+    
+    assert(x2.da.cols() == x1.da.cols());
+    IntervalMatrix d = IntervalMatrix::zero(x1.a.rows()*x2.a.cols(),x1.da.cols());
+    for (Index j=0; j<d.cols(); j++) 
+      for (Index i=0; i<d.rows(); i++)
       {
-        double vol_x2 = x2.volume();
-        IntervalRow row_i = x1.row(i);
-        MulOp::bwd(y[i],row_i,x2);
-
-        if(row_i.is_empty())
-        {
-          x1.set_empty();
-          return;
+        Index row_i = i%x1.a.rows();
+        Index col_i = i/x1.a.rows();
+        for (Index k=0; k<x2.a.rows(); k++) {
+          d(i,j) += x1.da(row_i+k*x1.a.rows(),j)*x2.a(k,col_i)
+                    +x1.a(row_i,k)*x2.da(k+col_i*x2.a.rows(),j);
         }
-
-        else
-          x1.row(i) = row_i;
-
-        if(x2.volume()/vol_x2 < 0.98)
-          last_row = i;
-        i = (i+1)%y.size();
-      } while(i != last_row);
     }
+    
+    return {
+      fwd(x1.m, x2.m),
+      fwd(x1.a, x2.a),
+      d,
+      x1.def_domain && x2.def_domain
+    };
+  }
 
-    else
-    {
-      IntervalMatrix Q = gauss_jordan(x1.mid());
-      IntervalVector b_tilde = Q*y;
-      IntervalMatrix A_tilde = Q*x1; // should be a tree matrix
+  inline void MulOp::bwd([[maybe_unused]] const IntervalMatrix& y, [[maybe_unused]] IntervalMatrix& x1, [[maybe_unused]] IntervalMatrix& x2)
+  {
+    assert(x1.rows() == x2.cols());
+    assert(y.rows() == x1.rows() && y.cols() == x2.cols());
 
-      for(int a = 0 ; a < 1 ; a++)
-      {
-        for(Index i = 0 ; i < x2.size() ; i++)
-        {
-          for(Index k = 0 ; k < b_tilde.size() ; k++)
-          {
-            Interval u = b_tilde[k];
-
-            for(Index j = 0 ; j < x2.size() ; j++)
-              if(i != j)
-                u -= x2[j]*A_tilde(k,j);
-
-            MulOp::bwd(u, x2[i], A_tilde(k,i));
-          }
-        }
-      }
-    }
+    // todo
   }
 }

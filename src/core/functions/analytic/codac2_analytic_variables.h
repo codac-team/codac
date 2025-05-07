@@ -2,7 +2,7 @@
  *  \file codac2_analytic_variables.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Damien Massé
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -24,7 +24,8 @@ namespace codac2
   {
     public:
 
-      AnalyticVarExpr()
+      explicit AnalyticVarExpr(const std::string& name)
+        : VarBase(name)
       { }
 
       virtual const ExprID& unique_id() const
@@ -40,7 +41,7 @@ namespace codac2
       void bwd_eval([[maybe_unused]] ValuesMap& v) const
       { }
 
-      void replace_expr([[maybe_unused]] const ExprID& old_expr_id, [[maybe_unused]] const std::shared_ptr<ExprBase>& new_expr)
+      void replace_arg([[maybe_unused]] const ExprID& old_arg_id, [[maybe_unused]] const std::shared_ptr<ExprBase>& new_expr)
       { }
 
       virtual bool belongs_to_args_list(const FunctionArgsList& args) const
@@ -50,17 +51,28 @@ namespace codac2
             return true;
         return false;
       }
+
+      virtual std::string str(bool in_parentheses = false) const
+      {
+        return in_parentheses ? "(" + _name + ")" : _name;
+      }
+
+      virtual bool is_str_leaf() const
+      {
+        return true;
+      }
   };
 
   class ScalarVar : public AnalyticVarExpr<ScalarType>
   {
     public:
 
-      ScalarVar();
+      explicit ScalarVar(const std::string& name = "?");
 
       std::shared_ptr<VarBase> arg_copy() const;
       std::shared_ptr<ExprBase> copy() const;
       Index size() const;
+      std::pair<Index,Index> output_shape() const;
 
       AnalyticExprWrapper<ScalarType> operator-() const;
   };
@@ -69,11 +81,12 @@ namespace codac2
   {
     public:
 
-      explicit VectorVar(Index n);
+      explicit VectorVar(Index n, const std::string& name = "?");
 
       std::shared_ptr<VarBase> arg_copy() const;
       std::shared_ptr<ExprBase> copy() const;
       Index size() const;
+      std::pair<Index,Index> output_shape() const;
 
       AnalyticExprWrapper<ScalarType> operator[](Index i) const;
       AnalyticExprWrapper<VectorType> subvector(Index i, Index j) const;
@@ -81,5 +94,26 @@ namespace codac2
     protected:
 
       Index _n;
+  };
+
+  class MatrixVar : public AnalyticVarExpr<MatrixType>
+  {
+    public:
+
+      explicit MatrixVar(Index r, Index c, const std::string& name = "?");
+
+      std::shared_ptr<VarBase> arg_copy() const;
+      std::shared_ptr<ExprBase> copy() const;
+      Index size() const;
+      Index rows() const;
+      Index cols() const;
+      std::pair<Index,Index> output_shape() const;
+
+      AnalyticExprWrapper<ScalarType> operator()(Index i, Index j) const;
+      //AnalyticExprWrapper<VectorType> col(Index i) const;
+
+    protected:
+
+      Index _r, _c;
   };
 }

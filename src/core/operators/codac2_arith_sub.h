@@ -2,7 +2,7 @@
  *  \file codac2_arith_sub.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Damien Massé
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -20,6 +20,18 @@ namespace codac2
   struct SubOp
   {
     // Unary operations
+
+    template<typename X1>
+    static std::string str(const X1& x1)
+    {
+      return "-" + x1->str(!x1->is_str_leaf());
+    }
+
+    template<typename X1>
+    static std::pair<Index,Index> output_shape(const X1& s1) {
+      return s1->output_shape();
+    }
+
     static Interval fwd(const Interval& x1);
     static ScalarType fwd_natural(const ScalarType& x1);
     static ScalarType fwd_centered(const ScalarType& x1);
@@ -36,6 +48,21 @@ namespace codac2
     static void bwd(const IntervalMatrix& y, IntervalMatrix& x1);
 
     // Binary operations
+
+    template<typename X1,typename X2>
+    static std::string str(const X1& x1, const X2& x2)
+    {
+      return x1->str(!x1->is_str_leaf()) + "-" + x2->str(!x2->is_str_leaf());
+    }
+
+    template<typename X1, typename X2>
+    static std::pair<Index,Index> output_shape(const X1& s1, const X2& s2) {
+      auto shape1=s1->output_shape();
+      auto shape2=s2->output_shape();
+      assert_release(shape1==shape2);
+      return shape1;
+    }
+
     static Interval fwd(const Interval& x1, const Interval& x2);
     static ScalarType fwd_natural(const ScalarType& x1, const ScalarType& x2);
     static ScalarType fwd_centered(const ScalarType& x1, const ScalarType& x2);
@@ -173,7 +200,7 @@ namespace codac2
     return {
       fwd(x1.m),
       fwd(x1.a),
-      IntervalMatrix(0,0), // not supported yet for matrices
+      -x1.da, 
       x1.def_domain
     };
   }
@@ -200,6 +227,9 @@ namespace codac2
 
   inline ScalarType SubOp::fwd_centered(const ScalarType& x1, const ScalarType& x2)
   {
+    if(centered_form_not_available_for_args(x1,x2))
+      return fwd_natural(x1,x2);
+
     assert(x1.da.rows() == x2.da.rows() && x1.da.cols() == x2.da.cols());
     return {
       fwd(x1.m, x2.m),
@@ -234,6 +264,9 @@ namespace codac2
 
   inline VectorType SubOp::fwd_centered(const VectorType& x1, const VectorType& x2)
   {
+    if(centered_form_not_available_for_args(x1,x2))
+      return fwd_natural(x1,x2);
+
     assert(x1.da.rows() == x2.da.rows() && x1.da.cols() == x2.da.cols());
     return {
       fwd(x1.m, x2.m),
@@ -271,7 +304,7 @@ namespace codac2
     return {
       fwd(x1.m, x2.m),
       fwd(x1.a, x2.a),
-      IntervalMatrix(0,0), // not supported yet for matrices
+      x1.da - x2.da, 
       x1.def_domain && x2.def_domain
     };
   }

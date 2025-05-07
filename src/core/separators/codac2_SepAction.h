@@ -13,7 +13,6 @@
 #include "codac2_Sep.h"
 #include "codac2_Collection.h"
 #include "codac2_OctaSym.h"
-#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -38,7 +37,7 @@ namespace codac2
   };
   
   template<typename S>
-    requires IsSepBaseOrPtr<S>
+    requires is_sep_v<S>
   inline SepAction OctaSym::operator()(const S& s) const
   {
     return SepAction(s, *this);

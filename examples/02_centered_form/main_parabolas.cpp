@@ -22,7 +22,7 @@ int main()
     );
 
   AnalyticFunction h({a}, fa(a[0],a[1])-fb(a[2],a[3]));
-  CtcInverse_ ctc(h, IntervalVector::zero(3));
+  CtcInverse ctc(h, IntervalVector::zero(3));
 
   IntervalVector x0({{0,1},{0,1},{0,1},{0,1}});
   draw_while_paving(x0, ctc, 0.001);

@@ -1,4 +1,4 @@
-// The generated .obj files can be visualized on https://3dviewer.net/
+// The generated .obj files can be visualized on https://3dviewer.net
 
 #include <codac>
 
@@ -17,7 +17,7 @@ int main()
   };
   
 
-  CtcInverse_ ctc(f, IntervalVector::zero(2));
+  CtcInverse ctc(f, IntervalVector::zero(2));
   auto p_ctc = pave({{0,2},{2,4},{0,10}}, ctc, 0.02);
   Figure3D fig_ctc("Paving contractor");
   fig_ctc.draw_paving(p_ctc);

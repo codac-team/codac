@@ -2,7 +2,7 @@
  *  \file codac2_mod.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Damien Massé
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -18,6 +18,18 @@ namespace codac2
 {
   struct ModOp
   {
+    template<typename X1,typename X2,typename P>
+    static std::string str(const X1& x1, const X2& x2, const P& p)
+    {
+      return "mod(" + x1->str() + "," + x2->str() + "," + p->str() + ")";
+    }
+
+    template<typename X1, typename X2>
+    static std::pair<Index,Index> output_shape([[maybe_unused]] const X1& s1, [[maybe_unused]] const X2& s2)
+    {
+      return {1,1};
+    }
+
     static void bwd(Interval& x1, Interval& x2, double p);
     static void bwd(Interval& x1, Interval& x2, Interval& p);
   };

@@ -44,7 +44,7 @@ namespace codac2
 
         // solve the axis aligned discrete lyapunov equation J.T * P * J − P = −J.T * J
         auto P = solve_discrete_lyapunov(J.transpose(),J.transpose()*J); // TODO solve the Lyapunov equation !!!
-        auto G0 = P.inverse().sqrt();
+        Matrix G0 = P.inverse().sqrt();
         unsigned int alpha = 0;
 
         if(verbose)

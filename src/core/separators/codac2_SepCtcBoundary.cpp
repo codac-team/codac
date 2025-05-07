@@ -16,18 +16,28 @@ BoxPair SepCtcBoundary::separate(const IntervalVector& x) const
 {
   assert_release(x.size() == this->size());
   
+  srand(time(NULL));
   Index attempt_nb = 5;
   IntervalVector x_boundary(x);
-  _ctc_boundary.front().contract(x_boundary);
+  IntervalVector larger_x(x);
+  _ctc_boundary.front()->contract(x_boundary);
 
   IntervalVector x_in(x_boundary), x_out(x_boundary);
+
+  // We restrict the "neighbourhood" of x in which we will take
+  // random vectors to be tested (_inside_test). Otherwise, if x
+  // is very large or unbounded prior to the contraction, then the
+  // candidate points will be large also and the inside test may 
+  // result in some unfortunate overflow.
+  if(!x_boundary.is_empty())
+    larger_x = IntervalVector(x_boundary).inflate(x_boundary.rad());
 
   for(const auto& b : x.diff(x_boundary,false))
   {
     if(b.is_empty())
       continue;
 
-    Vector m = b.mid(); // first try: midpoint of the box
+    Vector m = (larger_x & b).mid(); // first try: midpoint of the box
     BoolInterval d;
     Index k = 0;
 

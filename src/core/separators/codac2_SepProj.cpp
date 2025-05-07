@@ -35,7 +35,7 @@ namespace codac2
       auto w = l_stack.front(); // one box-guess in the projected column
       l_stack.pop_front();
 
-      auto w_sep = _sep.front().separate(w);
+      auto w_sep = _sep.front()->separate(w);
       assert((w_sep.inner | w_sep.outer) == w);
 
       // If the guess box may contain some values
@@ -44,7 +44,7 @@ namespace codac2
         // Trying to find inner values...
         // A new guess is the y-middle of the previous one
         auto w_mid = cart_prod_xy(x,extract_y(w).mid());
-        auto w_sep_mid = _sep.front().separate(w_mid);
+        auto w_sep_mid = _sep.front()->separate(w_mid);
         assert((w_sep_mid.inner | w_sep_mid.outer) == w_mid);
 
         // If inner values entirely cover the input projection box x,

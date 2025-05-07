@@ -10,7 +10,9 @@
 #pragma once
 
 #include <map>
+#include "codac2_Ctc.h"
 #include "codac2_Collection.h"
+#include "codac2_IntervalVector.h"
 #include "codac2_template_tools.h"
 #include "codac2_ProjBase.h"
 

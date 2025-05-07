@@ -56,6 +56,9 @@ void export_OctaSym(py::module& m)
 
     .def(py::self != py::self)
 
+    .def("permutation_matrix", &OctaSym::permutation_matrix,
+      MATRIX_OCTASYM_PERMUTATION_MATRIX_CONST)
+
     .def("__call__", [](const OctaSym& a, const IntervalVector& x) { return a(x); },
       MAT_TMINUSONE1_OCTASYM_OPERATORCALL_CONST_MAT_TMINUSONE1_REF_CONST,
       "x"_a)

@@ -312,7 +312,24 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
     ;
   }
   
-  //S abs(const MatrixBase<S,T>& x)
   m.def("abs", [](const S& x) { return abs(x); },
     AUTO_ABS_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF);
+  
+  if constexpr(std::is_same_v<T,double>)
+  {
+    m.def("floor", [](const S& x) -> S { return floor(x); },
+      AUTO_FLOOR_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF);
+    
+    m.def("ceil", [](const S& x) -> S { return ceil(x); },
+      AUTO_CEIL_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF);
+    
+    m.def("round", [](const S& x) -> S { return round(x); },
+      AUTO_ROUND_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF);
+
+    pyclass.def("is_nan", [](const S& x)
+        {
+          return x.is_nan();
+        },
+      MATRIXBASE_ADDONS_BASE_BOOL_IS_NAN_CONST);
+  }
 }

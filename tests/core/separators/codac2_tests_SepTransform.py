@@ -31,9 +31,9 @@ class TestSepTransform(unittest.TestCase):
     self.assertTrue(outer == IntervalVector([[-2.2,-1.8],[-2.2,-1.8]]))
 
     b = IntervalVector([[-2.5,-1.5],[-2,10]])
-    #DefaultView.draw_box(b,Color.purple())
+    #DefaultFigure.draw_box(b,Color.purple())
     inner,outer = s2.separate(b)
-    #DefaultView.draw_box(xs.inner,Color.green())
+    #DefaultFigure.draw_box(xs.inner,Color.green())
     self.assertTrue(Approx(inner,1e-1) == IntervalVector([[-2.5,-1.5],[-1.134,10]]))
     self.assertTrue(Approx(outer,1e-1) == IntervalVector([[-2.5,-1.5],[-2,-1]]))
 

@@ -25,9 +25,11 @@
 #include "codac2_py_atan_docs.h"
 #include "codac2_py_atan2_docs.h"
 #include "codac2_py_ceil_docs.h"
+#include "codac2_py_chi_docs.h"
 #include "codac2_py_component_docs.h"
 #include "codac2_py_cos_docs.h"
 #include "codac2_py_cosh_docs.h"
+#include "codac2_py_cross_prod_docs.h"
 #include "codac2_py_det_docs.h"
 #include "codac2_py_exp_docs.h"
 #include "codac2_py_floor_docs.h"
@@ -284,6 +286,21 @@ void export_operators(py::module& m)
     SCALAREXPR_CEIL_CONST_SCALAREXPR_REF,
     "x1"_a);
 
+  py::class_<ChiOp>(m, "ChiOp")
+
+    .def_static("fwd", (Interval(*)(const Interval&,const Interval&,const Interval&)) &ChiOp::fwd,
+      STATIC_INTERVAL_CHIOP_FWD_CONST_INTERVAL_REF_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
+      "x1"_a, "x2"_a, "x3"_a)
+    .def_static("bwd", (void(*)(const Interval&,Interval&,Interval&,Interval&)) &ChiOp::bwd,
+      STATIC_VOID_CHIOP_BWD_CONST_INTERVAL_REF_INTERVAL_REF_INTERVAL_REF_INTERVAL_REF,
+      "y"_a, "x1"_a, "x2"_a, "x3"_a)
+
+  ;
+
+  m.def("chi", [](const ScalarExpr& e1, const ScalarExpr& e2, const ScalarExpr& e3) { return chi(e1,e2,e3); },
+    SCALAREXPR_CHI_CONST_SCALAREXPR_REF_CONST_SCALAREXPR_REF_CONST_SCALAREXPR_REF,
+    "x1"_a, "x2"_a, "x3"_a);
+
   py::class_<ComponentOp>(m, "ComponentOp")
 
     .def_static("fwd", (Interval(*)(const IntervalVector&,Index)) &ComponentOp::fwd,
@@ -292,6 +309,13 @@ void export_operators(py::module& m)
     .def_static("bwd", (void(*)(const Interval&,IntervalVector&,Index)) &ComponentOp::bwd,
       STATIC_VOID_COMPONENTOP_BWD_CONST_INTERVAL_REF_INTERVALVECTOR_REF_INDEX,
       "y"_a, "x1"_a, "i"_a)
+
+    .def_static("fwd", (Interval(*)(const IntervalMatrix&,Index,Index)) &ComponentOp::fwd,
+      STATIC_INTERVAL_COMPONENTOP_FWD_CONST_INTERVALMATRIX_REF_INDEX_INDEX,
+      "x1"_a, "i"_a, "j"_a)
+    .def_static("bwd", (void(*)(const Interval&,IntervalMatrix&,Index,Index)) &ComponentOp::bwd,
+      STATIC_VOID_COMPONENTOP_BWD_CONST_INTERVAL_REF_INTERVALMATRIX_REF_INDEX_INDEX,
+      "y"_a, "x1"_a, "i"_a, "j"_a)
 
   ;
 
@@ -325,6 +349,21 @@ void export_operators(py::module& m)
     SCALAREXPR_COSH_CONST_SCALAREXPR_REF,
     "x1"_a);
 
+  py::class_<CrossProdOp>(m, "CrossProdOp")
+
+    .def_static("fwd", (IntervalVector(*)(const IntervalVector&,const IntervalVector&)) &CrossProdOp::fwd,
+      STATIC_INTERVALVECTOR_CROSSPRODOP_FWD_CONST_INTERVALVECTOR_REF_CONST_INTERVALVECTOR_REF,
+      "x1"_a, "x2"_a)
+    .def_static("bwd", (void(*)(const IntervalVector&,IntervalVector&,IntervalVector&)) &CrossProdOp::bwd,
+      STATIC_VOID_CROSSPRODOP_BWD_CONST_INTERVALVECTOR_REF_INTERVALVECTOR_REF_INTERVALVECTOR_REF,
+      "y"_a, "x1"_a, "x2"_a)
+
+  ;
+
+  m.def("cross_prod", [](const VectorExpr& e1, const VectorExpr& e2) { return cross_prod(e1,e2); },
+    VECTOREXPR_CROSS_PROD_CONST_VECTOREXPR_REF_CONST_VECTOREXPR_REF,
+    "x1"_a, "x2"_a);
+
   py::class_<DetOp>(m, "DetOp")
 
     .def_static("fwd", (Interval(*)(const IntervalMatrix&)) &DetOp::fwd,
@@ -348,6 +387,15 @@ void export_operators(py::module& m)
       STATIC_VOID_DETOP_BWD_CONST_INTERVAL_REF_INTERVALVECTOR_REF_INTERVALVECTOR_REF_INTERVALVECTOR_REF,
       "y"_a, "x1"_a, "x2"_a, "x3"_a)
   ;
+
+  m.def("det", [](const MatrixExpr& e1) { return det(e1); },
+    SCALAREXPR_DET_CONST_MATRIXEXPR_REF,
+    "x1"_a);
+
+  m.def("det", [](const VectorExpr &x1, const VectorExpr &x2) 
+		{ return det(x1,x2); },
+    SCALAREXPR_DET_CONST_VECTOREXPR_REF_CONST_VECTOREXPR_REF,
+    "x1"_a, "x2"_a);
 
   py::class_<ExpOp>(m, "ExpOp")
 
@@ -394,7 +442,82 @@ void export_operators(py::module& m)
     SCALAREXPR_LOG_CONST_SCALAREXPR_REF,
     "x1"_a);
 
-  // todo: MatrixOp
+  py::class_<MatrixOp>(m, "MatrixOp")
+
+    .def_static("fwd", (IntervalMatrix(*)(const IntervalVector&)) &MatrixOp::fwd,
+      STATIC_INTERVALMATRIX_MATRIXOP_FWD_CONST_X1_REF_CONST_X_REF_VARIADIC,
+      "x1"_a)
+    .def_static("fwd", (IntervalMatrix(*)(const IntervalVector&,const IntervalVector&)) &MatrixOp::fwd,
+      STATIC_INTERVALMATRIX_MATRIXOP_FWD_CONST_X1_REF_CONST_X_REF_VARIADIC,
+      "x1"_a, "x2"_a)
+    .def_static("fwd", (IntervalMatrix(*)(const IntervalVector&,const IntervalVector&,const IntervalVector&)) &MatrixOp::fwd,
+      STATIC_INTERVALMATRIX_MATRIXOP_FWD_CONST_X1_REF_CONST_X_REF_VARIADIC,
+      "x1"_a, "x2"_a, "x3"_a)
+    .def_static("fwd", (IntervalMatrix(*)(const IntervalVector&,const IntervalVector&,const IntervalVector&,const IntervalVector&)) &MatrixOp::fwd,
+      STATIC_INTERVALMATRIX_MATRIXOP_FWD_CONST_X1_REF_CONST_X_REF_VARIADIC,
+      "x1"_a, "x2"_a, "x3"_a, "x4"_a)
+    .def_static("fwd", (IntervalMatrix(*)(const IntervalVector&,const IntervalVector&,const IntervalVector&,const IntervalVector&,const IntervalVector&)) &MatrixOp::fwd,
+      STATIC_INTERVALMATRIX_MATRIXOP_FWD_CONST_X1_REF_CONST_X_REF_VARIADIC,
+      "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a)
+
+    .def_static("bwd", (void(*)(const IntervalMatrix&,IntervalVector&)) &MatrixOp::bwd,
+      STATIC_VOID_MATRIXOP_BWD_CONST_INTERVALMATRIX_REF_X_REF_VARIADIC,
+      "y"_a, "x1"_a)
+    .def_static("bwd", (void(*)(const IntervalMatrix&,IntervalVector&,IntervalVector&)) &MatrixOp::bwd,
+      STATIC_VOID_MATRIXOP_BWD_CONST_INTERVALMATRIX_REF_X_REF_VARIADIC,
+      "y"_a, "x1"_a, "x2"_a)
+    .def_static("bwd", (void(*)(const IntervalMatrix&,IntervalVector&,IntervalVector&,IntervalVector&)) &MatrixOp::bwd,
+      STATIC_VOID_MATRIXOP_BWD_CONST_INTERVALMATRIX_REF_X_REF_VARIADIC,
+      "y"_a, "x1"_a, "x2"_a, "x3"_a)
+    .def_static("bwd", (void(*)(const IntervalMatrix&,IntervalVector&,IntervalVector&,IntervalVector&,IntervalVector&)) &MatrixOp::bwd,
+      STATIC_VOID_MATRIXOP_BWD_CONST_INTERVALMATRIX_REF_X_REF_VARIADIC,
+      "y"_a, "x1"_a, "x2"_a, "x3"_a, "x4"_a)
+    .def_static("bwd", (void(*)(const IntervalMatrix&,IntervalVector&,IntervalVector&,IntervalVector&,IntervalVector&,IntervalVector&)) &MatrixOp::bwd,
+      STATIC_VOID_MATRIXOP_BWD_CONST_INTERVALMATRIX_REF_X_REF_VARIADIC,
+      "y"_a, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a)
+
+  ;
+
+  m.def("mat", [](const VectorExpr& e1)
+      { return mat(e1); },
+    MATRIXEXPR_MAT_CONST_SHARED_PTR_ANALYTICEXPR_X_REF_VARIADIC,
+    "x1"_a);
+  m.def("mat", [](const VectorExpr& e1, const VectorExpr& e2)
+      { return mat(e1,e2); },
+    MATRIXEXPR_MAT_CONST_SHARED_PTR_ANALYTICEXPR_X_REF_VARIADIC,
+    "x1"_a, "x2"_a);
+  m.def("mat", [](const VectorExpr& e1, const VectorExpr& e2, const VectorExpr& e3)
+      { return mat(e1,e2,e3); },
+    MATRIXEXPR_MAT_CONST_SHARED_PTR_ANALYTICEXPR_X_REF_VARIADIC,
+    "x1"_a, "x2"_a, "x3"_a);
+  m.def("mat", [](const VectorExpr& e1, const VectorExpr& e2, const VectorExpr& e3, const VectorExpr& e4)
+      { return mat(e1,e2,e3,e4); },
+    MATRIXEXPR_MAT_CONST_SHARED_PTR_ANALYTICEXPR_X_REF_VARIADIC,
+    "x1"_a, "x2"_a, "x3"_a, "x4"_a);
+  m.def("mat", [](const VectorExpr& e1, const VectorExpr& e2, const VectorExpr& e3, const VectorExpr& e4, const VectorExpr& e5)
+      { return mat(e1,e2,e3,e4,e5); },
+    MATRIXEXPR_MAT_CONST_SHARED_PTR_ANALYTICEXPR_X_REF_VARIADIC,
+    "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a);
+  m.def("mat", [](const VectorExpr& e1, const VectorExpr& e2, const VectorExpr& e3, const VectorExpr& e4, const VectorExpr& e5, const VectorExpr& e6)
+      { return mat(e1,e2,e3,e4,e5,e6); },
+    MATRIXEXPR_MAT_CONST_SHARED_PTR_ANALYTICEXPR_X_REF_VARIADIC,
+    "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a);
+  m.def("mat", [](const VectorExpr& e1, const VectorExpr& e2, const VectorExpr& e3, const VectorExpr& e4, const VectorExpr& e5, const VectorExpr& e6, const VectorExpr& e7)
+      { return mat(e1,e2,e3,e4,e5,e6,e7); },
+    MATRIXEXPR_MAT_CONST_SHARED_PTR_ANALYTICEXPR_X_REF_VARIADIC,
+    "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "x7"_a);
+  m.def("mat", [](const VectorExpr& e1, const VectorExpr& e2, const VectorExpr& e3, const VectorExpr& e4, const VectorExpr& e5, const VectorExpr& e6, const VectorExpr& e7, const VectorExpr& e8)
+      { return mat(e1,e2,e3,e4,e5,e6,e7,e8); },
+    MATRIXEXPR_MAT_CONST_SHARED_PTR_ANALYTICEXPR_X_REF_VARIADIC,
+    "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "x7"_a, "x8"_a);
+  m.def("mat", [](const VectorExpr& e1, const VectorExpr& e2, const VectorExpr& e3, const VectorExpr& e4, const VectorExpr& e5, const VectorExpr& e6, const VectorExpr& e7, const VectorExpr& e8, const VectorExpr& e9)
+      { return mat(e1,e2,e3,e4,e5,e6,e7,e8,e9); },
+    MATRIXEXPR_MAT_CONST_SHARED_PTR_ANALYTICEXPR_X_REF_VARIADIC,
+    "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "x7"_a, "x8"_a, "x9"_a);
+  m.def("mat", [](const VectorExpr& e1, const VectorExpr& e2, const VectorExpr& e3, const VectorExpr& e4, const VectorExpr& e5, const VectorExpr& e6, const VectorExpr& e7, const VectorExpr& e8, const VectorExpr& e9, const VectorExpr& e10)
+      { return mat(e1,e2,e3,e4,e5,e6,e7,e8,e9,e10); },
+    MATRIXEXPR_MAT_CONST_SHARED_PTR_ANALYTICEXPR_X_REF_VARIADIC,
+    "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "x7"_a, "x8"_a, "x9"_a, "x10"_a);
 
   py::class_<MaxOp>(m, "MaxOp")
 

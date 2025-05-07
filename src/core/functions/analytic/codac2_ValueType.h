@@ -15,6 +15,7 @@
 #include "codac2_IntervalVector.h"
 #include "codac2_IntervalMatrix.h"
 #include "codac2_AnalyticType.h"
+#include "codac2_analytic_variables.h"
 
 namespace codac2
 {
@@ -22,23 +23,19 @@ namespace codac2
   struct ValueType
   { };
 
-  template<>
-  struct ValueType<int> {
+  template<typename T>
+    requires (std::is_arithmetic_v<T>)
+  struct ValueType<T> {
     using Type = ScalarType;
   };
-
-  template<>
-  struct ValueType<Index> {
-    using Type = ScalarType;
-  };
-
-  template<>
-  struct ValueType<double> {
-    using Type = ScalarType;
-  };
-
+  
   template<>
   struct ValueType<Interval> {
+    using Type = ScalarType;
+  };
+  
+  template<>
+  struct ValueType<ScalarVar> {
     using Type = ScalarType;
   };
 
@@ -53,12 +50,34 @@ namespace codac2
   };
 
   template<>
+  struct ValueType<VectorVar> {
+    using Type = VectorType;
+  };
+
+  template<>
   struct ValueType<Matrix> {
     using Type = MatrixType;
   };
 
   template<>
   struct ValueType<IntervalMatrix> {
+    using Type = MatrixType;
+  };
+
+  template<>
+  struct ValueType<MatrixVar> {
+    using Type = MatrixType;
+  };
+
+  template<typename T>
+    requires (T::RowsAtCompileTime!=1 && T::ColsAtCompileTime==1)
+  struct ValueType<T> {
+    using Type = VectorType;
+  };
+
+  template<typename T>
+    requires (T::RowsAtCompileTime!=1 && T::ColsAtCompileTime!=1)
+  struct ValueType<T> {
     using Type = MatrixType;
   };
 }

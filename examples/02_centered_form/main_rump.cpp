@@ -14,6 +14,6 @@ int main()
     +pow(-pow(5*y[0]-20*pow(y[0],3.)+16*pow(y[0],5.),3.)+5*y[1]-20*pow(y[1],3.)+16*pow(y[1],5.),2.)
   );
 
-  CtcInverse_<Interval> ctc(f, 0.);
+  CtcInverse ctc(f, 0.);
   draw_while_paving({{-1,1},{-1,1}}, ctc, 0.001);
 }

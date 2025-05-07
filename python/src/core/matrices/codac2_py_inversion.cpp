@@ -24,30 +24,29 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_Inversion(py::module& m)
+void export_inversion(py::module& m)
 {
   m
 
-   .def("infinite_sum_enclosure", [](const IntervalMatrix& A) { double mrad; return infinite_sum_enclosure(A,mrad); },
-    INTERVALMATRIX_INFINITE_SUM_ENCLOSURE_CONST_INTERVALMATRIX_REF_DOUBLE_REF,
-    "A"_a)
+    .def("inverse_enclosure", [](const Matrix& A) { return inverse_enclosure(A); },
+      INTERVALMATRIX_INVERSE_ENCLOSURE_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF,
+      "A"_a)
 
-   .def("inverse_correction", [](const IntervalMatrix& A, const IntervalMatrix& B, bool left_inv = true)
-    {
-      return left_inv ? inverse_correction<LEFT_INV>(A,B) : inverse_correction<RIGHT_INV>(A,B);
-    },
-    INTERVALMATRIX_INVERSE_CORRECTION_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF_CONST_EIGEN_MATRIXBASE_OTHERDERIVED__REF,
-    "A"_a, "B"_a, "left_inv"_a)
+    .def("inverse_enclosure", [](const IntervalMatrix& A) { return inverse_enclosure(A); },
+      INTERVALMATRIX_INVERSE_ENCLOSURE_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF,
+      "A"_a)
 
-   .def("inverse_enclosure", [](const Matrix& A) { return inverse_enclosure(A); },
-  INTERVALMATRIX_INVERSE_ENCLOSURE_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF,
-  "A"_a)
+    .def("inverse_correction",
+        [](const IntervalMatrix& A, const IntervalMatrix& B, bool left_inv = true)
+        {
+          return left_inv ? inverse_correction<LEFT_INV>(A,B) : inverse_correction<RIGHT_INV>(A,B);
+        },
+      INTERVALMATRIX_INVERSE_CORRECTION_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF_CONST_EIGEN_MATRIXBASE_OTHERDERIVED__REF,
+      "A"_a, "B"_a, "left_inv"_a)
 
-   .def("inverse_enclosure", 
-  (IntervalMatrix(*)(const IntervalMatrix&))
-   &codac2::inverse_enclosure,
-  INTERVALMATRIX_INVERSE_ENCLOSURE_CONST_INTERVALMATRIX_REF,
-  "A"_a)
+    .def("infinite_sum_enclosure", [](const IntervalMatrix& A) { double mrad; return infinite_sum_enclosure(A,mrad); },
+      INTERVALMATRIX_INFINITE_SUM_ENCLOSURE_CONST_INTERVALMATRIX_REF_DOUBLE_REF,
+      "A"_a)
 
    ;
 }

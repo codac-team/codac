@@ -36,9 +36,9 @@ TEST_CASE("SepTransform")
     CHECK(xs.outer == IntervalVector({{-2.2,-1.8},{-2.2,-1.8}}));
 
     IntervalVector b({{-2.5,-1.5},{-2,10}});
-    //DefaultView::draw_box(b,Color::purple());
+    //DefaultFigure::draw_box(b,Color::purple());
     xs = s2.separate(b);
-    //DefaultView::draw_box(xs.inner,Color::green());
+    //DefaultFigure::draw_box(xs.inner,Color::green());
     CHECK(Approx(xs.inner,1e-1) == IntervalVector({{-2.5,-1.5},{-1.134,10}}));
     CHECK(Approx(xs.outer,1e-1) == IntervalVector({{-2.5,-1.5},{-2,-1}}));
   }

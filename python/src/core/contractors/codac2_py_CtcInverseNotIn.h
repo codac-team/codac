@@ -30,13 +30,20 @@ void export_CtcInverseNotIn(py::module& m, const std::string& export_name, py::c
       "f"_a, "y"_a, "with_centered_form"_a = true,
       CTCINVERSENOTIN_YX_CTCINVERSENOTIN_CONST_ANALYTICFUNCTION_TYPENAME_VALUETYPE_Y_TYPE_REF_CONST_Y_REF_BOOL);
 
-  if constexpr(std::is_same_v<T,VectorType>) // separators only associated with interval vectors
-  {
-    exported
-    .def(py::init<const AnalyticFunction<T>&, const pyCtcIntervalVector&, bool>(),
-      "f"_a, "c"_a, "with_centered_form"_a = true,
-      CTCINVERSENOTIN_YX_CTCINVERSENOTIN_CONST_ANALYTICFUNCTION_TYPENAME_VALUETYPE_Y_TYPE_REF_CONST_C_REF_BOOL);
-  }
+  // disabled: if constexpr(std::is_same_v<T,VectorType>) // contractors only associated with interval vectors
+  // disabled: {
+  // disabled:   exported
+  // disabled:   .def(py::init(
+  // disabled:       [](const py::object& f, const CtcBase<IntervalVector>& c, bool with_centered_form)
+  // disabled:       {
+  // disabled:         return std::make_unique<CtcInverseNotIn<D>>(
+  // disabled:           cast<AnalyticFunction<T>>(f),
+  // disabled:           c.copy(), with_centered_form);
+  // disabled:       }
+  // disabled:     ),
+  // disabled:     CTCINVERSENOTIN_YX_CTCINVERSENOTIN_CONST_ANALYTICFUNCTION_TYPENAME_VALUETYPE_Y_TYPE_REF_CONST_C_REF_BOOL,
+  // disabled:     "f"_a, "c"_a, "with_centered_form"_a = true);
+  // disabled: }
 
   exported
 

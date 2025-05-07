@@ -105,9 +105,9 @@ namespace codac2 {
         T.col(1) = u/u.norm();
 
         auto TTG = T.transpose() * this->G;
-        Eigen::BDCSVD<Matrix,Eigen::ComputeFullU> bdcsvd(TTG);
-        auto U = bdcsvd.matrixU();
-        auto E = bdcsvd.singularValues().asDiagonal();
+        Eigen::BDCSVD<Matrix> bdcsvd(TTG);
+        Matrix U = bdcsvd.matrixU();
+        Matrix E = bdcsvd.singularValues().asDiagonal();
 
         return {
             T.transpose() * (d + T * T.transpose() * (this->mu - d)),
@@ -118,8 +118,8 @@ namespace codac2 {
     Ellipsoid operator+(const Ellipsoid &e1, const Ellipsoid &e2) {
         assert_release(e1.size() == e2.size());
 
-        auto Q1 = e1.G * e1.G.transpose();
-        auto Q2 = e2.G * e2.G.transpose();
+        Matrix Q1 = e1.G * e1.G.transpose();
+        Matrix Q2 = e2.G * e2.G.transpose();
 
         double beta = std::sqrt(Q1.trace() / Q2.trace());
         return {
@@ -156,9 +156,9 @@ namespace codac2 {
         IntervalVector unit_box_ = IntervalVector::constant(n, {-1,1});
 
         // compute rounding error as a small box
-        auto mu_res_guaranteed = A_ * e_mu_ + b_;
-        auto G_res_guaranteed = A_ * e_G_;
-        auto error_box_ = mu_res_guaranteed - e_res_mu_ +
+        IntervalVector mu_res_guaranteed = A_ * e_mu_ + b_;
+        IntervalMatrix G_res_guaranteed = A_ * e_G_;
+        IntervalVector error_box_ = mu_res_guaranteed - e_res_mu_ +
                 (G_res_guaranteed - e_res_G_) * unit_box_;
 
         double rho = error_box_.norm().ub(); // max radius of error_box
@@ -180,8 +180,8 @@ namespace codac2 {
         IntervalMatrix I_ = IntervalMatrix::eye(G.rows(),G.cols());
         IntervalMatrix JG_inv_ = inverse_enclosure(JG); // rigourous inversion
         Matrix M(JG);
-        auto W = JG_inv_;
-        auto Z = I_;
+        IntervalMatrix W = JG_inv_;
+        IntervalMatrix Z = I_;
 
         // check for singularities
         if(std::abs(JG.determinant()) < trig[0])
@@ -194,13 +194,13 @@ namespace codac2 {
             assert(q.size() == G.rows());
 
             // SVD decomposition of JG = U*E*V.T
-            Eigen::BDCSVD<Matrix,Eigen::ComputeFullU> bdcsvd(JG);
-            auto U_ = bdcsvd.matrixU().template cast<Interval>(); // which is also the right part
-            auto Sv = bdcsvd.singularValues(); // vectors of singular values
+            Eigen::BDCSVD<Matrix> bdcsvd(JG);
+            IntervalMatrix U_ = bdcsvd.matrixU().template cast<Interval>(); // which is also the right part
+            Vector Sv = bdcsvd.singularValues(); // vectors of singular values
 
             // select new singular values
             Index dim = G.rows();
-            auto s_box = U_.transpose()*J_box*G_*unit_box;
+            IntervalVector s_box = U_.transpose()*J_box*G_*unit_box;
             IntervalMatrix S_ = IntervalMatrix::zero(dim,dim); // diagonal matrix of the new singular value
             IntervalMatrix S_pinv_ = IntervalMatrix::zero(dim,dim); // pseudo inverse of S
             for(Index i=0;i<dim;i++){
@@ -216,7 +216,7 @@ namespace codac2 {
             Z = W*JG.template cast<Interval>();
         }
 
-        auto b_box = (W * J_box * G_ - Z) * unit_box;
+        IntervalVector b_box = (W * J_box * G_ - Z) * unit_box;
         double rho = b_box.norm().ub(); // max radius of b_box
         return (1 + rho) * M;
     }

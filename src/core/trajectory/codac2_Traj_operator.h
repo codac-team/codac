@@ -62,9 +62,9 @@ namespace codac2
         return std::make_shared<AnalyticOperationExpr<TrajectoryOp<T>,O,ScalarType>>(*this);
       }
 
-      void replace_expr(const ExprID& old_expr_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_arg(const ExprID& old_arg_id, const std::shared_ptr<ExprBase>& new_expr)
       {
-        return OperationExprBase<AnalyticExpr<ScalarType>>::replace_expr(old_expr_id, new_expr);
+        return OperationExprBase<AnalyticExpr<ScalarType>>::replace_arg(old_arg_id, new_expr);
       }
       
       O fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
@@ -79,9 +79,24 @@ namespace codac2
         std::get<0>(this->_x)->bwd_eval(v);
       }
 
+      std::pair<Index,Index> output_shape() const {
+        return _x1.shape();
+      }
+
       virtual bool belongs_to_args_list(const FunctionArgsList& args) const
       {
         return std::get<0>(this->_x)->belongs_to_args_list(args);
+      }
+
+      std::string str(bool in_parentheses = false) const
+      {
+        std::string s = "T"; // user cannot (yet) specify a name for the trajectory
+        return in_parentheses ? "(" + s + ")" : s;
+      }
+
+      virtual bool is_str_leaf() const
+      {
+        return true;
       }
 
     protected:

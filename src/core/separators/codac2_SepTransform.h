@@ -15,7 +15,6 @@
 #include "codac2_AnalyticFunction.h"
 #include "codac2_CtcWrapper.h"
 #include "codac2_CtcInverse.h"
-#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -38,7 +37,7 @@ namespace codac2
     protected:
 
       const Collection<SepBase> _sep;
-      const CtcInverse_<IntervalVector> _ctc_inv;
+      const CtcInverse<IntervalVector> _ctc_inv;
       const AnalyticFunction<VectorType> _f, _f_inv;
   };
 }

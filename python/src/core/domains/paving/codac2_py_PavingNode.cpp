@@ -55,8 +55,11 @@ void export_pavingnode_base(py::class_<PN, std::shared_ptr<PN>>& c)
     .def("is_leaf", &PN::is_leaf,
       BOOL_PAVINGNODE_P_IS_LEAF_CONST)
 
-    .def("bisect", &PN::bisect,
+    .def("bisect", (void(PN::*)(void)) &PN::bisect,
       VOID_PAVINGNODE_P_BISECT)
+
+    .def("bisect", (void(PN::*)(std::function<std::pair<IntervalVector,IntervalVector>(const IntervalVector&)>)) &PN::bisect,
+      VOID_PAVINGNODE_P_BISECT_FUNCTION_PAIR_INTERVALVECTORINTERVALVECTOR_CONST_INTERVALVECTOR_REF_)
 
     .def("visit", (void(PN::*)(std::function<bool(std::shared_ptr<PN>)>)) &PN::visit,
       VOID_PAVINGNODE_P_VISIT_FUNCTION_BOOL_SHARED_PTR_PAVINGNODE_P_,

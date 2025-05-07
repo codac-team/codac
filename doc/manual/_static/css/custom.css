@@ -25,9 +25,107 @@ a.sidebar-brand {
   font-size: 0.8rem;
 }
 
-
 /* Removes empty space below blocks of code in tabs */
 .sphinx-tabs-panel div[class^="highlight"] {
   margin-bottom: 0;
   margin-top: 0;
+}
+
+.sphinx-tabs-tab {
+  line-height: 6px;
+  border-radius: 0;
+}
+
+.sphinx-tabs-panel {
+  padding: 0.4em;
+}
+
+figcaption {
+  text-align: left;
+}
+
+h1 {
+  font-size: 2.0em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1.2em;
+}
+
+div[class^="highlight"] {
+  background: #eeffcc;
+  /*border: 1px solid #e1e4e5;*/
+}
+
+.bg-ok {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.bg-bok {
+  background-color: #b8e994;
+  color: white;
+}
+
+.bg-nok {
+  background-color: #e55039;
+  color: white;
+}
+
+td:has(.bg-ok) {
+  background-color: #2ecc71;
+}
+
+td:has(.bg-bok) {
+  background-color: #b8e994;
+}
+
+td:has(.bg-nok) {
+  background-color: #e55039;
+}
+
+.cpp + .sphinx-tabs::before { /* for examples following a Doxygen block */
+  content: "Example of use:";
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: var(--font-size--small);
+  text-transform: uppercase;
+}
+
+.cpp + .sphinx-tabs { /* for examples following a Doxygen block */
+  margin-left: calc(10px + 2rem);
+}
+
+.cpp + .sphinx-tabs + figure { /* for figures following examples following a Doxygen block */
+  margin-left: calc(10px + 2rem);
+}
+
+.math-wrapper { /* removing centering of equations */
+  overflow-x: visible;
+}
+
+h1 + blockquote { /* for displaying main authors */
+  margin: .1rem .5rem 1rem 1rem;
+}
+
+h1 + blockquote div p { /* for displaying main authors */
+  margin: 0;
+  font-size: small;
+}
+
+article .align-default {
+  text-align: left;
+}
+
+dl.cpp:not(dl.cpp dl.cpp) { /* for displaying a border on doxygen blocks */
+  border-left: 5px solid var(--color-background-border);
+  padding-left: 5px;
+}
+
+#how-to-cite-codac pre {
+  font-size: 60%;
 }

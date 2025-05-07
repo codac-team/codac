@@ -17,7 +17,7 @@
 
 namespace codac2
 {
-  template<typename T>
+  template<typename T, typename Enable=void>
   struct Wrapper
   { };
 
@@ -41,23 +41,16 @@ namespace codac2
     using Domain = Interval;
   };
 
-  template<>
-  struct Wrapper<Vector> {
-    using Domain = IntervalVector;
-  };
-
-  template<>
-  struct Wrapper<IntervalVector> {
-    using Domain = IntervalVector;
-  };
-
-  template<>
-  struct Wrapper<Matrix> {
-    using Domain = IntervalMatrix;
-  };
-
-  template<>
-  struct Wrapper<IntervalMatrix> {
-    using Domain = IntervalMatrix;
+  template<typename OtherDerived>
+  struct Wrapper<OtherDerived,
+    typename std::enable_if<std::is_base_of_v<Eigen::MatrixBase<OtherDerived>,OtherDerived>>::type>
+  {
+    using Domain = Eigen::Matrix<Interval,OtherDerived::RowsAtCompileTime,OtherDerived::ColsAtCompileTime>;
+    // Automatically sets:
+    //   Wrapper<Vector>::Domain = IntervalVector
+    //   Wrapper<IntervalVector>::Domain = IntervalVector
+    //   Wrapper<Matrix>::Domain = IntervalMatrix
+    //   Wrapper<IntervalMatrix>::Domain = IntervalMatrix
+    //   + related possible expression templates
   };
 }

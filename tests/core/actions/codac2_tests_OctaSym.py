@@ -25,5 +25,8 @@ class TestOctaSym(unittest.TestCase):
     self.assertTrue(b.invert() == OctaSym([-2,1]))
     self.assertTrue(b*b == OctaSym([-1,-2]))
 
+    c = OctaSym([-2,1,3])
+    self.assertTrue(c.permutation_matrix() == Matrix([[0,-1,0],[1,0,0],[0,0,1]]))
+
 if __name__ ==  '__main__':
   unittest.main()

@@ -73,6 +73,32 @@ class TestCtcInverseNotIn(unittest.TestCase):
     c.contract(b)
     self.assertTrue(b == IntervalVector([[2,3],[-1,1]]))
   
+  # disabled: def tests_CtcInverseNotIn_3_CtcWrapper(self):
+  # disabled:   
+  # disabled:   x = VectorVar(2)
+  # disabled:   f = AnalyticFunction([x], vec(x[0],sqr(x[0]/7.)+sqr(x[1]/3.)))
+  # disabled:   c = CtcInverseNotIn(f, CtcWrapper([[0,oo],[1]]))
+  # disabled:   
+  # disabled:   b = IntervalVector([[0,0.8],[-2.28,-1.56]])
+  # disabled:   c.contract(b)
+  # disabled:   self.assertTrue(b == IntervalVector([[0,0.8],[-2.28,-1.56]]))
+  # disabled:   
+  # disabled:   b = IntervalVector([[4,5.4],[-0.05,2.45]])
+  # disabled:   c.contract(b)
+  # disabled:   self.assertTrue(Approx(b,1e-2) == IntervalVector([[4,5.4],[-0.05,2.45]]))
+  # disabled:   
+  # disabled:   b = IntervalVector([[6.25,6.7],[0.9,1.85]])
+  # disabled:   c.contract(b)
+  # disabled:   self.assertTrue(Approx(b,1e-2) == IntervalVector([[6.25,6.70],[0.9,1.85]]))
+  # disabled:   
+  # disabled:   b = IntervalVector([[-6,-5],[0,2]])
+  # disabled:   c.contract(b)
+  # disabled:   self.assertTrue(b == IntervalVector([[-6,-5],[0,2]]))
+  # disabled:   
+  # disabled:   b = IntervalVector([[2,3],[-1,1]])
+  # disabled:   c.contract(b)
+  # disabled:   self.assertTrue(b == IntervalVector([[2,3],[-1,1]]))
+  
   def tests_CtcInverseNotIn_4(self):
 
     v = VectorVar(1)

@@ -1,7 +1,7 @@
 .. _sec-extensions:
 
-Extensions
-==========
+Codac extensions
+================
 
 .. toctree::
 

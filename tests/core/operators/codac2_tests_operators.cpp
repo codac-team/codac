@@ -384,3 +384,18 @@ TEST_CASE("bwd mul operations")
   //cout << x << endl;
   //cout << x2 << endl;
 }
+
+TEST_CASE("test cross prod")
+{
+  CHECK(CrossProdOp::fwd(Vector({1,0,0}),Vector({0,1,0})) == Vector({0,0,1}));
+  CHECK(CrossProdOp::fwd(Vector({0,1,0}),Vector({0,0,1})) == Vector({1,0,0}));
+  CHECK(CrossProdOp::fwd(Vector({0,0,1}),Vector({1,0,0})) == Vector({0,1,0}));
+  CHECK(CrossProdOp::fwd(Vector({1,2,3}),Vector({2,4,6})) == Vector({0,0,0}));
+}
+
+TEST_CASE("test mat operator")
+{
+  IntervalVector x1({2,3}), x2({4,5}), x3({6,7}); 
+  CHECK(MatrixOp::fwd(x1,x2,x3) == IntervalMatrix({{2,4,6},{3,5,7}}));
+  CHECK(MatrixOp::fwd(x1) == IntervalMatrix({{2},{3}}));
+}
