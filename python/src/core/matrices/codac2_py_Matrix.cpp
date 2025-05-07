@@ -52,7 +52,7 @@ py::class_<Matrix> export_Matrix(py::module& m)
         [](Index_type r, Index_type c)
         {
           matlab::test_integer(r,c);
-          return std::make_unique<Matrix>(r,c);
+          return std::make_unique<Matrix>((Index)r,(Index)c);
         }),
       DOC_TO_BE_DEFINED,
       "r"_a, "c"_a)
