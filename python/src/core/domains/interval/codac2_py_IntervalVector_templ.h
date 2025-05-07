@@ -38,7 +38,7 @@ void export_IntervalVector_(py::module& m, py::class_<IV>& pyclass)
         [](Index_type n)
         {
           matlab::test_integer(n);
-          return std::make_unique<IV>(n);
+          return std::make_unique<IV>((Index)n);
         }),
       DOC_TO_BE_DEFINED,
       "n"_a)

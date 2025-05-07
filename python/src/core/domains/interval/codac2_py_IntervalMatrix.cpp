@@ -57,7 +57,7 @@ py::class_<IntervalMatrix> export_IntervalMatrix(py::module& m)
         [](Index_type r, Index_type c)
         {
           matlab::test_integer(r,c);
-          return std::make_unique<IntervalMatrix>(r,c);
+          return std::make_unique<IntervalMatrix>((Index)r,(Index)c);
         }),
       DOC_TO_BE_DEFINED,
       "r"_a, "c"_a)
