@@ -56,5 +56,23 @@ namespace codac2
         return x+1;
       return x;
     }
+
+    inline auto convert_indices(const std::vector<Index_type>& indices)
+    {
+      if constexpr(FOR_MATLAB)
+      {
+        std::vector<Index> indices_(indices.size());
+        for(size_t i = 0 ; i < indices.size() ; i++)
+        {
+          matlab::test_integer(indices[i]);
+          indices_[i] = (Index)matlab::input_index(indices[i]);
+        }
+
+        return indices_;
+      }
+
+      else
+        return indices;
+    }
   }
 }
