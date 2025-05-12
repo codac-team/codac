@@ -132,23 +132,6 @@ namespace codac2
     return A;
   }
 
-  Matrix inflate_flat_parallelepiped (IntervalMatrix Jz, double epsilon, double rho)
-  {
-    if (Jz.rows() == 2)
-    {
-      return inflate_flat_parallelepiped_2D(Jz, epsilon, rho);
-    }
-    else if (Jz.rows() == 3)
-    {
-      return inflate_flat_parallelepiped_3D(Jz, epsilon, rho);
-    }
-    else
-    {
-      throw std::invalid_argument("Invalid dimension for inflation");
-    }
-  }
-
-
   vector<Parallelepiped> PEIBOS2D(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon, Vector offset)
   {
     vector<Parallelepiped> output;
@@ -181,7 +164,7 @@ namespace codac2
         IntervalMatrix Jz = (JJf_punc * IntervalMatrix(symmetry.permutation_matrix()) * psi_0.diff(xc)).mid();
 
         // Inflation of the parallelepiped
-        Matrix A = inflate_flat_parallelepiped(Jz, epsilon, rho);
+        Matrix A = inflate_flat_parallelepiped_2D(Jz, epsilon, rho);
 
         output.push_back(Parallelepiped(z, A));
 
@@ -226,7 +209,7 @@ namespace codac2
 
           // Inflation of the parallelepiped
 
-          Matrix A = inflate_flat_parallelepiped(Jz, epsilon, rho);
+          Matrix A = inflate_flat_parallelepiped_3D(Jz, epsilon, rho);
           auto angle = acos((Jz.col(0)/Jz.col(0).norm()).dot(Jz.col(1)/Jz.col(1).norm()));
 
           if (Jz.col(0)==Jz.col(1) || A.is_nan() || IntervalMatrix(A).is_unbounded() || abs(angle).ub()<1e-3) // handle degenerated case (and almost degenerated cases)
@@ -243,6 +226,27 @@ namespace codac2
     }
 
     return output;
+  }
+
+  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon)
+  {
+    return PEIBOS(f, psi_0, generators, epsilon, Vector::zero(psi_0.output_size()));
+  }
+
+  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon, Vector offset)
+  {
+    if (psi_0.output_size()==2)
+    {
+      return PEIBOS2D(f, psi_0, generators, epsilon, offset);
+    }
+    else if (psi_0.output_size()==3)
+    {
+      return PEIBOS3D(f, psi_0, generators, epsilon, offset);
+    }
+    else
+    {
+      throw std::invalid_argument("PEIBOS only supports 2D and 3D functions.");
+    }
   }
 
 }

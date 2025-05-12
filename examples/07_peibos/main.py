@@ -13,7 +13,7 @@ if __name__=="__main__":
 
   figure_3d = Figure3D("Conform")
 
-  v_par = PEIBOS3D(f,psi0,generators,epsilon)
+  v_par = PEIBOS(f,psi0,generators,epsilon)
 
   for par in v_par:
     figure_3d.draw_parallelepiped(par.z,par.A,Color.green(0.5))

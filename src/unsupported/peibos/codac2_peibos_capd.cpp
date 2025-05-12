@@ -162,4 +162,25 @@ namespace codac2
     return output;
   }
 
+  vector<Parallelepiped> PEIBOS(capd::IMap& gamma, double tf, AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon)
+  {
+    return PEIBOS(gamma, tf, psi_0, generators, epsilon, Vector::zero(psi_0.output_size()));
+  }
+
+  vector<Parallelepiped> PEIBOS(capd::IMap& gamma, double tf, AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon, Vector offset)
+  {
+    if (psi_0.output_size()==2)
+    {
+      return PEIBOS2D(gamma, tf, psi_0, generators, epsilon, offset);
+    }
+    else if (psi_0.output_size()==3)
+    {
+      return PEIBOS3D(gamma, tf, psi_0, generators, epsilon, offset);
+    }
+    else
+    {
+      throw std::invalid_argument("PEIBOS only supports 2D and 3D functions.");
+    }
+  }
+
 }

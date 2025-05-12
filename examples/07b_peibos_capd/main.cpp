@@ -29,7 +29,7 @@ int main()
 
   vector<Parallelepiped> v_par_lorenz;
 
-  v_par_lorenz = PEIBOS3D(vectorField, tf, psi0, generators, epsilon);
+  v_par_lorenz = PEIBOS(vectorField, tf, psi0, generators, epsilon);
 
   for (const auto& p : v_par_lorenz)
   {

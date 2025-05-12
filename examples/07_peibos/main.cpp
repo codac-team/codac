@@ -23,7 +23,7 @@ int main()
   
   Figure3D figure3d ("Conform");
 
-  auto v_par = PEIBOS3D(f, psi0, generators, epsilon);
+  auto v_par = PEIBOS(f, psi0, generators, epsilon);
 
   for (const auto& p : v_par)
   {
