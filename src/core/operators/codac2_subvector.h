@@ -92,7 +92,7 @@ namespace codac2
       std::string str(bool in_parentheses = false) const
       {
         // todo: improve the following:
-        std::string s = ComponentOp::str(std::get<0>(this->_x), _i, _j);
+        std::string s = SubvectorOp::str(std::get<0>(this->_x), _i, _j);
         return in_parentheses ? "(" + s + ")" : s;
       }
 

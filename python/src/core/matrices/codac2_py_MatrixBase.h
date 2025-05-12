@@ -95,7 +95,13 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
         },
       MATRIXBASE_ADDONS_BASE_BOOL_IS_SQUARED_CONST)
 
-    .def("__getitem__", [](const S& x, const py::tuple& ij) -> const T&
+    .def(
+        #if FOR_MATLAB
+          "__call__"
+        #else
+          "__getitem__"
+        #endif
+        , [](const S& x, const py::tuple& ij) -> const T&
         {
           if constexpr(FOR_MATLAB)
             assert_release(py::isinstance<py::int_>(ij[0]) && py::isinstance<py::int_>(ij[1]));
@@ -107,7 +113,13 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
         }, py::return_value_policy::reference_internal,
       MATRIX_ADDONS_BASE_CONST_SCALAR_REF_OPERATORCALL_INDEX_INDEX_CONST)
 
-    .def("__setitem__", [](S& x, const py::tuple& ij, const T& a)
+    .def(
+        #if FOR_MATLAB
+          "setitem"
+        #else
+          "__setitem__"
+        #endif
+        , [](S& x, const py::tuple& ij, const T& a)
         {
           if constexpr(FOR_MATLAB)
             assert_release(py::isinstance<py::int_>(ij[0]) && py::isinstance<py::int_>(ij[1]));

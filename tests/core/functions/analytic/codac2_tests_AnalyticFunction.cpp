@@ -492,4 +492,23 @@ TEST_CASE("AnalyticFunction")
 				  {{1.0,2.0},{-0.2,-0.1}}}) ),1e-9)
 		== Matrix({{0,0}, {0,0}}));
   }
+
+  {
+    MatrixVar m(2,2);
+    AnalyticFunction f({m}, m*transpose(m));
+    CHECK(f.output_shape()==std::pair<Index,Index>(2,2));
+    ScalarVar theta;
+    AnalyticFunction g({theta}, flatten(f(mat(vec(cos(theta),sin(theta)),
+				vec(-sin(theta),cos(theta))))));
+    Interval a = Interval(0.3,0.4);
+    Interval v1 = cos(a)*cos(a)+sin(a)*sin(a);
+    Interval v2 = cos(a)*sin(a)-cos(a)*sin(a);
+    CHECK(Approx(g.eval(EvalMode::NATURAL,a),1e-9)==
+		IntervalVector({ v1,v2,v2,v1 }));
+    Interval v3 = 1.0 + 2*(cos(a)*sin(a)-cos(a)*sin(a))*(a-a.mid());
+    Interval v4 = (cos(a)*cos(a)-cos(a)*cos(a)+sin(a)*sin(a)-sin(a)*sin(a))
+		*(a-a.mid());
+    CHECK(Approx(g.eval(EvalMode::CENTERED,a),1e-9) ==
+		IntervalVector({ v3,v4,v4,v3 }));
+  }
 }

@@ -102,21 +102,18 @@ void export_VectorVar(py::module& m)
       "n"_a, "name"_a = "?")
 
     .def("size", &VectorVar::size,
-      INDEX_VECTORVAR_SIZE_CONST);
-
-  if(FOR_MATLAB)
-    exported.def("__call__", [](const VectorVar& v, Index_type i) -> ScalarExpr
+      INDEX_VECTORVAR_SIZE_CONST)
+    
+    .def(
+        #if FOR_MATLAB
+          "__call__"
+        #else
+          "__getitem__"
+        #endif
+        , [](const VectorVar& v, Index_type i) -> ScalarExpr
       {
         return get_item(v, i);
-      }, ANALYTICEXPRWRAPPER_SCALARTYPE_VECTORVAR_OPERATORCOMPO_INDEX_CONST);
-
-  else
-    exported.def("__getitem__", [](const VectorVar& v, Index_type i) -> ScalarExpr
-      {
-        return get_item(v, i);
-      }, ANALYTICEXPRWRAPPER_SCALARTYPE_VECTORVAR_OPERATORCOMPO_INDEX_CONST);
-
-  exported
+      }, ANALYTICEXPRWRAPPER_SCALARTYPE_VECTORVAR_OPERATORCOMPO_INDEX_CONST)
 
     .def("subvector", [](const VectorVar& v, Index_type i, Index_type j) -> VectorExpr
       {
@@ -180,20 +177,12 @@ void export_MatrixVar(py::module& m)
       "r"_a, "c"_a, "name"_a = "?")
 
     .def("size", &MatrixVar::size,
-      INDEX_MATRIXVAR_SIZE_CONST);
+      INDEX_MATRIXVAR_SIZE_CONST)
 
-    if(FOR_MATLAB)
-    {
-      // todo
-    }
-
-    else
-      exported.def("__call__", [](const MatrixVar& v, Index_type i, Index_type j) -> ScalarExpr
-        {
-          return get_item(v, i, j);
-        }, ANALYTICEXPRWRAPPER_SCALARTYPE_MATRIXVAR_OPERATORCALL_INDEX_INDEX_CONST);
-
-  exported
+    .def("__call__", [](const MatrixVar& v, Index_type i, Index_type j) -> ScalarExpr
+      {
+        return get_item(v, i, j);
+      }, ANALYTICEXPRWRAPPER_SCALARTYPE_MATRIXVAR_OPERATORCALL_INDEX_INDEX_CONST)
 
     .def("__pos__",  [](const MatrixVar& e1)                           { return e1;      }, py::is_operator())
     .def("__add__",  [](const MatrixVar& e1, const MatrixVar& e2)      { return e1 + e2; }, py::is_operator())

@@ -12,11 +12,11 @@ from codac import *
 
 class TestCtcInverse(unittest.TestCase):
 
-  # not supported (yet) in Python; # Contractors based on functions with two variables
-  # not supported (yet) in Python; x = ScalarVar()
-  # not supported (yet) in Python; y = ScalarVar()
-  # not supported (yet) in Python; f = AnalyticFunction([x,y], x-y)
-  # not supported (yet) in Python; c = CtcInverse(f, Interval(0.))
+  # not supported (yet) in Python # Contractors based on functions with two variables
+  # not supported (yet) in Python x = ScalarVar()
+  # not supported (yet) in Python y = ScalarVar()
+  # not supported (yet) in Python f = AnalyticFunction([x,y], x-y)
+  # not supported (yet) in Python c = CtcInverse(f, Interval(0.))
 
   def tests_CtcInverse_1(self):
 
@@ -152,6 +152,53 @@ class TestCtcInverse(unittest.TestCase):
     cs = p.connected_subsets()
     self.assertTrue(len(cs) == 1)
     self.assertTrue(Approx(cs[0].box(),1e-4) == [[0.149199,0.182388],[0.148306,0.1826],[0.148054,0.18],[0.148732,0.18]])
+  
+  def tests_automatic_deduction_issue245(self):
+
+    s = VectorVar(2)
+    f = AnalyticFunction([s],[sqr(s[0])+sqr(s[1])-1.0])
+
+    # Compilation checks:
+
+    s1 = SepInverse(f,IntervalVector([0.0])*0.)
+    s2 = SepInverse(f,IntervalVector([0.0]))
+    s3 = SepInverse(f,Vector([0.0]))
+    s4 = SepInverse(f,[[0.0,0.0]])
+    s5 = SepInverse(f,[0.0])
+    s6 = SepInverse(f,[0])
+
+    c1 = CtcInverse(f,IntervalVector([0.0])*0.)
+    c2 = CtcInverse(f,IntervalVector([0.0]))
+    c3 = CtcInverse(f,Vector([0.0]))
+    c4 = CtcInverse(f,[[0.0,0.0]])
+    c5 = CtcInverse(f,[0.0])
+    c6 = CtcInverse(f,[0])
+
+    inner,outer = s1.separate(IntervalVector(2))
+    self.assertTrue(outer == IntervalVector([[-1,1],[-1,1]]))
+    inner,outer = s2.separate(IntervalVector(2))
+    self.assertTrue(outer == IntervalVector([[-1,1],[-1,1]]))
+    inner,outer = s3.separate(IntervalVector(2))
+    self.assertTrue(outer == IntervalVector([[-1,1],[-1,1]]))
+    inner,outer = s4.separate(IntervalVector(2))
+    self.assertTrue(outer == IntervalVector([[-1,1],[-1,1]]))
+    inner,outer = s5.separate(IntervalVector(2))
+    self.assertTrue(outer == IntervalVector([[-1,1],[-1,1]]))
+    inner,outer = s6.separate(IntervalVector(2))
+    self.assertTrue(outer == IntervalVector([[-1,1],[-1,1]]))
+
+    x = IntervalVector(2); c1.contract(x)
+    self.assertTrue(x == IntervalVector([[-1,1],[-1,1]]))
+    x = IntervalVector(2); c2.contract(x)
+    self.assertTrue(x == IntervalVector([[-1,1],[-1,1]]))
+    x = IntervalVector(2); c3.contract(x)
+    self.assertTrue(x == IntervalVector([[-1,1],[-1,1]]))
+    x = IntervalVector(2); c4.contract(x)
+    self.assertTrue(x == IntervalVector([[-1,1],[-1,1]]))
+    x = IntervalVector(2); c5.contract(x)
+    self.assertTrue(x == IntervalVector([[-1,1],[-1,1]]))
+    x = IntervalVector(2); c6.contract(x)
+    self.assertTrue(x == IntervalVector([[-1,1],[-1,1]]))
 
 if __name__ ==  '__main__':
   unittest.main()

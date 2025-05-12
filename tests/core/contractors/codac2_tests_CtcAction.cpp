@@ -10,6 +10,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_CtcAction.h>
 #include <codac2_CtcInverse.h>
+#include <codac2_Wrapper.h>
 
 using namespace std;
 using namespace codac2;

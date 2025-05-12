@@ -52,6 +52,24 @@ void export_IntervalVector_(py::module& m, py::class_<IV>& pyclass)
     .def(py::init<const V&,const V&>(),
       MATRIX_ADDONS_INTERVALMATRIXBASE_MATRIX_CONST_MATRIX_DOUBLERC_REF_CONST_MATRIX_DOUBLERC_REF,
       "lb"_a, "ub"_a)
+    
+    .def(py::init(
+        [](const std::vector<std::vector<double>>& v)
+        {
+          auto iv = std::make_unique<IV>(v.size());
+          for(size_t i = 0 ; i < v.size() ; i++)
+          {
+            if(v[i].size() == 1)
+              (*iv)[i] = Interval(v[i][0]);
+            else if(v[i].size() == 2)
+              (*iv)[i] = Interval(v[i][0],v[i][1]);
+            else
+              throw invalid_argument("Interval is not made of one or two values.");
+          }
+          return iv;
+        }),
+      DOC_TO_BE_DEFINED,
+      "v"_a)
 
     .def(py::init( // this constructor must be the last one to be declared
         [](const std::vector<Interval>& v)

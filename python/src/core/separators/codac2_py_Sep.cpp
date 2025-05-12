@@ -29,7 +29,7 @@ py::class_<SepBase,pySep> export_Sep(py::module& m)
 {
   py::class_<BoxPair> exported_BoxPair(m, "BoxPair", BOXPAIR_MAIN);
   exported_BoxPair
-
+  
     .def(py::init(
         [](const IntervalVector& inner, const IntervalVector& outer)
         {

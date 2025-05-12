@@ -27,12 +27,24 @@ void export_ColorMap(py::module& m)
         COLORMAP_COLORMAP_MODEL,
         "m"_a=Model::RGB)
 
-    .def("__getitem__", [](const ColorMap& x, float r) -> const Color&
+    .def(
+        #if FOR_MATLAB
+          "__call__"
+        #else
+          "__getitem__"
+        #endif
+        , [](const ColorMap& x, float r) -> const Color&
         {
           return x.at(r);
         }, py::return_value_policy::reference_internal)
 
-    .def("__setitem__", [](ColorMap& x, float r, const Color& c)
+    .def(
+        #if FOR_MATLAB
+          "setitem"
+        #else
+          "__setitem__"
+        #endif
+        , [](ColorMap& x, float r, const Color& c)
         {
           x[r] = c;
         })

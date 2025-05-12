@@ -32,13 +32,25 @@ void export_Segment(py::module& m)
       SEGMENT_SEGMENT_CONST_INTERVALVECTOR_REF_CONST_INTERVALVECTOR_REF,
       "x1"_a, "x2"_a)
 
-    .def("__getitem__", [](const Segment& e, Index_type index) -> const IntervalVector&
+    .def(
+        #if FOR_MATLAB
+          "__call__"
+        #else
+          "__getitem__"
+        #endif
+        , [](const Segment& e, Index_type index) -> const IntervalVector&
         {
           matlab::test_integer(index);
           return e[matlab::input_index(index)];
         }, py::return_value_policy::reference_internal)
 
-    .def("__setitem__", [](Segment& e, Index_type index, const IntervalVector& x)
+    .def(
+        #if FOR_MATLAB
+          "setitem"
+        #else
+          "__setitem__"
+        #endif
+        , [](Segment& e, Index_type index, const IntervalVector& x)
         {
           matlab::test_integer(index);
           e[matlab::input_index(index)] = x;

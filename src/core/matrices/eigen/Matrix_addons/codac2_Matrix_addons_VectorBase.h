@@ -15,6 +15,15 @@
 
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C>
+explicit Matrix(const std::vector<double>& v)
+  : Matrix<Scalar,R,C>(R == 1 ? 1 : v.size(), C == 1 ? 1 : v.size())
+{
+  for(size_t i = 0 ; i < v.size() ; i++)
+    (*this)[i] = v[i];
+}
+
+template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
+  requires IsVectorOrRow<R,C>
 inline Scalar& operator()(Index i)
 {
   return const_cast<Scalar&>(const_cast<const Matrix<Scalar,R,C>*>(this)->operator()(i));

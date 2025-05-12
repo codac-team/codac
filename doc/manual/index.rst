@@ -33,50 +33,50 @@ The solution set is approximated from an initial box :math:`[\mathbf{x}_0]=[0,2]
   
   .. code-tab:: py
 
-    from codac import *
-
-    x = VectorVar(3)
-    f = AnalyticFunction([x], [
-      -(x[2]^2)+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
-      2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
-    ])
-
-    ctc = CtcInverse(f, [0,0])
-    draw_while_paving([[0,2],[2,4],[0,10]], ctc, 0.004)
+   from codac import *
+   
+   x = VectorVar(3)
+   f = AnalyticFunction([x], [
+     -(x[2]^2)+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
+     2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
+   ])
+   
+   ctc = CtcInverse(f, [0,0])
+   draw_while_paving([[0,2],[2,4],[0,10]], ctc, 0.004)
 
   .. code-tab:: c++
 
-    #include <codac>
+   #include <codac>
 
-    using namespace std;
-    using namespace codac2;
+   using namespace std;
+   using namespace codac2;
 
-    int main()
-    {
-      VectorVar x(3);
-      AnalyticFunction f { {x},
-        {
-          -(x[2]^2)+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
-          2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
-        }
-      };
+   int main()
+   {
+     VectorVar x(3);
+     AnalyticFunction f { {x},
+       {
+         -(x[2]^2)+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
+         2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
+       }
+     };
 
-      CtcInverse ctc(f, {0,0});
-      draw_while_paving({{0,2},{2,4},{0,10}}, ctc, 0.004);
-    }
+     CtcInverse ctc(f, {0,0});
+     draw_while_paving({{0,2},{2,4},{0,10}}, ctc, 0.004);
+   }
 
   .. code-tab:: matlab
 
-    import py.codac4matlab.*
+   import py.codac4matlab.*
 
-    x = VectorVar(3);
-    f = AnalyticFunction({x}, vec( ...
-      -sqr(x(3))+2*x(3)*sin(x(3)*x(1))+cos(x(3)*x(2)), ...
-      2*x(3)*cos(x(3)*x(1))-sin(x(3)*x(2)) ...
-    ));
+   x = VectorVar(3);
+   f = AnalyticFunction({x}, vec( ...
+     -sqr(x(3))+2*x(3)*sin(x(3)*x(1))+cos(x(3)*x(2)), ...
+     2*x(3)*cos(x(3)*x(1))-sin(x(3)*x(2)) ...
+   ));
 
-    ctc = CtcInverse(f, {0,0});
-    draw_while_paving(IntervalVector({{0,2},{2,4},{0,10}}), ctc, 0.004);
+   ctc = CtcInverse(f, IntervalVector({0,0}));
+   draw_while_paving(IntervalVector({{0,2},{2,4},{0,10}}), ctc, 0.004);
 
 
 The result is a set of non-overlapping boxes containing the set of feasible solutions of :eq:`eq:malti`. The following figure shows a projection of the computed set.
@@ -103,24 +103,25 @@ The following code allows to compute the set of vectors :math:`\mathbf{x}\in\mat
   
   .. code-tab:: py
 
-    x = VectorVar(2)
-    f = AnalyticFunction([x], x[0]*cos(x[0]-x[1])+x[1])
-    sep = SepInverse(f, [-oo,0])
-    draw_while_paving([[-10,10],[-10,10]], sep, 0.004)
+   x = VectorVar(2)
+   f = AnalyticFunction([x], x[0]*cos(x[0]-x[1])+x[1])
+   sep = SepInverse(f, [-oo,0])
+   draw_while_paving([[-10,10],[-10,10]], sep, 0.004)
 
   .. code-tab:: c++
 
-    VectorVar x(2);
-    AnalyticFunction f({x}, x[0]*cos(x[0]-x[1])+x[1]);
-    SepInverse sep(f, {-oo,0});
-    draw_while_paving({{-10,10},{-10,10}}, sep, 0.1);
+   VectorVar x(2);
+   AnalyticFunction f({x}, x[0]*cos(x[0]-x[1])+x[1]);
+   SepInverse sep(f, {-oo,0});
+   draw_while_paving({{-10,10},{-10,10}}, sep, 0.1);
 
   .. code-tab:: matlab
 
-    x = VectorVar(2);
-    f = AnalyticFunction({x}, x(0)*cos(x(0)-x(1))+x(1));
-    sep = SepInverse(f, {-oo,0});
-    draw_while_paving(IntervalVector({{-10,10},{-10,10}}), sep, 0.1);
+   x = VectorVar(2);
+   f = AnalyticFunction({x}, x(1)*cos(x(1)-x(2))+x(2));
+   sep = SepInverse(f, Interval(-oo,0));
+   draw_while_paving(IntervalVector({{-10,10},{-10,10}}), sep, 0.1);
+
 
 .. figure:: manual/example_ineq.png
   :width: 400px

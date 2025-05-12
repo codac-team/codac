@@ -85,7 +85,7 @@
     separators/codac2_py_SepCtcBoundary.cpp
     separators/codac2_py_SepCtcPair.cpp
     separators/codac2_py_SepInter.cpp
-    separators/codac2_py_SepInverse.h
+    separators/codac2_py_SepInverse.cpp
     separators/codac2_py_SepNot.cpp
     separators/codac2_py_SepPolygon.cpp
     separators/codac2_py_SepProj.cpp

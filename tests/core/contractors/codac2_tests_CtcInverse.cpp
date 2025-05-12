@@ -14,6 +14,7 @@
 #include <codac2_pave.h>
 #include <codac2_Subpaving.h>
 #include <codac2_CtcWrapper.h>
+#include <codac2_SepInverse.h>
 #include <codac2_drawwhilepaving.h>
 
 using namespace std;
@@ -245,4 +246,48 @@ TEST_CASE("ParabolasExample")
 
   //for(const auto& bi : cs)
   //  DefaultFigure::draw_box(bi.box().subvector(0,1));
+}
+
+TEST_CASE("Automatic template deduction - Issue #245")
+{
+  VectorVar s(2);
+  AnalyticFunction f({s},{sqr(s[0])+sqr(s[1])-1.0});
+
+  // Compilation checks:
+
+  SepInverse s1(f,IntervalVector({0.0})*0.); // expr. template
+  SepInverse s2(f,IntervalVector({0.0}));
+  SepInverse s3(f,Vector({0.0}));
+  SepInverse s4(f,{{0.0,0.0}});
+  SepInverse s5(f,{0.0});
+  SepInverse s6(f,{0});
+
+  CtcInverse c1(f,IntervalVector({0.0})*0.); // expr. template
+  CtcInverse c2(f,IntervalVector({0.0}));
+  CtcInverse c3(f,Vector({0.0}));
+  CtcInverse c4(f,{{0.0,0.0}});
+  CtcInverse c5(f,{0.0});
+  CtcInverse c6(f,{0});
+
+  CHECK(s1.separate(IntervalVector(2)).outer == IntervalVector({{-1,1},{-1,1}}));
+  CHECK(s2.separate(IntervalVector(2)).outer == IntervalVector({{-1,1},{-1,1}}));
+  CHECK(s3.separate(IntervalVector(2)).outer == IntervalVector({{-1,1},{-1,1}}));
+  CHECK(s4.separate(IntervalVector(2)).outer == IntervalVector({{-1,1},{-1,1}}));
+  CHECK(s5.separate(IntervalVector(2)).outer == IntervalVector({{-1,1},{-1,1}}));
+  CHECK(s6.separate(IntervalVector(2)).outer == IntervalVector({{-1,1},{-1,1}}));
+
+  IntervalVector x(2);
+
+  x = IntervalVector(2); c1.contract(x);
+  CHECK(x == IntervalVector({{-1,1},{-1,1}}));
+  x = IntervalVector(2); c2.contract(x);
+  CHECK(x == IntervalVector({{-1,1},{-1,1}}));
+  x = IntervalVector(2); c3.contract(x);
+  CHECK(x == IntervalVector({{-1,1},{-1,1}}));
+  x = IntervalVector(2); c4.contract(x);
+  CHECK(x == IntervalVector({{-1,1},{-1,1}}));
+  x = IntervalVector(2); c5.contract(x);
+  CHECK(x == IntervalVector({{-1,1},{-1,1}}));
+  x = IntervalVector(2); c6.contract(x);
+  CHECK(x == IntervalVector({{-1,1},{-1,1}}));
 }
