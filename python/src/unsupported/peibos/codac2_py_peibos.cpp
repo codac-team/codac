@@ -25,22 +25,6 @@ using namespace pybind11::literals;
 
 void export_peibos(py::module& m)
 {
-  m.def("PEIBOS2D", 
-    [](const py::object& f, const py::object& psi_0, vector<vector<int>> generators, double epsilon, Vector offset)
-    {
-      return PEIBOS2D(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, offset);
-    },
-    VECTOR_PARALLELEPIPED_PEIBOS2D_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_VECTOR_VECTOR_INT_DOUBLE_VECTOR,
-    "f"_a, "psi_0"_a, "generators"_a, "epsilon"_a, "offset"_a=Vector::zero(2));
-
-  m.def("PEIBOS3D", 
-    [](const py::object& f, const py::object& psi_0, vector<vector<int>> generators, double epsilon, Vector offset)
-    {
-      return PEIBOS3D(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, offset);
-    },
-    VECTOR_PARALLELEPIPED_PEIBOS3D_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_VECTOR_VECTOR_INT_DOUBLE_VECTOR,
-    "f"_a, "psi_0"_a, "generators"_a, "epsilon"_a, "offset"_a=Vector::zero(3));
-
   m.def("PEIBOS", 
     [](const py::object& f, const py::object& psi_0, vector<vector<int>> generators, double epsilon)
     {

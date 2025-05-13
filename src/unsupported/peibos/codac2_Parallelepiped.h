@@ -26,7 +26,7 @@ namespace codac2
       Vector z;
       Matrix A;
       
-      vector<Vector> vertices();
+      vector<Vector> vertices() const;
 
   };
 }

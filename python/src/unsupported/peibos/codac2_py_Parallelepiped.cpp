@@ -31,7 +31,7 @@ void export_Parallelepiped(py::module& m)
     "z"_a, "A"_a)
 
   .def("vertices", &Parallelepiped::vertices,
-    VECTOR_VECTOR_PARALLELEPIPED_VERTICES)
+    VECTOR_VECTOR_PARALLELEPIPED_VERTICES_CONST)
 
   .def_readwrite("z", &Parallelepiped::z)
 

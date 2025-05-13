@@ -18,7 +18,7 @@ Parallelepiped::Parallelepiped(const Vector& z_, const Matrix& A_)
   assert(z.size() == A.rows());
 }
 
-vector<Vector> Parallelepiped::vertices()
+vector<Vector> Parallelepiped::vertices() const
 {
   assert(A.rows() == 3);
   vector<Vector> vertices;

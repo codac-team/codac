@@ -76,7 +76,7 @@ namespace codac2
         IntervalMatrix Jz = (JJf_punc * IntervalMatrix(symmetry.permutation_matrix()) * psi_0.diff(xc)).mid();
 
         // Inflation of the parallelepiped
-        Matrix A = inflate_flat_parallelepiped(Jz, epsilon, rho);
+        Matrix A = inflate_flat_parallelepiped(Jz.mid(), epsilon, rho);
 
         output.push_back(Parallelepiped(z, A));
 
@@ -152,7 +152,7 @@ namespace codac2
           IntervalMatrix Jz = (JJf_punc * IntervalMatrix(symmetry.permutation_matrix()) * psi_0.diff(xc)).mid();
 
           // Inflation of the parallelepiped
-          Matrix A = inflate_flat_parallelepiped(Jz, epsilon, rho);
+          Matrix A = inflate_flat_parallelepiped(Jz.mid(), epsilon, rho);
 
           output.push_back(Parallelepiped(z, A));
 

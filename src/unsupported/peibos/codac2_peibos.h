@@ -22,12 +22,10 @@ namespace codac2
   vector<OctaSym> generate_symmetries (vector<vector<int>> generators, const AnalyticFunction<VectorType>& psi_0);
 
   double error(IntervalMatrix JJf, IntervalMatrix JJf_punc, const AnalyticFunction<VectorType>& psi_0, OctaSym symmetry, IntervalVector X);
-  Matrix inflate_flat_parallelepiped_3D (IntervalMatrix Jz, double epsilon, double rho);
-  Matrix inflate_flat_parallelepiped_2D (IntervalMatrix Jz, double epsilon, double rho);
-  Matrix inflate_flat_parallelepiped (IntervalMatrix Jz, double epsilon, double rho);
 
-  vector<Parallelepiped> PEIBOS2D(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon, Vector offset = Vector::Zero(2));
-  vector<Parallelepiped> PEIBOS3D(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon, Vector offset = Vector::Zero(3));
+  double split (IntervalVector X, double eps, const vector<IntervalVector>& boxes);
+
+  Matrix inflate_flat_parallelepiped (Matrix Jz, double epsilon, double rho);
 
   vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon);
   vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon, Vector offset);  
