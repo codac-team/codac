@@ -80,4 +80,9 @@ namespace codac2
   struct ValueType<T> {
     using Type = MatrixType;
   };
+  
+  template<typename T>
+  struct ValueType<AnalyticExprWrapper<T>> {
+    using Type = T;
+  };
 }

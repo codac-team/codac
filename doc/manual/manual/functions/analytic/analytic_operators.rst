@@ -106,6 +106,10 @@ When operators are available for operations 2--3, then an ``AnalyticFunction`` c
 
 .. |TanhOp| replace:: :raw-html:`<a href="https://github.com/codac-team/codac/blob/codac2/src/core/operators/codac2_tanh.h"><code class="docutils literal notranslate"><span class="pre">TanhOp</span></code></a>`
 
+.. |FlattenOp| replace:: :raw-html:`<a href="https://github.com/codac-team/codac/blob/codac2/src/core/operators/codac2_flatten.h"><code class="docutils literal notranslate"><span class="pre">FlattenOp</span></code></a>`
+
+.. |TransposeOp| replace:: :raw-html:`<a href="https://github.com/codac-team/codac/blob/codac2/src/core/operators/codac2_transpose.h"><code class="docutils literal notranslate"><span class="pre">TransposeOp</span></code></a>`
+
 .. |AddOp| replace:: :raw-html:`<a href="https://github.com/codac-team/codac/blob/codac2/src/core/operators/codac2_arith_add.h"><code class="docutils literal notranslate"><span class="pre">AddOp</span></code></a>`
 
 .. |SubOp| replace:: :raw-html:`<a href="https://github.com/codac-team/codac/blob/codac2/src/core/operators/codac2_arith_sub.h"><code class="docutils literal notranslate"><span class="pre">SubOp</span></code></a>`
@@ -183,6 +187,10 @@ If you notice any mathematical operators missing from the list below, feel free 
   | :math:`\tan(x)`                                     | ``tan(x)``           | |TanOp|       | ``x``: scalar                       ||okk|   ||okk|   ||okk|  ||okk|       |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
   | :math:`\tanh(x)`                                    | ``tanh(x)``          | |TanhOp|      | ``x``: scalar                       ||okk|   ||okk|   ||okk|  ||okk|       |
+  +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
+  | :math:`\mathrm{flatten}(\mathbf{X})`                | ``flatten(X)``       | |FlattenOp|   | ``X``: matrix                       ||okk|   ||okk|   ||okk|  ||okk|       |
+  +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
+  | :math:`\mathbf{X}^\intercal`                        | ``transpose(x)``     | |TransposeOp| | ``X``: matrix                       ||okk|   ||okk|   ||okk|  ||okk|       |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
   | :bg-title:`Binary operations`                                                                                                                                           |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
@@ -316,3 +324,11 @@ For example, the operator ``cos`` is proposed with:
       :start-after: [9-beg]
       :end-before: [9-end]
       :dedent: 4
+
+  .. group-tab:: Matlab
+
+    .. literalinclude:: src.m
+      :language: matlab
+      :start-after: [9-beg]
+      :end-before: [9-end]
+      :dedent: 0

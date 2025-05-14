@@ -15,6 +15,7 @@
 #include "codac2_CtcWrapper.h"
 #include "codac2_Collection.h"
 #include "codac2_arith_mul.h"
+#include "codac2_Wrapper.h"
 
 namespace codac2
 {
@@ -139,7 +140,7 @@ namespace codac2
   {
     public:
 
-      CtcInverse(const AnalyticFunction<typename ValueType<Y>::Type>& f, const Y& y, bool with_centered_form = true, bool is_not_in = false)
+      CtcInverse(const AnalyticFunction<typename ValueType<Y>::Type>& f, const typename Wrapper<Y>::Domain& y, bool with_centered_form = true, bool is_not_in = false)
         : Ctc<CtcInverse<Y,X>,X>(f.args()[0]->size() /* f must have only one arg, see following assert */),
           CtcInverse_<Y>(f, y, with_centered_form,is_not_in)
       {
@@ -165,41 +166,60 @@ namespace codac2
 
   // ScalarType
 
-    CtcInverse(const AnalyticFunction<ScalarType>&, std::initializer_list<double>, bool with_centered_form = true, bool is_not_in = false) -> 
+    CtcInverse(const AnalyticFunction<ScalarType>&, std::initializer_list<double>, bool = true, bool = false) -> 
       CtcInverse<Interval,IntervalVector>;
 
     template<typename Y>
-    CtcInverse(const AnalyticFunction<ScalarType>&, std::initializer_list<Y>, bool with_centered_form = true, bool is_not_in = false) -> 
+    CtcInverse(const AnalyticFunction<ScalarType>&, std::initializer_list<Y>, bool = true, bool = false) -> 
+      CtcInverse<Interval,IntervalVector>;
+
+    CtcInverse(const AnalyticFunction<VectorType>&, const Interval&, bool = true, bool = false) -> 
       CtcInverse<Interval,IntervalVector>;
 
     template<typename C>
       requires IsCtcBaseOrPtr<C,Interval>
-    CtcInverse(const AnalyticFunction<ScalarType>&, const C&, bool with_centered_form = true, bool is_not_in = false) -> 
+    CtcInverse(const AnalyticFunction<ScalarType>&, const C&, bool = true, bool = false) -> 
       CtcInverse<Interval,IntervalVector>;
 
   // VectorType
 
-    CtcInverse(const AnalyticFunction<VectorType>&, std::initializer_list<double>, bool with_centered_form = true, bool is_not_in = false) -> 
+    CtcInverse(const AnalyticFunction<VectorType>&, std::initializer_list<double>, bool = true, bool = false) -> 
       CtcInverse<IntervalVector,IntervalVector>;
 
-    CtcInverse(const AnalyticFunction<VectorType>&, std::initializer_list<std::initializer_list<double>>, bool with_centered_form = true, bool is_not_in = false) -> 
+    CtcInverse(const AnalyticFunction<VectorType>&, std::initializer_list<std::initializer_list<double>>, bool = true, bool = false) -> 
+      CtcInverse<IntervalVector,IntervalVector>;
+
+    CtcInverse(const AnalyticFunction<VectorType>&, const Vector&, bool = true, bool = false) -> 
+      CtcInverse<IntervalVector,IntervalVector>;
+
+    CtcInverse(const AnalyticFunction<VectorType>&, const IntervalVector&, bool = true, bool = false) -> 
+      CtcInverse<IntervalVector,IntervalVector>;
+
+    template<typename OtherDerived>
+      requires (OtherDerived::RowsAtCompileTime == -1 && OtherDerived::ColsAtCompileTime == 1)
+    CtcInverse(const AnalyticFunction<VectorType>&, const Eigen::MatrixBase<OtherDerived>&, bool = true, bool = false) -> 
       CtcInverse<IntervalVector,IntervalVector>;
 
     template<typename C>
       requires IsCtcBaseOrPtr<C,IntervalVector>
-    CtcInverse(const AnalyticFunction<VectorType>&, const C&, bool with_centered_form = true, bool is_not_in = false) -> 
+    CtcInverse(const AnalyticFunction<VectorType>&, const C&, bool = true, bool = false) -> 
       CtcInverse<IntervalVector,IntervalVector>;
 
   // MatrixType
         
-    CtcInverse(const AnalyticFunction<MatrixType>&, std::initializer_list<std::initializer_list<double>>, bool with_centered_form = true, bool is_not_in = false) -> 
+    CtcInverse(const AnalyticFunction<MatrixType>&, std::initializer_list<std::initializer_list<double>>, bool = true, bool = false) -> 
       CtcInverse<IntervalMatrix,IntervalVector>;
 
-    CtcInverse(const AnalyticFunction<MatrixType>&, std::initializer_list<std::initializer_list<std::initializer_list<double>>>, bool with_centered_form = true, bool is_not_in = false) -> 
+    CtcInverse(const AnalyticFunction<MatrixType>&, std::initializer_list<std::initializer_list<std::initializer_list<double>>>, bool = true, bool = false) -> 
+      CtcInverse<IntervalMatrix,IntervalVector>;
+
+    template<typename OtherDerived>
+      requires (OtherDerived::RowsAtCompileTime == -1 && OtherDerived::ColsAtCompileTime == -1)
+    CtcInverse(const AnalyticFunction<VectorType>&, const Eigen::MatrixBase<OtherDerived>&, bool = true, bool = false) -> 
       CtcInverse<IntervalMatrix,IntervalVector>;
 
     template<typename C>
       requires IsCtcBaseOrPtr<C,IntervalMatrix>
-    CtcInverse(const AnalyticFunction<MatrixType>&, const C&, bool with_centered_form = true, bool is_not_in = false) -> 
+    CtcInverse(const AnalyticFunction<MatrixType>&, const C&, bool = true, bool = false) -> 
       CtcInverse<IntervalMatrix,IntervalVector>;
 }

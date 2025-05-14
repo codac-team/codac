@@ -26,6 +26,7 @@
 #include "codac2_cross_prod.h"
 #include "codac2_det.h"
 #include "codac2_exp.h"
+#include "codac2_flatten.h"
 #include "codac2_floor.h"
 #include "codac2_log.h"
 #include "codac2_mat.h"
@@ -42,4 +43,5 @@
 #include "codac2_subvector.h"
 #include "codac2_tan.h"
 #include "codac2_tanh.h"
+#include "codac2_transpose.h"
 #include "codac2_vec.h"

@@ -16,9 +16,9 @@
 #include "codac2_FunctionBase.h"
 #include "codac2_template_tools.h"
 #include "codac2_AnalyticExprWrapper.h"
-#include "codac2_ScalarExprList.h"
 #include "codac2_operators.h"
 #include "codac2_cart_prod.h"
+#include "codac2_vec.h"
 
 namespace codac2
 {
@@ -34,6 +34,16 @@ namespace codac2
 
   inline EvalMode operator|(EvalMode a, EvalMode b)
   { return static_cast<EvalMode>(static_cast<int>(a) | static_cast<int>(b)); }
+
+  struct ScalarExprList : public AnalyticExprWrapper<VectorType>
+  {
+    // Mainly used to take advantage of initializer lists in AnalyticFunction constructors.
+    template<typename... S>
+      requires (std::is_same_v<typename ValueType<S>::Type,ScalarType> && ...)
+    ScalarExprList(const S&... y)
+      : AnalyticExprWrapper<VectorType>(vec(y...))
+    { }
+  };
 
   template<typename T>
     requires std::is_base_of_v<AnalyticTypeBase,T>

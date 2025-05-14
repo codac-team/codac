@@ -78,7 +78,6 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticExprWrapper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticFunction.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticType.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_ScalarExprList.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_ValueType.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_operations.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_operators.h
@@ -114,6 +113,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_cross_prod.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_det.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_exp.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_flatten.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_floor.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_log.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_mat.h
@@ -130,6 +130,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_subvector.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_tan.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_tanh.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_transpose.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_vec.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/matrices/eigen/Matrix_addons/codac2_Matrix_addons_Base.h

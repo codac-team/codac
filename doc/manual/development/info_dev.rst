@@ -163,3 +163,11 @@ If you simply want to use the latest Codac release in Python, you can download t
    .. code-block:: bash
       
       python -m twine upload --repository pypi *
+
+.. note::
+
+  | To use a locally compiled binding in the MATLAB environment, you may need to launch MATLAB from the command line:
+
+  .. code-block:: bash
+    
+    LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 matlab

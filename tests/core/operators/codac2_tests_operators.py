@@ -343,6 +343,23 @@ class TestInterval_bwd(unittest.TestCase):
     x1,x2,x3 = IntervalVector([2,3]), IntervalVector([4,5]), IntervalVector([6,7]) 
     self.assertTrue(MatrixOp.fwd(x1,x2,x3) == IntervalMatrix([[2,4,6],[3,5,7]]))
     self.assertTrue(MatrixOp.fwd(x1) == IntervalMatrix([[2],[3]]))
+
+  def tests_transpose_operator(self):
+    M = IntervalMatrix([[[1,1.5],[2,2.5],[3,3.5]],[[4,4.5],[5,5.5],[6,6.5]]])
+    N = IntervalMatrix([[[0.8,1.2],[3.5,4]],[[2.0,2.2],[4.8,5.2]],
+                        [[2.8,3.2],[5.8,6.2]]])
+    self.assertTrue(TransposeOp.fwd(M)==M.transpose())
+    TransposeOp.bwd(N,M)
+    self.assertTrue(M == IntervalMatrix([[[1,1.2],[2,2.2],[3,3.2]],[4.0,[5,5.2],[6,6.2]]]))
+
+  def tests_flatten_operator(self):
+    M = IntervalMatrix([[[1,1.5],[2,2.5],[3,3.5]],[[4,4.5],[5,5.5],[6,6.5]]])
+    N = IntervalVector([[0.8,1.2],[3.5,4],[2.0,2.2],[4.8,5.2],
+                        [2.8,3.2],[5.8,6.2]])
+    self.assertTrue(FlattenOp.fwd(M)==IntervalVector([[1,1.5],[4,4.5],[2,2.5],[5,5.5],[3,3.5],[6,6.5]]))
+    FlattenOp.bwd(N,M)
+    self.assertTrue(M == IntervalMatrix([[[1,1.2],[2,2.2],[3,3.2]],[4.0,[5,5.2],[6,6.2]]]))
+
   
 if __name__ ==  '__main__':
   unittest.main()

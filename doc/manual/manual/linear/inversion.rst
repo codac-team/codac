@@ -26,6 +26,15 @@ Reliable inversions of matrices
       :end-before: [linear-1-end]
       :dedent: 4
 
+  .. group-tab:: Matlab
+
+    .. literalinclude:: src.m
+      :language: matlab
+      :start-after: [linear-1-beg]
+      :end-before: [linear-1-end]
+      :dedent: 0
+
+
 .. doxygenfunction:: codac2::inverse_correction
   :project: codac
 

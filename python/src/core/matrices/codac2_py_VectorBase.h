@@ -39,14 +39,27 @@ void export_VectorBase([[maybe_unused]] py::module& m, py::class_<S>& pyclass)
       DOC_TO_BE_DEFINED,
       "x"_a)
 
-    .def("__getitem__", [](const S& x, Index_type index) -> const T&
+    .def(
+        #if FOR_MATLAB
+          "getitem"
+        #else
+          "__getitem__"
+        #endif
+        ,
+        [](const S& x, Index_type index) -> const T&
         {
           matlab::test_integer(index);
           return x[matlab::input_index(index)];
         }, py::return_value_policy::reference_internal,
       MATRIX_ADDONS_VECTORBASE_CONST_SCALAR_REF_OPERATORCOMPO_INDEX_CONST)
 
-    .def("__setitem__", [](S& x, Index_type index, const T& a)
+    .def(
+        #if FOR_MATLAB
+          "setitem"
+        #else
+          "__setitem__"
+        #endif
+        , [](S& x, Index_type index, const T& a)
         {
           matlab::test_integer(index);
           x[matlab::input_index(index)] = a;

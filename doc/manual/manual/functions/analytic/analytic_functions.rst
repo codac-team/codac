@@ -64,6 +64,14 @@ An ``AnalyticFunction`` object is built from:
       :end-before: [1-end]
       :dedent: 4
 
+  .. group-tab:: Matlab
+
+    .. literalinclude:: src.m
+      :language: matlab
+      :start-after: [1-beg]
+      :end-before: [1-end]
+      :dedent: 0
+
 For ``VectorVar`` and ``MatrixVar``, as well as for vector or matrix expressions, coefficients can be accessed using the operators ``[i]`` and ``(i,j)`` respectively. For vector elements, the ``.subvector(i,j)`` method allows to get a subvector of the variable or expression.
 
 .. tabs::
@@ -84,6 +92,14 @@ For ``VectorVar`` and ``MatrixVar``, as well as for vector or matrix expressions
       :end-before: [2-end]
       :dedent: 4
 
+  .. group-tab:: Matlab
+
+    .. literalinclude:: src.m
+      :language: matlab
+      :start-after: [2-beg]
+      :end-before: [2-end]
+      :dedent: 0
+
 Variables are temporary objects used only to construct expressions. They can be freed once the function has been instantiated: there is no memory error in using an ``AnalyticFunction`` without its ``*Var`` arguments in the same scope, as in this example:
 
 .. tabs::
@@ -103,6 +119,14 @@ Variables are temporary objects used only to construct expressions. They can be 
       :start-after: [3-beg]
       :end-before: [3-end]
       :dedent: 4
+
+  .. group-tab:: Matlab
+
+    .. literalinclude:: src.m
+      :language: matlab
+      :start-after: [3-beg]
+      :end-before: [3-end]
+      :dedent: 0
 
 
 Function composition
@@ -128,6 +152,14 @@ Function composition
       :end-before: [4-end]
       :dedent: 4
 
+  .. group-tab:: Matlab
+
+    .. literalinclude:: src.m
+      :language: matlab
+      :start-after: [4-beg]
+      :end-before: [4-end]
+      :dedent: 0
+
 Below is an example of a function composition involving matrix calculation for the rotation of a vector:
 
 .. tabs::
@@ -147,6 +179,14 @@ Below is an example of a function composition involving matrix calculation for t
       :start-after: [4b-beg]
       :end-before: [4b-end]
       :dedent: 4
+
+  .. group-tab:: Matlab
+
+    .. literalinclude:: src.m
+      :language: matlab
+      :start-after: [4b-beg]
+      :end-before: [4b-end]
+      :dedent: 0
 
 
 Evaluations
@@ -173,6 +213,14 @@ Evaluations can be done by the ``.eval()`` method of ``AnalyticFunction``.
       :start-after: [5-beg]
       :end-before: [5-end]
       :dedent: 4
+
+  .. group-tab:: Matlab
+
+    .. literalinclude:: src.m
+      :language: matlab
+      :start-after: [5-beg]
+      :end-before: [5-end]
+      :dedent: 0
 
 
 For multivariate functions, it is possible to provide several inputs to the ``.eval()`` method, as in the above example with ``f2`` or ``f3``. In Codac C++, the arguments may be of different types (any mixed scalar, vector, or matrix types). In Python and Matlab however, the binding does not allow any combination of inputs, but several arguments of same structural types can be provided: a list of scalar values, or a list of vector values (``Vector``, ``IntervalVector``), or a list of matrix values (``Matrix``, ``IntervalMatrix``).
@@ -211,6 +259,14 @@ By default, the latter mode is used for evaluations. To select a specific mode, 
       :start-after: [6-beg]
       :end-before: [6-end]
       :dedent: 4
+
+  .. group-tab:: Matlab
+
+    .. literalinclude:: src.m
+      :language: matlab
+      :start-after: [6-beg]
+      :end-before: [6-end]
+      :dedent: 0
 
 Although this class is dedicated to inclusion functions, it can also be used for real evaluations (without interval outputs). The ``.real_eval()`` method can be used for this purpose.
 
@@ -251,6 +307,14 @@ The ``.diff()`` method can be used in the same way as the ``.eval()`` method.
       :end-before: [7-end]
       :dedent: 4
 
+  .. group-tab:: Matlab
+
+    .. literalinclude:: src.m
+      :language: matlab
+      :start-after: [7-beg]
+      :end-before: [7-end]
+      :dedent: 0
+
 
 Other properties
 ----------------
@@ -274,6 +338,14 @@ Let us consider a function :math:`[\mathbf{f}]:\mathbb{IR}^n\to\mathbb{IR}^m`, t
       :start-after: [8-beg]
       :end-before: [8-end]
       :dedent: 4
+
+  .. group-tab:: Matlab
+
+    .. literalinclude:: src.m
+      :language: matlab
+      :start-after: [8-beg]
+      :end-before: [8-end]
+      :dedent: 0
 
 In the case of multivariate functions, ``.input_size()`` returns the sum of the dimensions of the arguments.
 

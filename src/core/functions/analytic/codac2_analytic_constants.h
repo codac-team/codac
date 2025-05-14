@@ -23,6 +23,11 @@ namespace codac2
         : _x(x)
       { }
 
+      const typename T::Domain& value() const
+      {
+        return _x;
+      }
+
       std::shared_ptr<ExprBase> copy() const
       {
         return std::make_shared<ConstValueExpr<T>>(*this);

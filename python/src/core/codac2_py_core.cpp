@@ -15,10 +15,11 @@
 #include <codac2_Row.h>
 #include <codac2_IntervalRow.h>
 #include <codac2_math.h>
+#include <codac2_Sep.h>
+#include "codac2_py_Sep.h"
 #include "codac2_py_AnalyticFunction.h"
 #include "codac2_py_CtcInverse.h"
 #include "codac2_py_CtcInverseNotIn.h"
-#include "codac2_py_SepInverse.h"
 #include "codac2_py_MatrixBlock.h"
 
 using namespace codac2;
@@ -116,6 +117,7 @@ void export_SepCross(py::module& m, py::class_<SepBase,pySep>& pysep);
 void export_SepCtcBoundary(py::module& m, py::class_<SepBase,pySep>& pysep);
 void export_SepCtcPair(py::module& m, py::class_<SepBase,pySep>& pysep);
 void export_SepInter(py::module& m, py::class_<SepBase,pySep>& sep);
+void export_SepInverse(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepNot(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepPolygon(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepProj(py::module& m, py::class_<SepBase,pySep>& sep);
@@ -211,6 +213,12 @@ PYBIND11_MODULE(_core, m)
     .value("DEFAULT", EvalMode::DEFAULT)
     .def(py::self | py::self, EVALMODE_OPERATOROR_EVALMODE_EVALMODE)
   ;
+
+  #if FOR_MATLAB // Python enums do not seem to be callable in matlab
+  m.attr("EvalMode_NATURAL") = EvalMode::NATURAL;
+  m.attr("EvalMode_CENTERED") = EvalMode::CENTERED;
+  m.attr("EvalMode_DEFAULT") = EvalMode::DEFAULT;
+  #endif
 
   export_ScalarExpr(m);
   export_VectorExpr(m);

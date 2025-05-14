@@ -28,7 +28,7 @@ void export_CtcInverse(py::module& m, const std::string& export_name, py::class_
   exported
     .def(py::init<const AnalyticFunction<T>&, const D&, bool>(),
       "f"_a, "y"_a, "with_centered_form"_a = true,
-      CTCINVERSE_YX_CTCINVERSE_CONST_ANALYTICFUNCTION_TYPENAME_VALUETYPE_Y_TYPE_REF_CONST_Y_REF_BOOL_BOOL);
+      CTCINVERSE_YX_CTCINVERSE_CONST_ANALYTICFUNCTION_TYPENAME_VALUETYPE_Y_TYPE_REF_CONST_TYPENAME_WRAPPER_Y_DOMAIN_REF_BOOL_BOOL);
 
   if constexpr(std::is_same_v<T,VectorType>) // contractors only associated with interval vectors
   {

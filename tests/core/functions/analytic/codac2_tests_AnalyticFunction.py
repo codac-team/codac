@@ -415,5 +415,20 @@ class TestAnalyticFunction(unittest.TestCase):
 					[[1.0,2.0],[-0.2,-0.1]]])),1e-9)
 			== Matrix([[0,0],[0,0]]))
 
+    m = MatrixVar(2,2)
+    f = AnalyticFunction([m], m*transpose(m))
+    theta = ScalarVar()
+    g = AnalyticFunction([theta], flatten(f(mat(vec(cos(theta),sin(theta)),
+                                                vec(-sin(theta),cos(theta))))))
+    a = Interval(0.3,0.4)
+    v1 = cos(a)*cos(a)+sin(a)*sin(a)
+    v2 = cos(a)*sin(a)-cos(a)*sin(a)
+    self.assertTrue(Approx(g.eval(EvalMode.NATURAL,a),1e-9)==
+                    IntervalVector([v1,v2,v2,v1]))
+    v3 = 1.0 + Interval(-2,2)*(cos(a)*sin(a)-cos(a)*sin(a))*a.rad()
+    v4 = (cos(a)*cos(a)-cos(a)*cos(a)+sin(a)*sin(a)-sin(a)*sin(a))*a.rad()
+    self.assertTrue(Approx(g.eval(EvalMode.CENTERED,a),1e-9)==
+                    IntervalVector([v3,v4,v4,v3]))
+
 if __name__ ==  '__main__':
   unittest.main()
