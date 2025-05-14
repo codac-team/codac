@@ -48,11 +48,6 @@ endif()
   set(CODAC_PKG_CONFIG_CFLAGS "${CODAC_PKG_CONFIG_CFLAGS} -I\${includedir}/${PROJECT_NAME}-unsupported" PARENT_SCOPE)
   set(CODAC_PKG_CONFIG_LIBS "${CODAC_PKG_CONFIG_LIBS} -l${PROJECT_NAME}-unsupported" PARENT_SCOPE)
 
-  message(STATUS "CODAC_PKG_CONFIG_CFLAGS ${CODAC_PKG_CONFIG_CFLAGS}")
-  message(STATUS "CODAC_PKG_CONFIG_LIBS ${CODAC_PKG_CONFIG_LIBS}")
-  message(STATUS "CODAC_LIBRARIES ${CODAC_LIBRARIES}")
-
-
 ################################################################################
 # Installation of libcodac-unsupported files
 ################################################################################
