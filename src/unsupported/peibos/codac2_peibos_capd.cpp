@@ -15,12 +15,13 @@ using namespace codac2;
 namespace codac2
 {
 
-  vector<Parallelepiped> PEIBOS2D(capd::IMap& gamma, double tf, AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon, Vector offset)
+  vector<Parallelepiped> PEIBOS2D(const capd::IMap& gamma, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset)
   {
     vector<Parallelepiped> output;
 
     // CAPD solver setup
-    capd::IOdeSolver solver(gamma, 20);
+    capd::IMap g (gamma);
+    capd::IOdeSolver solver(g, 20);
     solver.setAbsoluteTolerance(1e-20);
     solver.setRelativeTolerance(1e-20);
 
@@ -85,12 +86,13 @@ namespace codac2
     return output;
   }
 
-  vector<Parallelepiped> PEIBOS3D(capd::IMap& gamma, double tf, AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon, Vector offset)
+  vector<Parallelepiped> PEIBOS3D(const capd::IMap& gamma, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset)
   {
     vector<Parallelepiped> output;
     
     // CAPD solver setup
-    capd::IOdeSolver solver(gamma, 20);
+    capd::IMap g (gamma);
+    capd::IOdeSolver solver(g, 20);
 
     
     solver.setAbsoluteTolerance(1e-20);
@@ -162,12 +164,12 @@ namespace codac2
     return output;
   }
 
-  vector<Parallelepiped> PEIBOS(capd::IMap& gamma, double tf, AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon)
+  vector<Parallelepiped> PEIBOS(const capd::IMap& gamma, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon)
   {
     return PEIBOS(gamma, tf, psi_0, generators, epsilon, Vector::zero(psi_0.output_size()));
   }
 
-  vector<Parallelepiped> PEIBOS(capd::IMap& gamma, double tf, AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon, Vector offset)
+  vector<Parallelepiped> PEIBOS(const capd::IMap& gamma, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset)
   {
     if (psi_0.output_size()==2)
     {

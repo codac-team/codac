@@ -15,12 +15,12 @@ using namespace codac2;
 namespace codac2
 {
 
-  double distance_from_line_to_origin(Eigen::Matrix<double,3,1> a, Eigen::Matrix<double,3,1> b)
+  double distance_from_line_to_origin(const Eigen::Matrix<double,3,1>& a, const Eigen::Matrix<double,3,1>& b)
   {
     return (a.cross(b)).norm()/((b-a).norm());
   }
 
-  bool contains (vector<OctaSym> symmetries, OctaSym symmetry, const AnalyticFunction<VectorType>& psi_0)
+  bool contains (const vector<OctaSym>& symmetries, const OctaSym& symmetry, const AnalyticFunction<VectorType>& psi_0)
   {
     IntervalVector test_box =  Interval(-1.,1.)*IntervalVector::Ones(psi_0.input_size());
     IntervalVector psi_0_x = psi_0.eval(EvalMode::NATURAL,test_box);
@@ -35,7 +35,7 @@ namespace codac2
     return false;
   }
 
-  vector<OctaSym> generate_symmetries (vector<vector<int>> generators, const AnalyticFunction<VectorType>& psi_0)
+  vector<OctaSym> generate_symmetries (const vector<vector<int>>& generators, const AnalyticFunction<VectorType>& psi_0)
   {
     vector<OctaSym> symmetries;
 
@@ -92,7 +92,7 @@ namespace codac2
     return symmetries;
   }
 
-  double error(IntervalMatrix JJf, IntervalMatrix JJf_punc, const AnalyticFunction<VectorType>& psi_0, OctaSym symmetry, IntervalVector X)
+  double error(const IntervalMatrix& JJf, const IntervalMatrix& JJf_punc, const AnalyticFunction<VectorType>& psi_0, const OctaSym& symmetry, const IntervalVector& X)
   {
     auto xc = X.mid();
 
@@ -123,7 +123,7 @@ namespace codac2
     }
   }
 
-  Matrix inflate_flat_parallelepiped(Matrix Jz, double epsilon, double rho)
+  Matrix inflate_flat_parallelepiped(const Matrix& Jz, double epsilon, double rho)
   {
 
     int m = Jz.cols();
@@ -153,12 +153,12 @@ namespace codac2
   }
 
 
-  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon)
+  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon)
   {
     return PEIBOS(f, psi_0, generators, epsilon, Vector::Zero(psi_0.output_size()));
   }
 
-  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon, Vector offset)
+  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset)
   {
     int m = psi_0.input_size();
     int n = psi_0.output_size();

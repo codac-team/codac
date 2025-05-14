@@ -30,7 +30,7 @@ void export_peibos(py::module& m)
     {
       return PEIBOS(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon);
     },
-    VECTOR_PARALLELEPIPED_PEIBOS_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_VECTOR_VECTOR_INT_DOUBLE,
+    VECTOR_PARALLELEPIPED_PEIBOS_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_VECTOR_INT_REF_DOUBLE,
     "f"_a, "psi_0"_a, "generators"_a, "epsilon"_a);
 
   m.def("PEIBOS", 
@@ -38,6 +38,6 @@ void export_peibos(py::module& m)
     {
       return PEIBOS(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, offset);
     },
-    VECTOR_PARALLELEPIPED_PEIBOS_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_VECTOR_VECTOR_INT_DOUBLE_VECTOR,
+    VECTOR_PARALLELEPIPED_PEIBOS_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_VECTOR_INT_REF_DOUBLE_CONST_VECTOR_REF,
     "f"_a, "psi_0"_a, "generators"_a, "epsilon"_a, "offset"_a);
 }

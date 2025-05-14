@@ -17,16 +17,16 @@
 
 namespace codac2
 {
-  double distance_from_line_to_origin(Eigen::Matrix<double,3,1> a, Eigen::Matrix<double,3,1> b);
-  bool contains (vector<OctaSym> symmetries, OctaSym symmetry, const AnalyticFunction<VectorType>& psi_0);
-  vector<OctaSym> generate_symmetries (vector<vector<int>> generators, const AnalyticFunction<VectorType>& psi_0);
+  double distance_from_line_to_origin(const Eigen::Matrix<double,3,1>& a, const Eigen::Matrix<double,3,1>& b);
+  bool contains (const vector<OctaSym>& symmetries, const OctaSym& symmetry, const AnalyticFunction<VectorType>& psi_0);
+  vector<OctaSym> generate_symmetries (const vector<vector<int>>& generators, const AnalyticFunction<VectorType>& psi_0);
 
-  double error(IntervalMatrix JJf, IntervalMatrix JJf_punc, const AnalyticFunction<VectorType>& psi_0, OctaSym symmetry, IntervalVector X);
+  double error(const IntervalMatrix& JJf, const IntervalMatrix& JJf_punc, const AnalyticFunction<VectorType>& psi_0, const OctaSym& symmetry, const IntervalVector& X);
 
-  double split (IntervalVector X, double eps, const vector<IntervalVector>& boxes);
+  double split (const IntervalVector& X, double eps, const vector<IntervalVector>& boxes);
 
-  Matrix inflate_flat_parallelepiped (Matrix Jz, double epsilon, double rho);
+  Matrix inflate_flat_parallelepiped (const Matrix& Jz, double epsilon, double rho);
 
-  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon);
-  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon, Vector offset);  
+  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon);
+  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset);  
 }

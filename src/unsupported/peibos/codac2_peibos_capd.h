@@ -17,10 +17,10 @@
 namespace codac2
 {
 
-  vector<Parallelepiped> PEIBOS2D(capd::IMap& gamma, double tf, AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon, Vector offset = Vector::Zero(2));
-  vector<Parallelepiped> PEIBOS3D(capd::IMap& gamma, double tf, AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon, Vector offset = Vector::Zero(3));
+  vector<Parallelepiped> PEIBOS2D(const capd::IMap& gamma, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset = Vector::Zero(2));
+  vector<Parallelepiped> PEIBOS3D(const capd::IMap& gamma, double tf, const AnalyticFunction<VectorType>& psi_0, vector<vector<int>>& generators , double epsilon, const Vector& offset = Vector::Zero(3));
 
-  vector<Parallelepiped> PEIBOS(capd::IMap& gamma, double tf, AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon);
-  vector<Parallelepiped> PEIBOS(capd::IMap& gamma, double tf, AnalyticFunction<VectorType>& psi_0, vector<vector<int>> generators , double epsilon, Vector offset);
+  vector<Parallelepiped> PEIBOS(const capd::IMap& gamma, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon);
+  vector<Parallelepiped> PEIBOS(const capd::IMap& gamma, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset);
 
 }
