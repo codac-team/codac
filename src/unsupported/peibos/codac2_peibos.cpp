@@ -175,7 +175,7 @@ namespace codac2
     // Generate the symmetries from the generators
     vector<OctaSym> symmetries = generate_symmetries(generators, psi_0);
     vector<IntervalVector> boxes;
-    double true_eps = split(Interval(-1.,1.)*IntervalVector::Ones(psi_0.input_size()), epsilon, boxes);
+    double true_eps = split(Interval(-1.,1.)*IntervalVector::Ones(m), epsilon, boxes);
 
     for (const auto& symmetry : symmetries)
     {
