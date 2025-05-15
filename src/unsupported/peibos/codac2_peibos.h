@@ -17,8 +17,8 @@
 
 namespace codac2
 {
-  double distance_from_line_to_origin(const Eigen::Matrix<double,3,1>& a, const Eigen::Matrix<double,3,1>& b);
   bool contains (const vector<OctaSym>& symmetries, const OctaSym& symmetry, const AnalyticFunction<VectorType>& psi_0);
+  
   vector<OctaSym> generate_symmetries (const vector<vector<int>>& generators, const AnalyticFunction<VectorType>& psi_0);
 
   double error(const IntervalMatrix& JJf, const IntervalMatrix& JJf_punc, const AnalyticFunction<VectorType>& psi_0, const OctaSym& symmetry, const IntervalVector& X);

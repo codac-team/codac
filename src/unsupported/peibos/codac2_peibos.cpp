@@ -15,11 +15,6 @@ using namespace codac2;
 namespace codac2
 {
 
-  double distance_from_line_to_origin(const Eigen::Matrix<double,3,1>& a, const Eigen::Matrix<double,3,1>& b)
-  {
-    return (a.cross(b)).norm()/((b-a).norm());
-  }
-
   bool contains (const vector<OctaSym>& symmetries, const OctaSym& symmetry, const AnalyticFunction<VectorType>& psi_0)
   {
     IntervalVector test_box =  Interval(-1.,1.)*IntervalVector::Ones(psi_0.input_size());
