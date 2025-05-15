@@ -27,7 +27,13 @@ int main()
   figure_2d.set_axes(axis(0,{-1.4,2.2}), axis(1,{-0.4,0.3}));
 
   for (const auto& p : v_par_2d)
+  {
     figure_2d.draw_parallelepiped(p.z, p.A, {Color::green(),Color::green(0.5)});
+    for (const auto& vertice : p.vertices())
+    {
+      figure_2d.draw_point(vertice, {Color::red(),Color::red(0.5)});
+    }
+  }
 
   // 3D example of the PEIBOS algorithm
   VectorVar y_3d(3);
@@ -70,7 +76,7 @@ int main()
   figure_2d_nd_zy.set_window_properties({1125,50},{500,500});
   figure_2d_nd_zy.set_axes(axis(2,{-1.2,1.2}), axis(1,{-1.2,1.2}));
 
-  auto v_par_nd = PEIBOS(f_nd, psi0_nd, generators_nd, 0.01);
+  auto v_par_nd = PEIBOS(f_nd, psi0_nd, generators_nd, 0.02);
 
   for (const auto& p : v_par_nd)
   {

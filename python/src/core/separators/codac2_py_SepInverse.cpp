@@ -66,7 +66,7 @@ void export_SepInverse(py::module& m, py::class_<SepBase,pySep>& pysep)
 
           else
           {
-            assert_release(false && "case error - SepInverse: cannot deal with f")
+            assert_release(false && "case error - SepInverse: cannot deal with f");
           }
         }
       ),

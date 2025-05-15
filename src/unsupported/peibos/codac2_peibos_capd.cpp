@@ -63,11 +63,7 @@ namespace codac2
 
         capd::IMatrix monodromyMatrix(n,n);
         capd::ITimeMap::SolutionCurve solution(initialTime); 
-        capd::IVector c(n);
-        for (int j = 0; j < n; j++)
-        {
-          c[j] = to_capd(Y[j]);
-        }
+        capd::IVector c =to_capd(Y);
 
         capd::C1Rect2Set s(c);
         timeMap(finalTime, s, solution);
@@ -76,33 +72,23 @@ namespace codac2
 
         // To get the flow function and its Jacobian (monodromy matrix) for x_hat
         auto xc = X.mid();
-        auto yc = (symmetry(psi_0.eval(xc)) + offset).mid();
+        Vector yc = (symmetry(psi_0.eval(xc)) + offset).mid();
 
         capd::IMatrix monodromyMatrix_punc(n,n);
         capd::ITimeMap::SolutionCurve solution_punct(initialTime);
-        capd::IVector c_punct(n);
-        for (int j = 0; j < n; j++)
-        {
-          c_punct[j] = to_capd(yc[j]);
-        }
+        capd::IVector c_punct =to_capd(IntervalVector(yc));
 
         capd::C1Rect2Set s_punct(c_punct);
         timeMap_punc(finalTime, s_punct, solution_punct);      
         capd::IVector result_punct = timeMap_punc(finalTime, s_punct, monodromyMatrix_punc);
-        IntervalMatrix JJf_punc=to_codac(monodromyMatrix_punc);
+        IntervalMatrix JJf_point=to_codac(monodromyMatrix_punc);
 
         // Center of the parallelepiped
         Vector z = Vector(to_codac(result).mid());
         
-        // Maximum error computation
-        double rho = error( JJf, JJf_punc, psi_0, symmetry, X);
+        Parallelepiped p = parallelepiped_inclusion(z, JJf, JJf_point, psi_0, symmetry, X, true_eps);
 
-        IntervalMatrix Jz = (JJf_punc * IntervalMatrix(symmetry.permutation_matrix()) * psi_0.diff(xc)).mid();
-
-        // Inflation of the parallelepiped
-        Matrix A = inflate_flat_parallelepiped(Jz.mid(), true_eps, rho);
-
-        output.push_back(Parallelepiped(z, A));
+        output.push_back(p);
 
       }
     }

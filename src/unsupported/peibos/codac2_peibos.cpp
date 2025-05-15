@@ -92,12 +92,12 @@ namespace codac2
     return symmetries;
   }
 
-  double error(const IntervalMatrix& JJf, const IntervalMatrix& JJf_punc, const AnalyticFunction<VectorType>& psi_0, const OctaSym& symmetry, const IntervalVector& X)
+  double error(const IntervalMatrix& JJf, const IntervalMatrix& JJf_point, const AnalyticFunction<VectorType>& psi_0, const OctaSym& symmetry, const IntervalVector& X)
   {
     auto xc = X.mid();
 
     IntervalVector dX=X-xc;
-    IntervalMatrix JJg_punc=JJf_punc*IntervalMatrix(symmetry.permutation_matrix())*psi_0.diff(xc);
+    IntervalMatrix JJg_punc=JJf_point*IntervalMatrix(symmetry.permutation_matrix())*psi_0.diff(xc);
 
     IntervalMatrix JJg=JJf*IntervalMatrix(symmetry.permutation_matrix())*psi_0.diff(X);
 
@@ -152,6 +152,19 @@ namespace codac2
     return A_tild*mult;
   }
 
+  Parallelepiped parallelepiped_inclusion(const Vector& z, const IntervalMatrix& JJf, const IntervalMatrix& JJf_point, const AnalyticFunction<VectorType>& psi_0, const OctaSym& symmetry, const IntervalVector& X, double true_eps)
+  {
+    // Maximum error computation
+    double rho = error( JJf, JJf_point, psi_0, symmetry, X);
+
+    IntervalMatrix Jz = (JJf_point * IntervalMatrix(symmetry.permutation_matrix()) * psi_0.diff(X.mid())).mid();
+
+    // Inflation of the parallelepiped
+
+    Matrix A = inflate_flat_parallelepiped(Jz.mid(), true_eps, rho);
+
+    return Parallelepiped(z, A);
+  }
 
   vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon)
   {
@@ -164,7 +177,7 @@ namespace codac2
     int n = psi_0.output_size();
 
     assert (f.input_size() == n);
-    assert(offset.size() == n);
+    assert (offset.size() == n);
     assert (m < n);
     assert (generators.size() > 0 && (int) generators[0].size() == n);
 
@@ -189,28 +202,14 @@ namespace codac2
         auto xc = X.mid();
         auto yc = (symmetry(psi_0.eval(xc)) + offset).mid();
 
-        IntervalMatrix JJf_punc=f.diff(yc).mid();
+        IntervalMatrix JJf_point=f.diff(yc).mid();
 
         // Center of the parallelepiped
         Vector z = f.eval(yc).mid();
 
-        // Maximum error computation
-        double rho = error( JJf, JJf_punc, psi_0, symmetry, X);
-
-        IntervalMatrix Jz = (JJf_punc * IntervalMatrix(symmetry.permutation_matrix()) * psi_0.diff(xc)).mid();
-
-        // Inflation of the parallelepiped
-
-        Matrix A = inflate_flat_parallelepiped(Jz.mid(), true_eps, rho);
-
-        if (A.is_nan() || IntervalMatrix(A).is_unbounded()) // handle degenerated case (and almost degenerated cases)
-          {
-            z = f.eval(Y).mid();
-            Vector vars = (f.eval(Y) - z).ub();
-            A = vars * Matrix::Identity(n,n);
-          }
-
-        output.push_back(Parallelepiped(z, A));
+        Parallelepiped p = parallelepiped_inclusion(z, JJf, JJf_point, psi_0, symmetry, X, true_eps);
+        
+        output.push_back(p);
 
       }
     }

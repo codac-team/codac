@@ -18,26 +18,26 @@ Parallelepiped::Parallelepiped(const Vector& z_, const Matrix& A_)
   assert(z.size() == A.rows());
 }
 
+void generate_vertices(int i, int n, const Vector& z, const Matrix& A, vector<Vector>& L_v)
+{
+  if (i == n)
+  {
+    L_v.push_back(z);
+    L_v.push_back(z);
+  }
+  else if (i<n)
+  {
+    generate_vertices(i+1, n, z + A.col(i), A, L_v);
+    generate_vertices(i+1, n, z - A.col(i), A, L_v);
+  }
+}
+
 vector<Vector> Parallelepiped::vertices() const
 {
-  assert(A.rows() == 3);
-  vector<Vector> vertices;
-  Vector v1 = z + A.col(0) + A.col(1) + A.col(2);
-  Vector v2 = z + A.col(0) - A.col(1) + A.col(2);
-  Vector v3 = z - A.col(0) - A.col(1) + A.col(2);
-  Vector v4 = z - A.col(0) + A.col(1) + A.col(2);
-  Vector v5 = z - A.col(0) + A.col(1) - A.col(2);
-  Vector v6 = z + A.col(0) + A.col(1) - A.col(2);
-  Vector v7 = z + A.col(0) - A.col(1) - A.col(2);
-  Vector v8 = z - A.col(0) - A.col(1) - A.col(2);
-  vertices.push_back(v1);
-  vertices.push_back(v2);
-  vertices.push_back(v3);
-  vertices.push_back(v4);
-  vertices.push_back(v5);
-  vertices.push_back(v6);
-  vertices.push_back(v7);
-  vertices.push_back(v8);
+  vector<Vector> L_v;
 
-  return vertices;
+  generate_vertices(0, z.size(),z,A,L_v);
+
+  return L_v;
 }
+

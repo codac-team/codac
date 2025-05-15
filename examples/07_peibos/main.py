@@ -21,6 +21,8 @@ if __name__=="__main__":
 
   for par in v_par_2d:
     figure_2d.draw_parallelepiped(par.z,par.A,[Color.green(),Color.green(0.5)])
+    for vertice in par.vertices():
+      figure_2d.draw_point(vertice, [Color.red(), Color.red(0.5)])
 
   # 3D example of the PEIBOS algorithm
 
@@ -58,7 +60,7 @@ if __name__=="__main__":
   figure_2d_nd_zy.set_window_properties([1125,50],[500,500])
   figure_2d_nd_zy.set_axes(axis(2,[-1.2, 1.2]), axis(1,[-1.2, 1.2]))
 
-  v_par_nd = PEIBOS(f_nd,psi0_nd,generators_nd,0.01)
+  v_par_nd = PEIBOS(f_nd,psi0_nd,generators_nd,0.02)
 
   for p in v_par_nd:
     for vertice in p.vertices():
