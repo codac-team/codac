@@ -28,14 +28,14 @@ namespace codac2
 
       template<typename C>
         requires IsCtcBaseOrPtr<C,Y>
-      CtcInverse_(const AnalyticFunction<typename ValueType<Y>::Type>& f, const C& ctc_y, bool with_centered_form = true, bool is_not_in = false)
+      CtcInverse_(const AnalyticFunction<typename ExprType<Y>::Type>& f, const C& ctc_y, bool with_centered_form = true, bool is_not_in = false)
         : _f(f), _ctc_y(ctc_y), _with_centered_form(with_centered_form), _is_not_in(is_not_in)
       {
         assert_release([&]() { return f.output_size() == size_of(ctc_y); }()
           && "CtcInverse_: invalid dimension of image argument ('y' or 'ctc_y')");
       }
 
-      CtcInverse_(const AnalyticFunction<typename ValueType<Y>::Type>& f, const Y& y, bool with_centered_form = true, bool is_not_in = false)
+      CtcInverse_(const AnalyticFunction<typename ExprType<Y>::Type>& f, const Y& y, bool with_centered_form = true, bool is_not_in = false)
         : CtcInverse_(f, CtcWrapper<Y>(y), with_centered_form, is_not_in)
       { }
 
@@ -118,18 +118,18 @@ namespace codac2
           }
           
         // [4/4] Backward evaluation
-        _f.expr()->bwd_eval(v);
+        _f.expr()->bwd_eval(v); // recursive backward from the root to the leaves
         _f.intersect_from_args(v, x...); // updating input values
       }
 
-      const AnalyticFunction<typename ValueType<Y>::Type>& function() const
+      const AnalyticFunction<typename ExprType<Y>::Type>& function() const
       {
         return _f;
       }
 
     protected:
 
-      const AnalyticFunction<typename ValueType<Y>::Type> _f;
+      const AnalyticFunction<typename ExprType<Y>::Type> _f;
       const Collection<CtcBase<Y>> _ctc_y;
       bool _with_centered_form;
       bool _is_not_in = false;
@@ -140,7 +140,7 @@ namespace codac2
   {
     public:
 
-      CtcInverse(const AnalyticFunction<typename ValueType<Y>::Type>& f, const typename Wrapper<Y>::Domain& y, bool with_centered_form = true, bool is_not_in = false)
+      CtcInverse(const AnalyticFunction<typename ExprType<Y>::Type>& f, const typename Wrapper<Y>::Domain& y, bool with_centered_form = true, bool is_not_in = false)
         : Ctc<CtcInverse<Y,X>,X>(f.args()[0]->size() /* f must have only one arg, see following assert */),
           CtcInverse_<Y>(f, y, with_centered_form,is_not_in)
       {
@@ -149,7 +149,7 @@ namespace codac2
 
       template<typename C>
         requires IsCtcBaseOrPtr<C,Y>
-      CtcInverse(const AnalyticFunction<typename ValueType<Y>::Type>& f, const C& ctc_y, bool with_centered_form = true, bool is_not_in = false)
+      CtcInverse(const AnalyticFunction<typename ExprType<Y>::Type>& f, const C& ctc_y, bool with_centered_form = true, bool is_not_in = false)
         : Ctc<CtcInverse<Y,X>,X>(f.args()[0]->size() /* f must have only one arg, see following assert */),
           CtcInverse_<Y>(f, ctc_y, with_centered_form,is_not_in)
       {

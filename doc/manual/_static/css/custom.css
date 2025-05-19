@@ -76,6 +76,16 @@ div[class^="highlight"] {
   color: white;
 }
 
+.bg-noa { /* noa: "not available" */
+  background-color: #DDDDDD;
+  color: gray;
+}
+
+.medskip {
+  color: transparent; /* make the text invisible */
+  user-select: none; /* prevent selection of the text */
+}
+
 td:has(.bg-ok) {
   background-color: #2ecc71;
 }
@@ -86,6 +96,14 @@ td:has(.bg-bok) {
 
 td:has(.bg-nok) {
   background-color: #e55039;
+}
+
+td:has(.bg-noa) { /* noa: "not available" */
+  background-color: #DDDDDD;
+}
+
+td:has(.medskip) {
+  min-width: 120px;
 }
 
 .cpp + .sphinx-tabs::before { /* for examples following a Doxygen block */

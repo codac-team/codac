@@ -4,6 +4,7 @@ Contractors
 .. toctree::
 
   CtcDist <geometric/ctcdist>
+  CtcInverse <analytic/ctcinverse>
 
 ..   What are contractors? <http://codac.io>
 ..   The Ctc class <http://codac.io>

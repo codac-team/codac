@@ -12,6 +12,7 @@
 #include "codac2_Interval.h"
 #include "codac2_AnalyticType.h"
 #include "codac2_AnalyticExprWrapper.h"
+#include "codac2_sqr.h"
 
 namespace codac2
 {
@@ -42,13 +43,20 @@ namespace codac2
   inline ScalarExpr
   pow(const ScalarExpr& x1, const ScalarExpr& x2)
   {
+    auto x2_as_const_value = std::dynamic_pointer_cast<ConstValueExpr<ScalarType>>(x2->copy());
+    if(x2_as_const_value && x2_as_const_value->value() == 2.)
+    {
+      // SqrOp may be better than the generic PowOp with a simple power of 2
+      return { std::make_shared<AnalyticOperationExpr<SqrOp,ScalarType,ScalarType>>(x1) };
+    }
+
     return { std::make_shared<AnalyticOperationExpr<PowOp,ScalarType,ScalarType,ScalarType>>(x1,x2) };
   }
 
   inline ScalarExpr
   operator^(const ScalarExpr& x1, const ScalarExpr& x2)
   {
-    return { std::make_shared<AnalyticOperationExpr<PowOp,ScalarType,ScalarType,ScalarType>>(x1,x2) };
+    return pow(x1,x2);
   }
 
   // Inline functions

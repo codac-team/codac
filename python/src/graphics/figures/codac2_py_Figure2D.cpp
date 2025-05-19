@@ -25,11 +25,25 @@ using namespace pybind11::literals;
 
 void export_Figure2D(py::module& m)
 {
-  py::enum_<GraphicOutput>(m, "GraphicOutput")
-    .value("VIBES", GraphicOutput::VIBES)
-    .value("IPE", GraphicOutput::IPE)
-    .def(py::self | py::self, GRAPHICOUTPUT_OPERATOROR_GRAPHICOUTPUT_GRAPHICOUTPUT)
-  ;
+  if constexpr(FOR_MATLAB)
+  {
+    py::class_<GraphicOutput>(m, "GraphicOutput")
+      .def(py::init<>())
+      .def_static("VIBES", [](){ return GraphicOutput::VIBES; })
+      .def_static("IPE", [](){ return GraphicOutput::IPE; })
+      .def(py::self | py::self, GRAPHICOUTPUT_OPERATOROR_GRAPHICOUTPUT_GRAPHICOUTPUT)
+    ;
+  }
+
+  else
+  {
+    py::enum_<GraphicOutput>(m, "GraphicOutput")
+      .value("VIBES", GraphicOutput::VIBES)
+      .value("IPE", GraphicOutput::IPE)
+      .export_values()
+      .def(py::self | py::self, GRAPHICOUTPUT_OPERATOROR_GRAPHICOUTPUT_GRAPHICOUTPUT)
+    ;
+  }
 
   py::class_<FigureAxis> exported_axis(m, "FigureAxis", FIGURE2D_MAIN);
   exported_axis
@@ -232,6 +246,8 @@ void export_Figure2D(py::module& m)
 
   py::class_<DefaultFigure> exported_default_view(m, "DefaultFigure", DEFAULTFIGURE_MAIN);
   exported_default_view
+
+    .def(py::init<>()) // for using static methods in Matlab
   
     .def_static("selected_fig", &DefaultFigure::selected_fig,
       STATIC_SHARED_PTR_FIGURE2D_DEFAULTFIGURE_SELECTED_FIG)

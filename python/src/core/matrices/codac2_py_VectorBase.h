@@ -41,7 +41,7 @@ void export_VectorBase([[maybe_unused]] py::module& m, py::class_<S>& pyclass)
 
     .def(
         #if FOR_MATLAB
-          "getitem"
+          "__call__"
         #else
           "__getitem__"
         #endif
@@ -55,7 +55,7 @@ void export_VectorBase([[maybe_unused]] py::module& m, py::class_<S>& pyclass)
 
     .def(
         #if FOR_MATLAB
-          "setitem"
+          "__call__"
         #else
           "__setitem__"
         #endif

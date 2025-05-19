@@ -11,7 +11,7 @@
 
 #include "codac2_SampledTraj.h"
 #include "codac2_AnalyticExprWrapper.h"
-#include "codac2_ValueType.h"
+#include "codac2_ExprType.h"
 #include "codac2_Wrapper.h"
 
 namespace codac2
@@ -24,7 +24,7 @@ namespace codac2
       return x1(x2);
     }
 
-    static typename ValueType<T>::Type fwd(const TrajBase<T>& x1, const ScalarType& x2)
+    static typename ExprType<T>::Type fwd(const TrajBase<T>& x1, const ScalarType& x2)
     {
       IntervalMatrix d(x1.size(),x2.da.cols());
 
@@ -46,12 +46,12 @@ namespace codac2
   };
 
   template<typename T>
-  class AnalyticOperationExpr<TrajectoryOp<T>,typename ValueType<T>::Type,ScalarType>
-    : public AnalyticExpr<typename ValueType<T>::Type>, public OperationExprBase<AnalyticExpr<ScalarType>>
+  class AnalyticOperationExpr<TrajectoryOp<T>,typename ExprType<T>::Type,ScalarType>
+    : public AnalyticExpr<typename ExprType<T>::Type>, public OperationExprBase<AnalyticExpr<ScalarType>>
   {
     public:
 
-      using O = typename ValueType<T>::Type;
+      using O = typename ExprType<T>::Type;
 
       AnalyticOperationExpr(const TrajBase<T>& x1, const ScalarExpr& x2)
         : OperationExprBase<AnalyticExpr<ScalarType>>(x2), _x1(x1)
@@ -105,9 +105,9 @@ namespace codac2
   };
   
   template<typename T>
-  AnalyticFunction<typename ValueType<T>::Type> TrajBase<T>::as_function() const
+  AnalyticFunction<typename ExprType<T>::Type> TrajBase<T>::as_function() const
   {
-    using D = typename ValueType<T>::Type;
+    using D = typename ExprType<T>::Type;
 
     ScalarVar t;
     return {{t},

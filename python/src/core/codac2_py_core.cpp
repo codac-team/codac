@@ -11,7 +11,7 @@
 #include <pybind11/pybind11.h>
 #include <codac2_Interval.h>
 #include <codac2_AnalyticFunction.h>
-#include <codac2_ValueType.h>
+#include <codac2_ExprType.h>
 #include <codac2_Row.h>
 #include <codac2_IntervalRow.h>
 #include <codac2_math.h>

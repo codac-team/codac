@@ -511,4 +511,12 @@ TEST_CASE("AnalyticFunction")
     CHECK(Approx(g.eval(EvalMode::CENTERED,a),1e-9) ==
 		IntervalVector({ v3,v4,v4,v3 }));
   }
+
+  // Issue #235
+  {
+    // (Compilation test only)
+    ScalarVar x;
+    AnalyticFunction f1 { {x}, vec(x+x, 1.) };
+    AnalyticFunction f2 { {x}, { x+x, 1. } };
+  }
 }

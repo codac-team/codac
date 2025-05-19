@@ -718,7 +718,7 @@ void export_operators(py::module& m)
       "y"_a, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a)
   ;
 
-  const char* EVAL_VEC_DOC = VECTOREXPR_VEC_CONST_ANALYTICEXPRWRAPPER_X_REF_VARIADIC;
+  const char* EVAL_VEC_DOC = VECTOREXPR_VEC_CONST_X_REF_VARIADIC;
   using S = const ScalarExpr&;
 
   m .def("vec", [](S e1) { return vec(e1); }, EVAL_VEC_DOC, "x1"_a)

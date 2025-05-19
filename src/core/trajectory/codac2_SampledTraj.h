@@ -44,7 +44,7 @@ namespace codac2
       // size is not the std::map<double,T>::size() !
       virtual Index size() const
       {
-        if constexpr(std::is_same_v<typename ValueType<T>::Type,ScalarType>)
+        if constexpr(std::is_same_v<typename ExprType<T>::Type,ScalarType>)
           return 1;
 
         else
@@ -58,7 +58,7 @@ namespace codac2
 
       virtual std::pair<Index,Index> shape() const
       {
-        if constexpr(std::is_same_v<typename ValueType<T>::Type,ScalarType>)
+        if constexpr(std::is_same_v<typename ExprType<T>::Type,ScalarType>)
           return {1,1};
         else
         {

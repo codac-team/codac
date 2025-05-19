@@ -12,7 +12,7 @@
 #include "codac2_Interval.h"
 #include "codac2_Wrapper.h"
 #include "codac2_AnalyticFunction.h"
-#include "codac2_ValueType.h"
+#include "codac2_ExprType.h"
 
 namespace codac2
 {
@@ -38,7 +38,7 @@ namespace codac2
 
       auto nan_value() const
       {
-        if constexpr(std::is_same_v<T,double> || std::is_same_v<typename ValueType<T>::Type,ScalarType>)
+        if constexpr(std::is_same_v<T,double> || std::is_same_v<typename ExprType<T>::Type,ScalarType>)
           return std::numeric_limits<double>::quiet_NaN();
 
         else
@@ -96,6 +96,6 @@ namespace codac2
       }
 
       // Implementation in codac2_Trajectory_operator.h
-      AnalyticFunction<typename ValueType<T>::Type> as_function() const;
+      AnalyticFunction<typename ExprType<T>::Type> as_function() const;
   };
 }

@@ -28,7 +28,7 @@ void export_CtcInverse(py::module& m, const std::string& export_name, py::class_
   exported
     .def(py::init<const AnalyticFunction<T>&, const D&, bool>(),
       "f"_a, "y"_a, "with_centered_form"_a = true,
-      CTCINVERSE_YX_CTCINVERSE_CONST_ANALYTICFUNCTION_TYPENAME_VALUETYPE_Y_TYPE_REF_CONST_TYPENAME_WRAPPER_Y_DOMAIN_REF_BOOL_BOOL);
+      CTCINVERSE_YX_CTCINVERSE_CONST_ANALYTICFUNCTION_TYPENAME_EXPRTYPE_Y_TYPE_REF_CONST_TYPENAME_WRAPPER_Y_DOMAIN_REF_BOOL_BOOL);
 
   if constexpr(std::is_same_v<T,VectorType>) // contractors only associated with interval vectors
   {
@@ -41,7 +41,7 @@ void export_CtcInverse(py::module& m, const std::string& export_name, py::class_
             c.copy(), with_centered_form);
         }
       ),
-      CTCINVERSE_YX_CTCINVERSE_CONST_ANALYTICFUNCTION_TYPENAME_VALUETYPE_Y_TYPE_REF_CONST_C_REF_BOOL_BOOL,
+      CTCINVERSE_YX_CTCINVERSE_CONST_ANALYTICFUNCTION_TYPENAME_EXPRTYPE_Y_TYPE_REF_CONST_C_REF_BOOL_BOOL,
       "f"_a, "c"_a, "with_centered_form"_a = true);
   }
 
@@ -51,7 +51,7 @@ void export_CtcInverse(py::module& m, const std::string& export_name, py::class_
       VOID_CTCINVERSE__Y_CONTRACT_X_REF_VARIADIC_CONST))
 
     .def("function", &CtcInverse<D>::function,
-      CONST_ANALYTICFUNCTION_TYPENAME_VALUETYPE_Y_TYPE_REF_CTCINVERSE__Y_FUNCTION_CONST)
+      CONST_ANALYTICFUNCTION_TYPENAME_EXPRTYPE_Y_TYPE_REF_CTCINVERSE__Y_FUNCTION_CONST)
     
   ;
 }

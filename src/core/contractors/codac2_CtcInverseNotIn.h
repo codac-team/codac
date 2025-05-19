@@ -20,7 +20,7 @@ namespace codac2
   {
     public:
 
-      CtcInverseNotIn(const AnalyticFunction<typename ValueType<Y>::Type>& f, const Y& y, bool with_centered_form = true)
+      CtcInverseNotIn(const AnalyticFunction<typename ExprType<Y>::Type>& f, const Y& y, bool with_centered_form = true)
         : CtcUnion<X>(f.args()[0]->size() /* f must have only one arg, see following assert */)
       {
         assert_release(f.args().size() == 1 && "f must have only one arg");
@@ -45,7 +45,7 @@ namespace codac2
 
       template<typename C>
         requires IsCtcBaseOrPtr<C,Y>
-      CtcInverseNotIn(const AnalyticFunction<typename ValueType<Y>::Type>& f, const C& ctc_compl, bool with_centered_form = true)
+      CtcInverseNotIn(const AnalyticFunction<typename ExprType<Y>::Type>& f, const C& ctc_compl, bool with_centered_form = true)
         : CtcUnion<X>(f.args()[0]->size() /* f must have only one arg, see following assert */)
       {
         assert_release(f.args().size() == 1 && "f must have only one arg");

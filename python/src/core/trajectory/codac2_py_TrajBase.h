@@ -89,7 +89,7 @@ void export_TrajBase(py::class_<S>& pyclass)
         {
           return x.as_function();
         },
-      ANALYTICFUNCTION_TYPENAME_VALUETYPE_T_TYPE_TRAJBASE_T_AS_FUNCTION_CONST)
+      ANALYTICFUNCTION_TYPENAME_EXPRTYPE_T_TYPE_TRAJBASE_T_AS_FUNCTION_CONST)
 
   ;
 }
