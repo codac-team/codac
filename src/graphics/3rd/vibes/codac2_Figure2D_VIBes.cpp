@@ -23,7 +23,7 @@ Figure2D_VIBes::Figure2D_VIBes(const Figure2D& fig)
   Figure2D_VIBes::_has_been_initialized ++;
 
   vibes::newFigure(fig.name());
-  vibes::newGroup("alpha","");
+  vibes::newGroup("alpha",vibesParams("figure", _fig.name()));
 }
 
 Figure2D_VIBes::~Figure2D_VIBes()
@@ -62,7 +62,7 @@ void Figure2D_VIBes::draw_point(const Vector& c, const StyleProperties& s)
 
   if (std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end())
     {
-      vibes::newGroup(s.layer,"");
+      vibes::newGroup(s.layer,vibesParams("figure", _fig.name()));
       _layers.push_back(s.layer);
     }
 
@@ -78,7 +78,7 @@ void Figure2D_VIBes::draw_box(const IntervalVector& x, const StyleProperties& s)
 
   if (std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end())
     {
-      vibes::newGroup(s.layer,"");
+      vibes::newGroup(s.layer,vibesParams("figure", _fig.name()));
       _layers.push_back(s.layer);
     }
 
@@ -95,7 +95,7 @@ void Figure2D_VIBes::draw_circle(const Vector& c, double r, const StylePropertie
 
   if (std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end())
     {
-      vibes::newGroup(s.layer,"");
+      vibes::newGroup(s.layer,vibesParams("figure", _fig.name()));
       _layers.push_back(s.layer);
     }
 
@@ -112,7 +112,7 @@ void Figure2D_VIBes::draw_ring(const Vector& c, const Interval& r, const StylePr
 
   if (std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end())
     {
-      vibes::newGroup(s.layer,"");
+      vibes::newGroup(s.layer,vibesParams("figure", _fig.name()));
       _layers.push_back(s.layer);
     }
 
@@ -129,7 +129,7 @@ void Figure2D_VIBes::draw_polyline(const std::vector<Vector>& x, float tip_lengt
 
   if (std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end())
     {
-      vibes::newGroup(s.layer,"");
+      vibes::newGroup(s.layer,vibesParams("figure", _fig.name()));
       _layers.push_back(s.layer);
     }
 
@@ -155,7 +155,7 @@ void Figure2D_VIBes::draw_polygon(const std::vector<Vector>& x, const StylePrope
 
   if (std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end())
     {
-      vibes::newGroup(s.layer,"");
+      vibes::newGroup(s.layer,vibesParams("figure", _fig.name()));
       _layers.push_back(s.layer);
     }
 
@@ -179,7 +179,7 @@ void Figure2D_VIBes::draw_pie(const Vector& c, const Interval& r, const Interval
 
   if (std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end())
     {
-      vibes::newGroup(s.layer,"");
+      vibes::newGroup(s.layer,vibesParams("figure", _fig.name()));
       _layers.push_back(s.layer);
     }
 
@@ -197,7 +197,7 @@ void Figure2D_VIBes::draw_ellipse(const Vector& c, const Vector& ab, double thet
 
   if (std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end())
     {
-      vibes::newGroup(s.layer,"");
+      vibes::newGroup(s.layer,vibesParams("figure", _fig.name()));
       _layers.push_back(s.layer);
     }
 
@@ -214,7 +214,7 @@ void Figure2D_VIBes::draw_tank(const Vector& x, float size, const StylePropertie
 
   if (std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end())
     {
-      vibes::newGroup(s.layer,"");
+      vibes::newGroup(s.layer,vibesParams("figure", _fig.name()));
       _layers.push_back(s.layer);
     }
 
@@ -231,7 +231,7 @@ void Figure2D_VIBes::draw_AUV(const Vector& x, float size, const StyleProperties
 
   if (std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end())
     {
-      vibes::newGroup(s.layer,"");
+      vibes::newGroup(s.layer,vibesParams("figure", _fig.name()));
       _layers.push_back(s.layer);
     }
 
@@ -248,7 +248,7 @@ void Figure2D_VIBes::draw_motor_boat(const Vector& x, float size, const StylePro
 
   if (std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end())
     {
-      vibes::newGroup(s.layer,"");
+      vibes::newGroup(s.layer,vibesParams("figure", _fig.name()));
       _layers.push_back(s.layer);
     }
 

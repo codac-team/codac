@@ -8,7 +8,7 @@
  */
 
 #include "codac2_Parallelepiped.h"
-
+#include <iostream>
 using namespace std;
 using namespace codac2;
 
@@ -23,7 +23,6 @@ void generate_vertices(int i, int n, const Vector& z, const Matrix& A, vector<Ve
   if (i == n)
   {
     L_v.push_back(z);
-    L_v.push_back(z);
   }
   else if (i<n)
   {
@@ -35,7 +34,6 @@ void generate_vertices(int i, int n, const Vector& z, const Matrix& A, vector<Ve
 vector<Vector> Parallelepiped::vertices() const
 {
   vector<Vector> L_v;
-
   generate_vertices(0, z.size(),z,A,L_v);
 
   return L_v;
