@@ -19,18 +19,25 @@ class TestCtcDistManual(unittest.TestCase):
     # [ctcdist-1-beg]
     x = IntervalVector([[2,5],[2,6],[0,0],[0,0],[1,3]])
     c = CtcDist()
-    c.contract(x)
+    x = c.contract(x)
     # x = [ [2, 2.23607] ; [2, 2.23607] ; <0, 0> ; <0, 0> ; [2.82842, 3] ]
     # [ctcdist-1-end]
+
+    test.assertTrue(Approx(x,1e-5) == IntervalVector([[2,2.23607],[2,2.23607],[0],[0],[2.82842,3]]))
 
 
     # [ctcdist-2-beg]
     a1,a2,b1,b2,d = Interval(2,5),Interval(2,6),Interval(0),Interval(0),Interval(1,3)
     c = CtcDist()
-    c.contract(a1,a2,b1,b2,d)
+    a1,a2,b1,b2,d = c.contract(a1,a2,b1,b2,d)
     # a1 = [2, 2.23607] ; a2 = [2, 2.23607] ; b1 = <0, 0> ; b2 = <0, 0> ; d = [2.82842, 3]
     # [ctcdist-2-end]
 
+    test.assertTrue(Approx(a1,1e-5) == Interval([2,2.23607]))
+    test.assertTrue(Approx(a2,1e-5) == Interval([2,2.23607]))
+    test.assertTrue(Approx(b1,1e-5) == Interval([0]))
+    test.assertTrue(Approx(b2,1e-5) == Interval([0]))
+    test.assertTrue(Approx(d,1e-5) == Interval([2.82842,3]))
 
     # [ctcdist-3-beg]
     b1, b2 = Vector([1,2]), Vector([3.6,2.4])

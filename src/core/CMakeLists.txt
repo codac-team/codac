@@ -113,6 +113,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_cross_prod.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_det.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_exp.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_extend.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_flatten.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_floor.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_log.h

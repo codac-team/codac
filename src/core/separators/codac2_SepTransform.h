@@ -37,7 +37,7 @@ namespace codac2
     protected:
 
       const Collection<SepBase> _sep;
-      const CtcInverse<IntervalVector> _ctc_inv;
+      const CtcInverse<IntervalVector,IntervalVector> _ctc_inv;
       const AnalyticFunction<VectorType> _f, _f_inv;
   };
 }

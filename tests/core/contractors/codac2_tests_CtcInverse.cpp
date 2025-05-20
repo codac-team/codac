@@ -25,7 +25,7 @@ TEST_CASE("CtcInverse")
   {
     ScalarVar x,y;
     AnalyticFunction f { {x,y}, x-y };
-    CtcInverse_<Interval> c(f, Interval(0.));
+    CtcInverse<Interval,Interval,Interval> c(f, Interval(0.));
     CHECK(c.function().input_size() == 2);
 
     Interval a,b;

@@ -57,9 +57,12 @@ namespace codac2
 
   inline ScalarType ChiOp::fwd_natural(const ScalarType& x1, const ScalarType& x2, const ScalarType& x3)
   {
+    
     return {
       fwd(x1.a,x2.a,x3.a),
-      x1.def_domain && x2.def_domain && x3.def_domain
+      x1.def_domain && 
+	(x1.a.lb()>0.0 ? x2.def_domain : true)
+     && (x1.a.ub()<=0.0 ? x3.def_domain : true)
     };
   }
 
@@ -68,8 +71,11 @@ namespace codac2
     return {
       fwd(x1.m,x2.m,x3.m),
       fwd(x1.a,x2.a,x3.a),
-      IntervalMatrix(0,0), // not supported yet for auto diff
-      x1.def_domain && x2.def_domain && x3.def_domain
+      (x1.a.lb()>0 ? x3.da : (x1.a.ub()<=0 ? x2.da :
+              (x2.da | x3.da))), // not differentiable if lb <= 0 < ub
+      x1.def_domain && 
+	(x1.a.lb()>0.0 ? x2.def_domain : true)
+     && (x1.a.ub()<=0.0 ? x3.def_domain : true)
     };
   }
 

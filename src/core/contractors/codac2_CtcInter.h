@@ -16,35 +16,36 @@
 
 namespace codac2
 {
-  template<typename X=IntervalVector>
-  class CtcInter : public Ctc<CtcInter<X>,X>
+  template<typename... X>
+  class CtcInter : public Ctc<CtcInter<X...>,X...>
   {
     public:
 
       explicit CtcInter(Index n)
-        : Ctc<CtcInter<X>,X>(n)
+        : Ctc<CtcInter<X...>,X...>(n)
       {
-        if constexpr(std::is_same_v<X,Interval>)
+        if constexpr(std::is_same_v<X...,Interval>)
         {
           assert(n == 1);
         }
       }
 
       template<typename C>
-        requires (IsCtcBaseOrPtr<C,X> && !std::is_same_v<CtcInter<X>,C>)
+        requires (IsCtcBaseOrPtr<C,X...> && !std::is_same_v<CtcInter<X...>,C>)
       CtcInter(const C& c)
-        : Ctc<CtcInter<X>,X>(size_of(c)), _ctcs(c)
+        : Ctc<CtcInter<X...>,X...>(size_of(c)), _ctcs(c)
       { }
 
       template<typename... C>
-        requires (IsCtcBaseOrPtr<C,X> && ...)
+        requires (IsCtcBaseOrPtr<C,X...> && ...)
       CtcInter(const C&... c)
-        : Ctc<CtcInter<X>,X>(size_first_item(c...)), _ctcs(c...)
+        : Ctc<CtcInter<X...>,X...>(size_first_item(c...)), _ctcs(c...)
       {
         assert_release(all_same_size(c...));
       }
 
-      void contract(X& x) const
+      template<typename X_> // single type
+      void contract_impl(X_& x) const
       {
         for(const auto& ci : _ctcs)
         {
@@ -54,16 +55,22 @@ namespace codac2
         }
       }
 
+      void contract(X&... x) const
+      {
+        // contract_impl(..) method for multiple types is not yet implemented
+        contract_impl(x...);
+      }
+
       template<typename C>
-        requires std::is_base_of_v<CtcBase<X>,C>
-      CtcInter<X>& operator&=(const C& c)
+        requires std::is_base_of_v<CtcBase<X...>,C>
+      CtcInter<X...>& operator&=(const C& c)
       {
         assert_release(c.size() == this->size());
         _ctcs.push_object_back(c);
         return *this;
       }
 
-      CtcInter<X>& operator&=(const std::shared_ptr<CtcBase<X>>& c)
+      CtcInter<X...>& operator&=(const std::shared_ptr<CtcBase<X...>>& c)
       {
         assert_release(c->size() == this->size());
         _ctcs.push_back(c);
@@ -72,16 +79,25 @@ namespace codac2
 
     protected:
 
-      Collection<CtcBase<X>> _ctcs;
+      Collection<CtcBase<X...>> _ctcs;
+  };
+
+  template <>
+  class CtcInter<> : public CtcInter<IntervalVector>
+  { };
+
+  template<typename Tuple>
+  struct CtcInterType;
+
+  template<typename... T>
+  struct CtcInterType<std::tuple<T...>> {
+    using Ctc = CtcInter<T...>;
   };
 
   template<typename C1, typename C2>
-    requires (std::is_same_v<typename C1::ContractedType,typename C2::ContractedType>
-      && std::is_base_of_v<CtcBase<typename C1::ContractedType>,C1>
-      && std::is_base_of_v<CtcBase<typename C1::ContractedType>,C2>)
-  inline CtcInter<typename C1::ContractedType> operator&(const C1& c1, const C2& c2)
+  typename CtcInterType<typename C1::ContractedTypes>::Ctc operator&(const C1& c1, const C2& c2)
   {
-    return CtcInter<typename C1::ContractedType>(c1,c2);
+    return { c1, c2 };
   }
 
   template<typename C2>

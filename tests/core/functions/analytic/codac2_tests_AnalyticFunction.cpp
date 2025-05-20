@@ -512,6 +512,15 @@ TEST_CASE("AnalyticFunction")
 		IntervalVector({ v3,v4,v4,v3 }));
   }
 
+  {
+    ScalarVar x;
+    AnalyticFunction f({x}, extend(x*(1-sqrt(x)),x));
+    CHECK(f.eval(Interval(1.0,4.0)) == Interval(-4.0,0.0));
+    CHECK(f.eval(Interval(-4.0,-1.0)) == Interval(-4.0,-1.0));
+    CHECK(f.eval(Interval(0.0,4.0)) == Interval(-4.0,4.0));
+    CHECK(f.eval(Interval(0.0)) == Interval(0.0));
+  }
+
   // Issue #235
   {
     // (Compilation test only)

@@ -48,13 +48,13 @@ void export_CtcInter(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInte
       "c1"_a, "c2"_a)
 
     .def(CONTRACT_BOX_METHOD(CtcInter<IntervalVector>,
-      VOID_CTCINTER_X_CONTRACT_X_REF_CONST))
+      VOID_CTCINTER_X_CONTRACT_IMPL_X__REF_CONST))
 
     .def("__iand__", [](CtcInter<IntervalVector>& c1, const CtcBase<IntervalVector>& c2)
         {
           c1 &= std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c2.copy());
           return c1;
         },
-      CTCINTER_X_REF_CTCINTER_X_OPERATORANDEQ_CONST_C_REF)
+      CTCINTER_X_VARIADIC_REF_CTCINTER_X_OPERATORANDEQ_CONST_SHARED_PTR_CTCBASE_X_VARIADIC_REF)
   ;
 }

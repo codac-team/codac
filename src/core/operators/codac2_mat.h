@@ -96,7 +96,6 @@ namespace codac2
       requires (std::is_base_of_v<IntervalVector,X> && ...)
     static inline void bwd(const IntervalMatrix& y, X&... x)
     {
-      throw std::runtime_error("MatrixOp not fully implemented yet");
       Index i = 0;
       ((x &= y.col(i++)), ...);
     }

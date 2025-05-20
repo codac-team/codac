@@ -21,42 +21,35 @@ namespace codac2
 {
   class CtcNot;
   
-  template<typename Y>
-  class CtcInverse_// : virtual public Ctc
+  template<typename Y, typename... X>
+    requires (sizeof...(X) > 0)
+  class CtcInverse : public Ctc<CtcInverse<Y,X...>,X...>
   {
     public:
 
       template<typename C>
         requires IsCtcBaseOrPtr<C,Y>
-      CtcInverse_(const AnalyticFunction<typename ExprType<Y>::Type>& f, const C& ctc_y, bool with_centered_form = true, bool is_not_in = false)
-        : _f(f), _ctc_y(ctc_y), _with_centered_form(with_centered_form), _is_not_in(is_not_in)
+      CtcInverse(const AnalyticFunction<typename ExprType<Y>::Type>& f, const C& ctc_y, bool with_centered_form = true, bool is_not_in = false)
+        : Ctc<CtcInverse<Y,X...>,X...>(f.args()[0]->size()), _f(f), _ctc_y(ctc_y), _with_centered_form(with_centered_form), _is_not_in(is_not_in)
       {
         assert_release([&]() { return f.output_size() == size_of(ctc_y); }()
-          && "CtcInverse_: invalid dimension of image argument ('y' or 'ctc_y')");
+          && "CtcInverse: invalid dimension of image argument ('y' or 'ctc_y')");
       }
 
-      CtcInverse_(const AnalyticFunction<typename ExprType<Y>::Type>& f, const Y& y, bool with_centered_form = true, bool is_not_in = false)
-        : CtcInverse_(f, CtcWrapper<Y>(y), with_centered_form, is_not_in)
+      CtcInverse(const AnalyticFunction<typename ExprType<Y>::Type>& f, const Y& y, bool with_centered_form = true, bool is_not_in = false)
+        : CtcInverse(f, CtcWrapper<Y>(y), with_centered_form, is_not_in)
       { }
 
-      //std::shared_ptr<CtcBase<X>> copy() const
-      //{
-      //  return std::make_shared<CtcInverse_<Y>>(*this);
-      //}
-
-      template<typename... X>
       void contract(X&... x) const
       {
         return contract_(*_ctc_y.front(), x...);
       }
 
-      template<typename... X>
       void contract_(const Y& y, X&... x) const
       {
         return contract_(CtcWrapper<Y>(y), x...);
       }
 
-      template<typename... X>
       void contract_(const CtcBase<Y>& ctc_y, X&... x) const
       {
         ValuesMap v;
@@ -100,7 +93,7 @@ namespace codac2
 
               if constexpr(std::is_same_v<Y,IntervalMatrix>)
               {
-                std::cout << "CtcInverse_: matrices expressions not (yet) supported with centered form" << std::endl;
+                std::cout << "CtcInverse: matrices expressions not (yet) supported with centered form" << std::endl;
               }
 
               else
@@ -134,33 +127,7 @@ namespace codac2
       bool _with_centered_form;
       bool _is_not_in = false;
   };
-
-  template<typename Y,typename X=IntervalVector>
-  class CtcInverse : public Ctc<CtcInverse<Y,X>,X>, public CtcInverse_<Y>
-  {
-    public:
-
-      CtcInverse(const AnalyticFunction<typename ExprType<Y>::Type>& f, const typename Wrapper<Y>::Domain& y, bool with_centered_form = true, bool is_not_in = false)
-        : Ctc<CtcInverse<Y,X>,X>(f.args()[0]->size() /* f must have only one arg, see following assert */),
-          CtcInverse_<Y>(f, y, with_centered_form,is_not_in)
-      {
-        assert_release(f.args().size() == 1 && "f must have only one arg");
-      }
-
-      template<typename C>
-        requires IsCtcBaseOrPtr<C,Y>
-      CtcInverse(const AnalyticFunction<typename ExprType<Y>::Type>& f, const C& ctc_y, bool with_centered_form = true, bool is_not_in = false)
-        : Ctc<CtcInverse<Y,X>,X>(f.args()[0]->size() /* f must have only one arg, see following assert */),
-          CtcInverse_<Y>(f, ctc_y, with_centered_form,is_not_in)
-      {
-        assert_release(f.args().size() == 1 && "f must have only one arg");
-      }
-
-      void contract(X& x) const
-      {
-        CtcInverse_<Y>::contract(x);
-      }
-  };
+  
 
   // Template deduction guides
 

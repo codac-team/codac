@@ -191,10 +191,29 @@ namespace codac2
         return os;
       }
 
-    protected:
+      // not working with Clang: template<typename Y, typename... X>
+      // not working with Clang:   requires (sizeof...(X) > 0)
+      // not working with Clang: friend class CtcInverse;
 
-      template<typename Y>
-      friend class CtcInverse_;
+      // So, the following methods are temporarily public
+
+      // protected:
+
+      template<typename... Args>
+      void fill_from_args(ValuesMap& v, const Args&... x) const
+      {
+        Index i = 0;
+        (add_value_to_arg_map(v, x, i++), ...);
+      }
+
+      template<typename... Args>
+      void intersect_from_args(const ValuesMap& v, Args&... x) const
+      {
+        Index i = 0;
+        (intersect_value_from_arg_map(v, x, i++), ...);
+      }
+
+    protected:
 
       template<typename D>
       void add_value_to_arg_map(ValuesMap& v, const D& x, Index i) const
@@ -217,25 +236,11 @@ namespace codac2
           std::make_shared<D_TYPE>(typename D_TYPE::Domain(x).mid(), x, d, true);
       }
 
-      template<typename... Args>
-      void fill_from_args(ValuesMap& v, const Args&... x) const
-      {
-        Index i = 0;
-        (add_value_to_arg_map(v, x, i++), ...);
-      }
-
       template<typename D>
       void intersect_value_from_arg_map(const ValuesMap& v, D& x, Index i) const
       {
         assert(v.find(this->args()[i]->unique_id()) != v.end() && "argument cannot be found");
         x &= std::dynamic_pointer_cast<typename ExprType<D>::Type>(v.at(this->args()[i]->unique_id()))->a;
-      }
-
-      template<typename... Args>
-      void intersect_from_args(const ValuesMap& v, Args&... x) const
-      {
-        Index i = 0;
-        (intersect_value_from_arg_map(v, x, i++), ...);
       }
 
       template<bool NATURAL_EVAL,typename... Args>
