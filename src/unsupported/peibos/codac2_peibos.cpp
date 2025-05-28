@@ -15,14 +15,14 @@ using namespace codac2;
 namespace codac2
 {
 
-  bool contains (const vector<OctaSym>& symmetries, const OctaSym& symmetry, const AnalyticFunction<VectorType>& psi_0)
+  bool contains (const vector<OctaSym>& existing_symmetries, const OctaSym& symmetry_to_test, const AnalyticFunction<VectorType>& psi_0)
   {
     IntervalVector test_box =  Interval(-1.,1.)*IntervalVector::Ones(psi_0.input_size());
     IntervalVector psi_0_x = psi_0.eval(EvalMode::NATURAL,test_box);
     
-    for (OctaSym s : symmetries)
+    for (const OctaSym& s : existing_symmetries)
     {
-      if ((s(psi_0_x)) == (symmetry(psi_0_x)))
+      if ((s(psi_0_x)) == (symmetry_to_test(psi_0_x)))
       {
         return true;
       }
@@ -37,14 +37,14 @@ namespace codac2
     // Add the generators
     for (int i = 0; i < ((int) generators.size()); i++)
     {
-      OctaSym symmetry = OctaSym(generators[i]);
+      const OctaSym& symmetry = OctaSym(generators[i]);
       symmetries.push_back(symmetry);
     }
 
     // Add the inverses
     for (int i = 0; i < ((int) generators.size()); i++)
     {
-      OctaSym symmetry = OctaSym(generators[i]);
+      const OctaSym& symmetry = OctaSym(generators[i]);
       if (!contains(symmetries, symmetry.invert(), psi_0))
         symmetries.push_back(symmetry.invert());
     }
@@ -52,7 +52,7 @@ namespace codac2
     // Add the squares
     for (auto i = 0; i < ((int) generators.size()); i++)
     {
-      OctaSym symmetry = OctaSym(generators[i]);
+      const OctaSym& symmetry = OctaSym(generators[i]);
       if (!contains(symmetries, symmetry*symmetry, psi_0))
         symmetries.push_back(symmetry*symmetry);
     }
@@ -64,8 +64,8 @@ namespace codac2
       {
         if (i != j)
         {
-          OctaSym symmetry1 = OctaSym(generators[i]);
-          OctaSym symmetry2 = OctaSym(generators[j]);
+          const OctaSym& symmetry1 = OctaSym(generators[i]);
+          const OctaSym& symmetry2 = OctaSym(generators[j]);
           if (!contains(symmetries, symmetry1*symmetry2, psi_0))
             symmetries.push_back(symmetry1*symmetry2);
         }
@@ -77,8 +77,8 @@ namespace codac2
     {
       for (int j = 0; j < (int) generators.size(); j++)
       {
-        OctaSym symmetry1 = OctaSym(generators[i]);
-        OctaSym symmetry2 = OctaSym(generators[j]);
+        const OctaSym& symmetry1 = OctaSym(generators[i]);
+        const OctaSym& symmetry2 = OctaSym(generators[j]);
         if (!contains(symmetries, symmetry1*symmetry1*symmetry2, psi_0))
           symmetries.push_back(symmetry1*symmetry2);
       }
@@ -91,13 +91,13 @@ namespace codac2
   {
     auto xc = X.mid();
 
-    IntervalVector dX=X-xc;
-    IntervalMatrix JJg_punc=JJf_point*IntervalMatrix(symmetry.permutation_matrix())*psi_0.diff(xc);
+    auto dX=X-xc;
+    IntervalMatrix JJg_punc=JJf_point*(symmetry.permutation_matrix().template cast<Interval>())*psi_0.diff(xc);
 
-    IntervalMatrix JJg=JJf*IntervalMatrix(symmetry.permutation_matrix())*psi_0.diff(X);
+    IntervalMatrix JJg=JJf*(symmetry.permutation_matrix().template cast<Interval>())*psi_0.diff(X);
 
-    IntervalVector E = (JJg - JJg_punc)*dX;
-    Interval N = sqr(E[0]) + sqr(E[1]);
+    auto E = (JJg - JJg_punc)*dX;
+    auto N = sqr(E[0]) + sqr(E[1]);
 
     return std::sqrt(N.ub());
   }
@@ -121,8 +121,8 @@ namespace codac2
   Matrix inflate_flat_parallelepiped(const Matrix& Jz, double epsilon, double rho)
   {
 
-    int m = Jz.cols();
-    int n = Jz.rows();
+    Index m = Jz.cols();
+    Index n = Jz.rows();
 
     Matrix A (n, m);
     
@@ -152,11 +152,11 @@ namespace codac2
     // Maximum error computation
     double rho = error( JJf, JJf_point, psi_0, symmetry, X);
 
-    IntervalMatrix Jz = (JJf_point * IntervalMatrix(symmetry.permutation_matrix()) * psi_0.diff(X.mid())).mid();
+    auto Jz = (JJf_point * (symmetry.permutation_matrix().template cast<Interval>()) * psi_0.diff(X.mid())).mid();
 
     // Inflation of the parallelepiped
 
-    Matrix A = inflate_flat_parallelepiped(Jz.mid(), true_eps, rho);
+    auto A = inflate_flat_parallelepiped(Jz, true_eps, rho);
 
     return Parallelepiped(z, A);
   }
@@ -168,13 +168,13 @@ namespace codac2
 
   vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset)
   {
-    int m = psi_0.input_size();
-    int n = psi_0.output_size();
+    Index m = psi_0.input_size();
+    Index n = psi_0.output_size();
 
-    assert (f.input_size() == n);
-    assert (offset.size() == n);
-    assert (m < n);
-    assert (generators.size() > 0 && (int) generators[0].size() == n);
+    assert_release (f.input_size() == n && "output size of psi_0 must match input size of f");
+    assert_release (offset.size() == n && "offset size must match output size of psi_0");
+    assert_release (m < n);
+    assert_release (generators.size() > 0 && (int) generators[0].size() == n && "no generator given or wrong dimension of generator (must match output size of psi_0)");
 
     clock_t t_start = clock();
 
@@ -192,17 +192,17 @@ namespace codac2
 
         IntervalVector Y = symmetry(psi_0.eval(X)) + offset;
 
-        IntervalMatrix JJf=f.diff(Y);
+        auto JJf=f.diff(Y);
 
         auto xc = X.mid();
         auto yc = (symmetry(psi_0.eval(xc)) + offset).mid();
 
-        IntervalMatrix JJf_point=f.diff(yc).mid();
+        auto JJf_point=f.diff(yc).mid();
 
         // Center of the parallelepiped
-        Vector z = f.eval(yc).mid();
+        auto z = f.eval(yc).mid();
 
-        Parallelepiped p = parallelepiped_inclusion(z, JJf, JJf_point, psi_0, symmetry, X, true_eps);
+        auto p = parallelepiped_inclusion(z, JJf, JJf_point, psi_0, symmetry, X, true_eps);
         
         output.push_back(p);
 

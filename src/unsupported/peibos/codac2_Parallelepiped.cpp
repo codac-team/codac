@@ -15,7 +15,7 @@ using namespace codac2;
 Parallelepiped::Parallelepiped(const Vector& z_, const Matrix& A_)
   : z(z_), A(A_)
 {
-  assert(z.size() == A.rows());
+  assert_release(z.size() == A.rows());
 }
 
 void generate_vertices(int i, int n, const Vector& z, const Matrix& A, vector<Vector>& L_v)

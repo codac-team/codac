@@ -52,9 +52,8 @@ namespace codac2
     vector<IntervalVector> boxes;
     double true_eps = split(Interval(-1.,1.)*IntervalVector::Ones(m), epsilon, boxes);
     
-    for (int i = 0; i < ((int) symmetries.size()); i++)
+    for (const auto& symmetry : symmetries)
     {
-      OctaSym symmetry = symmetries[i];
       for (const auto& X : boxes)
       {
 
@@ -68,11 +67,11 @@ namespace codac2
         capd::C1Rect2Set s(c);
         timeMap(finalTime, s, solution);
         capd::IVector result = timeMap(finalTime, s, monodromyMatrix);
-        IntervalMatrix JJf=to_codac(monodromyMatrix);
+        auto JJf=to_codac(monodromyMatrix);
 
         // To get the flow function and its Jacobian (monodromy matrix) for x_hat
         auto xc = X.mid();
-        Vector yc = (symmetry(psi_0.eval(xc)) + offset).mid();
+        auto yc = (symmetry(psi_0.eval(xc)) + offset).mid();
 
         capd::IMatrix monodromyMatrix_punc(n,n);
         capd::ITimeMap::SolutionCurve solution_punct(initialTime);
@@ -81,12 +80,12 @@ namespace codac2
         capd::C1Rect2Set s_punct(c_punct);
         timeMap_punc(finalTime, s_punct, solution_punct);      
         capd::IVector result_punct = timeMap_punc(finalTime, s_punct, monodromyMatrix_punc);
-        IntervalMatrix JJf_point=to_codac(monodromyMatrix_punc);
+        auto JJf_point=to_codac(monodromyMatrix_punc);
 
         // Center of the parallelepiped
         Vector z = Vector(to_codac(result).mid());
         
-        Parallelepiped p = parallelepiped_inclusion(z, JJf, JJf_point, psi_0, symmetry, X, true_eps);
+        auto p = parallelepiped_inclusion(z, JJf, JJf_point, psi_0, symmetry, X, true_eps);
 
         output.push_back(p);
 

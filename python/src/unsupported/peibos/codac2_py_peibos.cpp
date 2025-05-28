@@ -26,7 +26,7 @@ using namespace pybind11::literals;
 void export_peibos(py::module& m)
 {
   m.def("PEIBOS", 
-    [](const py::object& f, const py::object& psi_0, vector<vector<int>> generators, double epsilon)
+    [](const py::object& f, const py::object& psi_0, const vector<vector<int>>& generators, double epsilon)
     {
       return PEIBOS(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon);
     },
@@ -34,7 +34,7 @@ void export_peibos(py::module& m)
     "f"_a, "psi_0"_a, "generators"_a, "epsilon"_a);
 
   m.def("PEIBOS", 
-    [](const py::object& f, const py::object& psi_0, vector<vector<int>> generators, double epsilon, Vector offset)
+    [](const py::object& f, const py::object& psi_0, const vector<vector<int>>& generators, double epsilon, Vector offset)
     {
       return PEIBOS(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, offset);
     },

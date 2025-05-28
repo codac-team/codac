@@ -1,6 +1,3 @@
-// Example from the publication:
-// https://www.ensta-bretagne.fr/jaulin/paper_centeredActa.pdf
-
 #include <codac>
 #include <codac-unsupported.h>
 
@@ -24,7 +21,7 @@ int main()
 
   Figure2D figure_2d ("Henon Map", GraphicOutput::VIBES);
   figure_2d.set_window_properties({25,50},{500,500});
-  figure_2d.set_axes(axis(0,{-1.4,2.2}), axis(1,{-0.4,0.3}));
+  figure_2d.set_axes({0,{-1.4,2.2}}, {1,{-0.4,0.3}});
 
   for (const auto& p : v_par_2d)
   {

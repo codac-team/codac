@@ -1,6 +1,3 @@
-// Example from the publication:
-// https://www.ensta-bretagne.fr/jaulin/paper_centeredActa.pdf
-
 #include <codac>
 #include <codac-unsupported.h>
 
