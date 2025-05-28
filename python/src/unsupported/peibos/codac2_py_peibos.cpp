@@ -26,18 +26,18 @@ using namespace pybind11::literals;
 void export_peibos(py::module& m)
 {
   m.def("PEIBOS", 
-    [](const py::object& f, const py::object& psi_0, const vector<vector<int>>& generators, double epsilon)
+    [](const py::object& f, const py::object& psi_0, const vector<vector<int>>& generators, double epsilon, bool verbose = false)
     {
-      return PEIBOS(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon);
+      return PEIBOS(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, verbose);
     },
-    VECTOR_PARALLELEPIPED_PEIBOS_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_VECTOR_INT_REF_DOUBLE,
-    "f"_a, "psi_0"_a, "generators"_a, "epsilon"_a);
+    VECTOR_PARALLELEPIPED_PEIBOS_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_VECTOR_INT_REF_DOUBLE_BOOL,
+    "f"_a, "psi_0"_a, "generators"_a, "epsilon"_a, "verbose"_a = false);
 
   m.def("PEIBOS", 
-    [](const py::object& f, const py::object& psi_0, const vector<vector<int>>& generators, double epsilon, Vector offset)
+    [](const py::object& f, const py::object& psi_0, const vector<vector<int>>& generators, double epsilon, const Vector& offset, bool verbose = false)
     {
-      return PEIBOS(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, offset);
+      return PEIBOS(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, offset, verbose);
     },
-    VECTOR_PARALLELEPIPED_PEIBOS_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_VECTOR_INT_REF_DOUBLE_CONST_VECTOR_REF,
-    "f"_a, "psi_0"_a, "generators"_a, "epsilon"_a, "offset"_a);
+    VECTOR_PARALLELEPIPED_PEIBOS_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_VECTOR_INT_REF_DOUBLE_CONST_VECTOR_REF_BOOL,
+    "f"_a, "psi_0"_a, "generators"_a, "epsilon"_a, "offset"_a, "verbose"_a = false);
 }

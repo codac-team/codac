@@ -161,12 +161,12 @@ namespace codac2
     return Parallelepiped(z, A);
   }
 
-  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon)
+  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, bool verbose)
   {
-    return PEIBOS(f, psi_0, generators, epsilon, Vector::Zero(psi_0.output_size()));
+    return PEIBOS(f, psi_0, generators, epsilon, Vector::Zero(psi_0.output_size()), verbose);
   }
 
-  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset)
+  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset, bool verbose)
   {
     Index m = psi_0.input_size();
     Index n = psi_0.output_size();
@@ -209,11 +209,14 @@ namespace codac2
       }
     }
 
-    printf("\nPEIBOS statistics:\n");
-    printf("------------------\n");
-    printf("Number of symmetries: %ld\n", symmetries.size());
-    printf("Real epsilon: %.4f\n", true_eps);
-    printf("Computation time: %.4fs\n\n", (double)(clock()-t_start)/CLOCKS_PER_SEC);
+    if (verbose)
+    {
+      printf("\nPEIBOS statistics:\n");
+      printf("------------------\n");
+      printf("Number of symmetries: %ld\n", symmetries.size());
+      printf("Real epsilon: %.4f\n", true_eps);
+      printf("Computation time: %.4fs\n\n", (double)(clock()-t_start)/CLOCKS_PER_SEC);
+    }
 
     return output;
 
