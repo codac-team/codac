@@ -282,15 +282,35 @@ void export_operators(py::module& m)
   py::class_<ChiOp>(m, "ChiOp")
     .def(py::init<>()) // for using static methods in Matlab
     .def_static("fwd", (Interval(*)(const Interval&,const Interval&,const Interval&)) &ChiOp::fwd,
-      STATIC_INTERVAL_CHIOP_FWD_CONST_INTERVAL_REF_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
+      STATIC_T_CHIOP_FWD_CONST_INTERVAL_REF_CONST_T_REF_CONST_T_REF,
+      "x1"_a, "x2"_a, "x3"_a)
+    .def_static("fwd", (IntervalVector(*)(const Interval&,const IntervalVector&,const IntervalVector&)) &ChiOp::fwd,
+      STATIC_T_CHIOP_FWD_CONST_INTERVAL_REF_CONST_T_REF_CONST_T_REF,
+      "x1"_a, "x2"_a, "x3"_a)
+    .def_static("fwd", (IntervalMatrix(*)(const Interval&,const IntervalMatrix&,const IntervalMatrix&)) &ChiOp::fwd,
+      STATIC_T_CHIOP_FWD_CONST_INTERVAL_REF_CONST_T_REF_CONST_T_REF,
       "x1"_a, "x2"_a, "x3"_a)
     .def_static("bwd", (void(*)(const Interval&,Interval&,Interval&,Interval&)) &ChiOp::bwd,
-      STATIC_VOID_CHIOP_BWD_CONST_INTERVAL_REF_INTERVAL_REF_INTERVAL_REF_INTERVAL_REF,
+      STATIC_VOID_CHIOP_BWD_CONST_T_REF_INTERVAL_REF_T_REF_T_REF,
+      "y"_a, "x1"_a, "x2"_a, "x3"_a)
+    .def_static("bwd", (void(*)(const IntervalVector&,Interval&,IntervalVector&,IntervalVector&)) &ChiOp::bwd,
+      STATIC_VOID_CHIOP_BWD_CONST_T_REF_INTERVAL_REF_T_REF_T_REF,
+      "y"_a, "x1"_a, "x2"_a, "x3"_a)
+    .def_static("bwd", (void(*)(const IntervalMatrix&,Interval&,IntervalMatrix&,IntervalMatrix&)) &ChiOp::bwd,
+      STATIC_VOID_CHIOP_BWD_CONST_T_REF_INTERVAL_REF_T_REF_T_REF,
       "y"_a, "x1"_a, "x2"_a, "x3"_a)
   ;
 
   m.def("chi", [](const ScalarExpr& e1, const ScalarExpr& e2, const ScalarExpr& e3) { return chi(e1,e2,e3); },
-    SCALAREXPR_CHI_CONST_SCALAREXPR_REF_CONST_SCALAREXPR_REF_CONST_SCALAREXPR_REF,
+    ANALYTICEXPRWRAPPER_T_CHI_CONST_SCALAREXPR_REF_CONST_T2_REF_CONST_T3_REF,
+    "x1"_a, "x2"_a, "x3"_a);
+
+  m.def("chi", [](const ScalarExpr& e1, const VectorExpr& e2, const VectorExpr& e3) { return chi(e1,e2,e3); },
+    ANALYTICEXPRWRAPPER_T_CHI_CONST_SCALAREXPR_REF_CONST_T2_REF_CONST_T3_REF,
+    "x1"_a, "x2"_a, "x3"_a);
+
+  m.def("chi", [](const ScalarExpr& e1, const MatrixExpr& e2, const MatrixExpr& e3) { return chi(e1,e2,e3); },
+    ANALYTICEXPRWRAPPER_T_CHI_CONST_SCALAREXPR_REF_CONST_T2_REF_CONST_T3_REF,
     "x1"_a, "x2"_a, "x3"_a);
 
   py::class_<ComponentOp>(m, "ComponentOp")

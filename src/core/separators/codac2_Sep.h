@@ -19,11 +19,11 @@ namespace codac2
     public:
 
       BoxPair(const BoxPair& x)
-        : _bp { x._bp }
+        : _bp { x._bp }, inner(_bp[0]), outer(_bp[1])
       { }
 
       BoxPair(const IntervalVector& inner_, const IntervalVector& outer_)
-        : _bp { inner_, outer_ }
+        : _bp { inner_, outer_ }, inner(_bp[0]), outer(_bp[1])
       { }
 
       BoxPair& operator=(const BoxPair& x)
@@ -31,13 +31,13 @@ namespace codac2
         _bp = x._bp;
         return *this;
       }
-
-      IntervalVector& inner = _bp[0];
-      IntervalVector& outer = _bp[1];
       
       // Pybind11 needs iterators for __iter__ method, that are provided
-      // by std::array. The above references are aliases for ease of use.
+      // by std::array. References 'inner' and 'outer' are aliases for ease of use.
       std::array<IntervalVector,2> _bp;
+
+      IntervalVector& inner;
+      IntervalVector& outer;
   };
 
   inline std::ostream& operator<<(std::ostream& os, const BoxPair& x)
@@ -55,6 +55,8 @@ namespace codac2
       {
         assert(n > 0);
       }
+
+      virtual ~SepBase() = default;
 
       Index size() const
       {

@@ -38,7 +38,7 @@ void export_OctaSym(py::module& m)
           for(const auto& li : l)
           {
             matlab::test_integer(li);
-            v[i++] = matlab::input_index(li);
+            v[i++] = (Index)li;
           }
 
           return std::make_unique<OctaSym>(v);

@@ -64,8 +64,8 @@ When operators are available for operations 2--3, then an ``AnalyticFunction`` c
 .. |C|   replace:: :vertical:`Centr.`
 .. |D|   replace:: :vertical:`Diff.`
 .. |CHI| replace:: :math:`\begin{split}\chi(x_1,x_2,x_3) =\\ \begin{cases}x_2 & \text{if } x_1 \leqslant 0, \\x_3 & \text{if } x_1>0.\end{cases}\end{split}`
+.. |CHI_TYPES| replace:: ``x1``: scalar, ``x2``, ``x3``: any (same types)
 .. |EXT| replace:: :math:`\begin{split}f(x) \textrm{ if } x \in D_f,\\ g(x) \textrm{ otherwise}\end{split}`
-
 
 .. |AbsOp| replace:: :raw-html:`<a href="https://github.com/codac-team/codac/blob/codac2/src/core/operators/codac2_abs.h"><code class="docutils literal notranslate"><span class="pre">AbsOp</span></code></a>`
 
@@ -251,7 +251,7 @@ If you notice any mathematical operators missing from the list below, feel free 
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
   | :bg-title:`Ternary operations`                                                                                                                                          |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
-  | |CHI|                                               | ``chi(x1,x2,x3)``    | |ChiOp|       | ``x1``, ``x2``, ``x3``: scalar      ||okk|   ||nok|   ||nok|  ||okk|       |
+  | |CHI|                                               | ``chi(x1,x2,x3)``    | |ChiOp|       | |CHI_TYPES|                         ||okk|   ||okk|   ||okk|  ||okk|       |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
   | :bg-title:`Vectorial / matricial operations`                                                                                                                            |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+

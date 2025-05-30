@@ -90,4 +90,13 @@ namespace codac2
       v[i] = x[i].template cast<Interval>();
     return v;
   }
+
+  template <std::size_t N>
+  static std::array<float, N> to_array(const std::initializer_list<float>& list)
+  {
+    assert(list.size() == N);
+    std::array<float, N> arr;
+    std::copy(list.begin(), list.end(), arr.begin());
+    return arr;
+  }
 }

@@ -152,84 +152,56 @@ namespace codac2
       /**
        * \brief Empty color (transparent white)
        */
-      static Color none()                      { return Color({255., 255., 255., 0.}); };
+      static Color none() { return Color({255,255,255, 0.}); };
 
-      /**
-       * \brief Black color
-       * 
-       * \param alpha Alpha value between 0. (transparent) and 1. (opaque)
-       */
-      static Color black(float alpha = 1.)      { return Color({0.,   0.,   0.,   (float) (alpha*255.)}); };
+      #define DEFINE_COLOR(NAME, R, G, B) \
+        static Color NAME(float alpha = 1.) { \
+            return Color({(float)(R), (float)(G), (float)(B), (float)(alpha * 255.)}); \
+        }
 
-      /**
-       * \brief White color
-       * 
-       * \param alpha Alpha value between 0. (transparent) and 1. (opaque)
-       */
-      static Color white(float alpha = 1.)      { return Color({255., 255., 255., (float) (alpha*255.)}); };
+      // Predefined colors
+      
+      DEFINE_COLOR(black,         0,   0,   0)
+      DEFINE_COLOR(white,         255, 255, 255)
 
-      /**
-       * \brief Green color
-       * 
-       * \param alpha Alpha value between 0. (transparent) and 1. (opaque)
-       */
-      static Color green(float alpha = 1.)      { return Color({144., 242., 0.,   (float) (alpha*255.)}); };
+      DEFINE_COLOR(light_gray,    217, 217, 217)
+      DEFINE_COLOR(gray,          180, 180, 180)
+      DEFINE_COLOR(dark_gray,     112, 112, 112)
 
-      /**
-       * \brief Blue color
-       * 
-       * \param alpha Alpha value between 0. (transparent) and 1. (opaque)
-       */
-      static Color blue(float alpha = 1.)       { return Color({0.,   98.,  198., (float) (alpha*255.)}); };
+      DEFINE_COLOR(light_green,   184, 233, 118)
+      DEFINE_COLOR(green,         144, 242, 0)
+      DEFINE_COLOR(dark_green,    94,  158, 0)
 
-      /**
-       * \brief Cyan color
-       * 
-       * \param alpha Alpha value between 0. (transparent) and 1. (opaque)
-       */
-      static Color cyan(float alpha = 1.)       { return Color({75.,  207., 250., (float) (alpha*255.)}); };
+      DEFINE_COLOR(light_blue,    75,  207, 250)
+      DEFINE_COLOR(blue,          45,  152, 218)
+      DEFINE_COLOR(dark_blue,     34,  112, 147)
 
-      /**
-       * \brief Yellow color
-       * 
-       * \param alpha Alpha value between 0. (transparent) and 1. (opaque)
-       */
-      static Color yellow(float alpha = 1.)     { return Color({255., 211., 42.,  (float) (alpha*255.)}); };
+      DEFINE_COLOR(light_cyan,    129, 236, 236)
+      DEFINE_COLOR(cyan,          109, 200, 200)
+      DEFINE_COLOR(dark_cyan,     82,  151, 151)
 
-      /**
-       * \brief Red color
-       * 
-       * \param alpha Alpha value between 0. (transparent) and 1. (opaque)
-       */
-      static Color red(float alpha = 1.)        { return Color({209., 59.,  0.,   (float) (alpha*255.)}); };
+      DEFINE_COLOR(light_yellow,  255, 250, 101)
+      DEFINE_COLOR(yellow,        255, 211, 42)
+      DEFINE_COLOR(dark_yellow,   225, 177, 44)
 
-      /**
-       * \brief Dark gray color
-       * 
-       * \param alpha Alpha value between 0. (transparent) and 1. (opaque)
-       */
-      static Color dark_gray(float alpha = 1.)  { return Color({112., 112., 112., (float) (alpha*255.)}); };
+      DEFINE_COLOR(light_orange,  253, 150, 68)
+      DEFINE_COLOR(orange,        255, 159, 26)
+      DEFINE_COLOR(dark_orange,   214, 134, 22)
 
-      /**
-       * \brief Light gray color
-       * 
-       * \param alpha Alpha value between 0. (transparent) and 1. (opaque)
-       */
-      static Color purple(float alpha = 1.)     { return Color({154., 0.,   170., (float) (alpha*255.)}); };
+      DEFINE_COLOR(light_red,     231, 127, 103)
+      DEFINE_COLOR(red,           209, 59,  0)
+      DEFINE_COLOR(dark_red,      179, 57,  57) 
 
-      /**
-       * \brief Dark green color
-       * 
-       * \param alpha Alpha value between 0. (transparent) and 1. (opaque)
-       */
-      static Color dark_green(float alpha = 1.) { return Color({94.,  158., 0.,   (float) (alpha*255.)}); };
+      DEFINE_COLOR(light_brown,   208, 151, 71)
+      DEFINE_COLOR(brown,         151, 109, 52)
+      DEFINE_COLOR(dark_brown,    99,  72,  34)
+
+      DEFINE_COLOR(light_purple,  205, 132, 241)
+      DEFINE_COLOR(purple,        154, 0,   170)
+      DEFINE_COLOR(dark_purple,   108, 0,   119)
+
+      DEFINE_COLOR(light_pink,    253, 167, 223)
+      DEFINE_COLOR(pink,          243, 104, 224)
+      DEFINE_COLOR(dark_pink,     185, 79,  171)
   };
-
-  template <std::size_t N>
-  static std::array<float, N> to_array(const std::initializer_list<float>& list) {
-      assert(list.size() == N);
-      std::array<float, N> arr;
-      std::copy(list.begin(), list.end(), arr.begin());
-      return arr;
-  }
 }

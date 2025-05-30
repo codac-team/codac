@@ -31,6 +31,8 @@ namespace codac2
         assert(n > 0);
       }
 
+      virtual ~CtcBase() = default;
+
       Index size() const
       {
         return _n;

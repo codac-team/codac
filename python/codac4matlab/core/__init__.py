@@ -37,6 +37,8 @@ class AnalyticFunction:
     else:
       if isinstance(args, (AnalyticFunction_Scalar,AnalyticFunction_Vector,AnalyticFunction_Matrix)):
         self.f = args
+      elif isinstance(args, (AnalyticFunction)):
+        self.f = args.f
       else:
         codac_error("AnalyticFunction: invalid function argument")
 

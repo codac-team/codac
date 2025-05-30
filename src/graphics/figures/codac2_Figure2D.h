@@ -288,6 +288,15 @@ namespace codac2
       void draw_parallelepiped(const Vector& z, const Matrix& A, const StyleProperties& s = StyleProperties());
 
       /**
+       * \brief Draws a zonotope z+sum_i [-1,1] A_i on the figure
+       * 
+       * \param z Coordinates of the center of the zonotope
+       * \param A list of vectors
+       * \param s Style of the zonotope (edge color and fill color)
+       */
+      void draw_zonotope(const Vector& z, const std::vector<Vector>& A, const StyleProperties& s = StyleProperties());
+
+      /**
        * \brief Draws a pie on the figure
        * 
        * \param c Center of the pie
@@ -631,6 +640,19 @@ namespace codac2
       {
         auto_init();
         selected_fig()->draw_parallelepiped(z,A,s);
+      }
+
+      /**
+       * \brief Draws a zonotope z+sum_i [-1,1] A_i on the figure
+       * 
+       * \param z Coordinates of the center of the zonotope
+       * \param A list of vectors
+       * \param s Style of the zonotope (edge color and fill color)
+       */
+      static void draw_zonotope(const Vector& z, const std::vector<Vector>& A, const StyleProperties& s = StyleProperties())
+      {
+        auto_init();
+        selected_fig()->draw_zonotope(z,A,s);
       }
 
       /**

@@ -31,7 +31,7 @@ namespace codac2
     public:
 
       Figure2D_IPE(const Figure2D& fig);
-      ~Figure2D_IPE();
+      virtual ~Figure2D_IPE();
       void update_axes();
       void update_window_properties();
       void center_viewbox(const Vector& c, const Vector& r);
@@ -84,6 +84,11 @@ namespace codac2
       std::ofstream _f, _f_temp_content;
       const double _ipe_grid_size = 500.;
       Vector _ratio { 1., 1. };
+
+      std::vector<double> _x_ticks;
+      std::vector<double> _y_ticks;
+      double _x_offset;
+      double _y_offset;
 
       std::map<std::string,Color> _colors;
   };

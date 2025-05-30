@@ -123,7 +123,7 @@ namespace codac2
 
       else
       {
-        assert_release(false && "unable to estimate output size");
+        assert_release_constexpr(false && "unable to estimate output size");
         return 0;
       }
     }

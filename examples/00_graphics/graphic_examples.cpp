@@ -55,6 +55,11 @@ int main(){
   fig2->draw_arrow({3,1},{2.2,2}, 0.2, {Color::red(),Color::black(0.3)});
   fig2->draw_parallelepiped({1.5,2.8},Matrix({{0.5,0.4},{0,0.2}}), {Color::red(),Color::green(0.5)});
 
+  fig2->draw_zonotope({4,1.5},
+		{{-0.2,0.1},{-0.06,0.04},{0.2,0.04},
+		 {0.06,-0.04},{0.01,-0.03},{0.08,0.18},{0,0}},
+	{{Color::red(),Color::yellow(0.4)},"zonotope"});
+
   // Colors
   // predefined colors without and with opacity
   fig2->draw_point({2,2}, {Color::red(),Color::yellow(0.5)});

@@ -74,7 +74,7 @@ namespace codac2
 
         else
         {
-          assert_release(false && "Modulo diameter error.");
+          assert_release_constexpr(false && "Modulo diameter error.");
         }
       }
     }

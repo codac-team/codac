@@ -136,7 +136,6 @@ void Figure2D::draw_point(const Vector& c, const StyleProperties& s)
 void Figure2D::draw_box(const IntervalVector& x, const StyleProperties& s)
 {
   assert_release(this->size() <= x.size());
-
   if(!x.is_empty())
     for(const auto& output_fig : _output_figures)
     {
@@ -223,6 +222,42 @@ void Figure2D::draw_polygon(const Polygon& x, const StyleProperties& s)
   for(const auto& output_fig : _output_figures)
     output_fig->draw_polygon(w,s);
 }
+
+void Figure2D::draw_zonotope(const Vector& z, const std::vector<Vector>& A, const StyleProperties& s)
+{
+   std::map<double,Vector> sides;
+   for (auto &u : A) {
+       assert_release(u.size()==2);
+       if (u==Vector::zero(2)) continue;
+       double theta = std::atan2(u[1],u[0]);
+       Vector v(u);
+       if (theta<=0.0) { theta=theta+PI; v=-v; } 
+    // Theta in ]0,PI] , v[1]>=0 and if v[1]=0, v[0]<0
+       auto try_insert=sides.insert({theta,v});
+       if (try_insert.second==false) {
+           (try_insert.first)->second += v;
+       }
+   }
+   std::vector<Vector> vertices;
+   Vector point=z;
+   // Start from v[1] maximum (and v[0] min for horizontal side)
+   for (const auto &a : sides) {
+       point+=a.second;
+   }
+   // Turn anticlockwise : first half
+   for (const auto &a : sides) {
+       vertices.push_back(point);
+       point-=2*a.second;
+   }
+   // Turn anticlockwise : second half
+   for (const auto &a : sides) {
+       vertices.push_back(point);
+       point+=2*a.second;
+   }
+   for(const auto& output_fig : _output_figures)
+      output_fig->draw_polygon(vertices,s);
+}
+
 
 void Figure2D::draw_parallelepiped(const Vector& z, const Matrix& A, const StyleProperties& s)
 {
@@ -392,56 +427,50 @@ void Figure2D::draw_motor_boat(const Vector& x, float size, const StylePropertie
 void Figure2D::draw_paving(const PavingOut& p,
   const StyleProperties& boundary_style,const StyleProperties& outside_style)
 {
-  for(const auto& output_fig : _output_figures)
-  {
     p.tree()->left()->visit([&]
       (std::shared_ptr<const PavingOut_Node> n)
       {
         const IntervalVector& outer = get<0>(n->boxes());
 
         if(n->top() == p.tree())
-          output_fig->draw_box(get<0>(n->top()->boxes()), outside_style);
+          draw_box(get<0>(n->top()->boxes()), outside_style);
 
         else
         {
-          auto p = get<0>(n->top()->boxes()).bisect_largest();
-          IntervalVector hull = n->top()->left() == n ? p.first : p.second;
+          auto b = get<0>(n->top()->boxes()).bisect_largest();
+          IntervalVector hull = n->top()->left() == n ? b.first : b.second;
 
           for(const auto& bi : hull.diff(outer))
-            output_fig->draw_box(bi, outside_style);
+            draw_box(bi, outside_style);
         }
 
         if(n->is_leaf())
-          output_fig->draw_box(outer, boundary_style);
+          draw_box(outer, boundary_style);
 
         return true;
       });
-  }
 }
 
 void Figure2D::draw_paving(const PavingInOut& p, const StyleProperties& boundary_style,
   const StyleProperties& outside_style, const StyleProperties& inside_style)
 {
-  for(const auto& output_fig : _output_figures)
-  {
-    p.tree()->visit([&]
-      (std::shared_ptr<const PavingInOut_Node> n)
-      {
-        const IntervalVector& outer = get<0>(n->boxes());
-        const IntervalVector& inner = get<1>(n->boxes());
+  p.tree()->visit([&]
+    (std::shared_ptr<const PavingInOut_Node> n)
+    {
+      const IntervalVector& outer = get<0>(n->boxes());
+      const IntervalVector& inner = get<1>(n->boxes());
 
-        IntervalVector hull = inner | outer;
+      IntervalVector hull = inner | outer;
 
-        for(const auto& bi : hull.diff(inner))
-          output_fig->draw_box(bi, inside_style);
+      for(const auto& bi : hull.diff(inner))
+        draw_box(bi, inside_style);
 
-        for(const auto& bi : hull.diff(outer))
-          output_fig->draw_box(bi, outside_style);
+      for(const auto& bi : hull.diff(outer))
+        draw_box(bi, outside_style);
 
-        if(n->is_leaf())
-          output_fig->draw_box(inner & outer, boundary_style);
+      if(n->is_leaf())
+          draw_box(inner & outer, boundary_style);
 
-        return true;
-      });
-  }
+      return true;
+    });
 }

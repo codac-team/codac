@@ -9,22 +9,21 @@
 
 #pragma once
 
-#include "codac2_SampledTraj.h"
 #include "codac2_AnalyticExprWrapper.h"
 #include "codac2_ExprType.h"
 #include "codac2_Wrapper.h"
 
 namespace codac2
 {
-  template<typename T>
+  template<typename TR>
   struct TrajectoryOp
   {
-    static typename Wrapper<T>::Domain fwd(const TrajBase<T>& x1, const Interval& x2)
+    static typename TR::Type::Domain fwd(const TR& x1, const Interval& x2)
     {
       return x1(x2);
     }
 
-    static typename ExprType<T>::Type fwd(const TrajBase<T>& x1, const ScalarType& x2)
+    static typename TR::Type fwd(const TR& x1, const ScalarType& x2)
     {
       IntervalMatrix d(x1.size(),x2.da.cols());
 
@@ -37,29 +36,27 @@ namespace codac2
     }
 
     static void bwd(
-      [[maybe_unused]] const TrajBase<T>& x1,
-      [[maybe_unused]] const typename Wrapper<T>::Domain& y,
+      [[maybe_unused]] const TR& x1,
+      [[maybe_unused]] const typename TR::Type::Domain& y,
       [[maybe_unused]] Interval& x2)
     {
       // todo
     }
   };
 
-  template<typename T>
-  class AnalyticOperationExpr<TrajectoryOp<T>,typename ExprType<T>::Type,ScalarType>
-    : public AnalyticExpr<typename ExprType<T>::Type>, public OperationExprBase<AnalyticExpr<ScalarType>>
+  template<typename TR, typename T, typename S>
+  class AnalyticOperationExpr<TrajectoryOp<TR>,T,S>
+    : public AnalyticExpr<typename TR::Type>, public OperationExprBase<AnalyticExpr<ScalarType>>
   {
     public:
 
-      using O = typename ExprType<T>::Type;
-
-      AnalyticOperationExpr(const TrajBase<T>& x1, const ScalarExpr& x2)
+      AnalyticOperationExpr(const TR& x1, const ScalarExpr& x2)
         : OperationExprBase<AnalyticExpr<ScalarType>>(x2), _x1(x1)
       { }
 
       std::shared_ptr<ExprBase> copy() const
       {
-        return std::make_shared<AnalyticOperationExpr<TrajectoryOp<T>,O,ScalarType>>(*this);
+        return std::make_shared<AnalyticOperationExpr<TrajectoryOp<TR>,T,ScalarType>>(*this);
       }
 
       void replace_arg(const ExprID& old_arg_id, const std::shared_ptr<ExprBase>& new_expr)
@@ -67,15 +64,15 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<ScalarType>>::replace_arg(old_arg_id, new_expr);
       }
       
-      O fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
+      T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
       {
-        return AnalyticExpr<O>::init_value(
-          v, TrajectoryOp<T>::fwd(_x1, std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval)));
+        return AnalyticExpr<T>::init_value(
+          v, TrajectoryOp<TR>::fwd(_x1, std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval)));
       }
       
       void bwd_eval(ValuesMap& v) const
       {
-        TrajectoryOp<T>::bwd(_x1, AnalyticExpr<O>::value(v).a, std::get<0>(this->_x)->value(v).a);
+        TrajectoryOp<TR>::bwd(_x1, AnalyticExpr<T>::value(v).a, std::get<0>(this->_x)->value(v).a);
         std::get<0>(this->_x)->bwd_eval(v);
       }
 
@@ -101,19 +98,6 @@ namespace codac2
 
     protected:
 
-      const TrajBase<T>& _x1;
+      const TR _x1;
   };
-  
-  template<typename T>
-  AnalyticFunction<typename ExprType<T>::Type> TrajBase<T>::as_function() const
-  {
-    using D = typename ExprType<T>::Type;
-
-    ScalarVar t;
-    return {{t},
-      AnalyticExprWrapper<D>(std::make_shared<
-        AnalyticOperationExpr
-        <TrajectoryOp<T>, D, ScalarType>>(*this,t))
-    };
-  }
 }

@@ -76,39 +76,41 @@ Available line styles are:
 Colors
 ------
 
-Predefined colors are available in the Color class. Each of the static methods can take an argument to define the transparency of the color
-between 0 (full transparency) and 1 (full opacity).
+Predefined colors are available in the ``Color`` class. Each of the static methods can take an argument to define the transparency of the color between 0 (full transparency) and 1 (full opacity).
 
 .. tabs::
 
   .. code-tab:: py
 
-    Color.none() # transparent
-    Color.black() # black
-    Color.white() # white
-    Color.green() # green
-    Color.blue() # blue
-    Color.cyan() # cyan
-    Color.yellow() # yellow
-    Color.red() # red
-    Color.dark_gray() # dark gray
-    Color.purple() # purple
-    Color.dark_green() # dark green
-  
+    Color.none(), Color.white(), Color.black()
+    Color.light_gray(), Color.gray(), Color.dark_gray()
+    Color.light_green(), Color.green(), Color.dark_green()
+    Color.light_blue(), Color.blue(), Color.dark_blue()
+    Color.light_cyan(), Color.cyan(), Color.dark_cyan()
+    Color.light_yellow(), Color.yellow(), Color.dark_yellow()
+    Color.light_orange(), Color.orange(), Color.dark_orange()
+    Color.light_red(), Color.red(), Color.dark_red()
+    Color.light_brown(), Color.brown(), Color.dark_brown()
+    Color.light_purple(), Color.purple(), Color.dark_purple()
+    Color.light_pink(), Color.pink(), Color.dark_pink()
+
   .. code-tab:: c++
 
-    Color::none(); // transparent
-    Color::black(); // black
-    Color::white(); // white
-    Color::green(); // green
-    Color::blue(); // blue
-    Color::cyan(); // cyan
-    Color::yellow(); // yellow
-    Color::red(); // red
-    Color::dark_gray(); // dark gray
-    Color::purple(); // purple
-    Color::dark_green(); // dark green
+    Color::none(), Color::white(), Color::black()
+    Color::light_gray(), Color::gray(), Color::dark_gray()
+    Color::light_green(), Color::green(), Color::dark_green()
+    Color::light_blue(), Color::blue(), Color::dark_blue()
+    Color::light_cyan(), Color::cyan(), Color::dark_cyan()
+    Color::light_yellow(), Color::yellow(), Color::dark_yellow()
+    Color::light_orange(), Color::orange(), Color::dark_orange()
+    Color::light_red(), Color::red(), Color::dark_red()
+    Color::light_brown(), Color::brown(), Color::dark_brown()
+    Color::light_purple(), Color::purple(), Color::dark_purple()
+    Color::light_pink(), Color::pink(), Color::dark_pink()
 
+Each basic color is available in three shades: ``light_``, normal and ``dark_``:
+
+.. figure:: img/codac_colors.png
 
 Custom colors can be defined in the RGB or HSV color spaces. An enumaration Model is used to make the distinction between the two.
 

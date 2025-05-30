@@ -71,7 +71,7 @@ namespace codac2
         if constexpr(std::is_same_v<T,MatrixType>)
           return {_x.rows(),_x.cols()};
 
-        assert_release(false && "unknow output shape for constant");
+        assert_release_constexpr(false && "unknow output shape for constant");
       }
 
       void replace_arg([[maybe_unused]] const ExprID& old_arg_id, [[maybe_unused]] const std::shared_ptr<ExprBase>& new_expr)

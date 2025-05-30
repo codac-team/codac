@@ -327,6 +327,18 @@ class TestInterval_bwd(unittest.TestCase):
     x = Interval(-1.57079632679489678, 1.1780972450961728626)
     self.assertFalse(tan(x).is_empty())
 
+  def tests_chi_op(self): 
+     self.assertTrue(
+        ChiOp.fwd(Interval(0.2,0.4),Interval(-2.0,-1.0),Interval(1.0,2.0)) == Interval(1.0,2.0))
+     self.assertTrue(
+        ChiOp.fwd(Interval(-0.2,0.2),IntervalVector([[-2.0,-1.0],[-1.0,0.0]]),IntervalVector([0.0,1.0])) == IntervalVector([[-2.0,0.0],[-1.0,1.0]]))
+     self.assertTrue(
+        ChiOp.fwd(
+          Interval(-0.2,0.0),
+          IntervalMatrix([[[-2.0,-1.0],[-1.0,0.0]],[[-2.0,-1.0],[-1.0,0.0]]]),
+          IntervalMatrix([[[2.0,3.0],[0.0,3.0]],[[2.0,3.0],[1.0,2.0]]]))
+         == IntervalMatrix([[[-2.0,-1.0],[-1.0,0.0]],[[-2.0,-1.0],[-1.0,0.0]]]))
+
   def tests_cross_prod(self):
 
     self.assertTrue(

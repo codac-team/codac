@@ -136,6 +136,61 @@ void Figure3D::draw_box(const IntervalVector& x, const StyleProperties& s)
   draw_parallelepiped(x.mid(), A, s);
 }
 
+void Figure3D::draw_zonotope(const Vector& z, const std::vector<Vector>& A, const StyleProperties& s) {
+   Matrix id = Matrix::Identity(3,3);
+   this->set_style_internal(s);
+   lock_style=true;
+   /* method : for each couple of vectors Ai Aj with i<j in A, draw two faces:
+      1) compute the normal N_ij = (Ai ^ Aj)
+      3) start from the center, and compute two vectors R1 and R2
+      2) for all k != i  and j
+	 a) if Nij.Ak !=0 add sgn(Nij.Ak)*Ak to R1
+         b) if (N_ij.Ak==0) add to R2 :
+                i) if k>j then add -AK
+                ii) if k<j then if (Ai^Aj).(Ai^Ak)>0 and k>i add Ak
+				 otherwise add -Ak
+         (seems to work, but must be validated... possibly there is a reference
+          somewhere)
+      3) result is center of one face, the other is symetric for R1 (not R2)
+    */
+    size_t nb = A.size();
+    for (size_t j=1;j<nb;j++) {
+       const Eigen::Vector3d &Aj = A[j];
+       for (size_t i=0;i<j;i++) {
+           const Eigen::Vector3d &Ai = A[i];
+           Eigen::Vector3d Norm = Ai.cross(Aj);
+           if (Norm.lpNorm<Eigen::Infinity>()<1e-8) continue;
+           Eigen::Vector3d R1 = Eigen::Vector3d::Zero();
+           Eigen::Vector3d R2 = Eigen::Vector3d::Zero();
+           for (size_t k=0;k<nb;k++) {
+               if (k==i || k==j) continue;
+               const Eigen::Vector3d &Ak = A[k];
+               double prod = Norm.dot(Ak);
+               if (std::fabs(prod)<1e-8) { /* considered 0 */
+                  if (k>j) {
+                    R2 -= Ak; 
+                    continue;
+                  }
+                  Eigen::Vector3d N2 = Ai.cross(Ak);
+		  if (N2.lpNorm<Eigen::Infinity>()<1e-8) {
+                      if (Ai.dot(Ak)<0 || i<k) R2 -= Ak; else R2 += Ak;
+                      continue;
+                  }
+                  if (N2.dot(Norm)>=0) R2 += Ak; else R2 -= Ak;
+               } 
+	       else if (prod>0.0) {
+		  R1 += Ak;
+               }
+               else {
+                  R1 -= Ak;
+               }
+          }
+          this->draw_parallelogram(z,id,R1+R2,Ai,Aj,s);
+          this->draw_parallelogram(z,id,-R1+R2,Ai,Aj,s);
+       }
+    }
+    lock_style=false;
+}
 
 void Figure3D::draw_arrow(const Vector& c, const Matrix &A,
 	const StyleProperties& s)
@@ -203,6 +258,10 @@ void Figure3D::draw_sphere(const Vector &c, const Matrix &A, const StyleProperti
         },
 	s
   );
+}
+
+void Figure3D::draw_ellipsoid(const Ellipsoid &e, const StyleProperties& s) {
+  this->draw_sphere(e.mu, e.G,s);
 }
 
 void Figure3D::draw_car(const Vector &c, const Matrix &A,

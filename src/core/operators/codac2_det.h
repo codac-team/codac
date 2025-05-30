@@ -41,9 +41,11 @@ namespace codac2
 
     // For matrices
     template<typename X1>
-    static std::pair<Index,Index> output_shape([[maybe_unused]] const X1& s1) {
+    static std::pair<Index,Index> output_shape([[maybe_unused]] const X1& s1)
+    {
       return {1,1};
     }
+
     static Interval fwd(const IntervalMatrix& x);
     static ScalarType fwd_natural(const MatrixType& x);
     static ScalarType fwd_centered(const MatrixType& x);
@@ -51,9 +53,11 @@ namespace codac2
 
     // For two vectors (merged into a 2×2 matrix)
     template<typename X1, typename X2>
-    static std::pair<Index,Index> output_shape([[maybe_unused]] const X1& s1, [[maybe_unused]] const X2& s2) {
+    static std::pair<Index,Index> output_shape([[maybe_unused]] const X1& s1, [[maybe_unused]] const X2& s2)
+    {
       return {1,1};
     }
+
     static Interval fwd(const IntervalVector& x1, const IntervalVector& x2);
     static ScalarType fwd_natural(const VectorType& x1, const VectorType& x2);
     static ScalarType fwd_centered(const VectorType& x1, const VectorType& x2);
@@ -61,9 +65,11 @@ namespace codac2
 
     // For three vectors (merged into a 3×3 matrix)
     template<typename X1, typename X2, typename X3>
-    static std::pair<Index,Index> output_shape([[maybe_unused]] const X1& s1, [[maybe_unused]] const X2& s2, [[maybe_unused]] const X3& s3) {
+    static std::pair<Index,Index> output_shape([[maybe_unused]] const X1& s1, [[maybe_unused]] const X2& s2, [[maybe_unused]] const X3& s3)
+    {
       return {1,1};
     }
+    
     static Interval fwd(const IntervalVector& x1, const IntervalVector& x2, const IntervalVector& x3);
     static ScalarType fwd_natural(const VectorType& x1, const VectorType& x2, const VectorType& x3);
     static ScalarType fwd_centered(const VectorType& x1, const VectorType& x2, const VectorType& x3);

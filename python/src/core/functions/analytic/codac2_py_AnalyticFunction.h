@@ -244,6 +244,9 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
 
   exported
 
+    .def(py::init<const AnalyticFunction<T>&>(),
+      ANALYTICFUNCTION_T_ANALYTICFUNCTION_CONST_ANALYTICFUNCTION_T_REF)
+
     .def("input_size", &AnalyticFunction<T>::input_size,
       INDEX_FUNCTIONBASE_E_INPUT_SIZE_CONST)
 

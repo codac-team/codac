@@ -36,12 +36,17 @@ namespace codac2
       /**
        * \brief Destructor for the Figure2D_VIBes object
        */
-      ~Figure2D_VIBes();
+      virtual ~Figure2D_VIBes();
 
       /**
        * \brief Updates the axes of the figure
        */
       void update_axes();
+
+      /**
+       * \brief Updates the drawing properties : line style and layer
+       */
+      void update_drawing_properties(const StyleProperties& s);
 
       /**
        * \brief Updates the window properties of the figure

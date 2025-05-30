@@ -311,6 +311,14 @@ namespace codac2
       bool is_degenerated() const;
 
       /**
+       * \brief Tests if this is an integer, that is, in the
+       * form of \f$[n,n]\f$ where n is an integer
+       *
+       * \return true if this is an integer singleton
+       */
+      bool is_integer() const;
+
+      /**
        * \brief Tests if this and x intersect
        * 
        * \param x the other interval

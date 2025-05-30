@@ -19,6 +19,7 @@ namespace codac2
     public:
 
       CtcEllipse0(const IntervalVector& q);
+
       void contract(IntervalVector& x) const;
 
     protected:
@@ -31,6 +32,7 @@ namespace codac2
     public:
 
       CtcEllipse(const IntervalVector& q);
+      
       void contract(IntervalVector& x) const;
       const IntervalVector& q() const;
 

@@ -60,7 +60,7 @@ namespace codac2
     static StyleProperties inside();
 
     /**
-     * \brief Predefined "outside" style, dark gray edge and cyan fill
+     * \brief Predefined "outside" style, dark gray edge and light blue fill
      */
     static StyleProperties outside();
 

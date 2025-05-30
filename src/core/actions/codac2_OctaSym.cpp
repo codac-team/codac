@@ -20,7 +20,7 @@ OctaSym::OctaSym(const vector<int>& s)
 {
   for([[maybe_unused]] const auto& i : s)
   {
-    assert_release(std::abs(i) > 0 && std::abs(i) <= size());
+    assert_release(std::abs(i) > 0 && std::abs(i) <= (int)size());
   }
 }
 

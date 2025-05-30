@@ -30,17 +30,17 @@ namespace codac2
     }
 
     template<typename X1>
-    static std::pair<Index,Index> output_shape(const X1& s1, Index i)
+    static std::pair<Index,Index> output_shape([[maybe_unused]] const X1& s1, [[maybe_unused]] Index i)
     {
-      auto shape1 = s1->output_shape();
+      [[maybe_unused]] auto shape1 = s1->output_shape();
       assert(shape1.second==1 && i<shape1.first);
       return {1,1};
     }
 
     template<typename X1>
-    static std::pair<Index,Index> output_shape(const X1& s1, Index i, Index j)
+    static std::pair<Index,Index> output_shape([[maybe_unused]] const X1& s1, [[maybe_unused]] Index i, [[maybe_unused]] Index j)
     {
-      auto shape1 = s1->output_shape();
+      [[maybe_unused]] auto shape1 = s1->output_shape();
       assert(j<shape1.second && i<shape1.first);
       return {1,1};
     }

@@ -8,6 +8,7 @@
  */
 
 #include "codac2_Color.h"
+#include "codac2_template_tools.h"
 
 using namespace std;
 using namespace codac2;
@@ -138,15 +139,16 @@ Color Color::hsv() const
 
 std::string Color::hex_str() const
 {
-  if (m == Model::RGB)
-    {
-      std::stringstream s;
-      s << std::hex << std::setfill('0');
-      s << std::setw(2) << (int)((*this)[0]) << std::setw(2) << (int)((*this)[1]) << std::setw(2) << (int)((*this)[2]);
-      if((*this)[3] != 1.)
-        s << std::setw(2) << (int)((*this)[3]);
-      return "#"+s.str();
-    }
+  if(m == Model::RGB)
+  {
+    std::stringstream s;
+    s << "#" << std::hex << std::setfill('0');
+    s << std::setw(2) << (int)((*this)[0]) << std::setw(2) << (int)((*this)[1]) << std::setw(2) << (int)((*this)[2]);
+    if((*this)[3] != 1.)
+      s << std::setw(2) << (int)((*this)[3]);
+    return s.str();
+  }
+
   else
     return rgb().hex_str();
 }

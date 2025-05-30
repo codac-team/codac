@@ -68,9 +68,13 @@ namespace codac2
 
   inline ScalarType PowOp::fwd_natural(const ScalarType& x1, const ScalarType& x2)
   {
+    bool x2isint = x2.a.is_integer();
+    bool x2positive = x2.a.lb()>=0.0;
     return {
       fwd(x1.a, x2.a),
-      x1.def_domain && x2.def_domain
+      x1.def_domain && x2.def_domain 
+        && (x2isint || x1.a.lb()>=0.0)
+        && (x2positive || !x1.a.contains(0.0))
     };
   }
 
@@ -79,15 +83,34 @@ namespace codac2
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
 
+    bool x2isint = x2.a.is_integer();
+    bool x2positive = x2.a.lb()>=0.0;
     IntervalMatrix d(1,x1.da.size());
-    for(Index i = 0 ; i < d.size() ; i++)
-      d(0,i) = x2.a*x1.da(0,i)*pow(x1.a,x2.a-1.);
+    
+    if (x2.a.is_degenerated())
+    { 
+      // To avoid calling log(x1.a), as it would return emptyset if x1.a<=0
+      for(Index i = 0 ; i < d.size() ; i++)
+        d(0,i) = x2.a*x1.da(0,i)*pow(x1.a,x2.a-1.);
+    }
+
+    else
+    {
+      for(Index i = 0 ; i < d.size() ; i++)
+      {
+        d(0,i) = x2.a*x1.da(0,i)*pow(x1.a,x2.a-1.) 
+                + x2.da(0,i)*log(x1.a)*pow(x1.a,x2.a); 
+			  // Not good when x1 close to 0
+      }
+    }
 
     return {
       fwd(x1.m, x2.m),
       fwd(x1.a, x2.a),
       d,
-      x1.def_domain && x2.def_domain
+      x1.def_domain && x2.def_domain 
+        && (x2isint || x1.a.lb()>=0.0)
+        && (x2positive || !x1.a.contains(0.0))
     };
   }
 

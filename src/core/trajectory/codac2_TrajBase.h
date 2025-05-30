@@ -94,8 +94,5 @@ namespace codac2
 
         return p;
       }
-
-      // Implementation in codac2_Trajectory_operator.h
-      AnalyticFunction<typename ExprType<T>::Type> as_function() const;
   };
 }

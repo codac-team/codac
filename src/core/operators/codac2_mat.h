@@ -29,8 +29,8 @@ namespace codac2
     template<typename X1, typename... X>
     static std::pair<Index,Index> output_shape(const X1& s1, [[maybe_unused]] const X&... s)
     {
-      auto shape1=s1->output_shape();
-      assert_release(shape1.second==1);
+      auto shape1 = s1->output_shape();
+      assert(shape1.second == 1);
       return { shape1.first, 1+sizeof...(X) };
     }
 

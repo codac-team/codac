@@ -209,6 +209,11 @@ namespace codac2
     return is_empty() || gaol::interval::is_a_double();
   }
 
+  inline bool Interval::is_integer() const
+  {
+    return gaol::interval::is_an_int();
+  }
+
   inline bool Interval::intersects(const Interval &x) const
   {
     return !is_empty() && !x.is_empty() && lb() <= x.ub() && ub() >= x.lb();

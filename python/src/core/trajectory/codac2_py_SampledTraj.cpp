@@ -165,6 +165,9 @@ py::class_<SampledTraj<T>> _export_SampledTraj(py::module& m, const string& clas
       VOID_SAMPLEDTRAJ_T_SET_DOUBLE_CONST_T_REF,
       "ti"_a, "xi"_a)
 
+    .def("as_function", &SampledTraj<T>::as_function,
+      ANALYTICFUNCTION_TYPENAME_EXPRTYPE_T_TYPE_SAMPLEDTRAJ_T_AS_FUNCTION_CONST)
+
     .def("__repr__", [](const SampledTraj<T>& x) {
           std::ostringstream stream;
           stream << x;

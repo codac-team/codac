@@ -64,7 +64,7 @@ namespace codac2
 
         else
         {
-          assert_release(false &&
+          assert_release_constexpr(false &&
             "cannot find a default complementary \"node value\" function for such Subaving class");
           return { };
         }

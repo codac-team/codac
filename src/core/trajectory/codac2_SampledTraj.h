@@ -13,6 +13,7 @@
 #include "codac2_TrajBase.h"
 #include "codac2_analytic_variables.h"
 #include "codac2_template_tools.h"
+#include "codac2_Traj_operator.h"
 
 namespace codac2
 {
@@ -20,6 +21,8 @@ namespace codac2
   class SampledTraj : public TrajBase<T>, public std::map<double,T>
   {
     public:
+
+      using Type = typename ExprType<T>::Type;
 
       SampledTraj()
         : TrajBase<T>(), std::map<double,T>()
@@ -250,6 +253,16 @@ namespace codac2
         }
 
         return { m };
+      }
+
+      AnalyticFunction<typename ExprType<T>::Type> as_function() const
+      {
+        ScalarVar t;
+        return {{t},
+          AnalyticExprWrapper<typename ExprType<T>::Type>(
+            std::make_shared<AnalyticOperationExpr<
+              TrajectoryOp<SampledTraj<T>>,typename ExprType<T>::Type,ScalarType>>(*this,t))
+        };
       }
   };
   
