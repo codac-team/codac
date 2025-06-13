@@ -24,7 +24,7 @@ class CtcCustom(Ctc):
 
 class TestCtcLazy(unittest.TestCase):
   
-  def tests_CtcLazy(self):
+  def test_CtcLazy(self):
 
     ctc_custom = CtcCustom()
     x = IntervalVector([[-1000,1000],[-1000,1000]])

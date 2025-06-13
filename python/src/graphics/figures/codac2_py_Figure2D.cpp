@@ -79,7 +79,7 @@ void export_Figure2D(py::module& m)
       CONST_VECTOR_FIGUREAXIS_REF_FIGURE2D_AXES_CONST)
   
     .def("set_axes", &Figure2D::set_axes,
-      VOID_FIGURE2D_SET_AXES_CONST_FIGUREAXIS_REF_CONST_FIGUREAXIS_REF,
+      FIGURE2D_REF_FIGURE2D_SET_AXES_CONST_FIGUREAXIS_REF_CONST_FIGUREAXIS_REF,
       "axis1"_a, "axis2"_a)
   
     .def("i", &Figure2D::i,
@@ -213,6 +213,27 @@ void export_Figure2D(py::module& m)
       VOID_FIGURE2D_PLOT_TRAJECTORY_CONST_SAMPLEDTRAJ_DOUBLE_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "s"_a=StyleProperties())
 
+    .def("draw_tube", [](Figure2D& fig, const py::object& x, const StyleProperties& s)
+        {
+          if(!is_instance<SlicedTube<IntervalVector>>(x)) {
+            assert_release("draw_tube: invalid function type");
+          }
+
+          fig.draw_tube(cast<SlicedTube<IntervalVector>>(x), s);
+        },
+      VOID_FIGURE2D_DRAW_TUBE_CONST_SLICEDTUBE_INTERVALVECTOR_REF_CONST_STYLEPROPERTIES_REF,
+      "x"_a, "s"_a)
+
+    .def("draw_tube", [](Figure2D& fig, const py::object& x, const ColorMap& cmap)
+        {
+          if(!is_instance<SlicedTube<IntervalVector>>(x)) {
+            assert_release("draw_tube: invalid function type");
+          }
+
+          fig.draw_tube(cast<SlicedTube<IntervalVector>>(x), cmap);
+        },
+      VOID_FIGURE2D_DRAW_TUBE_CONST_SLICEDTUBE_INTERVALVECTOR_REF_CONST_COLORMAP_REF,
+      "x"_a, "cmap"_a)
 
     // Robots
 
@@ -253,14 +274,15 @@ void export_Figure2D(py::module& m)
 
     .def(py::init<>()) // for using static methods in Matlab
   
-    .def_static("selected_fig", &DefaultFigure::selected_fig,
+    .def_static("selected_fig", &DefaultFigure::selected_fig, py::return_value_policy::reference,
       STATIC_SHARED_PTR_FIGURE2D_DEFAULTFIGURE_SELECTED_FIG)
   
     .def_static("set", &DefaultFigure::set,
       STATIC_VOID_DEFAULTFIGURE_SET_SHARED_PTR_FIGURE2D)
   
-    .def_static("set_axes", &DefaultFigure::set_axes,
-      STATIC_VOID_DEFAULTFIGURE_SET_AXES_CONST_FIGUREAXIS_REF_CONST_FIGUREAXIS_REF)
+    .def_static("set_axes", &DefaultFigure::set_axes, py::return_value_policy::reference,
+      STATIC_FIGURE2D_REF_DEFAULTFIGURE_SET_AXES_CONST_FIGUREAXIS_REF_CONST_FIGUREAXIS_REF,
+      "axis1"_a, "axis2"_a)
   
     .def_static("set_window_properties", &DefaultFigure::set_window_properties,
       STATIC_VOID_DEFAULTFIGURE_SET_WINDOW_PROPERTIES_CONST_VECTOR_REF_CONST_VECTOR_REF)
@@ -355,6 +377,28 @@ void export_Figure2D(py::module& m)
           DefaultFigure::draw_trajectory(cast<AnalyticTraj<VectorType>>(x), cmap);
         },
       STATIC_VOID_DEFAULTFIGURE_DRAW_TRAJECTORY_CONST_ANALYTICTRAJ_VECTORTYPE_REF_CONST_COLORMAP_REF,
+      "x"_a, "cmap"_a)
+
+    .def_static("draw_tube", [](const py::object& x, const StyleProperties& s)
+        {
+          if(!is_instance<SlicedTube<IntervalVector>>(x)) {
+            assert_release("draw_tube: invalid function type");
+          }
+
+          DefaultFigure::draw_tube(cast<SlicedTube<IntervalVector>>(x), s);
+        },
+      STATIC_VOID_DEFAULTFIGURE_DRAW_TUBE_CONST_SLICEDTUBE_INTERVALVECTOR_REF_CONST_STYLEPROPERTIES_REF,
+      "x"_a, "s"_a)
+
+    .def_static("draw_tube", [](const py::object& x, const ColorMap& cmap)
+        {
+          if(!is_instance<SlicedTube<IntervalVector>>(x)) {
+            assert_release("draw_tube: invalid function type");
+          }
+
+          DefaultFigure::draw_tube(cast<SlicedTube<IntervalVector>>(x), cmap);
+        },
+      STATIC_VOID_DEFAULTFIGURE_DRAW_TUBE_CONST_SLICEDTUBE_INTERVALVECTOR_REF_CONST_COLORMAP_REF,
       "x"_a, "cmap"_a)
 
     // Robots

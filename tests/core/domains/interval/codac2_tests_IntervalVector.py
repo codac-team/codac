@@ -38,7 +38,7 @@ class TestIntervalVector(unittest.TestCase):
         return False
     return True
 
-  def tests_intervalvector(self):
+  def test_intervalvector(self):
 
     x = IntervalVector(2)
     x[0] = Interval(-oo,oo)
@@ -633,7 +633,7 @@ class TestIntervalVector(unittest.TestCase):
     self.assertTrue(c.is_empty())
     
 
-  def tests_intervalvector_specific_to_python(self):
+  def test_intervalvector_specific_to_python(self):
 
     x = IntervalVector([[1,2],[2,3],[3,4]])
     y = IntervalVector(3)

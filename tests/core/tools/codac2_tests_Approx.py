@@ -13,7 +13,7 @@ import sys
 
 class TestApprox(unittest.TestCase):
 
-  def tests_approx(self):
+  def test_approx(self):
 
     self.assertFalse(Interval(0.1) == Interval(1.)/Interval(10.))
     self.assertTrue(Approx(Interval(0.1)) == Interval(1.)/Interval(10.))

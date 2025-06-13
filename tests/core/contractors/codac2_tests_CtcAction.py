@@ -12,7 +12,7 @@ from codac import *
 
 class TestCtcAction(unittest.TestCase):
   
-  def tests_CtcAction(self):
+  def test_CtcAction(self):
     
     x = VectorVar(2)
     c1 = CtcInverse(AnalyticFunction([x], x-IntervalVector([[1,5],[8,6]])), IntervalVector([[0],[0]]))

@@ -230,6 +230,8 @@ namespace codac2
   /**
    * \brief Returns the largest integer interval included in \f$[x]\f$
    * 
+   * The result is a subset interval of x.
+   * 
    * \param x interval value
    * \return the operation result
    */

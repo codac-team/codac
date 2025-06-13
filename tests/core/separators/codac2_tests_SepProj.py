@@ -12,7 +12,7 @@ from codac import *
 
 class TestSepProj(unittest.TestCase):
 
-  def tests_SepProj(self):
+  def test_SepProj(self):
 
     x = VectorVar(3)
     f_ellipsoid = AnalyticFunction([x], 2*sqr(x[0])+x[0]*x[1]+x[0]*x[2]+sqr(x[1])+sqr(x[2]))

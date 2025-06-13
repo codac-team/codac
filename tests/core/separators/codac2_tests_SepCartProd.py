@@ -12,7 +12,7 @@ from codac import *
 
 class TestSepCartProd(unittest.TestCase):
   
-  def tests_SepCartProd(self):
+  def test_SepCartProd(self):
     
     v = VectorVar(1)
     s1 = SepInverse(AnalyticFunction([v], v), IntervalVector([[-1,1]]))

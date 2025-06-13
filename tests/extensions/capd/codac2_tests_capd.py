@@ -12,7 +12,7 @@ from codac import *
 
 class TestCAPD(unittest.TestCase):
 
-  def tests_capd(self):
+  def test_capd(self):
      self.assertTrue(True)
 
 if __name__ ==  '__main__':

@@ -12,7 +12,7 @@ from codac import *
 
 class TestEigen(unittest.TestCase):
 
-  def tests_eigen(self):
+  def test_eigen(self):
      self.assertTrue(True)
 
 if __name__ ==  '__main__':

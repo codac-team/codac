@@ -18,7 +18,7 @@ def create_f():
 
 class TestAnalyticFunction(unittest.TestCase):
 
-  def tests_AnalyticFunction(self):
+  def test_AnalyticFunction(self):
 
     def invalid_function():
       x = ScalarVar()

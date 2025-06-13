@@ -51,6 +51,12 @@ namespace codac2
     init_from_list(l);
   }
 
+  inline Interval& Interval::init()
+  {
+    *this = Interval(-oo,oo);
+    return *this;
+  }
+
   inline Interval& Interval::init(const Interval& x)
   {
     *this = x;
@@ -356,6 +362,11 @@ namespace codac2
     
     else
       return gaol::operator&(x,y);
+  }
+
+  inline Interval operator|(const Interval& x, double y)
+  {
+    return gaol::operator|(x,Interval(y));
   }
 
   inline Interval operator|(const Interval& x, const Interval& y)

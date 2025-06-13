@@ -28,6 +28,9 @@ void export_IntervalMatrixBase(py::module& m, py::class_<S>& pyclass)
 
   pyclass
 
+    .def("init", [](S& x) { return x.init(); },
+      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_REF_INIT)
+
     .def("volume", [](const S& x) { return x.volume(); },
       MATRIXBASE_ADDONS_INTERVALMATRIXBASE_DOUBLE_VOLUME_CONST)
 

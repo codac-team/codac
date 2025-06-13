@@ -12,7 +12,7 @@ from codac import *
 
 class TestArithmeticMul(unittest.TestCase):
 
-  def tests_ArithmeticMul(self):
+  def test_ArithmeticMul(self):
 
     # inline Vector operator*(double x1, const Vector& x2)
     self.assertTrue(2.*Vector([1,2]) == Vector([2,4]))

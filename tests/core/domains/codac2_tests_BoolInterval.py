@@ -12,7 +12,7 @@ from codac import *
 
 class TestBoolInterval(unittest.TestCase):
 
-  def tests_BoolInterval(self):
+  def test_BoolInterval(self):
     
     self.assertTrue((BoolInterval.TRUE & BoolInterval.TRUE) == BoolInterval.TRUE)
     self.assertTrue((BoolInterval.TRUE & BoolInterval.FALSE) == BoolInterval.EMPTY)

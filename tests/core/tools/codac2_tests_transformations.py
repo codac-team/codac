@@ -13,7 +13,7 @@ import sys
 
 class TestTransformations(unittest.TestCase):
 
-  def tests_affine_transformation(self):
+  def test_affine_transformation(self):
 
     # Building the src trajectory analytically
     

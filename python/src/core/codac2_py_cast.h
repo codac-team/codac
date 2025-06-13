@@ -12,6 +12,7 @@
 
 #include <pybind11/pybind11.h>
 #include <codac2_AnalyticTraj.h>
+#include <codac2_SlicedTube.h>
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -102,5 +103,26 @@ namespace codac2
       assert(is_instance<T>(x));
       const py::object& f_ = x.attr("f");
       return f_.cast<const T&>();
+    }
+
+    template<typename T>
+      requires (std::is_same_v<SlicedTube<Interval>,T>
+        || std::is_same_v<SlicedTube<IntervalVector>,T>
+        || std::is_same_v<SlicedTube<IntervalMatrix>,T>)
+    bool is_instance(const py::object& x)
+    {
+      const py::object& x_ = x.attr("tube");
+      return x_ && py::isinstance<T>(x_);
+    }
+
+    template<typename T>
+      requires (std::is_same_v<SlicedTube<Interval>,T>
+        || std::is_same_v<SlicedTube<IntervalVector>,T>
+        || std::is_same_v<SlicedTube<IntervalMatrix>,T>)
+    const T& cast(const py::object& x)
+    {
+      assert(is_instance<T>(x));
+      const py::object& x_ = x.attr("tube");
+      return x_.cast<const T&>();
     }
 }

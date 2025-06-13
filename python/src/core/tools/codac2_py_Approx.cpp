@@ -60,4 +60,5 @@ void export_Approx(py::module& m)
   _export_Approx<IntervalMatrix>(m, "Approx_IntervalMatrix");
   _export_Approx<Segment>(m, "Approx_Segment");
   _export_Approx<Polygon>(m, "Approx_Polygon");
+  _export_Approx<std::pair<Interval,Interval>>(m, "Approx_pair_Interval");
 }

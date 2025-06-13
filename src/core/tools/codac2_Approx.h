@@ -157,6 +157,32 @@ namespace codac2
       const Polygon _x;
       const double _eps;
   };
+  
+  template<typename T>
+  class Approx<std::pair<T,T>>
+  {
+    public:
+
+      explicit Approx(const std::pair<T,T>& x, double eps = DEFAULT_EPS)
+        : _x(x), _eps(eps)
+      { }
+
+      friend bool operator==(const std::pair<T,T>& p1, const Approx<std::pair<T,T>>& p2)
+      {
+        return Approx<T>(p2._x.first,p2._eps) == p1.first && Approx<T>(p2._x.second,p2._eps) == p1.second;
+      }
+
+      friend std::ostream& operator<<(std::ostream& os, const Approx<std::pair<T,T>>& x)
+      {
+        os << "Approx(" << x._x.first << "," << x._x.second << ")";
+        return os;
+      }
+    
+    private:
+
+      const std::pair<T,T> _x;
+      const double _eps;
+  };
 
   Approx(const Polygon&, double) -> 
     Approx<Polygon>;

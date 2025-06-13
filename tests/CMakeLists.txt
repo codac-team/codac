@@ -56,6 +56,9 @@ list(APPEND SRC_TESTS # listing files without extension
   core/domains/interval/codac2_tests_Interval_operations
   core/domains/interval/codac2_tests_IntervalMatrix
   core/domains/interval/codac2_tests_IntervalVector
+  core/domains/tube/codac2_tests_TDomain
+  core/domains/tube/codac2_tests_SlicedTube
+  core/domains/tube/codac2_tests_SlicedTube_integral
 
   core/functions/analytic/codac2_tests_AnalyticFunction
   ../doc/manual/manual/functions/analytic/src
@@ -94,6 +97,15 @@ list(APPEND SRC_TESTS # listing files without extension
   core/trajectory/codac2_tests_SampledTraj
 
   graphics/styles/codac2_tests_Color
+)
+
+file(COPY
+  ${CMAKE_CURRENT_SOURCE_DIR}/core/domains/tube/codac2_tests_predefined_tubes.py
+  # Add here other Python files that are not tests but need to be exported to Python package
+  # ...
+  
+  DESTINATION
+  ${CMAKE_BINARY_DIR}/python/python_package/codac/tests
 )
 
 set(CODAC_LIBRARIES ${PROJECT_NAME}-core)

@@ -12,7 +12,7 @@ from codac import *
 
 class TestPolygon(unittest.TestCase):
 
-  def tests_polygon_base(self):
+  def test_polygon_base(self):
 
     p1 = Polygon([[3,4]])
     self.assertTrue(p1 == Polygon([[3,4]]))
@@ -27,7 +27,7 @@ class TestPolygon(unittest.TestCase):
     self.assertTrue(p3 == Polygon([[5,1],[1,2],[3,4]]))
     self.assertTrue(p3 == Polygon([[1,2],[3,4],[5,1]]))
 
-  def tests_empty_polygon(self):
+  def test_empty_polygon(self):
 
     p1 = Polygon.empty()
     self.assertTrue(p1.contains(IntervalVector([1,1])) == BoolInterval.FALSE)
@@ -37,7 +37,7 @@ class TestPolygon(unittest.TestCase):
     self.assertTrue(len(p1.unsorted_vertices()) == 0)
     self.assertTrue(len(p1.sorted_vertices()) == 0)
 
-  def tests_Polygon(self):
+  def test_Polygon(self):
 
     p1 = Polygon([[3,-1],[3,4],[5,6],[-1,1]])
     self.assertTrue(p1.contains([3.1,3]) == BoolInterval.FALSE)
@@ -79,7 +79,7 @@ class TestPolygon(unittest.TestCase):
     p3 = Polygon([[0,1],[1,0],[0,0]])
     self.assertTrue(p3.contains([1,1]) == BoolInterval.FALSE)
 
-  def tests_Polygon_degenerated_cases(self):
+  def test_Polygon_degenerated_cases(self):
 
     p1 = Polygon([[1,1]])
     self.assertTrue(p1.contains(IntervalVector([1,1])) == BoolInterval.TRUE)

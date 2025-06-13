@@ -62,12 +62,10 @@ namespace codac2
 
         else if(ir.diam() == 1.)
         {
-          double ir1 = ir.lb();
-          double ir2 = ir.ub();
           Interval x1_1 = x1; Interval x1_2 = x1;
           Interval x2_1 = x2; Interval x2_2 = x2;
-          SubOp::bwd(Interval(ir1*p),x1_1,x2_1);
-          SubOp::bwd(Interval(ir2*p),x1_2,x2_2);
+          SubOp::bwd(Interval(ir.lb()*p),x1_1,x2_1);
+          SubOp::bwd(Interval(ir.ub()*p),x1_2,x2_2);
           x1 = x1_1 | x1_2;
           x2 = x2_1 | x2_2;
         }

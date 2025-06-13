@@ -48,11 +48,12 @@ const std::vector<FigureAxis>& Figure2D::axes() const
   return _axes;
 }
 
-void Figure2D::set_axes(const FigureAxis& axis1, const FigureAxis& axis2)
+Figure2D& Figure2D::set_axes(const FigureAxis& axis1, const FigureAxis& axis2)
 {
   _axes = { axis1, axis2 };
   for(const auto& output_fig : _output_figures)
     output_fig->update_axes();
+  return *this;
 }
 
 const Index& Figure2D::i() const
@@ -385,6 +386,22 @@ void Figure2D::plot_trajectory(const SampledTraj<double>& x, const StyleProperti
       output_fig->update_axes();
 
     draw_polyline(values,s);
+  }
+}
+
+void Figure2D::draw_tube(const SlicedTube<IntervalVector>& x, const StyleProperties& s)
+{
+  for(const auto& si : x)
+    draw_box(si.codomain(),s);
+}
+
+void Figure2D::draw_tube(const SlicedTube<IntervalVector>& x, const ColorMap& cmap)
+{
+  auto tube_t0tf = x.tdomain()->t0_tf();
+  for(const auto& si : x)
+  {
+    auto c = cmap.color((si.t0_tf().mid()-tube_t0tf.lb())/tube_t0tf.diam());
+    draw_box(si.codomain(), {c,c});
   }
 }
 

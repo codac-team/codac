@@ -15,7 +15,7 @@ class TestIntvFullPivLU(unittest.TestCase):
 
 
 # bindings not implemented
-   def tests_IntvFullPivLU_1(self):
+   def test_IntvFullPivLU_1(self):
       M = Matrix([
       [ 1, -4, 3, 7 ],
       [ 2, 1, -4, 6 ],
@@ -32,7 +32,7 @@ class TestIntvFullPivLU(unittest.TestCase):
       I1 = LUdec.solve(IntervalMatrix.eye(4,4));
       self.assertTrue((I1*M-Matrix.eye(4,4)).norm().ub()<1e-10)
 
-   def tests_IntvFullPivLU_2(self):
+   def test_IntvFullPivLU_2(self):
       M = Matrix([
       [ 1, -4, 6, 7 ],
       [ 2, 1, 3, 6 ],

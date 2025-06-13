@@ -18,7 +18,7 @@ class TestCtcInverse(unittest.TestCase):
   # not supported (yet) in Python f = AnalyticFunction([x,y], x-y)
   # not supported (yet) in Python c = CtcInverse(f, Interval(0.))
 
-  def tests_CtcInverse_1(self):
+  def test_CtcInverse_1(self):
 
     x = VectorVar(2)
     f = AnalyticFunction([x], x[0]-x[1])
@@ -46,7 +46,7 @@ class TestCtcInverse(unittest.TestCase):
     c.contract(b)
     self.assertTrue(b == IntervalVector.empty(2))
 
-  def tests_CtcInverse_2(self):
+  def test_CtcInverse_2(self):
 
     x = VectorVar(2)
     f = AnalyticFunction([x], vec(x[0]-x[1]))
@@ -73,7 +73,7 @@ class TestCtcInverse(unittest.TestCase):
     c.contract(b)
     self.assertTrue(b == IntervalVector.empty(2))
   
-  def tests_CtcInverse_3(self):
+  def test_CtcInverse_3(self):
 
     x = VectorVar(2)
     f = AnalyticFunction([x], vec(x[0],sqr(x[0]/7.)+sqr(x[1]/3.)))
@@ -99,7 +99,7 @@ class TestCtcInverse(unittest.TestCase):
     c.contract(b)
     self.assertTrue(b == IntervalVector.empty(2))
   
-  def tests_CtcInverse_4(self):
+  def test_CtcInverse_4(self):
 
     x = VectorVar(2)
     f = AnalyticFunction([x], vec(x[0],sqr(x[0]/7.)+sqr(x[1]/3.)))
@@ -125,7 +125,7 @@ class TestCtcInverse(unittest.TestCase):
     c.contract(b)
     self.assertTrue(b == IntervalVector.empty(2))
   
-  def tests_ParabolasExample(self):
+  def test_ParabolasExample(self):
 
     u = ScalarVar()
     v = ScalarVar()
@@ -153,7 +153,7 @@ class TestCtcInverse(unittest.TestCase):
     self.assertTrue(len(cs) == 1)
     self.assertTrue(Approx(cs[0].box(),1e-4) == [[0.149199,0.182388],[0.148306,0.1826],[0.148054,0.18],[0.148732,0.18]])
   
-  def tests_automatic_deduction_issue245(self):
+  def test_automatic_deduction_issue245(self):
 
     s = VectorVar(2)
     f = AnalyticFunction([s],[sqr(s[0])+sqr(s[1])-1.0])

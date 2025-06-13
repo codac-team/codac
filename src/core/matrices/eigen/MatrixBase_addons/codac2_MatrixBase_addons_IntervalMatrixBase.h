@@ -116,8 +116,19 @@ inline auto diam() const
   degenerate_mat(diam);
 }
 
+inline bool contains(const Matrix<double,RowsAtCompileTime,ColsAtCompileTime>& x) const
+{
+  return _contains(x);
+}
+
 template<typename OtherDerived>
 inline bool contains(const MatrixBase<OtherDerived>& x) const
+{
+  return _contains(x);
+}
+
+template<typename T>
+inline bool _contains(const T& x) const
 {
   assert_release(x.size() == this->size());
 
@@ -132,8 +143,19 @@ inline bool contains(const MatrixBase<OtherDerived>& x) const
   return true;
 }
 
+inline bool interior_contains(const Matrix<double,RowsAtCompileTime,ColsAtCompileTime>& x) const
+{
+  return _interior_contains(x);
+}
+
 template<typename OtherDerived>
 inline bool interior_contains(const MatrixBase<OtherDerived>& x) const
+{
+  return _interior_contains(x);
+}
+
+template<typename T>
+inline bool _interior_contains(const T& x) const
 {
   assert_release(x.size() == this->size());
 
@@ -177,8 +199,19 @@ inline bool is_flat() const
   return false;
 }
 
+inline bool intersects(const Matrix<codac2::Interval,RowsAtCompileTime,ColsAtCompileTime>& x) const
+{
+  return _intersects(x);
+}
+
 template<typename OtherDerived>
 inline bool intersects(const MatrixBase<OtherDerived>& x) const
+{
+  return _intersects(x);
+}
+
+template<typename OtherDerived>
+inline bool _intersects(const MatrixBase<OtherDerived>& x) const
 {
   assert_release(this->size() == x.size());
 
@@ -193,8 +226,19 @@ inline bool intersects(const MatrixBase<OtherDerived>& x) const
   return true;
 }
 
+inline bool is_disjoint(const Matrix<codac2::Interval,RowsAtCompileTime,ColsAtCompileTime>& x) const
+{
+  return _is_disjoint(x);
+}
+
 template<typename OtherDerived>
 inline bool is_disjoint(const MatrixBase<OtherDerived>& x) const
+{
+  return _is_disjoint(x);
+}
+
+template<typename OtherDerived>
+inline bool _is_disjoint(const MatrixBase<OtherDerived>& x) const
 {
   assert_release(this->size() == x.size());
 
@@ -209,8 +253,19 @@ inline bool is_disjoint(const MatrixBase<OtherDerived>& x) const
   return false;
 }
 
+inline bool overlaps(const Matrix<codac2::Interval,RowsAtCompileTime,ColsAtCompileTime>& x) const
+{
+  return _overlaps(x);
+}
+
 template<typename OtherDerived>
 inline bool overlaps(const MatrixBase<OtherDerived>& x) const
+{
+  return _overlaps(x);
+}
+
+template<typename OtherDerived>
+inline bool _overlaps(const MatrixBase<OtherDerived>& x) const
 {
   assert_release(this->size() == x.size());
 
@@ -225,8 +280,19 @@ inline bool overlaps(const MatrixBase<OtherDerived>& x) const
   return true;
 }
 
+inline bool is_subset(const Matrix<codac2::Interval,RowsAtCompileTime,ColsAtCompileTime>& x) const
+{
+  return _is_subset(x);
+}
+
 template<typename OtherDerived>
 inline bool is_subset(const MatrixBase<OtherDerived>& x) const
+{
+  return _is_subset(x);
+}
+
+template<typename T>
+inline bool _is_subset(const T& x) const
 {
   assert_release(this->size() == x.size());
 
@@ -241,8 +307,19 @@ inline bool is_subset(const MatrixBase<OtherDerived>& x) const
   return true;
 }
 
+inline bool is_strict_subset(const Matrix<codac2::Interval,RowsAtCompileTime,ColsAtCompileTime>& x) const
+{
+  return _is_strict_subset(x);
+}
+
 template<typename OtherDerived>
 inline bool is_strict_subset(const MatrixBase<OtherDerived>& x) const
+{
+  return _is_strict_subset(x);
+}
+
+template<typename T>
+inline bool _is_strict_subset(const T& x) const
 {
   assert_release(this->size() == x.size());
 
@@ -260,8 +337,19 @@ inline bool is_strict_subset(const MatrixBase<OtherDerived>& x) const
   return false;
 }
 
+inline bool is_interior_subset(const Matrix<codac2::Interval,RowsAtCompileTime,ColsAtCompileTime>& x) const
+{
+  return _is_interior_subset(x);
+}
+
 template<typename OtherDerived>
 inline bool is_interior_subset(const MatrixBase<OtherDerived>& x) const
+{
+  return _is_interior_subset(x);
+}
+
+template<typename OtherDerived>
+inline bool _is_interior_subset(const MatrixBase<OtherDerived>& x) const
 {
   assert_release(this->size() == x.size());
 
@@ -276,8 +364,19 @@ inline bool is_interior_subset(const MatrixBase<OtherDerived>& x) const
   return true;
 }
 
+inline bool is_strict_interior_subset(const Matrix<codac2::Interval,RowsAtCompileTime,ColsAtCompileTime>& x) const
+{
+  return _is_strict_interior_subset(x);
+}
+
 template<typename OtherDerived>
 inline bool is_strict_interior_subset(const MatrixBase<OtherDerived>& x) const
+{
+  return _is_strict_interior_subset(x);
+}
+
+template<typename OtherDerived>
+inline bool _is_strict_interior_subset(const MatrixBase<OtherDerived>& x) const
 {
   assert_release(this->size() == x.size());
 
@@ -292,8 +391,19 @@ inline bool is_strict_interior_subset(const MatrixBase<OtherDerived>& x) const
   return true;
 }
 
+inline bool is_superset(const Matrix<codac2::Interval,RowsAtCompileTime,ColsAtCompileTime>& x) const
+{
+  return _is_superset(x);
+}
+
 template<typename OtherDerived>
 inline bool is_superset(const MatrixBase<OtherDerived>& x) const
+{
+  return _is_superset(x);
+}
+
+template<typename OtherDerived>
+inline bool _is_superset(const MatrixBase<OtherDerived>& x) const
 {
   assert_release(this->size() == x.size());
 
@@ -308,8 +418,19 @@ inline bool is_superset(const MatrixBase<OtherDerived>& x) const
   return true;
 }
 
+inline bool is_strict_superset(const Matrix<codac2::Interval,RowsAtCompileTime,ColsAtCompileTime>& x) const
+{
+  return _is_strict_superset(x);
+}
+
 template<typename OtherDerived>
 inline bool is_strict_superset(const MatrixBase<OtherDerived>& x) const
+{
+  return _is_strict_superset(x);
+}
+
+template<typename OtherDerived>
+inline bool _is_strict_superset(const MatrixBase<OtherDerived>& x) const
 {
   assert_release(this->size() == x.size());
 

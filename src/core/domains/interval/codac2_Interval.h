@@ -113,6 +113,15 @@ namespace codac2
       Interval(std::initializer_list<double> l);
 
       /**
+       * \brief Sets the value of this interval to [-oo,oo]
+       * 
+       * \note This function is used for template purposes.
+       * 
+       * \return a reference to this
+       */
+      Interval& init();
+
+      /**
        * \brief Sets the value of this interval to x
        * 
        * \note This function is used for template purposes.
@@ -711,6 +720,17 @@ namespace codac2
    * \return intersection result
    */
   Interval operator&(const Interval& x, const Interval& y);
+
+  /**
+   * \brief Returns the squared-union of an interval and a real: \f$[x]\sqcup\{y\}\f$
+   * 
+   * \note The squared-union is defined as: \f$[x]\sqcup[y]=\left[[x]\cup[y]\right]\f$
+   * 
+   * \param x interval value
+   * \param y real value
+   * \return squared-union result
+   */
+  Interval operator|(const Interval& x, double y);
 
   /**
    * \brief Returns the squared-union of two intervals: \f$[x]\sqcup[y]\f$

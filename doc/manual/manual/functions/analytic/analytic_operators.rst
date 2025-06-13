@@ -239,7 +239,7 @@ If you notice any mathematical operators missing from the list below, feel free 
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
   | :math:`\min(x_1,x_2)`                               | ``min(x1,x2)``       | |MinOp|       | ``x1``, ``x2``: scalar              ||okk|   ||okk|   ||okk|  ||okk|       |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
-  | :math:`x_1\bmod x_2`                                | ``mod(x1,x2)``       | |ModOp|       | ``x1``, ``x2``: scalar              ||nok|   ||nok|   ||nok|  ||okk|       |
+  | :math:`x_1\bmod x_2`                                | --                   | |ModOp|       | --                                  ||nok|   ||nok|   ||nok|  ||bok|       |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
   | :math:`(x_1)^{x_2}`                                 | | ``pow(x1,x2)``     | |PowOp|       | ``x1``, ``x2``: scalar              ||okk|   ||okk|   ||okk|  ||okk|       |
   |                                                     | | ``x1^x2``          |               |                                     |        |        |       |            |
@@ -267,7 +267,8 @@ If you notice any mathematical operators missing from the list below, feel free 
   | :math:`\left(\mathbf{x}_1,\mathbf{x}_2,\dots\right)`| ``mat(x1,x2,...)``   | |MatrixOp|    | ``x1``, ``...``: vector             ||okk|   ||okk|   ||okk|  ||nok|       |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
 
-Note that the operator :math:`\det` is only available for :math:`1\times 1` and :math:`2\times 2` matrices.
+| Note: the operator :math:`\det` is only available for :math:`1\times 1` and :math:`2\times 2` matrices.
+| Note: the operator :math:`\bmod` is only available for real periods (double precision), interval periods are not yet supported.
 
 
 Expression involving a non-supported centered-form operation

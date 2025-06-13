@@ -24,7 +24,7 @@ class CtcCustom(Ctc):
 
 class TestCtcFixpoint(unittest.TestCase):
   
-  def tests_CtcFixpoint(self):
+  def test_CtcFixpoint(self):
 
     ctc_custom = CtcCustom()
     x = IntervalVector([[-1000,1000],[-1000,1000]])

@@ -47,6 +47,11 @@
     domains/paving/codac2_py_Paving.cpp
     domains/paving/codac2_py_PavingNode.cpp
     domains/paving/codac2_py_Subpaving.cpp
+    domains/tube/codac2_py_Slice.h
+    domains/tube/codac2_py_SlicedTube.h
+    domains/tube/codac2_py_TDomain.cpp
+    domains/tube/codac2_py_TSlice.cpp
+    domains/tube/codac2_py_TubeBase.cpp
     domains/codac2_py_BoolInterval.cpp
 
     functions/analytic/codac2_py_analytic_variables.cpp
@@ -111,6 +116,7 @@
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/functions/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/graphics/

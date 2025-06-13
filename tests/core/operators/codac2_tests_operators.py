@@ -146,7 +146,7 @@ class TestInterval_bwd(unittest.TestCase):
     self.assertTrue(Approx(_x1) == expected_x1)
     self.assertTrue(Approx(_x2) == expected_x2)
 
-  def tests_interval_bwd(self):
+  def test_interval_bwd(self):
 
     pi_lb = Interval.pi().lb()
     pi_ub = Interval.pi().ub()
@@ -327,7 +327,7 @@ class TestInterval_bwd(unittest.TestCase):
     x = Interval(-1.57079632679489678, 1.1780972450961728626)
     self.assertFalse(tan(x).is_empty())
 
-  def tests_chi_op(self): 
+  def test_chi_op(self): 
      self.assertTrue(
         ChiOp.fwd(Interval(0.2,0.4),Interval(-2.0,-1.0),Interval(1.0,2.0)) == Interval(1.0,2.0))
      self.assertTrue(
@@ -339,7 +339,7 @@ class TestInterval_bwd(unittest.TestCase):
           IntervalMatrix([[[2.0,3.0],[0.0,3.0]],[[2.0,3.0],[1.0,2.0]]]))
          == IntervalMatrix([[[-2.0,-1.0],[-1.0,0.0]],[[-2.0,-1.0],[-1.0,0.0]]]))
 
-  def tests_cross_prod(self):
+  def test_cross_prod(self):
 
     self.assertTrue(
       CrossProdOp.fwd(Vector([1,0,0]),Vector([0,1,0])) == Vector([0,0,1]))
@@ -350,13 +350,13 @@ class TestInterval_bwd(unittest.TestCase):
     self.assertTrue(
       CrossProdOp.fwd(Vector([1,2,3]),Vector([2,4,6])) == Vector([0,0,0]))
 
-  def tests_mat_operator(self):
+  def test_mat_operator(self):
 
     x1,x2,x3 = IntervalVector([2,3]), IntervalVector([4,5]), IntervalVector([6,7]) 
     self.assertTrue(MatrixOp.fwd(x1,x2,x3) == IntervalMatrix([[2,4,6],[3,5,7]]))
     self.assertTrue(MatrixOp.fwd(x1) == IntervalMatrix([[2],[3]]))
 
-  def tests_transpose_operator(self):
+  def test_transpose_operator(self):
     M = IntervalMatrix([[[1,1.5],[2,2.5],[3,3.5]],[[4,4.5],[5,5.5],[6,6.5]]])
     N = IntervalMatrix([[[0.8,1.2],[3.5,4]],[[2.0,2.2],[4.8,5.2]],
                         [[2.8,3.2],[5.8,6.2]]])
@@ -364,7 +364,7 @@ class TestInterval_bwd(unittest.TestCase):
     TransposeOp.bwd(N,M)
     self.assertTrue(M == IntervalMatrix([[[1,1.2],[2,2.2],[3,3.2]],[4.0,[5,5.2],[6,6.2]]]))
 
-  def tests_flatten_operator(self):
+  def test_flatten_operator(self):
     M = IntervalMatrix([[[1,1.5],[2,2.5],[3,3.5]],[[4,4.5],[5,5.5],[6,6.5]]])
     N = IntervalVector([[0.8,1.2],[3.5,4],[2.0,2.2],[4.8,5.2],
                         [2.8,3.2],[5.8,6.2]])

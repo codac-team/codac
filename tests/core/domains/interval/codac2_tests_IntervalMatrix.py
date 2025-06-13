@@ -38,7 +38,7 @@ class TestIntervalMatrix(unittest.TestCase):
       [[-2,-1],[-2,-1],[-4,-2]]
     ])
 
-  def tests_0_intervalmatrix(self):
+  def test_0_intervalmatrix(self):
 
     x = IntervalMatrix([
       [ [-1,1], [-2,2] ],
@@ -55,7 +55,7 @@ class TestIntervalMatrix(unittest.TestCase):
 
     #m = IntervalMatrix(x)
     
-  def tests_intervalmatrix(self):
+  def test_intervalmatrix(self):
 
     m1 = IntervalMatrix(2,3)
     m2 = IntervalMatrix(3,2)
@@ -439,7 +439,7 @@ class TestIntervalMatrix(unittest.TestCase):
     ]))
 
 
-  def tests_intervalmatrix_mixing_type(self):
+  def test_intervalmatrix_mixing_type(self):
 
     m1 = Matrix([
       [ 1,2 ],

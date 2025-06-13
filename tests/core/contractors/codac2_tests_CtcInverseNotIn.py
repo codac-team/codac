@@ -16,7 +16,7 @@ class TestCtcInverseNotIn(unittest.TestCase):
   # Multivariable functions not supported (yet) for CtcInverseNotInNotIn: AnalyticFunction f { {x,y}, x-y }
   # Multivariable functions not supported (yet) for CtcInverseNotInNotIn: CtcInverseNotInNotIn<Interval> c(f, Interval(0.))
 
-  def tests_CtcInverseNotIn_2(self):
+  def test_CtcInverseNotIn_2(self):
 
     # Test not really relevant, but copied from CtcInverse:
 
@@ -47,7 +47,7 @@ class TestCtcInverseNotIn(unittest.TestCase):
     c.contract(b)
     self.assertTrue(b == IntervalVector([[1,5],[8,9]]))
   
-  def tests_CtcInverseNotIn_3(self):
+  def test_CtcInverseNotIn_3(self):
 
     x = VectorVar(2)
     f = AnalyticFunction([x], vec(x[0],sqr(x[0]/7.)+sqr(x[1]/3.)))
@@ -99,7 +99,7 @@ class TestCtcInverseNotIn(unittest.TestCase):
   # disabled:   c.contract(b)
   # disabled:   self.assertTrue(b == IntervalVector([[2,3],[-1,1]]))
   
-  def tests_CtcInverseNotIn_4(self):
+  def test_CtcInverseNotIn_4(self):
 
     v = VectorVar(1)
     c = CtcInverseNotIn(AnalyticFunction([v], v), [[-1,1]])
@@ -112,7 +112,7 @@ class TestCtcInverseNotIn(unittest.TestCase):
     c.contract(x)
     self.assertTrue(x == IntervalVector([[1,8]]))
   
-  def tests_CtcInverseNotIn_5(self):
+  def test_CtcInverseNotIn_5(self):
 
     v = VectorVar(2)
     c = CtcInverseNotIn(AnalyticFunction([v], v), IntervalVector([[-1,1],[5,6]]))

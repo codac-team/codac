@@ -163,6 +163,8 @@ class Approx:
       self.a = Approx_Segment(x,eps)
     elif isinstance(x, (Polygon,ConvexPolygon)):
       self.a = Approx_Polygon(x,eps)
+    elif isinstance(x, tuple) and isinstance(x[0], Interval) and isinstance(x[1], Interval):
+      self.a = Approx_pair_Interval(x,eps)
     else:
       codac_error("Approx: can only build Approx for: \
         double, Interval, [Interval]Vector, Matrix, [Interval]Matrix, Segment, [Convex]Polygon")
@@ -340,3 +342,111 @@ class AnalyticTraj:
     
   # Methods from AnalyticTraj:
   #   none
+
+
+class SlicedTube:
+
+  def __init__(self, x, y=None):
+
+    if y is None:
+      if isinstance(x, SlicedTube):
+        self.__init__(x.tube)
+      elif isinstance(x, SlicedTube_Interval):
+        self.tube = SlicedTube_Interval(x)
+      elif isinstance(x, SlicedTube_IntervalVector):
+        self.tube = SlicedTube_IntervalVector(x)
+      elif isinstance(x, SlicedTube_IntervalMatrix):
+        self.tube = SlicedTube_IntervalMatrix(x)
+      else:
+        codac_error("SlicedTube: unable to copy this tube from another one")
+
+    else:
+      if isinstance(y, AnalyticFunction):
+        self.__init__(x, y.f)
+      elif isinstance(y, (Interval,AnalyticFunction_Scalar)):
+        self.tube = SlicedTube_Interval(x, y)
+      elif isinstance(y, (IntervalVector,AnalyticFunction_Vector)):
+        self.tube = SlicedTube_IntervalVector(x, y)
+      elif isinstance(y, (IntervalMatrix,AnalyticFunction_Matrix)):
+        self.tube = SlicedTube_IntervalMatrix(x, y)
+      else:
+        codac_error("SlicedTube: can only build this tube from an AnalyticFunction_[Scalar/Vector/Matrix]")
+
+  def __iter__(self):
+    return self.tube.__iter__()
+
+  # From TubeBase:
+
+  def tdomain(self):
+    return self.tube.tdomain()
+
+  def t0_tf(self):
+    return self.tube.t0_tf()
+
+  # From SlicedTube<T>:
+  
+  def nb_slices(self):
+    return self.tube.nb_slices()
+  
+  def size(self):
+    return self.tube.size()
+  
+  def volume(self):
+    return self.tube.volume()
+  
+  def first_slice(self):
+    return self.tube.first_slice()
+  
+  def last_slice(self):
+    return self.tube.last_slice()
+
+  def is_empty(self):
+    return self.tube.is_empty()
+
+  def is_unbounded(self):
+    return self.tube.is_unbounded()
+
+  def codomain(self):
+    return self.tube.codomain()
+
+  def __call__(self,t):
+    return self.tube.__call__(t)
+
+  def enclosed_bounds(self,t):
+    return self.tube.enclosed_bounds(t)
+
+  def set(self,x,t=None):
+    if t is None:
+      return self.tube.set(x)
+    else:
+      return self.tube.set(x,t)
+
+  def set_ith_slice(self,x,i):
+    return self.tube.set_ith_slice(x,i)
+
+  def inflate(self,rad):
+    return self.tube.inflate(rad)
+
+  def __eq__(self,x):
+    return self.tube.__eq__(x.tube)
+
+  def __iand__(self,x):
+    return self.tube.__iand__(x)
+
+  def self_inter(self,x):
+    return self.tube.self_inter(x)
+
+  def __repr__(self):
+    return str(self.tube)
+
+  def integral(self,t1,t2=None):
+    if t2 is None:
+      return self.tube.integral(t1)
+    else:
+      return self.tube.integral(t1,t2)
+
+  def partial_integral(self,t1,t2=None):
+    if t2 is None:
+      return self.tube.partial_integral(t1)
+    else:
+      return self.tube.partial_integral(t1,t2)

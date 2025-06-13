@@ -70,6 +70,13 @@ Matrix(int r, int c, const double bounds[][2])
   assert_release(k == this->size() && "incorrect array size");
 }
 
+inline auto& init()
+{
+  for(Index i = 0 ; i < this->size() ; i++)
+    *(this->data()+i) = codac2::Interval();
+  return *this;
+}
+
 template<typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime,typename OtherDerived>
   requires IsIntervalDomain<U>
 inline bool operator==(const MatrixBase<OtherDerived>& x) const
@@ -275,7 +282,7 @@ template<typename OtherDerived>
 inline auto operator|(const MatrixBase<OtherDerived>& x) const
 {
   auto y = *this;
-  return y |= x;
+  return y |= x.template cast<codac2::Interval>();
 }
 
 template<typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
