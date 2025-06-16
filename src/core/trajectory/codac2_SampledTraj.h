@@ -35,7 +35,7 @@ namespace codac2
         auto it_t = l_t.begin(); auto it_x = l_x.begin();
         while(it_t != l_t.end())
         {
-          this->set(*it_t,*it_x);
+          this->set(*it_x, *it_t);
           it_t++; it_x++;
         }
       }
@@ -107,8 +107,8 @@ namespace codac2
             ++it;
         }
 
-        this->set(new_tdomain.lb(), y_lb); // clean truncation
-        this->set(new_tdomain.ub(), y_ub);
+        this->set(y_lb, new_tdomain.lb()); // clean truncation
+        this->set(y_ub, new_tdomain.ub());
       }
 
       virtual typename Wrapper<T>::Domain codomain() const
@@ -155,7 +155,7 @@ namespace codac2
         }
       }
 
-      void set(double t, const T& x)
+      void set(const T& x, double t)
       {
         assert(this->empty() || size_of(x) == this->size());
         std::map<double,T>::operator[](t) = x;
@@ -177,7 +177,7 @@ namespace codac2
         {
           // Appending values from the initial map:
           for(const auto& [ti,xi] : *this)
-            straj.set(ti, xi);
+            straj.set(xi, ti);
         }
         
         return straj;
@@ -195,7 +195,7 @@ namespace codac2
         SampledTraj<T> straj = TrajBase<T>::sampled_as(x);
         if(keep_original_values)
           for(const auto& [ti,xi] : *this)
-            straj.set(ti, xi);
+            straj.set(xi, ti);
         return straj;
       }
 
@@ -291,7 +291,7 @@ namespace codac2
       }
 
       prev_xi = xi;
-      x_continuous.set(ti, xi+value_mod);
+      x_continuous.set(xi+value_mod, ti);
     }
 
     return x_continuous;

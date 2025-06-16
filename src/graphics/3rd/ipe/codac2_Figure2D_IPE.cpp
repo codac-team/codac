@@ -206,6 +206,11 @@ std::string to_ipe_linestyle(const std::string& ls)
     return "solid";
 }
 
+std::string to_ipe_linewidth(const double line_width)
+{
+  return std::to_string((80.0*line_width)+0.4); // values found empirically
+}
+
 void Figure2D_IPE::begin_path(const StyleProperties& s, bool tip)
 {
   // substr is needed to remove the "#" at the beginning of hex_str (deprecated by IPE)
@@ -222,7 +227,7 @@ void Figure2D_IPE::begin_path(const StyleProperties& s, bool tip)
     opacity=\"" << ipe_opacity(s.fill_color) << "%\" \n \
     stroke-opacity=\"" << ipe_opacity(s.stroke_color) << "%\" \n \
     dash=\"" << to_ipe_linestyle(s.line_style) << "\" \n \
-    pen=\"heavier\"";
+    pen=\"" << to_ipe_linewidth(s.line_width)<< "\"";
   if (tip)
     _f_temp_content << "\n \
     arrow=\"normal/normal\"";
@@ -237,7 +242,7 @@ void Figure2D_IPE::begin_path_with_matrix(const Vector& x, float length, const S
 
   if ((std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end()) && s.layer != "")
       _layers.push_back(s.layer); 
-
+  
   _f_temp_content << "\n \
     <path layer=\"" << s.layer << "\" \n \
     stroke=\"codac_color_" << ipe_str(s.stroke_color) << "\" \n \
@@ -245,7 +250,7 @@ void Figure2D_IPE::begin_path_with_matrix(const Vector& x, float length, const S
     opacity=\"" << ipe_opacity(s.fill_color) << "%\" \n \
     stroke-opacity=\"" << ipe_opacity(s.stroke_color) << "%\" \n \
     dash=\"" << to_ipe_linestyle(s.line_style) << "\" \n \
-    pen=\"heavier\" \n \
+    pen=\"" << to_ipe_linewidth(s.line_width) << "\" \n \
     matrix=";
 
   // Matrix is composed of the 4 components of the 2D transformation matrix and the translation vector

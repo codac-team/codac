@@ -38,8 +38,8 @@ DefaultFigure.draw_box([[2.2,2.5],[2.2,2.5]],[Color.black(),Color.green(0.8)])
 DefaultFigure.set(fig1)
 DefaultFigure.draw_box([[2.2,2.5],[2.2,2.5]],[Color.blue(),Color.cyan(0.8)])
 
-fig2.draw_AUV([1,1,3.14/2],2.,StyleProperties([Color.black(),Color.yellow()],"-..", "vehicles"))
-fig2.draw_tank([2,1,3.14/2],1.,StyleProperties([Color.black(),Color.yellow()],"vehicles"))
+fig2.draw_AUV([1,1,3.14/2],2.,StyleProperties([Color.black(),Color.yellow()], "0.1", "vehicles"))
+fig2.draw_tank([2,1,3.14/2],1.5,StyleProperties([Color.black(),Color.yellow()],"vehicles","0.1"))
 fig2.draw_pie([2,2],[1.5,2.5],[(3*3.14/4)-0.5,(3*3.14/4)+0.5],[Color.blue(),Color.cyan()])
 fig2.draw_polyline([[2,-0.5],[4,0.5],[3,1.5],[4,2.5],[3,3]], StyleProperties(Color.red(),".."))
 fig2.draw_polygon([[2,4.5],[4,4.5],[4.2,3.5],[3.5,3]], [Color.none(),Color.green(0.5)])
@@ -47,10 +47,10 @@ fig2.draw_polyline([[-0.8,0],[0,1.5]], 0.2, [Color.red(),Color.black(0.3)])
 fig2.draw_ellipse([1,1],[0.5,2], 0.2, [Color.blue(),Color.blue(0.3)])
 fig2.draw_line([1,1],[3,3], Color.blue())
 fig2.draw_arrow([3,1],[2.2,2], 0.2, [Color.red(),Color.black(0.3)])
-fig2.draw_parallelepiped([1.5,2.8],Matrix([[0.5,0.4],[0,0.2]]), [Color.red(),Color.green(0.5)])
+fig2.draw_parallelepiped([1.5,2.8],Matrix([[0.5,0.4],[0,0.2]]), StyleProperties([Color.red(),Color.green(0.5)],"parallelepiped","0.1"))
 fig2.draw_zonotope([4,1.5],[[-0.2,0.1],[-0.06,0.04],[0.2,0.04],
                  [0.06,-0.04],[0.01,-0.03],[0.08,0.18],[0,0]],
-                StyleProperties([Color.red(),Color.yellow(0.4)],"zonotope"))
+                StyleProperties([Color.red(),Color.yellow(0.4)],"zonotope","0.05"))
 
 # Colors
 # predefined colors without and with opacity

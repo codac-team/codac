@@ -19,6 +19,8 @@
 #include "codac2_py_SepInter_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
 #include "codac2_SepUnion.h"
 #include "codac2_py_SepUnion_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_SepNot.h"
+#include "codac2_py_SepNot_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
 
 using namespace codac2;
 namespace py = pybind11;
@@ -111,6 +113,14 @@ py::class_<SepBase,pySep> export_Sep(py::module& m)
           return SepUnion(s1.copy(),s2.copy());
         },
       SEPUNION_OPERATOROR_CONST_INTERVALVECTOR_REF_CONST_S2_REF)
+
+    // Negation of separator
+
+    .def("__invert__", [](const SepBase& s1)
+        {
+          return SepNot(s1.copy());
+        },
+      SEPNOT_OPERATORNOT_CONST_S_REF)
 
   ;
 

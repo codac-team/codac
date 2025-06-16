@@ -46,7 +46,7 @@ class TestTransformations(unittest.TestCase):
 
     dst_estim = SampledVectorTraj()
     for ti,src_i in src:
-      dst_estim.set(ti, tr*src_i)
+      dst_estim.set(tr*src_i, ti)
 
     scale = tr.linear().col(0).norm()
     rotation_matrix = tr.linear() / scale

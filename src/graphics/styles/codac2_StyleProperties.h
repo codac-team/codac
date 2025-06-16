@@ -27,6 +27,7 @@ namespace codac2
     Color stroke_color = Color::black();
     Color fill_color = Color::none();
     std::string line_style = "-";
+    double line_width = 0.;
     std::string layer = "alpha";
 
     /**
@@ -42,8 +43,9 @@ namespace codac2
      * \param stroke_color Stroke color
      * \param param1 Optional parameter, can be layer name or line style
      * \param param2 Optional parameter, can be layer name or line style
+     * \param param3 Optional parameter, can be layer name or line style
      */
-    StyleProperties(const Color& stroke_color, const std::string& param1 = "", const std::string& param2 = "");
+    StyleProperties(const Color& stroke_color, const std::string& param1 = "", const std::string& param2 = "", const std::string& param3 = "");
 
     /**
      * \brief Constructor from a stroke and eventually a fill color, and two optional parameters
@@ -51,8 +53,16 @@ namespace codac2
      * \param colors list of colors (stroke color and eventually fill color)
      * \param param1 Optional parameter, can be layer name or line style
      * \param param2 Optional parameter, can be layer name or line style
+     * \param param3 Optional parameter, can be layer name or line style
      */
-    StyleProperties(std::initializer_list<Color> colors, const std::string& param1 = "", const std::string& param2 = "");
+    StyleProperties(std::initializer_list<Color> colors, const std::string& param1 = "", const std::string& param2 = "", const std::string& param3 = "");
+
+    /**
+     * \brief Parse a parameter and update the style properties accordingly
+     * 
+     * \param param Parameter to parse, can be a line style, line width or layer name
+     */
+    void parse_parameter(const std::string& param);
 
     /**
      * \brief Predefined "inside" style, dark gray edge and green fill

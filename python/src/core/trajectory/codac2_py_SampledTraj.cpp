@@ -162,8 +162,8 @@ py::class_<SampledTraj<T>> _export_SampledTraj(py::module& m, const string& clas
       "t"_a)
 
     .def("set", &SampledTraj<T>::set,
-      VOID_SAMPLEDTRAJ_T_SET_DOUBLE_CONST_T_REF,
-      "ti"_a, "xi"_a)
+      VOID_SAMPLEDTRAJ_T_SET_CONST_T_REF_DOUBLE,
+      "xi"_a, "ti"_a)
 
     .def("as_function", &SampledTraj<T>::as_function,
       ANALYTICFUNCTION_TYPENAME_EXPRTYPE_T_TYPE_SAMPLEDTRAJ_T_AS_FUNCTION_CONST)

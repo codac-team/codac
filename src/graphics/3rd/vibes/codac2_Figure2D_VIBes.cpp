@@ -23,7 +23,6 @@ Figure2D_VIBes::Figure2D_VIBes(const Figure2D& fig)
   Figure2D_VIBes::_has_been_initialized ++;
 
   vibes::newFigure(fig.name());
-  vibes::newGroup("alpha",vibesParams("figure", _fig.name()));
 }
 
 Figure2D_VIBes::~Figure2D_VIBes()
@@ -44,14 +43,18 @@ void Figure2D_VIBes::update_axes()
 
 void Figure2D_VIBes::update_drawing_properties(const StyleProperties& s)
 {
-  if (std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end())
+  if ((std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end()) && !(s.layer == "alpha"))
     {
       vibes::newGroup(s.layer,vibesParams("figure", _fig.name()));
       _layers.push_back(s.layer);
     }
 
   _params["LineStyle"] = s.line_style;
-  _params["group"] = s.layer;
+  _params["LineWidth"] = std::to_string(s.line_width);
+  if (s.layer != "alpha")
+    _params["group"] = s.layer;
+  else
+    _params.pop("group");
 }
 
 void Figure2D_VIBes::update_window_properties()

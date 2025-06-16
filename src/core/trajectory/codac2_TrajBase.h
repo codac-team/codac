@@ -54,8 +54,8 @@ namespace codac2
         auto tdom = tdomain();
         SampledTraj<T> straj;
         for(double t = tdom.lb() ; t < tdom.ub() ; t+=dt)
-          straj.set(t, (*this)(t));
-        straj.set(tdom.ub(), (*this)(tdom.ub()));
+          straj.set((*this)(t), t);
+        straj.set((*this)(tdom.ub()), tdom.ub());
         return straj;
       }
 
@@ -66,7 +66,7 @@ namespace codac2
         
         SampledTraj<T> straj;
         for(const auto& [ti,dump] : x)
-          straj.set(ti, (*this)(ti));
+          straj.set((*this)(ti), ti);
         return straj;
       }
 
@@ -77,20 +77,20 @@ namespace codac2
 
         SampledTraj<T> p;
         double t = tdomain().lb(), last_t = t;
-        p.set(t, y0); t += dt;
+        p.set(y0, t); t += dt;
         T y = y0;
 
         while(t < tdomain().ub())
         {
           y += ((*this)(last_t)+(*this)(t))*dt/2.;
-          p.set(t, y);
+          p.set(y, t);
           last_t = t;
           t += dt;
         }
 
         t = tdomain().ub();
         y += ((*this)(last_t)+(*this)(t))*(t-last_t)/2.;
-        p.set(t, y);
+        p.set(y, t);
 
         return p;
       }
