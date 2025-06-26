@@ -3,6 +3,19 @@
 # Source variables which are shared between install and uninstall.
 . $PSScriptRoot\sharedVars.ps1
 
+function Assert-SafeUrl {
+	param(
+		[string]$Url,
+		[string]$AllowedPrefix
+	)
+
+	$isLocal    = Test-Path $Url -PathType Any -ErrorAction SilentlyContinue
+	$isAllowed  = $Url.StartsWith($AllowedPrefix, [StringComparison]::OrdinalIgnoreCase)
+	if (-not ($isLocal -or $isAllowed)) {
+		throw "Invalid URL '$Url'. Must be a local path or start with '$AllowedPrefix'."
+	}
+}
+
 $toolsDir = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 
 $pp = Get-PackageParameters
@@ -15,6 +28,8 @@ Write-Host "Codac is going to be installed in '$installDir'"
 
 $root = Join-Path $installDir "codac"
 New-Item -ItemType Directory -Force -Path $root | Out-Null
+
+$AllowedUrlPrefix = 'https://github.com/codac-team/codac'
 
 if (!$pp['url']) { 
 	$url = 'https://github.com/codac-team/codac/releases/download/v1/codac_x86_mingw11.zip'
@@ -38,6 +53,7 @@ if (!$pp['url']) {
 else {
 	$url = $pp['url']
 	$checksum = $pp['checksum']
+	Assert-SafeUrl $url $AllowedUrlPrefix
 	$packageArgs = @{
 		packageName   = $env:ChocolateyPackageName
 		unzipLocation = Join-Path "$root" ".."
@@ -106,6 +122,7 @@ for ($i = 1; $i -le 99; $i++) {
 	if ($pp['url'+$i]) {
 		$url = $pp['url'+$i]
 		$checksum = $pp['checksum'+$i]
+		Assert-SafeUrl $url $AllowedUrlPrefix
 		$packageArgs = @{
 			packageName   = $env:ChocolateyPackageName
 			unzipLocation = Join-Path "$root" ".."
