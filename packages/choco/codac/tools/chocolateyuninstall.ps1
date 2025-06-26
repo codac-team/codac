@@ -15,11 +15,10 @@ Write-Host "Codac is going to be uninstalled from '$installDir'"
 
 $root = Join-Path $installDir "codac"
 
-try {
-    # Uninstall-ChocolateyPath does not seem always available...
+if (Get-Command Uninstall-ChocolateyPath -ErrorAction SilentlyContinue -CommandType Function) {
     Uninstall-ChocolateyPath "$root\bin" -PathType 'Machine'
 }
-catch {
+else {
     $newpath = [environment]::GetEnvironmentVariable("Path","Machine")
     $newpath = ($newpath.Split(';') | Where-Object { $_ -ne "$root\bin" }) -join ';'
     [environment]::SetEnvironmentVariable("Path",$newpath,"Machine")
