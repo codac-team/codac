@@ -44,9 +44,9 @@ choco install -y --ignore-dependencies codac --params "'/url:https://github.com/
     <releaseNotes>https://github.com/codac-team/codac/releases</releaseNotes>
     <dependencies>
       <dependency id="chocolatey-core.extension" version="1.1.0" />
-      <dependency id="mingw" version="[11.2.0.07112021]" />
-      <dependency id="eigen" version="3.3.4.20210818" />
-      <dependency id="ibex" version="2.8.9.20230510" />
+      <dependency id="mingw" version="[13.2.0]" />
+      <dependency id="eigen" version="3.4.0.20240224" />
+      <dependency id="ibex" version="2.8.9.20250626" />
     </dependencies>
   </metadata>
 </package>

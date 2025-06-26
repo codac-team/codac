@@ -32,9 +32,9 @@ New-Item -ItemType Directory -Force -Path $root | Out-Null
 $AllowedUrlPrefix = 'https://github.com/codac-team/codac'
 
 if (!$pp['url']) { 
-	$url = 'https://github.com/codac-team/codac/releases/download/v1/codac_x86_mingw11.zip'
+	$url = 'https://github.com/codac-team/codac/releases/download/v1/codac_x86_mingw13.zip'
 	$checksum = 'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE'
-	$url64 = 'https://github.com/codac-team/codac/releases/download/v1/codac_x64_mingw11.zip'
+	$url64 = 'https://github.com/codac-team/codac/releases/download/v1/codac_x64_mingw13.zip'
 	$checksum64 = 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'
 	$packageArgs = @{
 		packageName   = $env:ChocolateyPackageName
