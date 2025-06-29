@@ -121,7 +121,7 @@ namespace codac2
         }
       }
 
-      std::pair<T,T> enclosed_bounds(const Interval& t) const
+      inline std::pair<T,T> enclosed_bounds(const Interval& t) const
       {
         T x = *this; x.set_empty(); 
         auto bounds = std::make_pair(x,x);
@@ -155,9 +155,12 @@ namespace codac2
         return bounds;
       }
 
-      inline void set(const T& x)
+      inline void set(const T& x, bool propagate = true)
       {
-        set(x, true);
+        assert_release(x.size() == this->size());
+        codomain() = x;
+        if(propagate)
+          update_adjacent_codomains();
       }
 
       inline void init()
@@ -188,14 +191,6 @@ namespace codac2
 
       template<typename T_>
       friend class SlicedTube;
-
-      inline void set(const T& x, bool propagate)
-      {
-        assert_release(x.size() == this->size());
-        codomain() = x;
-        if(propagate)
-          update_adjacent_codomains();
-      }
 
       inline void set_empty(bool propagate)
       {

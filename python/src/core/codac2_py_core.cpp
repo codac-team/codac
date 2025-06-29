@@ -36,8 +36,10 @@ void export_OctaSym(py::module& m);
 py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py::module& m);
 void export_CtcAction(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcCartProd(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
+void export_CtcConstell(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcCross(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcCtcBoundary(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
+void export_CtcDeriv(py::module& m);
 void export_CtcDist(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcEmpty(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcFixpoint(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
@@ -70,8 +72,10 @@ void export_Subpaving(py::module& m);
 void export_TDomain(py::module& m);
 void export_TSlice(py::module& m);
 void export_TubeBase(py::module& m);
+void export_tube_cart_prod(py::module& m);
 
 // functions
+void export_VarBase(py::module& m);
 void export_ScalarVar(py::module& m);
 void export_VectorVar(py::module& m);
 void export_MatrixVar(py::module& m);
@@ -155,8 +159,10 @@ PYBIND11_MODULE(_core, m)
   auto py_ctc_iv = export_CtcIntervalVector(m);
   export_CtcAction(m, py_ctc_iv);
   export_CtcCartProd(m, py_ctc_iv);
+  export_CtcConstell(m, py_ctc_iv);
   export_CtcCross(m, py_ctc_iv);
   export_CtcCtcBoundary(m, py_ctc_iv);
+  export_CtcDeriv(m);
   export_CtcDist(m, py_ctc_iv);
   export_CtcEmpty(m, py_ctc_iv);
   export_CtcFixpoint(m, py_ctc_iv);
@@ -211,6 +217,7 @@ PYBIND11_MODULE(_core, m)
   export_SlicedTube<Interval>(m, "SlicedTube_Interval");
   export_SlicedTube<IntervalVector>(m, "SlicedTube_IntervalVector");
   export_SlicedTube<IntervalMatrix>(m, "SlicedTube_IntervalMatrix");
+  export_tube_cart_prod(m);
 
   export_arithmetic_add(py_V, py_IV, py_M, py_IM, py_B, py_IB);
   export_arithmetic_sub(py_V, py_IV, py_M, py_IM, py_B, py_IB);
@@ -241,6 +248,7 @@ PYBIND11_MODULE(_core, m)
   export_AnalyticFunction<ScalarType>(m,"AnalyticFunction_Scalar");
   export_AnalyticFunction<VectorType>(m,"AnalyticFunction_Vector");
   export_AnalyticFunction<MatrixType>(m,"AnalyticFunction_Matrix");
+  export_VarBase(m);
   export_ScalarVar(m);
   export_VectorVar(m);
   export_MatrixVar(m);
@@ -282,4 +290,11 @@ PYBIND11_MODULE(_core, m)
   // trajectory
   export_AnalyticTraj(m);
   export_SampledTraj(m);
+
+
+  m.def("srand", []()
+    {
+      srand(time(NULL));
+    },
+    DOC_TO_BE_DEFINED);
 }

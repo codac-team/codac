@@ -11,10 +11,13 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcAction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcAction.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCartProd.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcConstell.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcConstell.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCross.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCross.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCtcBoundary.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCtcBoundary.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcDeriv.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcDist.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcDist.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.cpp
@@ -76,6 +79,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_TSlice.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_TSlice.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_TubeBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_tube_cart_prod.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_ExprBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_ExprBase.h
@@ -217,6 +221,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Approx.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_assert.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Collection.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_fixpoint.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Index.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_math.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_object_file_format.cpp

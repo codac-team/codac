@@ -242,7 +242,7 @@ User manual
       * CtcInverseNotIn
    * Geometric contractors
       * :ref:`sec-ctc-geom-ctcdist`
-      * CtcPolar
+      * :ref:`sec-ctc-geom-ctcpolar`
       * CtcSegment
       * CtcPolygon
       * CtcPointCloud
@@ -433,6 +433,14 @@ Development
 ..    howto/robotics/index.rst
 ..    howto/geometry/index.rst
 ..    howto/dynamical/index.rst
+
+
+.. toctree::
+   :hidden:
+   :caption: Tutorial
+   :maxdepth: 3
+
+   tuto/cp_robotics/index.rst
 
 
 .. toctree::

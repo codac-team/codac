@@ -65,9 +65,9 @@ py::class_<Slice<T>> export_Slice(py::module& m, const std::string& name)
       PAIR_TT_SLICE_T_ENCLOSED_BOUNDS_CONST_INTERVAL_REF_CONST,
       "t"_a)
 
-    .def("set", (void (Slice<T>::*)(const T&)) &Slice<T>::set,
-      VOID_SLICE_T_SET_CONST_T_REF,
-      "x"_a)
+    .def("set", (void (Slice<T>::*)(const T&,bool)) &Slice<T>::set,
+      VOID_SLICE_T_SET_CONST_T_REF_BOOL,
+      "x"_a, "propagate"_a=true)
 
     .def("init", &Slice<T>::init,
       VOID_SLICE_T_INIT)

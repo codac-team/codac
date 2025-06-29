@@ -14,6 +14,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
+#include <codac2_SampledTraj.h>
 #include <codac2_AnalyticFunction.h>
 #include <codac2_analytic_variables.h>
 #include "codac2_py_AnalyticFunction_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
@@ -253,6 +254,18 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
     .def("output_size", &AnalyticFunction<T>::output_size,
       INDEX_ANALYTICFUNCTION_T_OUTPUT_SIZE_CONST)
 
+    .def("nb_args", &AnalyticFunction<T>::nb_args,
+      SIZET_FUNCTIONBASE_E_NB_ARGS_CONST)
+
+    .def("args", [](const AnalyticFunction<T>& f)
+      {
+        std::list<std::shared_ptr<VarBase>> l;
+        for(auto& a : f.args())
+          l.push_back(a);
+        return l;        
+      },
+      CONST_FUNCTIONARGSLIST_REF_FUNCTIONBASE_E_ARGS_CONST)
+
     .def("__call__", [](const AnalyticFunction<T>& f, const ScalarExpr& x)
       {
         return AnalyticExprWrapper<T>(
@@ -288,9 +301,30 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
   bind_(exported, "eval", eval, T_DOMAIN_ANALYTICFUNCTION_T_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
   bind_(exported, "diff", diff, AUTO_ANALYTICFUNCTION_T_DIFF_CONST_ARGS_REF_VARIADIC_CONST);
 
+  if constexpr(std::is_same_v<T,ScalarType> || std::is_same_v<T,VectorType>)
+  {
+    exported
+
+      .def("tube_eval", [](const AnalyticFunction<T>& f, const py::object& x1) {
+
+            if(!is_instance<SlicedTube<typename T::Domain>>(x1)) {
+              assert_release("tube_eval: invalid tube type");
+            }
+
+            return f.tube_eval(cast<SlicedTube<typename T::Domain>>(x1));
+          },
+        AUTO_ANALYTICFUNCTION_T_TUBE_EVAL_CONST_SLICEDTUBE_ARGS_REF_VARIADIC_CONST,
+        "x1"_a)
+    ;
+  }
+
   exported
 
-    // Mixed scalar/vector inputs are not supported yet
+    .def("traj_eval", [](const AnalyticFunction<T>& f, const SampledTraj<typename T::Scalar>& x1) {
+          return f.traj_eval(x1);
+        },
+      AUTO_ANALYTICFUNCTION_T_TRAJ_EVAL_CONST_SAMPLEDTRAJ_ARGS_REF_VARIADIC_CONST,
+      "x1"_a)
 
     .def("__repr__", [](const AnalyticFunction<T>& f) {
           std::ostringstream stream;

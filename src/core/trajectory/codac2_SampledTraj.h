@@ -296,4 +296,13 @@ namespace codac2
 
     return x_continuous;
   }
+
+  inline std::vector<SampledTraj<double>> as_scalar_trajs(const SampledTraj<Vector>& x)
+  {
+    std::vector<SampledTraj<double>> v(x.size());
+    for(const auto& [ti,xi] : x)
+      for(Index i = 0 ; i < x.size() ; i++)
+        v[i].set(xi[i],ti);
+    return v;
+  }
 }

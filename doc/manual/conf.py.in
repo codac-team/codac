@@ -20,6 +20,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx_tabs.tabs',
     'breathe',
+    'sphinx_togglebutton',
 ]
 
 templates_path = ['_templates']
@@ -60,6 +61,7 @@ html_theme_options = {
         "color-link--visited": "var(--color-link)",
 
         "header-height": "2rem",
+        "admonition-font-size": "100%",
     },
 
     "dark_css_variables": {
@@ -79,6 +81,7 @@ html_theme_options = {
         "color-link--hover": "#77C8F6",
 
         "header-height": "2rem",
+        "admonition-font-size": "100%",
     },
 
     "announcement": "You are currently reading the new Codac documentation, which is currently in preparation. <a href=\"http://codac.io\">See the v1 website</a>.",
@@ -95,3 +98,6 @@ mathjax3_config = {
 breathe_projects = {
   "codac": "../api/xml"
 }
+
+togglebutton_hint = "<strong style=\"color: #009945;\">Reveal the solution.</strong>"
+togglebutton_hint_hide = "Hide the solution"

@@ -96,6 +96,16 @@ namespace codac2
       }
 
       /**
+       * \brief Returns the number of arguments of the function.
+       * 
+       * \return an integer.
+       */
+      size_t nb_args() const
+      {
+        return _args.size();
+      }
+
+      /**
        * \brief Returns the expression associated with the function.
        * 
        * \return A constant reference to the shared pointer to the function's expression.

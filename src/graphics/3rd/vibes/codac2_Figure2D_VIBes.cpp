@@ -41,18 +41,18 @@ void Figure2D_VIBes::update_axes()
     _fig.name());
 }
 
-void Figure2D_VIBes::update_drawing_properties(const StyleProperties& s)
+void Figure2D_VIBes::update_drawing_properties(const StyleProperties& style)
 {
-  if ((std::find(_layers.begin(), _layers.end(), s.layer) == _layers.end()) && !(s.layer == "alpha"))
+  if ((std::find(_layers.begin(), _layers.end(), style.layer) == _layers.end()) && !(style.layer == "alpha"))
     {
-      vibes::newGroup(s.layer,vibesParams("figure", _fig.name()));
-      _layers.push_back(s.layer);
+      vibes::newGroup(style.layer,vibesParams("figure", _fig.name()));
+      _layers.push_back(style.layer);
     }
 
-  _params["LineStyle"] = s.line_style;
-  _params["LineWidth"] = std::to_string(s.line_width);
-  if (s.layer != "alpha")
-    _params["group"] = s.layer;
+  _params["LineStyle"] = style.line_style;
+  _params["LineWidth"] = std::to_string(style.line_width);
+  if (style.layer != "alpha")
+    _params["group"] = style.layer;
   else
     _params.pop("group");
 }
@@ -71,49 +71,49 @@ void Figure2D_VIBes::center_viewbox(const Vector& c, const Vector& r)
   vibes::axisLimits(c[i()]-r[i()], c[i()]+r[i()], c[j()]-r[j()], c[j()]+r[j()], _fig.name());
 }
 
-void Figure2D_VIBes::draw_point(const Vector& c, const StyleProperties& s)
+void Figure2D_VIBes::draw_point(const Vector& c, const StyleProperties& style)
 {
   assert(_fig.size() <= c.size());
-  update_drawing_properties(s);
+  update_drawing_properties(style);
 
-  vibes::drawPoint(c[i()],c[j()],2, to_vibes_style(s), _params);
+  vibes::drawPoint(c[i()],c[j()],2, to_vibes_style(style), _params);
 }
 
-void Figure2D_VIBes::draw_box(const IntervalVector& x, const StyleProperties& s)
+void Figure2D_VIBes::draw_box(const IntervalVector& x, const StyleProperties& style)
 {
   assert(_fig.size() <= x.size());
 
-  update_drawing_properties(s);
+  update_drawing_properties(style);
 
-  vibes::drawBox(x[i()].lb(),x[i()].ub(),x[j()].lb(),x[j()].ub(), to_vibes_style(s), _params);
+  vibes::drawBox(x[i()].lb(),x[i()].ub(),x[j()].lb(),x[j()].ub(), to_vibes_style(style), _params);
 }
 
-void Figure2D_VIBes::draw_circle(const Vector& c, double r, const StyleProperties& s)
+void Figure2D_VIBes::draw_circle(const Vector& c, double r, const StyleProperties& style)
 {
   assert(_fig.size() <= c.size());
   assert(r > 0.);
 
-  update_drawing_properties(s);
+  update_drawing_properties(style);
 
-  vibes::drawCircle(c[i()],c[j()],r, to_vibes_style(s), _params);
+  vibes::drawCircle(c[i()],c[j()],r, to_vibes_style(style), _params);
 }
 
-void Figure2D_VIBes::draw_ring(const Vector& c, const Interval& r, const StyleProperties& s)
+void Figure2D_VIBes::draw_ring(const Vector& c, const Interval& r, const StyleProperties& style)
 {
   assert(_fig.size() <= c.size());
   assert(!r.is_empty() && r.lb() >= 0.);
 
-  update_drawing_properties(s);
+  update_drawing_properties(style);
 
-  vibes::drawRing(c[i()],c[j()],r.lb(),r.ub(), to_vibes_style(s), _params);
+  vibes::drawRing(c[i()],c[j()],r.lb(),r.ub(), to_vibes_style(style), _params);
 }
 
-void Figure2D_VIBes::draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& s)
+void Figure2D_VIBes::draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& style)
 {
   assert(x.size() > 1);
   assert(tip_length >= 0.);
 
-  update_drawing_properties(s);
+  update_drawing_properties(style);
 
   vector<double> vx(x.size()), vy(x.size());
   for(size_t k = 0 ; k < x.size() ; k++)
@@ -123,16 +123,16 @@ void Figure2D_VIBes::draw_polyline(const std::vector<Vector>& x, float tip_lengt
   }
 
   if(tip_length != 0.)
-    vibes::drawArrow(vx,vy, tip_length, to_vibes_style(s), _params);
+    vibes::drawArrow(vx,vy, tip_length, to_vibes_style(style), _params);
   else
-    vibes::drawLine(vx,vy, to_vibes_style(s), _params);
+    vibes::drawLine(vx,vy, to_vibes_style(style), _params);
 }
 
-void Figure2D_VIBes::draw_polygon(const std::vector<Vector>& x, const StyleProperties& s)
+void Figure2D_VIBes::draw_polygon(const std::vector<Vector>& x, const StyleProperties& style)
 {
   assert(x.size() > 1);
 
-  update_drawing_properties(s);
+  update_drawing_properties(style);
   
   vector<double> vx(x.size()), vy(x.size());
   for(size_t k = 0 ; k < x.size() ; k++)
@@ -141,61 +141,61 @@ void Figure2D_VIBes::draw_polygon(const std::vector<Vector>& x, const StylePrope
     vx[k] = x[k][i()]; vy[k] = x[k][j()];
   }
 
-  vibes::drawPolygon(vx,vy, to_vibes_style(s), _params);
+  vibes::drawPolygon(vx,vy, to_vibes_style(style), _params);
 }
 
-void Figure2D_VIBes::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& s)
+void Figure2D_VIBes::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& style)
 {
   assert(_fig.size() <= c.size());
   assert(r.lb() >= 0.);
 
-  update_drawing_properties(s);
+  update_drawing_properties(style);
 
   // Corrected a bug in VIBEs in case of r=[..,oo] (the pie disappears when zoomed in)
-  vibes::drawPie(c[i()],c[j()], r.lb(),(r.ub()>1e5?1e5:r.ub()), 180.*theta.lb()/PI,180.*theta.ub()/PI, to_vibes_style(s), _params);
+  vibes::drawPie(c[i()],c[j()], r.lb(),(r.ub()>1e5?1e5:r.ub()), 180.*theta.lb()/PI,180.*theta.ub()/PI, to_vibes_style(style), _params);
 }
 
-void Figure2D_VIBes::draw_ellipse(const Vector& c, const Vector& ab, double theta, const StyleProperties& s)
+void Figure2D_VIBes::draw_ellipse(const Vector& c, const Vector& ab, double theta, const StyleProperties& style)
 {
   assert(c.size() == 2);
   assert(ab.size() == 2);
 
-  update_drawing_properties(s);
+  update_drawing_properties(style);
 
-  vibes::drawEllipse(c[0],c[1], ab[0],ab[1], 180.*theta/PI, to_vibes_style(s), _params);
+  vibes::drawEllipse(c[0],c[1], ab[0],ab[1], 180.*theta/PI, to_vibes_style(style), _params);
 }
 
-void Figure2D_VIBes::draw_tank(const Vector& x, float size, const StyleProperties& s)
+void Figure2D_VIBes::draw_tank(const Vector& x, float size, const StyleProperties& style)
 {
   assert(_fig.size() <= x.size()+1);
   assert(j()+1 < x.size());
 
-  update_drawing_properties(s);
+  update_drawing_properties(style);
 
-  vibes::drawTank(x[i()],x[j()],180.*x[j()+1]/PI, size, to_vibes_style(s), _params);
+  vibes::drawTank(x[i()],x[j()],180.*x[j()+1]/PI, size, to_vibes_style(style), _params);
 }
 
-void Figure2D_VIBes::draw_AUV(const Vector& x, float size, const StyleProperties& s)
+void Figure2D_VIBes::draw_AUV(const Vector& x, float size, const StyleProperties& style)
 {
   assert(_fig.size() <= x.size()+1);
   assert(j()+1 < x.size());
 
-  update_drawing_properties(s);
+  update_drawing_properties(style);
 
-  vibes::drawAUV(x[i()],x[j()],180.*x[j()+1]/PI, size, to_vibes_style(s), _params);
+  vibes::drawAUV(x[i()],x[j()],180.*x[j()+1]/PI, size, to_vibes_style(style), _params);
 }
 
-void Figure2D_VIBes::draw_motor_boat(const Vector& x, float size, const StyleProperties& s)
+void Figure2D_VIBes::draw_motor_boat(const Vector& x, float size, const StyleProperties& style)
 {
   assert(_fig.size() <= x.size()+1);
   assert(j()+1 < x.size());
 
-  update_drawing_properties(s);
+  update_drawing_properties(style);
 
-  vibes::drawMotorBoat(x[i()],x[j()],180.*x[j()+1]/PI, size, to_vibes_style(s), _params);
+  vibes::drawMotorBoat(x[i()],x[j()],180.*x[j()+1]/PI, size, to_vibes_style(style), _params);
 }
 
-std::string Figure2D_VIBes::to_vibes_style(const StyleProperties& s)
+std::string Figure2D_VIBes::to_vibes_style(const StyleProperties& style)
 {
-  return s.stroke_color.hex_str() + "[" + s.fill_color.hex_str() + "]";
+  return style.stroke_color.hex_str() + "[" + style.fill_color.hex_str() + "]";
 }

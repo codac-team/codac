@@ -33,13 +33,26 @@
     message(FATAL_ERROR "Unable to find Doxygen generated files, this is required for Python binding (docstring)")
   endif()
 
-  file(REMOVE_RECURSE ${CMAKE_CURRENT_BINARY_DIR}/docstring)
-  message(STATUS "Generating docstrings from doxygen files...")
-  file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docstring)
-  execute_process(COMMAND ${PYTHON_EXECUTABLE}
-    ${PROJECT_SOURCE_DIR}/scripts/doxygen/doxygen2docstring.py
-    ${CMAKE_CURRENT_BINARY_DIR}/../doc/api/xml/
-    ${CMAKE_CURRENT_BINARY_DIR}/docstring)
+  if(DEFINED NO_DOCSTRING_UPDATE)
+
+    # ^ This option allows a faster compilation of the library in case of minor changes
+    #   by disabling the generation of docstring files for Python, and so the re-compilation
+    #   of all the related python binding files.  
+    message(STATUS "Generation of docstrings is disabled.")
+
+  else()
+
+    set(NO_DOCSTRING_UPDATE OFF CACHE BOOL "Disables the update of docstrings")
+
+    file(REMOVE_RECURSE ${CMAKE_CURRENT_BINARY_DIR}/docstring)
+    message(STATUS "Generating docstrings from doxygen files...")
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docstring)
+    execute_process(COMMAND ${PYTHON_EXECUTABLE}
+      ${PROJECT_SOURCE_DIR}/scripts/doxygen/doxygen2docstring.py
+      ${CMAKE_CURRENT_BINARY_DIR}/../doc/api/xml/
+      ${CMAKE_CURRENT_BINARY_DIR}/docstring)
+
+  endif()
 
 
 ################################################################################

@@ -198,19 +198,19 @@ void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval
     INTERVAL_MAX_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
     "x"_a, "y"_a)
 
-  .def("sign", &codac2::sign,
+  .def("sign", (Interval(*)(const Interval&)) &codac2::sign,
     INTERVAL_SIGN_CONST_INTERVAL_REF,
     "x"_a)
 
-  .def("integer", &codac2::integer,
+  .def("integer", (Interval(*)(const Interval&)) &codac2::integer,
     INTERVAL_INTEGER_CONST_INTERVAL_REF,
     "x"_a)
 
-  .def("floor", &codac2::floor,
+  .def("floor", (Interval(*)(const Interval&)) &codac2::floor,
     INTERVAL_FLOOR_CONST_INTERVAL_REF,
     "x"_a)
 
-  .def("ceil", &codac2::ceil,
+  .def("ceil", (Interval(*)(const Interval&)) &codac2::ceil,
     INTERVAL_CEIL_CONST_INTERVAL_REF,
     "x"_a)
 

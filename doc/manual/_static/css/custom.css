@@ -147,3 +147,7 @@ dl.cpp:not(dl.cpp dl.cpp) { /* for displaying a border on doxygen blocks */
 #how-to-cite-codac pre {
   font-size: 60%;
 }
+
+a .download:before {
+  content: "⬇️ ";
+}

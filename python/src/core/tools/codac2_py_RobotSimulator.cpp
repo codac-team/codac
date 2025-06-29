@@ -26,6 +26,8 @@ void export_RobotSimulator(py::module& m)
   py::class_<RobotSimulator> exported_rs(m, "RobotSimulator", ROBOTSIMULATOR_MAIN);
   exported_rs
 
+    .def_readwrite("v_min", &RobotSimulator::v_min,
+      DOUBLE_ROBOTSIMULATOR_V_MIN)
     .def_readwrite("v_max", &RobotSimulator::v_max,
       DOUBLE_ROBOTSIMULATOR_V_MAX)
     .def_readwrite("w_max", &RobotSimulator::w_max,
@@ -43,8 +45,8 @@ void export_RobotSimulator(py::module& m)
       "x"_a, "wpt"_a)
 
     .def("simulate", &RobotSimulator::simulate,
-      VECTOR_ROBOTSIMULATOR_CONTROLLER_CONST_VECTOR_REF_CONST_VECTOR_REF_CONST,
-      "x0"_a, "dt"_a, "wpts"_a)
+      SAMPLEDTRAJ_VECTOR_ROBOTSIMULATOR_SIMULATE_CONST_VECTOR_REF_DOUBLE_LIST_VECTOR_SAMPLEDTRAJ_VECTOR_REF_CONST,
+      "x0"_a, "dt"_a, "wpts"_a, "u"_a)
 
   ;
 }

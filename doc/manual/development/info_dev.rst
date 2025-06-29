@@ -12,7 +12,7 @@ To build this manual using Sphinx, follow these steps:
 
    .. code-block:: bash
 
-      pip install sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs breathe
+      pip install sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs breathe sphinx_togglebutton
 
 2. **Building the manual**: After configuring the CMake project, the manual can be build with:
 

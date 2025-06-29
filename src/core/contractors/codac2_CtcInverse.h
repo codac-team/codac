@@ -27,6 +27,8 @@ namespace codac2
   {
     public:
 
+      using Ctc<CtcInverse<Y,X...>,X...>::contract;
+
       template<typename C>
         requires IsCtcBaseOrPtr<C,Y>
       CtcInverse(const AnalyticFunction<typename ExprType<Y>::Type>& f, const C& ctc_y, bool with_centered_form = true, bool is_not_in = false)

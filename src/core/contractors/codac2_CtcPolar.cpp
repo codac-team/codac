@@ -21,3 +21,9 @@ void CtcPolar::contract(IntervalVector& x) const
   _contract(x[0],x[1],x[2],x[3]);
   _contract(x[0],x[1],x[2],x[3]);
 }
+
+void CtcPolar::contract(Interval& x, Interval& y, Interval& rho, Interval& theta) const
+{
+  _contract(x,y,rho,theta);
+  _contract(x,y,rho,theta);
+}

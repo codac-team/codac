@@ -19,6 +19,7 @@ namespace codac2
   {
     public:
 
+      double v_min = 0.0; // min linear speed (m/s)
       double v_max = 1.0; // max linear speed (m/s)
       double w_max = 1.0; // max rotational speed (rad/s)
       double a_max = 2.0; // max linear acceleration (m/s²)
@@ -26,6 +27,6 @@ namespace codac2
 
       RobotSimulator();
       Vector controller(const Vector& x, const Vector& wpt) const;
-      SampledTraj<Vector> simulate(const Vector& x0, double dt, std::list<Vector> wpts) const;
+      SampledTraj<Vector> simulate(const Vector& x0, double dt, std::list<Vector> wpts, SampledTraj<Vector>& u) const;
   };
 }

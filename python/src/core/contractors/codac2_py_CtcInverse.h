@@ -13,6 +13,7 @@
 #include <codac2_CtcInverse.h>
 #include "codac2_py_Ctc.h"
 #include "codac2_py_CtcInverse_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include "codac2_py_Ctc_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 
 using namespace std;
 using namespace codac2;
@@ -23,7 +24,9 @@ template<typename T>
 void export_CtcInverse(py::module& m, const std::string& export_name, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& pyctc)
 {
   using D = typename T::Domain;
-  py::class_<CtcInverse<D,IntervalVector>> exported(m, export_name.c_str(), pyctc, CTCINVERSE_MAIN);
+  using C = CtcInverse<D,IntervalVector>; // comma cannot be interpreted by the following macro
+
+  py::class_<C> exported(m, export_name.c_str(), pyctc, CTCINVERSE_MAIN);
 
   exported
     .def(py::init<const AnalyticFunction<T>&, const D&, bool>(),
@@ -36,7 +39,7 @@ void export_CtcInverse(py::module& m, const std::string& export_name, py::class_
     .def(py::init(
         [](const py::object& f, const CtcBase<IntervalVector>& c, bool with_centered_form)
         {
-          return std::make_unique<CtcInverse<D,IntervalVector>>(
+          return std::make_unique<C>(
             cast<AnalyticFunction<T>>(f),
             c.copy(), with_centered_form);
         }
@@ -45,14 +48,24 @@ void export_CtcInverse(py::module& m, const std::string& export_name, py::class_
       "f"_a, "c"_a, "with_centered_form"_a = true);
   }
 
-  using C = CtcInverse<D,IntervalVector>; // comma cannot be interpreted by the following macro
-
   exported
 
     .def(CONTRACT_BOX_METHOD(C,
       VOID_CTCINVERSE_YX_CONTRACT_X_REF_VARIADIC_CONST))
+    
+    .def("contract_tube", [](const C& c, py::object& x1) -> py::object&
+        {
+          if(!is_instance<SlicedTube<IntervalVector>>(x1)) {
+            assert_release("contract_tube: invalid tube type");
+          }
 
-    .def("function", &CtcInverse<D,IntervalVector>::function,
+          c.contract(cast<SlicedTube<IntervalVector>>(x1));
+          return x1;
+        },
+      VIRTUAL_VOID_CTCBASE_X_CONTRACT_SLICEDTUBE_X_REF_VARIADIC_CONST,
+      "x"_a)
+
+    .def("function", &C::function,
       CONST_ANALYTICFUNCTION_TYPENAME_EXPRTYPE_Y_TYPE_REF_CTCINVERSE_YX_FUNCTION_CONST)
     
   ;

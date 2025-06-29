@@ -11,10 +11,10 @@ import unittest
 from codac import *
 
 
-class CtcCustom(Ctc):
+class CtcCustom(Ctc_IntervalVector):
 
   def __init__(self):
-    Ctc.__init__(self, 2)
+    Ctc_IntervalVector.__init__(self, 2)
 
   def contract(self, x):
     if x[0].rad() > 1.:

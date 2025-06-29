@@ -14,8 +14,10 @@
     contractors/codac2_py_Ctc.h
     contractors/codac2_py_CtcAction.cpp
     contractors/codac2_py_CtcCartProd.cpp
+    contractors/codac2_py_CtcConstell.cpp
     contractors/codac2_py_CtcCross.cpp
     contractors/codac2_py_CtcCtcBoundary.cpp
+    contractors/codac2_py_CtcDeriv.cpp
     contractors/codac2_py_CtcDist.cpp
     contractors/codac2_py_CtcEmpty.cpp
     contractors/codac2_py_CtcFixpoint.cpp
@@ -52,6 +54,7 @@
     domains/tube/codac2_py_TDomain.cpp
     domains/tube/codac2_py_TSlice.cpp
     domains/tube/codac2_py_TubeBase.cpp
+    domains/tube/codac2_py_tube_cart_prod.cpp
     domains/codac2_py_BoolInterval.cpp
 
     functions/analytic/codac2_py_analytic_variables.cpp

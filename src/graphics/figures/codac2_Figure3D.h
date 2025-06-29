@@ -63,24 +63,22 @@ namespace codac2
        * \param p1 first point
        * \param p2 second point
        * \param p3 third point
-       * \param s style
+       * \param style style
        */
       void draw_triangle(const Vector &c, const Matrix &A,
-		const Vector &p1, const Vector &p2,
-		const Vector &p3, 
-		const StyleProperties& s = { Color::dark_gray(0.5) });
-		 
+        const Vector &p1, const Vector &p2, const Vector &p3, 
+        const StyleProperties& style = { Color::dark_gray(0.5) });
+     
       /**
        * \brief Draws a triangle, shorter version
        *
        * \param p1 first point
        * \param p2 second point
        * \param p3 third point
-       * \param s style
+       * \param style style
        */
-      void draw_triangle(const Vector &p1, const Vector &p2,
-		const Vector &p3, 
-		const StyleProperties& s = { Color::dark_gray(0.5) });
+      void draw_triangle(const Vector &p1, const Vector &p2, const Vector &p3, 
+        const StyleProperties& style = { Color::dark_gray(0.5) });
 
       /**
        * \brief Draws a ``star-shaped'' polygon  as a sequence of adjacent
@@ -89,13 +87,11 @@ namespace codac2
        * \param c translation
        * \param A scaling
        * \param l points 
-       * \param s style
+       * \param style style
        */
-      void draw_polygon(const Vector &c, const Matrix &A,
-		const std::vector<Vector> &l, 
-		const StyleProperties& s = { Color::dark_gray(0.5) });
+      void draw_polygon(const Vector &c, const Matrix &A, const std::vector<Vector> &l, 
+        const StyleProperties& style = { Color::dark_gray(0.5) });
 
-		 
       /**
        * \brief Draws a parallelogram c + A (p + [-1,1]*v1 + [-1,1]*v2) 
        *
@@ -104,37 +100,37 @@ namespace codac2
        * \param p base point
        * \param v1 vector
        * \param v2 vector
-       * \param s style
+       * \param style style
        */
       void draw_parallelogram(const Vector &c, const Matrix &A,
-	        const Vector &p, const Vector &v1, const Vector &v2,
-		const StyleProperties& s = { Color::dark_gray(0.5) });
-		 
+        const Vector &p, const Vector &v1, const Vector &v2,
+        const StyleProperties& style = { Color::dark_gray(0.5) });
+     
       /**
        * \brief Draws a parallelepiped z+A*[-1,1]^3 on the figure
        * 
        * \param z Coordinates of the center of the parallelepiped
        * \param A Matrix of the parallelepiped
-       * \param s Style of the parallelepiped (edge color)
+       * \param style Style of the parallelepiped (edge color)
        */
-      void draw_parallelepiped(const Vector& z, const Matrix& A, const StyleProperties& s = { Color::dark_gray(0.5) });
+      void draw_parallelepiped(const Vector& z, const Matrix& A, const StyleProperties& style = { Color::dark_gray(0.5) });
 
       /**
        * \brief Draws a zonotope z+sum_i [-1,1] A_i on the figure
        * 
        * \param z Coordinates of the center of the zonotope
        * \param A list of vectors 
-       * \param s Style of the zonotope (edge color)
+       * \param style Style of the zonotope (edge color)
        */
-      void draw_zonotope(const Vector& z, const std::vector<Vector>& A, const StyleProperties& s = { Color::dark_gray(0.5) });
+      void draw_zonotope(const Vector& z, const std::vector<Vector>& A, const StyleProperties& style = { Color::dark_gray(0.5) });
 
       /**
        * \brief Draws a box on the figure
        * 
        * \param x Box to draw
-       * \param s Style of the box (edge color)
+       * \param style Style of the box (edge color)
        */      
-      void draw_box(const IntervalVector& x, const StyleProperties& s = { Color::dark_gray(0.5) });
+      void draw_box(const IntervalVector& x, const StyleProperties& style = { Color::dark_gray(0.5) });
 
 
       /**
@@ -143,10 +139,9 @@ namespace codac2
        * 
        * \param c start
        * \param A orientation (first column)
-       * \param s Style (color)
+       * \param style Style (color)
        */
-      void draw_arrow(const Vector &c, const Matrix& A, const StyleProperties& s = { Color::dark_gray(0.5) });
-
+      void draw_arrow(const Vector &c, const Matrix& A, const StyleProperties& style = { Color::dark_gray(0.5) });
 
       /**
        * \brief Draws the (x,y,z) axes on the figure in red, green and blue
@@ -165,42 +160,42 @@ namespace codac2
        * \param Ip2 bounds of p2
        * \param dp2 incrementation for p2
        * \param f function computing the values
-       * \param s Style (color)
+       * \param style Style (color)
        */
       void draw_surface(const Vector &c, const Matrix &A,
-		const Interval &Ip1, double dp1,
-                const Interval &Ip2, double dp2,
-		std::function<Vector(double,double)> f,
-		const StyleProperties& s = { Color::dark_gray(0.5) });
+        const Interval &Ip1, double dp1,
+        const Interval &Ip2, double dp2,
+        std::function<Vector(double,double)> f,
+        const StyleProperties& style = { Color::dark_gray(0.5) });
 
       /**
        * \brief Draws a sphere (ellipsoid)
        *
        * \param c translation
        * \param A scaling
-       * \param s Style (color)
+       * \param style Style (color)
        */
       void draw_sphere(const Vector &c, const Matrix &A,
-		const StyleProperties& s = { Color::dark_gray(0.5) });
+        const StyleProperties& style = { Color::dark_gray(0.5) });
 
       /**
        * \brief Draws an ellipsoid (from the Ellipsoid class)
        *
        * \param e Ellipsoid to draw
-       * \param s Style (color)
+       * \param style Style (color)
        */
       void draw_ellipsoid(const Ellipsoid &e,
-		const StyleProperties& s = { Color::dark_gray(0.5) });
+        const StyleProperties& style = { Color::dark_gray(0.5) });
 
       /** 
        * \brief Draws a car, with blue windscreen
        *
        * \param c ``center'' (low) of the car
        * \param A orientation
-       * \param s Style (color)
+       * \param style Style (color)
        */
       void draw_car(const Vector &c, const Matrix &A,
-		const StyleProperties& s = { Color::yellow(0.5) });
+        const StyleProperties& style = { Color::yellow(0.5) });
      
       /** 
        * \brief Draws a (paper) plane
@@ -208,10 +203,10 @@ namespace codac2
        * \param c ``center'' (low) of the car
        * \param A orientation
        * \param yaw_is_up yaw axis is up (default true)
-       * \param s Style (color)
+       * \param style Style (color)
        */
       void draw_plane(const Vector &c, const Matrix &A, bool yaw_is_up=true,
-		const StyleProperties& s = { Color::dark_gray(0.8) });
+        const StyleProperties& style = { Color::dark_gray(0.8) });
      
 
       // Pavings
@@ -220,33 +215,33 @@ namespace codac2
        * \brief Draws a paving on the figure (Only the boundary is drawn).
        * 
        * \param p PavingOut to draw (result of a paving with contractors). 
-       * \param bound_s Style of the boundary of the paving
+       * \param bound_style Style of the boundary of the paving
        */
       void draw_paving(const PavingOut& p,
-        const StyleProperties& bound_s = { Color::yellow(0.5) });
+        const StyleProperties& bound_style = { Color::yellow(0.5) });
 
       /**
        * \brief Draws a paving on the figure (Only the boundary and the inside is drawn).
        * 
        * \param p PavingInOut to draw (result of a paving with separators).
-       * \param bound_s Style of the boundary of the paving
-       * \param in_s Style of the inside of the paving
+       * \param bound_style Style of the boundary of the paving
+       * \param in_style Style of the inside of the paving
        */
       void draw_paving(const PavingInOut& p,
-        const StyleProperties& bound_s = { Color::yellow(0.3), "paving_bound" },
-        const StyleProperties& in_s = { Color::green(0.5) , "paving_in" });
+        const StyleProperties& bound_style = { Color::yellow(0.3), "paving_bound" },
+        const StyleProperties& in_style = { Color::green(0.5) , "paving_in" });
         
       /**
        * \brief Draws a subpaving on the figure
        * 
        * \param p Subpaving to draw
-       * \param s Style of the subpaving
+       * \param style Style of the subpaving
        */
       template<typename P>
-      inline void draw_subpaving(const Subpaving<P>& p, const StyleProperties& s = StyleProperties())
+      inline void draw_subpaving(const Subpaving<P>& p, const StyleProperties& style = StyleProperties())
       {
         for(const auto& pi : p.boxes())
-          draw_box(pi, s);
+          draw_box(pi, style);
       }
 
     private:
@@ -272,9 +267,9 @@ namespace codac2
        * Otherwise, do nothing. If the layer is empty of "alpha", use the
        * name of the figure.
        * 
-       * \param s layer. If empty or "alpha", use the name of the figure.
+       * \param style layer. If empty or "alpha", use the name of the figure.
        */
-      void set_style_internal(const StyleProperties& s);
+      void set_style_internal(const StyleProperties& style);
 
     protected:
 

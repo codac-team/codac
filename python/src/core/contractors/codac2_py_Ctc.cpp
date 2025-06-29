@@ -27,7 +27,7 @@ using namespace pybind11::literals;
 
 py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector> export_CtcIntervalVector(py::module& m)
 {
-  py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector> py_ctc_iv(m, "CtcIntervalVector");
+  py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector> py_ctc_iv(m, "Ctc_IntervalVector_");
   py_ctc_iv
 
     .def(py::init<Index>(),
