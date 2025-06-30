@@ -151,3 +151,12 @@ dl.cpp:not(dl.cpp dl.cpp) { /* for displaying a border on doxygen blocks */
 a .download:before {
   content: "⬇️ ";
 }
+
+.toggle-hidden .sphinx-tabs-panel {
+  background-color: #AAFFBF;
+}
+
+.toggle-hidden .sphinx-tabs-panel, .toggle-hidden [aria-selected="true"] {
+  background-color: #AAFFBF;
+  border-bottom: 1px solid #AAFFBF;
+}

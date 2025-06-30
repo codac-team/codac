@@ -192,7 +192,7 @@ This geometrical constraint is expressed by:
   \end{array}\right),
 
 | where :math:`\rho` and :math:`\theta` are respectively the radial and angular coordinates.
-| We could deal with :math:`\mathcal{L}_\textrm{polar}` by decomposition, but we would lose optimality. Therefore, a dedicated contractor exists to deal with it without decomposition: the ``CtcPolar``.
+| We could deal with :math:`\mathcal{L}_\textrm{polar}` by decomposition, but we would lose optimality. Therefore, a dedicated contractor exists to deal with it without decomposition: the ``CtcPolar``. :ref:`See more <sec-ctc-geom-ctcpolar>`.
 
 This constraint appears in the expression of :math:`\mathbf{g}`.
 
@@ -201,7 +201,36 @@ This constraint appears in the expression of :math:`\mathbf{g}`.
 
   **A.1.** On a sheet of paper, write a decomposition of function :math:`\mathbf{g}` that involves :math:`\mathcal{L}_\textrm{polar}`, other constraints and intermediate variables.
   
-  :download:`See the solution <doc/solution_a1.pdf>`
+  .. container:: toggle, toggle-hidden
+
+    Function :math:`\mathbf{g}` is given as:
+
+    .. math::
+
+      \mathbf{g}(\mathbf{x},\mathbf{y},\mathbf{m})=\left(\begin{array}{c}
+      x_{1}+y_{1}\cdot\cos\left(x_{3}+y_{2}\right)-m_1\\
+      x_{2}+y_{1}\cdot\sin\left(x_{3}+y_{2}\right)-m_2
+      \end{array}\right).
+
+    and can be decomposed as:
+
+    - external variables: :math:`\mathbf{x}\in\mathbb{R}^3`, :math:`\mathbf{y}\in\mathbb{R}^2`, :math:`\mathbf{m}\in\mathbb{R}^2`
+
+    - intermediate variables: :math:`a\in\mathbb{R}`, :math:`\mathbf{d}\in\mathbb{R}^2`
+
+    - constraints:
+
+    .. math::
+
+      \left\{ \begin{array}{rl}
+      (i) & \mathcal{L}_\textrm{polar}\big(d_1,d_2,y_1,a\big):~~~\mathbf{d}=y_1\cdot\left(\hspace{-0.1cm}\begin{array}{c}
+      ~\cos(a)~\\
+      ~\sin(a)~
+      \end{array}\hspace{-0.1cm}\right)\\
+      (ii) & d_1 = m_1-x_1 \\
+      (iii) & d_2 = m_2-x_2 \\
+      (iv) & a=x_3+y_2
+      \end{array}\right.
 
 
 Initialization
@@ -232,6 +261,26 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
 
       Vector x_truth = {2,1,PI/6}; // actual state vector (pose = position + bearing)
 
+  .. container:: toggle, toggle-hidden
+
+    .. tabs::
+
+      .. group-tab:: Python
+
+        .. literalinclude:: src/lesson_A.py
+          :language: py
+          :start-after: [A-q2-beg]
+          :end-before: [A-q2-end]
+          :dedent: 0
+
+      .. group-tab:: C++
+
+        .. literalinclude:: src/lesson_A.cpp
+          :language: c++
+          :start-after: [A-q2-beg]
+          :end-before: [A-q2-end]
+          :dedent: 2
+
 
   **A.3.** Create the bounded sets related to the state, the measurement and the landmark position: :math:`[\mathbf{x}]\in\mathbb{IR}^3`, :math:`[\mathbf{y}]\in\mathbb{IR}^2`, :math:`[\mathbf{m}]\in\mathbb{IR}^2`. We can for instance use the ``.inflate(float radius)`` method on intervals or boxes.
 
@@ -246,6 +295,26 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
     .. code-tab:: cpp
 
       x[2] &= x_truth[2]; // the heading is assumed to be known
+
+  .. container:: toggle, toggle-hidden
+
+    .. tabs::
+
+      .. group-tab:: Python
+
+        .. literalinclude:: src/lesson_A.py
+          :language: py
+          :start-after: [A-q3-beg]
+          :end-before: [A-q3-end]
+          :dedent: 0
+
+      .. group-tab:: C++
+
+        .. literalinclude:: src/lesson_A.cpp
+          :language: c++
+          :start-after: [A-q3-beg]
+          :end-before: [A-q3-end]
+          :dedent: 2
 
   **A.4.** Display the vehicle and the landmark with:
 
@@ -280,6 +349,26 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
 
       DefaultFigure::draw_pie(<x>, <y>, <[rho]> | 0, <[theta]>, Color::light_gray()); // with: <[rho]> | 0
 
+  .. container:: toggle, toggle-hidden
+
+    .. tabs::
+
+      .. group-tab:: Python
+
+        .. literalinclude:: src/lesson_A.py
+          :language: py
+          :start-after: [A-q5-beg]
+          :end-before: [A-q5-end]
+          :dedent: 0
+
+      .. group-tab:: C++
+
+        .. literalinclude:: src/lesson_A.cpp
+          :language: c++
+          :start-after: [A-q5-beg]
+          :end-before: [A-q5-end]
+          :dedent: 2
+
 As one can see, intervals are not limited to axis-aligned boxes: we sometimes perform rotational mapping to better fit the set to represent. This polar constraint is a case in point.
 
 
@@ -297,8 +386,48 @@ We will implement the decomposition of Question **A.1** using contractors and a 
   * | The contractor :math:`\mathcal{C}_\textrm{polar}` is provided by the class ``CtcPolar``. :ref:`See more <sec-ctc-geom-ctcdist>`.
   * The other contractors can be built with several ``CtcInverse`` objects. We recall that these constraints have to be expressed in the form :math:`f(\mathbf{x})=0`.
 
+  .. container:: toggle, toggle-hidden
+
+    .. tabs::
+
+      .. group-tab:: Python
+
+        .. literalinclude:: src/lesson_A.py
+          :language: py
+          :start-after: [A-q6-beg]
+          :end-before: [A-q6-end]
+          :dedent: 0
+
+      .. group-tab:: C++
+
+        .. literalinclude:: src/lesson_A.cpp
+          :language: c++
+          :start-after: [A-q6-beg]
+          :end-before: [A-q6-end]
+          :dedent: 2
+
   | **A.7.**  Create the intermediate variables introduced in Question **A.1**. They are ``Interval`` and ``IntervalVector`` objects, as for the other variables.
   | Note that the intermediate variables do not have to be initialized with prior values. For ``IntervalVector`` objects, you only have to define their size.
+
+  .. container:: toggle, toggle-hidden
+
+    .. tabs::
+
+      .. group-tab:: Python
+
+        .. literalinclude:: src/lesson_A.py
+          :language: py
+          :start-after: [A-q7-beg]
+          :end-before: [A-q7-end]
+          :dedent: 0
+
+      .. group-tab:: C++
+
+        .. literalinclude:: src/lesson_A.cpp
+          :language: c++
+          :start-after: [A-q7-beg]
+          :end-before: [A-q7-end]
+          :dedent: 2
 
 The current problem can be solved in one step with a smart order of contractors. You may find this order and run the contractors without iterative loop. However, this order may not always exist (due to dependencies in the constraints) or, in a pure declarative paradigm, we may not want to think about it. Using fixed-point iteration can then simplify the algorithm. In Codac, this is allowed using the ``fixpoint(..)`` function that will execute some ``contractors_list`` function until a fixpoint is reached. The `fixpoint` corresponds to a point where the involved domains are not contracted anymore.
 
@@ -331,10 +460,50 @@ The ``fixpoint`` function will execute the content of the function ``contractors
 
   | **A.8.** Call the contractors at stake, possibly using a fixpoint procedure.
 
+  .. container:: toggle, toggle-hidden
+
+    .. tabs::
+
+      .. group-tab:: Python
+
+        .. literalinclude:: src/lesson_A.py
+          :language: py
+          :start-after: [A-q8-beg]
+          :end-before: [A-q8-end]
+          :dedent: 0
+
+      .. group-tab:: C++
+
+        .. literalinclude:: src/lesson_A.cpp
+          :language: c++
+          :start-after: [A-q8-beg]
+          :end-before: [A-q8-end]
+          :dedent: 2
+
   | **A.9.**  Run your programm to solve the problem. You should obtain this figure:
 
   .. figure:: img/result_rangebearing.png
     :width: 250px
+
+  .. container:: toggle, toggle-hidden
+
+    .. tabs::
+
+      .. group-tab:: Python
+
+        .. literalinclude:: src/lesson_A.py
+          :language: py
+          :start-after: [A-q9-beg]
+          :end-before: [A-q9-end]
+          :dedent: 0
+
+      .. group-tab:: C++
+
+        .. literalinclude:: src/lesson_A.cpp
+          :language: c++
+          :start-after: [A-q9-beg]
+          :end-before: [A-q9-end]
+          :dedent: 2
 
 The black box :math:`[\mathbf{x}]` cumulates all the uncertainties of the problem:
 

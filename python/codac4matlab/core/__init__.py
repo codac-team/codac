@@ -542,6 +542,8 @@ def fixpoint(contract, *x):
     else:
       vol = 0.0
       for xi in x:
+        if xi.is_empty():
+          return x
         w = xi.volume()
         # As infinity is absorbent, this would not
         # allow us to identify a contraction, so we

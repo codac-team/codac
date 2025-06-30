@@ -99,5 +99,6 @@ breathe_projects = {
   "codac": "../api/xml"
 }
 
-togglebutton_hint = "<strong style=\"color: #009945;\">Reveal the solution.</strong>"
-togglebutton_hint_hide = "Hide the solution"
+#togglebutton_hint = "<strong style=\"color: #009945;\">Reveal the solution.</strong>"
+togglebutton_hint = "Reveal the solution."
+togglebutton_hint_hide = "Hide the solution."

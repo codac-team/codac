@@ -28,6 +28,9 @@ namespace codac2
         double w = x.volume(); return w == oo ? 0. : w;
       }()), ...);
 
+      if((x.is_empty(), ...))
+        return;
+
     } while(prev_vol != vol);
   }
 }

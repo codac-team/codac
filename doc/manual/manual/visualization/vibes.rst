@@ -3,8 +3,6 @@
 The VIBes viewer
 ================
 
-  Main author: `Simon Rohou <http://simon-rohou.fr/research>`_
-
 One of the graphical outputs supported in Codac is `the VIBes viewer <https://enstabretagnerobotics.github.io/VIBES/>`_: a visualization system that aims at providing people working with intervals a way to display results (boxes, pavings), without worrying about GUI programming.
 
 Installation
