@@ -100,7 +100,7 @@ where :math:`a,b,\dots,e` are intermediate variables used for the decomposition.
     # Now ctc_g can be called with the .contract(..) method to contract all domains:
     # Example:
     a = IntervalVector(2) # box for x
-    b = IntervalVector([[2,3],[5,6]]) # box for m
+    b = IntervalVector([[2,3],[5,6.2]]) # box for m
     d = Interval(4.5,5) # interval for y
     a,d,b = ctc_g.contract(a,d,b)
 
@@ -119,7 +119,7 @@ where :math:`a,b,\dots,e` are intermediate variables used for the decomposition.
     // Now ctc_g can be called with the .contract(..) method to contract all domains:
     // Example:
     IntervalVector a(2); // box for x
-    IntervalVector b({{2,3},{5,6}}); // box for m
+    IntervalVector b({{2,3},{5,6.2}}); // box for m
     Interval d(4.5,5); // interval for y
     ctc_g.contract(a,d,b);
 
