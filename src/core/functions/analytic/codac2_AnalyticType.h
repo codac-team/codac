@@ -14,6 +14,7 @@
 #include "codac2_Matrix.h"
 #include "codac2_IntervalVector.h"
 #include "codac2_IntervalMatrix.h"
+#include "codac2_Wrapper.h"
 
 namespace codac2
 {
@@ -22,28 +23,28 @@ namespace codac2
     virtual ~AnalyticTypeBase() = default;
   };
 
-  template<typename S, typename T, typename M>
+  template<typename T,typename D>
   struct AnalyticType : public AnalyticTypeBase
   {
-    using Scalar = S;
-    using Domain = T;
+    using Scalar = T;
+    using Domain = D;
 
-    T m;
-    T a;
-    M da;
+    D m;
+    D a;
+    IntervalMatrix da;
     bool def_domain;
 
     AnalyticType() = delete;
 
-    AnalyticType(const T& a_, bool def_domain_)
+    AnalyticType(const D& a_, bool def_domain_)
       : a(a_), def_domain(def_domain_)
     { }
 
-    AnalyticType(const T& m_, const T& a_, const M& da_, bool def_domain_)
+    AnalyticType(const D& m_, const D& a_, const IntervalMatrix& da_, bool def_domain_)
       : m(m_), a(a_), da(da_), def_domain(def_domain_)
     { }
 
-    AnalyticType<S,T,M>& operator&=(const AnalyticType<S,T,M>& x)
+    AnalyticType<T,D>& operator&=(const AnalyticType<T,D>& x)
     {
       a &= x.a;
       // restore this? da &= x.da;
@@ -52,9 +53,9 @@ namespace codac2
     }
   };
 
-  using ScalarType = AnalyticType<double,Interval,IntervalMatrix>;
-  using VectorType = AnalyticType<Vector,IntervalVector,IntervalMatrix>;
-  using MatrixType = AnalyticType<Matrix,IntervalMatrix,IntervalMatrix>;
+  using ScalarType = AnalyticType<double,Interval>;
+  using VectorType = AnalyticType<Vector,IntervalVector>;
+  using MatrixType = AnalyticType<Matrix,IntervalMatrix>;
 
   template<typename... T>
   bool centered_form_not_available_for_args(const T&... a)

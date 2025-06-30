@@ -9,6 +9,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_CtcDist.h>
+#include <codac2_CtcPolar.h>
 #include <codac2_CtcProj.h>
 #include <codac2_Approx.h>
 #include <codac2_cart_prod.h>
@@ -63,5 +64,26 @@ TEST_CASE("CtcDist - manual")
       DefaultFigure::draw_circle({0,0}, 0.1, {Color::red(),Color::red()});
       // [ctcdist-4-end]
     }
+  }
+}
+
+TEST_CASE("CtcPolar - manual")
+{
+  {
+    // [ctcpolar-1-beg]
+    IntervalVector x({{5,6.5},{6.5,8},{10,11},{0.8,1}});
+    CtcPolar c;
+    c.contract(x);
+    // x = [ [6, 6.5] ; [7.59934, 8] ; [10, 10.3078] ; [0.863211, 0.927296] ]
+    // [ctcpolar-1-end]
+  }
+
+  {
+    // [ctcpolar-2-beg]
+    Interval x(1.5,2.5), y(4,11), rho(7,8), theta(0.6,1.45);
+    CtcPolar c;
+    c.contract(x,y,rho,theta);
+    // x = [1.5, 2.5] ; y = [6.53834, 7.85812] ; rho = [7, 8] ; theta = [1.20558, 1.38218]
+    // [ctcpolar-2-end]
   }
 }

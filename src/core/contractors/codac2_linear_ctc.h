@@ -25,6 +25,7 @@ namespace codac2
 
       virtual void contract(IntervalMatrix& A, IntervalVector& x, IntervalVector& b) const = 0;
       virtual std::shared_ptr<CtcLinearBase> copy() const = 0;
+      virtual ~CtcLinearBase() = default;
   };
 
   /**

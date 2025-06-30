@@ -201,7 +201,7 @@ Optionally, for Python binding (*e.g.* ``choco install python --version=3.10.4``
   choco install doxygen.install --version=1.13
   choco install graphviz
   python -m pip install --upgrade pip
-  pip install --upgrade wheel setuptools sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs breathe
+  pip install --upgrade wheel setuptools sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs breathe sphinx_togglebutton
 
 The logic to follow will then be similar to Linux (note that for Visual Studio, commands such as ``make install`` need to be replaced with something similar to:
 
@@ -258,7 +258,7 @@ Optionally, for Python binding and documentation:
   wget https://github.com/Homebrew/homebrew-core/raw/d2267b9f2ad247bc9c8273eb755b39566a474a70/Formula/doxygen.rb ; brew reinstall ./doxygen.rb ; brew pin doxygen
   brew install graphviz
   python -m pip install --upgrade pip
-  pip install --upgrade wheel setuptools sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs
+  pip install --upgrade wheel setuptools sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs sphinx_togglebutton
 
 
 Troubleshooting

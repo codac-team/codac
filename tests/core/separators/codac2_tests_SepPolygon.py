@@ -12,7 +12,7 @@ from codac import *
 
 class TestSepPolygon(unittest.TestCase):
 
-  def tests_SepPolygon(self):
+  def test_SepPolygon(self):
 
     # Polygon, defined as a list of vertices
     p = Polygon([[3,-1],[3,4],[5,6],[-1,1]])
@@ -33,7 +33,7 @@ class TestSepPolygon(unittest.TestCase):
     self.assertTrue(inner == x)
     self.assertTrue(outer.is_empty())
 
-  def tests_SepPolygon_fromCodac1(self):
+  def test_SepPolygon_fromCodac1(self):
 
     # Polygone with hole, defined as a list of edges
 

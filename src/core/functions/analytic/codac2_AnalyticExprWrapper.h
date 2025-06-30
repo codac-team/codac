@@ -10,7 +10,7 @@
 #pragma once
 
 #include "codac2_AnalyticExpr.h"
-#include "codac2_ValueType.h"
+#include "codac2_ExprType.h"
 #include "codac2_analytic_variables.h"
 #include "codac2_component.h"
 #include "codac2_subvector.h"
@@ -41,7 +41,7 @@ namespace codac2
     template<typename C>
       requires (!std::is_base_of_v<AnalyticVarExpr<T>,C>)
     AnalyticExprWrapper(const C& e)
-      requires std::is_same_v<typename ValueType<C>::Type,T>
+      requires std::is_same_v<typename ExprType<C>::Type,T>
       : std::shared_ptr<AnalyticExpr<T>>(const_value(e))
     { }
     

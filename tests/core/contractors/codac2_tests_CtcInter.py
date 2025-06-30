@@ -12,7 +12,7 @@ from codac import *
 
 class TestCtcInter(unittest.TestCase):
   
-  def tests_CtcInter(self):
+  def test_CtcInter(self):
     
     c1 = CtcWrapper([[-10,10],[-2,2]])
     c2 = CtcWrapper([[-12,2],[0,4]])

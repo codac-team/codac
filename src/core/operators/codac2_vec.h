@@ -97,10 +97,10 @@ namespace codac2
   }
 
   template<typename... X>
-    requires ((std::is_same_v<typename ValueType<X>::Type,ScalarType>) && ...)
+    requires ((std::is_same_v<typename ExprType<X>::Type,ScalarType>) && ...)
   inline VectorExpr
   vec(const X&... x)
   {
-    return { std::make_shared<AnalyticOperationExpr<VectorOp,VectorType,typename ValueType<X>::Type...>>(_add_to_vec(x)...) };
+    return { std::make_shared<AnalyticOperationExpr<VectorOp,VectorType,typename ExprType<X>::Type...>>(_add_to_vec(x)...) };
   }
 }

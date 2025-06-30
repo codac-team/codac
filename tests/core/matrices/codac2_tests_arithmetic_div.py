@@ -12,7 +12,7 @@ from codac import *
 
 class TestArithmeticDiv(unittest.TestCase):
 
-  def tests_ArithmeticDiv(self):
+  def test_ArithmeticDiv(self):
 
     #inline Vector operator/(const Vector& x1, double x2)
     self.assertTrue(Approx(Vector([1,2,3])/10.) == Vector([.1,.2,.3]))

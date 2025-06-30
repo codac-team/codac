@@ -12,7 +12,7 @@ from codac import *
 
 class TestIbex(unittest.TestCase):
 
-  def tests_ibex(self):
+  def test_ibex(self):
      self.assertTrue(True) # IBEX is not available in Python
 
 if __name__ ==  '__main__':

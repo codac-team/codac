@@ -12,7 +12,7 @@ from codac import *
 
 class TestSepTransform(unittest.TestCase):
   
-  def tests_SepTransform(self):
+  def test_SepTransform(self):
     
     x = VectorVar(2)
     s1 = SepInverse(AnalyticFunction([x], sqr(x[0])+sqr(x[1])), [0,1])

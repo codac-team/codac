@@ -20,7 +20,7 @@ def test_inside_diamond(x):
 
 class TestCtcCtcBoundary(unittest.TestCase):
 
-  def tests_CtcCtcBoundary(self):
+  def test_CtcCtcBoundary(self):
 
     ctc_bound_diamond = CtcSegment([[-1],[0]], [[0],[-1]]) | CtcSegment([[0],[-1]], [[1],[0]]) \
       | CtcSegment([[1],[0]], [[0],[1]]) | CtcSegment([[0],[1]], [[-1],[0]])

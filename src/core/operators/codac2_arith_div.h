@@ -27,12 +27,11 @@ namespace codac2
     }
 
     template<typename X1,typename X2>
-    static std::pair<Index,Index> output_shape(const X1& s1, const X2& s2)
+    static std::pair<Index,Index> output_shape(const X1& s1, [[maybe_unused]] const X2& s2)
     {
-      auto shape1=s1->output_shape();
-      auto shape2=s2->output_shape();
-      assert_release(shape2.first == 1 && shape2.second == 1);
-      return shape1;
+      [[maybe_unused]] auto shape2 = s2->output_shape();
+      assert(shape2.first == 1 && shape2.second == 1);
+      return s1->output_shape();
     }
 
     static Interval fwd(const Interval& x1, const Interval& x2);

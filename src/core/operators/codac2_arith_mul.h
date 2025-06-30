@@ -33,15 +33,19 @@ namespace codac2
     template<typename X1, typename X2>
     static std::pair<Index,Index> output_shape(const X1& s1, const X2& s2)
     {
-      auto shape1=s1->output_shape();
-      auto shape2=s2->output_shape();
-      if (shape1.first==1 && shape1.second==1) {
+      auto shape1 = s1->output_shape();
+      auto shape2 = s2->output_shape();
+
+      if(shape1.first == 1 && shape1.second == 1)
         return shape2;
-      } else if (shape2.first==1 && shape2.second==1) {
+      
+      else if(shape2.first == 1 && shape2.second == 1)
         return shape1;
-      } else {
-        assert_release(shape1.second==shape2.first);
-        return std::pair(shape1.first, shape2.second);
+      
+      else
+      {
+        assert(shape1.second == shape2.first);
+        return { shape1.first, shape2.second };
       }
     }
 

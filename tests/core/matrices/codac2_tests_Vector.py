@@ -12,12 +12,12 @@ from codac import *
 
 class TestVector(unittest.TestCase):
 
-  def tests_Vector(self):
+  def test_Vector(self):
     
     self.assertTrue(Vector([1,2])+Vector([3,4]) == Vector([4,6]))
     
 
-  def tests_vector_specific_to_python(self):
+  def test_vector_specific_to_python(self):
 
     x = Vector([1,2,3])
     y = Vector.zero(3)

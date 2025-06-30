@@ -29,8 +29,8 @@ namespace codac2
     template<typename X1, typename... X>
     static std::pair<Index,Index> output_shape(const X1& s1, [[maybe_unused]] const X&... s)
     {
-      auto shape1=s1->output_shape();
-      assert_release(shape1.second==1);
+      auto shape1 = s1->output_shape();
+      assert(shape1.second == 1);
       return { shape1.first, 1+sizeof...(X) };
     }
 
@@ -96,7 +96,6 @@ namespace codac2
       requires (std::is_base_of_v<IntervalVector,X> && ...)
     static inline void bwd(const IntervalMatrix& y, X&... x)
     {
-      throw std::runtime_error("MatrixOp not fully implemented yet");
       Index i = 0;
       ((x &= y.col(i++)), ...);
     }

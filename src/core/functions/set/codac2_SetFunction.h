@@ -89,7 +89,7 @@ namespace codac2
 
         else
         {
-          assert_release(false && "Invalid argument: unknown input type");
+          assert_release_constexpr(false && "Invalid argument: unknown input type");
           return nullptr;
         }
       }
@@ -108,7 +108,7 @@ namespace codac2
 
         else
         {
-          assert_release(false && "Invalid argument: unknown input type");
+          assert_release_constexpr(false && "Invalid argument: unknown input type");
           return nullptr;
         }
       }

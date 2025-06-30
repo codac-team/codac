@@ -18,7 +18,7 @@ def create_f():
 
 class TestAnalyticFunction(unittest.TestCase):
 
-  def tests_AnalyticFunction(self):
+  def test_AnalyticFunction(self):
 
     def invalid_function():
       x = ScalarVar()
@@ -430,5 +430,13 @@ class TestAnalyticFunction(unittest.TestCase):
     self.assertTrue(Approx(g.eval(EvalMode.CENTERED,a),1e-9)==
                     IntervalVector([v3,v4,v4,v3]))
 
+    x = ScalarVar()
+    f = AnalyticFunction ([x], extend(x*(1-sqrt(x)),x));
+    self.assertTrue(f.eval(Interval(1.0,4.0))==Interval(-4.0,0.0))
+    self.assertTrue(f.eval(Interval(-4.0,-1.0))==Interval(-4.0,-1.0))
+    self.assertTrue(f.eval(Interval(0.0,4.0))==Interval(-4.0,4.0))
+    self.assertTrue(f.eval(Interval(0.0))==Interval(0.0))
+
+    
 if __name__ ==  '__main__':
   unittest.main()

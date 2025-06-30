@@ -14,7 +14,7 @@ import math
 
 class TestHull(unittest.TestCase):
 
-  def tests_hull_IntervalVector(self):
+  def test_hull_IntervalVector(self):
 
     self.assertTrue(hull(Vector([1,2])) == IntervalVector([[1,1],[2,2]]))
     self.assertTrue(hull(Vector([1,2]),Vector([1,2]),Vector([1,2]),Vector([1,2])) == IntervalVector([[1,1],[2,2]]))
@@ -26,7 +26,7 @@ class TestHull(unittest.TestCase):
     self.assertTrue(hull(IntervalVector([1,2])) == IntervalVector([[1,1],[2,2]]))
     self.assertTrue(hull(2.*IntervalVector([1,2])) == IntervalVector([[2,2],[4,4]]))
 
-  def tests_hull_IntervalMatrix(self):
+  def test_hull_IntervalMatrix(self):
 
     self.assertTrue(hull(Matrix([[1,2],[3,4]])) == IntervalMatrix(Matrix([[1,2],[3,4]])))
     self.assertTrue(hull(3.*Matrix([[1,2],[3,4]])) == IntervalMatrix(Matrix([[3,6],[9,12]])))

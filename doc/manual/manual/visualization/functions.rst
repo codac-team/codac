@@ -64,6 +64,7 @@ Geometric shapes
   - Polyline
   - Polygone
   - Parallelepiped
+  - Zonotope
   - Pie
   - Ellipse
   - Ellipsoid
@@ -118,6 +119,9 @@ Geometric shapes
 .. doxygenfunction:: codac2::Figure2D::draw_parallelepiped(const Vector&, const Matrix&, const StyleProperties&)
   :project: codac
 
+.. doxygenfunction:: codac2::Figure2D::draw_zonotope(const Vector&, const std::vector<Vector>&, const StyleProperties&)
+  :project: codac
+
 .. doxygenfunction:: codac2::Figure2D::draw_pie(const Vector&, const Interval&, const Interval&, const StyleProperties&)
   :project: codac
 
@@ -127,8 +131,8 @@ Geometric shapes
 .. doxygenfunction:: codac2::Figure2D::draw_ellipsoid(const Ellipsoid&, const StyleProperties&)
   :project: codac
 
-Trajectories
-------------
+Trajectories and tubes
+----------------------
 
 .. doxygenfunction:: codac2::Figure2D::draw_trajectory(const SampledTraj<Vector>&, const StyleProperties&)
   :project: codac
@@ -142,6 +146,12 @@ Trajectories can be drawn with a ColorMap instead of the classic StyleProperties
   :project: codac
 
 .. doxygenfunction:: codac2::Figure2D::draw_trajectory(const AnalyticTraj<VectorType>&, const ColorMap&)
+  :project: codac
+
+.. doxygenfunction:: codac2::Figure2D::draw_tube(const SlicedTube<IntervalVector>&, const StyleProperties&)
+  :project: codac
+
+.. doxygenfunction:: codac2::Figure2D::draw_tube(const SlicedTube<IntervalVector>&, const ColorMap&)
   :project: codac
 
 Vehicles

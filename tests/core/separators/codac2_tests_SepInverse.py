@@ -12,7 +12,7 @@ from codac import *
 
 class TestSepInverse(unittest.TestCase):
 
-  def tests_SepInverse_box(self):
+  def test_SepInverse_box(self):
 
     x = VectorVar(2)
     f = AnalyticFunction([x], [
@@ -46,7 +46,7 @@ class TestSepInverse(unittest.TestCase):
     self.assertTrue(inner == IntervalVector.empty(2))
     self.assertTrue(outer == b)
 
-  def tests_SepInverse_sep(self):
+  def test_SepInverse_sep(self):
 
     x = VectorVar(2)
     f = AnalyticFunction([x], [
@@ -80,7 +80,7 @@ class TestSepInverse(unittest.TestCase):
     self.assertTrue(inner == IntervalVector.empty(2))
     self.assertTrue(outer == b)
 
-  def tests_SepInverse_other_test(self):
+  def test_SepInverse_other_test(self):
 
     x = VectorVar(2)
     f = AnalyticFunction([x], vec(sqr(x[0])+sqr(x[1])))

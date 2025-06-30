@@ -85,7 +85,7 @@ class TestInterval_operations(unittest.TestCase):
     else:
       self.assertTrue(Approx(pow(-x,p),eps) == -expected)
 
-  def tests_interval_operations(self):
+  def test_interval_operations(self):
 
     self.assertTrue(0 < next_float(0))
     self.assertTrue(0 > previous_float(0))

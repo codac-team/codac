@@ -74,8 +74,8 @@ TEST_CASE("SampledTraj as operator (1d case)")
 
   AnalyticFunction h { {t}, g(t) };
 
-  for(double t = -PI ; t < PI ; t+=1e-2)
-    CHECK(Approx(h.real_eval(t),1e-8) == cos(t));
+  for(double t_ = -PI ; t_ < PI ; t_+=1e-2)
+    CHECK(Approx(h.real_eval(t_),1e-8) == cos(t_));
 }
 
 TEST_CASE("SampledTraj as operator (nd case)")
@@ -96,8 +96,8 @@ TEST_CASE("SampledTraj as operator (nd case)")
       g(t)
     };
 
-    for(double t = 0 ; t < 5 ; t+=1e-2)
-      CHECK(Approx(h.real_eval(t),1e-8) == Vector({2*cos(t),sin(2*t)}));
+    for(double t_ = 0 ; t_ < 5 ; t_+=1e-2)
+      CHECK(Approx(h.real_eval(t_),1e-8) == Vector({2*cos(t_),sin(2*t_)}));
   }
   {
     AnalyticFunction h {
@@ -105,8 +105,8 @@ TEST_CASE("SampledTraj as operator (nd case)")
       { g(t)[0],g(t)[1] }
     };
 
-    for(double t = 0 ; t < 5 ; t+=1e-2)
-      CHECK(Approx(h.real_eval(t),1e-8) == Vector({2*cos(t),sin(2*t)}));
+    for(double t_ = 0 ; t_ < 5 ; t_+=1e-2)
+      CHECK(Approx(h.real_eval(t_),1e-8) == Vector({2*cos(t_),sin(2*t_)}));
   }
 }
 

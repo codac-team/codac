@@ -11,10 +11,13 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcAction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcAction.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCartProd.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcConstell.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcConstell.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCross.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCross.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCtcBoundary.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCtcBoundary.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcDeriv.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcDist.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcDist.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcEllipse.cpp
@@ -65,6 +68,18 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/codac2_Paving.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/codac2_PavingNode.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/codac2_Subpaving.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_Slice.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SliceBase.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SliceBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SlicedTube.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SlicedTube_integral_impl.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SlicedTubeBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_TDomain.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_TDomain.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_TSlice.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_TSlice.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_TubeBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_tube_cart_prod.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_ExprBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_ExprBase.h
@@ -78,7 +93,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticExprWrapper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticFunction.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticType.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_ValueType.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_ExprType.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_operations.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_operators.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_variables.h
@@ -113,6 +128,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_cross_prod.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_det.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_exp.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_extend.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_flatten.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_floor.h
     ${CMAKE_CURRENT_SOURCE_DIR}/operators/codac2_log.h
@@ -205,10 +221,13 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Approx.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_assert.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Collection.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_fixpoint.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_Index.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_math.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_object_file_format.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_object_file_format.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_RobotSimulator.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_RobotSimulator.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_serialize.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_template_tools.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_transformations.cpp
@@ -241,6 +260,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/eigen
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube
     ${CMAKE_CURRENT_SOURCE_DIR}/functions
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set

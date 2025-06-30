@@ -12,7 +12,7 @@ from codac import *
 
 class TestLinearCtc(unittest.TestCase):
   
-  def tests_linear_ctc(self):
+  def test_linear_ctc(self):
       
     A = IntervalMatrix([
       [[4,5],[-1,1],[1.5,2.5]],

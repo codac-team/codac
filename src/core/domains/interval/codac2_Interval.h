@@ -24,19 +24,6 @@
 
 namespace codac2
 {
-  const double oo = []() {
-
-    // (from IBEX lib, main author: Gilles Chabert)
-    // We use Gaol not in PRESERVE_ROUNDING mode, thus
-    // assuming the rounding mode is always set upward.
-    // Calling this function in the initialization of
-    // the 'oo' constant should be enough as this constant
-    // is initialized before the first Codac function call occurs.
-    gaol::round_upward();
-
-    return std::numeric_limits<double>::infinity();
-  }();
-
   class Interval;
 
   template<>
@@ -111,6 +98,15 @@ namespace codac2
        * \param l list of values contained in the resulting interval
        */
       Interval(std::initializer_list<double> l);
+
+      /**
+       * \brief Sets the value of this interval to [-oo,oo]
+       * 
+       * \note This function is used for template purposes.
+       * 
+       * \return a reference to this
+       */
+      Interval& init();
 
       /**
        * \brief Sets the value of this interval to x
@@ -309,6 +305,14 @@ namespace codac2
        * \return true if this is degenerated
        */
       bool is_degenerated() const;
+
+      /**
+       * \brief Tests if this is an integer, that is, in the
+       * form of \f$[n,n]\f$ where n is an integer
+       *
+       * \return true if this is an integer singleton
+       */
+      bool is_integer() const;
 
       /**
        * \brief Tests if this and x intersect
@@ -703,6 +707,17 @@ namespace codac2
    * \return intersection result
    */
   Interval operator&(const Interval& x, const Interval& y);
+
+  /**
+   * \brief Returns the squared-union of an interval and a real: \f$[x]\sqcup\{y\}\f$
+   * 
+   * \note The squared-union is defined as: \f$[x]\sqcup[y]=\left[[x]\cup[y]\right]\f$
+   * 
+   * \param x interval value
+   * \param y real value
+   * \return squared-union result
+   */
+  Interval operator|(const Interval& x, double y);
 
   /**
    * \brief Returns the squared-union of two intervals: \f$[x]\sqcup[y]\f$

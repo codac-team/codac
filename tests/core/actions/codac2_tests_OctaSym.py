@@ -12,7 +12,7 @@ from codac import *
 
 class TestOctaSym(unittest.TestCase):
   
-  def tests_OctaSym(self):
+  def test_OctaSym(self):
 
     a = OctaSym([-2,1])
     self.assertTrue(a.invert() == OctaSym([2,-1]))

@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_ValueType.h
+ *  \file codac2_ExprType.h
  * ----------------------------------------------------------------------------
  *  \date       2024
  *  \author     Simon Rohou
@@ -20,69 +20,69 @@
 namespace codac2
 {
   template<typename T>
-  struct ValueType
+  struct ExprType
   { };
 
   template<typename T>
     requires (std::is_arithmetic_v<T>)
-  struct ValueType<T> {
+  struct ExprType<T> {
     using Type = ScalarType;
   };
   
   template<>
-  struct ValueType<Interval> {
+  struct ExprType<Interval> {
     using Type = ScalarType;
   };
   
   template<>
-  struct ValueType<ScalarVar> {
+  struct ExprType<ScalarVar> {
     using Type = ScalarType;
   };
 
   template<>
-  struct ValueType<Vector> {
+  struct ExprType<Vector> {
     using Type = VectorType;
   };
 
   template<>
-  struct ValueType<IntervalVector> {
+  struct ExprType<IntervalVector> {
     using Type = VectorType;
   };
 
   template<>
-  struct ValueType<VectorVar> {
+  struct ExprType<VectorVar> {
     using Type = VectorType;
   };
 
   template<>
-  struct ValueType<Matrix> {
+  struct ExprType<Matrix> {
     using Type = MatrixType;
   };
 
   template<>
-  struct ValueType<IntervalMatrix> {
+  struct ExprType<IntervalMatrix> {
     using Type = MatrixType;
   };
 
   template<>
-  struct ValueType<MatrixVar> {
+  struct ExprType<MatrixVar> {
     using Type = MatrixType;
   };
 
   template<typename T>
     requires (T::RowsAtCompileTime!=1 && T::ColsAtCompileTime==1)
-  struct ValueType<T> {
+  struct ExprType<T> {
     using Type = VectorType;
   };
 
   template<typename T>
     requires (T::RowsAtCompileTime!=1 && T::ColsAtCompileTime!=1)
-  struct ValueType<T> {
+  struct ExprType<T> {
     using Type = MatrixType;
   };
   
   template<typename T>
-  struct ValueType<AnalyticExprWrapper<T>> {
+  struct ExprType<AnalyticExprWrapper<T>> {
     using Type = T;
   };
 }

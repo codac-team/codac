@@ -17,7 +17,7 @@ def prim_value(x):
 
 class TestAnalyticTraj(unittest.TestCase):
 
-  def tests_AnalyticTraj(self):
+  def test_AnalyticTraj(self):
 
     t = ScalarVar()
     f = AnalyticFunction(

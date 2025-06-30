@@ -14,8 +14,10 @@
     contractors/codac2_py_Ctc.h
     contractors/codac2_py_CtcAction.cpp
     contractors/codac2_py_CtcCartProd.cpp
+    contractors/codac2_py_CtcConstell.cpp
     contractors/codac2_py_CtcCross.cpp
     contractors/codac2_py_CtcCtcBoundary.cpp
+    contractors/codac2_py_CtcDeriv.cpp
     contractors/codac2_py_CtcDist.cpp
     contractors/codac2_py_CtcEmpty.cpp
     contractors/codac2_py_CtcFixpoint.cpp
@@ -47,6 +49,12 @@
     domains/paving/codac2_py_Paving.cpp
     domains/paving/codac2_py_PavingNode.cpp
     domains/paving/codac2_py_Subpaving.cpp
+    domains/tube/codac2_py_Slice.h
+    domains/tube/codac2_py_SlicedTube.h
+    domains/tube/codac2_py_TDomain.cpp
+    domains/tube/codac2_py_TSlice.cpp
+    domains/tube/codac2_py_TubeBase.cpp
+    domains/tube/codac2_py_tube_cart_prod.cpp
     domains/codac2_py_BoolInterval.cpp
 
     functions/analytic/codac2_py_analytic_variables.cpp
@@ -94,6 +102,7 @@
     separators/codac2_py_SepWrapper.cpp
 
     tools/codac2_py_Approx.cpp
+    tools/codac2_py_RobotSimulator.cpp
     tools/codac2_py_transformations.cpp
 
     trajectory/codac2_py_AnalyticTraj.cpp
@@ -111,6 +120,7 @@
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/functions/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/graphics/

@@ -12,7 +12,7 @@ from codac import *
 
 class TestEllipsoid(unittest.TestCase):
 
-  def tests_Ellipsoid(self):
+  def test_Ellipsoid(self):
     
     self.assertTrue(True)
 

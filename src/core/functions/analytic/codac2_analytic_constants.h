@@ -10,7 +10,7 @@
 #pragma once
 
 #include "codac2_Index.h"
-#include "codac2_ValueType.h"
+#include "codac2_ExprType.h"
 
 namespace codac2
 {
@@ -71,7 +71,7 @@ namespace codac2
         if constexpr(std::is_same_v<T,MatrixType>)
           return {_x.rows(),_x.cols()};
 
-        assert_release(false && "unknow output shape for constant");
+        assert_release_constexpr(false && "unknow output shape for constant");
       }
 
       void replace_arg([[maybe_unused]] const ExprID& old_arg_id, [[maybe_unused]] const std::shared_ptr<ExprBase>& new_expr)
@@ -101,8 +101,8 @@ namespace codac2
   };
 
   template<typename T>
-  inline AnalyticExprWrapper<typename ValueType<T>::Type> const_value(const T& x)
+  inline AnalyticExprWrapper<typename ExprType<T>::Type> const_value(const T& x)
   {
-    return { std::make_shared<ConstValueExpr<typename ValueType<T>::Type>>(x) };
+    return { std::make_shared<ConstValueExpr<typename ExprType<T>::Type>>(x) };
   }
 }

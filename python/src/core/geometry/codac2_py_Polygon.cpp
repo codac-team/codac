@@ -40,6 +40,9 @@ void export_Polygon(py::module& m)
     .def("sorted_vertices", &Polygon::sorted_vertices,
       VECTOR_INTERVALVECTOR_POLYGON_SORTED_VERTICES_CONST)
 
+    .def("box", &Polygon::box,
+      INTERVALVECTOR_POLYGON_BOX_CONST)
+
     .def("is_empty", &Polygon::is_empty,
       BOOL_POLYGON_IS_EMPTY_CONST)
 

@@ -12,7 +12,7 @@ from codac import *
 
 class TestCtcPolygon(unittest.TestCase):
 
-  def tests_CtcPolygon(self):
+  def test_CtcPolygon(self):
 
     # Polygon, defined as a list of vertices
     c = CtcPolygon([[3,-1],[3,4],[5,6],[-1,1]])
@@ -25,7 +25,7 @@ class TestCtcPolygon(unittest.TestCase):
     c.contract(x)
     self.assertTrue(x.is_empty())
 
-  def tests_CtcPolygon_fromCodac1(self):
+  def test_CtcPolygon_fromCodac1(self):
 
     # Polygone with hole, defined as a list of edges
 

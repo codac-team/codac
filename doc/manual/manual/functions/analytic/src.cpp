@@ -140,7 +140,7 @@ TEST_CASE("AnalyticFunction - manual")
     ScalarVar x2;
     AnalyticFunction f2({x1,x2}, x1^x2); // example of multivariate function
     IntervalMatrix J2 = f2.diff(2.,Interval(2,3));
-    // J2 = intv. matrix 1x2: [[ [4,12], [0,0] ]]
+    // J2 = intv. matrix 1x2: [[ [4,12], [2.77258,5.54518] ]]
 
     VectorVar v(3);
     AnalyticFunction f3({v}, { // vectorial function
@@ -152,7 +152,7 @@ TEST_CASE("AnalyticFunction - manual")
     // [7-end]
 
     CHECK(Approx(J1) == IntervalMatrix({{{-(PI/2),1}}}));
-    CHECK(Approx(J2,1e-8) == IntervalMatrix({{{4,12},0}}));
+    CHECK(Approx(J2,1e-6) == IntervalMatrix({{{4,12},{2.7725887222,5.5451774445}}}));
     CHECK(J3 == IntervalMatrix({{1,-16,0},{0,0,{-1,0}}}));
 
     AnalyticFunction f = f3;

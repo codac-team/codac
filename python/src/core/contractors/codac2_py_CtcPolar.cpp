@@ -31,5 +31,14 @@ void export_CtcPolar(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInte
     .def(CONTRACT_BOX_METHOD(CtcPolar,
       VOID_CTCPOLAR_CONTRACT_INTERVALVECTOR_REF_CONST))
 
+    .def("contract",
+      [](const CtcPolar& c, Interval& x, Interval& y, Interval& rho, Interval& theta)
+      {
+        c.contract(x,y,rho,theta);
+        return std::make_tuple(x,y,rho,theta);
+      },
+      VOID_CTCPOLAR_CONTRACT_INTERVAL_REF_INTERVAL_REF_INTERVAL_REF_INTERVAL_REF_CONST,
+      "x"_a, "y"_a, "rho"_a, "theta"_a)
+
   ;
 }

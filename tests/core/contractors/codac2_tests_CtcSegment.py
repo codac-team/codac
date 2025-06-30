@@ -12,7 +12,7 @@ from codac import *
 
 class TestCtcSegment(unittest.TestCase):
   
-  def tests_CtcSegment(self):
+  def test_CtcSegment(self):
 
     x = IntervalVector(2)
     c = CtcSegment([[3],[-1]],[[3],[4]])
@@ -48,7 +48,7 @@ class TestCtcSegment(unittest.TestCase):
     c.contract(x)
     self.assertTrue(x.is_empty())
   
-  def tests_CtcSegment_fromCodac1(self):
+  def test_CtcSegment_fromCodac1(self):
 
     # Test_CtcSegment01
 

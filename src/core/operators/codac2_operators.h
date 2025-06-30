@@ -26,6 +26,7 @@
 #include "codac2_cross_prod.h"
 #include "codac2_det.h"
 #include "codac2_exp.h"
+#include "codac2_extend.h"
 #include "codac2_flatten.h"
 #include "codac2_floor.h"
 #include "codac2_log.h"

@@ -13,7 +13,7 @@ from codac import *
 
 class TestInversion(unittest.TestCase):
 
-  def tests_Inversion_1(self):
+  def test_Inversion_1(self):
 
     x = Matrix([
       [ 1, 2, 0 ],
@@ -25,7 +25,7 @@ class TestInversion(unittest.TestCase):
     self.assertTrue((x*y).contains(Matrix.eye(3,3)))
 
 
-  def tests_Inversion_2(self):
+  def test_Inversion_2(self):
 
     x = IntervalMatrix([
       [ [0.0,0.0], [-0.1,-0.1], [0.2,0.2]  ],
@@ -41,7 +41,7 @@ class TestInversion(unittest.TestCase):
     self.assertTrue(Approx(z*x)==IntervalMatrix.eye(3,3))
 
 
-  def tests_Inversion_3(self):
+  def test_Inversion_3(self):
 
     u = Matrix([
        [ 1,2,3 ],

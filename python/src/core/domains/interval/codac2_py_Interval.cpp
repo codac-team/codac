@@ -53,7 +53,10 @@ py::class_<Interval> export_Interval(py::module& m)
     // Interval(std::array<double,1> array);
     // Interval(std::array<double,2> array);
 
-    .def("init", &Interval::init,
+    .def("init", (Interval& (Interval::*)())&Interval::init,
+      INTERVAL_REF_INTERVAL_INIT)
+
+    .def("init", (Interval& (Interval::*)(const Interval&))&Interval::init,
       INTERVAL_REF_INTERVAL_INIT_CONST_INTERVAL_REF,
       "x"_a)
 

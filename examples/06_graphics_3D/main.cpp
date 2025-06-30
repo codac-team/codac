@@ -51,6 +51,16 @@ int main()
   fig_examples.draw_plane({3,0,0},0.5*Matrix::Identity(3,3),true,
 		{ Color::dark_gray(0.8), "plane" });
 
+  fig_examples.draw_zonotope({1.5,1.5,1.5},
+	{{0.3,0.2,0.4},{-0.2,0.1,0.3},{-0.2,-0.1,0.0},{0.3,0.0,-0.1},
+         {-0.1,0.05,0.2},{0.0,0.2,0.1}}, 
+	{ Color::dark_green(1.0), "zonotope" });
+  fig_examples.draw_zonotope({-1.5,-1.5,-1.5},
+	{{0.3,0.2,0.0},{-0.2,0.1,0.0},{-0.2,-0.1,0.0},{0.3,0.0,0.0},
+         {-0.2,0.0,0.0},{-0.1,0.05,0.0},{0.0,0.2,0.0},{0.0,0.0,0.1}}, 
+	{ Color::dark_green(1.0), "zonotope2" });
+
+
   fig_examples.draw_surface({0,-2,0}, 0.5*Matrix::Identity(3,3), Interval(0,2*PI),
 		0.05*PI, Interval(0,2*PI), 0.05*PI,
 		[](double phi,double psi) -> Vector

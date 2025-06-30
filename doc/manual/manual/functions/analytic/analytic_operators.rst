@@ -64,7 +64,8 @@ When operators are available for operations 2--3, then an ``AnalyticFunction`` c
 .. |C|   replace:: :vertical:`Centr.`
 .. |D|   replace:: :vertical:`Diff.`
 .. |CHI| replace:: :math:`\begin{split}\chi(x_1,x_2,x_3) =\\ \begin{cases}x_2 & \text{if } x_1 \leqslant 0, \\x_3 & \text{if } x_1>0.\end{cases}\end{split}`
-
+.. |CHI_TYPES| replace:: ``x1``: scalar, ``x2``, ``x3``: any (same types)
+.. |EXT| replace:: :math:`\begin{split}f(x) \textrm{ if } x \in D_f,\\ g(x) \textrm{ otherwise}\end{split}`
 
 .. |AbsOp| replace:: :raw-html:`<a href="https://github.com/codac-team/codac/blob/codac2/src/core/operators/codac2_abs.h"><code class="docutils literal notranslate"><span class="pre">AbsOp</span></code></a>`
 
@@ -87,6 +88,8 @@ When operators are available for operations 2--3, then an ``AnalyticFunction`` c
 .. |DetOp| replace:: :raw-html:`<a href="https://github.com/codac-team/codac/blob/codac2/src/core/operators/codac2_det.h"><code class="docutils literal notranslate"><span class="pre">DetOp</span></code></a>`
 
 .. |ExpOp| replace:: :raw-html:`<a href="https://github.com/codac-team/codac/blob/codac2/src/core/operators/codac2_exp.h"><code class="docutils literal notranslate"><span class="pre">ExpOp</span></code></a>`
+
+.. |ExtendOp| replace:: :raw-html:`<a href="https://github.com/codac-team/codac/blob/codac2/src/core/operators/codac2_extend.h"><code class="docutils literal notranslate"><span class="pre">ExtendOp</span></code></a>`
 
 .. |FloorOp| replace:: :raw-html:`<a href="https://github.com/codac-team/codac/blob/codac2/src/core/operators/codac2_floor.h"><code class="docutils literal notranslate"><span class="pre">FloorOp</span></code></a>`
 
@@ -236,7 +239,7 @@ If you notice any mathematical operators missing from the list below, feel free 
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
   | :math:`\min(x_1,x_2)`                               | ``min(x1,x2)``       | |MinOp|       | ``x1``, ``x2``: scalar              ||okk|   ||okk|   ||okk|  ||okk|       |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
-  | :math:`x_1\bmod x_2`                                | ``mod(x1,x2)``       | |ModOp|       | ``x1``, ``x2``: scalar              ||nok|   ||nok|   ||nok|  ||okk|       |
+  | :math:`x_1\bmod x_2`                                | --                   | |ModOp|       | --                                  ||nok|   ||nok|   ||nok|  ||bok|       |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
   | :math:`(x_1)^{x_2}`                                 | | ``pow(x1,x2)``     | |PowOp|       | ``x1``, ``x2``: scalar              ||okk|   ||okk|   ||okk|  ||okk|       |
   |                                                     | | ``x1^x2``          |               |                                     |        |        |       |            |
@@ -244,9 +247,11 @@ If you notice any mathematical operators missing from the list below, feel free 
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
   | :math:`\mathrm{arctan2}(y,x)`                       | ``atan2(y,x)``       | |Atan2Op|     | ``y``, ``x``: scalar                ||okk|   ||okk|   ||okk|  ||okk|       |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
+  | |EXT|                                               | ``extend(fx,gx)``    | |ExtendOp|    | ``fx``, ``gx``: any (same types)    ||okk|   ||okk|   ||okk|  ||okk|       |
+  +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
   | :bg-title:`Ternary operations`                                                                                                                                          |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
-  | |CHI|                                               | ``chi(x1,x2,x3)``    | |ChiOp|       | ``x1``, ``x2``, ``x3``: scalar      ||okk|   ||nok|   ||nok|  ||okk|       |
+  | |CHI|                                               | ``chi(x1,x2,x3)``    | |ChiOp|       | |CHI_TYPES|                         ||okk|   ||okk|   ||okk|  ||okk|       |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
   | :bg-title:`Vectorial / matricial operations`                                                                                                                            |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
@@ -262,7 +267,8 @@ If you notice any mathematical operators missing from the list below, feel free 
   | :math:`\left(\mathbf{x}_1,\mathbf{x}_2,\dots\right)`| ``mat(x1,x2,...)``   | |MatrixOp|    | ``x1``, ``...``: vector             ||okk|   ||okk|   ||okk|  ||nok|       |
   +-----------------------------------------------------+----------------------+---------------+-------------------------------------+--------+--------+-------+------------+
 
-Note that the operator :math:`\det` is only available for :math:`1\times 1` and :math:`2\times 2` matrices.
+| Note: the operator :math:`\det` is only available for :math:`1\times 1` and :math:`2\times 2` matrices.
+| Note: the operator :math:`\bmod` is only available for real periods (double precision), interval periods are not yet supported.
 
 
 Expression involving a non-supported centered-form operation

@@ -98,6 +98,13 @@ namespace codac2
       std::vector<IntervalVector> sorted_vertices() const;
 
       /**
+       * \brief Computes the bounding box of the polygon.
+       *
+       * \return The ``IntervalVector`` hull box.
+       */
+      IntervalVector box() const;
+
+      /**
        * \brief Checks whether the polygon is empty (has no vertex).
        *
        * \return True if the polygon is empty.

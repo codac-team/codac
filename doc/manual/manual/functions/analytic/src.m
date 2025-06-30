@@ -99,7 +99,7 @@ J1 = f1.diff(Interval(0,PI/2));
 x2 = ScalarVar();
 f2 = AnalyticFunction({x1,x2}, x1^x2); % example of multivariate function
 J2 = f2.diff(2.,Interval(2,3));
-% J2 = intv. matrix 1x2: [[ [4,12], [0,0] ]]
+% J2 = intv. matrix 1x2: [[ [4,12], [2.77258,5.54518] ]]
 
 v = VectorVar(3);
 f3 = AnalyticFunction({v}, vec( ... % vectorial function

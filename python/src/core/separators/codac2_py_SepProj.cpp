@@ -26,7 +26,7 @@ void export_SepProj(py::module& m, py::class_<SepBase,pySep>& pysep)
   exported
 
     .def(py::init(
-        [](const SepBase& s, vector<Index_type> proj_indices, double default_eps)
+        [](const SepBase& s, const vector<Index_type>& proj_indices, double default_eps)
         {
           return make_unique<SepProj>(s.copy(), matlab::convert_indices(proj_indices), default_eps);
         }),
@@ -34,7 +34,7 @@ void export_SepProj(py::module& m, py::class_<SepBase,pySep>& pysep)
       "s"_a, "proj_indices"_a, "default_eps"_a=0.01)
 
     .def(py::init(
-        [](const SepBase& s, vector<Index_type> proj_indices, const IntervalVector& y, double default_eps)
+        [](const SepBase& s, const vector<Index_type>& proj_indices, const IntervalVector& y, double default_eps)
         {
           return make_unique<SepProj>(s.copy(), matlab::convert_indices(proj_indices), y, default_eps);
         }),

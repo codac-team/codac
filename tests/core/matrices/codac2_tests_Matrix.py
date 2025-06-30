@@ -12,7 +12,7 @@ from codac import *
 
 class TestMatrix(unittest.TestCase):
 
-  def tests_def_Matrix(self):
+  def test_def_Matrix(self):
 
     x = Matrix([
       [ 1, 2 ],
@@ -32,7 +32,7 @@ class TestMatrix(unittest.TestCase):
     m = Matrix(x)
 
 
-  def tests_fnc_Matrix(self):
+  def test_fnc_Matrix(self):
 
     x = Matrix([
       [ -1, 3  ],

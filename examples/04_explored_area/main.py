@@ -15,7 +15,7 @@ f = AnalyticFunction(
 
 tdomain = [0,5]
 sampled_f = AnalyticTraj(f,tdomain).sampled(0.8)
-sampled_f.set(6, [0,-1]) # appending the position (0,-1) at t=6
+sampled_f.set([0,-1], 6.) # appending the position (0,-1) at t=6
 
 w = VectorVar(3)
 g = sampled_f.as_function()

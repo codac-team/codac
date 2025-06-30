@@ -12,7 +12,7 @@ from codac import *
 
 class TestArithmeticAdd(unittest.TestCase):
 
-  def tests_ArithmeticAdd(self):
+  def test_ArithmeticAdd(self):
 
     # inline Vector operator-(const Vector& x1, const Vector& x2)
     self.assertTrue(Vector([1,2,3])-Vector([5,6,7]) == Vector([-4,-4,-4]))

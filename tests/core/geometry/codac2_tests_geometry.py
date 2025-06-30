@@ -12,7 +12,7 @@ from codac import *
 
 class TestGeometry(unittest.TestCase):
 
-  def tests_orientation(self):
+  def test_orientation(self):
     
     # Align points
     self.assertTrue(orientation([0.,0.],[5.,0.],[8.,0.]) == OrientationInterval.COLINEAR)
@@ -39,7 +39,7 @@ class TestGeometry(unittest.TestCase):
     self.assertTrue(orientation([0,0],[10,1],[4,4]) == OrientationInterval.CLOCKWISE)
     self.assertTrue(orientation([0,0],[2,2],[10,1]) == OrientationInterval.COUNTERCLOCKWISE)
 
-  def tests_alignments(self):
+  def test_alignments(self):
     
     # Alignments
     p1 = IntervalVector([0.,0.])
@@ -60,7 +60,7 @@ class TestGeometry(unittest.TestCase):
     self.assertTrue(aligned([[-oo,0],[-oo,0]],[1,1],[10,10]) == BoolInterval.UNKNOWN)
     self.assertTrue(aligned(IntervalVector(2),[1,1],[10,10]) == BoolInterval.UNKNOWN)
 
-  def tests_convex_hull(self):
+  def test_convex_hull(self):
 
     v = [
       [0,3],[1,1],[2,2],[4,4],[0,0],[1,2],[3,1],[3,3]

@@ -385,6 +385,17 @@ TEST_CASE("bwd mul operations")
   //cout << x2 << endl;
 }
 
+TEST_CASE("test chi op")
+{
+  CHECK(ChiOp::fwd(Interval(0.2,0.4),Interval(-2.0,-1.0),Interval(1.0,2.0)) == Interval(1.0,2.0));
+  CHECK(ChiOp::fwd(Interval(-0.2,0.2),IntervalVector({{-2.0,-1.0},{-1.0,0.0}}),IntervalVector({0.0,1.0})) == IntervalVector({{-2.0,0.0},{-1.0,1.0}}));
+  CHECK(ChiOp::fwd(
+    Interval(-0.2,0.0),
+    IntervalMatrix({{{-2.0,-1.0},{-1.0,0.0}},{{-2.0,-1.0},{-1.0,0.0}}}),
+    IntervalMatrix({{{2.0,3.0},{0.0,3.0}},{{2.0,3.0},{1.0,2.0}}}))
+  == IntervalMatrix({{{-2.0,-1.0},{-1.0,0.0}},{{-2.0,-1.0},{-1.0,0.0}}}));
+}
+
 TEST_CASE("test cross prod")
 {
   CHECK(CrossProdOp::fwd(Vector({1,0,0}),Vector({0,1,0})) == Vector({0,0,1}));

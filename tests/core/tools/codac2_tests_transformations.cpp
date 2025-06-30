@@ -58,7 +58,7 @@ TEST_CASE("Affine transformation")
 
     SampledTraj<Vector> dst_estim;
     for(const auto& [ti,src_i] : src)
-      dst_estim.set(ti, tr*Eigen::Vector2d(src_i));
+      dst_estim.set(tr*Eigen::Vector2d(src_i), ti);
 
   //DefaultFigure::draw_trajectory(dst_estim, Color::purple());
 

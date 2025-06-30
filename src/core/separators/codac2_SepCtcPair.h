@@ -22,16 +22,16 @@ namespace codac2
 
       template<typename C1, typename C2>
         requires (IsCtcBaseOrPtr<C1,IntervalVector> && IsCtcBaseOrPtr<C2,IntervalVector>)
-      SepCtcPair(const C1& ctc_in, const C2& ctc_out)
-        : Sep<SepCtcPair>(size_of(ctc_in)), _ctc_in_out(ctc_in, ctc_out)
+      SepCtcPair(const C1& ctc_inner, const C2& ctc_outer)
+        : Sep<SepCtcPair>(size_of(ctc_inner)), _ctc_inner_outer(ctc_inner, ctc_outer)
       {
-        assert_release(size_of(ctc_in) == size_of(ctc_out));
+        assert_release(size_of(ctc_inner) == size_of(ctc_outer));
       }
 
       BoxPair separate(const IntervalVector& x) const;
 
     protected:
 
-      const Collection<CtcBase<IntervalVector>> _ctc_in_out;
+      const Collection<CtcBase<IntervalVector>> _ctc_inner_outer;
   };
 }

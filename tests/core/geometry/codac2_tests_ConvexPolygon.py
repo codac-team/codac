@@ -12,7 +12,7 @@ from codac import *
 
 class TestConvexPolygon(unittest.TestCase):
 
-  def tests_ConvexPolygon_degenerate_base(self):
+  def test_ConvexPolygon_degenerate_base(self):
 
     p = ConvexPolygon([[1,2],[1,2]])
     self.assertTrue(len(p.unsorted_vertices()) == 1)
@@ -42,7 +42,7 @@ class TestConvexPolygon(unittest.TestCase):
     p = ConvexPolygon([[1,2],[1,3],[1,3],[1,2]])
     self.assertTrue(len(p.unsorted_vertices()) == 2)
 
-  def tests_ConvexPolygon_degenerate_cases(self):
+  def test_ConvexPolygon_degenerate_cases(self):
 
     p1 = ConvexPolygon([[0,4]])
     self.assertTrue(len(p1.edges()) == 1)
@@ -55,7 +55,7 @@ class TestConvexPolygon(unittest.TestCase):
     self.assertTrue(p1.edges()[0][1] == IntervalVector([2,8]))
     self.assertTrue(p1 == ConvexPolygon([[2,8],[0,4]]))
 
-  def tests_ConvexPolygon_intersection(self):
+  def test_ConvexPolygon_intersection(self):
 
     p1 = ConvexPolygon([[0,4],[4,8],[7,0]])
     p2 = ConvexPolygon([[-1,2],[-1,3],[5,3],[5,2]])

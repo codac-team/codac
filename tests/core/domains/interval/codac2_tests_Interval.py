@@ -19,7 +19,7 @@ import math
 
 class TestInterval(unittest.TestCase):
 
-  def tests_interval(self):
+  def test_interval(self):
 
     self.assertTrue(Interval() == Interval(-oo,oo))
     self.assertTrue(Interval(1.0) == Interval(1.0,1.0))

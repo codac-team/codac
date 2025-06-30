@@ -180,6 +180,14 @@ namespace codac2
     return v;
   }
 
+  IntervalVector Polygon::box() const
+  {
+    IntervalVector b = IntervalVector::empty(2);
+    for(const auto& e : *this)
+      b |= e.box();
+    return b;
+  }
+
   bool Polygon::is_empty() const
   {
     return this->std::vector<Segment>::empty();
@@ -189,9 +197,9 @@ namespace codac2
   {
     assert_release(p.size() == 2);
 
-    for(const auto& edge_k : *this)
+    for(const auto& e : *this)
     {
-      auto b = edge_k.contains(p);
+      auto b = e.contains(p);
       if(b == BoolInterval::TRUE || b == BoolInterval::UNKNOWN)
         return b;
     }
@@ -241,12 +249,12 @@ namespace codac2
     // Now the number i of crossing can be computed.
     Index i = 0;
 
-    for(const auto& edge_k : *this)
+    for(const auto& e : *this)
     {
-      if(transect.box().is_strict_superset(edge_k.box()))
+      if(transect.box().is_strict_superset(e.box()))
         continue; // case of a ray passing over a colinear edge
 
-      switch(transect.intersects(edge_k))
+      switch(transect.intersects(e))
       {
         case BoolInterval::TRUE:
           i++;

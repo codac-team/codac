@@ -51,7 +51,7 @@ It can also be deduced from one or two Color objects.
     fig.draw_box({{2.2,2.5},{2.2,2.5}},Color::red()); // red edge, no fill
     fig.draw_box({{2.2,2.5},{2.2,2.5}},{Color::blue(),Color::green()}); // blue edge, green fill
 
-In addition, a line style and/or a layer can be added to the StyleProperties object. The line style is defined by a string, and the layer is defined by its name (string).
+In addition, a line style, a line width and/or a layer can be added to the StyleProperties object. The line style is defined by a string, and the layer is defined by its name (string).
 
 Available line styles are:
   - "\-" (solid)
@@ -60,55 +60,59 @@ Available line styles are:
   - "\-\." (dash-dotted)
   - "\-\.\." (dash-dot-dotted)
 
-**These two arguments are optional, only one can be added and they can be added in any order.**
+**These three arguments are optional, only one can be added and they can be added in any order.** 
+
+**Note that by convention a parameter starting with a number is interpreted as a line width**
 
 .. tabs::
 
   .. code-tab:: py
     
-    fig.draw_box([[2.2,2.5],[2.2,2.5]], StyleProperties(Color.red(), "..", "layer1")) # Red edge, dotted line and layer1
+    fig.draw_box([[2.2,2.5],[2.2,2.5]], StyleProperties(Color.red(), "..", "layer1","0.1")) # Red edge, dotted line, line width of 0.1 and layer1
 
   .. code-tab:: c++
 
-    fig.draw_box({{2.2,2.5},{2.2,2.5}}, StyleProperties(Color.red(), "..", "layer1")); // Red edge, dotted line and layer1
-    // fig.draw_box({{2.2,2.5},{2.2,2.5}}, {Color.red(), "..", "layer1"}); //equivalent
+    fig.draw_box({{2.2,2.5},{2.2,2.5}}, StyleProperties(Color.red(), "..", "layer1")); // Red edge, dotted line, line width of 0.1 and layer1
+    // fig.draw_box({{2.2,2.5},{2.2,2.5}}, {Color.red(), "..", "layer1", "0.1"}); //equivalent
 
 Colors
 ------
 
-Predefined colors are available in the Color class. Each of the static methods can take an argument to define the transparency of the color
-between 0 (full transparency) and 1 (full opacity).
+Predefined colors are available in the ``Color`` class. Each of the static methods can take an argument to define the transparency of the color between 0 (full transparency) and 1 (full opacity).
 
 .. tabs::
 
   .. code-tab:: py
 
-    Color.none() # transparent
-    Color.black() # black
-    Color.white() # white
-    Color.green() # green
-    Color.blue() # blue
-    Color.cyan() # cyan
-    Color.yellow() # yellow
-    Color.red() # red
-    Color.dark_gray() # dark gray
-    Color.purple() # purple
-    Color.dark_green() # dark green
-  
+    Color.none(), Color.white(), Color.black()
+    Color.light_gray(), Color.gray(), Color.dark_gray()
+    Color.light_green(), Color.green(), Color.dark_green()
+    Color.light_blue(), Color.blue(), Color.dark_blue()
+    Color.light_cyan(), Color.cyan(), Color.dark_cyan()
+    Color.light_yellow(), Color.yellow(), Color.dark_yellow()
+    Color.light_orange(), Color.orange(), Color.dark_orange()
+    Color.light_red(), Color.red(), Color.dark_red()
+    Color.light_brown(), Color.brown(), Color.dark_brown()
+    Color.light_purple(), Color.purple(), Color.dark_purple()
+    Color.light_pink(), Color.pink(), Color.dark_pink()
+
   .. code-tab:: c++
 
-    Color::none(); // transparent
-    Color::black(); // black
-    Color::white(); // white
-    Color::green(); // green
-    Color::blue(); // blue
-    Color::cyan(); // cyan
-    Color::yellow(); // yellow
-    Color::red(); // red
-    Color::dark_gray(); // dark gray
-    Color::purple(); // purple
-    Color::dark_green(); // dark green
+    Color::none(), Color::white(), Color::black()
+    Color::light_gray(), Color::gray(), Color::dark_gray()
+    Color::light_green(), Color::green(), Color::dark_green()
+    Color::light_blue(), Color::blue(), Color::dark_blue()
+    Color::light_cyan(), Color::cyan(), Color::dark_cyan()
+    Color::light_yellow(), Color::yellow(), Color::dark_yellow()
+    Color::light_orange(), Color::orange(), Color::dark_orange()
+    Color::light_red(), Color::red(), Color::dark_red()
+    Color::light_brown(), Color::brown(), Color::dark_brown()
+    Color::light_purple(), Color::purple(), Color::dark_purple()
+    Color::light_pink(), Color::pink(), Color::dark_pink()
 
+Each basic color is available in three shades: ``light_``, normal and ``dark_``:
+
+.. figure:: img/codac_colors.png
 
 Custom colors can be defined in the RGB or HSV color spaces. An enumaration Model is used to make the distinction between the two.
 

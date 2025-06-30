@@ -11,29 +11,31 @@
 
 #include "codac2_AnalyticFunction.h"
 #include "codac2_TrajBase.h"
-#include "codac2_SampledTraj.h"
+#include "codac2_Traj_operator.h"
 
 namespace codac2
 {
-  template<typename O, typename S = typename O::Scalar>
-  class AnalyticTraj : public TrajBase<S>, public AnalyticFunction<O>
+  template<typename T>
+  class AnalyticTraj : public TrajBase<typename T::Scalar>, public AnalyticFunction<T>
   {
     public:
 
-      AnalyticTraj(const AnalyticFunction<O>& f, const Interval& tdomain)
-        : TrajBase<S>(), AnalyticFunction<O>(f), _tdomain(tdomain)
+      using Type = T;
+
+      AnalyticTraj(const AnalyticFunction<T>& f, const Interval& tdomain)
+        : TrajBase<typename T::Scalar>(), AnalyticFunction<T>(f), _tdomain(tdomain)
       {
         assert_release(f.args().total_size() == 1 && "domain of f must be 1d");
       }
 
       virtual Index size() const
       {
-        return AnalyticFunction<O>::output_size();
+        return AnalyticFunction<T>::output_size();
       }
 
       virtual std::pair<Index,Index> shape() const
       {
-        return AnalyticFunction<O>::output_shape();
+        return AnalyticFunction<T>::output_shape();
       }
 
       virtual bool is_empty() const
@@ -52,24 +54,34 @@ namespace codac2
         _tdomain &= new_tdomain;
       }
 
-      virtual typename Wrapper<S>::Domain codomain() const
+      virtual typename T::Domain codomain() const
       {
-        return AnalyticFunction<O>::eval(this->_tdomain);
+        return AnalyticFunction<T>::eval(this->_tdomain);
       }
 
-      virtual S operator()(double t) const
+      virtual typename T::Scalar operator()(double t) const
       {
         if(!this->tdomain().contains(t))
           return this->nan_value();
-        return AnalyticFunction<O>::real_eval(t);
+        return AnalyticFunction<T>::real_eval(t);
       }
 
-      virtual typename Wrapper<S>::Domain operator()(const Interval& t) const
+      virtual typename T::Domain operator()(const Interval& t) const
       {
         if(!this->tdomain().is_superset(t))
-          return typename Wrapper<S>::Domain((*this)(tdomain().lb())) // we obtain the output dimension by an evalution...
+          return typename T::Domain((*this)(tdomain().lb())) // we obtain the output dimension by an evalution...
             .init(Interval(-oo,oo));
-        return AnalyticFunction<O>::eval(t);
+        return AnalyticFunction<T>::eval(t);
+      }
+  
+      AnalyticFunction<T> as_function() const
+      {
+        ScalarVar t;
+        return {{t},
+          AnalyticExprWrapper<T>(
+            std::make_shared<AnalyticOperationExpr<
+              TrajectoryOp<AnalyticTraj<T>>,T,ScalarType>>(*this,t))
+        };
       }
 
     protected:

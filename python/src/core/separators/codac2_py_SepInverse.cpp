@@ -32,6 +32,7 @@ void export_SepInverse(py::module& m, py::class_<SepBase,pySep>& pysep)
     .def(py::init(
         [](const py::object& f, const SepBase& s, bool with_centered_form)
         {
+          assert_release(is_instance<AnalyticFunction<VectorType>>(f));
           return std::make_unique<SepInverse>(
             cast<AnalyticFunction<VectorType>>(f),
             s.copy(), with_centered_form);
@@ -66,7 +67,8 @@ void export_SepInverse(py::module& m, py::class_<SepBase,pySep>& pysep)
 
           else
           {
-            assert_release(false && "case error - SepInverse: cannot deal with f");
+            assert_release_constexpr(false && "case error - SepInverse: cannot deal with f");
+            return std::unique_ptr<SepInverse>(nullptr);
           }
         }
       ),

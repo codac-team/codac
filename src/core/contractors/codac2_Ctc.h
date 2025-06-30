@@ -15,34 +15,16 @@
 #include "codac2_assert.h"
 #include "codac2_TypeInfo.h"
 #include "codac2_IntervalVector.h"
+#include "codac2_SlicedTube.h"
 
 namespace codac2
 {
-  //class Ctc
-  //{
-  //  public:
-  //
-  //    //virtual std::shared_ptr<Ctc> copy() const = 0;
-  //};
-  //template<typename... X>
-  //class Ctc
-  //{
-  //  public:
-  //
-  //    virtual std::shared_ptr<Ctc<X...>> copy() const
-  //    {
-  //      return nullptr;
-  //    }
-  //    
-  //    virtual void contract(X&... x) const = 0;
-  //};
-
-  template<typename X>
-  class CtcBase// : virtual public Ctc<X_>
+  template<typename... X>
+  class CtcBase
   {
     public:
-    
-      using ContractedType = X;
+      
+      using ContractedTypes = std::tuple<X...>;
 
       CtcBase(Index n)
         : _n(n)
@@ -50,41 +32,50 @@ namespace codac2
         assert(n > 0);
       }
 
+      virtual ~CtcBase() = default;
+
       Index size() const
       {
         return _n;
       }
       
-      virtual void contract(X& x) const = 0;
+      virtual void contract(X&... x) const = 0;
 
-      virtual std::shared_ptr<CtcBase<X>> copy() const = 0;
+      virtual void contract(SlicedTube<X>&... x) const
+      {
+        auto tdomain = std::get<0>(std::make_tuple(x...));
+        for(auto it = tdomain.begin() ; it != tdomain.end() ; it++)
+          contract((x(it)->codomain())...);
+      }
+
+      virtual std::shared_ptr<CtcBase<X...>> copy() const = 0;
 
     protected:
 
       const Index _n;
   };
 
-  template<typename C,typename X_>
-  class Ctc : public CtcBase<X_>
+  template<typename C,typename... X>
+  class Ctc : public CtcBase<X...>
   {
     public:
     
       Ctc(Index n)
-        : CtcBase<X_>(n)
+        : CtcBase<X...>(n)
       { }
 
-      virtual std::shared_ptr<CtcBase<X_>> copy() const
+      virtual std::shared_ptr<CtcBase<X...>> copy() const
       {
         return std::make_shared<C>(*dynamic_cast<const C*>(this));
       }
   };
 
-  template<class C,class X>
-  concept IsCtcBaseOrPtr = (std::is_base_of_v<CtcBase<X>,C>
-      || std::is_same_v<std::shared_ptr<CtcBase<X>>,C>);
+  template<class C,class... X>
+  concept IsCtcBaseOrPtr = (std::is_base_of_v<CtcBase<X...>,C>
+      || std::is_same_v<std::shared_ptr<CtcBase<X...>>,C>);
 
-  template<class C,class X>
-  concept IsCtcBase = std::is_base_of_v<CtcBase<X>,C>;
+  template<class C,class... X>
+  concept IsCtcBase = std::is_base_of_v<CtcBase<X...>,C>;
   
 
   template<typename C>

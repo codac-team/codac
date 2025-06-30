@@ -2,10 +2,10 @@ from codac import *
 
 # As an example, defining a custom contractor (does nothing special here)
 
-class MyCtc(Ctc):
+class MyCtc(Ctc_IntervalVector):
 
   def __init__(self, C_):
-    Ctc.__init__(self, C_.size())
+    Ctc_IntervalVector.__init__(self, C_.size())
     self.C = C_
 
   def contract(self, x):

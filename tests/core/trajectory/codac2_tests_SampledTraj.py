@@ -13,7 +13,7 @@ import sys, math
 
 class TestSampledTraj(unittest.TestCase):
 
-  def tests_SampledTraj(self):
+  def test_SampledTraj(self):
 
     x = SampledVectorTraj({
       0.25: [-0.5,0.5],
