@@ -16,7 +16,7 @@
 
 #include <list>
 #include <array>
-#include <3rd/gaol/gaol_interval.h>
+#include <gaol/gaol_interval.h>
 #include "codac2_Index.h"
 #include "codac2_Domain.h"
 #include "codac2_assert.h"

@@ -47,8 +47,6 @@ The solution set is approximated from an initial box :math:`[\mathbf{x}_0]=[0,2]
   .. code-tab:: c++
 
    #include <codac>
-
-   using namespace std;
    using namespace codac2;
 
    int main()

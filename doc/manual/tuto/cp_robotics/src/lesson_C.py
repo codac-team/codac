@@ -6,14 +6,12 @@ class MyCtc(Ctc_IntervalVector):
     Ctc_IntervalVector.__init__(self, 2) # the contractor acts on 2d boxes
     self.M = M_                          # attribute needed later on for the contraction
 
-  # [B-q2-beg]
   def contract(self, a):
     u = IntervalVector.empty(2)
     for mi in self.M:
       u |= a & mi
     a = IntervalVector(u)
     return a
-  # [B-q2-end]
 
     # Insert contraction formula here (question B.2)
 
@@ -56,7 +54,7 @@ fig.set_axes(
 ).auto_scale()
 
 for mi in M: # displaying the landmarks
-   fig.draw_box(mi, [Color.dark_green(),Color.green()])
+  fig.draw_box(mi, [Color.dark_green(),Color.green()])
 # [C-q2-end]
 
 

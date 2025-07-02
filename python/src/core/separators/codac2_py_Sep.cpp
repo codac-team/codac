@@ -31,6 +31,18 @@ py::class_<SepBase,pySep> export_Sep(py::module& m)
 {
   py::class_<BoxPair> exported_BoxPair(m, "BoxPair", BOXPAIR_MAIN);
   exported_BoxPair
+
+    .def_property("inner",
+      [](BoxPair& bp) -> IntervalVector& { return bp.inner; },
+      [](BoxPair& bp, const IntervalVector& x) { bp.inner = x; },
+      py::return_value_policy::reference_internal
+    )
+
+    .def_property("outer",
+      [](BoxPair& bp) -> IntervalVector& { return bp.outer; },
+      [](BoxPair& bp, const IntervalVector& x) { bp.outer = x; },
+      py::return_value_policy::reference_internal
+    )
   
     .def(py::init(
         [](const IntervalVector& inner, const IntervalVector& outer)
