@@ -63,24 +63,30 @@ if __name__=="__main__":
   y_nd = VectorVar(3)
   rot_matrix_1 = Matrix([[1,0,0],[0,1/np.sqrt(2.0),-1/np.sqrt(2.0)],[0,1/np.sqrt(2.0),+1/np.sqrt(2.0)]])
   rot_matrix_2 = Matrix([[1/np.sqrt(2.0),-1/np.sqrt(2.0),0],[1/np.sqrt(2.0),1/np.sqrt(2.0),0],[0,0,1]])
-  f_nd = AnalyticFunction([y_nd],rot_matrix_1 * rot_matrix_2 * y_nd)
+  # f_nd = AnalyticFunction([y_nd],rot_matrix_1 * rot_matrix_2 * y_nd)
+  f_nd = AnalyticFunction([y_nd], [y_nd[0]/sqrt(sqr(y_nd[0])+sqr(y_nd[1])+sqr(y_nd[2])), y_nd[1]/sqrt(sqr(y_nd[0])+sqr(y_nd[1])+sqr(y_nd[2])), y_nd[2]/sqrt(sqr(y_nd[0])+sqr(y_nd[1])+sqr(y_nd[2]))])
+  # f_nd = f_nd_1(y_nd)
 
   X_nd = VectorVar(1)
   psi0_nd = AnalyticFunction([X_nd],[X_nd[0],1,1])
 
   generators_nd = [[1, 2, 3], [-2, 1, 3], [3, 2, -1], [1, -2, -3]]
 
+  figure_3d_nd = Figure3D("Cube on Sphere")
+  figure_3d_nd.draw_axes(0.5)
+
   figure_2d_nd_xy = Figure2D("XY Plane", GraphicOutput.VIBES)
   figure_2d_nd_xy.set_window_properties([575,50],[500,500])
-  figure_2d_nd_xy.set_axes(axis(0,[-1.8, 1.8]), axis(1,[-1.8, 1.8]))
+  figure_2d_nd_xy.set_axes(axis(0,[-1., 1.]), axis(1,[-1., 1.]))
 
   figure_2d_nd_zy = Figure2D("ZY Plane", GraphicOutput.VIBES)
   figure_2d_nd_zy.set_window_properties([1125,50],[500,500])
-  figure_2d_nd_zy.set_axes(axis(0,[-1.8, 1.8]), axis(1,[-1.8, 1.8]))
+  figure_2d_nd_zy.set_axes(axis(0,[-1., 1.]), axis(1,[-1., 1.]))
 
   v_par_nd = PEIBOS(f_nd,psi0_nd,generators_nd,0.1)
 
   for p in v_par_nd:
+    figure_3d_nd.draw_parallelepiped(p.z, p.A, Color.green(0.5))
     draw_zonotope(p, 0, 1, figure_2d_nd_xy, [Color.black(), Color.green(0.2)])
     draw_zonotope(p, 2, 1, figure_2d_nd_zy, [Color.black(), Color.green(0.2)])
     for vertice in p.vertices():

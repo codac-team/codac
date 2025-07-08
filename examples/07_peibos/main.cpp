@@ -77,6 +77,7 @@ int main()
   Matrix rot_matrix_2 ({ {1/std::sqrt(2.0),-1/std::sqrt(2.0),0},
                           {1/std::sqrt(2.0),+1/std::sqrt(2.0),0},
                           {0,0,1} });
+  // AnalyticFunction f_nd({y_nd}, rot_matrix_1 * rot_matrix_2 * y_nd);
   AnalyticFunction f_nd({y_nd}, rot_matrix_1 * rot_matrix_2 * y_nd);
 
   VectorVar X_nd(1);
