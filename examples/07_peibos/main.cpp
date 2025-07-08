@@ -71,7 +71,13 @@ int main()
   // nD example of the PEIBOS algorithm
 
   VectorVar y_nd(3);
-  AnalyticFunction f_nd({y_nd},{y_nd[0],y_nd[1],y_nd[2]});
+  Matrix rot_matrix_1 ({ {1,0,0},
+                          {0,1/std::sqrt(2.0),-1/std::sqrt(2.0)},
+                          {0,1/std::sqrt(2.0),+1/std::sqrt(2.0)} });
+  Matrix rot_matrix_2 ({ {1/std::sqrt(2.0),-1/std::sqrt(2.0),0},
+                          {1/std::sqrt(2.0),+1/std::sqrt(2.0),0},
+                          {0,0,1} });
+  AnalyticFunction f_nd({y_nd}, rot_matrix_1 * rot_matrix_2 * y_nd);
 
   VectorVar X_nd(1);
   AnalyticFunction psi0_nd ({X_nd},{X_nd[0],1,1});
@@ -84,23 +90,23 @@ int main()
 
   Figure2D figure_2d_nd_xy ("XY Plane", GraphicOutput::VIBES);
   figure_2d_nd_xy.set_window_properties({575,50},{500,500});
-  figure_2d_nd_xy.set_axes(axis(0,{-1.2,1.2}), axis(1,{-1.2,1.2}));
+  figure_2d_nd_xy.set_axes(axis(0,{-1.8,1.8}), axis(1,{-1.8,1.8}));
 
   Figure2D figure_2d_nd_zy ("ZY Plane", GraphicOutput::VIBES);
   figure_2d_nd_zy.set_window_properties({1125,50},{500,500});
-  figure_2d_nd_zy.set_axes(axis(2,{-1.2,1.2}), axis(1,{-1.2,1.2}));
+  figure_2d_nd_zy.set_axes(axis(0,{-1.8,1.8}), axis(1,{-1.8,1.8}));
 
-  auto v_par_nd = PEIBOS(f_nd, psi0_nd, generators_nd, 0.02);
+  auto v_par_nd = PEIBOS(f_nd, psi0_nd, generators_nd, 0.1);
 
   for (const auto& p : v_par_nd)
   {
-    figure_2d_nd_zy.draw_box(p.bounding_box(), {Color::blue()});
-    figure_2d_nd_xy.draw_box(p.bounding_box(), {Color::blue()});
+    draw_zonotope(p, 0, 1, figure_2d_nd_xy, {Color::black(),Color::green(0.2)});
+    draw_zonotope(p, 2, 1, figure_2d_nd_zy, {Color::black(),Color::green(0.2)});
     auto vertices = p.vertices();
     for (const auto& vertice : vertices)
     {
-      figure_2d_nd_zy.draw_point(vertice, {Color::red(),Color::red(0.5)});
-      figure_2d_nd_xy.draw_point(vertice, {Color::red(),Color::red(0.5)});
+      figure_2d_nd_xy.draw_point({vertice(0),vertice(1)}, {Color::red(),Color::red(0.5)});
+      figure_2d_nd_zy.draw_point({vertice(2),vertice(1)}, {Color::red(),Color::red(0.5)});
     }
   }
     
