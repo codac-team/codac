@@ -94,6 +94,8 @@ int main()
 
   for (const auto& p : v_par_nd)
   {
+    figure_2d_nd_zy.draw_box(p.bounding_box(), {Color::blue()});
+    figure_2d_nd_xy.draw_box(p.bounding_box(), {Color::blue()});
     auto vertices = p.vertices();
     for (const auto& vertice : vertices)
     {

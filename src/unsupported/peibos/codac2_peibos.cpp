@@ -137,7 +137,8 @@ namespace codac2
 
     Matrix Q = (A_tild.transpose() * A_tild).inverse();
 
-    Matrix mult (n, n);
+    // Matrix mult (n, n);
+    Matrix mult = Matrix::Zero(n,n);
     for (int i = 0; i < n; i++)
       mult(i,i) = rho*std::sqrt(Q(i,i));
 
@@ -170,10 +171,10 @@ namespace codac2
   {
     Index m = psi_0.input_size();
 
-    assert_release (f.input_size() == n && "output size of psi_0 must match input size of f");
-    assert_release (offset.size() == n && "offset size must match output size of psi_0");
+    assert_release (f.input_size() == psi_0.output_size() && "output size of psi_0 must match input size of f");
+    assert_release (offset.size() == psi_0.output_size() && "offset size must match output size of psi_0");
     assert_release (m < psi_0.output_size());
-    assert_release (generators.size() > 0 && (int) generators[0].size() == n && "no generator given or wrong dimension of generator (must match output size of psi_0)");
+    assert_release (generators.size() > 0 && (int) generators[0].size() == psi_0.output_size() && "no generator given or wrong dimension of generator (must match output size of psi_0)");
 
     clock_t t_start = clock();
 
