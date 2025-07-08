@@ -44,7 +44,7 @@ namespace codac2
       void update_axes();
 
       /**
-       * \brief Updates the drawing properties : line style and layer
+       * \brief Updates the drawing properties : colors, line style, line width and layer
        */
       void update_drawing_properties(const StyleProperties& s);
 
@@ -60,6 +60,11 @@ namespace codac2
        * \param r Radius of the viewbox
        */
       void center_viewbox(const Vector& c, const Vector& r);
+
+      /**
+       * \brief Clears the figure
+       */
+      void clear();
       
       // Geometric shapes
 

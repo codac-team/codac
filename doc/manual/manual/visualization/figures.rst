@@ -132,6 +132,8 @@ Many properties have an associated getter :
 
 For temporal objects (such as trajectories or tubes), it is possible to restrict the temporal frame to display by using the ``set_tdomain()`` method.
 
+**For animation purposes** a function ``clear()`` is available to clear the figure content before drawing again. 
+
 VIBes only
 ----------
 

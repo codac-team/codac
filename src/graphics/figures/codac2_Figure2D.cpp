@@ -95,6 +95,12 @@ void Figure2D::center_viewbox(const Vector& c, const Vector& r)
     output_fig->center_viewbox(c,r);
 }
 
+void Figure2D::clear()
+{
+  for(const auto& output_fig : _output_figures)
+    output_fig->clear();
+}
+
 double Figure2D::scaled_unit() const
 {
   return std::max(_axes[0].limits.diam(),_axes[1].limits.diam()) / _window_size.max_coeff();
