@@ -43,6 +43,11 @@ namespace codac2
       virtual ~Figure2D_IPE();
 
       /**
+       * \brief Initializes the figure
+       */
+      void init_figure();
+
+      /**
        * \brief Updates the axes of the figure
        */
       void update_axes();

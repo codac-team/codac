@@ -22,6 +22,30 @@ Figure2D_IPE::Figure2D_IPE(const Figure2D& fig)
     _x_offset(0.03*_fig.axes()[0].limits.diam()),
     _y_offset(0.03*_fig.axes()[1].limits.diam())
 {
+  init_figure();
+}
+
+Figure2D_IPE::~Figure2D_IPE()
+{ 
+  draw_axes();
+  print_header_page();
+  _f_temp_content.close();
+  _f.close();
+
+  _f = std::ofstream(_fig.name() + ".xml", std::ofstream::binary | std::ofstream::app);
+  std::ifstream f_temp_content(_fig.name() + "_tmp.xml", std::ofstream::binary);
+  _f << f_temp_content.rdbuf();
+  f_temp_content.close();
+  std::remove((_fig.name() + "_tmp.xml").c_str());
+  _f.close();
+
+  _f = std::ofstream(_fig.name() + ".xml", std::ofstream::app);
+  _f << "\n</page>\n</ipe>";
+  _f.close();
+}
+
+void Figure2D_IPE::init_figure()
+{
   list<Color> codac_colors {
     Color::none(), Color::black(), Color::white(),
     Color::light_gray(), Color::gray(), Color::dark_gray(),
@@ -42,25 +66,6 @@ Figure2D_IPE::Figure2D_IPE(const Figure2D& fig)
 
   _layers.push_back("alpha");
   _layers.push_back("axes");
-}
-
-Figure2D_IPE::~Figure2D_IPE()
-{ 
-  draw_axes();
-  print_header_page();
-  _f_temp_content.close();
-  _f.close();
-
-  _f = std::ofstream(_fig.name() + ".xml", std::ofstream::binary | std::ofstream::app);
-  std::ifstream f_temp_content(_fig.name() + "_tmp.xml", std::ofstream::binary);
-  _f << f_temp_content.rdbuf();
-  f_temp_content.close();
-  std::remove((_fig.name() + "_tmp.xml").c_str());
-  _f.close();
-
-  _f = std::ofstream(_fig.name() + ".xml", std::ofstream::app);
-  _f << "\n</page>\n</ipe>";
-  _f.close();
 }
 
 const std::vector<double> generate_axis_ticks(double min_val, double max_val) {
@@ -185,31 +190,11 @@ void Figure2D_IPE::clear()
   _f_temp_content.close();
   _f_temp_content = std::ofstream(_fig.name() + "_tmp.xml");
 
-  // clear _color map
+  // clear _color map and layers
   _colors.clear();
   _layers.clear();
 
-  list<Color> codac_colors {
-    Color::none(), Color::black(), Color::white(),
-    Color::light_gray(), Color::gray(), Color::dark_gray(),
-    Color::light_green(), Color::green(), Color::dark_green(),
-    Color::light_blue(), Color::blue(), Color::dark_blue(),
-    Color::light_cyan(), Color::cyan(), Color::dark_cyan(),
-    Color::light_yellow(), Color::yellow(), Color::dark_yellow(),
-    Color::light_orange(), Color::orange(), Color::dark_orange(),
-    Color::light_red(), Color::red(), Color::dark_red(),
-    Color::light_brown(), Color::brown(), Color::dark_brown(),
-    Color::light_purple(), Color::purple(), Color::dark_purple(),
-    Color::light_pink(), Color::pink(), Color::dark_pink()
-  };
-
-  for(const auto& ci : codac_colors)
-    // substr is needed to remove the "#" at the beginning of hex_str (deprecated by IPE)
-    _colors.emplace(ci.hex_str().substr(1), ci);
-
-  _layers.push_back("alpha");
-  _layers.push_back("axes");
-
+  init_figure();
 }
 
 std::string ipe_str(const Color& c)
