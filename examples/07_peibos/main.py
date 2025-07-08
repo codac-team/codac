@@ -1,5 +1,13 @@
 from codac import *
 
+def draw_zonotope (p, i, j, figure, style):
+  A_cropped = Matrix(2, p.A.cols())
+  for index in range(p.A.cols()):
+    A_cropped[0, index] = p.A[i, index]
+    A_cropped[1, index] = p.A[j, index]
+  z_cropped = Vector([p.z[i], p.z[j]])
+  figure.draw_zonotope(z_cropped, A_cropped, style)
+
 if __name__=="__main__":
 
   # 2D example of the PEIBOS algorithm
@@ -13,7 +21,7 @@ if __name__=="__main__":
   
   generators_2d = [[1, 2], [-2, 1]]
 
-  v_par_2d = PEIBOS(f_2d,psi0_2d,generators_2d,0.1,[-0.2,0])
+  v_par_2d = PEIBOS(f_2d,psi0_2d,generators_2d,0.2,[-0.2,0.])
   
   figure_2d = Figure2D("Henon Map", GraphicOutput.VIBES)
   figure_2d.set_window_properties([25,50],[500,500])
@@ -21,6 +29,7 @@ if __name__=="__main__":
 
   for par in v_par_2d:
     figure_2d.draw_parallelepiped(par.z,par.A,[Color.green(),Color.green(0.5)])
+    figure_2d.draw_box(par.bounding_box(), [Color.blue()])
     for vertice in par.vertices():
       figure_2d.draw_point(vertice, [Color.red(), Color.red(0.5)])
 
@@ -37,10 +46,15 @@ if __name__=="__main__":
   figure_3d = Figure3D("Conform")
   figure_3d.draw_axes()
 
+  figure_3d_proj = Figure2D("Conform projected", GraphicOutput.VIBES)
+  figure_3d_proj.set_window_properties([25,600],[500,500])
+  figure_3d_proj.set_axes(axis(0,[-1.5,2.5]), axis(1,[-2,2]))
+
   v_par_3d = PEIBOS(f_3d,psi0_3d,generators_3d,0.2)
 
   for par in v_par_3d:
     figure_3d.draw_parallelepiped(par.z,par.A,Color.green(0.5))
+    draw_zonotope(par, 0, 1, figure_3d_proj, [Color.black(),Color.green(0.2)])
 
   # nD example of the PEIBOS algorithm
 

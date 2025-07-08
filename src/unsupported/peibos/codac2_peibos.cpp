@@ -169,11 +169,10 @@ namespace codac2
   vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset, bool verbose)
   {
     Index m = psi_0.input_size();
-    Index n = psi_0.output_size();
 
     assert_release (f.input_size() == n && "output size of psi_0 must match input size of f");
     assert_release (offset.size() == n && "offset size must match output size of psi_0");
-    assert_release (m < n);
+    assert_release (m < psi_0.output_size());
     assert_release (generators.size() > 0 && (int) generators[0].size() == n && "no generator given or wrong dimension of generator (must match output size of psi_0)");
 
     clock_t t_start = clock();
@@ -189,7 +188,6 @@ namespace codac2
     {
       for (const auto& X : boxes)
       {
-
         IntervalVector Y = symmetry(psi_0.eval(X)) + offset;
 
         auto JJf=f.diff(Y);

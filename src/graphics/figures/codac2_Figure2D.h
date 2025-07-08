@@ -21,6 +21,9 @@
 #include "codac2_Polygon.h"
 #include "codac2_SlicedTube.h"
 
+// still unsupported
+// #include "codac2_Parallelepiped.h"
+
 #define DEFAULT_FIG_NAME "Codac - default figure"
 
 namespace codac2
@@ -288,6 +291,14 @@ namespace codac2
        */
       void draw_parallelepiped(const Vector& z, const Matrix& A, const StyleProperties& style = StyleProperties());
 
+      // /**
+      //  * \brief Draws a Parallelepiped z+A*[-1,1]^2 on the figure
+      //  * 
+      //  * \param p The parallelepiped to draw
+      //  * \param style Style of the parallelepiped (edge color and fill color)
+      //  */
+      // void draw_parallelepiped(const Parallelepiped& p, const StyleProperties& style = StyleProperties());
+
       /**
        * \brief Draws a zonotope z+sum_i [-1,1] A_i on the figure
        * 
@@ -295,7 +306,15 @@ namespace codac2
        * \param A list of vectors
        * \param style Style of the zonotope (edge color and fill color)
        */
-      void draw_zonotope(const Vector& z, const std::vector<Vector>& A, const StyleProperties& style = StyleProperties());
+      void draw_zonotope(const Vector& z, const Matrix& A, const StyleProperties& style = StyleProperties());
+
+      // /**
+      //  * \brief Draws a the projected zonotope of a parallelepiped  on the figure
+      //  * 
+      //  * \param p Parallelepiped to project and draw
+      //  * \param style Style of the zonotope (edge color and fill color)
+      //  */
+      // void draw_zonotope(const Parallelepiped& p, const StyleProperties& style = StyleProperties());
 
       /**
        * \brief Draws a pie on the figure
@@ -676,6 +695,18 @@ namespace codac2
         selected_fig()->draw_parallelepiped(z,A,style);
       }
 
+      // /**
+      //  * \brief Draws a parallelepiped z+A*[-1,1]^2 on the figure
+      //  * 
+      //  * \param p The parallelepiped to draw
+      //  * \param style Style of the parallelepiped (edge color and fill color)
+      //  */
+      // static void draw_parallelepiped(const Parallelepiped& p, const StyleProperties& style = StyleProperties())
+      // {
+      //   auto_init();
+      //   selected_fig()->draw_parallelepiped(p,style);
+      // }
+
       /**
        * \brief Draws a zonotope z+sum_i [-1,1] A_i on the figure
        * 
@@ -683,7 +714,7 @@ namespace codac2
        * \param A list of vectors
        * \param style Style of the zonotope (edge color and fill color)
        */
-      static void draw_zonotope(const Vector& z, const std::vector<Vector>& A, const StyleProperties& style = StyleProperties())
+      static void draw_zonotope(const Vector& z, const Matrix& A, const StyleProperties& style = StyleProperties())
       {
         auto_init();
         selected_fig()->draw_zonotope(z,A,style);

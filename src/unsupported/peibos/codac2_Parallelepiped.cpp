@@ -16,6 +16,7 @@ Parallelepiped::Parallelepiped(const Vector& z_, const Matrix& A_)
   : z(z_), A(A_)
 {
   assert_release(z.size() == A.rows());
+  assert_release(A.cols() <= z.size() && "too many vectors, you are describing a zonotope");
 }
 
 void generate_vertices(int i, int n, const Vector& z, const Matrix& A, vector<Vector>& L_v)
@@ -37,5 +38,15 @@ vector<Vector> Parallelepiped::vertices() const
   generate_vertices(0, z.size(),z,A,L_v);
 
   return L_v;
+}
+
+IntervalVector Parallelepiped::bounding_box() const
+{
+  IntervalVector box (z);
+  for (auto vertice : vertices())
+  {
+    box |= IntervalVector(vertice);
+  }
+  return box;
 }
 

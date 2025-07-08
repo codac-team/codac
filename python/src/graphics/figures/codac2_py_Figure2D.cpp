@@ -164,7 +164,7 @@ void export_Figure2D(py::module& m)
       "z"_a, "A"_a, "style"_a=StyleProperties())
 
     .def("draw_zonotope", &Figure2D::draw_zonotope,
-      VOID_FIGURE2D_DRAW_ZONOTOPE_CONST_VECTOR_REF_CONST_VECTOR_VECTOR_REF_CONST_STYLEPROPERTIES_REF,
+      VOID_FIGURE2D_DRAW_ZONOTOPE_CONST_VECTOR_REF_CONST_MATRIX_REF_CONST_STYLEPROPERTIES_REF,
       "z"_a, "A"_a, "style"_a=StyleProperties())
 
     .def("draw_pie", &Figure2D::draw_pie,
@@ -338,7 +338,7 @@ void export_Figure2D(py::module& m)
       "z"_a, "A"_a, "style"_a=StyleProperties())
 
     .def_static("draw_zonotope", &DefaultFigure::draw_zonotope,
-      STATIC_VOID_DEFAULTFIGURE_DRAW_ZONOTOPE_CONST_VECTOR_REF_CONST_VECTOR_VECTOR_REF_CONST_STYLEPROPERTIES_REF,
+      STATIC_VOID_DEFAULTFIGURE_DRAW_ZONOTOPE_CONST_VECTOR_REF_CONST_MATRIX_REF_CONST_STYLEPROPERTIES_REF,
       "z"_a, "A"_a, "style"_a=StyleProperties())
 
     .def_static("draw_pie", &DefaultFigure::draw_pie,

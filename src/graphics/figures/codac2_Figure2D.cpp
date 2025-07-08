@@ -224,10 +224,11 @@ void Figure2D::draw_polygon(const Polygon& x, const StyleProperties& style)
     output_fig->draw_polygon(w,style);
 }
 
-void Figure2D::draw_zonotope(const Vector& z, const std::vector<Vector>& A, const StyleProperties& style)
+void Figure2D::draw_zonotope(const Vector& z, const Matrix& A, const StyleProperties& style)
 {
    std::map<double,Vector> sides;
-   for (auto &u : A) {
+   for (int i = 0; i < A.cols(); ++i) {
+       auto u = A.col(i);
        assert_release(u.size()==2);
        if (u==Vector::zero(2)) continue;
        double theta = std::atan2(u[1],u[0]);
@@ -259,6 +260,17 @@ void Figure2D::draw_zonotope(const Vector& z, const std::vector<Vector>& A, cons
       output_fig->draw_polygon(vertices,style);
 }
 
+// void Figure2D::draw_zonotope(const Parallelepiped& p, const StyleProperties& style)
+// {
+//   assert_release(i() < p.z.size() && j() < p.z.size());
+
+//   Matrix A_cropped(2, p.A.cols());
+//   A_cropped.row(0) = p.A.row(i());
+//   A_cropped.row(1) = p.A.row(j());
+
+//   draw_zonotope(p.z, A_cropped, style);
+// }
+
 
 void Figure2D::draw_parallelepiped(const Vector& z, const Matrix& A, const StyleProperties& style)
 {
@@ -272,6 +284,13 @@ void Figure2D::draw_parallelepiped(const Vector& z, const Matrix& A, const Style
       Vector(z-a1-a2), Vector(z+a1-a2)
     }), style);
 }
+
+// void Figure2D::draw_parallelepiped(const Parallelepiped& p, const StyleProperties& style)
+// {
+//   assert_release(p.z.size() == 2);
+
+//   draw_parallelepiped(p.z, p.A, style);
+// }
 
 void Figure2D::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& style)
 {

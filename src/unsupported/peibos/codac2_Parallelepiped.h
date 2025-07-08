@@ -12,6 +12,7 @@
 #include <vector>
 #include <codac2_Vector.h>
 #include <codac2_Matrix.h>
+#include <codac2_IntervalVector.h>
 
 using namespace std;
 
@@ -27,6 +28,7 @@ namespace codac2
       Matrix A;
       
       vector<Vector> vertices() const;
+      IntervalVector bounding_box() const;
 
   };
 }

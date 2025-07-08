@@ -33,6 +33,9 @@ void export_Parallelepiped(py::module& m)
   .def("vertices", &Parallelepiped::vertices,
     VECTOR_VECTOR_PARALLELEPIPED_VERTICES_CONST)
 
+  .def("bounding_box", &Parallelepiped::bounding_box,
+    INTERVALVECTOR_PARALLELEPIPED_BOUNDING_BOX_CONST)
+
   .def_readwrite("z", &Parallelepiped::z)
 
   .def_readwrite("A", &Parallelepiped::A)
