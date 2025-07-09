@@ -104,13 +104,18 @@ namespace codac2
     return output;
   }
 
-  vector<vector<Parallelepiped>> PEIBOS(const capd::IMap& gamma, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, bool verbose)
+  map<double,vector<Parallelepiped>> PEIBOS(const capd::IMap& gamma, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, bool verbose)
   {
     return PEIBOS(gamma, tf, dt, psi_0, generators, epsilon, Vector::zero(psi_0.output_size()), verbose);
   }
 
-  vector<vector<Parallelepiped>> PEIBOS(const capd::IMap& gamma, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset, bool verbose)
+  map<double,vector<Parallelepiped>> PEIBOS(const capd::IMap& gamma, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset, bool verbose)
   {
+    map<double,vector<Parallelepiped>> output;
+
+    for (double t=0.;t<=tf;t+=dt)
+      output[t] = vector<Parallelepiped>();
+     
     int m = psi_0.input_size();
     int n = psi_0.output_size();
 
@@ -120,8 +125,6 @@ namespace codac2
 
     clock_t t_start = clock();
 
-    vector<vector<Parallelepiped>> output;
-    
     // CAPD solver setup
     capd::IMap g (gamma);
     capd::IOdeSolver solver(g, 20);
@@ -171,8 +174,6 @@ namespace codac2
           auto result = solution(t);
           auto JJf = to_codac(solution.derivative(t));
 
-
-
           auto result_punct = solution_punct(t);
           auto JJf_point = to_codac(solution_punct.derivative(t));
 
@@ -181,9 +182,8 @@ namespace codac2
           
           auto p = parallelepiped_inclusion(z, JJf, JJf_point, psi_0, symmetry, X, true_eps);
 
-          to_add.push_back(p);
+          output[t].push_back(p);
         }
-        output.push_back(to_add);
       }
     }
     
