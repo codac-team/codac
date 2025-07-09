@@ -16,6 +16,7 @@ namespace py = pybind11;
 
 // PEIBOS
 void export_Parallelepiped(py::module& m);
+void export_Zonotope(py::module& m);
 void export_peibos(py::module& m);
 
 PYBIND11_MODULE(_unsupported, m)
@@ -24,6 +25,7 @@ PYBIND11_MODULE(_unsupported, m)
 
   // PEIBOS
   export_Parallelepiped(m);
+  export_Zonotope(m);
   export_peibos(m);
 
 }

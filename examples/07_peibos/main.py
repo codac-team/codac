@@ -1,15 +1,6 @@
 from codac import *
 import numpy as np
 
-def draw_zonotope (p, i, j, figure, style):
-  A_cropped = Matrix(2, p.A.cols())
-  for index in range(p.A.cols()):
-    A_cropped[0, index] = p.A[i, index]
-    A_cropped[1, index] = p.A[j, index]
-  z_cropped = Vector([p.z[i], p.z[j]])
-
-  figure.draw_zonotope(z_cropped, A_cropped, style)
-
 if __name__=="__main__":
 
   # 2D example of the PEIBOS algorithm
@@ -54,9 +45,10 @@ if __name__=="__main__":
 
   v_par_3d = PEIBOS(f_3d,psi0_3d,generators_3d,0.2)
 
-  for par in v_par_3d:
-    figure_3d.draw_parallelepiped(par.z,par.A,Color.green(0.5))
-    draw_zonotope(par, 0, 1, figure_3d_proj, [Color.black(),Color.green(0.2)])
+  for p in v_par_3d:
+    figure_3d.draw_parallelepiped(p.z,p.A,Color.green(0.5))
+    z = p.project([0, 1])
+    figure_3d_proj.draw_zonotope(z.z, z.A , [Color.black(),Color.green(0.2)])
 
   # nD example of the PEIBOS algorithm
 
@@ -86,8 +78,10 @@ if __name__=="__main__":
 
   for p in v_par_nd:
     figure_3d_nd.draw_parallelepiped(p.z, p.A, Color.green(0.5))
-    draw_zonotope(p, 0, 1, figure_2d_nd_xy, [Color.black(), Color.green(0.2)])
-    draw_zonotope(p, 2, 1, figure_2d_nd_zy, [Color.black(), Color.green(0.2)])
+    z_xy = p.project([0, 1])
+    z_zy = p.project([2, 1])
+    figure_2d_nd_xy.draw_zonotope(z_xy.z, z_xy.A, [Color.black(), Color.green(0.2)])
+    figure_2d_nd_zy.draw_zonotope(z_zy.z, z_zy.A, [Color.black(), Color.green(0.2)])
     for vertice in p.vertices():
       figure_2d_nd_xy.draw_point([vertice[0],vertice[1]], [Color.red(), Color.red(0.5)])
       figure_2d_nd_zy.draw_point([vertice[2],vertice[1]], [Color.red(), Color.red(0.5)])

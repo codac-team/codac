@@ -26,9 +26,9 @@ void export_Zonotope(py::module& m)
     exported(m, "Zonotope", ZONOTOPE_MAIN);
   exported
 
-  // .def(py::init<const Vector&, const Matrix&>(),
-  //   PARALLELEPIPED_PARALLELEPIPED_CONST_VECTOR_REF_CONST_MATRIX_REF,
-  //   "z"_a, "A"_a)
+  .def(py::init<const Vector&, const Matrix&>(),
+    ZONOTOPE_ZONOTOPE_CONST_VECTOR_REF_CONST_MATRIX_REF,
+    "z"_a, "A"_a)
 
   .def_readwrite("z", &Zonotope::z)
 

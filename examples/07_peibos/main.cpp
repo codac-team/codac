@@ -4,16 +4,6 @@
 using namespace std;
 using namespace codac2;
 
-void draw_zonotope (const Parallelepiped& p, const int& i, const int& j, Figure2D& figure, const StyleProperties& style = StyleProperties())
-{
-  Matrix A_cropped (2, p.A.cols());
-  A_cropped.row(0) = p.A.row(i);
-  A_cropped.row(1) = p.A.row(j);
-  Vector z_cropped ({p.z[i], p.z[j]});
-
-  figure.draw_zonotope(z_cropped, A_cropped, style);
-}
-
 int main()
 {
   // 2D example of the PEIBOS algorithm
@@ -65,7 +55,8 @@ int main()
   for (const auto& p : v_par_3d)
   {
     figure3d.draw_parallelepiped(p.z, p.A, Color::green(0.5));
-    draw_zonotope(p, 0, 1, figure_3d_proj, {Color::black(),Color::green(0.2)});
+    Zonotope z = p.project({0,1});
+    figure_3d_proj.draw_zonotope(z.z ,z.A , {Color::black(),Color::green(0.2)});
   }
     
   // nD example of the PEIBOS algorithm
@@ -104,8 +95,10 @@ int main()
   for (const auto& p : v_par_nd)
   {
     figure_3d_nd.draw_parallelepiped(p.z, p.A, Color::green(0.5));
-    draw_zonotope(p, 0, 1, figure_2d_nd_xy, {Color::black(),Color::green(0.2)});
-    draw_zonotope(p, 2, 1, figure_2d_nd_zy, {Color::black(),Color::green(0.2)});
+    Zonotope z_xy = p.project({0,1});
+    Zonotope z_zy = p.project({2,1});
+    figure_2d_nd_xy.draw_zonotope(z_xy.z, z_xy.A, {Color::black(),Color::green(0.2)});
+    figure_2d_nd_zy.draw_zonotope(z_zy.z, z_zy.A, {Color::black(),Color::green(0.2)});
     auto vertices = p.vertices();
     for (const auto& vertice : vertices)
     {

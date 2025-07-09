@@ -30,6 +30,10 @@ void export_Parallelepiped(py::module& m)
     PARALLELEPIPED_PARALLELEPIPED_CONST_VECTOR_REF_CONST_MATRIX_REF,
     "z"_a, "A"_a)
 
+  .def("project", &Parallelepiped::project,
+    ZONOTOPE_PARALLELEPIPED_PROJECT_CONST_VECTOR_INT_REF_CONST,
+    "indices"_a)
+
   .def("vertices", &Parallelepiped::vertices,
     VECTOR_VECTOR_PARALLELEPIPED_VERTICES_CONST)
 

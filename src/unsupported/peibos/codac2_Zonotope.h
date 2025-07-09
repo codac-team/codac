@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_Parallelepiped.h
+ *  \file codac2_Zonotope.h
  * ----------------------------------------------------------------------------
  *  \date       2025
  *  \author     Maël Godard
@@ -19,10 +19,10 @@ using namespace std;
 
 namespace codac2
 {
-  class Parallelepiped
+  class Zonotope
   {
     public:
-      Parallelepiped(const Vector& z, const Matrix& A);
+      Zonotope(const Vector& z, const Matrix& A);
 
       Vector z;
       Matrix A;

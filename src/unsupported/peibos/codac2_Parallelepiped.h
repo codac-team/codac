@@ -13,9 +13,9 @@
 #include <codac2_Vector.h>
 #include <codac2_Matrix.h>
 #include <codac2_IntervalVector.h>
+#include "codac2_Zonotope.h"
 
 using namespace std;
-
 
 namespace codac2
 {
@@ -26,6 +26,8 @@ namespace codac2
 
       Vector z;
       Matrix A;
+
+      Zonotope project(const vector<int>& indices) const;
       
       vector<Vector> vertices() const;
       IntervalVector bounding_box() const;
