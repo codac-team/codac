@@ -55,4 +55,35 @@ int main()
   {
     figure3d_lorenz.draw_parallelepiped(p.z, p.A, Color::green(0.5));
   }
+
+  // multiple discrete times
+
+  capd::IMap vectorField_discrete("par:l,g;var:t,w;fun:w,-sin(t)*g/l - 0.5*w;");
+ 
+  vectorField_discrete.setParameter("l",capd::interval(2.));
+  vectorField_discrete.setParameter("g",capd::interval(10.));
+
+  double tf_discrete = 10.0;
+  double dt_discrete = 0.05;
+  
+  VectorVar X_discrete(1);
+  AnalyticFunction psi0_discrete ({X_discrete},{0.01,X_discrete[0]*0.01});
+
+  vector<vector<int>> generators_discrete ({{1,2},
+                                      {-2,1}});
+  
+  auto v_par_discrete = PEIBOS(vectorField_discrete, tf_discrete, dt_discrete, psi0_discrete, generators_discrete, 0.1, {-M_PI/2.,0.});
+
+  Figure2D output_discrete ("Pendulum",GraphicOutput::VIBES|GraphicOutput::IPE);
+  output_discrete.set_axes(axis(0,{-2,1.5}),axis(1,{-2,3}));
+  output_discrete.set_window_properties({800,100},{800,800});
+
+  for (const auto& p : v_par_discrete)
+  {
+    for (const auto& pp : p)
+    {
+      output_discrete.draw_parallelepiped(pp.z, pp.A, {Color::green(),Color::green(0.5)});
+    }
+  }
+
 }
