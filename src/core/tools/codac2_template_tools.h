@@ -92,7 +92,7 @@ namespace codac2
   }
 
   template <std::size_t N>
-  static std::array<float, N> to_array(const std::initializer_list<float>& list)
+  static std::array<float, N> to_array(std::initializer_list<float> list)
   {
     assert(list.size() == N);
     std::array<float, N> arr;

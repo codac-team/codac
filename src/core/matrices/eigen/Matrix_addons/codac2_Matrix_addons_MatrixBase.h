@@ -19,6 +19,15 @@ Matrix() = delete;
 
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires (!IsVectorOrRow<R,C>)
+explicit Matrix(int r, int c)
+{
+  Base::template _init2<int,int>(r,c);
+  if constexpr(!IsIntervalDomain<Scalar>)
+    init(0.);
+}
+
+template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
+  requires (!IsVectorOrRow<R,C>)
 explicit Matrix(int r, int c, const Scalar values[])
   : Matrix<Scalar,R,C>(r,c)
 {

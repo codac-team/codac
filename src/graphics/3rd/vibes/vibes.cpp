@@ -218,6 +218,14 @@ namespace vibes
     setFigureProperty(figureName.empty()?current_fig:figureName, "viewbox", "auto");
   }
 
+  //>[#144]
+  void axisEqual(const std::string &figureName)
+  {
+    beginDrawingIfNeeded();
+    setFigureProperty(figureName.empty()?current_fig:figureName, "viewbox", "equal");
+  }
+  //<[#144]
+
   void axisLimits(const double &x_lb, const double &x_ub, const double &y_lb, const double &y_ub, const std::string &figureName)
   {
     beginDrawingIfNeeded();
@@ -761,6 +769,22 @@ namespace vibes
 
     fputs(Value(msg).toJSONString().append("\n\n").c_str(), channel.get());
     fflush(channel.get());
+  }
+
+  void drawCake(const double &cx, const double &cy, const double &rot, const double &length, Params params)
+  {
+      beginDrawingIfNeeded();
+      Vec2d vc = { cx, cy };
+      Params msg;
+      msg["action"] = "draw";
+      msg["figure"] = params.pop("figure",current_fig);
+      msg["shape"] = (params, "type", "cake",
+                              "center", vc,
+                              "length", length,
+                              "orientation", rot);
+
+      fputs(Value(msg).toJSONString().append("\n\n").c_str(), channel.get());
+      fflush(channel.get());
   }
 
 

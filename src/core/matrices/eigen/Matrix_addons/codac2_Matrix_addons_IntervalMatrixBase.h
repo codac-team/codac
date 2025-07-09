@@ -30,10 +30,10 @@
 // does not work.. Matrix(MatrixBase<OtherDerived1> lb, MatrixBase<OtherDerived2> ub)
 // does not work..   : Matrix<U,R,C>(lb)
 
-template<typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
-  requires IsIntervalDomain<U>
+template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
+  requires IsIntervalDomain<Scalar>
 Matrix(const Matrix<double,R,C>& lb, const Matrix<double,R,C>& ub)
-  : Matrix<U,R,C>(lb)
+  : Matrix<Scalar,R,C>(lb)
 {
   assert_release(lb.size() == ub.size());
 
@@ -53,10 +53,10 @@ Matrix(const Matrix<double,R,C>& lb, const Matrix<double,R,C>& ub)
   }
 }
 
-template<typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
-  requires IsIntervalDomain<U>
+template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
+  requires IsIntervalDomain<Scalar>
 Matrix(int r, int c, const double bounds[][2])
-  : Matrix<U,R,C>(r,c)
+  : Matrix<Scalar,R,C>(r,c)
 {
   assert_release(r > 0 && c > 0);
 
@@ -77,58 +77,51 @@ inline auto& init()
   return *this;
 }
 
-template<typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime,typename OtherDerived>
-  requires IsIntervalDomain<U>
+template<int R=RowsAtCompileTime,int C=ColsAtCompileTime,typename OtherDerived>
+  requires IsIntervalDomain<Scalar>
 inline bool operator==(const MatrixBase<OtherDerived>& x) const
 {
   return operator==(x.eval().template cast<codac2::Interval>());
 }
 
-template<typename U=Scalar>
-  requires IsIntervalDomain<U>
 inline double min_rad() const
+  requires IsIntervalDomain<Scalar>
 {
   return (this->data()+extr_diam_index(true))->rad();
 }
 
-template<typename U=Scalar>
-  requires IsIntervalDomain<U>
 inline double max_rad() const
+  requires IsIntervalDomain<Scalar>
 {
   return (this->data()+extr_diam_index(false))->rad();
 }
 
-template<typename U=Scalar>
-  requires IsIntervalDomain<U>
 inline double min_diam() const
+  requires IsIntervalDomain<Scalar>
 {
   return (this->data()+extr_diam_index(true))->diam();
 }
 
-template<typename U=Scalar>
-  requires IsIntervalDomain<U>
 inline double max_diam() const
+  requires IsIntervalDomain<Scalar>
 {
   return (this->data()+extr_diam_index(false))->diam();
 }
 
-template<typename U=Scalar>
-  requires IsIntervalDomain<U>
 inline Index min_diam_index() const
+  requires IsIntervalDomain<Scalar>
 {
   return extr_diam_index(true);
 }
 
-template<typename U=Scalar>
-  requires IsIntervalDomain<U>
 inline Index max_diam_index() const
+  requires IsIntervalDomain<Scalar>
 {
   return extr_diam_index(false);
 }
 
-template<typename U=Scalar>
-  requires IsIntervalDomain<U>
 inline Index extr_diam_index(bool min) const
+  requires IsIntervalDomain<Scalar>
 {
   // This code originates from the ibex-lib
   // See: ibex_TemplateVector.h
@@ -203,16 +196,14 @@ inline Index extr_diam_index(bool min) const
   return selected_index;
 }
 
-template<typename U=Scalar>
-  requires IsIntervalDomain<U>
 inline void set_empty()
+  requires IsIntervalDomain<Scalar>
 {
   this->init(codac2::Interval::empty());
 }
 
-template<typename U=Scalar>
-  requires IsIntervalDomain<U>
 inline auto& inflate(double r)
+  requires IsIntervalDomain<Scalar>
 {
   assert_release(r >= 0.);
 
@@ -221,8 +212,8 @@ inline auto& inflate(double r)
   return *this;
 }
 
-template<typename OtherDerived,typename U=Scalar>
-  requires IsIntervalDomain<U>
+template<typename OtherDerived>
+  requires IsIntervalDomain<Scalar>
 inline auto& inflate(const MatrixBase<OtherDerived>& r)
 {
   assert_release(this->size() == r.size());
@@ -285,16 +276,16 @@ inline auto operator|(const MatrixBase<OtherDerived>& x) const
   return y |= x.template cast<codac2::Interval>();
 }
 
-template<typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
-  requires IsIntervalDomain<U>
+template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
+  requires IsIntervalDomain<Scalar>
 inline static auto empty(Index r, Index c)
 {
   assert_release(r >= 0 && c >= 0);
-  return Matrix<U,R,C>::constant(r,c,codac2::Interval::empty());
+  return Matrix<Scalar,R,C>::constant(r,c,codac2::Interval::empty());
 }
 
-template<typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
-  requires IsIntervalDomain<U>
+template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
+  requires IsIntervalDomain<Scalar>
 inline auto bisect(Index i, float ratio = 0.49) const
 {
   assert_release(i >= 0 && i < this->size());
@@ -308,8 +299,8 @@ inline auto bisect(Index i, float ratio = 0.49) const
   return p;
 }
 
-template<typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
-  requires IsIntervalDomain<U>
+template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
+  requires IsIntervalDomain<Scalar>
 inline auto bisect_largest(float ratio = 0.49) const
 {
   return bisect(max_diam_index(), ratio);

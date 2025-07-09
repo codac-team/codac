@@ -189,8 +189,8 @@ User manual
    * :ref:`sec-intervals-class`
    * Boolean intervals
 
-* Linear algebra
-   * Vector, Matrix
+* :ref:`sec-linear`
+   * :ref:`sec-linear-vecmat`
    * IntervalVector, IntervalMatrix
    * Matrix operations and basic linear solving
    * :ref:`sec-linear-inversion`

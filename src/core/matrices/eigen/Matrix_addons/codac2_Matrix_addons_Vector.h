@@ -13,13 +13,10 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
-template<typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
-  requires (!IsIntervalDomain<U>) && (IsVectorOrRow<R,C>)
+template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
+  requires (!IsIntervalDomain<Scalar>) && (IsVectorOrRow<R,C>)
 Matrix(std::initializer_list<double> l)
-  : Matrix<double,R,C>(
-    [&]() -> int { if(R == 1) return 1; else return l.size(); }(),
-    [&]() -> int { if(C == 1) return 1; else return l.size(); }()
-  )
+  : Matrix<double,R,C>(R == 1 ? 1 : l.size(), C == 1 ? 1 : l.size())
 {
   assert_release(!std::empty(l));
   Index i = 0;
@@ -27,14 +24,10 @@ Matrix(std::initializer_list<double> l)
     (*this)[i++] = li;
 }
 
-template<typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
-  requires (!IsIntervalDomain<U>) && (IsVectorOrRow<R,C>)
+template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
+  requires (!IsIntervalDomain<Scalar>) && (IsVectorOrRow<R,C>)
 explicit Matrix(int n, double values[])
-  : Matrix<double,R,C>(
-    [&]() -> int { if(R == 1) return 1; else return n; }(),
-    [&]() -> int { if(C == 1) return 1; else return n; }(),
-    values
-  )
+  : Matrix<double,R,C>(R == 1 ? 1 : n, C == 1 ? 1 : n, values)
 {
   assert_release(n > 0);
 }

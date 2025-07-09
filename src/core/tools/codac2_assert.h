@@ -29,9 +29,8 @@ namespace codac2
     do {                                                                      \
       throw std::invalid_argument(                                            \
         std::string("\n=============================================================================") \
-        + "\nThe following Codac assertion failed:\n\n\t" + std::string(test) \
-        + "\n\nIn: " + std::string(file) + ":" + std::to_string(line)         \
-        + "\nFunction: " + std::string(function)                              \
+        + "\nThe following Codac assertion failed:\n\n\tIn function: " + std::string(function) + "\n\n\t" + std::string(test) \
+        + "\n\nIn file: " + std::string(file) + ":" + std::to_string(line)         \
         + "\nYou need help? Submit an issue on: https://github.com/codac-team/codac/issues" \
         + "\n=============================================================================" \
       );                                                                      \

@@ -15,6 +15,15 @@
 
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C>
+explicit Matrix(int n)
+{
+  Base::template _init2<int,int>(R == 1 ? 1 : n, C == 1 ? 1 : n);
+  if constexpr(!IsIntervalDomain<Scalar>)
+    init(0.);
+}
+
+template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
+  requires IsVectorOrRow<R,C>
 explicit Matrix(const std::vector<double>& v)
   : Matrix<Scalar,R,C>(R == 1 ? 1 : v.size(), C == 1 ? 1 : v.size())
 {

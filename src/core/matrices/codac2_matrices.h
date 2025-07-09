@@ -35,6 +35,9 @@ namespace Eigen
 
 #define EIGEN_MATRIXBASE_PLUGIN "codac2_MatrixBase_addons_include.h"
 #define EIGEN_MATRIX_PLUGIN "codac2_Matrix_addons_include.h"
+// The option #define EIGEN_INITIALIZE_MATRICES_BY_ZERO is not used because
+// of the interval cases: an IntervalMatrix would have its components initialized
+// to 0 instead of [-oo,oo].
 
 #ifndef EIGEN_NO_DEBUG
 /* Disables Eigen's assertions if defined.
