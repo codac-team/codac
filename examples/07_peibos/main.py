@@ -63,9 +63,8 @@ if __name__=="__main__":
   y_nd = VectorVar(3)
   rot_matrix_1 = Matrix([[1,0,0],[0,1/np.sqrt(2.0),-1/np.sqrt(2.0)],[0,1/np.sqrt(2.0),+1/np.sqrt(2.0)]])
   rot_matrix_2 = Matrix([[1/np.sqrt(2.0),-1/np.sqrt(2.0),0],[1/np.sqrt(2.0),1/np.sqrt(2.0),0],[0,0,1]])
-  # f_nd = AnalyticFunction([y_nd],rot_matrix_1 * rot_matrix_2 * y_nd)
-  f_nd = AnalyticFunction([y_nd], [y_nd[0]/sqrt(sqr(y_nd[0])+sqr(y_nd[1])+sqr(y_nd[2])), y_nd[1]/sqrt(sqr(y_nd[0])+sqr(y_nd[1])+sqr(y_nd[2])), y_nd[2]/sqrt(sqr(y_nd[0])+sqr(y_nd[1])+sqr(y_nd[2]))])
-  # f_nd = f_nd_1(y_nd)
+  g_nd = AnalyticFunction([y_nd], [y_nd[0]/sqrt(sqr(y_nd[0])+sqr(y_nd[1])+sqr(y_nd[2])), y_nd[1]/sqrt(sqr(y_nd[0])+sqr(y_nd[1])+sqr(y_nd[2])), y_nd[2]/sqrt(sqr(y_nd[0])+sqr(y_nd[1])+sqr(y_nd[2]))])
+  f_nd = AnalyticFunction([y_nd], rot_matrix_1 * rot_matrix_2 * g_nd(y_nd))
 
   X_nd = VectorVar(1)
   psi0_nd = AnalyticFunction([X_nd],[X_nd[0],1,1])

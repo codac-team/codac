@@ -6,6 +6,7 @@
 
   pybind11_add_module(_unsupported SHARED
     peibos/codac2_py_Parallelepiped.cpp
+    peibos/codac2_py_Zonotope.cpp
     peibos/codac2_py_peibos.cpp
     codac2_py_unsupported.cpp
   )

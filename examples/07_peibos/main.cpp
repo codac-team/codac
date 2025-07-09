@@ -77,9 +77,9 @@ int main()
   Matrix rot_matrix_2 ({ {1/std::sqrt(2.0),-1/std::sqrt(2.0),0},
                           {1/std::sqrt(2.0),+1/std::sqrt(2.0),0},
                           {0,0,1} });
-  // AnalyticFunction f_nd({y_nd}, rot_matrix_1 * rot_matrix_2 * y_nd);
-  AnalyticFunction f_nd({y_nd}, rot_matrix_1 * rot_matrix_2 * y_nd);
-
+  AnalyticFunction g_nd ({y_nd}, {y_nd[0]/sqrt(sqr(y_nd[0])+sqr(y_nd[1])+sqr(y_nd[2])), y_nd[1]/sqrt(sqr(y_nd[0])+sqr(y_nd[1])+sqr(y_nd[2])), y_nd[2]/sqrt(sqr(y_nd[0])+sqr(y_nd[1])+sqr(y_nd[2]))});
+  AnalyticFunction f_nd ({y_nd}, rot_matrix_1 * rot_matrix_2 * g_nd(y_nd));
+  
   VectorVar X_nd(1);
   AnalyticFunction psi0_nd ({X_nd},{X_nd[0],1,1});
 
@@ -88,19 +88,22 @@ int main()
                                       {3,2,-1},
                                       {1,-2,-3}});
 
+  Figure3D figure_3d_nd ("Cube on Sphere");
+  figure_3d_nd.draw_axes(0.5);
 
   Figure2D figure_2d_nd_xy ("XY Plane", GraphicOutput::VIBES);
   figure_2d_nd_xy.set_window_properties({575,50},{500,500});
-  figure_2d_nd_xy.set_axes(axis(0,{-1.8,1.8}), axis(1,{-1.8,1.8}));
+  figure_2d_nd_xy.set_axes(axis(0,{-1.,1.}), axis(1,{-1.,1.}));
 
   Figure2D figure_2d_nd_zy ("ZY Plane", GraphicOutput::VIBES);
   figure_2d_nd_zy.set_window_properties({1125,50},{500,500});
-  figure_2d_nd_zy.set_axes(axis(0,{-1.8,1.8}), axis(1,{-1.8,1.8}));
+  figure_2d_nd_zy.set_axes(axis(0,{-1.,1.}), axis(1,{-1.,1.}));
 
   auto v_par_nd = PEIBOS(f_nd, psi0_nd, generators_nd, 0.1);
 
   for (const auto& p : v_par_nd)
   {
+    figure_3d_nd.draw_parallelepiped(p.z, p.A, Color::green(0.5));
     draw_zonotope(p, 0, 1, figure_2d_nd_xy, {Color::black(),Color::green(0.2)});
     draw_zonotope(p, 2, 1, figure_2d_nd_zy, {Color::black(),Color::green(0.2)});
     auto vertices = p.vertices();

@@ -6,6 +6,8 @@
     
     ${CMAKE_CURRENT_SOURCE_DIR}/peibos/codac2_Parallelepiped.h
     ${CMAKE_CURRENT_SOURCE_DIR}/peibos/codac2_Parallelepiped.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/peibos/codac2_Zonotope.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/peibos/codac2_Zonotope.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/peibos/codac2_peibos.h
     ${CMAKE_CURRENT_SOURCE_DIR}/peibos/codac2_peibos.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/codac2_unsupported_empty.cpp
