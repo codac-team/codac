@@ -16,7 +16,6 @@
 
 using namespace std;
 
-
 namespace codac2
 {
   class Zonotope

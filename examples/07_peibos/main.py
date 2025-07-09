@@ -82,6 +82,3 @@ if __name__=="__main__":
     z_zy = p.project([2, 1])
     figure_2d_nd_xy.draw_zonotope(z_xy.z, z_xy.A, [Color.black(), Color.green(0.2)])
     figure_2d_nd_zy.draw_zonotope(z_zy.z, z_zy.A, [Color.black(), Color.green(0.2)])
-    for vertice in p.vertices():
-      figure_2d_nd_xy.draw_point([vertice[0],vertice[1]], [Color.red(), Color.red(0.5)])
-      figure_2d_nd_zy.draw_point([vertice[2],vertice[1]], [Color.red(), Color.red(0.5)])

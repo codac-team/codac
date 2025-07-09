@@ -8,7 +8,7 @@
  */
 
 #include "codac2_Zonotope.h"
-#include <iostream>
+
 using namespace std;
 using namespace codac2;
 

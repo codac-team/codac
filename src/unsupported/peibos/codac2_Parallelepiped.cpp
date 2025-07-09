@@ -8,7 +8,7 @@
  */
 
 #include "codac2_Parallelepiped.h"
-#include <iostream>
+
 using namespace std;
 using namespace codac2;
 
@@ -21,8 +21,8 @@ Parallelepiped::Parallelepiped(const Vector& z_, const Matrix& A_)
 
 Zonotope Parallelepiped::project(const vector<int>& indices) const
 {
-  assert_release(std::min_element(indices.begin(), indices.end()) >= 0 && "indices out of range");
-  assert_release(std::max_element(indices.begin(), indices.end()) <= z.size() && "indices out of range");
+  assert_release(*std::min_element(indices.begin(), indices.end()) >= 0 && "indices out of range");
+  assert_release(*std::max_element(indices.begin(), indices.end()) <= z.size() && "indices out of range");
 
   Matrix A_cropped (indices.size(), A.cols());
   Vector z_cropped (indices.size());
