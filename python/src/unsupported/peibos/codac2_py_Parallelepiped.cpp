@@ -40,9 +40,11 @@ void export_Parallelepiped(py::module& m)
   .def("bounding_box", &Parallelepiped::bounding_box,
     INTERVALVECTOR_PARALLELEPIPED_BOUNDING_BOX_CONST)
 
-  .def_readwrite("z", &Parallelepiped::z)
+  .def_readwrite("z", &Parallelepiped::z,
+    VECTOR_PARALLELEPIPED_Z)
 
-  .def_readwrite("A", &Parallelepiped::A)
+  .def_readwrite("A", &Parallelepiped::A,
+    MATRIX_PARALLELEPIPED_A)
   ;
 }
 
