@@ -31,16 +31,4 @@ namespace codac2
 
   vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, bool verbose = false);
   vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset, bool verbose = false);  
-
-  static ColorMap peibos_cmap()
-  {
-    ColorMap cmap( Model::HSV );
-    int i = 0;
-          for(int h = 300 ; h > 0 ; h-=10)
-          {
-            cmap[i]=Color({(float)h,50.,100.,50.},Model::HSV);
-            i++;
-          }
-    return cmap;
-  }
 }

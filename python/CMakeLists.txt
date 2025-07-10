@@ -64,7 +64,6 @@
   add_subdirectory(src/core)
   add_subdirectory(src/graphics)
   add_subdirectory(src/unsupported)
-
   
   add_custom_target(pip_package)
   add_custom_command(TARGET pip_package PRE_BUILD

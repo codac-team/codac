@@ -14,13 +14,25 @@ using namespace codac2;
 
 namespace codac2
 {
+  IMapWrapper::IMapWrapper(const string& s) : gamma(s)
+  {}
 
-  vector<Parallelepiped> PEIBOS(const capd::IMap& gamma, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, bool verbose)
+  void IMapWrapper::setParameter(const string& name, double value)
   {
-    return PEIBOS(gamma, tf, psi_0, generators, epsilon, Vector::zero(psi_0.output_size()), verbose);
+    gamma.setParameter(name, value);
   }
 
-  vector<Parallelepiped> PEIBOS(const capd::IMap& gamma, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset, bool verbose)
+  void IMapWrapper::setParameter(const string& name, Interval value)
+  {
+    gamma.setParameter(name, to_capd(value));
+  }
+
+  vector<Parallelepiped> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, bool verbose)
+  {
+    return PEIBOS(i_map_wrapper, tf, psi_0, generators, epsilon, Vector::zero(psi_0.output_size()), verbose);
+  }
+
+  vector<Parallelepiped> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset, bool verbose)
   {
     int m = psi_0.input_size();
     int n = psi_0.output_size();
@@ -34,7 +46,7 @@ namespace codac2
     vector<Parallelepiped> output;
     
     // CAPD solver setup
-    capd::IMap g (gamma);
+    capd::IMap g (i_map_wrapper.gamma);
     capd::IOdeSolver solver(g, 20);
 
     
@@ -104,12 +116,12 @@ namespace codac2
     return output;
   }
 
-  map<double,vector<Parallelepiped>> PEIBOS(const capd::IMap& gamma, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, bool verbose)
+  map<double,vector<Parallelepiped>> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, bool verbose)
   {
-    return PEIBOS(gamma, tf, dt, psi_0, generators, epsilon, Vector::zero(psi_0.output_size()), verbose);
+    return PEIBOS(i_map_wrapper, tf, dt, psi_0, generators, epsilon, Vector::zero(psi_0.output_size()), verbose);
   }
 
-  map<double,vector<Parallelepiped>> PEIBOS(const capd::IMap& gamma, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset, bool verbose)
+  map<double,vector<Parallelepiped>> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset, bool verbose)
   {
     map<double,vector<Parallelepiped>> output;
 
@@ -126,7 +138,7 @@ namespace codac2
     clock_t t_start = clock();
 
     // CAPD solver setup
-    capd::IMap g (gamma);
+    capd::IMap g (i_map_wrapper.gamma);
     capd::IOdeSolver solver(g, 20);
 
     

@@ -73,5 +73,8 @@ void export_ColorMap(py::module& m)
     .def_static("rainbow", &ColorMap::rainbow,
         STATIC_COLORMAP_COLORMAP_RAINBOW)
 
+    .def_static("rainbow_05", &ColorMap::rainbow_05,
+        STATIC_COLORMAP_COLORMAP_RAINBOW_05)
+
   ;
 }

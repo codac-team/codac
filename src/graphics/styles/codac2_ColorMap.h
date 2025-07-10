@@ -166,5 +166,20 @@ namespace codac2
         return cmap;
       }
 
+      /**
+       * \brief Rainbow color map with 0.5 alpha
+       */
+      static ColorMap rainbow_05()
+      {
+        ColorMap cmap( Model::HSV );
+        int i = 0;
+              for(int h = 300 ; h > 0 ; h-=10)
+              {
+                cmap[i]=Color({(float)h,50.,100.,50.},Model::HSV);
+                i++;
+              }
+        return cmap;
+      }
+
   };
 }
