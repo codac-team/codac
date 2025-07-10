@@ -73,7 +73,7 @@ jobs:
 
         # CAPD
         # cancelled on 2023/05/09: bash scripts/dependencies/install_capd.sh
-        if [ "${{ matrix.cfg.with_capd }}" = "ON" ]; then git clone --depth 1 -b master https://github.com/CAPDGroup/CAPD.git ; cd CAPD ; mkdir build ; cd build ; cmake .. ; cmake -E env CXXFLAGS="-fPIC" CFLAGS="-fPIC" sudo cmake --build . -j 4 --config Release --target install ; cd ../.. ; fi
+        if [ "${{ matrix.cfg.with_capd }}" = "ON" ]; then git clone --depth 1 -b master https://github.com/CAPDGroup/CAPD.git ; cd CAPD ; mkdir build ; cd build ; cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON .. ; cmake -E env CXXFLAGS="-fPIC" CFLAGS="-fPIC" sudo cmake --build . -j 4 --config Release --target install ; cd ../.. ; fi
 
         # Environment variables
         export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/codac/build_install
