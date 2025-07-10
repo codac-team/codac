@@ -205,3 +205,5 @@
   # todo: finish deb package
 
   include(CPack)
+
+  message(STATUS "Final CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")

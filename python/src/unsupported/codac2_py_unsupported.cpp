@@ -19,7 +19,7 @@ void export_Parallelepiped(py::module& m);
 void export_Zonotope(py::module& m);
 void export_peibos(py::module& m);
 
-#ifdef WITH_CAPD
+#ifdef PEIBOS_CAPD
   void export_IMapWrapper(py::module& m);
   void export_peibos_capd(py::module& m);
 #endif
@@ -33,7 +33,7 @@ PYBIND11_MODULE(_unsupported, m)
   export_Zonotope(m);
   export_peibos(m);
 
-  #ifdef WITH_CAPD
+  #ifdef PEIBOS_CAPD
     export_IMapWrapper(m);
     export_peibos_capd(m);
   #endif

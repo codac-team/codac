@@ -11,22 +11,20 @@
     codac2_py_unsupported.cpp
   )
 
-  message(STATUS "WITH_CAPD = ${WITH_CAPD}")
-
   if (WITH_CAPD)
     list(APPEND PYBIND_UNSUPPORTED_SRC
       peibos/codac2_py_peibos_capd.cpp
     )
-    add_definitions(-DWITH_CAPD)
+    # add_definitions(-DPEIBOS_CAPD)
   endif()
 
   pybind11_add_module(_unsupported SHARED
     ${PYBIND_UNSUPPORTED_SRC}
   )
 
-  if (WITH_CAPD)
-    target_compile_definitions(_unsupported PRIVATE WITH_CAPD)
-  endif()
+  # if (WITH_CAPD)
+  #   target_compile_definitions(_unsupported PRIVATE PEIBOS_CAPD)
+  # endif()
 
   target_include_directories(_unsupported
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../../docstring
