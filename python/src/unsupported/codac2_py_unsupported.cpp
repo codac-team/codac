@@ -12,8 +12,6 @@
 #include <codac2_Interval.h>
 #include <codac2_math.h>
 
-#include <iostream>
-
 using namespace codac2;
 namespace py = pybind11;
 
