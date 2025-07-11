@@ -14,7 +14,6 @@ import sys
 class TestApprox(unittest.TestCase):
 
   def test_approx(self):
-    print(Interval(0.1))
     self.assertFalse(Interval(0.1) == Interval(1.)/Interval(10.))
     self.assertTrue(Approx(Interval(0.1)) == Interval(1.)/Interval(10.))
     self.assertTrue(Interval(0.1) == Approx(Interval(1.)/Interval(10.)))

@@ -11,10 +11,38 @@
 
 #include <gaol/gaol_interval.h>
 #include <numbers>
+#include <cfenv>
 #include <cmath>
+
 
 namespace codac2
 {
+  inline void round_up()
+  {
+    gaol::round_upward();
+  }
+
+  inline void round_down()
+  {
+    gaol::round_downward();
+  }
+
+  inline std::string decode_rounding_mode(int mode)
+  {
+    switch (mode) {
+      case FE_TONEAREST: return "FE_TONEAREST";
+      case FE_DOWNWARD:  return "FE_DOWNWARD";
+      case FE_UPWARD:    return "FE_UPWARD";
+      case FE_TOWARDZERO:return "FE_TOWARDZERO";
+      default:           return "UNKNOWN";
+    }
+  }
+
+  inline std::string get_rounding_mode()
+  {
+    return decode_rounding_mode(std::fegetround());
+  }
+
   const double oo = []() {
 
     // (from IBEX lib, main author: Gilles Chabert)

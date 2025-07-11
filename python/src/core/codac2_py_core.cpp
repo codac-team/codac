@@ -136,6 +136,7 @@ void export_SepWrapper(py::module& m, py::class_<SepBase,pySep>& sep);
 
 // tools
 void export_Approx(py::module& m);
+void export_math(py::module& m);
 void export_transformations(py::module& m);
 void export_RobotSimulator(py::module& m);
 
@@ -284,6 +285,7 @@ PYBIND11_MODULE(_core, m)
 
   // tools
   export_Approx(m);
+  export_math(m);
   export_transformations(m);
   export_RobotSimulator(m);
 
