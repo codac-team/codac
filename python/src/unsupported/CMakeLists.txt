@@ -22,10 +22,6 @@
     ${PYBIND_UNSUPPORTED_SRC}
   )
 
-  # if (WITH_CAPD)
-  #   target_compile_definitions(_unsupported PRIVATE PEIBOS_CAPD)
-  # endif()
-
   target_include_directories(_unsupported
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../../docstring
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../../../include 

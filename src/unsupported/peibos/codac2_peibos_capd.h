@@ -12,7 +12,8 @@
 #include "codac2_peibos.h"
 
 #include <codac2_capd.h>
-#include <capd/capdlib.h>
+
+#include <capd/poincare/lib.h>
 
 namespace codac2
 {
