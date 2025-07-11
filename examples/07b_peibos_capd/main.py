@@ -1,5 +1,4 @@
 from codac import *
-
 # 2D example of the PEIBOS algorithm
 
 vectorField_2d_wrap = IMapWrapper ("var:x1,x2;fun:x2,(1-sqr(x1))*x2-x1;")

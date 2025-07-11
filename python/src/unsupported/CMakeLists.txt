@@ -15,7 +15,7 @@
     list(APPEND PYBIND_UNSUPPORTED_SRC
       peibos/codac2_py_peibos_capd.cpp
     )
-    # add_definitions(-DPEIBOS_CAPD)
+    add_definitions(-DPEIBOS_CAPD)
   endif()
 
   pybind11_add_module(_unsupported SHARED
