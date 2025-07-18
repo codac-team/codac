@@ -33,7 +33,9 @@
     message(FATAL_ERROR "Unable to find Doxygen generated files, this is required for Python binding (docstring)")
   endif()
 
-  if(DEFINED NO_DOCSTRING_UPDATE)
+  option(NO_DOCSTRING_UPDATE "No docstrings update" OFF)
+
+  if(NO_DOCSTRING_UPDATE)
 
     # ^ This option allows a faster compilation of the library in case of minor changes
     #   by disabling the generation of docstring files for Python, and so the re-compilation

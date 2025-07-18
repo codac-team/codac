@@ -58,14 +58,21 @@ namespace codac2
        * \brief Updates the axes of the figure
         */
       virtual void update_axes() = 0;
+
       /**
        * \brief Updates the position and size of the window
        */
       virtual void update_window_properties() = 0;
+
       /**
        * \brief Centers the viewbox
        */
       virtual void center_viewbox(const Vector& c, const Vector& r) = 0;
+
+      /**
+       * \brief Clears the figure
+       */
+      virtual void clear() = 0;
 
     protected:
 

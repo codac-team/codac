@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include <3rd/gaol/gaol_interval.h>
+#include <gaol/gaol_interval.h>
 #include <numbers>
 #include <cmath>
 

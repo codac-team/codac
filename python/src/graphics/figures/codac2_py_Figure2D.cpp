@@ -101,6 +101,9 @@ void export_Figure2D(py::module& m)
     .def("center_viewbox", &Figure2D::center_viewbox,
       VOID_FIGURE2D_CENTER_VIEWBOX_CONST_VECTOR_REF_CONST_VECTOR_REF,
       "c"_a, "r"_a)
+
+    .def("clear", &Figure2D::clear,
+      VOID_FIGURE2D_CLEAR)
   
     .def("scaled_unit", &Figure2D::scaled_unit,
       DOUBLE_FIGURE2D_SCALED_UNIT_CONST)
@@ -290,6 +293,9 @@ void export_Figure2D(py::module& m)
   
     .def_static("set_window_properties", &DefaultFigure::set_window_properties,
       STATIC_VOID_DEFAULTFIGURE_SET_WINDOW_PROPERTIES_CONST_VECTOR_REF_CONST_VECTOR_REF)
+
+    .def_static("clear", &DefaultFigure::clear,
+      STATIC_VOID_DEFAULTFIGURE_CLEAR)
 
     // Geometric shapes
 

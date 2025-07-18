@@ -36,6 +36,12 @@ void export_BoolInterval(py::module& m)
     .def(py::self | py::self,
       BOOLINTERVAL_OPERATOROR_BOOLINTERVAL_BOOLINTERVAL)
 
+    .def("__invert__", [](const BoolInterval& x)
+        {
+          return ~x;
+        },
+      BOOLINTERVAL_OPERATORTILD__BOOLINTERVAL)
+
     .def("__repr__", [](const BoolInterval& x) {
           std::ostringstream s;
           s << x;

@@ -71,6 +71,13 @@ void Figure2D_VIBes::center_viewbox(const Vector& c, const Vector& r)
   vibes::axisLimits(c[i()]-r[i()], c[i()]+r[i()], c[j()]-r[j()], c[j()]+r[j()], _fig.name());
 }
 
+void Figure2D_VIBes::clear()
+{
+  vibes::clearFigure(_fig.name());
+  _params = vibesParams("figure", _fig.name(), "LineStyle", "-");
+  _layers.clear();
+}
+
 void Figure2D_VIBes::draw_point(const Vector& c, const StyleProperties& style)
 {
   assert(_fig.size() <= c.size());

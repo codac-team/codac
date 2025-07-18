@@ -1,3 +1,5 @@
+.. _sec-linear:
+
 Linear algebra
 ==============
 
@@ -6,6 +8,7 @@ Codac provides a set of functions for the decomposition and inversion of interva
 .. toctree::
   :maxdepth: 2
 
+  vec_mat.rst
   inversion.rst
   lu.rst
 

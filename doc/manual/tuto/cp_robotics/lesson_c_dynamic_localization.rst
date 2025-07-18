@@ -143,7 +143,7 @@ Before going into a set-membership state estimation, we set up a simulation envi
         :language: c++
         :start-after: [C-q4-beg]
         :end-before: [C-q4-end]
-        :dedent: 2
+        :dedent: 0
 
   **C.5.** Finally, we run the simulation for generating and drawing the observation vectors. ``obs`` contains all the observation vectors.
 

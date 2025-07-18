@@ -654,7 +654,7 @@ TEST_CASE("IntervalMatrix - mixing type")
     CHECK(m2.template cast<Interval>().is_strict_subset(m1));
 
     Matrix m3(2,2);
-    m3.init(m2+m2);
+    m3 = m2+m2;
     CHECK(m3 == Matrix({
       { 3, 5 },
       { 7, 9 }

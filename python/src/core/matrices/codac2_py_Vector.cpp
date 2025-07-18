@@ -53,7 +53,7 @@ py::class_<Vector> export_Vector(py::module& m)
         [](Index_type n)
         {
           matlab::test_integer(n);
-          return std::make_unique<Vector>((Index)n);
+          return std::make_unique<Vector>((int)n);
         }),
       DOC_TO_BE_DEFINED,
       "n"_a)

@@ -265,6 +265,9 @@ namespace vibes {
   /// Set axes limits to the bounding box of the drawing
   void axisAuto(const std::string &figureName = std::string());
 
+  /// Set axis equal aspect ratio to the bounding box of the drawing [#144]
+  void axisEqual(const std::string &figureName = std::string());
+
   /// Specify the rectangle to be displayed: Lower-left corner (\a x_lb, \a y_lb) and a upper-right corner (\a x_ub, \a y_ub).
   void axisLimits(const double &x_lb, const double &x_ub, const double &y_lb, const double &y_ub, const std::string &figureName = std::string());
 
@@ -392,6 +395,9 @@ namespace vibes {
   VIBES_FUNC_COLOR_PARAM_6(drawRaster, const std::string&, rasterFilename,
                                        const double &,ulb, const double &, yub,
                                        const double &,width, const double &, height, const double &, rot);
+
+  /// Draw a Cake at position (cx,cy)
+  VIBES_FUNC_COLOR_PARAM_4(drawCake,const double &,cx, const double &,cy, const double &,rot, const double &,length)
 
   /// @}
   /// @name Objects grouping and deletion

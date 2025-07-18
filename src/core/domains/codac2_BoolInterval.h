@@ -34,6 +34,25 @@ namespace codac2
 
   constexpr BoolInterval operator|(BoolInterval a, BoolInterval b)
   { return static_cast<BoolInterval>(static_cast<int>(a) | static_cast<int>(b)); }
+
+  /**
+   * \brief Returns the complementary of a BoolInterval
+   * 
+   * \param x the boolean interval
+   * \return the complementary
+   */
+  inline BoolInterval operator~(BoolInterval x)
+  {
+    switch(x)
+    {
+      case BoolInterval::FALSE:
+        return BoolInterval::TRUE;
+      case BoolInterval::TRUE:
+        return BoolInterval::FALSE;
+      default:
+        return BoolInterval::UNKNOWN;
+    }
+  }
   
   /**
    * \brief Streams out a BoolInterval

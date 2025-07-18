@@ -32,3 +32,8 @@
   target_compile_options(${PROJECT_NAME} PUBLIC ${CODAC_CXX_FLAGS})
   target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES})
+
+  add_executable(animation graphic_animation.cpp)
+  target_compile_options(animation PUBLIC ${CODAC_CXX_FLAGS})
+  target_include_directories(animation SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS})
+  target_link_libraries(animation PUBLIC ${CODAC_LIBRARIES})

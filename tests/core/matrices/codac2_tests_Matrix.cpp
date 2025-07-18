@@ -7,6 +7,7 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
+#include <iostream>
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_Vector.h>
 #include <codac2_Matrix.h>
@@ -45,4 +46,17 @@ TEST_CASE("Matrix")
     { -1, 4  },
     { -6, -9 }
   }));
+}
+
+TEST_CASE("Matrix zero init")
+{
+  auto x = Matrix(2,2);
+  CHECK(x(0,0) == 0);
+  CHECK(x(1,0) == 0);
+  CHECK(x(0,1) == 0);
+  CHECK(x(1,1) == 0);
+
+  Vector v(2);
+  CHECK(v(0) == 0);
+  CHECK(v(1) == 0);
 }

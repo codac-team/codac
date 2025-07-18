@@ -87,6 +87,8 @@ where :math:`a,b,\dots,e` are intermediate variables used for the decomposition.
 
   .. code-tab:: py
 
+    from codac import *
+
     # Symbolic variables:
     y = ScalarVar()
     x,m = VectorVar(2),VectorVar(2)
@@ -100,11 +102,14 @@ where :math:`a,b,\dots,e` are intermediate variables used for the decomposition.
     # Now ctc_g can be called with the .contract(..) method to contract all domains:
     # Example:
     a = IntervalVector(2) # box for x
-    b = IntervalVector([[2,3],[5,6]]) # box for m
+    b = IntervalVector([[2,3],[5,6.2]]) # box for m
     d = Interval(4.5,5) # interval for y
     a,d,b = ctc_g.contract(a,d,b)
 
   .. code-tab:: c++
+
+    #include <codac>
+    using namespace codac2;
 
     // Symbolic variables:
     ScalarVar y;
@@ -119,7 +124,7 @@ where :math:`a,b,\dots,e` are intermediate variables used for the decomposition.
     // Now ctc_g can be called with the .contract(..) method to contract all domains:
     // Example:
     IntervalVector a(2); // box for x
-    IntervalVector b({{2,3},{5,6}}); // box for m
+    IntervalVector b({{2,3},{5,6.2}}); // box for m
     Interval d(4.5,5); // interval for y
     ctc_g.contract(a,d,b);
 
@@ -236,14 +241,14 @@ This constraint appears in the expression of :math:`\mathbf{g}`.
 Initialization
 --------------
 
-A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal` is perceiving a landmark :math:`\mathbf{m}=\left(5,6\right)^\intercal` at a range :math:`y_1=6` and a bearing :math:`y_2=\pi/6`. We assume that the position of the robot is not known and that the uncertainties related to the measurement and the landmark are:
+A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal` is perceiving a landmark :math:`\mathbf{m}=\left(5,6.2\right)^\intercal` at a range :math:`y_1=6` and a bearing :math:`y_2=\pi/6`. We assume that the position of the robot is not known and that the uncertainties related to the measurement and the landmark are:
 
 * **Measurement.** For :math:`y_1`: :math:`[-0.3,0.3]`, for :math:`y_2`: :math:`[-0.1,0.1]`.
 * **Landmark.** For each component of the position: :math:`[-0.2,0.2]`.
 
 .. admonition:: Exercise
 
-  **A.2.** In a new project, create the vectors ``x_truth``, ``y_truth``, ``m_truth`` representing the actual but unknown values of :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal`, :math:`\mathbf{y}=\left(6,\pi/6\right)^\intercal` and :math:`\mathbf{m}=\left(5,6\right)^\intercal`.
+  **A.2.** In a new project, create the vectors ``x_truth``, ``y_truth``, ``m_truth`` representing the actual but unknown values of :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal`, :math:`\mathbf{y}=\left(6,\pi/6\right)^\intercal` and :math:`\mathbf{m}=\left(5,6.2\right)^\intercal`.
 
   .. tabs::
 
@@ -330,7 +335,7 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
       DefaultFigure::draw_tank(x_truth, 1, {Color::black(),Color::yellow()}); // robot's size is 1
       DefaultFigure::draw_box(m, Color::red());
 
-  **A.5.** Display the range-and-bearing measurement with its uncertainties. For this, we will use the function ``.draw_pie(<x>, <y>, <[rho]>, <[theta]>)`` to display a portion of a ring :math:`[\rho]\times[\theta]` centered on :math:`(x,y)^\intercal`. Here, we must add in :math:`[\theta]` the robot heading :math:`x_3` and the bounded bearing :math:`[y_2]`.
+  **A.5.** Display the range-and-bearing measurement with its uncertainties. For this, we will use the function ``.draw_pie(<c>, <[rho]>, <[theta]>)`` to display a portion of a ring :math:`[\rho]\times[\theta]` centered on :math:`(x,y)^\intercal`. Here, we must add in :math:`[\theta]` the robot heading :math:`x_3` and the bounded bearing :math:`[y_2]`.
 
   You should obtain this figure:
 
@@ -343,11 +348,11 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
 
     .. code-tab:: py
 
-      DefaultFigure.draw_pie(<x>, <y>, <[rho]> | 0, <[theta]>, Color.light_gray()) # with: <[rho]> | 0
+      DefaultFigure.draw_pie([<x>, <y>], <[rho]> | 0, <[theta]>, Color.light_gray()) # with: <[rho]> | 0
 
     .. code-tab:: c++
 
-      DefaultFigure::draw_pie(<x>, <y>, <[rho]> | 0, <[theta]>, Color::light_gray()); // with: <[rho]> | 0
+      DefaultFigure::draw_pie({<x>, <y>}, <[rho]> | 0, <[theta]>, Color::light_gray()); // with: <[rho]> | 0
 
   .. container:: toggle, toggle-hidden
 

@@ -13,11 +13,19 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
+/**
+ * \brief Checks if the matrix is square.
+ * \return True if the number of rows equals the number of columns.
+ */
 inline bool is_squared() const
 {
   return this->rows() == this->cols();
 }
 
+/**
+ * \brief Returns the squared norm of the matrix.
+ * \return The squared norm value.
+ */
 inline auto squared_norm() const
 {
   return this->squaredNorm();
@@ -35,16 +43,28 @@ inline auto squared_norm() const
     } \
   return m; \
 
+/**
+ * \brief Returns the minimum coefficient in the matrix.
+ * \return The minimum coefficient value.
+ */
 inline Scalar min_coeff() const
 {
   minmax_item(min);
 }
 
+/**
+ * \brief Returns the maximum coefficient in the matrix.
+ * \return The maximum coefficient value.
+ */
 inline Scalar max_coeff() const
 {
   minmax_item(max);
 }
 
+/**
+ * \brief Checks if any coefficient in the matrix is NaN.
+ * \return True if any element is NaN, false otherwise.
+ */
 inline bool is_nan() const
 {
   return this->array().isNaN().any();

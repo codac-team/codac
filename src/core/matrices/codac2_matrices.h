@@ -35,6 +35,9 @@ namespace Eigen
 
 #define EIGEN_MATRIXBASE_PLUGIN "codac2_MatrixBase_addons_include.h"
 #define EIGEN_MATRIX_PLUGIN "codac2_Matrix_addons_include.h"
+// The option #define EIGEN_INITIALIZE_MATRICES_BY_ZERO is not used because
+// of the interval cases: an IntervalMatrix would have its components initialized
+// to 0 instead of [-oo,oo].
 
 #ifndef EIGEN_NO_DEBUG
 /* Disables Eigen's assertions if defined.
@@ -107,6 +110,18 @@ namespace codac2
 
 namespace codac2
 {
+  /**
+   * \brief Compute the element-wise absolute value of a matrix.
+   *
+   * This function takes an Eigen matrix expression and returns a matrix
+   * where each element is replaced by its absolute value.
+   * 
+   * For scalar type double, the standard library fabs() is used.
+   * For other scalar types, it uses the generic abs() function.
+   *
+   * \param x Input matrix expression.
+   * \return A new Eigen matrix with the absolute values of the elements of \p x.
+   */
   template<typename OtherDerived>
   inline auto abs(const Eigen::MatrixBase<OtherDerived>& x)
   {
@@ -125,6 +140,17 @@ namespace codac2
     return a;
   }
 
+  /**
+   * \brief Compute the element-wise floor of a matrix.
+   *
+   * This function returns a matrix where each element is replaced by
+   * the largest integer not greater than that element.
+   * 
+   * Disabled for interval matrices.
+   *
+   * \param x Input matrix expression.
+   * \return A new Eigen matrix with floored elements.
+   */
   template<typename OtherDerived>
     requires (!Eigen::IsIntervalDomain<typename OtherDerived::Scalar>)
   inline auto floor(const Eigen::MatrixBase<OtherDerived>& x)
@@ -132,6 +158,17 @@ namespace codac2
     return x.array().floor().matrix();
   }
 
+  /**
+   * \brief Compute the element-wise ceiling of a matrix.
+   *
+   * This function returns a matrix where each element is replaced by
+   * the smallest integer not less than that element.
+   * 
+   * Disabled for interval matrices.
+   *
+   * \param x Input matrix expression.
+   * \return A new Eigen matrix with ceiled elements.
+   */
   template<typename OtherDerived>
     requires (!Eigen::IsIntervalDomain<typename OtherDerived::Scalar>)
   inline auto ceil(const Eigen::MatrixBase<OtherDerived>& x)
@@ -139,6 +176,17 @@ namespace codac2
     return x.array().ceil().matrix();
   }
 
+  /**
+   * \brief Compute the element-wise rounding of a matrix.
+   *
+   * This function returns a matrix where each element is replaced by
+   * the nearest integer to that element.
+   * 
+   * Disabled for interval matrices.
+   *
+   * \param x Input matrix expression.
+   * \return A new Eigen matrix with rounded elements.
+   */
   template<typename OtherDerived>
     requires (!Eigen::IsIntervalDomain<typename OtherDerived::Scalar>)
   inline auto round(const Eigen::MatrixBase<OtherDerived>& x)
@@ -146,16 +194,41 @@ namespace codac2
     return x.array().round().matrix();
   }
 
+  /**
+   * \brief Provides an Eigen IOFormat for formatting row vectors.
+   *
+   * This format prints elements separated by spaces,
+   * with brackets around the entire row vector.
+   *
+   * \return An Eigen::IOFormat configured for row vector formatting.
+   */
   inline Eigen::IOFormat codac_row_fmt()
   {
     return Eigen::IOFormat(Eigen::StreamPrecision, Eigen::DontAlignCols, " ", "", "", "", "[ ", " ]");
   }
 
+  /**
+   * \brief Provides an Eigen IOFormat for formatting column vectors.
+   *
+   * This format prints elements separated by semicolons,
+   * with brackets around the entire vector.
+   *
+   * \return An Eigen::IOFormat configured for column vector formatting.
+   */
   inline Eigen::IOFormat codac_vector_fmt()
   {
     return Eigen::IOFormat(Eigen::StreamPrecision, Eigen::DontAlignCols, "", " ; ", "", "", "[ ", " ]");
   }
-
+    
+  /**
+   * \brief Provides an Eigen IOFormat for formatting matrices.
+   *
+   * This format prints elements separated by commas,
+   * rows separated by new lines,
+   * and brackets around the entire matrix.
+   *
+   * \return An Eigen::IOFormat configured for matrix formatting.
+   */
   inline Eigen::IOFormat codac_matrix_fmt()
   {
     return Eigen::IOFormat(Eigen::StreamPrecision, 0, " , ", "\n", "[ ", " ]", "[", "]");

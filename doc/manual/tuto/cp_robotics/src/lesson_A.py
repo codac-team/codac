@@ -3,7 +3,7 @@ from codac import *
 # [A-q2-beg]
 x_truth = Vector([2,1,PI/6])
 y_truth = Vector([6,PI/6])
-m_truth = Vector([5,6.2])
+m_truth = Vector([5,6])
 # [A-q2-end]
 
 # [A-q3-beg]

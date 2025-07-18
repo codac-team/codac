@@ -64,5 +64,18 @@ class TestMatrix(unittest.TestCase):
       [ -6, -9 ]
     ]))
 
+  def test_def_Matrix_zero_init(self):
+
+    x = Matrix(2,2)
+    print(x)
+    self.assertTrue(x(0,0) == 0)
+    self.assertTrue(x(1,0) == 0)
+    self.assertTrue(x(0,1) == 0)
+    self.assertTrue(x(1,1) == 0)
+
+    v = Vector(2)
+    self.assertTrue(v[0] == 0)
+    self.assertTrue(v[1] == 0)
+
 if __name__ ==  '__main__':
   unittest.main()

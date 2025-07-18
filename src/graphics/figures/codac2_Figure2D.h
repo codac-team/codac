@@ -161,6 +161,11 @@ namespace codac2
       void center_viewbox(const Vector& c, const Vector& r);
 
       /**
+       * \brief Clears the figure
+       */
+      void clear();
+
+      /**
        * \brief Getter for the scaling factor of the figure
        * 
        * \return The scaling factor of the figure
@@ -533,6 +538,15 @@ namespace codac2
       {
         auto_init();
         selected_fig()->auto_scale();
+      }
+
+      /**
+       * \brief Clear the figure
+       */
+      static void clear()
+      {
+        auto_init();
+        selected_fig()->clear();
       }
 
       // Geometric shapes

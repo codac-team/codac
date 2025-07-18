@@ -265,9 +265,9 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry
-    ${CMAKE_CURRENT_SOURCE_DIR}/graphics
-    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/ipe
-    ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes
+    #${CMAKE_CURRENT_SOURCE_DIR}/graphics
+    #${CMAKE_CURRENT_SOURCE_DIR}/graphics/ipe
+    #${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes
     ${CMAKE_CURRENT_SOURCE_DIR}/matrices
     ${CMAKE_CURRENT_SOURCE_DIR}/matrices/eigen/Matrix_addons
     ${CMAKE_CURRENT_SOURCE_DIR}/matrices/eigen/MatrixBase_addons
@@ -278,7 +278,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/tools
     ${CMAKE_CURRENT_SOURCE_DIR}/trajectory
   )
-  target_link_libraries(${PROJECT_NAME}-core PUBLIC ${PROJECT_NAME}-graphics Ibex::ibex Eigen3::Eigen)
+  target_link_libraries(${PROJECT_NAME}-core PUBLIC Ibex::ibex Eigen3::Eigen) # ${PROJECT_NAME}-graphics
   
 
 ################################################################################
