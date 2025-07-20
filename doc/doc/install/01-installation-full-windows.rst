@@ -12,7 +12,7 @@ Quick start
 
 .. rubric:: Using MinGW
 
-Check https://community.chocolatey.org/packages/codac/1.5.7.
+Check https://community.chocolatey.org/packages/codac/1.5.7.20250626.
 
 
 .. rubric:: Using Visual Studio
