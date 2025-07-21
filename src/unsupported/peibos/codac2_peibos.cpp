@@ -38,7 +38,8 @@ namespace codac2
     for (int i = 0; i < ((int) generators.size()); i++)
     {
       const OctaSym& symmetry = OctaSym(generators[i]);
-      symmetries.push_back(symmetry);
+      if (!contains(symmetries, symmetry, psi_0))
+        symmetries.push_back(symmetry);
     }
 
     // Add the inverses
@@ -162,26 +163,24 @@ namespace codac2
     return Parallelepiped(z, A);
   }
 
-  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, bool verbose)
+  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<OctaSym>& symmetries, double epsilon, bool verbose)
   {
-    return PEIBOS(f, psi_0, generators, epsilon, Vector::Zero(psi_0.output_size()), verbose);
+    return PEIBOS(f, psi_0, symmetries, epsilon, Vector::Zero(psi_0.output_size()), verbose);
   }
 
-  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset, bool verbose)
+  vector<Parallelepiped> PEIBOS(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const vector<OctaSym>& symmetries, double epsilon, const Vector& offset, bool verbose)
   {
     Index m = psi_0.input_size();
 
     assert_release (f.input_size() == psi_0.output_size() && "output size of psi_0 must match input size of f");
     assert_release (offset.size() == psi_0.output_size() && "offset size must match output size of psi_0");
     assert_release (m < psi_0.output_size());
-    assert_release (generators.size() > 0 && (int) generators[0].size() == psi_0.output_size() && "no generator given or wrong dimension of generator (must match output size of psi_0)");
+    assert_release (symmetries.size() > 0 && (int) symmetries[0].size() == psi_0.output_size() && "no generator given or wrong dimension of generator (must match output size of psi_0)");
 
     clock_t t_start = clock();
 
     vector<Parallelepiped> output;
 
-    // Generate the symmetries from the generators
-    vector<OctaSym> symmetries = generate_symmetries(generators, psi_0);
     vector<IntervalVector> boxes;
     double true_eps = split(Interval(-1.,1.)*IntervalVector::Ones(m), epsilon, boxes);
 

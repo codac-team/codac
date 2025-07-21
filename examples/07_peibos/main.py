@@ -14,7 +14,7 @@ if __name__=="__main__":
   
   generators_2d = [[1, 2], [-2, 1]]
 
-  v_par_2d = PEIBOS(f_2d,psi0_2d,generators_2d,0.2,[-0.2,0.])
+  v_par_2d = PEIBOS(f_2d,psi0_2d,generate_symmetries(generators_2d, psi0_2d),0.2,[-0.2,0.])
   
   figure_2d = Figure2D("Henon Map", GraphicOutput.VIBES)
   figure_2d.set_window_properties([25,50],[500,500])
@@ -43,7 +43,7 @@ if __name__=="__main__":
   figure_3d_proj.set_window_properties([25,600],[500,500])
   figure_3d_proj.set_axes(axis(0,[-1.5,2.5]), axis(1,[-2,2]))
 
-  v_par_3d = PEIBOS(f_3d,psi0_3d,generators_3d,0.2)
+  v_par_3d = PEIBOS(f_3d,psi0_3d,generate_symmetries(generators_3d, psi0_3d),0.2)
 
   for p in v_par_3d:
     figure_3d.draw_parallelepiped(p.z,p.A,Color.green(0.5))
@@ -74,7 +74,7 @@ if __name__=="__main__":
   figure_2d_nd_zy.set_window_properties([1125,50],[500,500])
   figure_2d_nd_zy.set_axes(axis(0,[-1., 1.]), axis(1,[-1., 1.]))
 
-  v_par_nd = PEIBOS(f_nd,psi0_nd,generators_nd,0.1)
+  v_par_nd = PEIBOS(f_nd,psi0_nd,generate_symmetries(generators_nd, psi0_nd),0.1)
 
   for p in v_par_nd:
     figure_3d_nd.draw_parallelepiped(p.z, p.A, Color.green(0.5))

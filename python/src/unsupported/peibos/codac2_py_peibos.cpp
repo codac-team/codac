@@ -25,19 +25,27 @@ using namespace pybind11::literals;
 
 void export_peibos(py::module& m)
 {
-  m.def("PEIBOS", 
-    [](const py::object& f, const py::object& psi_0, const vector<vector<int>>& generators, double epsilon, bool verbose = false)
+  m.def("generate_symmetries", 
+    [](const vector<vector<int>>& generators, const py::object& psi_0)
     {
-      return PEIBOS(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, verbose);
+      return generate_symmetries(generators, cast<AnalyticFunction<VectorType>>(psi_0));
     },
-    VECTOR_PARALLELEPIPED_PEIBOS_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_VECTOR_INT_REF_DOUBLE_BOOL,
-    "f"_a, "psi_0"_a, "generators"_a, "epsilon"_a, "verbose"_a = false);
+    VECTOR_OCTASYM_GENERATE_SYMMETRIES_CONST_VECTOR_VECTOR_INT_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF,
+    "generators"_a, "psi_0"_a);
 
   m.def("PEIBOS", 
-    [](const py::object& f, const py::object& psi_0, const vector<vector<int>>& generators, double epsilon, const Vector& offset, bool verbose = false)
+    [](const py::object& f, const py::object& psi_0, const vector<OctaSym>& symmetries, double epsilon, bool verbose = false)
     {
-      return PEIBOS(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, offset, verbose);
+      return PEIBOS(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), symmetries, epsilon, verbose);
     },
-    VECTOR_PARALLELEPIPED_PEIBOS_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_VECTOR_INT_REF_DOUBLE_CONST_VECTOR_REF_BOOL,
-    "f"_a, "psi_0"_a, "generators"_a, "epsilon"_a, "offset"_a, "verbose"_a = false);
+    VECTOR_PARALLELEPIPED_PEIBOS_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_OCTASYM_REF_DOUBLE_BOOL,
+    "f"_a, "psi_0"_a, "symmetries"_a, "epsilon"_a, "verbose"_a = false);
+
+  m.def("PEIBOS", 
+    [](const py::object& f, const py::object& psi_0, const vector<OctaSym>& symmetries, double epsilon, const Vector& offset, bool verbose = false)
+    {
+      return PEIBOS(cast<AnalyticFunction<VectorType>>(f), cast<AnalyticFunction<VectorType>>(psi_0), symmetries, epsilon, offset, verbose);
+    },
+    VECTOR_PARALLELEPIPED_PEIBOS_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_OCTASYM_REF_DOUBLE_CONST_VECTOR_REF_BOOL,
+    "f"_a, "psi_0"_a, "symmetries"_a, "epsilon"_a, "offset"_a, "verbose"_a = false);
 }

@@ -17,7 +17,7 @@ int main()
   vector<vector<int>> generators_2d ({{1,2},
                                       {-2,1}});
 
-  auto v_par_2d = PEIBOS(f_2d, psi0_2d, generators_2d, 0.2, {-0.2,0.});
+  auto v_par_2d = PEIBOS(f_2d, psi0_2d, generate_symmetries(generators_2d, psi0_2d), 0.2, {-0.2,0.});
 
   Figure2D figure_2d ("Henon Map", GraphicOutput::VIBES);
   figure_2d.set_window_properties({25,50},{500,500});
@@ -50,7 +50,7 @@ int main()
   figure_3d_proj.set_window_properties({25,600},{500,500});
   figure_3d_proj.set_axes({0,{-1.5,2.5}}, {1,{-2,2}});
 
-  auto v_par_3d = PEIBOS(f_3d, psi0_3d, generators_3d, 0.2);  
+  auto v_par_3d = PEIBOS(f_3d, psi0_3d, generate_symmetries(generators_3d, psi0_3d), 0.2);  
 
   for (const auto& p : v_par_3d)
   {
@@ -90,7 +90,7 @@ int main()
   figure_2d_nd_zy.set_window_properties({1125,50},{500,500});
   figure_2d_nd_zy.set_axes(axis(0,{-1.,1.}), axis(1,{-1.,1.}));
 
-  auto v_par_nd = PEIBOS(f_nd, psi0_nd, generators_nd, 0.1);
+  auto v_par_nd = PEIBOS(f_nd, psi0_nd, generate_symmetries(generators_nd, psi0_nd), 0.1);
 
   for (const auto& p : v_par_nd)
   {

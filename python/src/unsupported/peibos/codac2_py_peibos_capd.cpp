@@ -52,34 +52,34 @@ void export_IMapWrapper(py::module& m)
 void export_peibos_capd(py::module& m)
 {
   m.def("PEIBOS", 
-    [](const IMapWrapper& i_map_wrapper, double tf, const py::object& psi_0, const vector<vector<int>>& generators, double epsilon, bool verbose = false)
+    [](const IMapWrapper& i_map_wrapper, double tf, const py::object& psi_0, const vector<OctaSym>& symmetries, double epsilon, bool verbose = false)
     {
-      return PEIBOS(i_map_wrapper, tf, cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, verbose);
+      return PEIBOS(i_map_wrapper, tf, cast<AnalyticFunction<VectorType>>(psi_0), symmetries, epsilon, verbose);
     },
-    VECTOR_PARALLELEPIPED_PEIBOS_CONST_IMAPWRAPPER_REF_DOUBLE_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_VECTOR_INT_REF_DOUBLE_BOOL,
-    "i_map_wrapper"_a, "tf"_a, "psi_0"_a, "generators"_a, "epsilon"_a, "verbose"_a = false);
+    VECTOR_PARALLELEPIPED_PEIBOS_CONST_IMAPWRAPPER_REF_DOUBLE_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_OCTASYM_REF_DOUBLE_BOOL,
+    "i_map_wrapper"_a, "tf"_a, "psi_0"_a, "symmetries"_a, "epsilon"_a, "verbose"_a = false);
 
   m.def("PEIBOS", 
-    [](const IMapWrapper& i_map_wrapper, double tf, const py::object& psi_0, const vector<vector<int>>& generators, double epsilon, const Vector& offset, bool verbose = false)
+    [](const IMapWrapper& i_map_wrapper, double tf, const py::object& psi_0, const vector<OctaSym>& symmetries, double epsilon, const Vector& offset, bool verbose = false)
     {
-      return PEIBOS(i_map_wrapper, tf, cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, offset, verbose);
+      return PEIBOS(i_map_wrapper, tf, cast<AnalyticFunction<VectorType>>(psi_0), symmetries, epsilon, offset, verbose);
     },
-    VECTOR_PARALLELEPIPED_PEIBOS_CONST_IMAPWRAPPER_REF_DOUBLE_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_VECTOR_INT_REF_DOUBLE_CONST_VECTOR_REF_BOOL,
-    "i_map_wrapper"_a, "tf"_a, "psi_0"_a, "generators"_a, "epsilon"_a, "offset"_a, "verbose"_a = false);
+    VECTOR_PARALLELEPIPED_PEIBOS_CONST_IMAPWRAPPER_REF_DOUBLE_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_OCTASYM_REF_DOUBLE_CONST_VECTOR_REF_BOOL,
+    "i_map_wrapper"_a, "tf"_a, "psi_0"_a, "symmetries"_a, "epsilon"_a, "offset"_a, "verbose"_a = false);
 
   m.def("PEIBOS", 
-    [](const IMapWrapper& i_map_wrapper, double tf, double dt, const py::object& psi_0, const vector<vector<int>>& generators, double epsilon, bool verbose = false)
+    [](const IMapWrapper& i_map_wrapper, double tf, double dt, const py::object& psi_0, const vector<OctaSym>& symmetries, double epsilon, bool verbose = false)
     {
-      return PEIBOS(i_map_wrapper, tf, dt, cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, verbose);
+      return PEIBOS(i_map_wrapper, tf, dt, cast<AnalyticFunction<VectorType>>(psi_0), symmetries, epsilon, verbose);
     },
-    MAP_DOUBLEVECTOR_PARALLELEPIPED_PEIBOS_CONST_IMAPWRAPPER_REF_DOUBLE_DOUBLE_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_VECTOR_INT_REF_DOUBLE_BOOL,
-    "i_map_wrapper"_a, "tf"_a, "dt"_a, "psi_0"_a, "generators"_a, "epsilon"_a, "verbose"_a = false);
+    MAP_DOUBLEVECTOR_PARALLELEPIPED_PEIBOS_CONST_IMAPWRAPPER_REF_DOUBLE_DOUBLE_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_OCTASYM_REF_DOUBLE_BOOL,
+    "i_map_wrapper"_a, "tf"_a, "dt"_a, "psi_0"_a, "symmetries"_a, "epsilon"_a, "verbose"_a = false);
 
   m.def("PEIBOS", 
-    [](const IMapWrapper& i_map_wrapper, double tf, double dt, const py::object& psi_0, const vector<vector<int>>& generators, double epsilon, const Vector& offset, bool verbose = false)
+    [](const IMapWrapper& i_map_wrapper, double tf, double dt, const py::object& psi_0, const vector<OctaSym>& symmetries, double epsilon, const Vector& offset, bool verbose = false)
     {
-      return PEIBOS(i_map_wrapper, tf, dt, cast<AnalyticFunction<VectorType>>(psi_0), generators, epsilon, offset, verbose);
+      return PEIBOS(i_map_wrapper, tf, dt, cast<AnalyticFunction<VectorType>>(psi_0), symmetries, epsilon, offset, verbose);
     },
-    MAP_DOUBLEVECTOR_PARALLELEPIPED_PEIBOS_CONST_IMAPWRAPPER_REF_DOUBLE_DOUBLE_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_VECTOR_INT_REF_DOUBLE_CONST_VECTOR_REF_BOOL,
-    "i_map_wrapper"_a, "tf"_a, "dt"_a, "psi_0"_a, "generators"_a, "epsilon"_a, "offset"_a, "verbose"_a = false);
+    MAP_DOUBLEVECTOR_PARALLELEPIPED_PEIBOS_CONST_IMAPWRAPPER_REF_DOUBLE_DOUBLE_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_VECTOR_OCTASYM_REF_DOUBLE_CONST_VECTOR_REF_BOOL,
+    "i_map_wrapper"_a, "tf"_a, "dt"_a, "psi_0"_a, "symmetries"_a, "epsilon"_a, "offset"_a, "verbose"_a = false);
 }

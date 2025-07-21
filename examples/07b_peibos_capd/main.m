@@ -14,10 +14,10 @@ psi0_2d = AnalyticFunction({X_2d},vec(cos(X_2d(1)*PI/4.-PI/2),sin(X_2d(1)*PI/4.-
 
 generators_2d = int64([1,2;-2,1]);
 
-v_par_2d = PEIBOS (vectorField_2d_wrap, tf_2d, psi0_2d, generators_2d, 0.05, true);
+v_par_2d = PEIBOS (vectorField_2d_wrap, tf_2d, psi0_2d, generate_symmetries(generators_2d, psi0_2d), 0.05, true);
 
 output = Figure2D("Van der Pol",GraphicOutput().VIBES);
-output.set_window_properties(Vector([25,50]),Vector([500,500]));
+output.set_window_properties(Vector([50,100]),Vector([800,800]));
 output.set_axes(axis(1,Interval([-3.,3.])), axis(2,Interval([-3.,3.])));
 
 for i = 1:length(v_par_2d)
@@ -38,7 +38,7 @@ psi0_3d = AnalyticFunction({X_3d},vec(1/sqrt(1+sqr(X_3d(1))+sqr(X_3d(2))),X_3d(1
 
 generators_3d = int64([1, 2, 3; -2, 1, 3; 3, 2, -1]);
 
-v_par_3d = PEIBOS (vectorField_3d_wrap, tf_3d, psi0_3d, generators_3d, 0.2, true);
+v_par_3d = PEIBOS (vectorField_3d_wrap, tf_3d, psi0_3d, generate_symmetries(generators_3d, psi0_3d), 0.2, true);
 
 figure_3d_lorenz = Figure3D ("Lorenz matlab");
 
@@ -61,7 +61,7 @@ psi0_discrete = AnalyticFunction({X_discrete},vec(0.01*cos(X_discrete(1)*PI/4.0)
 
 generators_discrete = int64([1,2;-2,1]);
 
-v_par_discrete = PEIBOS (vectorField_discrete_wrap, tf_discrete, dt_discrete, psi0_discrete, generators_discrete, 0.2, Vector([-PI/2.0,0.0]), true);
+v_par_discrete = PEIBOS (vectorField_discrete_wrap, tf_discrete, dt_discrete, psi0_discrete, generate_symmetries(generators_discrete, psi0_discrete), 0.2, Vector([-PI/2.0,0.0]), true);
 
 output_discrete = Figure2D("Pendulum", GraphicOutput().VIBES);
 output_discrete.set_window_properties(Vector([1000,100]), Vector([800,800]));

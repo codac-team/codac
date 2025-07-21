@@ -27,19 +27,19 @@ namespace codac2
     gamma.setParameter(name, to_capd(value));
   }
 
-  vector<Parallelepiped> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, bool verbose)
+  vector<Parallelepiped> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<OctaSym>& symmetries, double epsilon, bool verbose)
   {
-    return PEIBOS(i_map_wrapper, tf, psi_0, generators, epsilon, Vector::zero(psi_0.output_size()), verbose);
+    return PEIBOS(i_map_wrapper, tf, psi_0, symmetries, epsilon, Vector::zero(psi_0.output_size()), verbose);
   }
 
-  vector<Parallelepiped> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset, bool verbose)
+  vector<Parallelepiped> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<OctaSym>& symmetries, double epsilon, const Vector& offset, bool verbose)
   {
     int m = psi_0.input_size();
     int n = psi_0.output_size();
 
     assert(offset.size() == n);
     assert (m < n);
-    assert (generators.size() > 0 && (int) generators[0].size() == n);
+    assert (symmetries.size() > 0 && (int) symmetries[0].size() == n);
 
     clock_t t_start = clock();
 
@@ -47,8 +47,7 @@ namespace codac2
     
     // CAPD solver setup
     capd::IMap g (i_map_wrapper.gamma);
-    capd::IOdeSolver solver(g, 20);
-
+    capd::IOdeSolver solver(g, 30);
     
     solver.setAbsoluteTolerance(1e-20);
     solver.setRelativeTolerance(1e-20);
@@ -59,8 +58,6 @@ namespace codac2
     capd::interval initialTime(0.);
     capd::interval finalTime(tf);
 
-    // Generate the symmetries from the generators
-    vector<OctaSym> symmetries = generate_symmetries(generators, psi_0);
     vector<IntervalVector> boxes;
     double true_eps = split(Interval(-1.,1.)*IntervalVector::Ones(m), epsilon, boxes);
     
@@ -116,12 +113,12 @@ namespace codac2
     return output;
   }
 
-  map<double,vector<Parallelepiped>> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, bool verbose)
+  map<double,vector<Parallelepiped>> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<OctaSym>& symmetries, double epsilon, bool verbose)
   {
-    return PEIBOS(i_map_wrapper, tf, dt, psi_0, generators, epsilon, Vector::zero(psi_0.output_size()), verbose);
+    return PEIBOS(i_map_wrapper, tf, dt, psi_0, symmetries, epsilon, Vector::zero(psi_0.output_size()), verbose);
   }
 
-  map<double,vector<Parallelepiped>> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset, bool verbose)
+  map<double,vector<Parallelepiped>> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<OctaSym>& symmetries, double epsilon, const Vector& offset, bool verbose)
   {
     map<double,vector<Parallelepiped>> output;
 
@@ -133,7 +130,7 @@ namespace codac2
 
     assert(offset.size() == n);
     assert (m < n);
-    assert (generators.size() > 0 && (int) generators[0].size() == n);
+    assert (symmetries.size() > 0 && (int) symmetries[0].size() == n);
 
     clock_t t_start = clock();
 
@@ -151,8 +148,6 @@ namespace codac2
     capd::interval initialTime(0.);
     capd::interval finalTime(tf);
 
-    // Generate the symmetries from the generators
-    vector<OctaSym> symmetries = generate_symmetries(generators, psi_0);
     vector<IntervalVector> boxes;
     double true_eps = split(Interval(-1.,1.)*IntervalVector::Ones(m), epsilon, boxes);
     

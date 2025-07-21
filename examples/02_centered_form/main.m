@@ -1,3 +1,4 @@
+%% 
 import py.codac4matlab.*
 
 x = VectorVar(3);

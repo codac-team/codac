@@ -29,9 +29,9 @@ namespace codac2
       capd::IMap gamma;
   };
 
-  vector<Parallelepiped> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, bool verbose = false);
-  vector<Parallelepiped> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset, bool verbose = false);
+  vector<Parallelepiped> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<OctaSym>& symmetries, double epsilon, bool verbose = false);
+  vector<Parallelepiped> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, const AnalyticFunction<VectorType>& psi_0, const vector<OctaSym>& symmetries, double epsilon, const Vector& offset, bool verbose = false);
 
-  map<double,vector<Parallelepiped>> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, bool verbose = false);
-  map<double,vector<Parallelepiped>> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<vector<int>>& generators , double epsilon, const Vector& offset, bool verbose = false);
+  map<double,vector<Parallelepiped>> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<OctaSym>& symmetries, double epsilon, bool verbose = false);
+  map<double,vector<Parallelepiped>> PEIBOS(const IMapWrapper& i_map_wrapper, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<OctaSym>& symmetries, double epsilon, const Vector& offset, bool verbose = false);
 }

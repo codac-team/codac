@@ -17,7 +17,7 @@ psi0_2d = AnalyticFunction({X_2d},vec(cos(X_2d(1)*PI/4.-PI/2),sin(X_2d(1)*PI/4.-
 
 generators_2d = int64([1,2;-2,1]);
 
-v_par_2d = PEIBOS(f_2d,psi0_2d,generators_2d,0.2,Vector([-0.2,0.]));
+v_par_2d = PEIBOS(f_2d,psi0_2d,generate_symmetries(generators_2d, psi0_2d),0.2,Vector([-0.2,0.]));
 
 figure_2d = Figure2D("Henon Map",GraphicOutput().VIBES);
 figure_2d.set_window_properties(Vector([25,50]),Vector([500,500]));
@@ -44,7 +44,7 @@ psi0_3d = AnalyticFunction({X_3d},vec(1/sqrt(1+sqr(X_3d(1))+sqr(X_3d(2))),X_3d(1
 
 generators_3d = int64([1, 2, 3; -2, 1, 3; 3, 2, -1]);
 
-v_par_3d = PEIBOS(f_3d,psi0_3d,generators_3d,0.2);
+v_par_3d = PEIBOS(f_3d,psi0_3d,generate_symmetries(generators_3d, psi0_3d),0.2);
 
 figure_3d = Figure3D("Conform matlab");
 figure_3d.draw_axes();
@@ -84,7 +84,7 @@ figure_2d_nd_zy = Figure2D("ZY Plane",GraphicOutput().VIBES);
 figure_2d_nd_zy.set_window_properties(Vector([1125,50]),Vector([500,500]));
 figure_2d_nd_zy.set_axes(axis(1,Interval([-1.,1.])), axis(2,Interval([-1.,1.])));
 
-v_par_nd = PEIBOS(f_nd,psi0_nd,generators_nd,0.1);
+v_par_nd = PEIBOS(f_nd,psi0_nd,generate_symmetries(generators_nd, psi0_nd),0.1);
 
 for i = 1:length(v_par_nd)
     p = v_par_nd{i};

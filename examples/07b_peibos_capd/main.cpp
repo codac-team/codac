@@ -18,11 +18,11 @@ int main()
   vector<vector<int>> generators_2d ({{1,2},
                                       {-2,1}});
   
-  auto v_par_2d = PEIBOS(vectorField_2d_wrap, tf_2d, psi0_2d, generators_2d, 0.05, true);
+  auto v_par_2d = PEIBOS(vectorField_2d_wrap, tf_2d, psi0_2d, generate_symmetries(generators_2d, psi0_2d), 0.05, true);
 
   Figure2D output ("Van der Pol",GraphicOutput::VIBES|GraphicOutput::IPE);
   output.set_axes(axis(0,{-3,3}),axis(1,{-3,3}));
-  output.set_window_properties({100,100},{800,800});
+  output.set_window_properties({50,100},{800,800});
 
   for (const auto& p : v_par_2d)
   {
@@ -45,7 +45,7 @@ int main()
                                   {-2,1,3},
                                   {3,2,-1}});
 
-  auto v_par_3d = PEIBOS(vectorField_3d_wrap, tf_3d, psi0_3d, generators_3d, 0.2, true);
+  auto v_par_3d = PEIBOS(vectorField_3d_wrap, tf_3d, psi0_3d, generate_symmetries(generators_3d, psi0_3d), 0.2, true);
 
   Figure3D figure3d_lorenz ("Lorenz");
 
@@ -69,7 +69,7 @@ int main()
   vector<vector<int>> generators_discrete ({{1,2},
                                             {-2,1}});
   
-  auto v_par_discrete = PEIBOS(vectorField_discrete_wrap, tf_discrete, dt_discrete, psi0_discrete, generators_discrete, 0.2, {-PI/2.,0.}, true);
+  auto v_par_discrete = PEIBOS(vectorField_discrete_wrap, tf_discrete, dt_discrete, psi0_discrete, generate_symmetries(generators_discrete, psi0_discrete), 0.2, {-PI/2.,0.}, true);
 
   Figure2D output_discrete ("Pendulum",GraphicOutput::VIBES | GraphicOutput::IPE);
   output_discrete.set_axes(axis(0,{-2,1.5}),axis(1,{-2,3}));
