@@ -32,8 +32,8 @@ jobs:
             - { img: 'lebarsfa/amd64:bullseye-for-codac', os: ubuntu-latest, shell: bash, arch: amd64, bitness: 64, runtime: bullseye, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bullseye amd64' }
             - { img: 'lebarsfa/pi-64:bullseye-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: arm64, bitness: 64, runtime: bullseye, cmake_flags: '-fPIC', deb: true, desc: 'Debian Bullseye arm64' }
             - { img: 'lebarsfa/pi:bullseye-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: armhf, bitness: 32, runtime: bullseye, cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Bullseye armv6hf' }
-            - { img: 'lebarsfa/amd64:buster-for-codac', os: ubuntu-latest, shell: bash, arch: amd64, bitness: 64, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Debian Buster amd64' }
-            - { img: 'lebarsfa/pi-64:buster-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: arm64, bitness: 64, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Debian Buster arm64' }
+            #- { img: 'lebarsfa/amd64:buster-for-codac', os: ubuntu-latest, shell: bash, arch: amd64, bitness: 64, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Debian Buster amd64' }
+            #- { img: 'lebarsfa/pi-64:buster-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: arm64, bitness: 64, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Debian Buster arm64' }
             - { img: 'lebarsfa/pi:buster-for-codac', os: ubuntu-24.04-arm, shell: bash, arch: armhf, bitness: 32, runtime: buster, cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Buster armv6hf' }
     name: ${{ matrix.cfg.desc }}
     steps: 
