@@ -18,6 +18,14 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
+/**
+ * \brief Computes the complementary set of this interval vector (or interval row).
+ *
+ * This function returns the set of intervals that are not part of this vector,
+ * interpreted as the complement with respect to the whole interval domain.
+ *
+ * \return A list of intervals representing the complement of this interval vector.
+ */
 template<typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsIntervalDomain<U> && IsVectorOrRow<R,C>
 inline auto complementary() const
@@ -25,6 +33,24 @@ inline auto complementary() const
   return Matrix<codac2::Interval,R,C>((int)this->size()).diff(*this);
 }
 
+/**
+ * \brief Computes the difference between this interval vector (or interval row) and another.
+ *
+ * This method returns the set-theoretic difference between this vector \p x and another vector \p y,
+ * i.e., all values contained in \p x but not in \p y. The result is expressed as a list of disjoint
+ * interval vectors.
+ *
+ * \param y The interval vector to subtract.
+ * \param compactness optional boolean to obtain or not disjoint intervals.
+ * \return A list of interval vectors forming the difference ``this \ y``.
+ *         The list is empty if the difference is empty.
+ *
+ * \note Note the following special cases:
+ * - If the two vectors are equal, the result is empty.
+ * - If they are disjoint, the result is simply this vector.
+ * - If \p y is a flat interval (degenerate) in some dimensions and \p x is not, this may return \p x directly
+ *   to avoid unnecessary fragmentation (depending on the \p compactness flag).
+ */
 template<typename OtherDerived,typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsIntervalDomain<U> && IsVectorOrRow<R,C>
 inline std::list<Matrix<codac2::Interval,R,C>> diff(const MatrixBase<OtherDerived>& y, bool compactness = true) const

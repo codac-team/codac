@@ -143,13 +143,6 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
       MATRIX_ADDONS_BASE_AUTO_REF_INIT_CONST_SCALAR_REF,
       "x"_a)
 
-    .def("init", [](S& x, const S& a)
-        {
-          x.init(a);
-        },
-      MATRIX_ADDONS_BASE_AUTO_REF_INIT_CONST_MATRIX_SCALARROWSATCOMPILETIMECOLSATCOMPILETIME_REF,
-      "x"_a)
-
     .def("__repr__", [](const S& x)
         {
           std::ostringstream s;

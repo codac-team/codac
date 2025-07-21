@@ -8,7 +8,7 @@
     <title>Codac</title>
     <authors>Codac Team</authors>
     <projectUrl>http://codac.io/</projectUrl>
-    <iconUrl>https://avatars.githubusercontent.com/u/77788511</iconUrl>
+    <iconUrl>https://rawcdn.githack.com/lebarsfa/Packages/50595b5a73d25531d2ee33f47c8fb9a43590bd1a/choco/icons/codac.png</iconUrl>
     <licenseUrl>https://github.com/codac-team/codac/blob/master/COPYING.LESSER</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/codac-team/codac</projectSourceUrl>
@@ -28,14 +28,14 @@ Codac is a library providing tools for constraint programming over reals, trajec
 
 ## Package parameters
 The following package parameters can be set:
-- `/url:URL` - Will install the specified binary package (e.g. built for Visual Studio), see versions from https://github.com/codac-team/codac/releases (the Windows `PATH` might need to be updated manually with e.g. `C:\ProgramData\chocolatey\lib\ibex\bin`, etc.). By default, only the MinGW libraries compatible with the corresponding MinGW Chocolatey package dependency are installed. Use the standard parameter `choco install --ignore-dependencies ...` to avoid installing the default MinGW and IBEX Chocolatey package dependencies if needed (you might want to install manually [IBEX](https://community.chocolatey.org/packages/ibex) package with the corresponding parameters, as well as the corresponding compiler).
+- `/url:URL` - Will install the specified binary package (e.g. built for Visual Studio), see versions from https://github.com/codac-team/codac/releases (the Windows `PATH` might need to be updated manually with e.g. `C:\ProgramData\chocolatey\lib\codac\bin`, etc.). By default, only the MinGW libraries compatible with the corresponding MinGW Chocolatey package dependency are installed. Use the standard parameter `choco install --ignore-dependencies ...` to avoid installing the default MinGW and IBEX Chocolatey package dependencies if needed (you might want to install manually [IBEX](https://community.chocolatey.org/packages/ibex) package with the corresponding parameters, as well as the corresponding compiler).
 - `/checksum:SHA256` - SHA256 checksum of the binary package specified by the `/url` parameter. If needed, use the standard parameter `choco install --ignore-checksums ...` for trusted sources.
 - `/urlX:URL` - Same as above, with X in [1,99], except this will not disable the installation of the MinGW libraries compatible with the corresponding MinGW Chocolatey package dependency.
 - `/checksumX:SHA256` - SHA256 checksum of the binary package specified by the `/urlX` parameter. If needed, use the standard parameter `choco install --ignore-checksums ...` for trusted sources.
 - `/InstallDir:INSTALLDIR` - Installation directory.
-- `/Path` - Will try to update Windows `PATH`.
+- `/NoPath` - Will not try to update Windows `PATH`.
 - `/NoRegistry` - Will not try to update Windows registry.
-To pass package parameters, use `--params "''"` (e.g. `choco install codac --params "'/Path /NoRegistry'"`), and to install another binary package, try e.g.
+To pass package parameters, use `--params "''"` (e.g. `choco install codac --params "'/NoPath /NoRegistry'"`), and to install another binary package, try e.g.
 ```
 choco install -y chocolatey-core.extension
 choco install -y --ignore-dependencies codac --params "'/url:https://github.com/codac-team/codac/releases/download/v1/codac_x64_vc17.zip'"
@@ -44,8 +44,8 @@ choco install -y --ignore-dependencies codac --params "'/url:https://github.com/
     <releaseNotes>https://github.com/codac-team/codac/releases</releaseNotes>
     <dependencies>
       <dependency id="chocolatey-core.extension" version="1.1.0" />
-      <dependency id="mingw" version="[11.2.0.07112021]" />
-      <dependency id="ibex" version="2.8.9.20230510" />
+      <dependency id="mingw" version="[13.2.0]" />
+      <dependency id="ibex" version="2.8.9.20250626" />
     </dependencies>
   </metadata>
 </package>

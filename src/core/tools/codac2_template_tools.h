@@ -43,20 +43,20 @@ namespace codac2
   }
 
   template<class... T>
-  bool all_same_size(const T&... x)
+  inline bool all_same_size(const T&... x)
   {
     return (... && (same_size(std::get<0>(std::make_tuple(x...)), x)));
   }
 
   template<class... T>
-  Index size_first_item(const T&... x)
+  inline Index size_first_item(const T&... x)
   {
     return size_of(std::get<0>(std::make_tuple(x...)));
   }
 
   // Removes duplicates when no comparison operator is available
   template<typename T>
-  void remove_duplicates_from_list(std::list<T>& l)
+  inline void remove_duplicates_from_list(std::list<T>& l)
   {
     typename std::list<T>::iterator it = l.begin();
     while(it != l.end())
@@ -92,11 +92,20 @@ namespace codac2
   }
 
   template <std::size_t N>
-  static std::array<float, N> to_array(std::initializer_list<float> list)
+  static inline std::array<float, N> to_array(std::initializer_list<float> list)
   {
     assert(list.size() == N);
     std::array<float, N> arr;
     std::copy(list.begin(), list.end(), arr.begin());
     return arr;
+  }
+
+  template<int N>
+  inline Vector to_vector(const std::array<int,N>& x)
+  {
+    Vector s(x.size());
+    for(size_t i = 0 ; i < N ; i++)
+      s[i] = x[i];
+    return s;
   }
 }

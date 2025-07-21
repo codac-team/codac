@@ -45,7 +45,7 @@ jobs:
         sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
         sudo apt update
 
-        sudo apt-get -y install flex bison # libeigen3-dev
+        sudo apt-get -y install flex bison catch2 # libeigen3-dev
   
         # For documentation
         pip install sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme

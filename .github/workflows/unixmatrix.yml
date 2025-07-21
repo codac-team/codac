@@ -123,15 +123,18 @@ jobs:
     - run: |
         sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
         # Replace this line by the next ones to test a specific binary package of IBEX.
-        #sudo apt-get -q update ; sudo apt-get -y install libibex-dev dpkg-dev || true
-        sudo apt-get -q update ; sudo apt-get -y install dpkg-dev || true
+        #sudo apt-get -q update ; sudo apt-get -y install libibex-dev catch2 dpkg-dev || true # libeigen3-dev
+        sudo apt-get -q update ; sudo apt-get -y install catch2 dpkg-dev || true # libeigen3-dev
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20241117/libibex-dev-2.8.9.20241117-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb --no-check-certificate -nv
         sudo dpkg -i libibex-dev-2.8.9.20241117-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb
         rm -Rf libibex-dev-2.8.9.20241117-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb
       shell: bash
       if: matrix.cfg.deb==true
+    #- run: brew install eigen
+    #  if: runner.os=='macOS'
+    - run: brew install catch2 # Issues with binary packages when cross-compiling...
+      if: (runner.os=='macOS')&&(matrix.cfg.cross!=true)
     - run: |
-        #brew install eigen
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20241117/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
         unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
         rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
@@ -143,7 +146,7 @@ jobs:
         if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
         mkdir build ; cd build
         cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D BUILD_TESTS=ON -D CMAKE_INSTALL_PREFIX="../codac" ..
-        cmake --build . -j 4 --config Debug --target install
+        cmake --build . -j 4 --config Release --target install
         cd ..
         sed_param=s/PATH_SUFFIXES\ /PATHS\ \$\{CMAKE_CURRENT_LIST_FILE\}\\/..\\/..\\/..\\/..\\/\ PATH_SUFFIXES\ /
         if [ ${{ runner.os }} = Windows ]; then sed -i "$sed_param" codac/share/codac/cmake/*.cmake ; fi
@@ -186,7 +189,7 @@ jobs:
         cd ../../..
         checksum -f=codac.$PACKAGE_VERSION.nupkg -t=sha256
         choco install -y -r --no-progress --ignore-dependencies -s . codac --pre --params "'/url:./codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
-        if [ ${{ matrix.cfg.runtime }} != mingw11 ] || [ ${{ matrix.cfg.arch }} != x64 ]; then rm -Rf codac.$PACKAGE_VERSION.nupkg ; fi # To avoid upload conflicts of the same file...
+        if [ ${{ matrix.cfg.runtime }} != mingw13 ] || [ ${{ matrix.cfg.arch }} != x64 ]; then rm -Rf codac.$PACKAGE_VERSION.nupkg ; fi # To avoid upload conflicts of the same file...
         checksum -f=codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip -t=sha256
       shell: bash
       if: runner.os=='Windows'
@@ -212,7 +215,7 @@ jobs:
       if: (github.event_name!='pull_request')&&((github.ref_name=='codac1')||(github.ref_name=='codac2')||(github.ref_name=='codac2_codac4matlab'))
     - run: |
         if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$PATH ; fi
-        cd build && ctest -C Debug -V --output-on-failure
+        cd build && ctest -C Release -V --output-on-failure
         cd ..
       shell: bash
       if: (matrix.cfg.cross!=true)

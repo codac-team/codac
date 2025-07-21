@@ -585,7 +585,7 @@ class TestIntervalMatrix(unittest.TestCase):
     self.assertTrue(IntervalMatrix(m2).is_strict_subset(m1))
 
     m3 = Matrix(2,2)
-    m3.init(m2+m2)
+    m3 = m2+m2
     self.assertTrue(m3 == Matrix([
       [ 3, 5 ],
       [ 7, 9 ]

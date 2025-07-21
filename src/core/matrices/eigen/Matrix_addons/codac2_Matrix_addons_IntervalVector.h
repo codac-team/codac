@@ -18,6 +18,17 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
+/**
+ * \brief Constructs an interval vector or interval row from an initializer list of floating point values.
+ * 
+ * Converts each value in the list into a degenerate interval and stores it in the structure.
+ * 
+ * \pre The structure must be a vector or row vector (\c IsVectorOrRow).
+ * 
+ * \param l Initializer list of values to convert into intervals.
+ * 
+ * \pre The initializer list \p l must not be empty.
+ */
 template<typename T,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires (std::is_arithmetic_v<T> && IsIntervalDomain<Scalar> && IsVectorOrRow<R,C>)
 Matrix(std::initializer_list<T> l)
@@ -29,6 +40,17 @@ Matrix(std::initializer_list<T> l)
     (*this)[i++] = codac2::Interval(li);
 }
 
+/**
+ * \brief Constructs an interval vector or interval row from an initializer list of initializer lists of doubles.
+ * 
+ * Converts each inner list into an interval and stores it in the structure.
+ * 
+ * \pre The structure must be a vector or row vector (\c IsVectorOrRow).
+ * 
+ * \param l Initializer list of initializer lists of doubles representing intervals.
+ * 
+ * \pre The initializer list \p l must not be empty.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsIntervalDomain<Scalar> && IsVectorOrRow<R,C>
 Matrix(std::initializer_list<std::initializer_list<double>> l)
@@ -40,6 +62,17 @@ Matrix(std::initializer_list<std::initializer_list<double>> l)
     (*this)[i++] = codac2::Interval(li);
 }
 
+/**
+ * \brief Constructs an interval vector or interval row from an initializer list of intervals.
+ * 
+ * Copies each interval in the list into the structure.
+ * 
+ * \pre The structure must be a vector or row vector (\c IsVectorOrRow).
+ * 
+ * \param l Initializer list of intervals.
+ * 
+ * \pre The initializer list \p l must not be empty.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsIntervalDomain<Scalar> && IsVectorOrRow<R,C>
 Matrix(std::initializer_list<codac2::Interval> l)
@@ -51,6 +84,18 @@ Matrix(std::initializer_list<codac2::Interval> l)
     (*this)[i++] = li;
 }
 
+/**
+ * \brief Constructs an interval vector or interval row from a size and array of bounds.
+ * 
+ * Initializes the structure intervals using the given array of bounds.
+ *
+ * \pre The structure must be a vector or row vector (\c IsVectorOrRow).
+ * 
+ * \param n Number of components (must be positive).
+ * \param bounds Array of bounds, each element containing lower and upper bound as double.
+ * 
+ * \pre \p n must be greater than zero.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsIntervalDomain<Scalar> && IsVectorOrRow<R,C>
 Matrix(int n, const double bounds[][2])
@@ -59,6 +104,14 @@ Matrix(int n, const double bounds[][2])
   assert_release(n > 0);
 }
 
+/**
+ * \brief Creates an interval vector (or interval row) of size \p n initialized with empty intervals.
+ * 
+ * \pre The structure must be a vector or row vector (\c IsVectorOrRow).
+ * 
+ * \param n Size of the vector (must be non-negative).
+ * \return A vector or row matrix of size \p n with all elements set to empty intervals.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsIntervalDomain<Scalar> && IsVectorOrRow<R,C>
 inline static auto empty(Index n)

@@ -13,6 +13,16 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
+/**
+ * \brief Constructs a vector or row matrix with size \p n.
+ * 
+ * \pre The matrix is a vector or row vector (\c IsVectorOrRow<R,C>).
+ * 
+ * \param n Number of elements.
+ * 
+ * \details
+ * Initializes the matrix to zero if ``Scalar`` is not an interval domain.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C>
 explicit Matrix(int n)
@@ -22,6 +32,13 @@ explicit Matrix(int n)
     init(0.);
 }
 
+/**
+ * \brief Constructs a vector or row matrix from a vector of doubles.
+ * 
+ * \pre The matrix is a vector or row vector (\c IsVectorOrRow<R,C>).
+ * 
+ * \param v Vector of doubles to initialize the matrix.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C>
 explicit Matrix(const std::vector<double>& v)
@@ -31,6 +48,14 @@ explicit Matrix(const std::vector<double>& v)
     (*this)[i] = v[i];
 }
 
+/**
+ * \brief Access element at index \p i (mutable).
+ * 
+ * \pre The matrix is a vector or row vector (\c IsVectorOrRow<R,C>).
+ * 
+ * \param i Index of the element.
+ * \return Reference to the element at index \p i.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C>
 inline Scalar& operator()(Index i)
@@ -38,6 +63,14 @@ inline Scalar& operator()(Index i)
   return const_cast<Scalar&>(const_cast<const Matrix<Scalar,R,C>*>(this)->operator()(i));
 }
 
+/**
+ * \brief Access element at index \p i (const).
+ * 
+ * \pre The matrix is a vector or row vector (\c IsVectorOrRow<R,C>).
+ * 
+ * \param i Index of the element.
+ * \return Const reference to the element at index \p i.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C>
 inline const Scalar& operator()(Index i) const
@@ -46,6 +79,14 @@ inline const Scalar& operator()(Index i) const
   return this->PlainObjectBase<Matrix<Scalar,R,C>>::operator()(i);
 }
 
+/**
+ * \brief Access element at index \p i (mutable) via operator[].
+ * 
+ * \pre The matrix is a vector or row vector (\c IsVectorOrRow<R,C>).
+ * 
+ * \param i Index of the element.
+ * \return Reference to the element at index \p i.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C>
 inline Scalar& operator[](Index i)
@@ -53,6 +94,14 @@ inline Scalar& operator[](Index i)
   return const_cast<Scalar&>(const_cast<const Matrix<Scalar,R,C>*>(this)->operator[](i));
 }
 
+/**
+ * \brief Access element at index \p i (const) via operator[].
+ * 
+ * \pre The matrix is a vector or row vector (\c IsVectorOrRow<R,C>).
+ * 
+ * \param i Index of the element.
+ * \return Const reference to the element at index \p i.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C>
 inline const Scalar& operator[](Index i) const
@@ -61,6 +110,14 @@ inline const Scalar& operator[](Index i) const
   return this->PlainObjectBase<Matrix<Scalar,R,C>>::operator[](i);
 }
 
+/**
+ * \brief Creates a zero vector or row matrix of size \p n.
+ * 
+ * \pre The matrix is a vector or row vector (\c IsVectorOrRow<R,C>).
+ * 
+ * \param n Size of the vector.
+ * \return A zero-initialized matrix of size \p n.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C>
 inline static Matrix<Scalar,R,C> zero(Index n)
@@ -69,6 +126,14 @@ inline static Matrix<Scalar,R,C> zero(Index n)
   return DenseBase<Matrix<Scalar,R,C>>::Zero(n);
 }
 
+/**
+ * \brief Creates a ones vector or row matrix of size \p n.
+ * 
+ * \pre The matrix is a vector or row vector (\c IsVectorOrRow<R,C>).
+ * 
+ * \param n Size of the vector.
+ * \return A matrix filled with ones of size \p n.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C>
 inline static Matrix<Scalar,R,C> ones(Index n)
@@ -77,6 +142,15 @@ inline static Matrix<Scalar,R,C> ones(Index n)
   return DenseBase<Matrix<Scalar,R,C>>::Ones(n);
 }
 
+/**
+ * \brief Creates a constant vector or row matrix of size \p n filled with \p x.
+ * 
+ * \pre The matrix is a vector or row vector (\c IsVectorOrRow<R,C>).
+ * 
+ * \param n Size of the vector.
+ * \param x The constant value to fill.
+ * \return A matrix filled with \p x of size \p n.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C>
 inline static Matrix<Scalar,R,C> constant(Index n, const Scalar& x)
@@ -85,8 +159,16 @@ inline static Matrix<Scalar,R,C> constant(Index n, const Scalar& x)
   return DenseBase<Matrix<Scalar,R,C>>::Constant(n,x);
 }
 
-// Note that this static function is not called "rand"
-// because of ambiguity with the member function "rand"
+/**
+ * \brief Creates a random vector or row matrix of size \p n.
+ * 
+ * \pre The matrix is a vector or row vector (\c IsVectorOrRow<R,C>).
+ * 
+ * \param n Size of the vector.
+ * \return A matrix filled with random values of size \p n.
+ * 
+ * \note Named 'random' to avoid ambiguity with any member function named 'rand'.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C>
 inline static Matrix<Scalar,R,C> random(Index n)
@@ -95,6 +177,14 @@ inline static Matrix<Scalar,R,C> random(Index n)
   return DenseBase<Matrix<Scalar,R,C>>::Random(n);
 }
 
+/**
+ * \brief Inserts values from matrix \p x starting at index \p start_id.
+ * 
+ * \pre The matrix and \p x are both vectors or row vectors.
+ * 
+ * \param start_id Start index for insertion.
+ * \param x The matrix whose values will be inserted.
+ */
 template<typename OtherDerived,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C> && IsVectorOrRow<MatrixBase<OtherDerived>::RowsAtCompileTime,MatrixBase<OtherDerived>::ColsAtCompileTime>
 inline void put(Index start_id, const MatrixBase<OtherDerived>& x)
@@ -105,6 +195,17 @@ inline void put(Index start_id, const MatrixBase<OtherDerived>& x)
   this->segment(start_id,x.size()) << x;
 }
 
+/**
+ * \brief Resizes the vector or row matrix to size \p n, preserving existing values.
+ * 
+ * \pre The matrix is a vector or row vector.
+ * 
+ * \param n The new size.
+ * 
+ * \details
+ * Eigen's ``resize()`` discards existing data, so this function copies existing
+ * values before resizing and restores them afterward.
+ */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C>
 inline void resize_save_values(Index n)

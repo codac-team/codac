@@ -16,7 +16,6 @@
 #include "codac2_IntervalVector.h"
 #include "codac2_Paving.h"
 #include "codac2_template_tools.h"
-#include "codac2_Figure2D.h"
 
 namespace codac2
 {

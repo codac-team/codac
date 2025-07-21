@@ -13,6 +13,14 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
+/**
+ * \brief Returns the index of the minimum coefficient in the vector.
+ *
+ * \return The index (0-based) of the minimum coefficient.
+ *
+ * \note For a column vector, the returned index is the row index.
+ *       For a row vector, it is the column index.
+ */
 template<typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires (!IsIntervalDomain<U>) && (IsVectorOrRow<R,C>)
 inline Index min_coeff_index() const
@@ -23,6 +31,14 @@ inline Index min_coeff_index() const
   return r;
 }
 
+/**
+ * \brief Returns the index of the maximum coefficient in the vector.
+ *
+ * \return The index (0-based) of the maximum coefficient.
+ *
+ * \note For a column vector, the returned index is the row index.
+ *       For a row vector, it is the column index.
+ */
 template<typename U=Scalar,int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires (!IsIntervalDomain<U>) && (IsVectorOrRow<R,C>)
 inline Index max_coeff_index() const

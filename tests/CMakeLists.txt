@@ -4,28 +4,19 @@
 
 # Finding Catch2
 
-  #message(STATUS "Getting Catch2 library... (an Internet connection might be required)")
-
-  Include(FetchContent)
-
-  #find_package(Catch2 3.6.0 EXACT QUIET)
-  find_package(Catch2 3.6.0 QUIET)
-  if(Catch2_FOUND)
-    message(STATUS "Found Catch2 version ${Catch2_VERSION} in ${Catch2_DIR}")
-  else()
-    message(STATUS "Attempt to install Catch2 automatically...")
-    FetchContent_Declare(
-    Catch2
-    #GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    #GIT_TAG        v3.6.0
-    #URL https://github.com/catchorg/Catch2/archive/refs/tags/v3.6.0.zip
-    URL ${CMAKE_SOURCE_DIR}/3rd/Catch2-3.6.0.zip
-    #SOURCE_DIR "P:/devel/GitHub/Catch2"
-    #FIND_PACKAGE_ARGS
-  )
+option(ENABLE_FIND_PACKAGE_CATCH2 "ENABLE_FIND_PACKAGE_CATCH2" ON)
+if(ENABLE_FIND_PACKAGE_CATCH2)
+  find_package(Catch2 3.0.0 QUIET) # Use Catch2_DIR or CMAKE_PREFIX_PATH to specify a custom Catch2 installation path...
+endif()
+if(Catch2_FOUND)
+  message(STATUS "Found Catch2 version ${Catch2_VERSION} in ${Catch2_DIR}")
+else()
+  message(STATUS "Attempt to install Catch2 automatically...")
+  FetchContent_Declare(Catch2 URL https://github.com/catchorg/Catch2/archive/refs/tags/v3.6.0.zip)
+  #FetchContent_Declare(Catch2 URL ${CMAKE_CURRENT_SOURCE_DIR}/../3rd/Catch2-3.6.0.zip) # If needed to be self-contained...
   FetchContent_MakeAvailable(Catch2)
-  # Adds Catch2::Catch2WithMain
-  endif()
+endif()
+# Adds Catch2::Catch2WithMain
 
 list(APPEND SRC_TESTS # listing files without extension
 
@@ -59,6 +50,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/domains/tube/codac2_tests_TDomain
   core/domains/tube/codac2_tests_SlicedTube
   core/domains/tube/codac2_tests_SlicedTube_integral
+  ../doc/manual/manual/intervals/src
 
   core/functions/analytic/codac2_tests_AnalyticFunction
   ../doc/manual/manual/functions/analytic/src
@@ -108,7 +100,7 @@ file(COPY
   ${CMAKE_BINARY_DIR}/python/python_package/codac/tests
 )
 
-set(CODAC_LIBRARIES ${PROJECT_NAME}-core)
+set(CODAC_LIBRARIES ${PROJECT_NAME}-core ${PROJECT_NAME}-graphics)
 
 # CAPD test
 if (WITH_CAPD)

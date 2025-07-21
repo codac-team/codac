@@ -694,7 +694,30 @@ namespace codac2
    */
   Interval operator""_i(long double x);
 
+  /**
+   * @brief Returns the previous representable double-precision floating-point value before x.
+   *
+   * This function computes the largest double value that is strictly less than the input value x,
+   * effectively moving one step down in the floating-point representation.
+   * 
+   * \see For obtaining the next representable double value greater than x, use ``next_float()``.
+   *
+   * \param x The input double value.
+   * \return The previous representable double value before x.
+   */
   double previous_float(double x);
+
+  /**
+   * \brief Returns the next representable double-precision floating-point value after x.
+   *
+   * This function computes the smallest double value that is strictly greater than the input value x,
+   * effectively moving one step up in the floating-point representation.
+   * 
+   * \see For obtaining the previous representable double value less than x, use ``previous_float()``.
+   *
+   * \param x The input double value.
+   * \return The next representable double value after x.
+   */
   double next_float(double x);
 
   /**
