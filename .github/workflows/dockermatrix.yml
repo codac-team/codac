@@ -67,8 +67,8 @@ jobs:
         git config --global --add safe.directory ${PWD} && \
         if [ \"${{ matrix.cfg.deb }}\" = \"true\" ]; then \
         sudo sh -c 'echo \"deb [trusted=yes] https://packages.ensta-bretagne.fr/\$(if [ -z \"\$(. /etc/os-release && echo \$UBUNTU_CODENAME)\" ]; then echo debian/\$(. /etc/os-release && echo \$VERSION_CODENAME); else echo ubuntu/\$(. /etc/os-release && echo \$UBUNTU_CODENAME); fi) ./\" > /etc/apt/sources.list.d/ensta-bretagne.list' && \
-        #sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev dpkg-dev || true && \\
-        sudo apt-get -q update ; sudo apt-get -y install dpkg-dev || true && \
+        #sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev catch2 dpkg-dev || true && \\
+        sudo apt-get -q update ; sudo apt-get -y install catch2 dpkg-dev || true && \
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20241117/libibex-dev-2.8.9.20241117-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb --no-check-certificate -nv && \
         sudo dpkg -i libibex-dev-2.8.9.20241117-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb && \
         rm -Rf libibex-dev-2.8.9.20241117-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb ; \
@@ -79,8 +79,8 @@ jobs:
         sudo cp -Rf ibex/* /usr/ ; \
         fi && \
         mkdir build ; cd build && \
-        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" .. && \
-        cmake --build . -j 4 --config Debug --target install && \
+        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D BUILD_TESTS=ON -D CMAKE_INSTALL_PREFIX="../codac" .. && \
+        cmake --build . -j 4 --config Release --target install && \
         cd .. && \
         zip -q -r codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac && \
         mkdir -p codac_standalone/example ; cd codac_standalone && \
@@ -103,6 +103,8 @@ jobs:
         else \
         sudo cp -Rf codac/* /usr/local/ ; \
         fi && \
+        cd build && ctest -C Release -V --output-on-failure && \
+        cd .. && \
         rm -Rf codac && \
         cd tests/test_codac && \
         cmake ${{ matrix.cfg.cmake_params }} . && \

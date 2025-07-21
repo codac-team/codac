@@ -53,6 +53,8 @@ jobs:
       shell: bash
     #- run: brew install eigen
     #  if: runner.os=='macOS'
+    - run: brew install catch2 # Issues with binary packages when cross-compiling...
+      if: (runner.os=='macOS')&&(matrix.cfg.cross!=true)
     - run: brew install graphviz ; brew install --formula doxygen ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects furo sphinx-math-dollar
       if: runner.os=='macOS'
     - run: |

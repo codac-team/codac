@@ -3,6 +3,19 @@
 # Source variables which are shared between install and uninstall.
 . $PSScriptRoot\sharedVars.ps1
 
+function Assert-SafeUrl {
+	param(
+		[string]$Url,
+		[string]$AllowedPrefix
+	)
+
+	$isLocal    = Test-Path $Url -PathType Any -ErrorAction SilentlyContinue
+	$isAllowed  = $Url.StartsWith($AllowedPrefix, [StringComparison]::OrdinalIgnoreCase)
+	if (-not ($isLocal -or $isAllowed)) {
+		throw "Invalid URL '$Url'. Must be a local path or start with '$AllowedPrefix'."
+	}
+}
+
 $toolsDir = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 
 $pp = Get-PackageParameters
@@ -16,10 +29,12 @@ Write-Host "Codac is going to be installed in '$installDir'"
 $root = Join-Path $installDir "codac"
 New-Item -ItemType Directory -Force -Path $root | Out-Null
 
+$AllowedUrlPrefix = 'https://github.com/codac-team/codac'
+
 if (!$pp['url']) { 
-	$url = 'https://github.com/codac-team/codac/releases/download/v1/codac_x86_mingw11.zip'
+	$url = 'https://github.com/codac-team/codac/releases/download/v1/codac_x86_mingw13.zip'
 	$checksum = 'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE'
-	$url64 = 'https://github.com/codac-team/codac/releases/download/v1/codac_x64_mingw11.zip'
+	$url64 = 'https://github.com/codac-team/codac/releases/download/v1/codac_x64_mingw13.zip'
 	$checksum64 = 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'
 	$packageArgs = @{
 		packageName   = $env:ChocolateyPackageName
@@ -38,6 +53,7 @@ if (!$pp['url']) {
 else {
 	$url = $pp['url']
 	$checksum = $pp['checksum']
+	Assert-SafeUrl $url $AllowedUrlPrefix
 	$packageArgs = @{
 		packageName   = $env:ChocolateyPackageName
 		unzipLocation = Join-Path "$root" ".."
@@ -50,7 +66,7 @@ else {
 	}
 	Install-ChocolateyZipPackage @packageArgs
 
-	# Analyze url to guess what to add to Windows PATH...
+	# Analyze url to guess what to add to Windows PATH or registry...
 	if ($url -match "x86") {
 		$arch = "x86"
 	}
@@ -92,20 +108,21 @@ else {
 	}
 }
 
-if (!$pp['NoRegistry']) {
+$cmakepathtoadd = "$root\share\$CMakePackageName\cmake"
+if ((!$pp['NoRegistry']) -and (Test-Path $cmakepathtoadd)) {
 	New-Item "$CMakeSystemRepositoryPath\$CMakePackageName" -ItemType directory -Force
-	New-ItemProperty -Name "$CMakePackageName$CMakePackageVer`_$arch" -PropertyType String -Value "$root\share\$CMakePackageName\cmake" -Path "$CMakeSystemRepositoryPath\$CMakePackageName" -Force
+	New-ItemProperty -Name "$CMakePackageName$CMakePackageVer`_$arch" -PropertyType String -Value $cmakepathtoadd -Path "$CMakeSystemRepositoryPath\$CMakePackageName" -Force
 }
 $pathtoadd = "$root\bin"
-if (($pp['Path']) -and !([environment]::GetEnvironmentVariable("Path","Machine") -match [regex]::escape($pathtoadd))) {
-	$newpath = [environment]::GetEnvironmentVariable("Path","Machine") + ";$pathtoadd"
-	[environment]::SetEnvironmentVariable("Path",$newpath,"Machine")
+if ((!$pp['NoPath']) -and (Test-Path $pathtoadd)) {
+	Install-ChocolateyPath $pathtoadd -PathType 'Machine'
 }
 
 for ($i = 1; $i -le 99; $i++) {
 	if ($pp['url'+$i]) {
 		$url = $pp['url'+$i]
 		$checksum = $pp['checksum'+$i]
+		Assert-SafeUrl $url $AllowedUrlPrefix
 		$packageArgs = @{
 			packageName   = $env:ChocolateyPackageName
 			unzipLocation = Join-Path "$root" ".."
@@ -118,7 +135,7 @@ for ($i = 1; $i -le 99; $i++) {
 		}
 		Install-ChocolateyZipPackage @packageArgs
 
-		# Analyze url to guess what to add to Windows PATH...
+		# Analyze url to guess what to add to Windows PATH or registry...
 		if ($url -match "x86") {
 			$arch = "x86"
 		}
@@ -159,14 +176,14 @@ for ($i = 1; $i -le 99; $i++) {
 			$runtime = "mingw"
 		}
 
-		if (!$pp['NoRegistry']) {
+		$cmakepathtoadd = "$root\share\$CMakePackageName\cmake"
+		if ((!$pp['NoRegistry']) -and (Test-Path $cmakepathtoadd)) {
 			New-Item "$CMakeSystemRepositoryPath\$CMakePackageName" -ItemType directory -Force
-			New-ItemProperty -Name "$CMakePackageName$CMakePackageVer`_$arch" -PropertyType String -Value "$root\share\$CMakePackageName\cmake" -Path "$CMakeSystemRepositoryPath\$CMakePackageName" -Force
+			New-ItemProperty -Name "$CMakePackageName$CMakePackageVer`_$arch" -PropertyType String -Value $cmakepathtoadd -Path "$CMakeSystemRepositoryPath\$CMakePackageName" -Force
 		}
 		$pathtoadd = "$root\bin"
-		if (($pp['Path']) -and !([environment]::GetEnvironmentVariable("Path","Machine") -match [regex]::escape($pathtoadd))) {
-			$newpath = [environment]::GetEnvironmentVariable("Path","Machine") + ";$pathtoadd"
-			[environment]::SetEnvironmentVariable("Path",$newpath,"Machine")
+		if ((!$pp['NoPath']) -and (Test-Path $pathtoadd)) {
+			Install-ChocolateyPath $pathtoadd -PathType 'Machine'
 		}
 	}
 }

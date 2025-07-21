@@ -2,7 +2,19 @@
 #  codac / Python binding - cmake configuration file
 # ==================================================================
 
-  add_subdirectory(pybind11)
+  option(ENABLE_FIND_PACKAGE_PYBIND11 "ENABLE_FIND_PACKAGE_PYBIND11" ON)
+  if(ENABLE_FIND_PACKAGE_PYBIND11)
+    find_package(pybind11 3.0.0 QUIET)
+  endif()
+  if(pybind11_FOUND)
+    message(STATUS "Found pybind11 version ${pybind11_VERSION} in ${pybind11_DIR}") # Use pybind11_DIR or CMAKE_PREFIX_PATH to specify a custom pybind11 installation path...
+  else()
+    message(STATUS "Attempt to install pybind11 automatically...")
+    FetchContent_Declare(pybind11 URL https://github.com/pybind/pybind11/archive/refs/tags/v3.0.0.zip)
+    #FetchContent_Declare(pybind11 URL ${CMAKE_CURRENT_SOURCE_DIR}/../3rd/pybind11-ed5057ded698e305210269dafa57574ecf964483.zip) # If needed to be self-contained...
+    FetchContent_MakeAvailable(pybind11)
+  endif()
+  # Adds pybind11::headers, pybind11::module, pybind11::embed
 
   set(PYTHON_PACKAGE_NAME ${PROJECT_NAME})
   set(PYTHON_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_package")
