@@ -1,8 +1,8 @@
 # This file generates .deb (Unix) and .nupkg (Windows) packages (and zip for having Codac and IBEX binaries for several Visual Studio versions)
 on:
     push:
-        branches: '**'
-        tags: '' # Restrict to blank tags
+        branches: ['**']
+        tags-ignore: ['**']  # Ignore all tag pushes
     pull_request:
 
 jobs:

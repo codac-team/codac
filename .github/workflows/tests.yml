@@ -3,7 +3,7 @@ on:
     push:
         branches-ignore:
         - codac2_codac4matlab
-        tags: '' # Restrict to blank tags
+        tags-ignore: ['**']  # Ignore all tag pushes
     pull_request:
         branches-ignore:
         - codac2_codac4matlab
