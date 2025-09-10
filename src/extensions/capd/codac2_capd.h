@@ -14,6 +14,9 @@
 #include "codac2_IntervalVector.h"
 #include "codac2_Matrix.h"
 #include "codac2_IntervalMatrix.h"
+#include "codac2_SlicedTube.h"
+#include "codac2_SolutionCurveWrapper.h"
+
 
 namespace codac2
 {
@@ -64,5 +67,14 @@ namespace codac2
    * \return the converted Codac IntervalMatrix
    */
   codac2::IntervalMatrix to_codac(const capd::IMatrix& x);
+
+  /**
+   * \brief Converts a CAPD SolutionCurve into a Codac SlicedTube
+   * 
+   * \param solution_curve the CAPD SolutionCurve to be converted
+   * \param tdomain the TDomain defining the time slices of the resulting SlicedTube
+   * \return the converted Codac SlicedTube with both the time slices (and eventually gates) of Codac and the gates from CAPD
+   */
+  codac2::SlicedTube<codac2::IntervalVector> to_codac(const codac2::SolutionCurveWrapper& solution_curve, const std::shared_ptr<TDomain>& tdomain);
 
 }

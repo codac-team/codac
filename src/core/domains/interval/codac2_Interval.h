@@ -315,6 +315,13 @@ namespace codac2
       bool is_integer() const;
 
       /**
+       * \brief Checks whether the interval has integer lower and upper bounds.
+       *
+       * \return ``true`` if this has integer lower and upper bounds; ``false`` otherwise.
+       */
+      bool has_integer_bounds() const;
+
+      /**
        * \brief Tests if this and x intersect
        * 
        * \param x the other interval
@@ -442,7 +449,7 @@ namespace codac2
       std::vector<Interval> complementary(bool compactness = true) const;
 
       /**
-       * \brief Computes the result of \f$[x]\[y]\f$
+       * \brief Computes the result of \f$[x]\backslash[y]\f$
        * 
        * \param y interval to remove from this
        * \param compactness optional boolean to obtain or not disjoint intervals

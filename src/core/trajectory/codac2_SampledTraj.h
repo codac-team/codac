@@ -10,6 +10,7 @@
 #pragma once
 
 #include <map>
+#include "codac2_math.h"
 #include "codac2_TrajBase.h"
 #include "codac2_analytic_variables.h"
 #include "codac2_template_tools.h"

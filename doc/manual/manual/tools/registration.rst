@@ -1,7 +1,7 @@
 .. _sec-tools-registration:
 
-Affine transformation estimation
-================================
+Transformation estimation
+=========================
 
 The ``affine_transformation()`` functions allow to compute the affine transformation (translation, rotation, scaling) that best aligns an ordered set of 2d points ``src`` with another set ``dst``. This transformation is obtained using Singular Value Decomposition (SVD).
 Please note that these functions do not employ any guaranteed calculation, and the result is only an approximation that can be used for certain applications such as robotics.

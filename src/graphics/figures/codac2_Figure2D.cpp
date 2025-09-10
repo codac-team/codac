@@ -345,12 +345,29 @@ void Figure2D::draw_trajectory(const SampledTraj<Vector>& x, const StyleProperti
   assert_release(this->size() <= x.size());
 
   std::vector<Vector> values;
+
+  auto display_and_clear = [&]() {
+
+    if(values.size() > 1)
+      draw_polyline(values,style);
+
+    else if(values.size() == 1)
+      draw_point(values[0],style);
+
+    values.clear();
+  };
+
   for(const auto& [ti,xi] : x)
     if(_tdomain.contains(ti))
-      values.push_back(xi);
+    {
+      if(!xi.is_nan())
+        values.push_back(xi);
 
-  if(values.size() > 1)
-    draw_polyline(values,style);
+      else
+        display_and_clear();
+    }
+
+  display_and_clear();
 }
 
 void Figure2D::draw_trajectory(const AnalyticTraj<VectorType>& x, const StyleProperties& style)
@@ -378,21 +395,35 @@ void Figure2D::draw_trajectory(const AnalyticTraj<VectorType>& x, const ColorMap
 
 void Figure2D::plot_trajectory(const SampledTraj<double>& x, const StyleProperties& style)
 {
+  _axes[0].limits = x.tdomain();
+  _axes[1].limits = x.codomain();
+  for(const auto& output_fig : _output_figures)
+    output_fig->update_axes();
+
   std::vector<Vector> values;
+
+  auto display_and_clear = [&]() {
+
+    if(values.size() > 1)
+      draw_polyline(values,style);
+
+    else if(values.size() == 1)
+      draw_point(values[0],style);
+
+    values.clear();
+  };
+
   for(const auto& [ti,xi] : x)
     if(_tdomain.contains(ti))
-      values.push_back({ti,xi});
+    {
+      if(!std::isnan(xi))
+        values.push_back({ti,xi});
 
-  if(values.size() > 1)
-  {
-    _axes[0].limits = x.tdomain();
-    _axes[1].limits = x.codomain();
+      else
+        display_and_clear();
+    }
 
-    for(const auto& output_fig : _output_figures)
-      output_fig->update_axes();
-
-    draw_polyline(values,style);
-  }
+  display_and_clear();
 }
 
 void Figure2D::plot_trajectories(const SampledTraj<Vector>& x, const StyleProperties& style)

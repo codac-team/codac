@@ -744,3 +744,17 @@ inline bool is_bisectable() const
         return true;
   return false;
 }
+
+/**
+ * \brief Checks whether all intervals in the matrix have integer lower and upper bounds.
+ *
+ * \return ``true`` if every interval in the matrix has integer lower and upper bounds; ``false`` otherwise.
+ */
+inline bool has_integer_bounds() const
+{
+  for(Index i = 0 ; i < this->rows() ; i++)
+    for(Index j = 0 ; j < this->cols() ; j++)
+      if(!(*this)(i,j).has_integer_bounds())
+        return false;
+  return true;
+}

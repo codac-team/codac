@@ -124,4 +124,4 @@ We obtain the following approximation:
 
 .. admonition:: Technical documentation
 
-  See the `C++ API documentation of this class <../../../api/html/classcodac2_1_1_ctc_dist.html>`_.
+  See the `C++ API documentation of this class <../../api/html/classcodac2_1_1_ctc_dist.html>`_.

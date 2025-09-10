@@ -53,12 +53,24 @@ int main()
   cout << "\n\nafter time=" << T << " the image is: " << result;
   cout << "\ndiam(image): " << diam(result) << endl << endl;
 
-  DefaultFigure::set_axes(axis(0,{-2,1.5}),axis(1,{-2,3}));
+  // conversion of the CAPD solution curve into a Codac SlicedTube
+  
+  auto tdomain = create_tdomain(Interval(0,20),0.05, true);
+  auto codac_tube = to_codac(solution, tdomain);
+
+  Figure2D fig_2d("Pendulum with friction", GraphicOutput::VIBES | GraphicOutput::IPE);
+
+  // visualization with Codac
+
+  fig_2d.set_axes(axis(0,{-2,1.5}),axis(1,{-2,3}));
+
+  fig_2d.draw_tube(codac_tube, ColorMap::blue_tube());
+  fig_2d.draw_tube(codac_tube, Color::black());
 
   for (float t=0.;t<20.;t+=0.05)
-    DefaultFigure::draw_box(to_codac(solution(t)));
+    fig_2d.draw_box(to_codac(solution(t)), {Color::none(), Color::orange(0.5)});
 
-  DefaultFigure::draw_box(to_codac(c),Color::green());
-  DefaultFigure::draw_box(to_codac(result),Color::red());
+  fig_2d.draw_box(to_codac(c), Color::green());
+  fig_2d.draw_box(to_codac(result), Color::red());
   
 }

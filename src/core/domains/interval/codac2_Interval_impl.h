@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <cmath> // for trunc
+
 // Inline functions
 
 namespace codac2
@@ -218,6 +220,11 @@ namespace codac2
   inline bool Interval::is_integer() const
   {
     return gaol::interval::is_an_int();
+  }
+
+  inline bool Interval::has_integer_bounds() const
+  {
+    return trunc(lb()) == lb() && trunc(ub()) == ub();
   }
 
   inline bool Interval::intersects(const Interval &x) const

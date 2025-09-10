@@ -49,4 +49,13 @@ namespace codac2
   {
     return pow(v, 1./p);
   }
+
+  template<typename T>
+  inline bool is_nan(const T& x)
+  {
+    if constexpr(std::is_arithmetic_v<T>)
+      return std::isnan(x);
+    else
+      return x.is_nan();
+  }
 }

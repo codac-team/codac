@@ -32,7 +32,7 @@
   target_include_directories(${PROJECT_NAME}-sympy PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/
   )
-  target_link_libraries(${PROJECT_NAME}-sympy PUBLIC Ibex::ibex) # pybind11::embed)
+  target_link_libraries(${PROJECT_NAME}-sympy PUBLIC) # pybind11::embed)
   
 
 ################################################################################

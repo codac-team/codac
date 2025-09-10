@@ -121,3 +121,13 @@ TEST_CASE("SampledTraj: operations")
   x -= 42.;
   CHECK(Approx(x.codomain(),1e-5) == Interval(-1,1)+4.-42.);
 }
+
+TEST_CASE("SampledTraj: nan case")
+{
+  SampledTraj<Vector> x;
+  x.set(Vector({0,0}),0.);
+  x.set(Vector({2,2}),2.);
+  CHECK(x(1.) == Vector({1,1}));
+  x.set(Vector({0,NAN}),0.);
+  CHECK(x(1.).is_nan());
+}

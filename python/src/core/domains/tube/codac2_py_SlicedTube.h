@@ -164,9 +164,13 @@ void export_SlicedTube(py::module& m, const std::string& name)
       .def("partial_integral", (std::pair<T,T> (SlicedTube<T>::*)(const Interval&,const Interval&) const) &SlicedTube<T>::partial_integral,
         PAIR_TT_SLICEDTUBE_T_PARTIAL_INTEGRAL_CONST_INTERVAL_REF_CONST_INTERVAL_REF_CONST,
         "t1"_a, "t2"_a)
-      
-      .def("primitive", &SlicedTube<T>::primitive,
+
+      .def("primitive", (SlicedTube<T> (SlicedTube<T>::*)() const) &SlicedTube<T>::primitive,
         SLICEDTUBE_T_SLICEDTUBE_T_PRIMITIVE_CONST)
+
+      .def("primitive", (SlicedTube<T> (SlicedTube<T>::*)(const T&) const) &SlicedTube<T>::primitive,
+        SLICEDTUBE_T_SLICEDTUBE_T_PRIMITIVE_CONST_T_REF_CONST,
+        "x0"_a)
       
     ;
   }

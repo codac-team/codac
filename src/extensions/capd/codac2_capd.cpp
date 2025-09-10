@@ -62,5 +62,23 @@ namespace codac2
     return y;
   }
 
+  SlicedTube<IntervalVector> to_codac(const codac2::SolutionCurveWrapper& solution_curve, const std::shared_ptr<TDomain>& tdomain)
+  {
+    assert_release(solution_curve.get_domain().size() >= 2);
+
+    SlicedTube codac_tube(tdomain, IntervalVector(solution_curve.dimension()));
+
+    for (const auto& t_slice: *tdomain)
+      if (t_slice.lb() >= solution_curve.t0() && t_slice.ub() <= solution_curve.tf())
+        codac_tube.set(to_codac(solution_curve(to_capd((Interval)t_slice))), t_slice);
+
+    codac_tube.set(to_codac(solution_curve(solution_curve.t0())), solution_curve.t0());
+    codac_tube.set(to_codac(solution_curve(solution_curve.tf())), solution_curve.tf());
+
+    for (size_t i = 1; i < solution_curve.get_domain().size() - 1; ++i) 
+      codac_tube.set(to_codac(solution_curve(solution_curve.get_domain()[i].rightBound())), solution_curve.get_domain()[i].rightBound());
+
+    return codac_tube;
+  }
 
 }

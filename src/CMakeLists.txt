@@ -14,10 +14,6 @@
     add_subdirectory(extensions/capd)
   endif()
 
-  #if(WITH_IBEX) # included by default for now
-    add_subdirectory(extensions/ibex)
-  #endif()
-
   #if(WITH_PYTHON)
   #  add_subdirectory(sympy)
   #endif()
@@ -119,28 +115,8 @@
 
   endif()
 
-  #if(WITH_IBEX) # included by default for now
-
-    file(APPEND ${CODAC_CMAKE_CONFIG_FILE} "
-
-  # Optional 3rd party:
-
-    find_package(IBEX REQUIRED)
-
-    find_path(CODAC_IBEX_INCLUDE_DIR ${PROJECT_NAME}-ibex.h
-              PATH_SUFFIXES include/${PROJECT_NAME}-ibex)
-    set(CODAC_INCLUDE_DIRS \${CODAC_INCLUDE_DIRS} \${CODAC_IBEX_INCLUDE_DIR})
-
-    find_library(CODAC_IBEX_LIBRARY NAMES ${PROJECT_NAME}-ibex
-                 PATH_SUFFIXES lib)
-                 
-    set(CODAC_LIBRARIES \${CODAC_LIBRARIES} \${CODAC_IBEX_LIBRARY} Ibex::ibex)
-    ")
-
-  #endif()
-
   file(APPEND ${CODAC_CMAKE_CONFIG_FILE} "
-    set(CODAC_LIBRARIES \${CODAC_LIBRARIES} \${CODAC_GRAPHICS_LIBRARY}  \${CODAC_CORE_LIBRARY})
+    set(CODAC_LIBRARIES \${CODAC_LIBRARIES} \${CODAC_GRAPHICS_LIBRARY} \${CODAC_CORE_LIBRARY})
     ")
 
 

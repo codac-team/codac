@@ -154,11 +154,37 @@ Intervals support a wide range of predicates:
 - ``is_empty()``: test if the interval is empty
 - ``is_degenerated()``: test if it’s of the form [a,a]
 - ``is_integer()``: test if it’s an integer singleton
+- ``has_integer_bounds()``: test if the bounds are integers
 - ``is_unbounded()``: test if any bound is infinite
 - ``contains(x)``: test if it contains a real number
 - ``intersects(y)``: test if it intersects with another interval
 - ``is_subset(y)``: test if it is a subset of another
 - ``is_strict_subset(y)``, ``is_interior_subset(y)``, *etc.*
+
+
+Advanced operations
+-------------------
+
+.. list-table:: Supported advanced methods for a given interval :math:`[x]`
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Method
+     - Description
+   * - ``inflate(rad)``
+     - Expands the interval by `±rad`
+   * - ``bisect([ratio])``
+     - Splits into two intervals at given ratio (default is 0.49)
+   * - ``complementary()``
+     - Computes complement :math:`\mathbb{R} \setminus [x]`
+   * - ``diff(y)``
+     - Computes set difference :math:`[x] \setminus [y]`
+   * - ``rand()``
+     - Returns a random sample within the interval
+   * - ``init()``
+     - Re-initializes to :math:`[-\infty,\infty]`
+   * - ``init_from_list(l)``
+     - Initializes using the hull of a list of values
 
 
 Interval arithmetic
@@ -192,31 +218,6 @@ All standard arithmetic operations are supported, both element-wise and with rea
     z = x - 1              % [1, 2]
     z = 2 * x              % [4, 6]
     z = x / y              % [1, 3]
-
-
-Advanced operations
--------------------
-
-.. list-table:: Supported advanced methods for a given interval :math:`[x]`
-   :widths: 30 70
-   :header-rows: 1
-
-   * - Method
-     - Description
-   * - ``inflate(rad)``
-     - Expands the interval by `±rad`
-   * - ``bisect([ratio])``
-     - Splits into two intervals at given ratio (default is 0.49)
-   * - ``complementary()``
-     - Computes complement :math:`\mathbb{R} \setminus [x]`
-   * - ``diff(y)``
-     - Computes set difference :math:`[x] \setminus [y]`
-   * - ``rand()``
-     - Returns a random sample within the interval
-   * - ``init()``
-     - Re-initializes to [-∞, ∞]
-   * - ``init_from_list(l)``
-     - Initializes using the hull of a list of values
 
 
 Unary and binary functions
@@ -299,4 +300,4 @@ These functions are useful in the context of interval arithmetic to tightly cont
 
 .. admonition:: Technical documentation
 
-  See the `C++ API documentation of this class <../../../api/html/classcodac2_1_1_interval.html>`_.
+  See the `C++ API documentation of this class <../../api/html/classcodac2_1_1_interval.html>`_.

@@ -325,7 +325,7 @@ User manual
    * :ref:`sec-graphics-3d`
 
 * :ref:`sec-tools`
-   * Serialization tools
+   * :ref:`sec-tools-serialization`
    * :ref:`sec-tools-registration`
 
 * Codac extensions

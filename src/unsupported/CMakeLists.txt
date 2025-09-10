@@ -25,7 +25,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/paver
     ${CMAKE_CURRENT_SOURCE_DIR}/styles
   )
-  target_link_libraries(${PROJECT_NAME}-unsupported PUBLIC ${PROJECT_NAME}-core Ibex::ibex Eigen3::Eigen)
+  target_link_libraries(${PROJECT_NAME}-unsupported PUBLIC ${PROJECT_NAME}-core Eigen3::Eigen)
   
 
 ################################################################################

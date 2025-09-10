@@ -8,6 +8,7 @@
  */
 
 #include <catch2/catch_test_macros.hpp>
+#include <ibex_Interval.h>
 #include <codac2_ibex.h>
 
 using namespace std;

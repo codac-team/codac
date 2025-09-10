@@ -9,6 +9,8 @@
 
 #pragma once
 
+#ifdef _IBEX_INTERVAL_H_ // only available if IBEX has been included beforehand
+
 #include <ibex_Interval.h>
 #include <ibex_Vector.h>
 #include <ibex_Matrix.h>
@@ -102,3 +104,7 @@ namespace codac2
    */
   codac2::IntervalMatrix to_codac(const ibex::IntervalMatrix& x);
 }
+
+#include "codac2_ibex_impl.h"
+
+#endif

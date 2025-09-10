@@ -80,4 +80,4 @@ Related content
 
 .. admonition:: Technical documentation
 
-  See the `C++ API documentation of this class <../../../api/html/classcodac2_1_1_ctc_polar.html>`_.
+  See the `C++ API documentation of this class <../../api/html/classcodac2_1_1_ctc_polar.html>`_.

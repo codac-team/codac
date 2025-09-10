@@ -15,7 +15,7 @@
 #include "codac2_IntervalVector.h"
 #include "codac2_CtcWrapper.h"
 #include "codac2_AnalyticFunction.h"
-
+#include "codac2_SampledTraj.h"
 
 namespace codac2
 {
@@ -51,11 +51,12 @@ namespace codac2
         return (a > 0) ? 1 : ((a < 0) ? -1 : 0);
       }
 
-      template<typename T>
-      Mat<T,-1,1> operator()(const Mat<T,-1,1>& x) const
+      template<typename Derived>
+        requires (Derived::ColsAtCompileTime == 1)
+      Mat<typename Derived::Scalar,-1,1> operator()(const Eigen::MatrixBase<Derived>& x) const
       {
         assert_release(x.size() == (Index)size());
-        Mat<T,-1,1> x_(size());
+        Mat<typename Derived::Scalar,-1,1> x_(x);
         for(size_t i = 0 ; i < size() ; i++)
           x_[i] = _sign((*this)[i])*x[std::abs((*this)[i])-1];
         return x_;
@@ -73,6 +74,15 @@ namespace codac2
 
       std::shared_ptr<SetExpr> operator()(const std::shared_ptr<SetExpr>& x1) const;
       // -> is defined in set operations file
+
+      template<typename T>
+      SampledTraj<T> operator()(const SampledTraj<T>& x) const
+      {
+        auto y = x;
+        for(auto& [ti,yi] : y)
+          yi = (*this)(yi);
+        return y;
+      }
 
       friend std::ostream& operator<<(std::ostream& str, const OctaSym& s)
       {

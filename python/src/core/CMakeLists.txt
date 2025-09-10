@@ -103,6 +103,7 @@
 
     tools/codac2_py_Approx.cpp
     tools/codac2_py_RobotSimulator.cpp
+    tools/codac2_py_serialization.cpp
     tools/codac2_py_transformations.cpp
 
     trajectory/codac2_py_AnalyticTraj.cpp

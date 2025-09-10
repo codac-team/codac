@@ -126,6 +126,12 @@ py::class_<Interval> export_Interval(py::module& m)
     .def("is_degenerated", &Interval::is_degenerated,
       BOOL_INTERVAL_IS_DEGENERATED_CONST)
 
+    .def("is_integer", &Interval::is_integer,
+      BOOL_INTERVAL_IS_INTEGER_CONST)
+
+    .def("has_integer_bounds", &Interval::has_integer_bounds,
+      BOOL_INTERVAL_HAS_INTEGER_BOUNDS_CONST)
+
     .def("intersects", &Interval::intersects,
       BOOL_INTERVAL_INTERSECTS_CONST_INTERVAL_REF_CONST,
       "x"_a)

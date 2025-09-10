@@ -50,6 +50,8 @@ namespace codac2
 
         else if constexpr(std::is_same_v<T,Interval>)
         {
+          if((x1.is_empty() && !x2._x.is_empty()) || (!x1.is_empty() && x2._x.is_empty()))
+            return false;
           return (x1.lb() == x2._x.lb() || x1.lb() == Approx<double>(x2._x.lb(),x2._eps))
               && (x1.ub() == x2._x.ub() || x1.ub() == Approx<double>(x2._x.ub(),x2._eps));
         }
