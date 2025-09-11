@@ -821,7 +821,7 @@ namespace codac2
        * \param x SlicedTube to draw
        * \param style Style of the tube
        */
-      static void draw_tube(const SlicedTube<IntervalVector>& x, const StyleProperties& style = StyleProperties())
+      static void draw_tube(const SlicedTube<IntervalVector>& x, const StyleProperties& style)
       {
         auto_init();
         selected_fig()->draw_tube(x,style);
@@ -833,7 +833,7 @@ namespace codac2
        * \param x SlicedTube to draw
        * \param cmap Colormap to use
        */
-      static void draw_tube(const SlicedTube<IntervalVector>& x, const ColorMap& cmap)
+      static void draw_tube(const SlicedTube<IntervalVector>& x, const ColorMap& cmap = ColorMap::blue_tube())
       {
         auto_init();
         selected_fig()->draw_tube(x,cmap);

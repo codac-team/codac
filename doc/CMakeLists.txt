@@ -32,7 +32,7 @@
         set(NULL_DEST "/dev/null")
       endif()
 
-      message(STATUS "Building API Documentation (mandatory for Python binding)")
+      message(STATUS "Building API Documentation (mandatory for Python binding or for building the manual)")
       execute_process(COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} OUTPUT_QUIET)
       add_custom_target(api COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} OUTPUT_QUIET)
 

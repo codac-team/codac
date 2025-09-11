@@ -109,5 +109,14 @@ class TestSampledTraj(unittest.TestCase):
       self.assertTrue(Approx(h.real_eval(t_),1e-8) == Vector([2*math.cos(t_),math.sin(2*t_)]))
       t_=t_+1e-2
 
+    # SampledTraj (nan case)
+
+    x = SampledVectorTraj()
+    x.set(Vector([0,0]),0.)
+    x.set(Vector([2,2]),2.)
+    self.assertTrue(x(1.) == Vector([1,1]))
+    x.set(Vector([0,float("nan")]),0.)
+    self.assertTrue(x(1.).is_nan())
+
 if __name__ ==  '__main__':
   unittest.main()

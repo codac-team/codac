@@ -76,6 +76,8 @@ void export_Color(py::module& m)
     // Predefined colors
 
     .def_static("none", &Color::none)
+    .def_static("random", &Color::random)
+
     .def_static("black", &Color::black, "alpha"_a=1)
     .def_static("white", &Color::white, "alpha"_a=1)
 

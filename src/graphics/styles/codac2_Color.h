@@ -152,7 +152,23 @@ namespace codac2
       /**
        * \brief Empty color (transparent white)
        */
-      static Color none() { return Color({255,255,255, 0.}); };
+      static Color none()
+      {
+        return Color({255,255,255, 0.});
+      };
+
+      /**
+       * \brief Random color (full opacity)
+       */
+      static Color random()
+      {
+        return Color({(float)Interval(0,360).rand(),100,100}, Model::HSV);
+      };
+
+      #define DEFINE_COLOR(NAME, R, G, B) \
+        static Color NAME(float alpha = 1.) { \
+            return Color({(float)(R), (float)(G), (float)(B), (float)(alpha * 255.)}); \
+        }
 
       #define DEFINE_COLOR(NAME, R, G, B) \
         static Color NAME(float alpha = 1.) { \

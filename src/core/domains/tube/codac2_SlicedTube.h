@@ -373,10 +373,16 @@ namespace codac2
 
       inline SlicedTube<T> primitive() const
       {
+        auto x0 = all_reals_codomain();
+        x0.init(0.);
+        return primitive(x0);
+      }
+
+      inline SlicedTube<T> primitive(const T& x0) const
+      {
         auto x = all_reals_codomain();
         auto p = SlicedTube<T>(this->tdomain(), x);
-        x.init(0.);
-        p.set(x, this->tdomain()->t0_tf().lb()); // may create an unwanted gate
+        p.set(x0, this->tdomain()->t0_tf().lb()); // may create an unwanted gate
         CtcDeriv c;
         c.contract(p,*this);
         return p;

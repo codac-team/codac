@@ -35,13 +35,18 @@ endif()
   #endif()
 
   add_library(${PROJECT_NAME}-unsupported ${CODAC_UNSUPPORTED_SRC})
-
-  target_link_libraries(${PROJECT_NAME}-unsupported PUBLIC ${CODAC_LIBRARIES} Ibex::ibex Eigen3::Eigen)
-
+  target_include_directories(${PROJECT_NAME}-unsupported PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/ipe
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/vibes
+    ${CMAKE_CURRENT_SOURCE_DIR}/figures
+    ${CMAKE_CURRENT_SOURCE_DIR}/paver
+    ${CMAKE_CURRENT_SOURCE_DIR}/styles
+  )
+  target_link_libraries(${PROJECT_NAME}-unsupported PUBLIC ${PROJECT_NAME}-core Eigen3::Eigen)
+  
   if (WITH_CAPD)
     target_include_directories(${PROJECT_NAME}-unsupported PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../extensions/capd)
   endif()
-  
 
 ################################################################################
 # For the generation of the PKG file

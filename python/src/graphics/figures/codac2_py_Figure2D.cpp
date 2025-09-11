@@ -417,7 +417,7 @@ void export_Figure2D(py::module& m)
           DefaultFigure::draw_tube(cast<SlicedTube<IntervalVector>>(x), cmap);
         },
       STATIC_VOID_DEFAULTFIGURE_DRAW_TUBE_CONST_SLICEDTUBE_INTERVALVECTOR_REF_CONST_COLORMAP_REF,
-      "x"_a, "cmap"_a)
+      "x"_a, "cmap"_a=ColorMap::blue_tube())
 
     // Robots
 

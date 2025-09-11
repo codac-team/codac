@@ -34,6 +34,8 @@ void export_IntervalVector_(py::module& m, py::class_<IV>& pyclass)
 
   pyclass
 
+    .def(py::init<>())
+
     .def(py::init(
         [](Index_type n)
         {

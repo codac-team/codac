@@ -143,6 +143,9 @@ void export_IntervalMatrixBase(py::module& m, py::class_<S>& pyclass)
     .def("is_bisectable", [](const S& x) { return x.is_bisectable(); },
       MATRIXBASE_ADDONS_INTERVALMATRIXBASE_BOOL_IS_BISECTABLE_CONST)
 
+    .def("has_integer_bounds", [](const S& x) { return x.has_integer_bounds(); },
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_BOOL_HAS_INTEGER_BOUNDS_CONST)
+
     .def("inflate", [](S& x, double r) { return x.inflate(r); },
       MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_REF_INFLATE_DOUBLE,
       "r"_a)
