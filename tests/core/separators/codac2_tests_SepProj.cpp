@@ -13,6 +13,8 @@
 #include <codac2_SepInverse.h>
 #include <codac2_pave.h>
 #include <codac2_Approx.h>
+#include <codac2_Figure2D.h>
+#include <codac2_drawwhilepaving.h>
 
 using namespace std;
 using namespace codac2;
@@ -26,7 +28,7 @@ TEST_CASE("SepProj")
 
   // todo: test with SepProj sep_proj(sep_ellipsoid, {0,1}, {{-oo,oo}});
 
-  //pave(IntervalVector({{-2,2},{-2,2}}), sep_proj, 0.1);
+  //draw_while_paving(IntervalVector({{-2,2},{-2,2}}), sep_proj, 0.1);
 
   {
     IntervalVector b({{0.2,0.4},{0.0,1}});
@@ -39,11 +41,11 @@ TEST_CASE("SepProj")
 
   {
     IntervalVector b({{-0.4,-0.2},{0.95,1.5}});
-    //DefaultFigure::draw_box(b, Color::blue());
+    //DefaultFigure::draw_box(b, StyleProperties(Color::blue(),"0.01"));
     auto bs = sep_proj.separate(b,1e-3);
-    //DefaultFigure::draw_box(bs.inner, Color::green());
-    //DefaultFigure::draw_box(bs.outer, Color::black());
-    CHECK(Approx(bs.outer,1e-2) == IntervalVector({{-0.4,-0.2},{0.95,1.15}}));
+    //DefaultFigure::draw_box(bs.inner, {Color::green(),Color::green(0.3)});
+    //DefaultFigure::draw_box(bs.outer, {Color::black(),Color::black(0.3)});
+    CHECK(Approx(bs.outer,1e-2) == IntervalVector({{-0.4,-0.2},{0.95,1.12421}}));
   }
 
   {

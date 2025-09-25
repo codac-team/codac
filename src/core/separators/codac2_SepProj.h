@@ -36,7 +36,7 @@ namespace codac2
         assert_release(*min_element(_xi.begin(),_xi.end()) >= 0);
         assert_release(*max_element(_xi.begin(),_xi.end()) < size_of(s));
         assert_release(size_of(s) >= (Index)_xi.size() && "cannot compute a projection of a set into a superset");
-        assert_release(y.is_bisectable());
+        assert_release(y.size() == 0 /* set projected onto itself */ || y.is_bisectable());
         assert_release(default_eps > 0.);
       }
       

@@ -41,20 +41,19 @@ namespace codac2
     public:
 
       SepWrapper(const IntervalVector& y)
-        : SepCtcPair(complementary_union(y), CtcWrapper<IntervalVector>(y))
+        : SepCtcPair([y]()
+              {
+                // Inner contractor:
+                CtcUnion<IntervalVector> cu(y.size());
+                for(const auto& complem_y : y.complementary())
+                  cu |= CtcWrapper<IntervalVector>(complem_y);
+                return cu;
+              }(),
+            CtcWrapper<IntervalVector>(y))
       { }
 
       BoxPair separate(const IntervalVector& x) const;
-
-    protected:
-
-      CtcUnion<IntervalVector> complementary_union(const IntervalVector& y) const
-      {
-        CtcUnion<IntervalVector> cu(y.size());
-        for(const auto& complem_y : y.complementary())
-          cu |= CtcWrapper<IntervalVector>(complem_y);
-        return cu;
-      }
+      // ^ is referenced here for Doxygen purpose
   };
 
   template<>

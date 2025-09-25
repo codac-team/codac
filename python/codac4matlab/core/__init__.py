@@ -257,6 +257,15 @@ def hull(*args):
     elif isinstance(arg, (IntervalMatrix)):
       mode = 1
       lst.append(arg)
+    elif isinstance(arg, (list)):
+      if(isinstance(arg[0], (IntervalVector))):
+        return hull_intervalvector(arg)
+      elif(isinstance(arg[0], (IntervalMatrix))):
+        return hull_intervalmatrix(arg)
+      else:
+        codac_error("hull: invalid input arguments")
+    else:
+      codac_error("hull: invalid input arguments")
 
   if mode == 0:
     return hull_intervalvector(lst)

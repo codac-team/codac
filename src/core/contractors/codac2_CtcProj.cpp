@@ -23,6 +23,12 @@ namespace codac2
   {
     assert_release(eps > 0.);
     assert_release(x.size() == this->size());
+
+    if(_y.size() == 0) // the set is projected onto itself
+    {
+      _ctc.front()->contract(x);
+      return;
+    }
     
     list<IntervalVector> l_stack { cart_prod_xy(x,_y) };
     x.set_empty();

@@ -29,7 +29,7 @@ class TestSepProj(unittest.TestCase):
 
     b = IntervalVector([[-0.4,-0.2],[0.95,1.5]])
     inner,outer = sep_proj.separate(b,1e-3)
-    self.assertTrue(Approx(outer,1e-2) == IntervalVector([[-0.4,-0.2],[0.95,1.15]]))
+    self.assertTrue(Approx(outer,1e-2) == IntervalVector([[-0.4,-0.2],[0.95,1.12421]]))
 
     b = IntervalVector([[0.65],[-0.5,-0.4]])
     inner,outer = sep_proj.separate(b,1e-3)

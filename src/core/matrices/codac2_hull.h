@@ -24,4 +24,13 @@ namespace codac2
     else
       return x1.template cast<Interval>();
   }
+
+  template<typename X>
+  inline Wrapper<X>::Domain hull(const std::list<X>& l)
+  {
+    auto h = l.front().template cast<Interval>();
+    for(const auto& li : l)
+      h |= li;
+    return h;
+  }
 }
