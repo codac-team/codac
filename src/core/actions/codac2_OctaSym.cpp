@@ -41,7 +41,7 @@ OctaSym OctaSym::operator*(const OctaSym& s) const
   assert_release(size() == s.size());
   OctaSym a(*this);
   for(size_t i = 0 ; i < a.size() ; i++)
-    a[i] = _sign(s[i])*(*this)[std::abs((int)s[i])-1];
+    a[i] = sign(s[i])*(*this)[std::abs((int)s[i])-1];
   return a;
 }
 
@@ -49,6 +49,6 @@ Matrix OctaSym::permutation_matrix() const
 { 
   Matrix m = Matrix::zero(size(),size());
   for(size_t i = 0 ; i < size() ; i++)
-    m(i,std::abs((*this)[i])-1) = _sign((*this)[i]);
+    m(i,std::abs((*this)[i])-1) = sign((*this)[i]);
   return m;
 }

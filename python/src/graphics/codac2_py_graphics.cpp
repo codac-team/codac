@@ -18,12 +18,10 @@ namespace py = pybind11;
 void export_Figure2D(py::module& m);
 void export_Figure3D(py::module& m);
 
-// paver
-void export_drawwhilepaving(py::module& m);
-
 // styles
 void export_Color(py::module& m);
 void export_ColorMap(py::module& m);
+void export_PavingStyle(py::module& m);
 void export_StyleProperties(py::module& m);
 
 
@@ -34,12 +32,10 @@ PYBIND11_MODULE(_graphics, m)
   // styles
   export_Color(m);
   export_ColorMap(m);
+  export_PavingStyle(m);
   export_StyleProperties(m);
 
   // figures
   export_Figure2D(m);
   export_Figure3D(m);
-
-  // paver
-  export_drawwhilepaving(m);
 }

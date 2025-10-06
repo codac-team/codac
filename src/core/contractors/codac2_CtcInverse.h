@@ -142,7 +142,10 @@ namespace codac2
     CtcInverse(const AnalyticFunction<ScalarType>&, std::initializer_list<Y>, bool = true, bool = false) -> 
       CtcInverse<Interval,IntervalVector>;
 
-    CtcInverse(const AnalyticFunction<VectorType>&, const Interval&, bool = true, bool = false) -> 
+    CtcInverse(const AnalyticFunction<ScalarType>&, const Interval&, bool = true, bool = false) -> 
+      CtcInverse<Interval,IntervalVector>;
+
+    CtcInverse(const AnalyticFunction<ScalarType>&, double, bool = true, bool = false) -> 
       CtcInverse<Interval,IntervalVector>;
 
     template<typename C>
@@ -184,7 +187,7 @@ namespace codac2
 
     template<typename OtherDerived>
       requires (OtherDerived::RowsAtCompileTime == -1 && OtherDerived::ColsAtCompileTime == -1)
-    CtcInverse(const AnalyticFunction<VectorType>&, const Eigen::MatrixBase<OtherDerived>&, bool = true, bool = false) -> 
+    CtcInverse(const AnalyticFunction<MatrixType>&, const Eigen::MatrixBase<OtherDerived>&, bool = true, bool = false) -> 
       CtcInverse<IntervalMatrix,IntervalVector>;
 
     template<typename C>

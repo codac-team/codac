@@ -13,6 +13,8 @@
 #include <codac2_IntervalVector.h>
 #include <codac2_SlicedTube.h>
 #include <codac2_Approx.h>
+#include <codac2_AnalyticTraj.h>
+#include <codac2_SampledTraj.h>
 
 using namespace std;
 using namespace codac2;
@@ -406,5 +408,55 @@ TEST_CASE("SlicedTube")
     CHECK(x({45.5,46}) == Interval(-1,3));
     CHECK(x(45.8) == Interval(-1,3));
     CHECK(x(45.2) == Interval(-1,3));
+  }
+
+  SECTION("SlicedTube as operator (1d case)")
+  {
+    ScalarVar t;
+    AnalyticFunction f { {t}, cos(t) };
+    AnalyticTraj analytic_traj(f, {-PI,PI});
+    auto sampled_traj = analytic_traj.sampled(1e-2);
+    auto tdomain = create_tdomain({-PI,PI},1e-2);
+    SlicedTube<Interval> tube(tdomain, sampled_traj);
+    auto g = tube.as_function();
+
+    AnalyticFunction h { {t}, g(t) };
+
+    for(double t_ = -PI ; t_ < PI ; t_+=1e-2)
+      CHECK(Approx(h.real_eval(t_),1e-4) == cos(t_));
+  }
+
+  SECTION("SlicedTube as operator (nd case)")
+  {
+    ScalarVar t;
+    AnalyticFunction f {
+      {t},
+      vec(2*cos(t),sin(2*t))
+    };
+
+    auto analytic_traj = AnalyticTraj(f, {0,5});
+    auto sampled_traj = analytic_traj.sampled(1e-2);
+    auto tdomain = create_tdomain({0,5},1e-3);
+    SlicedTube<IntervalVector> tube(tdomain, sampled_traj);
+    auto g = tube.as_function();
+
+    {
+      AnalyticFunction h {
+        {t},
+        g(t)
+      };
+
+      for(double t_ = 0 ; t_ < 5 ; t_+=1e-2)
+        CHECK(Approx(h.eval(t_),1e-2) == IntervalVector({2*cos(t_),sin(2*t_)}));
+    }
+    {
+      AnalyticFunction h {
+        {t},
+        { g(t)[0],g(t)[1] }
+      };
+
+      for(double t_ = 0 ; t_ < 5 ; t_+=1e-2)
+        CHECK(Approx(h.eval(t_),1e-2) == IntervalVector({2*cos(t_),sin(2*t_)}));
+    }
   }
 }

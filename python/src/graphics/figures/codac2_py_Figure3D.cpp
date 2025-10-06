@@ -61,12 +61,12 @@ void export_Figure3D(py::module& m)
       "x"_a, "style"_a=StyleProperties())
 
     .def("draw_parallelepiped", &Figure3D::draw_parallelepiped,
-      VOID_FIGURE3D_DRAW_PARALLELEPIPED_CONST_VECTOR_REF_CONST_MATRIX_REF_CONST_STYLEPROPERTIES_REF,
-      "z"_a, "A"_a, "style"_a=StyleProperties())
+      VOID_FIGURE3D_DRAW_PARALLELEPIPED_CONST_PARALLELEPIPED_REF_CONST_STYLEPROPERTIES_REF,
+      "p"_a, "style"_a=StyleProperties())
 
     .def("draw_zonotope", &Figure3D::draw_zonotope,
-      VOID_FIGURE3D_DRAW_ZONOTOPE_CONST_VECTOR_REF_CONST_VECTOR_VECTOR_REF_CONST_STYLEPROPERTIES_REF, 
-      "z"_a, "A"_a, "style"_a=StyleProperties())
+      VOID_FIGURE3D_DRAW_ZONOTOPE_CONST_ZONOTOPE_REF_CONST_STYLEPROPERTIES_REF, 
+      "z"_a, "style"_a=StyleProperties())
 
     .def("draw_arrow", &Figure3D::draw_arrow,
       VOID_FIGURE3D_DRAW_ARROW_CONST_VECTOR_REF_CONST_MATRIX_REF_CONST_STYLEPROPERTIES_REF,

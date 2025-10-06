@@ -14,10 +14,12 @@
 #include "codac2_py_Ctc.h"
 #include "codac2_py_Sep.h"
 #include <codac2_OctaSym.h>
+#include <codac2_OctaSym_operator.h>
 #include <codac2_template_tools.h>
 #include <codac2_CtcAction.h>
 #include <codac2_SepAction.h>
 #include "codac2_py_OctaSym_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include "codac2_py_cast.h"
 
 using namespace std;
 using namespace codac2;
@@ -73,6 +75,10 @@ void export_OctaSym(py::module& m)
 
     .def("__call__", [](const OctaSym& a, const SampledTraj<Vector>& x) { return a(x); },
       SAMPLEDTRAJ_T_OCTASYM_OPERATORCALL_CONST_SAMPLEDTRAJ_T_REF_CONST,
+      "x"_a)
+
+    .def("__call__", [](const OctaSym& a, const VectorExpr& x) { return a.operator()(x); },
+      VECTOREXPR_OCTASYM_OPERATORCALL_CONST_V_REF_CONST,
       "x"_a)
 
     .def("__repr__", [](const OctaSym& s) {

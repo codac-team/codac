@@ -44,6 +44,7 @@ namespace codac2
     }
   };
 
+  // todo: merge this code with SlicedTube_operator
   template<typename TR, typename T, typename S>
   class AnalyticOperationExpr<TrajectoryOp<TR>,T,S>
     : public AnalyticExpr<typename TR::Type>, public OperationExprBase<AnalyticExpr<ScalarType>>

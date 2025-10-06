@@ -19,7 +19,7 @@ f = AnalyticFunction([x], sqrt(sqr(x[0])+sqr(x[1])))
 s = SepInverse(f, [2,4])
 
 a = MySep(s) & MySep(SepWrapper_IntervalVector([[-1.5,1.5],[-0.25,0.25]]))
-draw_while_paving([[-5,5],[-5,5]], a, 0.1)
+DefaultFigure.pave([[-5,5],[-5,5]], a, 0.1)
 
 
 # Example of paving structure and extraction of connected subsets

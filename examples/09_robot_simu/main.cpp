@@ -4,12 +4,12 @@ using namespace codac2;
 int main()
 {
   std::list<Vector> wpts {
-    {0,0}, {2,1}, {4,0},
-    {6,2}, {8,0}, {6,2}
+    {2,1}, {4,0}, {6,2}, {8,0}, {6,2}
   };
 
   RobotSimulator s;
-  auto x = s.simulate({0,0,0,0}, 1e-2, wpts);
+  SampledTraj<Vector> u;
+  auto x = s.simulate({0,0,0,0}, 1e-2, wpts, u);
 
   Figure2D g("Robot simulation", GraphicOutput::VIBES);
 

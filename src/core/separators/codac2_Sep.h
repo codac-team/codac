@@ -102,4 +102,14 @@ namespace codac2
   template<typename S>
     requires (IsSepBaseOrPtr<S>)
   struct is_sep<S> : std::true_type {};
+  
+  template<typename S>
+    requires IsSepBaseOrPtr<S>
+  const SepBase& sep(const S& s)
+  {
+    if constexpr(std::is_base_of_v<SepBase,S>)
+      return s;
+    else
+      return *s;
+  }
 }

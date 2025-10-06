@@ -532,6 +532,9 @@ class SlicedTube:
 
   def primitive(self):
     return self.tube.primitive()
+    
+  def as_function(self):
+    return AnalyticFunction(self.tube.as_function())
 
 
 def fixpoint(contract, *x):
@@ -561,3 +564,10 @@ def fixpoint(contract, *x):
           vol += w
 
   return x
+
+
+# Deprecated function draw_while_paving(..)
+draw_while_paving = lambda *args, **kwargs: (_ for _ in ()).throw(
+    NotImplementedError("draw_while_paving(..) is deprecated,\n \
+      please replace by DefaultFigure.pave(..) (or any Figure2D object)")
+)

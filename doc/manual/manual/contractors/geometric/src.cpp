@@ -14,8 +14,8 @@
 #include <codac2_Approx.h>
 #include <codac2_cart_prod.h>
 #include <codac2_CtcInter.h>
-#include <codac2_drawwhilepaving.h>
 #include <codac2_math.h>
+#include <codac2_Figure2D.h>
 
 using namespace std;
 using namespace codac2;
@@ -53,7 +53,7 @@ TEST_CASE("CtcDist - manual")
     if(false) // graphic outputs is disabled for tests
     {
       // [ctcdist-4-beg]
-      draw_while_paving( // calling a paver algorithm for graphic output
+      DefaultFigure::pave( // calling a paver algorithm for graphic output
         {{-3,5},{-2.5,5.5}}, // initial 2d box
         c1 & c2, // intersection of the two projected contractors
         0.1 // paver precision

@@ -49,6 +49,8 @@
     domains/paving/codac2_py_Paving.cpp
     domains/paving/codac2_py_PavingNode.cpp
     domains/paving/codac2_py_Subpaving.cpp
+    domains/zonotope/codac2_py_Parallelepiped.cpp
+    domains/zonotope/codac2_py_Zonotope.cpp
     domains/tube/codac2_py_Slice.h
     domains/tube/codac2_py_SlicedTube.h
     domains/tube/codac2_py_TDomain.cpp
@@ -87,6 +89,7 @@
     separators/codac2_py_Sep.cpp
     separators/codac2_py_Sep.h
     separators/codac2_py_SepAction.cpp
+    separators/codac2_py_SepCartPolar.cpp
     separators/codac2_py_SepCartProd.cpp
     separators/codac2_py_SepChi.cpp
     separators/codac2_py_SepCross.cpp
@@ -121,6 +124,7 @@
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/zonotope/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/functions/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/

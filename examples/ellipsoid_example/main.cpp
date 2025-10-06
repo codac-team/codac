@@ -1,4 +1,5 @@
 #include <codac>
+#include <limits>
 
 using namespace std;
 using namespace codac2;
@@ -142,7 +143,7 @@ int main() {
 
     // get the eigenvector of D associated with the minimum eigenvalue (negative real part)
     Eigen::VectorXd v;
-    double min_eigenvalue = FLT_MAX ;
+    double min_eigenvalue = std::numeric_limits<double>::max();
     for (int i = 0; i < eigenvalues.size(); i++){
         if (eigenvalues(i) < min_eigenvalue){
             min_eigenvalue = eigenvalues(i);

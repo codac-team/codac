@@ -300,5 +300,70 @@ class TestSlicedTube(unittest.TestCase):
     self.assertTrue(Approx(tdomain.tslice(2.)) == Interval(1.900000000000001, 2.000000000000002))
     self.assertTrue(Approx(a(Interval(1,2)),1e-4) == Interval(-2.17496, 7.13757))
 
+  def test_specific_detected_bug_from_sampling(self):
+
+    tdomain = create_tdomain([0.,46.], 0.5)
+    x = SlicedTube(tdomain, Interval())
+    tdomain.sample(46, False)
+    x.set([-1,3], [30,31])
+    self.assertTrue(x([30,31]) == Interval(-1,3))
+    x.set([-1,3], [45,46])
+    self.assertTrue(x([45,46]) == Interval(-1,3))
+    self.assertTrue(x([45.5,46]) == Interval(-1,3))
+    self.assertTrue(x(45.8) == Interval(-1,3))
+    self.assertTrue(x(45.2) == Interval(-1,3))
+
+  def test_SlicedTube_as_operator_1dcase(self):
+
+    t = ScalarVar()
+    f = AnalyticFunction([t], cos(t))
+    analytic_traj = AnalyticTraj(f, [-PI,PI])
+    sampled_traj = analytic_traj.sampled(1e-2)
+    tdomain = create_tdomain([-PI,PI],1e-2)
+    tube = SlicedTube(tdomain, sampled_traj)
+    g = tube.as_function();
+
+    h = AnalyticFunction([t], g(t))
+
+    t_ = -math.pi
+    while t_ < math.pi:
+      self.assertTrue(Approx(h.real_eval(t_),1e-4) == math.cos(t_))
+      t_=t_+1e-2
+
+  def test_SlicedTube_as_operator_ndcase(self):
+
+    t = ScalarVar()
+    f = AnalyticFunction(
+      [t],
+      vec(2*cos(t),sin(2*t))
+    )
+
+    analytic_traj = AnalyticTraj(f, [0,5])
+    sampled_traj = analytic_traj.sampled(1e-2)
+    tdomain = create_tdomain([0,5],1e-3)
+    tube = SlicedTube(tdomain, sampled_traj)
+    g = tube.as_function()
+
+    h = AnalyticFunction(
+      [t],
+      g(t)
+    )
+
+    t_ = 0
+    while t_ < 5:
+      self.assertTrue(Approx(h.eval(t_),1e-2) == IntervalVector([2*math.cos(t_),math.sin(2*t_)]))
+      t_=t_+1e-2
+
+    h = AnalyticFunction(
+      [t],
+      [ g(t)[0],g(t)[1] ]
+    )
+
+    t_ = 0
+    while t_ < 5:
+      self.assertTrue(Approx(h.eval(t_),1e-2) == IntervalVector([2*math.cos(t_),math.sin(2*t_)]))
+      t_=t_+1e-2
+
+
 if __name__ ==  '__main__':
   unittest.main()

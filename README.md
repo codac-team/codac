@@ -35,7 +35,7 @@ f = AnalyticFunction([x], [
 ])
 
 ctc = CtcInverse(f, [0,0])
-draw_while_paving([[0,2],[2,4],[0,10]], ctc, 0.004)
+DefaultFigure.pave([[0,2],[2,4],[0,10]], ctc, 0.004)
 ```
 
 The result is a set of non-overlapping boxes containing the set of feasible solutions. The following figure shows a projection of the computed set.
@@ -59,7 +59,7 @@ $$
 x = VectorVar(2)
 f = AnalyticFunction([x], x[0]*cos(x[0]-x[1])+x[1])
 sep = SepInverse(f, [-oo,0])
-draw_while_paving([[-10,10],[-10,10]], sep, 0.004)
+DefaultFigure.pave([[-10,10],[-10,10]], sep, 0.004)
 ```
 
 <img src="./doc/manual/manual/example_ineq.png" width="400px" />

@@ -30,9 +30,11 @@ namespace codac2
 
   constexpr double PI = std::numbers::pi; // Need C++20
 
-  inline int sign(double x)
+  template<typename T>
+  requires std::is_arithmetic_v<T>
+  inline constexpr int sign(T x)
   {
-    return (x > 0) ? 1 : ((x < 0) ? -1 : 0);
+    return (x > T(0)) - (x < T(0));
   }
 
   inline int integer(double x)

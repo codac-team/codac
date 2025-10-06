@@ -13,19 +13,21 @@
 
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_Figure2D.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_Figure2D.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_Figure2D_pave.h
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_Figure2DInterface.h
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_OutputFigure2D.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_OutputFigure2D.h
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_Figure3D.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_Figure3D.h
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_drawwhilepaving.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_drawwhilepaving.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_drawwhilepaving.h # deprecated, to be removed
 
     ${CMAKE_CURRENT_SOURCE_DIR}/styles/codac2_Color.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/styles/codac2_Color.h
     ${CMAKE_CURRENT_SOURCE_DIR}/styles/codac2_ColorMap.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/styles/codac2_ColorMap.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/styles/codac2_PavingStyle.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/styles/codac2_PavingStyle.h
     ${CMAKE_CURRENT_SOURCE_DIR}/styles/codac2_StyleProperties.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/styles/codac2_StyleProperties.h
   )
@@ -44,7 +46,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/ipe
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/vibes
     ${CMAKE_CURRENT_SOURCE_DIR}/figures
-    ${CMAKE_CURRENT_SOURCE_DIR}/paver
+    ${CMAKE_CURRENT_SOURCE_DIR}/paver # deprecated, to be removed
     ${CMAKE_CURRENT_SOURCE_DIR}/styles
   )
   target_link_libraries(${PROJECT_NAME}-graphics PUBLIC ${PROJECT_NAME}-core Ibex::ibex Eigen3::Eigen ${PROJECT_NAME}-core)

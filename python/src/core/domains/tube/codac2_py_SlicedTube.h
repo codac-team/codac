@@ -137,6 +137,9 @@ void export_SlicedTube(py::module& m, const std::string& name)
       SLICEDTUBE_SLICEDTUBE_T_OPERATORANDEQ_CONST_SLICEDTUBE_REF,
       "x"_a)
 
+    .def("as_function", &SlicedTube<T>::as_function,
+      ANALYTICFUNCTION_TYPENAME_EXPRTYPE_T_TYPE_SLICEDTUBE_T_AS_FUNCTION_CONST)
+
     .def("__repr__", [](const SlicedTube<T>& x) {
           std::ostringstream stream;
           stream << x;

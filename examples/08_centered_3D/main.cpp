@@ -37,11 +37,11 @@ int main()
         } else {
            IntervalVector cent = f.eval(T.mid());
 	   Vector inflationbox = cent.rad() + df.rad()*T.rad();
-           std::vector<Vector> v
-              { (T[0].rad()*df.col(0).mid()), (T[1].rad()*df.col(1).mid()),
-              { inflationbox[0], 0.0, 0.0 }, { 0.0, inflationbox[1], 0.0 },
-	      { 0.0, 0.0, inflationbox[2] } };
-           fig_zon.draw_zonotope(cent.mid(),v,Color::red(0.3));
+           Matrix v (3,5);
+            v << (T[0].rad()*df.col(0).mid()), (T[1].rad()*df.col(1).mid()),
+                  Vector({ inflationbox[0], 0.0, 0.0 }),Vector({ 0.0, inflationbox[1], 0.0 }),
+                  Vector({ 0.0, 0.0, inflationbox[2] });
+           fig_zon.draw_zonotope({cent.mid(),v},Color::red(0.3));
         }
         psi=psi+dpsi;
       }

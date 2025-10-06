@@ -14,7 +14,6 @@
 #include <codac2_pave.h>
 #include <codac2_Approx.h>
 #include <codac2_Figure2D.h>
-#include <codac2_drawwhilepaving.h>
 
 using namespace std;
 using namespace codac2;
@@ -28,7 +27,7 @@ TEST_CASE("SepProj")
 
   // todo: test with SepProj sep_proj(sep_ellipsoid, {0,1}, {{-oo,oo}});
 
-  //draw_while_paving(IntervalVector({{-2,2},{-2,2}}), sep_proj, 0.1);
+  //DefaultFigure::pave(IntervalVector({{-2,2},{-2,2}}), sep_proj, 0.1);
 
   {
     IntervalVector b({{0.2,0.4},{0.0,1}});

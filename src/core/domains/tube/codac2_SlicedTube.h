@@ -14,6 +14,7 @@
 #include "codac2_SlicedTubeBase.h"
 #include "codac2_AnalyticFunction.h"
 #include "codac2_CtcDeriv.h"
+#include "codac2_Tube_operator.h"
 
 namespace codac2
 {
@@ -83,6 +84,14 @@ namespace codac2
       inline Index size() const
       {
         return first_slice()->size();
+      }
+
+      virtual std::pair<Index,Index> shape() const
+      {
+        if constexpr(std::is_same_v<typename ExprType<T>::Type,ScalarType>)
+          return {1,1};
+        else
+          return {first_slice()->codomain().rows(),first_slice()->codomain().cols()};
       }
 
       inline double volume() const
@@ -362,6 +371,16 @@ namespace codac2
            << " slice" << (x.nb_slices() > 1 ? "s" : "")
            << std::flush;
         return os;
+      }
+
+      AnalyticFunction<typename ExprType<T>::Type> as_function() const
+      {
+        ScalarVar t;
+        return {{t},
+          AnalyticExprWrapper<typename ExprType<T>::Type>(
+            std::make_shared<AnalyticOperationExpr<
+              TubeOp<SlicedTube<T>>,typename ExprType<T>::Type,ScalarType>>(*this,t))
+        };
       }
 
       // Integral related methods

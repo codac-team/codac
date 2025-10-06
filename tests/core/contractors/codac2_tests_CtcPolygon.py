@@ -44,7 +44,7 @@ class TestCtcPolygon(unittest.TestCase):
       [[-3,-3], [-2,3]]
     ])
 
-    #draw_while_paving(IntervalVector([[-10,10],[-10,10]]), c, 0.1)
+    #DefaultFigure.pave(IntervalVector([[-10,10],[-10,10]]), c, 0.1)
 
     # Check a box inside the hole
 

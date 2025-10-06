@@ -26,7 +26,7 @@ class TestSepCtcBoundary(unittest.TestCase):
       | CtcSegment([[1],[0]], [[0],[1]]) | CtcSegment([[0],[1]], [[-1],[0]])
 
     sep_diamond = SepCtcBoundary(ctc_bound_diamond,test_inside_diamond)
-    #draw_while_paving(IntervalVector([[-2,2],[-2,2]]), sep_diamond, 0.1)
+    #DefaultFigure.pave(IntervalVector([[-2,2],[-2,2]]), sep_diamond, 0.1)
 
     x = IntervalVector(2)
     inner,outer = sep_diamond.separate(IntervalVector(2))

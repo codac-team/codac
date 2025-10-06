@@ -26,7 +26,7 @@ class TestCtcCtcBoundary(unittest.TestCase):
       | CtcSegment([[1],[0]], [[0],[1]]) | CtcSegment([[0],[1]], [[-1],[0]])
 
     ctc_diamond = CtcCtcBoundary(ctc_bound_diamond,test_inside_diamond)
-    #draw_while_paving(IntervalVector([[-2,2],[-2,2]]), ctc_diamond, 0.1)
+    #DefaultFigure.pave(IntervalVector([[-2,2],[-2,2]]), ctc_diamond, 0.1)
 
     x = IntervalVector(2)
     ctc_diamond.contract(x)

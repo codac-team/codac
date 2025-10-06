@@ -42,7 +42,7 @@ The solution set is approximated from an initial box :math:`[\mathbf{x}_0]=[0,2]
    ])
    
    ctc = CtcInverse(f, [0,0])
-   draw_while_paving([[0,2],[2,4],[0,10]], ctc, 0.004)
+   DefaultFigure.pave([[0,2],[2,4],[0,10]], ctc, 0.004)
 
   .. code-tab:: c++
 
@@ -60,7 +60,7 @@ The solution set is approximated from an initial box :math:`[\mathbf{x}_0]=[0,2]
      };
 
      CtcInverse ctc(f, {0,0});
-     draw_while_paving({{0,2},{2,4},{0,10}}, ctc, 0.004);
+     DefaultFigure::pave({{0,2},{2,4},{0,10}}, ctc, 0.004);
    }
 
   .. code-tab:: matlab
@@ -74,7 +74,7 @@ The solution set is approximated from an initial box :math:`[\mathbf{x}_0]=[0,2]
    ));
 
    ctc = CtcInverse(f, IntervalVector({0,0}));
-   draw_while_paving(IntervalVector({{0,2},{2,4},{0,10}}), ctc, 0.004);
+   DefaultFigure.pave(IntervalVector({{0,2},{2,4},{0,10}}), ctc, 0.004);
 
 
 The result is a set of non-overlapping boxes containing the set of feasible solutions of :eq:`eq:malti`. The following figure shows a projection of the computed set.
@@ -104,21 +104,21 @@ The following code allows to compute the set of vectors :math:`\mathbf{x}\in\mat
    x = VectorVar(2)
    f = AnalyticFunction([x], x[0]*cos(x[0]-x[1])+x[1])
    sep = SepInverse(f, [-oo,0])
-   draw_while_paving([[-10,10],[-10,10]], sep, 0.004)
+   DefaultFigure.pave([[-10,10],[-10,10]], sep, 0.004)
 
   .. code-tab:: c++
 
    VectorVar x(2);
    AnalyticFunction f({x}, x[0]*cos(x[0]-x[1])+x[1]);
    SepInverse sep(f, {-oo,0});
-   draw_while_paving({{-10,10},{-10,10}}, sep, 0.1);
+   DefaultFigure::pave({{-10,10},{-10,10}}, sep, 0.1);
 
   .. code-tab:: matlab
 
    x = VectorVar(2);
    f = AnalyticFunction({x}, x(1)*cos(x(1)-x(2))+x(2));
    sep = SepInverse(f, Interval(-oo,0));
-   draw_while_paving(IntervalVector({{-10,10},{-10,10}}), sep, 0.1);
+   DefaultFigure.pave(IntervalVector({{-10,10},{-10,10}}), sep, 0.1);
 
 
 .. figure:: manual/example_ineq.png
@@ -305,6 +305,7 @@ User manual
    * :ref:`sec-geom-utils`
    * :ref:`sec-geom-segment`
    * :ref:`sec-geom-polygon`
+   * :ref:`sec-zonotope`
    * Polyhedron
 
 * :ref:`sec-ellipsoids`
@@ -365,7 +366,7 @@ Development
 -----------
 
 * :ref:`sec-dev-info`
-* Changelog
+* :ref:`sec-dev-changelog`
 * C++ API
 
 
@@ -446,8 +447,8 @@ Development
    :maxdepth: 3
 
    development/info_dev.rst
+   development/changelog.rst
 .. 
-..    Changelog
 ..    C++ API
 
 

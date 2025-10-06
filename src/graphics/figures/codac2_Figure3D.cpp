@@ -103,21 +103,21 @@ void Figure3D::draw_parallelogram(const Vector &c, const Matrix &A,
    _file << "f " << ip1 << " " << ip2 << " " << ip3 << " " << ip4 << "\n";
 }
 
-void Figure3D::draw_parallelepiped(const Vector& z, const Matrix& A, const StyleProperties& style)
+void Figure3D::draw_parallelepiped(const Parallelepiped& p, const StyleProperties& style)
 {
-  assert_release(z.size() == 3);
-  assert_release(A.rows() == 3 && A.cols() == 3);
+  assert_release(p.z.size() == 3);
+  assert_release(p.A.rows() == 3 && p.A.cols() == 3);
 
   this->set_style_internal(style);
 
-  size_t ip0 = this->move_write_v(z,A,Vector({-1,-1,-1}));
-  size_t ip1 = this->move_write_v(z,A,Vector({-1,-1,1}));
-  size_t ip2 = this->move_write_v(z,A,Vector({-1,1,-1}));
-  size_t ip3 = this->move_write_v(z,A,Vector({-1,1,1}));
-  size_t ip4 = this->move_write_v(z,A,Vector({1,-1,-1}));
-  size_t ip5 = this->move_write_v(z,A,Vector({1,-1,1}));
-  size_t ip6 = this->move_write_v(z,A,Vector({1,1,-1}));
-  size_t ip7 = this->move_write_v(z,A,Vector({1,1,1}));
+  size_t ip0 = this->move_write_v(p.z,p.A,Vector({-1,-1,-1}));
+  size_t ip1 = this->move_write_v(p.z,p.A,Vector({-1,-1,1}));
+  size_t ip2 = this->move_write_v(p.z,p.A,Vector({-1,1,-1}));
+  size_t ip3 = this->move_write_v(p.z,p.A,Vector({-1,1,1}));
+  size_t ip4 = this->move_write_v(p.z,p.A,Vector({1,-1,-1}));
+  size_t ip5 = this->move_write_v(p.z,p.A,Vector({1,-1,1}));
+  size_t ip6 = this->move_write_v(p.z,p.A,Vector({1,1,-1}));
+  size_t ip7 = this->move_write_v(p.z,p.A,Vector({1,1,1}));
 
   _file << "f " << ip0 << " " << ip1 << " " << ip3 << " " << ip2 << "\n";
   _file << "f " << ip4 << " " << ip5 << " " << ip7 << " " << ip6 << "\n";
@@ -133,10 +133,11 @@ void Figure3D::draw_box(const IntervalVector& x, const StyleProperties& style)
   assert_release(x.size()==3);
   Vector inter = (x-x.mid()).ub();
   Matrix A ({{inter[0],0,0},{0,inter[1],0},{0,0,inter[2]}});
-  draw_parallelepiped(x.mid(), A, style);
+  draw_parallelepiped({x.mid(), A}, style);
 }
 
-void Figure3D::draw_zonotope(const Vector& z, const std::vector<Vector>& A, const StyleProperties& style) {
+void Figure3D::draw_zonotope(const Zonotope& z, const StyleProperties& style) {
+  assert_release(z.z.size() == 3);
    Matrix id = Matrix::Identity(3,3);
    this->set_style_internal(style);
    lock_style=true;
@@ -153,18 +154,18 @@ void Figure3D::draw_zonotope(const Vector& z, const std::vector<Vector>& A, cons
           somewhere)
       3) result is center of one face, the other is symetric for R1 (not R2)
     */
-    size_t nb = A.size();
+    size_t nb = z.A.cols();
     for (size_t j=1;j<nb;j++) {
-       const Eigen::Vector3d &Aj = A[j];
+       const Eigen::Vector3d &Aj = z.A.col(j);
        for (size_t i=0;i<j;i++) {
-           const Eigen::Vector3d &Ai = A[i];
+           const Eigen::Vector3d &Ai = z.A.col(i);
            Eigen::Vector3d Norm = Ai.cross(Aj);
            if (Norm.lpNorm<Eigen::Infinity>()<1e-8) continue;
            Eigen::Vector3d R1 = Eigen::Vector3d::Zero();
            Eigen::Vector3d R2 = Eigen::Vector3d::Zero();
            for (size_t k=0;k<nb;k++) {
                if (k==i || k==j) continue;
-               const Eigen::Vector3d &Ak = A[k];
+               const Eigen::Vector3d &Ak = z.A.col(k);
                double prod = Norm.dot(Ak);
                if (std::fabs(prod)<1e-8) { /* considered 0 */
                   if (k>j) {
@@ -185,8 +186,8 @@ void Figure3D::draw_zonotope(const Vector& z, const std::vector<Vector>& A, cons
                   R1 -= Ak;
                }
           }
-          this->draw_parallelogram(z,id,R1+R2,Ai,Aj,style);
-          this->draw_parallelogram(z,id,-R1+R2,Ai,Aj,style);
+          this->draw_parallelogram(z.z,id,R1+R2,Ai,Aj,style);
+          this->draw_parallelogram(z.z,id,-R1+R2,Ai,Aj,style);
        }
     }
     lock_style=false;
@@ -200,7 +201,7 @@ void Figure3D::draw_arrow(const Vector& c, const Matrix &A,
   double a=0.05;
   this->set_style_internal(style);
   lock_style=true;
-  draw_parallelepiped(v, A*tr, style);
+  draw_parallelepiped({v, A*tr}, style);
   std::vector<Vector> l_points { 
   { 1+4*a,0,0 },
   { 1,a,-a },

@@ -17,5 +17,5 @@ int main()
   };
 
   CtcInverse ctc(f, {0,0});
-  draw_while_paving({{0,2},{2,4},{0,10}}, ctc, 0.004);
+  DefaultFigure::pave({{0,2},{2,4},{0,10}}, ctc, 0.004);
 }

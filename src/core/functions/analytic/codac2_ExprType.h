@@ -85,4 +85,12 @@ namespace codac2
   struct ExprType<AnalyticExprWrapper<T>> {
     using Type = T;
   };
+
+  template<typename T>
+  class SlicedTube;
+  
+  template<typename T>
+  struct ExprType<SlicedTube<T>> {
+    using Type = typename ExprType<T>::Type;
+  };
 }

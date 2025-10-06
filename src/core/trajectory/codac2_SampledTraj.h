@@ -48,7 +48,7 @@ namespace codac2
       // size is not the std::map<double,T>::size() !
       virtual Index size() const
       {
-        if constexpr(std::is_same_v<typename ExprType<T>::Type,ScalarType>)
+        if constexpr(std::is_same_v<Type,ScalarType>)
           return 1;
 
         else
@@ -62,7 +62,7 @@ namespace codac2
 
       virtual std::pair<Index,Index> shape() const
       {
-        if constexpr(std::is_same_v<typename ExprType<T>::Type,ScalarType>)
+        if constexpr(std::is_same_v<Type,ScalarType>)
           return {1,1};
         else
         {
@@ -256,13 +256,13 @@ namespace codac2
         return { m };
       }
 
-      AnalyticFunction<typename ExprType<T>::Type> as_function() const
+      AnalyticFunction<Type> as_function() const
       {
         ScalarVar t;
         return {{t},
-          AnalyticExprWrapper<typename ExprType<T>::Type>(
+          AnalyticExprWrapper<Type>(
             std::make_shared<AnalyticOperationExpr<
-              TrajectoryOp<SampledTraj<T>>,typename ExprType<T>::Type,ScalarType>>(*this,t))
+              TrajectoryOp<SampledTraj<T>>,Type,ScalarType>>(*this,t))
         };
       }
   };

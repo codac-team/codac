@@ -15,7 +15,6 @@
 #include <codac2_Subpaving.h>
 #include <codac2_CtcWrapper.h>
 #include <codac2_SepInverse.h>
-#include <codac2_drawwhilepaving.h>
 
 using namespace std;
 using namespace codac2;
@@ -231,7 +230,7 @@ TEST_CASE("ParabolasExample")
   CtcInverse ctc(h, IntervalVector::zero(3));
   IntervalVector x0 {{0,1},{0,1},{0.05,0.18},{0.05,0.18}};
 
-  //draw_while_paving(x0, ctc, 0.001);
+  //DefaultFigure::pave(x0, ctc, 0.001);
   //DefaultFigure::set_axes(axis(0,{0.11,0.23}), axis(1,{0.1,0.22}));
 
   auto p = pave(x0, ctc, 0.01);

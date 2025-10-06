@@ -36,6 +36,20 @@ namespace codac2
     return x.size();
   }
 
+  template<typename C>
+    requires is_ctc_v<C>
+  inline Index size_of(const std::shared_ptr<C>& x)
+  {
+    return x->size();
+  }
+
+  template<typename S>
+    requires is_sep_v<S>
+  inline Index size_of(const std::shared_ptr<S>& x)
+  {
+    return x->size();
+  }
+
   template<typename T1, typename T2>
   inline bool same_size(const T1& x1, const T2& x2)
   {
@@ -66,20 +80,6 @@ namespace codac2
       else
         ++it;
     }
-  }
-
-  template<typename C>
-    requires is_ctc_v<C>
-  inline Index size_of(const std::shared_ptr<C>& x)
-  {
-    return x->size();
-  }
-
-  template<typename S>
-    requires is_sep_v<S>
-  inline Index size_of(const std::shared_ptr<S>& x)
-  {
-    return x->size();
   }
 
   template<int R,int C>

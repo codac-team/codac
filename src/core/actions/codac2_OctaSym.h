@@ -23,6 +23,7 @@ namespace codac2
   class SepBase;
   class SepAction;
   class SetExpr;
+  class OctaSymOp;
 
   /**
    * \class Action
@@ -46,11 +47,6 @@ namespace codac2
 
       Matrix permutation_matrix() const;
 
-      int _sign(int a) const
-      {
-        return (a > 0) ? 1 : ((a < 0) ? -1 : 0);
-      }
-
       template<typename Derived>
         requires (Derived::ColsAtCompileTime == 1)
       Mat<typename Derived::Scalar,-1,1> operator()(const Eigen::MatrixBase<Derived>& x) const
@@ -58,7 +54,7 @@ namespace codac2
         assert_release(x.size() == (Index)size());
         Mat<typename Derived::Scalar,-1,1> x_(x);
         for(size_t i = 0 ; i < size() ; i++)
-          x_[i] = _sign((*this)[i])*x[std::abs((*this)[i])-1];
+          x_[i] = sign((*this)[i])*x[std::abs((*this)[i])-1];
         return x_;
       }
 
@@ -82,6 +78,18 @@ namespace codac2
         for(auto& [ti,yi] : y)
           yi = (*this)(yi);
         return y;
+      }
+
+      template<typename V>
+        // To avoid ambiguity with operator()(const Eigen::MatrixBase<Derived>& x):
+        requires (std::is_same_v<V,VectorExpr> || std::is_same_v<V,VectorVar>)
+      inline VectorExpr operator()(const V& x1) const
+      {
+        if constexpr(std::is_same_v<V,VectorExpr>)
+          assert_release((Index)this->size() == x1->output_shape().first);
+        else
+          assert_release((Index)this->size() == x1.output_shape().first);
+        return { std::make_shared<AnalyticOperationExpr<OctaSymOp,VectorType,VectorType>>(*this, x1) };
       }
 
       friend std::ostream& operator<<(std::ostream& str, const OctaSym& s)

@@ -1,12 +1,12 @@
 from codac import *
 
 wpts = [
-  [0,0], [2,1], [4,0],
-  [6,2], [8,0], [6,2]
+  [2,1], [4,0], [6,2], [8,0], [6,2]
 ]
 
 s = RobotSimulator()
-x = s.simulate([0,0,0,0], 1e-2, wpts)
+u = SampledVectorTraj()
+x = s.simulate([0,0,0,0], 1e-2, wpts, u)
 
 g = Figure2D("Robot simulation", GraphicOutput.VIBES)
 

@@ -19,4 +19,4 @@ h = AnalyticFunction([a],
 )
 
 ctc = CtcInverse(h, [0,0,0])
-draw_while_paving([[0,1],[0,1],[0,1],[0,1]], ctc, 0.001)
+DefaultFigure.pave([[0,1],[0,1],[0,1],[0,1]], ctc, 1e-3)

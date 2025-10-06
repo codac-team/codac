@@ -10,7 +10,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_CtcPolygon.h>
 #include <codac2_pave.h>
-#include <codac2_drawwhilepaving.h>
 #include <codac2_Figure2D.h>
 
 using namespace std;
@@ -29,7 +28,7 @@ TEST_CASE("CtcPolygon")
   c.contract(x);
   CHECK(x.is_empty());
 
-  //draw_while_paving({{-3,7},{-3,8}}, c, 0.1);
+  //DefaultFigure::pave({{-3,7},{-3,8}}, c, 0.1);
   //DefaultFigure::draw_polygon({{3,-1},{3,4},{5,6},{-1,1}});
 }
 
@@ -52,7 +51,7 @@ TEST_CASE("CtcPolygon - tests from Codac1")
       Segment({{-3,-3},{-2,3}})
     });
     
-    //draw_while_paving(IntervalVector({{-10,10},{-10,10}}), c, .1);
+    //DefaultFigure::pave(IntervalVector({{-10,10},{-10,10}}), c, .1);
 
     // Check a box inside the hole
     {

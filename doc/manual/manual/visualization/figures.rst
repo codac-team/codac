@@ -55,7 +55,7 @@ DefaultFigure (see :ref:`subsec-graphics-2d-figures-defaultfigure`).
 DefaultFigure
 -------------
 
-A DefaultFigure using only VIBes as graphical output is available. This figure is the one used by the function `draw_while_paving` by default. 
+A DefaultFigure using only VIBes as graphical output is available.
 Any Figure2D object can be used as DefaultFigure with the set method:
 
 .. tabs::

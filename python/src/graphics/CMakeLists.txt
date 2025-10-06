@@ -10,10 +10,9 @@
     figures/codac2_py_Figure2D.cpp
     figures/codac2_py_Figure3D.cpp
 
-    paver/codac2_py_drawwhilepaving.cpp
-
     styles/codac2_py_Color.cpp
     styles/codac2_py_ColorMap.cpp
+    styles/codac2_py_PavingStyle.cpp
     styles/codac2_py_StyleProperties.cpp
   )
 
@@ -24,7 +23,6 @@
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/figures/
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/paver/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/styles/
   )
 

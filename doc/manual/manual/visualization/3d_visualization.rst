@@ -79,10 +79,10 @@ generally a sequence of adjacent triangles sharing a same vertex.
 .. doxygenfunction:: codac2::Figure3D::draw_parallelogram(const Vector&, const Matrix&, const Vector&, const Vector&, const Vector&, const StyleProperties&)
   :project: codac
 
-.. doxygenfunction:: codac2::Figure3D::draw_parallelepiped(const Vector&, const Matrix&, const StyleProperties&)
+.. doxygenfunction:: codac2::Figure3D::draw_parallelepiped(const Parallelepiped&, const StyleProperties&)
   :project: codac
 
-.. doxygenfunction:: codac2::Figure3D::draw_zonotope(const Vector&, const std::vector<Vector>&, const StyleProperties&)
+.. doxygenfunction:: codac2::Figure3D::draw_zonotope(const Zonotope&, const StyleProperties&)
   :project: codac
 
 .. doxygenfunction:: codac2::Figure3D::draw_arrow(const Vector&, const Matrix& A, const StyleProperties&)

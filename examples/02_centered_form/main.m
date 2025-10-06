@@ -7,4 +7,4 @@ f = AnalyticFunction({x}, vec( ...
 ));
 
 ctc = CtcInverse(f, IntervalVector({0,0}));
-draw_while_paving(IntervalVector({{0,2},{2,4},{0,10}}), ctc, 0.004);
+DefaultFigure.pave(IntervalVector({{0,2},{2,4},{0,10}}), ctc, 0.004);

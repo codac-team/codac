@@ -27,7 +27,6 @@ h = AnalyticFunction(
 s_h = SepInverse(h, [0,0.1])
 s_projh = SepProj(s_h, [0,1], [sampled_f.tdomain()])
 
-DefaultFigure.set_window_properties([75,75],[700,700])
-draw_while_paving([[-3,3],[-2,2]], s_projh, 5e-2)
+DefaultFigure.pave([[-3,3],[-2,2]], s_projh, 5e-2)
 DefaultFigure.draw_trajectory(sampled_f)
 DefaultFigure.draw_trajectory(AnalyticTraj(f,tdomain), Color.dark_gray())
