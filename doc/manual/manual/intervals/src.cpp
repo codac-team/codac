@@ -60,6 +60,8 @@ TEST_CASE("Interval class - manual")
     x.diam();   // diameter
     x.mag();    // magnitude
     x.mig();    // mignitude
+    x.smag();   // signed magnitude
+    x.smig();   // signed mignitude
     x.size();   // dimension (always 1)
     // [interval-class-4-end]
   }
@@ -99,7 +101,7 @@ TEST_CASE("Interval class - manual")
 
   {
     // [interval-class-7-beg]
-    double x = previous_float(1.0);
+    double x = prev_float(1.0);
     // x = 0.9999999999999999
     // [interval-class-7-end]
     CHECK(Approx<double>(x) == 0.9999999999999999);

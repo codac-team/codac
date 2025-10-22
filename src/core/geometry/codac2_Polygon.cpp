@@ -298,7 +298,6 @@ namespace codac2
     int way = 1;
     if(n > 1)
       way = ((*this)[1] == p[(i+1)%n]) ? 1 : -1;
-    assert(way == 1 || (way == -1 && (*this)[1] == p[(i-1+2*n)%n]));
 
     for(size_t j = 0 ; j < n ; j++)
       if((*this)[j] != p[(i+way*j+2*n)%n])

@@ -24,12 +24,12 @@ namespace codac2
     : ConvexPolygon(std::vector<Vector>(vertices))
   { }
 
-  ConvexPolygon::ConvexPolygon(const std::vector<Vector>& vertices)
-    : ConvexPolygon(vectorVector_to_vectorIntervalVector(vertices))
+  ConvexPolygon::ConvexPolygon(const std::vector<Vector>& vertices, bool compute_convex_hull)
+    : ConvexPolygon(vectorVector_to_vectorIntervalVector(vertices),compute_convex_hull)
   { }
 
-  ConvexPolygon::ConvexPolygon(const std::vector<IntervalVector>& vertices)
-    : Polygon(convex_hull(vertices))
+  ConvexPolygon::ConvexPolygon(const std::vector<IntervalVector>& vertices, bool compute_convex_hull)
+    : Polygon(compute_convex_hull ? convex_hull(vertices) : vertices)
   { }
 
   ConvexPolygon::ConvexPolygon(std::initializer_list<Segment> edges)

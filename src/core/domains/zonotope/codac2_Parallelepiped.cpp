@@ -18,23 +18,6 @@ Parallelepiped::Parallelepiped(const Vector& z_, const Matrix& A_)
   assert_release(A.cols() <= z.size() && "too many vectors, you are describing a zonotope");
 }
 
-Zonotope Parallelepiped::proj(const std::vector<Index>& indices) const
-{
-  assert_release(*std::min_element(indices.begin(), indices.end()) >= 0 && "indices out of range");
-  assert_release(*std::max_element(indices.begin(), indices.end()) <= z.size() && "indices out of range");
-
-  Matrix A_cropped (indices.size(), A.cols());
-  Vector z_cropped (indices.size());
-
-  for (size_t i = 0; i < indices.size(); ++i)
-  {
-    A_cropped.row(i) = A.row(indices[i]);
-    z_cropped[i] = z[indices[i]];
-  }
-
-  return Zonotope(z_cropped, A_cropped);
-}
-
 void generate_vertices(Index i, Index n, const Vector& z, const Matrix& A, vector<Vector>& L_v)
 {
   if (i == n)
@@ -61,4 +44,13 @@ IntervalVector Parallelepiped::box() const
   for(const auto& v : vertices())
     box |= v;
   return box;
+}
+
+bool Parallelepiped::contains(const Vector& v) const
+{
+  assert_release(A.rows() == A.cols() && "Matrix A must be square to check containment.");
+
+  IntervalVector IV = Interval(-1,1)*IntervalVector::Ones(A.cols());
+
+  return IV.contains(A.inverse()*(v - z));
 }

@@ -41,7 +41,7 @@ namespace codac2
       SepInter& operator&=(const S& s)
       {
         assert_release(s.size() == this->size());
-        _seps.push_object_back(s);
+        _seps.push_back(s);
         return *this;
       }
 

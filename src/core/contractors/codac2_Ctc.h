@@ -15,10 +15,12 @@
 #include "codac2_assert.h"
 #include "codac2_TypeInfo.h"
 #include "codac2_IntervalVector.h"
-#include "codac2_SlicedTube.h"
 
 namespace codac2
 {
+  template<typename T>
+  class SlicedTube;
+
   template<typename... X>
   class CtcBase
   {
@@ -41,12 +43,8 @@ namespace codac2
       
       virtual void contract(X&... x) const = 0;
 
-      virtual void contract_tube(SlicedTube<X>&... x) const
-      {
-        auto tdomain = std::get<0>(std::make_tuple(x...));
-        for(auto it = tdomain.begin() ; it != tdomain.end() ; it++)
-          contract((x(it)->codomain())...);
-      }
+      virtual void contract_tube(SlicedTube<X>&... x) const;
+      // -> is defined in codac2_SlicedTube.h
 
       virtual std::shared_ptr<CtcBase<X...>> copy() const = 0;
 

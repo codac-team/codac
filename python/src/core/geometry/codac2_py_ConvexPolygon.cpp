@@ -23,9 +23,13 @@ void export_ConvexPolygon(py::module& m)
   py::class_<ConvexPolygon,Polygon> exported(m, "ConvexPolygon", CONVEXPOLYGON_MAIN);
   exported
 
-    .def(py::init<const std::vector<Vector>&>(),
-      CONVEXPOLYGON_CONVEXPOLYGON_CONST_VECTOR_VECTOR_REF,
-      "vertices"_a)
+    .def(py::init<const std::vector<Vector>&,bool>(),
+      CONVEXPOLYGON_CONVEXPOLYGON_CONST_VECTOR_VECTOR_REF_BOOL,
+      "vertices"_a, "compute_convex_hull"_a = true)
+
+    .def(py::init<const std::vector<IntervalVector>&,bool>(),
+      CONVEXPOLYGON_CONVEXPOLYGON_CONST_VECTOR_INTERVALVECTOR_REF_BOOL,
+      "vertices"_a, "compute_convex_hull"_a = true)
 
     .def(py::init<const std::vector<Segment>&>(),
       CONVEXPOLYGON_CONVEXPOLYGON_CONST_VECTOR_SEGMENT_REF,

@@ -48,6 +48,8 @@ class TestIntervalManual(unittest.TestCase):
     x.diam()    # diameter
     x.mag()     # magnitude
     x.mig()     # mignitude
+    x.smag()    # signed magnitude
+    x.smig()    # signed mignitude
     x.size()    # dimension (always 1)
     # [interval-class-4-end]
 
@@ -75,7 +77,7 @@ class TestIntervalManual(unittest.TestCase):
     test.assertTrue(Approx(z) == Interval(1, math.exp(math.pi/2)))
 
     # [interval-class-7-beg]
-    x = previous_float(1.0)
+    x = prev_float(1.0)
     # x = 0.9999999999999999
     # [interval-class-7-end]
     test.assertTrue(Approx(x) == 0.9999999999999999 and x != 1)

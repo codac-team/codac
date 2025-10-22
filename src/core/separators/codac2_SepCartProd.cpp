@@ -29,5 +29,10 @@ BoxPair SepCartProd::separate(const IntervalVector& x) const
 
   assert(i == x.size());
   assert((x_in | x_out) == x);
+
+  if(x_out.is_empty())
+    return { IntervalVector(size()), IntervalVector::empty(size()) };
+  if(x_in.is_empty())
+    return { IntervalVector::empty(size()), IntervalVector(size()) };
   return { x_in, x_out };
 }

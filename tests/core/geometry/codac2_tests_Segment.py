@@ -14,7 +14,7 @@ def hull(x):
   if x == -oo:
     return Interval(-oo, next_float(-oo))
   if x == oo:
-    return Interval(previous_float(oo), oo)
+    return Interval(prev_float(oo), oo)
   else:
     return INterval(x)
 

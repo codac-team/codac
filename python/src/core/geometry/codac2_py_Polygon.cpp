@@ -31,6 +31,8 @@ void export_Polygon(py::module& m)
       POLYGON_POLYGON_CONST_VECTOR_SEGMENT_REF,
       "edges"_a)
 
+    .def("size", [](const Polygon& p) { return p.size();  })
+
     .def("edges", &Polygon::edges,
       CONST_VECTOR_SEGMENT_REF_POLYGON_EDGES_CONST)
 

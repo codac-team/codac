@@ -68,6 +68,9 @@ class AnalyticFunction:
 
   def tube_eval(self,*args):
     return self.f.tube_eval(*args)
+  
+  def parallelepiped_eval(self,*args):
+    return self.f.parallelepiped_eval(*args)
 
   def diff(self,*args):
     return self.f.diff(*args)

@@ -165,6 +165,5 @@ namespace codac2
         }
         return cmap;
       }
-
   };
 }

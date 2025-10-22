@@ -58,7 +58,7 @@ TEST_CASE("SlicedTube")
     CHECK(*tdomain->tslice(0.01) == Interval(0,1));
     CHECK(*tdomain->tslice(1) == Interval(1,2));
     CHECK(*tdomain->tslice(2) == Interval(2,3));
-    CHECK(*tdomain->tslice(previous_float(3.)) == Interval(2,3));
+    CHECK(*tdomain->tslice(prev_float(3.)) == Interval(2,3));
     CHECK(*tdomain->tslice(3) == Interval(3,oo));
     CHECK(*tdomain->tslice(next_float(3.)) == Interval(3,oo));
 
@@ -195,7 +195,7 @@ TEST_CASE("SlicedTube")
     CHECK(v[3]->codomain() == IntervalVector::constant(3,Interval(-10,10)));
 
     CHECK(x(-42.) == IntervalVector::constant(3,Interval(2.,3.)));
-    CHECK(x(previous_float(-42.)) == IntervalVector(3));
+    CHECK(x(prev_float(-42.)) == IntervalVector(3));
     CHECK(x(next_float(-42.)) == IntervalVector(3));
 
     // Eval: affectation at interval t
@@ -215,7 +215,7 @@ TEST_CASE("SlicedTube")
     CHECK(v[13]->codomain() == IntervalVector::constant(3,Interval(9.,10.)));
 
     CHECK(x(Interval(44,55)) == IntervalVector::constant(3,Interval(9.,10.)));
-    CHECK(x(previous_float(44.)) == IntervalVector(3));
+    CHECK(x(prev_float(44.)) == IntervalVector(3));
     CHECK(x(next_float(55.)) == IntervalVector(3));
 
     // Iterators tests

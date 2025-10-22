@@ -55,6 +55,12 @@ void export_IntervalMatrixBase(py::module& m, py::class_<S>& pyclass)
     .def("mig", [](const S& x) { return x.mig(); },
       MATRIXBASE_ADDONS_INTERVALMATRIXBASE_AUTO_MIG_CONST)
 
+    .def("smag", [](const S& x) { return x.smag(); },
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_AUTO_SMAG_CONST)
+
+    .def("smig", [](const S& x) { return x.smig(); },
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_AUTO_SMIG_CONST)
+
     .def("rand", [](const S& x) { return x.rand(); },
       MATRIXBASE_ADDONS_INTERVALMATRIXBASE_AUTO_RAND_CONST)
 

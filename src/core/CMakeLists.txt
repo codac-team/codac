@@ -18,6 +18,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCross.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCtcBoundary.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcCtcBoundary.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcDeriv.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcDeriv.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcDist.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcDist.h
@@ -71,9 +72,11 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/codac2_Subpaving.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/zonotope/codac2_Parallelepiped.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/zonotope/codac2_Parallelepiped.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/zonotope/codac2_Parallelepiped_eval.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/zonotope/codac2_Zonotope.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/zonotope/codac2_Zonotope.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_Slice.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_Slice_polygon.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SliceBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SliceBase.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SlicedTube.h
@@ -192,6 +195,9 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_pave.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/paver/codac2_pave.h
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/peibos/codac2_peibos.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/peibos/codac2_peibos.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/proj/codac2_ProjBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/proj/codac2_ProjBase.h
 
@@ -284,6 +290,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/matrices/eigen/MatrixBase_addons
     ${CMAKE_CURRENT_SOURCE_DIR}/operators
     ${CMAKE_CURRENT_SOURCE_DIR}/paver
+    ${CMAKE_CURRENT_SOURCE_DIR}/peibos
     ${CMAKE_CURRENT_SOURCE_DIR}/proj
     ${CMAKE_CURRENT_SOURCE_DIR}/separators
     ${CMAKE_CURRENT_SOURCE_DIR}/tools

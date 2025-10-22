@@ -15,6 +15,7 @@
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <codac2_SampledTraj.h>
+#include <codac2_Parallelepiped.h>
 #include <codac2_AnalyticFunction.h>
 #include <codac2_analytic_variables.h>
 #include "codac2_py_AnalyticFunction_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
@@ -316,6 +317,11 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
         AUTO_ANALYTICFUNCTION_T_TUBE_EVAL_CONST_SLICEDTUBE_ARGS_REF_VARIADIC_CONST,
         "x1"_a)
     ;
+  }
+
+  if constexpr(std::is_same_v<T,VectorType>)
+  {
+    bind_(exported, "parallelepiped_eval", parallelepiped_eval, PARALLELEPIPED_ANALYTICFUNCTION_T_PARALLELEPIPED_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
   }
 
   exported

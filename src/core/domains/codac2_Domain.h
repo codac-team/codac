@@ -39,6 +39,8 @@ namespace codac2
       virtual V mid() const = 0;
       virtual V mag() const = 0;
       virtual V mig() const = 0;
+      virtual V smag() const = 0;
+      virtual V smig() const = 0;
       virtual V rad() const = 0;
       virtual V diam() const = 0;
       virtual double volume() const = 0;

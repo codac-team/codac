@@ -10,9 +10,9 @@
 #pragma once
 
 #include <vector>
-#include <codac2_Vector.h>
-#include <codac2_Matrix.h>
-#include <codac2_IntervalVector.h>
+#include "codac2_Vector.h"
+#include "codac2_Matrix.h"
+#include "codac2_IntervalVector.h"
 #include "codac2_Zonotope.h"
 
 namespace codac2
@@ -37,15 +37,6 @@ namespace codac2
        * \param A Shape matrix of the parallelepiped (\f$n\times m\f$ matrix with \f$m \leqslant n\f$)
        */
       Parallelepiped(const Vector& z, const Matrix& A);
-
-      /**
-       * \brief Projects the parallelepiped onto the subspace defined by the given indices
-       * 
-       * \param indices Vector of indices of the dimensions to project onto
-       * 
-       * \return A new Zonotope object representing the projection of the parallelepiped onto the specified subspace
-       */
-      Zonotope proj(const std::vector<Index>& indices) const;
       
       /**
        * \brief Computes the vertices of the parallelepiped
@@ -60,6 +51,15 @@ namespace codac2
        * \return An IntervalVector representing the axis-aligned bounding box of the parallelepiped
        */
       IntervalVector box() const;
+
+      /**
+       * \brief Checks if a given point is contained within the parallelepiped. The matrix A has to be square and invertible.
+       * 
+       * \param v The point to check (n-dimensional vector)
+       * 
+       * \return true if the point is inside the parallelepiped, false otherwise
+       */
+      bool contains(const Vector& v) const;
 
   };
 }

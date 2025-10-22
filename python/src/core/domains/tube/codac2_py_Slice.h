@@ -43,7 +43,7 @@ py::class_<Slice<T>> export_Slice(py::module& m, const std::string& name)
     .def("size", &Slice<T>::size,
       INDEX_SLICE_T_SIZE_CONST)
 
-    .def("codomain", (const T& (Slice<T>::*)() const) &Slice<T>::codomain,
+    .def("codomain", [](const Slice<T>& x) { return x.codomain(); },
       CONST_T_REF_SLICE_T_CODOMAIN_CONST)
 
     .def("is_gate", &Slice<T>::is_gate,
@@ -89,6 +89,16 @@ py::class_<Slice<T>> export_Slice(py::module& m, const std::string& name)
         },
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_SLICE_REF)
   ;
+
+  if constexpr(std::is_same_v<T,Interval>)
+  {
+    exported_slice_class
+
+      .def("polygon_slice", &Slice<Interval>::polygon_slice,
+        CONVEXPOLYGON_SLICE_T_POLYGON_SLICE_CONST_SLICE_T_REF_CONST,
+        "v"_a)
+    ;
+  }
 
   return exported_slice_class;
 }

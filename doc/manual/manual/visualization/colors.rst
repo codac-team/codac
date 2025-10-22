@@ -73,7 +73,7 @@ Available line styles are:
   .. code-tab:: c++
 
     fig.draw_box({{2.2,2.5},{2.2,2.5}}, StyleProperties(Color::red(), "..", "layer1")); // Red edge, dotted line, line width of 0.1 and layer1
-    // fig.draw_box({{2.2,2.5},{2.2,2.5}}, {Color.red(), "..", "layer1", "0.1"}); //equivalent
+    // fig.draw_box({{2.2,2.5},{2.2,2.5}}, {Color::red(), "..", "layer1", "0.1"}); //equivalent
 
 Colors
 ------

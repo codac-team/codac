@@ -95,7 +95,7 @@ namespace codac2
   static inline std::array<float, N> to_array(std::initializer_list<float> list)
   {
     assert(list.size() == N);
-    std::array<float, N> arr;
+    std::array<float, N> arr{};
     std::copy(list.begin(), list.end(), arr.begin());
     return arr;
   }

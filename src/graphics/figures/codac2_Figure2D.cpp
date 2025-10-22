@@ -215,7 +215,7 @@ void Figure2D::draw_polyline(const vector<Vector>& x, float tip_length, const St
 
 void Figure2D::draw_polygon(const Polygon& x, const StyleProperties& s)
 {
-  assert_release(x.size() > 1);
+  assert_release(x.size() >= 1);
 
   vector<Vector> w;
   for(const auto& xi : x.sorted_vertices())
@@ -294,7 +294,7 @@ void Figure2D::draw_pie(const Vector& c, const Interval& r, const Interval& thet
 
   Interval r_(r);
   if(r.is_unbounded())
-    r_ &= Interval(0,previous_float(oo));
+    r_ &= Interval(0,prev_float(oo));
 
   for(const auto& output_fig : _output_figures)
     output_fig->draw_pie(c,r_,theta_,s);

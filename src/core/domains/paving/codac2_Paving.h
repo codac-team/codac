@@ -83,7 +83,7 @@ namespace codac2
         return connected_subsets(IntervalVector(size()), node_value);
       }
 
-      std::list<ConnectedSubset_> connected_subsets(const IntervalVector& x0, const NodeValue_& node_value) const
+      inline std::list<ConnectedSubset_> connected_subsets(const IntervalVector& x0, const NodeValue_& node_value) const
       {
         std::list<IntervalVector> l_boxes = boxes(node_value, x0);
         [[maybe_unused]] Index nb_boxes = l_boxes.size();

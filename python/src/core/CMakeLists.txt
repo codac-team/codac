@@ -86,6 +86,8 @@
 
     paver/codac2_py_pave.cpp
 
+    peibos/codac2_py_peibos.cpp
+
     separators/codac2_py_Sep.cpp
     separators/codac2_py_Sep.h
     separators/codac2_py_SepAction.cpp
@@ -131,6 +133,7 @@
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/graphics/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/matrices/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/paver/
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/peibos/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/separators/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tools/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/

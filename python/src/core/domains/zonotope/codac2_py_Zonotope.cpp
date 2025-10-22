@@ -30,6 +30,13 @@ void export_Zonotope(py::module& m)
       ZONOTOPE_ZONOTOPE_CONST_VECTOR_REF_CONST_MATRIX_REF,
       "z"_a, "A"_a)
 
+    .def("proj",[](const Zonotope& x, const std::vector<Index_type>& indices)
+        {
+          return x.proj(matlab::convert_indices(indices));
+        },
+      ZONOTOPE_ZONOTOPE_PROJ_CONST_VECTOR_INDEX_REF_CONST,
+      "indices"_a)
+
     .def_readwrite("z", &Zonotope::z,
       VECTOR_ZONOTOPE_Z)
 

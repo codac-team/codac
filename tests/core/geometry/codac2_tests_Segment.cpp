@@ -17,7 +17,7 @@ using namespace codac2;
 Interval hull(double x)
 {
   if(x == -oo) return { -oo, next_float(-oo) };
-  if(x == oo)  return { previous_float(oo), oo };
+  if(x == oo)  return { prev_float(oo), oo };
   else return { x };
 }
 

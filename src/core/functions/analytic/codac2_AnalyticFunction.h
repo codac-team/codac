@@ -19,6 +19,7 @@
 #include "codac2_operators.h"
 #include "codac2_cart_prod.h"
 #include "codac2_vec.h"
+#include "codac2_Parallelepiped.h"
 
 namespace codac2
 {
@@ -193,6 +194,10 @@ namespace codac2
 
         return y;
       }
+
+      template<typename... Args>
+      Parallelepiped parallelepiped_eval(const Args&... x) const;
+      // -> is defined in codac2_Parallelepiped_eval.h file
 
       Index output_size() const
       {

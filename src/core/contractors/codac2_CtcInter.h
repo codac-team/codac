@@ -66,7 +66,7 @@ namespace codac2
       CtcInter<X...>& operator&=(const C& c)
       {
         assert_release(c.size() == this->size());
-        _ctcs.push_object_back(c);
+        _ctcs.push_back(c);
         return *this;
       }
 

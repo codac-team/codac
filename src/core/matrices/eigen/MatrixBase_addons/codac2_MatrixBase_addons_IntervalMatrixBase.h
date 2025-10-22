@@ -146,6 +146,32 @@ inline auto mig() const
 }
 
 /**
+ * \brief Returns a matrix containing the signed magnitudes of each interval element.
+ * 
+ * The signed magnitude is lower bound if |lower bound|>|upper bound|, upper bound otherwise.
+ * 
+ * \return A matrix of doubles with the signed magnitudes of each interval.
+ */
+template<typename U=Scalar>
+  requires IsIntervalDomain<U>
+inline auto smag() const
+{
+  degenerate_mat(smag);
+}
+
+/**
+ * \brief Returns a matrix containing the signed mignitudes of each interval element.
+ * 
+ * \return A matrix of doubles with the signed mignitudes of each interval.
+ */
+template<typename U=Scalar>
+  requires IsIntervalDomain<U>
+inline auto smig() const
+{
+  degenerate_mat(smig);
+}
+
+/**
  * \brief Returns a matrix with random values chosen inside each interval element.
  * 
  * Each element in the resulting matrix is a random number uniformly sampled inside the interval.

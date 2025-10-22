@@ -138,7 +138,7 @@
     message(STATUS "Found Eigen3 version ${Eigen3_VERSION} in ${Eigen3_DIR}")
   else()
     message(STATUS "Attempt to install custom Eigen3 automatically...")
-    FetchContent_Declare(Eigen3 URL https://github.com/codac-team/eigen/archive/refs/heads/master.zip)
+    FetchContent_Declare(Eigen3 URL http://github.com/codac-team/eigen/archive/refs/heads/eigen-5.0.zip)
     #FetchContent_Declare(Eigen3 URL ${CMAKE_CURRENT_SOURCE_DIR}/3rd/eigen-a0dc3994bd5d4e804dab58decb78c56a5af516ba.zip) # If needed to be self-contained...
     FetchContent_MakeAvailable(Eigen3)
   endif()

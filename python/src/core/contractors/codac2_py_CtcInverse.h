@@ -62,7 +62,7 @@ void export_CtcInverse(py::module& m, const std::string& export_name, py::class_
           c.contract_tube(cast<SlicedTube<IntervalVector>>(x1));
           return x1;
         },
-      VIRTUAL_VOID_CTCBASE_X_CONTRACT_TUBE_SLICEDTUBE_X_REF_VARIADIC_CONST,
+      VOID_CTCBASE_X_CONTRACT_TUBE_SLICEDTUBE_X_REF_VARIADIC_CONST,
       "x"_a)
 
     .def("function", &C::function,

@@ -10,6 +10,7 @@
 
 #include <pybind11/pybind11.h>
 #include <codac2_Interval.h>
+#include <codac2_Parallelepiped_eval.h>
 #include <codac2_AnalyticFunction.h>
 #include <codac2_ExprType.h>
 #include <codac2_Row.h>
@@ -118,6 +119,9 @@ void export_operators(py::module& m);
 
 // paver
 void export_pave(py::module& m);
+
+// peibos
+void export_peibos(py::module& m);
 
 // separators
 py::class_<SepBase,pySep> export_Sep(py::module& m);
@@ -271,6 +275,9 @@ PYBIND11_MODULE(_core, m)
 
   // paver
   export_pave(m);
+
+  // peibos
+  export_peibos(m);
 
   // separators
   auto py_sep = export_Sep(m);
