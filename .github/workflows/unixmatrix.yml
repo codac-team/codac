@@ -51,7 +51,7 @@ jobs:
             # Not clear whether macos-15-intel is more Sequoia or Sonoma, see https://github.com/actions/runner-images/issues/13045...
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: true
         fetch-depth: 0
