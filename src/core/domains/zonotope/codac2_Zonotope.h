@@ -10,10 +10,8 @@
 #pragma once
 
 #include <vector>
-#include <codac2_Vector.h>
-#include <codac2_Matrix.h>
-
-using namespace std;
+#include "codac2_Vector.h"
+#include "codac2_Matrix.h"
 
 namespace codac2
 {
@@ -36,6 +34,15 @@ namespace codac2
        * \param A Shape matrix of the zonotope (\f$n\times m\f$ matrix)
        */
       Zonotope(const Vector& z, const Matrix& A);
+
+      /**
+       * \brief Projects the Zonotope onto the subspace defined by the given indices
+       * 
+       * \param indices Vector of indices of the dimensions to project onto
+       * 
+       * \return A new Zonotope object representing the projection of the Zonotope onto the specified subspace
+       */
+      Zonotope proj(const std::vector<Index>& indices) const;
 
       /**
        * \brief Center of the zonotope

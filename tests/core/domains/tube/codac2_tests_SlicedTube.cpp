@@ -15,14 +15,17 @@
 #include <codac2_Approx.h>
 #include <codac2_AnalyticTraj.h>
 #include <codac2_SampledTraj.h>
+#include <codac2_Figure2D.h>
 
 using namespace std;
 using namespace codac2;
 
+#include "codac2_tests_predefined_tubes.cpp"
+
 SlicedTube<IntervalVector> return_a_tube()
 {
   return SlicedTube(
-    create_tdomain(Interval(0,2),0.5),
+    create_tdomain(Interval(0,2),0.5,false),
     IntervalVector::constant(3,Interval(-1.5,1)));
 }
 
@@ -58,7 +61,7 @@ TEST_CASE("SlicedTube")
     CHECK(*tdomain->tslice(0.01) == Interval(0,1));
     CHECK(*tdomain->tslice(1) == Interval(1,2));
     CHECK(*tdomain->tslice(2) == Interval(2,3));
-    CHECK(*tdomain->tslice(previous_float(3.)) == Interval(2,3));
+    CHECK(*tdomain->tslice(prev_float(3.)) == Interval(2,3));
     CHECK(*tdomain->tslice(3) == Interval(3,oo));
     CHECK(*tdomain->tslice(next_float(3.)) == Interval(3,oo));
 
@@ -195,7 +198,7 @@ TEST_CASE("SlicedTube")
     CHECK(v[3]->codomain() == IntervalVector::constant(3,Interval(-10,10)));
 
     CHECK(x(-42.) == IntervalVector::constant(3,Interval(2.,3.)));
-    CHECK(x(previous_float(-42.)) == IntervalVector(3));
+    CHECK(x(prev_float(-42.)) == IntervalVector(3));
     CHECK(x(next_float(-42.)) == IntervalVector(3));
 
     // Eval: affectation at interval t
@@ -215,7 +218,7 @@ TEST_CASE("SlicedTube")
     CHECK(v[13]->codomain() == IntervalVector::constant(3,Interval(9.,10.)));
 
     CHECK(x(Interval(44,55)) == IntervalVector::constant(3,Interval(9.,10.)));
-    CHECK(x(previous_float(44.)) == IntervalVector(3));
+    CHECK(x(prev_float(44.)) == IntervalVector(3));
     CHECK(x(next_float(55.)) == IntervalVector(3));
 
     // Iterators tests
@@ -242,7 +245,7 @@ TEST_CASE("SlicedTube")
 
   SECTION("Test Slice<T>")
   {
-    auto tdomain = create_tdomain(Interval(0,1), 0.1);
+    auto tdomain = create_tdomain(Interval(0,1), 0.1, false);
     SlicedTube x(tdomain, IntervalVector(2));
     CHECK(x.nb_slices() == 10);
     CHECK(tdomain->tslice(-oo) == tdomain->end());
@@ -289,7 +292,7 @@ TEST_CASE("SlicedTube")
     SlicedTube<Interval> *x;
 
     {
-      auto tdomain = create_tdomain(Interval(0,1), 0.1);
+      auto tdomain = create_tdomain(Interval(0,1), 0.1, false);
       x = new SlicedTube<Interval>(tdomain, Interval());
       CHECK(x->tdomain() == tdomain);
     }
@@ -308,7 +311,7 @@ TEST_CASE("SlicedTube")
 
   SECTION("Reverse iterator")
   {
-    auto tdomain = create_tdomain(Interval(0,1), 0.5);
+    auto tdomain = create_tdomain(Interval(0,1), 0.5, false);
     SlicedTube x(tdomain, Interval());
 
     auto it1 = x.begin();
@@ -330,28 +333,28 @@ TEST_CASE("SlicedTube")
 
     auto it = tdomain->begin();
     CHECK(*it == Interval(0));
-    CHECK(x(it)->codomain() == Interval(-10,10));
+    CHECK(x.slice(it)->codomain() == Interval(-10,10));
     it++;
     CHECK(*it == Interval(0,1));
-    CHECK(x(it)->codomain() == Interval(-10,10));
+    CHECK(x.slice(it)->codomain() == Interval(-10,10));
     it++;
     CHECK(*it == Interval(1,1));
-    CHECK(x(it)->codomain() == Interval(-10,10));
+    CHECK(x.slice(it)->codomain() == Interval(-10,10));
     it = tdomain->begin();
     it++;
-    x(it)->set(Interval(2,8));
-    CHECK(x(it)->codomain() == Interval(2,8));
-    CHECK(x(std::prev(it))->codomain() == Interval(2,8));
-    CHECK(x(std::next(it))->codomain() == Interval(2,8));
-    CHECK(x(std::next(std::next(it)))->codomain() == Interval(-10,10));
+    x.slice(it)->set(Interval(2,8));
+    CHECK(x.slice(it)->codomain() == Interval(2,8));
+    CHECK(x.slice(std::prev(it))->codomain() == Interval(2,8));
+    CHECK(x.slice(std::next(it))->codomain() == Interval(2,8));
+    CHECK(x.slice(std::next(std::next(it)))->codomain() == Interval(-10,10));
     CHECK(x.codomain() == Interval(-10,10));
     it++; it++; it++; it++; it++;
     CHECK(*it == Interval(3));
-    x(it)->set(Interval(3,5));
-    CHECK(x(it)->codomain() == Interval(3,5));
-    CHECK(x(std::prev(it))->codomain() == Interval(-10,10));
-    CHECK(x(std::next(it))->codomain() == Interval(-10,10));
-    CHECK(x(std::next(std::next(it)))->codomain() == Interval(-10,10));
+    x.slice(it)->set(Interval(3,5));
+    CHECK(x.slice(it)->codomain() == Interval(3,5));
+    CHECK(x.slice(std::prev(it))->codomain() == Interval(-10,10));
+    CHECK(x.slice(std::next(it))->codomain() == Interval(-10,10));
+    CHECK(x.slice(std::next(std::next(it)))->codomain() == Interval(-10,10));
     CHECK(x.codomain() == Interval(-10,10));
   }
 
@@ -365,10 +368,10 @@ TEST_CASE("SlicedTube")
     for(auto it = cx1.tdomain()->begin();
       it != cx1.tdomain()->end(); ++it)
     {
-      Interval ix1 = cx1(it)->codomain(), ix2 = cx2(it)->codomain();
-      AddOp::bwd(y(it)->codomain(), ix1, ix2);
-      cx1(it)->set(ix1);
-      cx2(it)->set(ix2);
+      Interval ix1 = cx1.slice(it)->codomain(), ix2 = cx2.slice(it)->codomain();
+      AddOp::bwd(y.slice(it)->codomain(), ix1, ix2);
+      cx1.slice(it)->set(ix1);
+      cx2.slice(it)->set(ix2);
     }
 
     CHECK(cx1.codomain() == Interval(1));
@@ -397,7 +400,7 @@ TEST_CASE("SlicedTube")
 
   SECTION("Testing specific detected bug from sampling")
   {
-    auto tdomain = create_tdomain({0.,46.}, 0.5);
+    auto tdomain = create_tdomain({0.,46.}, 0.5, false);
     SlicedTube x(tdomain, Interval());
     list<TSlice>::iterator it = tdomain->sample(46, false);
     CHECK(*it == Interval(45.5,46));
@@ -416,7 +419,7 @@ TEST_CASE("SlicedTube")
     AnalyticFunction f { {t}, cos(t) };
     AnalyticTraj analytic_traj(f, {-PI,PI});
     auto sampled_traj = analytic_traj.sampled(1e-2);
-    auto tdomain = create_tdomain({-PI,PI},1e-2);
+    auto tdomain = create_tdomain({-PI,PI},1e-2,false);
     SlicedTube<Interval> tube(tdomain, sampled_traj);
     auto g = tube.as_function();
 
@@ -436,7 +439,7 @@ TEST_CASE("SlicedTube")
 
     auto analytic_traj = AnalyticTraj(f, {0,5});
     auto sampled_traj = analytic_traj.sampled(1e-2);
-    auto tdomain = create_tdomain({0,5},1e-3);
+    auto tdomain = create_tdomain({0,5},1e-3,false);
     SlicedTube<IntervalVector> tube(tdomain, sampled_traj);
     auto g = tube.as_function();
 
@@ -458,5 +461,250 @@ TEST_CASE("SlicedTube")
       for(double t_ = 0 ; t_ < 5 ; t_+=1e-2)
         CHECK(Approx(h.eval(t_),1e-2) == IntervalVector({2*cos(t_),sin(2*t_)}));
     }
+  }
+
+  SECTION("Inversion, scalar tube")
+  {
+    SlicedTube x = tube_test_1();
+    x.set_ith_slice(Interval(-4,2), 14); // to test primitives pre-computation
+
+    CHECK(x.invert({0}, x.tdomain()->t0_tf()) == Interval(3,46));
+    CHECK(x.invert({-7}, x.tdomain()->t0_tf()) == Interval(4,12));
+    CHECK(x.invert(Interval(), x.tdomain()->t0_tf()) == Interval(0,46));
+    CHECK(x.invert({-12,14}, x.tdomain()->t0_tf()) == Interval(0,46));
+    CHECK(x.invert({-20,-18}, x.tdomain()->t0_tf()) == Interval::empty());
+    CHECK(x.invert({-1,1}, x.tdomain()->t0_tf()) == Interval(2,46));
+    CHECK(x.invert({-10.5}, x.tdomain()->t0_tf()) == Interval(7,8));
+    CHECK(x.invert({-12,-7}, x.tdomain()->t0_tf()) == Interval(4,12));
+    CHECK(x.invert({10,11}, x.tdomain()->t0_tf()) == Interval(20,27));
+    CHECK(x.invert({6.01,7}, x.tdomain()->t0_tf()) == Interval(0,30));
+    CHECK(x.invert({6,7}, x.tdomain()->t0_tf()) == Interval(0,43));
+    CHECK(x.invert({5.9,7}, x.tdomain()->t0_tf()) == Interval(0,43));
+  }
+  
+  SECTION("Inversion, scalar tube, subsets")
+  {
+    SlicedTube x = tube_test_1();
+    x.set_ith_slice(Interval(-4,2), 14); // to test primitives pre-computation
+
+    vector<Interval> v;
+
+    x.invert(Interval(0), v, x.tdomain()->t0_tf());
+    CHECK(v.size() == 4);
+
+    if(v.size() == 4)
+    {
+      CHECK(v[0] == Interval(3,4));
+      CHECK(v[1] == Interval(14,17));
+      CHECK(v[2] == Interval(37,42));
+      CHECK(v[3] == Interval(43,46));
+    }
+
+    // The same, with a custom domain:
+    x.invert(Interval(0), v, Interval(3.8,42.5));
+    CHECK(v.size() == 3);
+
+    if(v.size() == 3)
+    {
+      CHECK(v[0] == Interval(3.8,4));
+      CHECK(v[1] == Interval(14,17));
+      CHECK(v[2] == Interval(37,42));
+    }
+
+    x.invert(Interval(-1,1), v, x.tdomain()->t0_tf());
+    CHECK(v.size() == 4);
+
+    if(v.size() == 4)
+    {
+      CHECK(v[0] == Interval(2,5));
+      CHECK(v[1] == Interval(13,17));
+      CHECK(v[2] == Interval(34,35));
+      CHECK(v[3] == Interval(36,46));
+    }
+
+    // The same, with a custom domain (empty):
+    x.invert(Interval(-1,1), v, Interval::empty());
+    CHECK(v.size() == 0);
+
+    x.invert(Interval(-6.9999), v, x.tdomain()->t0_tf());
+    CHECK(v.size() == 2);
+
+    if(v.size() == 2)
+    {
+      CHECK(v[0] == Interval(4,7));
+      CHECK(v[1] == Interval(8,12));
+    }
+
+    x.invert(Interval(), v, x.tdomain()->t0_tf());
+    CHECK(v.size() == 1);
+
+    if(v.size() == 1)
+      CHECK(v[0] == Interval(0,46));
+
+    x.invert(Interval(-30,-29), v, x.tdomain()->t0_tf());
+    CHECK(v.size() == 0);
+
+    x.invert(Interval(3.5), v, x.tdomain()->t0_tf());
+    CHECK(v.size() == 5);
+
+    if(v.size() == 5)
+    {
+      CHECK(v[0] == Interval(1,4));
+      CHECK(v[1] == Interval(15,18));
+      CHECK(v[2] == Interval(26,27));
+      CHECK(v[3] == Interval(30,38));
+      CHECK(v[4] == Interval(40,45));
+    }
+
+    x.invert(Interval(9.5,30), v, x.tdomain()->t0_tf());
+    CHECK(v.size() == 1);
+
+    if(v.size() == 1)
+      CHECK(v[0] == Interval(20,27));
+
+    x.invert(Interval(12,13), v, x.tdomain()->t0_tf());
+    CHECK(v.size() == 1);
+
+    if(v.size() == 1)
+      CHECK(v[0] == Interval(22,25));
+
+    x.invert(Interval(-4,-3), v, x.tdomain()->t0_tf());
+    CHECK(v.size() == 3);
+
+    if(v.size() == 3)
+    {
+      CHECK(v[0] == Interval(3,5));
+      CHECK(v[1] == Interval(9,10));
+      CHECK(v[2] == Interval(11,15));
+    }
+  }
+
+  SECTION("Inversion, derivative")
+  {
+    auto tdomain = create_tdomain({0,5},1.);
+    SlicedTube<Interval> x(tdomain, Interval());
+    SlicedTube<Interval> v(tdomain, Interval());
+
+    x.set({0}, 0);
+    x.set({4}, 5);
+
+    v.set_ith_slice({1,2}, 0*2+1);
+    v.set_ith_slice((Interval(1)/2) | (Interval(3)/2), 1*2+1);
+    v.set_ith_slice(Interval(0) | (Interval(1)/2), 2*2+1);
+    v.set_ith_slice({0}, 3*2+1);
+    v.set_ith_slice((Interval(-1)/2) | (Interval(1)/2), 4*2+1);
+
+    CtcDeriv ctc(TimePropag::FWD_BWD);
+    ctc.contract(x, v);
+    ctc.contract(x, v);
+    ctc.contract(x, v);
+
+    //for(const auto& sx : x)
+    //  DefaultFigure::draw_box(cart_prod(sx.t0_tf(),sx.codomain()));
+    //DefaultFigure::set_axes(axis(0,x.tdomain()->t0_tf()), axis(1,x.codomain()));
+
+    auto draw_polygon = [&](double t) {
+      auto it = tdomain->tslice(t);
+      auto p = x.slice(it)->polygon_slice(*v.slice(it));
+      //DefaultFigure::draw_polygon(
+      //    p, {Color::blue(),Color::blue(0.2)}
+      //  );
+    };
+    draw_polygon(0.5);
+    draw_polygon(1.5);
+    draw_polygon(2.5);
+    draw_polygon(3.5);
+    draw_polygon(4.5);
+
+    CHECK(x.invert(x.codomain(), x.tdomain()->t0_tf()) == x.tdomain()->t0_tf());
+    CHECK(x.invert(Interval(), x.tdomain()->t0_tf()) == x.tdomain()->t0_tf());
+
+    // Using derivative
+    CHECK(x.invert(x.codomain(), v, x.tdomain()->t0_tf()) == x.tdomain()->t0_tf());
+    CHECK(x.invert(Interval(), v, x.tdomain()->t0_tf()) == x.tdomain()->t0_tf());
+    CHECK(x.invert(Interval(0.), v, x.tdomain()->t0_tf()) == Interval(0));
+    CHECK(Approx(x.slice(tdomain->tslice(4.5))->invert(Interval(4.25), *v.slice(tdomain->tslice(4.5)), *tdomain->tslice(4.5)),1e-10) == Interval(9)/2);
+    CHECK(x.invert(Interval(17)/4, v, x.tdomain()->t0_tf()) == Interval(Interval(9)/2));
+    CHECK(Approx(x.invert(Interval(4), v, x.tdomain()->t0_tf()),1e-10) == Interval(3,5));
+
+    CHECK(Approx(x.slice(tdomain->tslice(4.5))->invert(Interval(41)/10, *v.slice(tdomain->tslice(4.5)), *tdomain->tslice(4.5)),1e-10) == ((Interval(21)/5)|(Interval(24)/5)));
+
+    CHECK(x.slice(tdomain->tslice(4.5))->polygon_slice(*v.slice(tdomain->tslice(4.5))) == 
+      []() {
+        auto tdomain = create_tdomain({4,5});
+        SlicedTube<Interval> x(tdomain, (Interval(7)/2)|(Interval(17)/4));
+        SlicedTube<Interval> v(tdomain, (-Interval(1)/2)|(Interval(1)/2));
+
+        auto sx = x.first_slice();
+        auto sv = v.first_slice();
+        x.set((Interval(7)/2)|4,4);
+        x.set({4},5);
+
+        return sx->polygon_slice(*sv);
+      }());
+
+    CHECK(Approx(x.invert(Interval(41)/10, v, x.tdomain()->t0_tf()),1e-10) == ((Interval(21)/5)|(Interval(24)/5)));
+    CHECK(x.invert((Interval(7)/2), v, x.tdomain()->t0_tf()) == Interval(2,4));
+    CHECK(x.invert(Interval::empty(), v, x.tdomain()->t0_tf()) == Interval::empty());
+    CHECK(x.invert(Interval(10), v, x.tdomain()->t0_tf()) == Interval::empty());
+    CHECK(x.invert(Interval(2,3), v, x.tdomain()->t0_tf()) == Interval(1,2));
+    CHECK(x.invert(Interval(1), v, x.tdomain()->t0_tf()) == Interval(0.5,0.75));
+    CHECK(x.invert((Interval(7)/2) | Interval(4), v, x.tdomain()->t0_tf()) == Interval(2,5));
+  }
+
+  SECTION("Inversion, another test")
+  {
+    auto tdomain = create_tdomain({-20,20},0.05);
+    ScalarVar t;
+    AnalyticFunction f({t}, Interval(-1,1)*((t^2)+1));
+    SlicedTube<Interval> x(tdomain, f);
+    CHECK(x.invert(0., x.tdomain()->t0_tf()) == x.tdomain()->t0_tf());
+  }
+
+  SECTION("Inversion, vector tube")
+  {
+    auto x0 = tube_test_1();
+    SlicedTube<IntervalVector> x(x0.tdomain(), IntervalVector(2));
+
+    auto xi = x.begin(); auto x0i = x0.begin();
+    while(xi != x.end())
+    {
+      assert(x0i != x0.end());
+      xi->set(cart_prod(x0i->codomain(),x0i->codomain()-3), false); // shift
+      xi++; x0i++;
+    }
+    assert(x0i == x0.end());
+
+    IntervalVector inv_val = IntervalVector::constant(2,{0.5,0.5});
+    vector<Interval> v_t;
+    x.invert(inv_val, v_t, x.tdomain()->t0_tf());
+
+    CHECK(v_t.size() == 5);
+    CHECK(v_t[0] == Interval(3,4));
+    CHECK(v_t[1] == Interval(15,17));
+    CHECK(v_t[2] == Interval(37,38));
+    CHECK(v_t[3] == Interval(40,42));
+    CHECK(v_t[4] == Interval(43,45));
+
+    // Union inversion:
+    Interval inv = x.invert(inv_val, x.tdomain()->t0_tf());
+    CHECK(inv == Interval(3,45));
+
+    // Restricted domain
+
+    Interval restricted(15.2,39);
+    x.invert(inv_val, v_t, restricted);
+
+    //for(const auto& sx : x)
+    //  DefaultFigure::draw_box(cart_prod(sx.t0_tf(),sx.codomain()));
+    //DefaultFigure::draw_box(cart_prod(Interval(15.2,39),inv_val[0]), Color::blue());
+    //DefaultFigure::set_axes(axis(0,x.tdomain()->t0_tf()), axis(1,x.codomain()[0]));
+
+    CHECK(v_t.size() == 2);
+    CHECK(v_t[0] == Interval(15.2,17));
+    CHECK(v_t[1] == Interval(37,38));
+
+    inv = x.invert(inv_val, restricted);
+    CHECK(inv == Interval(15.2,38));
   }
 }

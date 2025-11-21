@@ -10,6 +10,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_IntvFullPivLU.h>
 #include <codac2_BoolInterval.h>
+#include <codac2_IntervalVector.h>
+#include <iostream>
 
 using namespace std;
 using namespace codac2;
@@ -49,6 +51,9 @@ TEST_CASE("IntvFullPivLU")
     IntervalMatrix K = LUdec.kernel();
     CHECK(K.cols()==1);
     CHECK((IntervalMatrix(M)*K).lpNorm<Eigen::Infinity>().ub()<=1e-10);
+    IntervalMatrix coK = LUdec.cokernel();
+    CHECK(coK.rows()==1);
+    CHECK((coK*IntervalMatrix(M)).lpNorm<Eigen::Infinity>().ub()<=1e-10);
   }
   
   /* rectangular matrix, full rank */
@@ -70,6 +75,15 @@ TEST_CASE("IntvFullPivLU")
     IntervalMatrix I1 = LUdec.solve(IntervalMatrix::Identity(3,3));
     CHECK((IntervalMatrix(M)*I1-IntervalMatrix::Identity(3,3))
   		.lpNorm<Eigen::Infinity>().ub()<=1e-10);
+    IntervalMatrix A { { 1 }, 
+		       { {-20,20} },
+		       { 2 },
+		       { {-20,20} },
+		       { {-20,20} }};
+    IntervalVector B { 2.0,1.0,4.0 };
+    LUdec.solve(B,A);
+    CHECK((IntervalMatrix(M)*A-B)
+  		.lpNorm<Eigen::Infinity>().ub()<=1e-10);
   }
   
   /* rectangular matrix, full rank */
@@ -84,6 +98,11 @@ TEST_CASE("IntvFullPivLU")
     CHECK(LUdec.is_injective()==BoolInterval::TRUE);
     CHECK(LUdec.is_surjective()==BoolInterval::FALSE);
     CHECK(LUdec.rank()==Interval(3));
+    IntervalMatrix CoImg = LUdec.coimage(M);
+    CHECK(CoImg.rows()==3);
+    IntervalMatrix coK = LUdec.cokernel();
+    CHECK(coK.rows()==2);
+    CHECK((coK*IntervalMatrix(M)).lpNorm<Eigen::Infinity>().ub()<=1e-10);
     CHECK((LUdec.reconstructed_matrix()-M).lpNorm<Eigen::Infinity>().ub()<=1e-10);
   }
   
@@ -91,9 +110,9 @@ TEST_CASE("IntvFullPivLU")
   /* interval matrix, full rank */
   {
     IntervalMatrix M 
-    { { 1, {-4,0}, {5,6}, 7, 6 },
-      { 2,  {1,3}, 3, {3,6}, -2 },
-      { 5,  {0,2}, 2, 9, {-4,-1} } };
+    { { {-4,0}, 1, {5,6}, 7, 6 },
+      { {1,3}, 2, 3, {3,6}, -2 },
+      { {0,2}, 5, 2, 9, {-4,-1} } };
     IntvFullPivLU LUdec(M);
     CHECK(M.is_subset(LUdec.reconstructed_matrix()));
     CHECK(LUdec.is_injective()==BoolInterval::FALSE);
@@ -118,8 +137,12 @@ TEST_CASE("IntvFullPivLU")
     CHECK(LUdec.rank()==Interval(1,3));
     IntervalMatrix K = LUdec.kernel();
     CHECK(K.cols()==4);
+    IntervalMatrix K2 = LUdec.cokernel();
+    CHECK(K2.rows()==2);
     IntervalMatrix Img = LUdec.image(M);
     CHECK(Img.cols()==1);
+    IntervalMatrix CoImg = LUdec.coimage(M);
+    CHECK(CoImg.rows()==1);
   }
   
 }

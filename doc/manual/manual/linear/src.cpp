@@ -8,6 +8,7 @@
  */
 
 #include <catch2/catch_test_macros.hpp>
+#include <map>
 #include <codac2_inversion.h>
 
 using namespace std;
@@ -34,5 +35,15 @@ TEST_CASE("linear - manual")
 
     CHECK((A.template cast<Interval>()*B).contains(Matrix::eye(3,3)));
     CHECK(i);
+  }
+
+  {
+    // [vector-map-compare-1-beg]
+    // std::map<codac2::Vector, int> m; // does not compile
+    std::map<codac2::Vector, int, codac2::VectorCompare> m;
+    codac2::Vector v1({1,3}), v2({-42,10});
+    m[v1] = 10;
+    m[v2] = 20;
+    // [vector-map-compare-1-end]
   }
 }

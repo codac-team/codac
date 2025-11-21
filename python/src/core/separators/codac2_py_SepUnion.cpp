@@ -49,6 +49,6 @@ void export_SepUnion(py::module& m, py::class_<SepBase,pySep>& pysep)
           s1 |= s2.copy();
           return s1;
         },
-      SEPUNION_REF_SEPUNION_OPERATOROREQ_CONST_S_REF)
+      SEPUNION_REF_SEPUNION_OPERATORUNIONEQ_CONST_S_REF)
   ;
 }

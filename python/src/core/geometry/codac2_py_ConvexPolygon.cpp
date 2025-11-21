@@ -23,9 +23,13 @@ void export_ConvexPolygon(py::module& m)
   py::class_<ConvexPolygon,Polygon> exported(m, "ConvexPolygon", CONVEXPOLYGON_MAIN);
   exported
 
-    .def(py::init<const std::vector<Vector>&>(),
-      CONVEXPOLYGON_CONVEXPOLYGON_CONST_VECTOR_VECTOR_REF,
-      "vertices"_a)
+    .def(py::init<const std::vector<Vector>&,bool>(),
+      CONVEXPOLYGON_CONVEXPOLYGON_CONST_VECTOR_VECTOR_REF_BOOL,
+      "vertices"_a, "compute_convex_hull"_a = true)
+
+    .def(py::init<const std::vector<IntervalVector>&,bool>(),
+      CONVEXPOLYGON_CONVEXPOLYGON_CONST_VECTOR_INTERVALVECTOR_REF_BOOL,
+      "vertices"_a, "compute_convex_hull"_a = true)
 
     .def(py::init<const std::vector<Segment>&>(),
       CONVEXPOLYGON_CONVEXPOLYGON_CONST_VECTOR_SEGMENT_REF,
@@ -35,12 +39,30 @@ void export_ConvexPolygon(py::module& m)
       CONVEXPOLYGON_CONVEXPOLYGON_CONST_INTERVALVECTOR_REF,
       "x"_a)
 
+    .def(py::self &= py::self,
+      CONVEXPOLYGON_REF_CONVEXPOLYGON_OPERATORINTEREQ_CONST_CONVEXPOLYGON_REF,
+      "p"_a)
+
+    // For MATLAB compatibility
+    .def("self_inter", &ConvexPolygon::operator&=,
+      CONVEXPOLYGON_REF_CONVEXPOLYGON_OPERATORINTEREQ_CONST_CONVEXPOLYGON_REF,
+      "p"_a)
+
+    .def(py::self |= py::self,
+      CONVEXPOLYGON_REF_CONVEXPOLYGON_OPERATORUNIONEQ_CONST_CONVEXPOLYGON_REF,
+      "p"_a)
+
+    // For MATLAB compatibility
+    .def("self_union", &ConvexPolygon::operator|=,
+      CONVEXPOLYGON_REF_CONVEXPOLYGON_OPERATORUNIONEQ_CONST_CONVEXPOLYGON_REF,
+      "p"_a)
+
     .def("__and__",
         [](const ConvexPolygon& p1, const ConvexPolygon& p2) -> ConvexPolygon
         {
           return p1 & p2;
         },
-      CONVEXPOLYGON_OPERATORAND_CONST_CONVEXPOLYGON_REF_CONST_CONVEXPOLYGON_REF,
+      CONVEXPOLYGON_OPERATORINTER_CONST_CONVEXPOLYGON_REF_CONST_CONVEXPOLYGON_REF,
       "p2"_a)
 
     .def_static("empty", &ConvexPolygon::empty,

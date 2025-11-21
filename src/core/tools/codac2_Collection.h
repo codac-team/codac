@@ -25,11 +25,10 @@ namespace codac2
       { }
 
       template<typename... T_>
-        requires ((std::is_base_of_v<T,T_> // T_ should be some T class
-          && !std::is_same_v<Collection<T>,T_>) && ...)
+        requires ((!std::is_same_v<Collection<T>,T_>) && ...)
       Collection(const T_&... x)
       {
-        (push_object_back(x), ...);
+        (push_back(x), ...);
       }
 
       template<typename... T_>
@@ -47,9 +46,16 @@ namespace codac2
 
       template<typename T_>
         requires std::is_base_of_v<T,T_>
-      void push_object_back(const T_& x)
+      void push_back(const T_& x)
       {
         this->push_back(std::make_shared<T_>(x));
+      }
+
+      template<typename T_>
+        requires std::is_base_of_v<T,T_>
+      void push_back(const std::shared_ptr<T_>& x)
+      {
+        this->std::vector<std::shared_ptr<T>>::push_back(x);
       }
   };
 }

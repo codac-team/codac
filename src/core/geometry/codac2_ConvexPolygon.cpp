@@ -24,12 +24,12 @@ namespace codac2
     : ConvexPolygon(std::vector<Vector>(vertices))
   { }
 
-  ConvexPolygon::ConvexPolygon(const std::vector<Vector>& vertices)
-    : ConvexPolygon(vectorVector_to_vectorIntervalVector(vertices))
+  ConvexPolygon::ConvexPolygon(const std::vector<Vector>& vertices, bool compute_convex_hull)
+    : ConvexPolygon(vectorVector_to_vectorIntervalVector(vertices),compute_convex_hull)
   { }
 
-  ConvexPolygon::ConvexPolygon(const std::vector<IntervalVector>& vertices)
-    : Polygon(convex_hull(vertices))
+  ConvexPolygon::ConvexPolygon(const std::vector<IntervalVector>& vertices, bool compute_convex_hull)
+    : Polygon(compute_convex_hull ? convex_hull(vertices) : vertices)
   { }
 
   ConvexPolygon::ConvexPolygon(std::initializer_list<Segment> edges)
@@ -38,7 +38,7 @@ namespace codac2
 
   ConvexPolygon::ConvexPolygon(const vector<Segment>& edges)
     : Polygon([edges] {
-      auto l = Polygon(edges).unsorted_vertices();
+      auto l = Polygon(edges).vertices();
       return convex_hull({ l.begin(), l.end() });
     }())
   { }
@@ -51,42 +51,66 @@ namespace codac2
   {
     return ConvexPolygon();
   }
+  
+  ConvexPolygon& ConvexPolygon::operator&=(const ConvexPolygon& p)
+  {
+    *this = *this & p;
+    return *this;
+  }
+  
+  ConvexPolygon& ConvexPolygon::operator|=(const ConvexPolygon& p)
+  {
+    vector<IntervalVector> v, pv = p.vertices(), pthis = this->vertices();
+    v.reserve(pv.size() + pthis.size());
+    v.insert(v.end(), pv.begin(), pv.end());
+    v.insert(v.end(), pthis.begin(), pthis.end());
+    *this = ConvexPolygon(v, true);
+    return *this;
+  }
 
   ConvexPolygon operator&(const ConvexPolygon& p1, const ConvexPolygon& p2)
   {
     vector<IntervalVector> inter;
 
-    auto v1 = p1.sorted_vertices();
+    if(p1.is_empty() || p2.is_empty())
+      return ConvexPolygon::empty();
+
+    auto v1 = p1.vertices();
     for(const auto& vi : v1)
+    {
+      assert(!vi.is_empty());
       if(p2.contains(vi) == BoolInterval::TRUE) // strictly contained
         inter.push_back(vi);
+    }
 
-    auto v2 = p2.sorted_vertices();
-    for(const auto& vi : p2.unsorted_vertices())
+    auto v2 = p2.vertices();
+    for(const auto& vi : p2.vertices())
+    {
+      assert(!vi.is_empty());
       if(p1.contains(vi) == BoolInterval::TRUE) // strictly contained
         inter.push_back(vi);
+    }
 
-    if(v1.size() > 1 && v2.size() > 1)
-      for(const auto& e1 : p1)
-        for(const auto& e2 : p2)
+    for(const auto& e1 : p1)
+      for(const auto& e2 : p2)
+      {
+        auto x = e1 & e2;
+        if(!x.is_empty())
         {
-          auto x = e1 & e2;
-          if(!x.is_empty())
+          // In case of colinear edges, the intersection would result in
+          // a large box (infinite solutions): end points are kept.
+          if((colinear(e1,e2) & BoolInterval::TRUE) == BoolInterval::TRUE)
           {
-            // In case of colinear edges, the intersection would result in
-            // a large box (infinite solutions): end points are kept.
-            if((colinear(e1,e2) & BoolInterval::TRUE) == BoolInterval::TRUE)
-            {
-              if(e1[0].intersects(x)) inter.push_back(e1[0]);
-              if(e1[1].intersects(x)) inter.push_back(e1[1]);
-              if(e2[0].intersects(x)) inter.push_back(e2[0]);
-              if(e2[1].intersects(x)) inter.push_back(e2[1]);
-            }
-
-            else
-              inter.push_back(x);
+            if(e1[0].intersects(x)) inter.push_back(e1[0]);
+            if(e1[1].intersects(x)) inter.push_back(e1[1]);
+            if(e2[0].intersects(x)) inter.push_back(e2[0]);
+            if(e2[1].intersects(x)) inter.push_back(e2[1]);
           }
+
+          else
+            inter.push_back(x);
         }
+      }
 
     return ConvexPolygon(inter);
   }

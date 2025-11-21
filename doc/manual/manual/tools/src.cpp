@@ -9,6 +9,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_serialization.h>
+#include <codac2_peibos.h>
 
 using namespace std;
 using namespace codac2;

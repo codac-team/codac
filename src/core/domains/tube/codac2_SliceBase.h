@@ -14,6 +14,7 @@
 
 namespace codac2
 {
+  class Interval;
   class TSlice;
   class SlicedTubeBase;
 

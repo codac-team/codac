@@ -31,14 +31,13 @@ void export_Polygon(py::module& m)
       POLYGON_POLYGON_CONST_VECTOR_SEGMENT_REF,
       "edges"_a)
 
+    .def("size", [](const Polygon& p) { return p.size();  })
+
     .def("edges", &Polygon::edges,
       CONST_VECTOR_SEGMENT_REF_POLYGON_EDGES_CONST)
 
-    .def("unsorted_vertices", &Polygon::unsorted_vertices,
-      LIST_INTERVALVECTOR_POLYGON_UNSORTED_VERTICES_CONST)
-
-    .def("sorted_vertices", &Polygon::sorted_vertices,
-      VECTOR_INTERVALVECTOR_POLYGON_SORTED_VERTICES_CONST)
+    .def("vertices", &Polygon::vertices,
+      VECTOR_INTERVALVECTOR_POLYGON_VERTICES_CONST)
 
     .def("box", &Polygon::box,
       INTERVALVECTOR_POLYGON_BOX_CONST)

@@ -55,6 +55,6 @@ void export_CtcUnion(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInte
           c1 |= std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c2.copy());
           return c1;
         },
-      CTCUNION_X_VARIADIC_REF_CTCUNION_X_OPERATOROREQ_CONST_SHARED_PTR_CTCBASE_X_VARIADIC_REF)
+      CTCUNION_X_VARIADIC_REF_CTCUNION_X_OPERATORUNIONEQ_CONST_SHARED_PTR_CTCBASE_X_VARIADIC_REF)
   ;
 }

@@ -10,12 +10,13 @@
 #pragma once
 
 #include "codac2_SliceBase.h"
+#include "codac2_ConvexPolygon.h"
+#include "codac2_CtcDeriv.h"
+#include "codac2_cart_prod.h"
+#include "codac2_trunc.h"
 
 namespace codac2
 {
-  template<class T>
-  class SlicedTube;
-
   template<class T>
   class Slice : public SliceBase,
     protected T
@@ -179,6 +180,201 @@ namespace codac2
         return codomain() == x.codomain();
       }
 
+      inline ConvexPolygon polygon_slice(const Slice<T>& v) const
+        requires std::is_same_v<T,Interval>
+      {
+        const Interval& t = this->t0_tf();
+        Interval input = this->input_gate(), output = this->output_gate();
+
+        // /!\ .diam() method is not reliable (floating point result)
+        // -> We need to compute the diameter with intervals
+        Interval d = Interval(t.ub())-Interval(t.lb());
+
+        Interval proj_output =  input + d * v;
+        Interval proj_input  = output - d * v;
+
+        return CtcDeriv::polygon_slice(
+          t, *this,
+          input, proj_input,
+          output, proj_output,
+          v);
+      }
+
+      inline ConvexPolygon polygon_slice_i(const Slice<T>& v, Index i) const
+        requires std::is_same_v<T,IntervalVector>
+      {
+        const Interval& t = this->t0_tf();
+
+        // /!\ .diam() method is not reliable (floating point result)
+        // -> We need to compute the diameter with intervals
+        Interval d = Interval(t.ub())-Interval(t.lb());
+
+        Interval input = this->input_gate()[i], output = this->output_gate()[i];
+        Interval proj_output =  input + d * v[i];
+        Interval proj_input  = output - d * v[i];
+
+        return CtcDeriv::polygon_slice(
+          t, (*this)[i],
+          input, proj_input,
+          output, proj_output,
+          v[i]);
+      }
+
+      /**
+       * \brief Returns the evaluation of this slice at \f$t\f$
+       *
+       * \param t temporal input (outside ``Slice``'s tdomain, result is unbounded)
+       * \return value of \f$\llbracket x\rrbracket(t)\f$
+       */
+      inline T operator()(double t) const
+      {
+        if(t == t0_tf().lb())
+          return input_gate();
+
+        else if(t == t0_tf().ub())
+          return output_gate();
+
+        else if(t0_tf().contains(t))
+          return codomain();
+
+        else
+          return all_reals_value();
+      }
+
+      /**
+       * \brief Returns the evaluation of this slice over \f$[t]\f$
+       *
+       * \param t ``Interval`` temporal input (outside ``Slice``'s tdomain, result is unbounded)
+       * \return value of \f$\llbracket x\rrbracket([t])\f$
+       */
+      inline T operator()(const Interval& t) const
+      {
+        if(t.is_degenerated())
+          return operator()(t.lb());
+
+        else if(t.is_subset(t0_tf()))
+          return codomain();
+
+        else
+          return all_reals_value();
+      }
+
+      /**
+       * \brief Returns the optimal evaluation of this slice at \f$t\f$,
+       *        based on the derivative information \f$\llbracket v\rrbracket(\cdot)\f$
+       *
+       * \param t temporal input (outside ``Slice``'s tdomain, result is unbounded)
+       * \param v derivative slice such that \f$\dot{x}(\cdot)\in\llbracket v\rrbracket(\cdot)\f$
+       * \return ``Interval`` value of \f$\llbracket x\rrbracket(t)\f$
+       */
+      inline T operator()(double t, const Slice<T>& v) const
+        requires (std::is_same_v<T,Interval> || std::is_same_v<T,IntervalVector>)
+      {
+        return operator()(Interval(t),v);
+      }
+
+      /**
+       * \brief Returns the optimal evaluation of this slice over \f$[t]\f$,
+       *        based on the derivative information \f$\llbracket v\rrbracket(\cdot)\f$
+       *
+       * \param t ``Interval`` temporal input (outside ``Slice``'s tdomain, result is unbounded)
+       * \param v derivative slice such that \f$\dot{x}(\cdot)\in\llbracket v\rrbracket(\cdot)\f$
+       * \return ``Interval`` value of \f$\llbracket x\rrbracket([t])\f$
+       */
+      inline T operator()(const Interval& t, const Slice<T>& v) const
+        requires (std::is_same_v<T,Interval> || std::is_same_v<T,IntervalVector>)
+      {
+        if constexpr(std::is_same_v<T,Interval>)
+          return untrunc((polygon_slice(v) & ConvexPolygon(cart_prod(t,trunc(codomain())))).box()[1]);
+
+        else if constexpr(std::is_same_v<T,IntervalVector>)
+        {
+          T y = all_reals_value();
+          IntervalVector codom = codomain();
+          for(Index i = 0 ; i < size() ; i++)
+            y[i] &= untrunc((polygon_slice_i(v,i) & ConvexPolygon(cart_prod(t,trunc(codom[i])))).box()[1]);
+          return y;
+        }
+      }
+
+      /**
+       * \brief Returns the interval inversion \f$\llbracket x\rrbracket^{-1}([y])\f$
+       *
+       * \param y ``Interval`` codomain
+       * \param t optional interval tdomain on which the inversion will be performed
+       * \return hull of \f$\llbracket x\rrbracket^{-1}([y])\cap[t]\f$
+       */
+      inline Interval invert(const T& y, const Interval& t = Interval()) const
+      {
+        if(t.is_empty())
+          return Interval::empty();
+
+        else if(t.is_strict_superset(t0_tf()))
+          return Interval();
+
+        else if((t0_tf() & t) == t0_tf() && codomain().is_subset(y))
+          return t0_tf();
+
+        else if(t == t0_tf().lb())
+        {
+          if(y.intersects(input_gate()))
+            return t0_tf().lb();
+          else
+            return Interval::empty();
+        }
+
+        else if(t == t0_tf().ub())
+        {
+          if(y.intersects(output_gate()))
+            return t0_tf().ub();
+          else
+            return Interval::empty();
+        }
+
+        else
+        {
+          if(y.intersects(codomain()))
+            return t & t0_tf();
+          else
+            return Interval::empty();
+        }
+      }
+
+      /**
+       * \brief Returns the optimal interval inversion \f$\llbracket x\rrbracket^{-1}([y])\f$
+       *
+       * \note The knowledge of the derivative slice \f$\llbracket v\rrbracket(\cdot)\f$ allows a finer inversion.
+       *
+       * \param y ``Interval`` codomain
+       * \param v derivative slice such that \f$\dot{x}(\cdot)\in\llbracket v\rrbracket(\cdot)\f$
+       * \param t the optional interval tdomain on which the inversion will be performed
+       * \return hull of \f$\llbracket x\rrbracket^{-1}([y])\cap[t]\f$
+       */
+      inline Interval invert(const T& y, const Slice<T>& v, const Interval& t = Interval()) const
+        requires (std::is_same_v<T,Interval> || std::is_same_v<T,IntervalVector>)
+      {
+        if(t.is_empty() || y.is_empty())
+          return Interval::empty();
+
+        else if(!t.is_subset(t0_tf()))
+          return Interval();
+
+        else
+        {
+          if constexpr(std::is_same_v<T,Interval>)
+            return untrunc((polygon_slice(v) & ConvexPolygon(cart_prod(t,trunc(y)))).box()[0]);
+
+          else if constexpr(std::is_same_v<T,IntervalVector>)
+          {
+            Interval t_(t);
+            for(Index i = 0 ; i < size() ; i++)
+              if(!t_.is_empty())
+                t_ &= untrunc((polygon_slice_i(v,i) & ConvexPolygon(cart_prod(t_,trunc(y[i])))).box()[0]);
+            return t_;
+          }
+        }
+      }
+
       friend inline std::ostream& operator<<(std::ostream& os, const Slice& x)
       {
         os << x.t0_tf()
@@ -186,6 +382,21 @@ namespace codac2
            << std::flush;
         return os;
       }
+
+      inline T all_reals_value() const
+      {
+        T x = codomain();
+        x.init();
+        return x;
+      }
+
+      inline T empty_value() const
+      {
+        T x = codomain();
+        x.set_empty();
+        return x;
+      }
+      
 
     protected:
 

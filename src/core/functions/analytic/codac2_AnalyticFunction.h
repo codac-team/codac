@@ -2,7 +2,7 @@
  *  \file codac2_AnalyticFunction.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou, Damien Massé
+ *  \author     Simon Rohou, Damien Massé, Maël Godard
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -19,6 +19,9 @@
 #include "codac2_operators.h"
 #include "codac2_cart_prod.h"
 #include "codac2_vec.h"
+#include "codac2_Wrapper.h"
+#include "codac2_Parallelepiped.h"
+#include "codac2_peibos_tools.h"
 
 namespace codac2
 {
@@ -189,9 +192,33 @@ namespace codac2
         );
 
         for(auto it = tdomain->begin() ; it != tdomain->end() ; it++)
-          y(it)->codomain() = this->eval(x(it)->codomain()...);
+          y.slice(it)->codomain() = this->eval(x.slice(it)->codomain()...);
 
         return y;
+      }
+
+      template<typename... Args>
+        requires std::is_same_v<VectorType,T> && ((!std::is_same_v<MatrixType,typename ExprType<Args>::Type>) && ...)
+      Parallelepiped parallelepiped_eval(const Args&... x) const
+      {
+        this->check_valid_inputs(x...);
+        assert_release(this->input_size() < this->output_size() &&
+                      "Parallelepiped evaluation requires more outputs than inputs.");
+        assert_release(this->input_size() > 0 &&
+                    "Parallelepiped evaluation requires at least one input.");
+
+        IntervalVector Y = this->eval(((typename Wrapper<Args>::Domain)(x)).mid()...);
+        Vector z = Y.mid();
+
+        Matrix A = this->diff(((typename Wrapper<Args>::Domain)(x)).mid()...).mid();
+
+        // Maximum error computation
+        double rho = error_peibos(Y, z, this->diff(x...), A, cart_prod(x...));
+
+        // Inflation of the parallelepiped
+        Matrix A_inf = inflate_flat_parallelepiped(A, (cart_prod(x...).template cast<Interval>()).rad(), rho);
+
+        return Parallelepiped(z, A_inf);
       }
 
       Index output_size() const

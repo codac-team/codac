@@ -13,6 +13,7 @@
 #include "codac2_Interval.h"
 #include "codac2_IntervalMatrix.h"
 #include "codac2_IntervalVector.h"
+#include "codac2_IntervalRow.h"
 #include "codac2_BoolInterval.h"
 #include "codac2_IntvFullPivLU.h"
 #include "codac2_arith_mul.h"
@@ -52,18 +53,44 @@ IntervalMatrix IntvFullPivLU::build_LU_bounds(const IntervalMatrix &E) {
 /** constructor from Matrix of double 
  */
 IntvFullPivLU::IntvFullPivLU(const Matrix &M) :
-   _LU(M), 
+   _LU(M), transform(Row::Constant(M.cols(),1.0)), 
    matrixLU_(M.rows(), M.cols())
 {
-   this->compute_matrix_LU(IntervalMatrix(M), _LU.maxPivot()*_LU.threshold());
+   this->compute_matrix_LU(IntervalMatrix(M),
+		 _LU.maxPivot()*_LU.threshold());
 }
   
 /** constructor from Matrix of Intervals
  */
 IntvFullPivLU::IntvFullPivLU(const IntervalMatrix &M) :
-   _LU(M.mid()), 
    matrixLU_(M.rows(), M.cols())
 {
+   Matrix middle = M.mid();
+#if 0
+   double norm = std::max(middle.lpNorm<Eigen::Infinity>(),1e-8);
+		 /* to avoid zero norm */
+   /* first transform middle to homogeneise the diameters */
+   transform = M.diam().colwise().sum();
+   double mx = transform.maxCoeff();
+   double mn = std::max(transform.minCoeff(),1e-8*norm); /* epsilon value */
+   if (mx<1e-6*norm || mn==mx) {
+		 /* quasi-punctual matrix relative to its norm  */
+#endif
+      transform = Row::Constant(M.cols(),1.0);
+#if 0
+   } else {
+      double ratio = std::sqrt(mn*mx);
+      for (Index i=0;i<M.cols();i++) {
+          double a = ratio/std::max(transform[i],1e-8*norm);
+          int b;
+          frexp(a,&b);
+          transform[i] = exp2(b);
+          middle.col(i) *= transform[i];
+      }
+   }
+#endif
+   _LU = Eigen::FullPivLU<Matrix>(middle);
+   /* compute the colmax of diam */
    this->compute_matrix_LU(M,_LU.maxPivot()*_LU.threshold());
 }
 
@@ -82,6 +109,17 @@ void IntvFullPivLU::compute_matrix_LU(const IntervalMatrix &M, double nonzero) {
     int nCols=M.cols();
     int dim = std::min(nRows,nCols);
     Matrix mLU = _LU.matrixLU();
+#if 0
+    /* (de-)transformation of mLU :
+       we have P-1 LU Q-1 = M D_R   (D diag from R = transform)
+       P-1 LU Q-1 D_R-1 = A
+       and U Q-1 D_R-1 = U D_R'-1 Q-1 where R' = R Q */
+    Row Tprime = transform * _LU.permutationQ();
+    for (int c=0;c<nCols;c++) 
+      for (int l=std::min(c,nRows-1);l>=0;l--) {
+         mLU(l,c) /= Tprime[c];
+      }
+#endif
     /* modification of mLU if not full rank (check this) */
     for (int i=0;i<dim;i++) {
         if (std::fabs(mLU(i,i))<nonzero) {
@@ -140,7 +178,9 @@ void IntvFullPivLU::compute_matrix_LU(const IntervalMatrix &M, double nonzero) {
        InvL * (_LU.permutationP() * M * 
        _LU.permutationQ()) * InvU;
 
+//    std::cout << "error matrix : " << error << "\n";
     IntervalMatrix eps = IntvFullPivLU::build_LU_bounds(error);
+//    std::cout << "eps matrix : " << eps << "\n";
     
     /* product */
     for (Index c=0;c<nCols;c++) 
@@ -309,6 +349,64 @@ IntervalMatrix IntvFullPivLU::kernel() const {
     return res;
 }
 
+IntervalMatrix IntvFullPivLU::cokernel() const {
+    /* same approach than the kernel computation algorithm. 
+       however, we do not consider only U, but L and the diagonal of U.
+       in practice it means that we simplify the computation : all rows
+       with 0 in the diagonal of U (or after the diagonal) are "generating" */
+    std::vector<IntervalRow> cokernel;
+    std::vector<bool> generating(matrixLU_.rows(),true);
+    for (Index r=0;r<matrixLU_.rows();r++) {
+      /* a potential cokernel row is built as follows :
+         we consider each row r and states that the vector must be 0
+         for all row > r , and 1 for r.
+         if we manage to build such a vector by filling dependant indices
+         < r, then this index is stated as "generating" and will be 0 for
+         the next vectors. Otherwise, it is states as "not generating" and 
+         and used in next vectors */
+      /* before anything, if r<matrixLU_.rows() and 
+         matrixLU_(r,r) does not contains 0, just states that 
+         r is not generating and go on */
+      if (r<matrixLU_.cols() && !matrixLU_(r,r).contains(0.0)) {
+          generating[r]=false;
+          continue;
+      }
+      IntervalRow vect = IntervalRow::Zero(matrixLU_.rows());
+      vect[r]=1.0;
+      for (Index r1=r-1;r1>=0;r1--) {
+         if (r1>=matrixLU_.cols())  {
+             /* the only possible case is generating[r1] true */
+             continue;
+         }
+         /* in the following, either 0.0 \notin matrixLU_(r1,r1)
+            and generating(r1) is false, which is fine,
+            or 0.0 in matrixLU_(r1,r1). Much less fine, in this case we 
+            consider vect[r1]=0.0. Normally we must have generating[r1] true
+            so that's ok */
+         vect[r1]=0.0;
+         if (!matrixLU_(r1,r1).contains(0.0)) {
+           for (Index r2=r1+1;r2<=r;r2++) {
+             vect[r1] -= matrixLU_(r2,r1)*vect[r2];
+           }
+         }
+         /* note: here, in theory if generating[r1] is 0 we should
+            be able to put vect[r1]=0.0 even if 0.0 is not in 
+            vect[r1], because the actual kernel is a combination
+            of found vectors. _however_, it means that the vector
+            we are constructing is _not_ in the kernel, just that it
+            can be used to build the kernel... but that may be the only
+            acceptable approach */
+      }
+      cokernel.push_back(vect*_LU.permutationP());
+    }
+    /* build the matrix */
+    IntervalMatrix res(cokernel.size(),matrixLU_.rows());
+    for (unsigned int r=0;r<cokernel.size();r++) {
+       res.row(r)=cokernel[r];
+    }
+    return res;
+}
+
 IntervalMatrix IntvFullPivLU::solve(const IntervalMatrix &rhs) const {
     assert_release(rhs.rows()==matrixLU_.rows());
     IntervalMatrix prhs = _LU.permutationP()*rhs;
@@ -347,6 +445,40 @@ IntervalMatrix IntvFullPivLU::solve(const IntervalMatrix &rhs) const {
         }
     }
     return _LU.permutationQ()*res;
+}
+
+void IntvFullPivLU::solve(const IntervalMatrix &rhs, IntervalMatrix &B) const {
+    assert_release(rhs.rows()==matrixLU_.rows() && B.rows()==matrixLU_.cols());
+    IntervalMatrix prhs = _LU.permutationP()*rhs;
+    /* inverse L */
+    for (Index r = 0; r<matrixLU_.rows()-1; r++) {
+       for (Index r1=r+1;r1<matrixLU_.rows();r1++) {
+          prhs.row(r1) -= matrixLU_(r1,r)*prhs.row(r);
+       }
+    }
+    /* first check, if rows>cols, the 0 lines */
+    for (Index r=matrixLU_.cols(); r<matrixLU_.rows();r++) {
+        for (Index a=0;a<prhs.cols();a++) {
+            if (!prhs(r,a).contains(0.0)) {
+               B.set_empty(); return;
+            }
+        }
+    }
+    IntervalMatrix qB = _LU.permutationQ().inverse()*B;
+    /* then use the diagonal elements */
+//    IntervalMatrix res = IntervalMatrix::Zero(matrixLU_.cols(),rhs.cols());
+    Index dim = std::min(matrixLU_.cols(),matrixLU_.rows());
+    IntervalMatrix U = matrixLU_.triangularView<Eigen::Upper>();
+    for (Index r = dim-1;r>=0;r--) {
+        IntervalRow rw=U.row(r);
+        for (Index c = 0;c<qB.cols();c++) {
+           IntervalVector bvect=qB.col(c);
+           MulOp::bwd(prhs(r,c),rw,bvect);
+           if (bvect.is_empty()) { B.set_empty(); return; }
+           qB.col(c)=bvect;
+        }
+    }
+    B &= _LU.permutationQ()*qB;
 }
 
 IntervalMatrix IntvFullPivLU::reconstructed_matrix() const {

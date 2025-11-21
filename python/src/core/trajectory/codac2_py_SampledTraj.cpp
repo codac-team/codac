@@ -168,6 +168,15 @@ py::class_<SampledTraj<T>> _export_SampledTraj(py::module& m, const string& clas
     .def("as_function", &SampledTraj<T>::as_function,
       ANALYTICFUNCTION_TYPE_SAMPLEDTRAJ_T_AS_FUNCTION_CONST)
 
+    .def("primitive", (SampledTraj<T> (SampledTraj<T>::*)() const) &SampledTraj<T>::primitive,
+      SAMPLEDTRAJ_T_SAMPLEDTRAJ_T_PRIMITIVE_CONST)
+
+    .def("derivative", &SampledTraj<T>::derivative,
+      SAMPLEDTRAJ_T_SAMPLEDTRAJ_T_DERIVATIVE_CONST)
+
+    .def("mean", &SampledTraj<T>::mean,
+      T_SAMPLEDTRAJ_T_MEAN_CONST)
+
     .def("__repr__", [](const SampledTraj<T>& x) {
           std::ostringstream stream;
           stream << x;

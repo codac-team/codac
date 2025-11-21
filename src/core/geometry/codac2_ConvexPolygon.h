@@ -36,15 +36,23 @@ namespace codac2
        * \brief Constructs a ``ConvexPolygon`` from a vector of ``Vector`` vertices.
        *
        * \param vertices A vector of vertices defining the convex polygon.
+       * \param compute_convex_hull if true, will create the shape as the convex hull
+       *   of the provided points. This option may be set to false when one can ensure
+       *   that the points are already convex and provided in counterclockwise order.
+       *   This would speed up computations, avoiding a Graham scan procedure.
        */
-      ConvexPolygon(const std::vector<Vector>& vertices);
+      ConvexPolygon(const std::vector<Vector>& vertices, bool compute_convex_hull = true);
 
       /**
        * \brief Constructs a ``ConvexPolygon`` from a vector of ``IntervalVector`` vertices.
        *
        * \param vertices A vector of ``IntervalVector``s enclosing the convex polygon vertices.
+       * \param compute_convex_hull if true, will create the shape as the convex hull
+       *   of the provided points. This option may be set to false when one can ensure
+       *   that the points are already convex and provided in counterclockwise order.
+       *   This would speed up computations, avoiding a Graham scan procedure.
        */
-      explicit ConvexPolygon(const std::vector<IntervalVector>& vertices);
+      explicit ConvexPolygon(const std::vector<IntervalVector>& vertices, bool compute_convex_hull = true);
 
       /**
        * \brief Constructs a ``ConvexPolygon`` from an initializer list of ``Segment`` edges.
@@ -75,6 +83,22 @@ namespace codac2
        * \return An empty convex polygon without vertices.
        */
       static ConvexPolygon empty();
+
+      /**
+       * \brief Self intersection of this and p
+       * 
+       * \param p the other convex polygon
+       * \return a reference to this
+       */
+      ConvexPolygon& operator&=(const ConvexPolygon& p);
+
+      /**
+       * \brief Self union of this and p
+       * 
+       * \param p the other convex polygon
+       * \return a reference to this
+       */
+      ConvexPolygon& operator|=(const ConvexPolygon& p);
 
     protected:
 

@@ -116,16 +116,17 @@ namespace codac2
       const double _eps;
   };
   
-  template<>
-  class Approx<Polygon>
+  template<typename P>
+    requires std::is_base_of_v<Polygon,P>
+  class Approx<P>
   {
     public:
 
-      explicit Approx(const Polygon& x, double eps = DEFAULT_EPS)
+      explicit Approx(const P& x, double eps = DEFAULT_EPS)
         : _x(x), _eps(eps)
       { }
 
-      friend bool operator==(const Polygon& p1, const Approx<Polygon>& p2)
+      friend bool operator==(const P& p1, const Approx<P>& p2)
       {
         size_t n = p1.edges().size();
         if(p2._x.edges().size() != n)
@@ -139,7 +140,6 @@ namespace codac2
         int way = 1;
         if(n > 1)
           way = (Approx<Segment>(p1.edges()[1], p2._eps) == p2._x.edges()[(i+1)%n]) ? 1 : -1;
-        assert(way == 1 || (way == -1 && p1.edges()[1] == p2._x.edges()[(i-1+2*n)%n]));
 
         for(size_t j = 0 ; j < n ; j++)
           if(Approx<Segment>(p1.edges()[j], p2._eps) != p2._x.edges()[(i+way*j+2*n)%n])
@@ -148,7 +148,7 @@ namespace codac2
         return true;
       }
 
-      friend std::ostream& operator<<(std::ostream& os, const Approx<Polygon>& x)
+      friend std::ostream& operator<<(std::ostream& os, const Approx<P>& x)
       {
         os << "Approx(" << x._x << ")";
         return os;
@@ -156,7 +156,7 @@ namespace codac2
     
     private:
 
-      const Polygon _x;
+      const P _x;
       const double _eps;
   };
   

@@ -97,6 +97,10 @@ class TestInterval(unittest.TestCase):
     self.assertTrue(x.mid() == 1)
     self.assertTrue(x.rad() == 1)
     self.assertTrue(x.diam() == 2)
+    self.assertTrue(x.mag() == 2)
+    self.assertTrue(x.mig() == 0)
+    self.assertTrue(x.smag() == 2)
+    self.assertTrue(x.smig() == 0)
 
     x = Interval(-3,-1)
 
@@ -105,6 +109,10 @@ class TestInterval(unittest.TestCase):
     self.assertTrue(x.mid() == -2)
     self.assertTrue(x.rad() == 1)
     self.assertTrue(x.diam() == 2)
+    self.assertTrue(x.mag() == 3)
+    self.assertTrue(x.mig() == 1)
+    self.assertTrue(x.smag() == -3)
+    self.assertTrue(x.smig() == -1)
 
     x = Interval(-3,1)
 
@@ -113,6 +121,10 @@ class TestInterval(unittest.TestCase):
     self.assertTrue(x.mid() == -1)
     self.assertTrue(x.rad() == 2)
     self.assertTrue(x.diam() == 4)
+    self.assertTrue(x.mag() == 3)
+    self.assertTrue(x.mig() == 0)
+    self.assertTrue(x.smag() == -3)
+    self.assertTrue(x.smig() == 0)
 
     x = Interval(-oo,0)
 
@@ -121,6 +133,10 @@ class TestInterval(unittest.TestCase):
     self.assertTrue(x.mid() == -sys.float_info.max)
     self.assertTrue(x.rad() == oo)
     self.assertTrue(x.diam() == oo)
+    self.assertTrue(x.mag() == oo)
+    self.assertTrue(x.mig() == 0)
+    self.assertTrue(x.smag() == -oo)
+    self.assertTrue(x.smig() == 0)
 
     x = Interval(-oo,oo)
 
@@ -129,6 +145,10 @@ class TestInterval(unittest.TestCase):
     self.assertTrue(x.mid() == 0)
     self.assertTrue(x.rad() == oo)
     self.assertTrue(x.diam() == oo)
+    self.assertTrue(x.mag() == oo)
+    self.assertTrue(x.mig() == 0)
+    self.assertTrue(x.smag() == oo)
+    self.assertTrue(x.smig() == 0)
 
     x = Interval(sys.float_info.max,oo)
 
@@ -137,17 +157,21 @@ class TestInterval(unittest.TestCase):
     self.assertTrue(x.mid() == sys.float_info.max)
     self.assertTrue(x.rad() == oo)
     self.assertTrue(x.diam() == oo)
+    self.assertTrue(x.mag() == oo)
+    self.assertTrue(x.mig() == sys.float_info.max)
+    self.assertTrue(x.smag() == oo)
+    self.assertTrue(x.smig() == sys.float_info.max)
 
     x = Interval(-1,1)
     for i in range(10):
       self.assertTrue(x.contains(x.rand()))
-    x = Interval(-oo,0);
+    x = Interval(-oo,0)
     for i in range(10):
       self.assertTrue(x.contains(x.rand()))
-    x = Interval(0,oo);
+    x = Interval(0,oo)
     for i in range(10):
       self.assertTrue(x.contains(x.rand()))
-    x = Interval(-oo,oo);
+    x = Interval(-oo,oo)
     for i in range(10):
       self.assertTrue(x.contains(x.rand()))
     x = Interval.empty()
@@ -183,10 +207,10 @@ class TestInterval(unittest.TestCase):
     self.assertTrue(not Interval(0,next_float(0)).is_bisectable())
     self.assertTrue(Interval(0,next_float(next_float(0))).is_bisectable())
     self.assertTrue(Interval(10,next_float(next_float(10))).is_bisectable())
-    self.assertTrue(Interval(previous_float(previous_float(0)),0).is_bisectable())
-    self.assertTrue(Interval(previous_float(previous_float(10)),10).is_bisectable())
+    self.assertTrue(Interval(prev_float(prev_float(0)),0).is_bisectable())
+    self.assertTrue(Interval(prev_float(prev_float(10)),10).is_bisectable())
     self.assertTrue(not Interval(10,next_float(10)).is_bisectable())
-    self.assertTrue(not Interval(previous_float(0),0).is_bisectable())
+    self.assertTrue(not Interval(prev_float(0),0).is_bisectable())
 
     self.assertTrue(Interval(0,2).mid() == 1.0)
     self.assertTrue(Interval(-oo,oo).mid() == 0)

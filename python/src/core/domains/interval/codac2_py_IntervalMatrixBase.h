@@ -55,6 +55,12 @@ void export_IntervalMatrixBase(py::module& m, py::class_<S>& pyclass)
     .def("mig", [](const S& x) { return x.mig(); },
       MATRIXBASE_ADDONS_INTERVALMATRIXBASE_AUTO_MIG_CONST)
 
+    .def("smag", [](const S& x) { return x.smag(); },
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_AUTO_SMAG_CONST)
+
+    .def("smig", [](const S& x) { return x.smig(); },
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_AUTO_SMIG_CONST)
+
     .def("rand", [](const S& x) { return x.rand(); },
       MATRIXBASE_ADDONS_INTERVALMATRIXBASE_AUTO_RAND_CONST)
 
@@ -65,34 +71,34 @@ void export_IntervalMatrixBase(py::module& m, py::class_<S>& pyclass)
       MATRIXBASE_ADDONS_INTERVALMATRIXBASE_AUTO_DIAM_CONST)
 
     .def("min_rad", [](const S& x) { return x.min_rad(); },
-      MATRIX_ADDONS_INTERVALMATRIXBASE_DOUBLE_MIN_RAD_CONST)
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_DOUBLE_MIN_RAD_CONST)
 
     .def("max_rad", [](const S& x) { return x.max_rad(); },
-      MATRIX_ADDONS_INTERVALMATRIXBASE_DOUBLE_MAX_RAD_CONST)
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_DOUBLE_MAX_RAD_CONST)
 
     .def("min_diam", [](const S& x) { return x.min_diam(); },
-      MATRIX_ADDONS_INTERVALMATRIXBASE_DOUBLE_MIN_DIAM_CONST)
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_DOUBLE_MIN_DIAM_CONST)
 
     .def("max_diam", [](const S& x) { return x.max_diam(); },
-      MATRIX_ADDONS_INTERVALMATRIXBASE_DOUBLE_MAX_DIAM_CONST)
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_DOUBLE_MAX_DIAM_CONST)
 
     .def("min_diam_index", [](const S& x)
         {
           return matlab::output_index(x.min_diam_index());
         },
-      MATRIX_ADDONS_INTERVALMATRIXBASE_INDEX_MIN_DIAM_INDEX_CONST)
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_INDEX_MIN_DIAM_INDEX_CONST)
 
     .def("max_diam_index", [](const S& x)
         {
           return matlab::output_index(x.max_diam_index());
         },
-      MATRIX_ADDONS_INTERVALMATRIXBASE_INDEX_MAX_DIAM_INDEX_CONST)
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_INDEX_MAX_DIAM_INDEX_CONST)
 
     .def("extr_diam_index", [](const S& x, bool min)
         {
           return matlab::output_index(x.extr_diam_index(min));
         },
-      MATRIX_ADDONS_INTERVALMATRIXBASE_INDEX_EXTR_DIAM_INDEX_BOOL_CONST,
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_INDEX_EXTR_DIAM_INDEX_BOOL_CONST,
       "min"_a)
 
     .def("__contains__", [](const S& x, const V& y) { return x.contains(y); },
@@ -167,19 +173,19 @@ void export_IntervalMatrixBase(py::module& m, py::class_<S>& pyclass)
       "ratio"_a = 0.49)
 
     .def(py::self &= py::self,
-      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_REF_OPERATORANDEQ_CONST_MATRIXBASE_OTHERDERIVED_REF
+      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_REF_OPERATORINTEREQ_CONST_MATRIXBASE_OTHERDERIVED_REF
       "x"_a)
 
     .def(py::self |= py::self,
-      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_REF_OPERATOROREQ_CONST_MATRIXBASE_OTHERDERIVED_REF
+      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_REF_OPERATORUNIONEQ_CONST_MATRIXBASE_OTHERDERIVED_REF
       "x"_a)
 
     .def(py::self & py::self,
-      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_OPERATORAND_CONST_MATRIXBASE_OTHERDERIVED_REF_CONST
+      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_OPERATORINTER_CONST_MATRIXBASE_OTHERDERIVED_REF_CONST
       "x"_a)
 
     .def(py::self | py::self,
-      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_OPERATOROR_CONST_MATRIXBASE_OTHERDERIVED_REF_CONST,
+      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_OPERATORUNION_CONST_MATRIXBASE_OTHERDERIVED_REF_CONST,
       "x"_a)
   ;
 

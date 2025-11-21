@@ -39,7 +39,7 @@ namespace codac2
       }
 
       CtcInverse(const AnalyticFunction<typename ExprType<Y>::Type>& f, const Y& y, bool with_centered_form = true, bool is_not_in = false)
-        : CtcInverse(f, CtcWrapper<Y>(y), with_centered_form, is_not_in)
+        : CtcInverse(f, CtcWrapper<Y,Y>(y), with_centered_form, is_not_in)
       { }
 
       void contract(X&... x) const
@@ -49,7 +49,7 @@ namespace codac2
 
       void contract_(const Y& y, X&... x) const
       {
-        return contract_(CtcWrapper<Y>(y), x...);
+        return contract_(CtcWrapper<Y,Y>(y), x...);
       }
 
       void contract_(const CtcBase<Y>& ctc_y, X&... x) const

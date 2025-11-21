@@ -25,6 +25,10 @@ void export_StyleProperties(py::module& m)
   
     .def(py::init<>(),
       STYLEPROPERTIES_STYLEPROPERTIES)
+
+    .def(py::init<const std::string&, const std::string&, const std::string&>(),
+      STYLEPROPERTIES_STYLEPROPERTIES_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF,
+      "param1"_a, "param2"_a="", "param3"_a="")
   
     .def(py::init<const Color&, const std::string&, const std::string&, const std::string&>(),
       STYLEPROPERTIES_STYLEPROPERTIES_CONST_COLOR_REF_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF,
@@ -55,9 +59,6 @@ void export_StyleProperties(py::module& m)
 
     .def_static("boundary", &StyleProperties::boundary,
       STATIC_STYLEPROPERTIES_STYLEPROPERTIES_BOUNDARY)
-
-    .def_static("available_line_styles", &StyleProperties::available_line_styles,
-      STATIC_SET_STRING_STYLEPROPERTIES_AVAILABLE_LINE_STYLES)
 
   ;
   

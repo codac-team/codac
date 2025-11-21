@@ -10,10 +10,11 @@
 #pragma once
 
 #include <vector>
-#include <codac2_Vector.h>
-#include <codac2_Matrix.h>
-#include <codac2_IntervalVector.h>
+#include "codac2_Vector.h"
+#include "codac2_Matrix.h"
+#include "codac2_IntervalVector.h"
 #include "codac2_Zonotope.h"
+#include "codac2_BoolInterval.h"
 
 namespace codac2
 {
@@ -37,15 +38,6 @@ namespace codac2
        * \param A Shape matrix of the parallelepiped (\f$n\times m\f$ matrix with \f$m \leqslant n\f$)
        */
       Parallelepiped(const Vector& z, const Matrix& A);
-
-      /**
-       * \brief Projects the parallelepiped onto the subspace defined by the given indices
-       * 
-       * \param indices Vector of indices of the dimensions to project onto
-       * 
-       * \return A new Zonotope object representing the projection of the parallelepiped onto the specified subspace
-       */
-      Zonotope proj(const std::vector<Index>& indices) const;
       
       /**
        * \brief Computes the vertices of the parallelepiped
@@ -60,6 +52,24 @@ namespace codac2
        * \return An IntervalVector representing the axis-aligned bounding box of the parallelepiped
        */
       IntervalVector box() const;
+
+      /**
+       * \brief Checks if a given point is contained within the parallelepiped. The matrix A has to be square and invertible.
+       * 
+       * \param v The point to check
+       * 
+       * \return BoolInterval true if the point is inside the parallelepiped, false if is outside, and unknown otherwise
+       */
+      BoolInterval contains(const Vector& v) const;
+
+      /**
+       * \brief Checks if a given box is contained within the parallelepiped. The matrix A has to be square and invertible.
+       * 
+       * \param x The box to check
+       * 
+       * \return BoolInterval true if the box is inside the parallelepiped, false if is outside, and unknown otherwise
+       */
+      BoolInterval is_superset(const IntervalVector& x) const;
 
   };
 }

@@ -88,21 +88,21 @@ py::class_<SepBase,pySep> export_Sep(py::module& m)
         {
           return SepInter(s1.copy(),s2.copy());
         },
-      SEPINTER_OPERATORAND_CONST_S1_REF_CONST_S2_REF)
+      SEPINTER_OPERATORINTER_CONST_S1_REF_CONST_S2_REF)
 
     .def("__and__", [](const SepBase& s1, const IntervalVector& x2)
         {
           auto s2 = SepWrapper(x2);
           return SepInter(s1.copy(),s2.copy());
         },
-      SEPINTER_OPERATORAND_CONST_INTERVALVECTOR_REF_CONST_S2_REF)
+      SEPINTER_OPERATORINTER_CONST_INTERVALVECTOR_REF_CONST_S2_REF)
 
     .def("__rand__", [](const SepBase& s1, const IntervalVector& x2)
         {
           auto s2 = SepWrapper(x2);
           return SepInter(s1.copy(),s2.copy());
         },
-      SEPINTER_OPERATORAND_CONST_INTERVALVECTOR_REF_CONST_S2_REF)
+      SEPINTER_OPERATORINTER_CONST_INTERVALVECTOR_REF_CONST_S2_REF)
 
     // Union of separators
 
@@ -110,21 +110,21 @@ py::class_<SepBase,pySep> export_Sep(py::module& m)
         {
           return SepUnion(s1.copy(),s2.copy());
         },
-      SEPUNION_OPERATOROR_CONST_S1_REF_CONST_S2_REF)
+      SEPUNION_OPERATORUNION_CONST_S1_REF_CONST_S2_REF)
 
     .def("__or__", [](const SepBase& s1, const IntervalVector& x2)
         {
           auto s2 = SepWrapper(x2);
           return SepUnion(s1.copy(),s2.copy());
         },
-      SEPUNION_OPERATOROR_CONST_INTERVALVECTOR_REF_CONST_S2_REF)
+      SEPUNION_OPERATORUNION_CONST_INTERVALVECTOR_REF_CONST_S2_REF)
 
     .def("__ror__", [](const SepBase& s1, const IntervalVector& x2)
         {
           auto s2 = SepWrapper(x2);
           return SepUnion(s1.copy(),s2.copy());
         },
-      SEPUNION_OPERATOROR_CONST_INTERVALVECTOR_REF_CONST_S2_REF)
+      SEPUNION_OPERATORUNION_CONST_INTERVALVECTOR_REF_CONST_S2_REF)
 
     // Negation of separator
 

@@ -285,10 +285,38 @@ If you notice any mathematical operators missing from the list below, feel free 
 | Note: the operator :math:`\bmod` is only available for real periods (double precision), interval periods are not yet supported.
 
 
-Expression involving a non-supported centered-form operation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Expressions involving a non-supported centered-form operation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If an operator, for which the centered form is not defined, is involved in an expression, then this expression cannot be evaluated using the centered form (calculation is disabled for the entire operation). A simple natural evaluation will then be computed.
+
+
+Expressions involving a temporal operator
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Temporal operations for involving trajectories or tubes in analytic expressions require an intermediate operation:
+
+.. tabs::
+  
+  .. code-tab:: py
+
+    x = # some sampled trajectory...
+    g = x.as_function() # intermediate operation
+
+    t = ScalarVar()
+    h = AnalyticFunction(
+      [t], g(t)
+    )
+
+  .. code-tab:: c++
+
+    x = // some sampled trajectory...
+    g = x.as_function(); // intermediate operation
+
+    ScalarVar t;
+    AnalyticFunction h(
+      {t}, g(t)
+    );
 
 
 Direct use of operators

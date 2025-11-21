@@ -19,10 +19,10 @@ namespace codac2
     auto partial_integ = partial_integral(t);
 
     if(partial_integ.first.is_empty() || partial_integ.second.is_empty())
-      return this->empty_codomain();
+      return this->empty_value();
 
     else if(partial_integ.first.is_unbounded() || partial_integ.second.is_unbounded())
-      return this->all_reals_codomain();
+      return this->all_reals_value();
 
     else
       return T(partial_integ.first.lb()) | partial_integ.second.ub();
@@ -37,13 +37,13 @@ namespace codac2
     if(integ_t1.first.is_empty() || integ_t1.second.is_empty() ||
        integ_t2.first.is_empty() || integ_t2.second.is_empty())
     {
-      return this->empty_codomain();
+      return this->empty_value();
     }
 
     else if(integ_t1.first.is_unbounded() || integ_t1.second.is_unbounded() ||
             integ_t2.first.is_unbounded() || integ_t2.second.is_unbounded())
     {
-      return this->all_reals_codomain();
+      return this->all_reals_value();
     }
 
     else
@@ -60,7 +60,7 @@ namespace codac2
     //if(!t.is_subset(tdomain()->t0_tf()))
     //  return { Interval(), Interval() };
 
-    auto zero = this->all_reals_codomain();
+    auto zero = this->all_reals_value();
     zero.init(Interval(0.));
 
     std::pair<T,T> p_integ { zero, zero };
@@ -73,13 +73,13 @@ namespace codac2
 
       if(si.codomain().is_empty())
       {
-        auto e = this->empty_codomain();
+        auto e = this->empty_value();
         return { e, e };
       }
 
       if(si.codomain().is_unbounded())
       {
-        auto u = this->all_reals_codomain();
+        auto u = this->all_reals_value();
         return { u, u };
       }
 

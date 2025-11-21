@@ -23,7 +23,7 @@ using namespace pybind11::literals;
 
 py::class_<Interval> export_Interval(py::module& m)
 {
-  py::class_<Interval> exported_interval_class(m, "Interval", INTERVAL_MAIN);
+  py::class_<Interval,std::shared_ptr<Interval>> exported_interval_class(m, "Interval", INTERVAL_MAIN);
   exported_interval_class
   
     .def(py::init<>(),
@@ -86,6 +86,12 @@ py::class_<Interval> export_Interval(py::module& m)
 
     .def("mig", &Interval::mig,
       DOUBLE_INTERVAL_MIG_CONST)
+
+    .def("smag", &Interval::smag,
+      DOUBLE_INTERVAL_SMAG_CONST)
+
+    .def("smig", &Interval::smig,
+      DOUBLE_INTERVAL_SMIG_CONST)
 
     .def("rand", &Interval::rand,
       DOUBLE_INTERVAL_RAND_CONST)
@@ -188,21 +194,21 @@ py::class_<Interval> export_Interval(py::module& m)
       "y"_a, "compactness"_a = true)
 
     .def(py::self |= py::self,
-      INTERVAL_REF_INTERVAL_OPERATOROREQ_CONST_INTERVAL_REF,
+      INTERVAL_REF_INTERVAL_OPERATORUNIONEQ_CONST_INTERVAL_REF,
       "x"_a)
 
     // For MATLAB compatibility
     .def("self_union", &Interval::operator|=,
-      INTERVAL_REF_INTERVAL_OPERATOROREQ_CONST_INTERVAL_REF,
+      INTERVAL_REF_INTERVAL_OPERATORUNIONEQ_CONST_INTERVAL_REF,
       "x"_a)
 
     .def(py::self &= py::self,
-      INTERVAL_REF_INTERVAL_OPERATORANDEQ_CONST_INTERVAL_REF,
+      INTERVAL_REF_INTERVAL_OPERATORINTEREQ_CONST_INTERVAL_REF,
       "x"_a)
 
     // For MATLAB compatibility
     .def("self_inter", &Interval::operator&=,
-      INTERVAL_REF_INTERVAL_OPERATORANDEQ_CONST_INTERVAL_REF,
+      INTERVAL_REF_INTERVAL_OPERATORINTEREQ_CONST_INTERVAL_REF,
       "x"_a)
 
     .def(py::self += double(),
@@ -273,7 +279,7 @@ py::class_<Interval> export_Interval(py::module& m)
 
   // The following functions are defined in GAOL:
 
-    m.def("previous_float", &codac2::previous_float,
+    m.def("prev_float", &codac2::prev_float,
       "Returns the previous floating point value",
       "x"_a);
 

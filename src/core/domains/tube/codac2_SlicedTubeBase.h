@@ -9,7 +9,6 @@
 
 #pragma once
 
-#include "codac2_TDomain.h"
 #include "codac2_Slice.h"
 #include "codac2_TubeBase.h"
 

@@ -14,49 +14,65 @@ using namespace std;
 
 namespace codac2
 {
-  Matrix rising(const Matrix& R_, const Matrix& U_, const Matrix& A)
+  Matrix rising(const Matrix& R_, const Matrix& A)
   {
-    Matrix R = R_, U = U_;
+    Matrix R = R_;
     Index n = A.rows(), m = A.cols();
     Index p = m-n;
 
     for(Index i = n-1 ; i > 0 ; i--)
     {
+      auto U =R*A;
       Matrix K = U(i,i+p)*Matrix::Identity(n,n);
       K.block(0,i,i,1) = -U.block(0,i+p,i,1);
       R = K*R;
-      U = R*A;
     }
-
     return R;
   }
 
-  Matrix precond(const Matrix& P, const Matrix& L, const Matrix& U)
+  Matrix precond(const Eigen::PermutationMatrix<-1,-1,int>& P, const Matrix& L, const Matrix& A)
   {
-    auto P_inv = P.inverse();
-    Matrix A = P_inv*(L*U);
-    Matrix R = (P_inv*L).inverse();
-    return rising(R,U,A);
+    // Matrix A = P_inv*L*U;
+    // Matrix R = (P_inv*L).inverse();
+    return rising((P*L).inverse(),A);
   }
 
   Matrix gauss_jordan(const Matrix& A)
   {
     Index n = A.rows(), m = A.cols();
-    Eigen::FullPivLU<Matrix> lu(A);
 
-    Matrix L = Matrix::Identity(n,n);
-    if(std::pow(L.determinant(),2) < 1e-5)
-    {
-      cout << "[Matrix gauss_jordan(const Matrix& A)] -> eye Matrix" << endl;
-      return Matrix::eye(n,n);
-    }
+    #if 0
 
-    L.block(0,0,n,std::min(m,n)).triangularView<Eigen::StrictlyLower>() = 
-        lu.matrixLU().block(0,0,n,std::min(m,n));
+        Eigen::FullPivLU<Matrix> lu(A);
 
-    Matrix P = lu.permutationP();
-    Matrix U = lu.matrixLU().triangularView<Eigen::Upper>();
+        Matrix L = Matrix::Identity(n,n);
+        if(std::pow(lu.determinant(),2) < 1e-5)
+        {
+          cout << "[Matrix gauss_jordan(const Matrix& A)] -> eye Matrix" << endl;
+          return Matrix::eye(n,n);
+        }
 
-    return precond(P,L,U);
+        L.block(0,0,n,std::min(m,n)).triangularView<Eigen::StrictlyLower>() = 
+            lu.matrixLU().block(0,0,n,std::min(m,n));
+
+        Matrix P = lu.permutationP();
+        Matrix U = lu.matrixLU().triangularView<Eigen::Upper>();
+
+        return precond(P,L,U);
+        
+    #else
+
+      assert_release(m >= n);
+      Matrix B = A.leftCols(n);
+      Eigen::PartialPivLU<Matrix> lu(B);
+      Matrix L = Matrix::Identity(n,n);
+      if(lu.rcond() < 1e-6)
+        return L;
+      L.triangularView<Eigen::StrictlyLower>()
+  		 = lu.matrixLU().block(0,0,n,std::min(m,n));
+      Matrix U = lu.matrixLU().triangularView<Eigen::Upper>();
+      return precond(lu.permutationP().transpose(),L,A);
+
+    #endif
   }
 }

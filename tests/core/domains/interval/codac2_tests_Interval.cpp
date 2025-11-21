@@ -103,6 +103,10 @@ TEST_CASE("Interval - tests from IBEX")
   CHECK(x.mid() == 1);
   CHECK(x.rad() == 1);
   CHECK(x.diam() == 2);
+  CHECK(x.mag() == 2);
+  CHECK(x.mig() == 0);
+  CHECK(x.smag() == 2);
+  CHECK(x.smig() == 0);
 
   x = Interval(-3,-1);
 
@@ -111,6 +115,10 @@ TEST_CASE("Interval - tests from IBEX")
   CHECK(x.mid() == -2);
   CHECK(x.rad() == 1);
   CHECK(x.diam() == 2);
+  CHECK(x.mag() == 3);
+  CHECK(x.mig() == 1);
+  CHECK(x.smag() == -3);
+  CHECK(x.smig() == -1);
 
   x = Interval(-3,1);
 
@@ -119,6 +127,10 @@ TEST_CASE("Interval - tests from IBEX")
   CHECK(x.mid() == -1);
   CHECK(x.rad() == 2);
   CHECK(x.diam() == 4);
+  CHECK(x.mag() == 3);
+  CHECK(x.mig() == 0);
+  CHECK(x.smag() == -3);
+  CHECK(x.smig() == 0);
 
   x = Interval(-oo,0);
 
@@ -127,6 +139,10 @@ TEST_CASE("Interval - tests from IBEX")
   CHECK(x.mid() == -std::numeric_limits<double>::max());
   CHECK(x.rad() == oo);
   CHECK(x.diam() == oo);
+  CHECK(x.mag() == oo);
+  CHECK(x.mig() == 0);
+  CHECK(x.smag() == -oo);
+  CHECK(x.smig() == 0);
 
   x = Interval(-oo,oo);
 
@@ -135,6 +151,10 @@ TEST_CASE("Interval - tests from IBEX")
   CHECK(x.mid() == 0);
   CHECK(x.rad() == oo);
   CHECK(x.diam() == oo);
+  CHECK(x.mag() == oo);
+  CHECK(x.mig() == 0);
+  CHECK(x.smag() == oo);
+  CHECK(x.smig() == 0);
 
   x = Interval(std::numeric_limits<double>::max(),oo);
 
@@ -143,6 +163,10 @@ TEST_CASE("Interval - tests from IBEX")
   CHECK(x.mid() == std::numeric_limits<double>::max());
   CHECK(x.rad() == oo);
   CHECK(x.diam() == oo);
+  CHECK(x.mag() == oo);
+  CHECK(x.mig() == std::numeric_limits<double>::max());
+  CHECK(x.smag() == oo);
+  CHECK(x.smig() == std::numeric_limits<double>::max());
 
   x = Interval(-1,1);
   for(size_t i = 0 ; i < 10 ; i++)
@@ -189,10 +213,10 @@ TEST_CASE("Interval - tests from IBEX")
   CHECK(!Interval(0,codac2::next_float(0)).is_bisectable());
   CHECK(Interval(0,codac2::next_float(codac2::next_float(0))).is_bisectable());
   CHECK(Interval(10,codac2::next_float(codac2::next_float(10))).is_bisectable());
-  CHECK(Interval(codac2::previous_float(codac2::previous_float(0)),0).is_bisectable());
-  CHECK(Interval(codac2::previous_float(codac2::previous_float(10)),10).is_bisectable());
+  CHECK(Interval(codac2::prev_float(codac2::prev_float(0)),0).is_bisectable());
+  CHECK(Interval(codac2::prev_float(codac2::prev_float(10)),10).is_bisectable());
   CHECK(!Interval(10,codac2::next_float(10)).is_bisectable());
-  CHECK(!Interval(codac2::previous_float(0),0).is_bisectable());
+  CHECK(!Interval(codac2::prev_float(0),0).is_bisectable());
 
   CHECK(Interval(0,2).mid() == 1.0);
   CHECK(Interval(-oo,oo).mid() == 0);
@@ -243,8 +267,8 @@ TEST_CASE("Interval - other tests")
 
   x = Interval(0,oo);
   a = x.bisect(0.5);
-  CHECK(a.first == Interval(0,codac2::previous_float(oo)));
-  CHECK(a.second == Interval(codac2::previous_float(oo),oo));
+  CHECK(a.first == Interval(0,codac2::prev_float(oo)));
+  CHECK(a.second == Interval(codac2::prev_float(oo),oo));
 
   x = Interval(-oo,0);
   a = x.bisect(0.5);

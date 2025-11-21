@@ -70,27 +70,33 @@ namespace codac2
         return straj;
       }
 
-      SampledTraj<T> primitive(const T& y0, double dt) const
+      SampledTraj<T> primitive(double dt) const
       {
         assert_release(dt > 0.);
         assert_release(!is_empty());
 
+        T s = [this]() {
+          if constexpr(std::is_same_v<T,double>)
+            return 0.;
+          else
+            return T((*this)(this->tdomain().lb())).init(0.);
+        }();
+
         SampledTraj<T> p;
         double t = tdomain().lb(), last_t = t;
-        p.set(y0, t); t += dt;
-        T y = y0;
+        p.set(s, t); t += dt;
 
         while(t < tdomain().ub())
         {
-          y += ((*this)(last_t)+(*this)(t))*dt/2.;
-          p.set(y, t);
+          s += ((*this)(last_t)+(*this)(t))*dt/2.;
+          p.set(s, t);
           last_t = t;
           t += dt;
         }
 
         t = tdomain().ub();
-        y += ((*this)(last_t)+(*this)(t))*(t-last_t)/2.;
-        p.set(y, t);
+        s += ((*this)(last_t)+(*this)(t))*(t-last_t)/2.;
+        p.set(s, t);
 
         return p;
       }

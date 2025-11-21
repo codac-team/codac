@@ -49,6 +49,6 @@ void export_SepInter(py::module& m, py::class_<SepBase,pySep>& pysep)
           s1 &= s2.copy();
           return s1;
         },
-      SEPINTER_REF_SEPINTER_OPERATORANDEQ_CONST_S_REF)
+      SEPINTER_REF_SEPINTER_OPERATORINTEREQ_CONST_S_REF)
   ;
 }

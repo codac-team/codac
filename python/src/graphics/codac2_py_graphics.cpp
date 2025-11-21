@@ -22,6 +22,7 @@ void export_Figure3D(py::module& m);
 void export_Color(py::module& m);
 void export_ColorMap(py::module& m);
 void export_PavingStyle(py::module& m);
+void export_StyleGradientProperties(py::module& m);
 void export_StyleProperties(py::module& m);
 
 
@@ -33,6 +34,7 @@ PYBIND11_MODULE(_graphics, m)
   export_Color(m);
   export_ColorMap(m);
   export_PavingStyle(m);
+  export_StyleGradientProperties(m);
   export_StyleProperties(m);
 
   // figures

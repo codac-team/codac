@@ -10,6 +10,7 @@
 #include <iostream>
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_Polygon.h>
+#include <codac2_ConvexPolygon.h>
 
 using namespace std;
 using namespace codac2;
@@ -37,8 +38,7 @@ TEST_CASE("Empty polygon")
   CHECK(p1.contains(IntervalVector(2)) == BoolInterval::FALSE);
   CHECK(p1.is_empty());
   CHECK(p1.edges().size() == 0);
-  CHECK(p1.unsorted_vertices().size() == 0);
-  CHECK(p1.sorted_vertices().size() == 0);
+  CHECK(p1.vertices().size() == 0);
 }
 
 TEST_CASE("Polygon contains")
@@ -112,4 +112,24 @@ TEST_CASE("Polygon contains - degenerated cases")
   CHECK(p4.contains(IntervalVector({1,1})) == BoolInterval::TRUE);
   CHECK(p4.contains(IntervalVector({1,3})) == BoolInterval::TRUE);
   CHECK(p4.contains(IntervalVector({1,2})) == BoolInterval::TRUE);
+}
+
+TEST_CASE("Polygon contains - limit cases")
+{
+  {
+    IntervalVector x({5,3.5});
+    Polygon p({{4,3.5},{5,4},{4,4.5}});
+    //DefaultFigure::draw_polygon(p, Color::red());
+    //DefaultFigure::draw_point(x);
+    CHECK(p.contains(x) == BoolInterval::FALSE);
+  }
+
+  {
+    ConvexPolygon p1({{4,3.5},{5,4},{4.5,4.25},{4,4}});
+    CHECK(p1.contains({4.5,4.25}) == BoolInterval::TRUE);
+    ConvexPolygon p2({{4,4.25},{5,4.25}});
+    auto i = p1 & p2;
+    CHECK(i == ConvexPolygon(IntervalVector({4.5,4.25})));
+    CHECK(i.vertices().size() == 1);
+  }
 }

@@ -10,6 +10,8 @@
 #pragma once
 
 #include <functional>
+#include "codac2_Interval.h"
+#include "codac2_SlicedTube.h"
 #include "codac2_Ctc.h"
 #include "codac2_IntervalVector.h"
 #include "codac2_Collection.h"

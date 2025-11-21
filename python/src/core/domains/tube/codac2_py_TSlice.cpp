@@ -23,9 +23,7 @@ using namespace pybind11::literals;
 
 void export_TSlice(py::module& m)
 {
-  py::class_<TSlice,Interval,
-    std::unique_ptr<TSlice,py::nodelete> // disables any destructor invocations
-  > exported_tslice_class(m, "TSlice", TSLICE_MAIN);
+  py::class_<TSlice,Interval,std::shared_ptr<TSlice>> exported_tslice_class(m, "TSlice", TSLICE_MAIN);
   exported_tslice_class
 
     .def("is_gate", &TSlice::is_gate,

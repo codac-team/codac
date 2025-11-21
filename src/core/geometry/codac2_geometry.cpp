@@ -175,4 +175,32 @@ namespace codac2
       (p[0]-c[0])*sin(a)+(p[1]-c[1])*cos(a)+c[1]
     };
   }
+
+  void merge_adjacent_points(list<IntervalVector>& l)
+  {
+    bool merged_something;
+    do
+    {
+      merged_something = false;
+      for(auto li = l.begin(); li != l.end();)
+      {
+        for(auto lj = l.begin(); lj != l.end(); ++lj)
+        {
+          if(li != lj && li->intersects(*lj))
+          {
+            *li |= *lj;
+            li = l.erase(li);
+            merged_something = true;
+            break;
+          }
+
+          else
+            ++li;
+        }
+
+        if(merged_something)
+          break;
+      }
+    } while(merged_something);
+  }
 }

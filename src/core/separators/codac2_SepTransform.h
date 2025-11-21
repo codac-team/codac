@@ -26,7 +26,7 @@ namespace codac2
         requires IsSepBaseOrPtr<S>
       SepTransform(const S& s, const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& f_inv)
         : Sep<SepTransform>(f.args()[0]->size() /* f must have only one arg, see following assert */),
-          _sep(s), _ctc_inv(f, IntervalVector(f_inv.args()[0]->size())), _f(f), _f_inv(f_inv)
+          _sep(s), _f(f), _f_inv(f_inv)
       {
         assert_release(f.args().size() == 1 && "f must have only one arg");
         assert_release(f.args().size() == f_inv.args().size());
@@ -37,7 +37,6 @@ namespace codac2
     protected:
 
       const Collection<SepBase> _sep;
-      const CtcInverse<IntervalVector,IntervalVector> _ctc_inv;
       const AnalyticFunction<VectorType> _f, _f_inv;
   };
 }

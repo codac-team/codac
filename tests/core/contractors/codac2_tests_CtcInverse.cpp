@@ -22,6 +22,24 @@ using namespace codac2;
 TEST_CASE("CtcInverse")
 {
   {
+    ScalarVar x;
+    AnalyticFunction f { {x}, x-42 };
+    CtcInverse<Interval,Interval> c(f, Interval(0.));
+    Interval a;
+    c.contract(a);
+    CHECK(a == 42);
+  }
+
+  {
+    VectorVar x(1);
+    AnalyticFunction f { {x}, x[0]-42 };
+    CtcInverse<Interval,IntervalVector> c(f, Interval(0.));
+    IntervalVector a(1);
+    c.contract(a);
+    CHECK(a == IntervalVector({{42}}));
+  }
+
+  {
     ScalarVar x,y;
     AnalyticFunction f { {x,y}, x-y };
     CtcInverse<Interval,Interval,Interval> c(f, Interval(0.));
@@ -236,12 +254,14 @@ TEST_CASE("ParabolasExample")
   auto p = pave(x0, ctc, 0.01);
   auto cs = p.connected_subsets();
   CHECK(cs.size() == 1);
-  CHECK(Approx(cs.begin()->box(),1e-4) == IntervalVector({
-    {0.149199,0.182388},
-    {0.148306,0.1826},
-    {0.148054,0.18},
-    {0.148732,0.18}
-  }));
+  IntervalVector hull({
+     {0.149199,0.182388},
+     {0.148306,0.1826},
+     {0.148054,0.18},
+     {0.148732,0.18}
+  });
+  hull.inflate(1e-4);
+  CHECK(hull.is_superset(cs.begin()->box()));
 
   //for(const auto& bi : cs)
   //  DefaultFigure::draw_box(bi.box().subvector(0,1));

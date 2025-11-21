@@ -34,7 +34,7 @@ namespace codac2
     const PavingStyle& style)
   {
     assert_release(eps > 0.);
-    assert_release(c.size() >= 2 && "cannot reveal 1d contractors");
+    assert_release(size_of(c) >= 2 && "cannot reveal 1d contractors");
 
     if(x0.size() > 2)
       draw_box(*this, x0, style.outside);

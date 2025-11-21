@@ -87,3 +87,6 @@ Geometric operations on objects
 
 .. doxygenfunction:: rotate(const T &x, const Interval &a, const IntervalVector &o)
   :project: codac
+
+.. doxygenfunction:: merge_adjacent_points(std::list<IntervalVector>& l)
+  :project: codac

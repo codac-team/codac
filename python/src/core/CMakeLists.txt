@@ -20,6 +20,7 @@
     contractors/codac2_py_CtcDeriv.cpp
     contractors/codac2_py_CtcDist.cpp
     contractors/codac2_py_CtcEmpty.cpp
+    contractors/codac2_py_CtcEval.cpp
     contractors/codac2_py_CtcFixpoint.cpp
     contractors/codac2_py_CtcInnerOuter.cpp
     contractors/codac2_py_CtcIdentity.cpp
@@ -54,6 +55,7 @@
     domains/tube/codac2_py_Slice.h
     domains/tube/codac2_py_SlicedTube.h
     domains/tube/codac2_py_TDomain.cpp
+    domains/tube/codac2_py_TimePropag.cpp
     domains/tube/codac2_py_TSlice.cpp
     domains/tube/codac2_py_TubeBase.cpp
     domains/tube/codac2_py_tube_cart_prod.cpp
@@ -76,6 +78,7 @@
     matrices/codac2_py_hull.cpp
     matrices/codac2_py_inversion.cpp
     matrices/codac2_py_IntvFullPivLU.cpp
+    matrices/codac2_py_GaussJordan.cpp
     matrices/codac2_py_Matrix.cpp
     matrices/codac2_py_MatrixBase.h
     matrices/codac2_py_MatrixBlock.h
@@ -85,6 +88,8 @@
     operators/codac2_py_operators.cpp
 
     paver/codac2_py_pave.cpp
+
+    peibos/codac2_py_peibos.cpp
 
     separators/codac2_py_Sep.cpp
     separators/codac2_py_Sep.h
@@ -108,6 +113,7 @@
     tools/codac2_py_RobotSimulator.cpp
     tools/codac2_py_serialization.cpp
     tools/codac2_py_transformations.cpp
+    tools/codac2_py_trunc.cpp
 
     trajectory/codac2_py_AnalyticTraj.cpp
     trajectory/codac2_py_SampledTraj.cpp
@@ -131,6 +137,7 @@
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/graphics/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/matrices/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/paver/
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/peibos/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/separators/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tools/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/

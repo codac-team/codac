@@ -10,6 +10,9 @@
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_Segment.h>
 #include <codac2_Approx.h>
+#include <codac2_geometry.h>
+#include <iostream>
+#include <iomanip>
 
 using namespace std;
 using namespace codac2;
@@ -17,12 +20,21 @@ using namespace codac2;
 Interval hull(double x)
 {
   if(x == -oo) return { -oo, next_float(-oo) };
-  if(x == oo)  return { previous_float(oo), oo };
+  if(x == oo)  return { prev_float(oo), oo };
   else return { x };
 }
 
 TEST_CASE("Segment")
 {
+  SECTION("contains")
+  {
+    Vector p1({0,-10}), p2({-10,-10}), p3({-11,-10});
+    Segment e1(Vector({-10,-10}), Vector({10,-10}));
+    CHECK(e1.contains(p1) == BoolInterval::TRUE);
+    CHECK(e1.contains(p2) == BoolInterval::TRUE);
+    CHECK(e1.contains(p3) == BoolInterval::FALSE);
+  }
+
   SECTION("intersects")
   {
     CHECK(Segment({{0,0},{10,0}}).intersects(Segment({{4,0},{6,0}})) == BoolInterval::TRUE);
@@ -123,5 +135,12 @@ TEST_CASE("Segment")
 
     CHECK((Segment({2,0},{6,4}) & Segment({6,5},{5,6})) == IntervalVector::empty(2));
     CHECK(proj_intersection(Segment({2,0},{6,4}), Segment({6,5},{5,6})) == IntervalVector({6.5,4.5}));
+  }
+
+  SECTION("intersection - near infinite cases")
+  {
+    Segment e1({-1,6},{-1,next_float(-oo)});
+    Segment e2({-1,-1},{3,-6});
+    CHECK((e1 & e2) == IntervalVector({-1,-1}));
   }
 }

@@ -14,6 +14,7 @@
 #include "codac2_Vector.h"
 #include "codac2_IntervalVector.h"
 #include "codac2_StyleProperties.h"
+#include "codac2_StyleGradientProperties.h"
 #include "codac2_Ellipsoid.h"
 #include "codac2_SampledTraj.h"
 #include "codac2_AnalyticTraj.h"
@@ -141,5 +142,26 @@ namespace codac2
        * \param style Style of the motor boat (edge color and fill color)
        */
       virtual void draw_motor_boat(const Vector& x, float size, const StyleProperties& style = StyleProperties()) = 0;
+
+      // Miscellaneous
+
+      /**
+       * \brief Draws text on the figure
+       * 
+       * \param text Text to display
+       * \param ul Position of the top-left corner of the text
+       * \param scale Scaling of the text (VIBes only)
+       * \param style Style of the text (color, layer)
+       */
+      virtual void draw_text(const std::string& text, const Vector& ul, double scale, const StyleProperties& style = StyleProperties()) = 0;
+
+      /**
+       * \brief Draws a raster on the figure
+       * 
+       * \param filename The name of the file
+       * \param bbox The bounding box of the raster
+       * \param style Style of the raster (only the layer is used)
+       */
+      virtual void draw_raster(const std::string& filename, const IntervalVector& bbox, const StyleProperties& style = StyleProperties()) = 0;
   };
 }

@@ -82,7 +82,7 @@ namespace codac2
         const StyleProperties& style = { Color::dark_gray(0.5) });
 
       /**
-       * \brief Draws a ``star-shaped'' polygon  as a sequence of adjacent
+       * \brief Draws a star-shaped polygon  as a sequence of adjacent
        * triangles (l[0],l[k],l[k+1]) with k>=1.
        *
        * \param c translation
@@ -189,7 +189,7 @@ namespace codac2
       /** 
        * \brief Draws a car, with blue windscreen
        *
-       * \param c ``center'' (low) of the car
+       * \param c center of the car
        * \param A orientation
        * \param style Style (color)
        */
@@ -199,7 +199,7 @@ namespace codac2
       /** 
        * \brief Draws a (paper) plane
        *
-       * \param c ``center'' (low) of the car
+       * \param c center of the car
        * \param A orientation
        * \param yaw_is_up yaw axis is up (default true)
        * \param style Style (color)

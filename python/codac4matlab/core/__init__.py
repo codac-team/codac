@@ -68,6 +68,9 @@ class AnalyticFunction:
 
   def tube_eval(self,*args):
     return self.f.tube_eval(*args)
+  
+  def parallelepiped_eval(self,*args):
+    return self.f.parallelepiped_eval(*args)
 
   def diff(self,*args):
     return self.f.diff(*args)
@@ -413,8 +416,8 @@ class AnalyticTraj:
   def sampled(self, dt):
     return self.traj.sampled(dt)
     
-  def primitive(self, y0, t):
-    return self.traj.primitive(y0, t)
+  def primitive(self,*args):
+    return self.traj.primitive(*args)
     
   def as_function(self):
     return AnalyticFunction(self.traj.as_function())
@@ -479,6 +482,9 @@ class SlicedTube:
   def last_slice(self):
     return self.tube.last_slice()
 
+  def slice(self,*args):
+    return self.tube.slice(*args)
+
   def is_empty(self):
     return self.tube.is_empty()
 
@@ -488,8 +494,8 @@ class SlicedTube:
   def codomain(self):
     return self.tube.codomain()
 
-  def __call__(self,t):
-    return self.tube.__call__(t)
+  def __call__(self,*args):
+    return self.tube.__call__(*args)
 
   def enclosed_bounds(self,t):
     return self.tube.enclosed_bounds(t)
@@ -535,6 +541,15 @@ class SlicedTube:
     
   def as_function(self):
     return AnalyticFunction(self.tube.as_function())
+
+  def invert(self,*args):
+    return self.tube.invert(*args)
+
+  def all_reals_value(self):
+    return self.tube.all_reals_value()
+
+  def empty_value(self):
+    return self.tube.empty_value()
 
 
 def fixpoint(contract, *x):

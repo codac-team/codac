@@ -2,7 +2,8 @@
 // Adapted from CAPD examples
 
 // [codac-capd-1-beg]
-#include <codac-graphics.h> //can be replace by <codac>
+#include <codac-core.h>
+#include <codac-graphics.h>
 #include <codac-capd.h>
 #include <capd/capdlib.h>
 // [codac-capd-1-end]

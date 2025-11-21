@@ -64,6 +64,10 @@ void export_Paving(py::module& m)
       LIST_PAVINGOUT_CONNECTEDSUBSET__PAVINGOUT_CONNECTED_SUBSETS_CONST_INTERVALVECTOR_REF_CONST_PAVINGOUT_NODEVALUE__REF_CONST,
       "x0"_a, "node_value"_a = PavingOut::outer)
 
+    .def("__and__", (IntervalVector (PavingOut::*)(const IntervalVector&))&PavingOut::operator&,
+      INTERVALVECTOR_PAVINGOUT_OPERATORINTER_CONST_INTERVALVECTOR_REF_CONST,
+      "x"_a)
+
     .def_readonly_static("outer", &PavingOut::outer,
       STATIC_CONST_NODEVALUE__PAVINGOUT_OUTER)
     .def_readonly_static("outer_complem", &PavingOut::outer_complem,

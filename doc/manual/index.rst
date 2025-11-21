@@ -82,7 +82,7 @@ The result is a set of non-overlapping boxes containing the set of feasible solu
 .. figure:: manual/example_malti.png
   :width: 400px
 
-  Outer approximation of the solution set, computed with ``CtcInverse``. Blue parts are guaranteed to be solution-free. Computation time: 0.609s. 3624 boxes.
+  Outer approximation of the solution set, projected onto :math:`(x_1,x_2)`, computed with ``CtcInverse``. Blue parts are guaranteed to be solution-free. Computation time: 0.609s. 3624 boxes.
 
 
 Short example: solving an inequality
@@ -206,6 +206,8 @@ User manual
    * Set-membership functions
       * The class SetMembershipFunction
       * Extension to custom expressions
+   * :ref:`sec-functions-parallelepiped-eval`
+   * :ref:`sec-functions-peibos`
 
 * Tubes
    * What is a tube?
@@ -308,6 +310,9 @@ User manual
    * :ref:`sec-zonotope`
    * Polyhedron
 
+* :ref:`sec-actions`
+   * :ref:`sec-actions-octasym`
+
 * :ref:`sec-ellipsoids`
    * :ref:`sec-ellipsoids-intro`
    * :ref:`sec-ellipsoids-class`
@@ -366,6 +371,7 @@ Development
 -----------
 
 * :ref:`sec-dev-info`
+* :ref:`sec-dev-common-issues`
 * :ref:`sec-dev-changelog`
 * C++ API
 
@@ -395,6 +401,7 @@ Development
    manual/functions/index.rst
    manual/contractors/index.rst
    manual/geometry/index.rst
+   manual/actions/index.rst
    manual/ellipsoids/index.rst
    manual/visualization/index.rst
    manual/tools/index.rst
@@ -447,6 +454,7 @@ Development
    :maxdepth: 3
 
    development/info_dev.rst
+   development/common_issues.rst
    development/changelog.rst
 .. 
 ..    C++ API

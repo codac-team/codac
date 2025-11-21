@@ -20,7 +20,7 @@ namespace codac2
     protected:
 
       explicit TDomain(const Interval& t0_tf);
-      explicit TDomain(const Interval& t0_tf, double dt, bool with_gates = false);
+      explicit TDomain(const Interval& t0_tf, double dt, bool with_gates = true);
 
     public:
 
@@ -45,5 +45,5 @@ namespace codac2
   };
 
   std::shared_ptr<TDomain> create_tdomain(const Interval& t0_tf = Interval(-oo,oo));
-  std::shared_ptr<TDomain> create_tdomain(const Interval& t0_tf, double dt, bool with_gates = false);
+  std::shared_ptr<TDomain> create_tdomain(const Interval& t0_tf, double dt, bool with_gates = true);
 }
