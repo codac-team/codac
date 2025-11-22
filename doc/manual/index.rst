@@ -183,6 +183,7 @@ User manual
    * :ref:`sec-install-py`
    * :ref:`sec-install-cpp`
    * :ref:`sec-install-matlab`
+   * :ref:`sec-install-performances`
 
 * :ref:`sec-intervals`
    * What is an interval?
@@ -338,10 +339,7 @@ User manual
    * Interface with the IBEX library
    * Sympy (symbolic computation)
 
-* :ref:`sec-seealso`
-   * Frequently Asked Questions
-   * :ref:`sec-seealso-performances`
-   * Low-level interval library
+* Frequently Asked Questions
 
 * References
    * Related papers
@@ -406,7 +404,6 @@ Development
    manual/visualization/index.rst
    manual/tools/index.rst
    manual/extensions/index.rst
-   manual/seealso/index.rst
    
 ..    linear/index.rst
 ..    functions/index.rst
