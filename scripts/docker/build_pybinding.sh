@@ -2,7 +2,7 @@
 
 set -e -x
 
-wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20241117/ibex_$(uname -m)_manylinux_2_28.zip --no-check-certificate -nv
+wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20250626/ibex_$(uname -m)_manylinux_2_28.zip --no-check-certificate -nv
 unzip -q ibex_$(uname -m)_manylinux_2_28.zip
 rm -Rf ibex_$(uname -m)_manylinux_2_28.zip
 sudo cp -Rf ibex/* /usr/local/
