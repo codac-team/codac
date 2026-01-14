@@ -19,6 +19,7 @@
 
 #include "codac2_linear_ctc.h"
 #include "codac2_GaussJordan.h"
+#include "codac2_IntvFullPivLU.h"
 
 namespace codac2
 {
@@ -354,11 +355,18 @@ namespace codac2
     };
   }
 
-  inline void MulOp::bwd([[maybe_unused]] const IntervalMatrix& y, [[maybe_unused]] IntervalMatrix& x1, [[maybe_unused]] IntervalMatrix& x2)
+  inline void MulOp::bwd(const IntervalMatrix& y, IntervalMatrix& x1, IntervalMatrix& x2)
   {
     assert(x1.rows() == x2.cols());
     assert(y.rows() == x1.rows() && y.cols() == x2.cols());
 
-    // todo
+    IntvFullPivLU LUdec(x1);
+    LUdec.solve(y,x2);
+    if (x2.is_empty()) { x1.set_empty(); return; }
+    IntvFullPivLU LUdec2(IntervalMatrix(x2.transpose()));
+    IntervalMatrix tX1 = x1.transpose();
+    LUdec2.solve(y.transpose(),tX1);
+    x1 = tX1.transpose();
+    if (x1.is_empty()) { x2.set_empty(); return; }
   }
 }

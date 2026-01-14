@@ -8,6 +8,8 @@
  */
 
 #include <catch2/catch_test_macros.hpp>
+#include <codac2_OctaSym.h>
+#include <codac2_AnalyticFunction.h>
 #include <codac2_peibos.h>
 #include <codac2_Approx.h>
 
@@ -39,11 +41,11 @@ TEST_CASE("Peibos")
 
   for (const auto& p : v_par_2d)
   {
-    if (p.contains(b0))
+    if ((p.contains(b0))==BoolInterval::TRUE)
       count_b0++;
-    if (p.contains(b1))
+    if ((p.contains(b1))==BoolInterval::TRUE)
       count_b1++;
-    if (p.contains(b2))
+    if ((p.contains(b2))==BoolInterval::TRUE)
       count_b2++;
   }
 

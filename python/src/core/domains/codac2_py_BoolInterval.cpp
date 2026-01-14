@@ -31,10 +31,10 @@ void export_BoolInterval(py::module& m)
     .value("UNKNOWN", BoolInterval::UNKNOWN)
 
     .def(py::self & py::self,
-      BOOLINTERVAL_OPERATORAND_BOOLINTERVAL_BOOLINTERVAL)
+      BOOLINTERVAL_OPERATORINTER_BOOLINTERVAL_BOOLINTERVAL)
 
     .def(py::self | py::self,
-      BOOLINTERVAL_OPERATOROR_BOOLINTERVAL_BOOLINTERVAL)
+      BOOLINTERVAL_OPERATORUNION_BOOLINTERVAL_BOOLINTERVAL)
 
     .def("__invert__", [](const BoolInterval& x)
         {
@@ -48,5 +48,13 @@ void export_BoolInterval(py::module& m)
           return string(s.str()); 
         },
       OSTREAM_REF_OPERATOROUT_OSTREAM_REF_CONST_BOOLINTERVAL_REF)
+  ;
+
+  m
+    .def("logical_and", (BoolInterval (*)(BoolInterval,BoolInterval))&codac2::operator&&,
+      BOOLINTERVAL_OPERATORAND_BOOLINTERVAL_BOOLINTERVAL)
+
+    .def("logical_or", (BoolInterval (*)(BoolInterval,BoolInterval))&codac2::operator||,
+      BOOLINTERVAL_OPERATOROR_BOOLINTERVAL_BOOLINTERVAL)
   ;
 }

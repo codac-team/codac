@@ -6,6 +6,8 @@ list(APPEND CODAC_CAPD_SRC
     
   ${CMAKE_CURRENT_SOURCE_DIR}/codac2_capd.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/codac2_capd.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/codac2_peibos_capd.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/codac2_peibos_capd.h
   ${CMAKE_CURRENT_SOURCE_DIR}/codac2_SolutionCurveWrapper.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/codac2_SolutionCurveWrapper.h
 )

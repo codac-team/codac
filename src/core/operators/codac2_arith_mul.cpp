@@ -57,58 +57,117 @@ namespace codac2
 
     if(x1.rows() > x1.cols())
     {
-      Index last_row = 0;
-      Index i = 0;
+      #if 0
 
-      do
-      {
-        double vol_x2 = x2.volume();
-        IntervalRow row_i = x1.row(i);
-        MulOp::bwd(y[i],row_i,x2);
+        Index last_row = 0;
+        Index i = 0;
 
-        if(row_i.is_empty())
+        do
         {
-          x1.set_empty();
-          return;
-        }
+          double vol_x2 = x2.volume();
+          IntervalRow row_i = x1.row(i);
+          MulOp::bwd(y[i],row_i,x2);
 
-        else
-          x1.row(i) = row_i;
+          if(row_i.is_empty())
+          {
+            x1.set_empty();
+            return;
+          }
 
-        if(x2.volume()/vol_x2 < 0.98)
-          last_row = i;
-        i = (i+1)%y.size();
-      } while(i != last_row);
+          else
+            x1.row(i) = row_i;
+
+          if(x2.volume()/vol_x2 < 0.98)
+            last_row = i;
+          i = (i+1)%y.size();
+        } while(i != last_row);
+
+      #else
+
+        // Interval FullPiv attempt, could be used for any possibility.
+        // Only contracts x2.
+        IntvFullPivLU LUdec(x1);
+        IntervalMatrix copy_x2(x2);
+        LUdec.solve(y,copy_x2);
+        x2 = copy_x2.col(0);
+
+      #endif
     }
 
     else
     {
-      IntervalMatrix Q = gauss_jordan(x1.mid());
-      IntervalVector b_tilde = Q*y;
-      IntervalMatrix A_tilde = Q*x1; // should be a tree matrix
-      
-      bool contraction;
-      do
-      {
-        contraction = false;
+      #if 0
 
-        for(Index i = 0 ; i < x2.size() ; i++)
-        {
-          for(Index k = 0 ; k < b_tilde.size() ; k++)
+        IntvFullPivLU LUdec(x1);
+        IntervalMatrix copy_x2(x2);
+        LUdec.solve(y,copy_x2);
+        x2 = copy_x2.col(0);
+
+      #else
+
+        // "Tree matrix" attempt, works well in example.
+        // Only contract x2.
+        IntervalMatrix P = gauss_jordan(x1.mid());
+        IntervalVector b_tilde = P*y;
+        IntervalMatrix A_tilde = P*x1;
+        // A_tilde should be a tree matrix
+            
+        #if 1
+
+          for(Index i = b_tilde.size()-1 ; i>=0 ; i--)
           {
-            Interval u = b_tilde[k];
-
-            for(Index j = 0 ; j < x2.size() ; j++)
-              if(i != j)
-                u -= x2[j]*A_tilde(k,j);
-
-            Interval x2i_old = x2[i];
-            MulOp::bwd(u, x2[i], A_tilde(k,i));
-            contraction |= x2i_old != x2[i];
+            IntervalRow R = A_tilde.row(i);
+            MulOp::bwd(b_tilde[i], R, x2);
+            if(x2.is_empty()) { x1.set_empty(); x2.set_empty(); return; }
           }
-        }
 
-      } while(contraction);
+          for(Index i=0 ; i<b_tilde.size() ; i++)
+          {
+            IntervalRow R = A_tilde.row(i);
+            MulOp::bwd(b_tilde[i], R, x2);
+            if(x2.is_empty()) { x1.set_empty(); x2.set_empty(); return; }
+          }
+
+        #else
+
+          bool contraction;
+          do
+          {
+            contraction = false;
+
+            for(Index i = 0 ; i < x2.size() ; i++)
+            {
+              for(Index k = 0 ; k < b_tilde.size() ; k++)
+              {
+                Interval u = b_tilde[k];
+
+                for(Index j = 0 ; j < x2.size() ; j++)
+                  if(i != j)
+                    u -= x2[j]*A_tilde(k,j);
+
+                Interval x2i_old = x2[i];
+                MulOp::bwd(u, x2[i], A_tilde(k,i));
+                contraction |= x2i_old != x2[i];
+              }
+            }
+
+          } while(contraction);
+
+        #endif
+      #endif
+    }
+
+    // Basic contraction on x1
+    for(Index i=0 ; i<x1.rows() ; i++)
+    {
+      IntervalRow R = x1.row(i);
+      MulOp::bwd(y[i], R, x2);
+      if(R.is_empty())
+      {
+        x1.set_empty();
+        return;
+      }
+      x1.row(i) = R;
     }
   }
 }

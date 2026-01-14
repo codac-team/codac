@@ -78,8 +78,9 @@ using namespace pybind11::literals;
   \
   exported \
   \
-    /* Several cases of scalar inputs */ \
     .def(op_name, [](AnalyticFunction<T>& f) { return f.op(); }, doc) \
+  \
+    /* Several cases of scalar inputs */ \
     .def(op_name, [](AnalyticFunction<T>& f, I x1) { return f.op(x1); }, doc) \
     .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2) { return f.op(x1,x2); }, doc) \
     .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3) { return f.op(x1,x2,x3); }, doc) \
@@ -92,7 +93,6 @@ using namespace pybind11::literals;
     .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6, I x7, I x8, I x9, I x10) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10); }, doc) \
   \
     /* Several cases of vector inputs */ \
-    .def(op_name, [](AnalyticFunction<T>& f) { return f.op(); }, doc) \
     .def(op_name, [](AnalyticFunction<T>& f, py::list x1) { return f.op(cast<IntervalVector>(x1)); }, doc) \
     .def(op_name, [](AnalyticFunction<T>& f, IV x1) { return f.op(x1); }, doc) \
     .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2) { return f.op(x1,x2); }, doc) \
@@ -106,7 +106,6 @@ using namespace pybind11::literals;
     .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6, IV x7, IV x8, IV x9, IV x10) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10); }, doc) \
   \
     /* Several cases of matrix inputs */ \
-    .def(op_name, [](AnalyticFunction<T>& f) { return f.op(); }, doc) \
     .def(op_name, [](AnalyticFunction<T>& f, IM x1) { return f.op(x1); }, doc) \
     .def(op_name, [](AnalyticFunction<T>& f, IM x1, IM x2) { return f.op(x1,x2); }, doc) \
     .def(op_name, [](AnalyticFunction<T>& f, IM x1, IM x2, IM x3) { return f.op(x1,x2,x3); }, doc) \
@@ -117,6 +116,39 @@ using namespace pybind11::literals;
     .def(op_name, [](AnalyticFunction<T>& f, IM x1, IM x2, IM x3, IM x4, IM x5, IM x6, IM x7, IM x8) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8); }, doc) \
     .def(op_name, [](AnalyticFunction<T>& f, IM x1, IM x2, IM x3, IM x4, IM x5, IM x6, IM x7, IM x8, IM x9) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8,x9); }, doc) \
     .def(op_name, [](AnalyticFunction<T>& f, IM x1, IM x2, IM x3, IM x4, IM x5, IM x6, IM x7, IM x8, IM x9, IM x10) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10); }, doc) \
+  \
+  ; \
+
+#define bind_parallelepiped_eval(exported, op_name, op, doc) \
+  \
+  exported \
+  \
+    .def(op_name, [](AnalyticFunction<T>& f) { return f.op(); }, doc) \
+  \
+    /* Several cases of scalar inputs */ \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1) { return f.op(x1); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2) { return f.op(x1,x2); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3) { return f.op(x1,x2,x3); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4) { return f.op(x1,x2,x3,x4); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5) { return f.op(x1,x2,x3,x4,x5); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6) { return f.op(x1,x2,x3,x4,x5,x6); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6, I x7) { return f.op(x1,x2,x3,x4,x5,x6,x7); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6, I x7, I x8) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6, I x7, I x8, I x9) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8,x9); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, I x1, I x2, I x3, I x4, I x5, I x6, I x7, I x8, I x9, I x10) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10); }, doc) \
+  \
+    /* Several cases of vector inputs */ \
+    .def(op_name, [](AnalyticFunction<T>& f, py::list x1) { return f.op(cast<IntervalVector>(x1)); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1) { return f.op(x1); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2) { return f.op(x1,x2); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3) { return f.op(x1,x2,x3); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4) { return f.op(x1,x2,x3,x4); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5) { return f.op(x1,x2,x3,x4,x5); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6) { return f.op(x1,x2,x3,x4,x5,x6); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6, IV x7) { return f.op(x1,x2,x3,x4,x5,x6,x7); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6, IV x7, IV x8) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6, IV x7, IV x8, IV x9) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8,x9); }, doc) \
+    .def(op_name, [](AnalyticFunction<T>& f, IV x1, IV x2, IV x3, IV x4, IV x5, IV x6, IV x7, IV x8, IV x9, IV x10) { return f.op(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10); }, doc) \
   \
   ; \
 
@@ -321,7 +353,7 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
 
   if constexpr(std::is_same_v<T,VectorType>)
   {
-    bind_(exported, "parallelepiped_eval", parallelepiped_eval, PARALLELEPIPED_ANALYTICFUNCTION_T_PARALLELEPIPED_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
+    bind_parallelepiped_eval(exported, "parallelepiped_eval", parallelepiped_eval, PARALLELEPIPED_ANALYTICFUNCTION_T_PARALLELEPIPED_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
   }
 
   exported

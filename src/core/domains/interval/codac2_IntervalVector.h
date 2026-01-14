@@ -34,7 +34,7 @@ namespace codac2
   inline std::ostream& operator<<(std::ostream& os, const IntervalVector& x)
   {
     if(x.is_empty())
-      return os << "[ empty vector ]";
+      return os << "[ empty " << x.size() << "d vector ]";
 
     else
     {

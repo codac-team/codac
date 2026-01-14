@@ -55,6 +55,6 @@ void export_CtcInter(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInte
           c1 &= std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c2.copy());
           return c1;
         },
-      CTCINTER_X_VARIADIC_REF_CTCINTER_X_OPERATORANDEQ_CONST_SHARED_PTR_CTCBASE_X_VARIADIC_REF)
+      CTCINTER_X_VARIADIC_REF_CTCINTER_X_OPERATORINTEREQ_CONST_SHARED_PTR_CTCBASE_X_VARIADIC_REF)
   ;
 }

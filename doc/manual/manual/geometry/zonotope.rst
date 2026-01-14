@@ -1,5 +1,7 @@
 .. _sec-zonotope:
 
+.. _subsec-zonotope-zonotope:
+
 Zonotopes
 =========
 
@@ -13,6 +15,8 @@ Zonotope
 .. doxygenclass:: codac2::Zonotope
   :project: codac
   :members:
+
+.. _subsec-zonotope-parallelepiped:
 
 Parallelepiped
 --------------

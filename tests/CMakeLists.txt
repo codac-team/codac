@@ -31,6 +31,8 @@ list(APPEND SRC_TESTS # listing files without extension
   core/contractors/codac2_tests_CtcAction
   core/contractors/codac2_tests_CtcCartProd
   core/contractors/codac2_tests_CtcCtcBoundary
+  core/contractors/codac2_tests_CtcDeriv
+  core/contractors/codac2_tests_CtcEval
   core/contractors/codac2_tests_CtcFixpoint
   core/contractors/codac2_tests_CtcInter
   core/contractors/codac2_tests_CtcInverse
@@ -50,6 +52,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/domains/zonotope/codac2_tests_Parallelepiped
   core/domains/zonotope/codac2_tests_Parallelepiped_eval
   core/domains/tube/codac2_tests_TDomain
+  core/domains/tube/codac2_tests_Slice
   core/domains/tube/codac2_tests_Slice_polygon
   core/domains/tube/codac2_tests_SlicedTube
   core/domains/tube/codac2_tests_SlicedTube_integral
@@ -74,6 +77,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/matrices/codac2_tests_hull
   core/matrices/codac2_tests_inversion
   core/matrices/codac2_tests_IntFullPivLU
+  core/matrices/codac2_tests_GaussJordan
   ../doc/manual/manual/linear/src
 
   core/operators/codac2_tests_operators
@@ -90,6 +94,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/tools/codac2_tests_Approx
   core/tools/codac2_tests_serialization
   core/tools/codac2_tests_transformations
+  core/tools/codac2_tests_trunc
   core/tools/ibex/codac2_tests_ibex
   ../doc/manual/manual/tools/src
   

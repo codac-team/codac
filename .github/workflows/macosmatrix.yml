@@ -21,26 +21,26 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
+            - { os: macos-14, shell: bash, arch: arm64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 14, desc: 'macOS Sonoma Python 3.14 arm64' }
             - { os: macos-14, shell: bash, arch: arm64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 13, desc: 'macOS Sonoma Python 3.13 arm64' }
             - { os: macos-14, shell: bash, arch: arm64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 12, desc: 'macOS Sonoma Python 3.12 arm64' }
             - { os: macos-14, shell: bash, arch: arm64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 11, desc: 'macOS Sonoma Python 3.11 arm64' }
-            - { os: macos-13, shell: bash, arch: arm64, runtime: ventura, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 10, cross: true, desc: 'macOS Ventura Python 3.10 arm64 (cross)' }
-            - { os: macos-13, shell: bash, arch: arm64, runtime: ventura, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 9, cross: true, desc: 'macOS Ventura Python 3.9 arm64 (cross)' }
-            - { os: macos-13, shell: bash, arch: arm64, runtime: ventura, cmake_flags: '-fPIC', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 8, cross: true, desc: 'macOS Ventura Python 3.8 arm64 (cross)' }
-            - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 13, desc: 'macOS Ventura Python 3.13 x86_64' }
-            - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 12, desc: 'macOS Ventura Python 3.12 x86_64' }
-            - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 11, desc: 'macOS Ventura Python 3.11 x86_64' }
-            - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Ventura Python 3.10 x86_64' }
-            - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 9, desc: 'macOS Ventura Python 3.9 x86_64' }
-            - { os: macos-13, shell: bash, arch: x86_64, runtime: ventura, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 8, desc: 'macOS Ventura Python 3.8 x86_64' }
+            - { os: macos-15-intel, shell: bash, arch: x86_64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 14, desc: 'macOS Sonoma Python 3.14 x86_64' }
+            - { os: macos-15-intel, shell: bash, arch: x86_64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 13, desc: 'macOS Sonoma Python 3.13 x86_64' }
+            - { os: macos-15-intel, shell: bash, arch: x86_64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 12, desc: 'macOS Sonoma Python 3.12 x86_64' }
+            - { os: macos-15-intel, shell: bash, arch: x86_64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 11, desc: 'macOS Sonoma Python 3.11 x86_64' }
+            - { os: macos-15-intel, shell: bash, arch: x86_64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Sonoma Python 3.10 x86_64' }
+            - { os: macos-15-intel, shell: bash, arch: x86_64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 9, desc: 'macOS Sonoma Python 3.9 x86_64' }
+            - { os: macos-15-intel, shell: bash, arch: x86_64, runtime: sonoma, cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 8, desc: 'macOS Sonoma Python 3.8 x86_64' }
+            # Not clear whether macos-15-intel is more Sequoia or Sonoma, see https://github.com/actions/runner-images/issues/13045...
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: true
         fetch-depth: 0
         clean: false
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
         architecture: x64

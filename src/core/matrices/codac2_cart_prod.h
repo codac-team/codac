@@ -70,8 +70,7 @@ namespace codac2
   }
 
   template<typename... X>
-    requires ((!is_interval_based_v<X>) && ...)
-      && ((!is_ctc_v<X>) && ...) && ((!is_sep_v<X>) && ...)
+    requires ((std::is_arithmetic_v<X> || is_matrix_base_double<X>) && ...)
   inline Vector cart_prod(const X&... x)
   {
     return cart_prod(to_IntervalVector(x)...).mid();

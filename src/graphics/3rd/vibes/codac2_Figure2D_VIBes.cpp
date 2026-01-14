@@ -9,6 +9,7 @@
 
 #include "codac2_Figure2D_VIBes.h"
 #include "codac2_math.h"
+#include "codac2_trunc.h"
 
 using namespace std;
 using namespace codac2;
@@ -126,7 +127,7 @@ void Figure2D_VIBes::draw_polyline(const std::vector<Vector>& x, float tip_lengt
   for(size_t k = 0 ; k < x.size() ; k++)
   {
     assert(_fig.size() <= x[k].size());
-    vx[k] = x[k][i()]; vy[k] = x[k][j()];
+    vx[k] = graphic_trunc(x[k][i()]); vy[k] = graphic_trunc(x[k][j()]);
   }
 
   if(tip_length != 0.)
@@ -137,18 +138,22 @@ void Figure2D_VIBes::draw_polyline(const std::vector<Vector>& x, float tip_lengt
 
 void Figure2D_VIBes::draw_polygon(const std::vector<Vector>& x, const StyleProperties& style)
 {
-  assert(x.size() > 1);
-
   update_drawing_properties(style);
-  
-  vector<double> vx(x.size()), vy(x.size());
-  for(size_t k = 0 ; k < x.size() ; k++)
-  {
-    assert(_fig.size() <= x[k].size());
-    vx[k] = x[k][i()]; vy[k] = x[k][j()];
-  }
 
-  vibes::drawPolygon(vx,vy, to_vibes_style(style), _params);
+  if(x.size() == 1)
+    draw_point(x[0], style);
+
+  else if(x.size() > 1)
+  {
+    vector<double> vx(x.size()), vy(x.size());
+    for(size_t k = 0 ; k < x.size() ; k++)
+    {
+      assert(_fig.size() <= x[k].size());
+      vx[k] = x[k][i()]; vy[k] = x[k][j()];
+    }
+
+    vibes::drawPolygon(vx,vy, to_vibes_style(style), _params);
+  }
 }
 
 void Figure2D_VIBes::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& style)
@@ -200,6 +205,28 @@ void Figure2D_VIBes::draw_motor_boat(const Vector& x, float size, const StylePro
   update_drawing_properties(style);
 
   vibes::drawMotorBoat(x[i()],x[j()],180.*x[j()+1]/PI, size, to_vibes_style(style), _params);
+}
+
+void Figure2D_VIBes::draw_text(const std::string& text, const Vector& ul, double scale, const StyleProperties& style)
+{
+  assert(_fig.size() <= ul.size());
+
+  auto new_style = style;
+  new_style.fill_color = new_style.stroke_color;
+  new_style.stroke_color = Color::none();
+
+  update_drawing_properties(new_style);
+
+  vibes::drawText(ul[0], ul[1], text, scale, to_vibes_style(new_style), _params);
+}
+
+void Figure2D_VIBes::draw_raster(const std::string& filename, const IntervalVector& bbox, const StyleProperties& style)
+{
+  assert(bbox.size()==2);
+
+  update_drawing_properties(style);
+
+  vibes::drawRaster(filename, bbox[0].lb(), bbox[1].ub(), bbox[0].diam(), bbox[1].diam(), _params);
 }
 
 std::string Figure2D_VIBes::to_vibes_style(const StyleProperties& style)

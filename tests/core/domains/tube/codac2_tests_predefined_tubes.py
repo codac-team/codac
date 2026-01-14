@@ -2,7 +2,7 @@ from codac import *
 
 def tube_test_1():
 
-  x = SlicedTube(create_tdomain([0.,46.], 1.), Interval())
+  x = SlicedTube(create_tdomain([0.,46.], 1., False), Interval())
   x.set_ith_slice([4,8], 0)
   x.set_ith_slice([2,7], 1)
   x.set_ith_slice([1,6], 2)
@@ -53,7 +53,7 @@ def tube_test_1():
 
 def tube_test_1_01():
 
-  x = SlicedTube(create_tdomain([0.,46.], 0.5), Interval())
+  x = SlicedTube(create_tdomain([0.,46.], 0.5, False), Interval())
   
   x.set([4,8], [0,1])
   x.set([2,7], [1,2])
@@ -105,7 +105,7 @@ def tube_test_1_01():
 
 def tube_test2():
 
-  x = SlicedTube(create_tdomain([0.,46.], 1.), Interval())
+  x = SlicedTube(create_tdomain([0.,46.], 1., False), Interval())
   
   x.set_ith_slice([-2,0], 0)
   x.set_ith_slice([-3,1], 1)
@@ -157,7 +157,7 @@ def tube_test2():
 
 def tube_test3():
 
-  x = SlicedTube(create_tdomain([0.,5.], 1.), Interval())
+  x = SlicedTube(create_tdomain([0.,5.], 1., False), Interval())
 
   x.set_ith_slice([1,3], 0)
   x.set_ith_slice([0,2], 1)
@@ -168,7 +168,7 @@ def tube_test3():
 
 def tube_test4():
 
-  x = SlicedTube(create_tdomain([0.,21.], 1.), Interval())
+  x = SlicedTube(create_tdomain([0.,21.], 1., False), Interval())
 
   x.set([1,2], [0,9])
   x.set([0.5,1.5], [9,11])
@@ -181,7 +181,7 @@ def tube_test4():
 
 def tube_test4_05():
 
-  x = SlicedTube(create_tdomain([0.,21.], 0.5), Interval())
+  x = SlicedTube(create_tdomain([0.,21.], 0.5, False), Interval())
 
   x.set([1,2], [0,9])
   x.set([0.5,1.5], [9,10])

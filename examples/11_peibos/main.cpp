@@ -11,7 +11,7 @@ int main()
   AnalyticFunction f_2d({y_2d},{y_2d[1]+1-a*sqr(y_2d[0]),b*y_2d[0]});
 
   VectorVar X_2d(1);
-  AnalyticFunction psi0_2d ({X_2d},{cos(X_2d[0]*PI/4.-PI/2),sin(X_2d[0]*PI/4.-PI/2)});
+  AnalyticFunction psi0_2d ({X_2d},{sin(X_2d[0]*PI/4.),cos(X_2d[0]*PI/4.)});
 
   OctaSym id_2d ({1,2});
   OctaSym s ({-2,1});

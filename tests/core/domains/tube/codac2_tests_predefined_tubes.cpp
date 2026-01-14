@@ -1,6 +1,6 @@
 SlicedTube<Interval> tube_test_1()
 {
-  SlicedTube x(create_tdomain({0.,46.}, 1.), Interval());
+  SlicedTube x(create_tdomain({0.,46.}, 1., false), Interval());
   x.set_ith_slice({4,8}, 0);
   x.set_ith_slice({2,7}, 1);
   x.set_ith_slice({1,6}, 2);
@@ -52,7 +52,7 @@ SlicedTube<Interval> tube_test_1()
 
 SlicedTube<Interval> tube_test_1_01()
 {
-  SlicedTube x(create_tdomain({0.,46.}, 0.5), Interval());
+  SlicedTube x(create_tdomain({0.,46.}, 0.5, false), Interval());
   
   x.set({4,8}, {0,1});
   x.set({2,7}, {1,2});
@@ -105,7 +105,7 @@ SlicedTube<Interval> tube_test_1_01()
 
 SlicedTube<Interval> tube_test2()
 {
-  SlicedTube x(create_tdomain({0.,46.}, 1.), Interval());
+  SlicedTube x(create_tdomain({0.,46.}, 1., false), Interval());
   
   x.set_ith_slice({-2,0}, 0);
   x.set_ith_slice({-3,1}, 1);
@@ -158,7 +158,7 @@ SlicedTube<Interval> tube_test2()
 
 SlicedTube<Interval> tube_test3()
 {
-  SlicedTube x(create_tdomain({0.,5.}, 1.), Interval());
+  SlicedTube x(create_tdomain({0.,5.}, 1., false), Interval());
 
   x.set_ith_slice({1,3}, 0);
   x.set_ith_slice({0,2}, 1);
@@ -170,7 +170,7 @@ SlicedTube<Interval> tube_test3()
 
 SlicedTube<Interval> tube_test4()
 {
-  SlicedTube x(create_tdomain({0.,21.}, 1.), Interval());
+  SlicedTube x(create_tdomain({0.,21.}, 1., false), Interval());
 
   x.set({1,2}, {0,9});
   x.set({0.5,1.5}, {9,11});
@@ -184,7 +184,7 @@ SlicedTube<Interval> tube_test4()
 
 SlicedTube<Interval> tube_test4_05()
 {
-  SlicedTube x(create_tdomain({0.,21.}, 0.5), Interval());
+  SlicedTube x(create_tdomain({0.,21.}, 0.5, false), Interval());
 
   x.set({1,2}, {0,9});
   x.set({0.5,1.5}, {9,10});

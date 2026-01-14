@@ -94,12 +94,30 @@ namespace codac2
     using Ctc = CtcInter<T...>;
   };
 
-  template<typename C1, typename C2>
+  template<typename C1,typename C2>
   typename CtcInterType<typename C1::ContractedTypes>::Ctc operator&(const C1& c1, const C2& c2)
   {
     return { c1, c2 };
   }
 
+  template<typename C1,typename C2>
+  typename CtcInterType<typename C1::ContractedTypes>::Ctc operator&(const std::shared_ptr<C1>& c1, const std::shared_ptr<C2>& c2)
+  {
+    return { c1, c2 };
+  }
+
+  template<typename C1,typename C2>
+  typename CtcInterType<typename C1::ContractedTypes>::Ctc operator&(const std::shared_ptr<C1>& c1, const C2& c2)
+  {
+    return { c1, c2 };
+  }
+
+  template<typename C1,typename C2>
+  typename CtcInterType<typename C1::ContractedTypes>::Ctc operator&(const C1& c1, const std::shared_ptr<C2>& c2)
+  {
+    return { c1, c2 };
+  }
+  
   template<typename C2>
     requires std::is_base_of_v<CtcBase<IntervalVector>,C2>
   inline CtcInter<IntervalVector> operator&(const IntervalVector& c1, const C2& c2)
@@ -115,4 +133,7 @@ namespace codac2
     assert_release(c1.size() == c2.size());
     return CtcInter<IntervalVector>(c1,CtcWrapper(c2));
   }
+
+  // Template deduction guides
+  CtcInter(Index) -> CtcInter<IntervalVector>;
 }

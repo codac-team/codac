@@ -108,14 +108,14 @@ namespace codac2
       void begin_path_with_matrix(const Vector& x, float length, const StyleProperties& style = StyleProperties());
 
       /**
-       * \brief Draws a text on the figure
+       * \brief Draws a tick label on the figure
        * 
-       * \param c Coordinates of the text
+       * \param c Coordinates of the tick
        * \param r Rotation of the text (in radians)
        * \param text Text to draw
        * \param style Style properties for the text (font size, color, etc.)
        */
-      void draw_text(const Vector& c, const Vector& r, const std::string& text, const StyleProperties& style = StyleProperties());
+      void draw_tick_label(const Vector& c, const Vector& r, const std::string& text, const StyleProperties& style = StyleProperties());
 
       /**
        * \brief Draws the axes of the figure
@@ -223,6 +223,27 @@ namespace codac2
        * \param style Style of the motor boat (edge color and fill color)
        */
       void draw_motor_boat(const Vector& x, float size, const StyleProperties& style = StyleProperties());
+
+      // Miscellaneous
+
+      /**
+       * \brief Draws text on the figure
+       * 
+       * \param text Text to display
+       * \param ul Position of the top-left corner of the text
+       * \param scale Scaling of the text (VIBes only)
+       * \param style Style of the text (color, layer)
+       */
+      void draw_text(const std::string& text, const Vector& ul, double scale, const StyleProperties& style = StyleProperties());
+
+      /**
+       * \brief Draws a the bounding box and the name of the raster on the figure
+       * 
+       * \param filename The name of the file
+       * \param bbox The bounding box of the raster
+       * \param style Style of the raster (only the layer is used)
+       */
+      void draw_raster(const std::string& filename, const IntervalVector& bbox, const StyleProperties& style = StyleProperties());
 
     protected:
 

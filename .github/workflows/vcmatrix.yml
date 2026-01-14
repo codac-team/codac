@@ -19,12 +19,14 @@ jobs:
         matrix:
             cfg:
             # Should be Visual Studio 2015 for Python 3.5-3.7, Visual Studio 2019 for Python 3.8-3.10, but need Visual Studio 2022 for C++20 compatibility...?
+            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 14, desc: 'Windows Visual Studio 2022 x86 Python 3.14' }
             - { os: windows-2022, shell: cmd, arch: x86, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 13, desc: 'Windows Visual Studio 2022 x86 Python 3.13' }
             - { os: windows-2022, shell: cmd, arch: x86, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 12, desc: 'Windows Visual Studio 2022 x86 Python 3.12' }
             - { os: windows-2022, shell: cmd, arch: x86, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 11, desc: 'Windows Visual Studio 2022 x86 Python 3.11' }
             - { os: windows-2022, shell: cmd, arch: x86, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 10, desc: 'Windows Visual Studio 2022 x86 Python 3.10' }
             - { os: windows-2022, shell: cmd, arch: x86, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 9, desc: 'Windows Visual Studio 2022 x86 Python 3.9' }
             - { os: windows-2022, shell: cmd, arch: x86, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 8, desc: 'Windows Visual Studio 2022 x86 Python 3.8' }
+            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 14, desc: 'Windows Visual Studio 2022 x64 Python 3.14' }
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 13, desc: 'Windows Visual Studio 2022 x64 Python 3.13' }
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 12, desc: 'Windows Visual Studio 2022 x64 Python 3.12' }
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 11, desc: 'Windows Visual Studio 2022 x64 Python 3.11' }
@@ -33,12 +35,12 @@ jobs:
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc17, cmake_params: '-G "Visual Studio 17" -T v143 -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 8, desc: 'Windows Visual Studio 2022 x64 Python 3.8' }
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: true
         fetch-depth: 0
         clean: false
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
         architecture: ${{ matrix.cfg.arch }}
@@ -49,9 +51,7 @@ jobs:
       if: matrix.cfg.py_v_maj!=''
     - run: echo "VERBOSE=1" >> $GITHUB_ENV
       shell: bash
-    - run: |
-        (New-Object System.Net.WebClient).DownloadFile("http://www.ensta-bretagne.fr/lebars/Share/windows_extra_tools.zip", "C:\Windows\Temp\windows_extra_tools.zip") 
-        7z x C:\Windows\Temp\windows_extra_tools.zip -o"C:\Windows" -y
+    - run: choco install -y -r --no-progress wget
       shell: pwsh
       if: runner.os=='Windows'
     #- run: choco install -y -r --no-progress eigen --version=3.4.0.20240224 ${{ matrix.cfg.choco_flags }}

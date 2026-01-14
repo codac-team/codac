@@ -80,12 +80,12 @@ void export_TrajBase(py::class_<S>& pyclass)
       SAMPLEDTRAJ_T_TRAJBASE_T_SAMPLED_AS_CONST_SAMPLEDTRAJ_Q_REF_CONST,
       "x"_a)
 
-    .def("primitive", [](const S& x, const T& y0, double dt)
+    .def("primitive", [](const S& x, double dt)
         {
-          return x.primitive(y0,dt);
+          return x.primitive(dt);
         },
-      SAMPLEDTRAJ_T_TRAJBASE_T_PRIMITIVE_CONST_T_REF_DOUBLE_CONST,
-      "y0"_a, "dt"_a)
+      SAMPLEDTRAJ_T_TRAJBASE_T_PRIMITIVE_DOUBLE_CONST,
+      "dt"_a)
 
   ;
 }

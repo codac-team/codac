@@ -139,4 +139,18 @@ namespace codac2
       ei = rotate(ei,a,c);
     return x_;
   }
+
+  /**
+   * \brief Merges overlapping or adjacent ``IntervalVector`` points within a list.
+   *
+   * This function iteratively scans a list of ``IntervalVector`` objects and merges
+   * any pairs that intersect.
+   * The process repeats until no further merges are possible.
+   *
+   * This operation is useful for simplifying collections of intervals or bounding boxes
+   * that may overlap due to uncertainty propagation or geometric tolerance.
+   *
+   * \param l list of ``IntervalVector`` objects to be merged. The list is modified in-place.
+   */
+  void merge_adjacent_points(std::list<IntervalVector>& l);
 }

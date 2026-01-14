@@ -32,6 +32,11 @@ namespace codac2
     using Domain = Interval;
   };
 
+  template<>
+  struct Wrapper<Interval> {
+    using Domain = Interval;
+  };
+
   template<typename T,typename D>
   struct AnalyticType;
 

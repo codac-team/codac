@@ -30,21 +30,21 @@ void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval
   py_Interval
 
   .def(py::self & py::self,
-    INTERVAL_OPERATORAND_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
+    INTERVAL_OPERATORINTER_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
     "x"_a)
 
   // For MATLAB compatibility
   .def("inter", (Interval(*)(const Interval&,const Interval&)) &codac2::operator&,
-    INTERVAL_OPERATORAND_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
+    INTERVAL_OPERATORINTER_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
     "x"_a)
 
   .def(py::self | py::self,
-    INTERVAL_OPERATOROR_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
+    INTERVAL_OPERATORUNION_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
     "x"_a)
   
   // For MATLAB compatibility
   .def("union", (Interval(*)(const Interval&,const Interval&)) &codac2::operator|,
-    INTERVAL_OPERATOROR_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
+    INTERVAL_OPERATORUNION_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
     "x"_a)
 
   .def(+ py::self,

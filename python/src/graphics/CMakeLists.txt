@@ -13,6 +13,7 @@
     styles/codac2_py_Color.cpp
     styles/codac2_py_ColorMap.cpp
     styles/codac2_py_PavingStyle.cpp
+    styles/codac2_py_StyleGradientProperties.cpp
     styles/codac2_py_StyleProperties.cpp
   )
 

@@ -142,6 +142,9 @@ void export_operators(py::module& m)
     .def_static("bwd", (void(*)(const IntervalVector&,IntervalMatrix&,IntervalVector&)) &MulOp::bwd,
       STATIC_VOID_MULOP_BWD_CONST_INTERVALVECTOR_REF_INTERVALMATRIX_REF_INTERVALVECTOR_REF,
       "y"_a, "x1"_a, "x2"_a)
+    .def_static("bwd", (void(*)(const IntervalMatrix&,IntervalMatrix&,IntervalMatrix&)) &MulOp::bwd,
+      STATIC_VOID_MULOP_BWD_CONST_INTERVALMATRIX_REF_INTERVALMATRIX_REF_INTERVALMATRIX_REF,
+      "y"_a, "x1"_a, "x2"_a)
   ;
 
   py::class_<SubOp>(m, "SubOp")

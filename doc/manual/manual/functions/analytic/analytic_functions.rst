@@ -188,6 +188,7 @@ Below is an example of a function composition involving matrix calculation for t
       :end-before: [4b-end]
       :dedent: 0
 
+.. _subsec-functions-analytic-class-evaluations:
 
 Evaluations
 -----------

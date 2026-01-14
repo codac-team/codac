@@ -39,7 +39,11 @@ void export_Parallelepiped(py::module& m)
       INTERVALVECTOR_PARALLELEPIPED_BOX_CONST)
 
     .def("contains", &Parallelepiped::contains,
-      BOOL_PARALLELEPIPED_CONTAINS_CONST_VECTOR_REF_CONST,
+      BOOLINTERVAL_PARALLELEPIPED_CONTAINS_CONST_VECTOR_REF_CONST,
+      "x"_a)
+
+    .def("is_superset", &Parallelepiped::is_superset,
+      BOOLINTERVAL_PARALLELEPIPED_IS_SUPERSET_CONST_INTERVALVECTOR_REF_CONST,
       "x"_a)
 
   ;

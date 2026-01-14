@@ -10,92 +10,85 @@
 #include "codac2_CtcDeriv.h"
 #include "codac2_Slice.h"
 #include "codac2_Interval.h"
+#include "codac2_trunc.h"
 
 using namespace std;
 using namespace codac2;
 
-Interval slice_hull(const Interval& dt,
-  const Interval& x, const Interval& input_x, const Interval& output_x,
+CtcDeriv::CtcDeriv(const TimePropag& time_propag, bool fast_mode)
+  : _time_propag(time_propag), _fast_mode(fast_mode)
+{ }
+
+ConvexPolygon CtcDeriv::polygon_slice(
+  const Interval& t, const Interval& envelope,
+  const Interval& input, const Interval& proj_input,
+  const Interval& output, const Interval& proj_output,
   const Interval& v)
 {
-  Interval hull = x;
-  hull &= input_x  + dt*v;
-  hull &= output_x - dt*v;
-  return hull;
+  if(v.is_empty() || input.is_empty() || output.is_empty())
+    return ConvexPolygon::empty();
+
+  ConvexPolygon p(cart_prod(t,trunc(envelope)));
+
+  ConvexPolygon p_fwd(std::vector<Vector>({
+    {t.ub(), trunc(proj_output.ub())},
+    {t.lb(), trunc(input.ub())},
+    {t.lb(), trunc(input.lb())},
+    {t.ub(), trunc(proj_output.lb())}
+  }), !false); // false: avoid costly computation of convex hull (vertices are already ordered)
+  p &= p_fwd;
+
+  ConvexPolygon p_bwd(std::vector<Vector>({
+    {t.lb(), trunc(proj_input.ub())},
+    {t.lb(), trunc(proj_input.lb())},
+    {t.ub(), trunc(output.lb())},
+    {t.ub(), trunc(output.ub())}
+  }), !false); // false: avoid costly computation of convex hull (vertices are already ordered)
+  p &= p_bwd;
+    
+  return p;
 }
 
-CtcDeriv::CtcDeriv()
+void CtcDeriv::contract(
+  const Interval& t, Interval& envelope,
+  Interval& input, Interval& output,
+  const Interval& v, const TimePropag& time_propag,
+  bool fast_mode)
 {
+  Interval proj_input;
+  Interval proj_output;
 
-}
+  // /!\ .diam() method is not reliable (floating point result)
+  // -> We need to compute the diameter with intervals
+  Interval d = Interval(t.ub())-Interval(t.lb());
 
-void CtcDeriv::contract(Slice<Interval>& x, const Slice<Interval>& v) const
-{
-  assert_release(x.t0_tf() == v.t0_tf());
-  
-  Interval ingate = x.input_gate();
-  Interval outgate = x.output_gate();
+  if((time_propag & TimePropag::FWD) == TimePropag::FWD)
+    proj_output &= input + d * v;
 
-  // Gates contraction
-  ingate &= x.output_gate() - x.t0_tf().diam() * v.codomain();
-  outgate &= x.input_gate() + x.t0_tf().diam() * v.codomain();
+  if((time_propag & TimePropag::BWD) == TimePropag::BWD)
+    proj_input &= output - d * v;
 
-  if(outgate.is_superset(x.output_gate()) || ingate.is_superset(x.input_gate()))
+  if(!fast_mode && time_propag == TimePropag::FWD_BWD
+    && (proj_output.is_superset(output) || proj_input.is_superset(input)))
   {
-    auto prev_x = x.prev_slice();
-    auto next_x = x.next_slice();
-
-    // Gates needed for polygon computation
-    if(prev_x->is_gate())
-      prev_x->set(ingate, false);
-    if(next_x->is_gate())
-      next_x->set(outgate, false);
-
     // Optimal envelope
-    x.set(x.polygon_slice(v).box()[1], false);
+    envelope = untrunc(CtcDeriv::polygon_slice(
+        t, envelope,
+        input, proj_input,
+        output, proj_output,
+        v
+      ).box()[1]);
   }
 
   else
   {
-    x.set(x.codomain()
-      & (ingate + Interval(0,x.t0_tf().diam()) * v.codomain())
-      & (outgate - Interval(0,x.t0_tf().diam()) * v.codomain())
-    , false);
-  }
-}
+    if((time_propag & TimePropag::FWD) == TimePropag::FWD)
+      envelope &= input + Interval(0,d.ub()) * v;
 
-void CtcDeriv::contract(Slice<IntervalVector>& x, const Slice<IntervalVector>& v) const
-{
-  assert_release(x.size() == v.size());
-  assert_release(x.t0_tf() == v.t0_tf());
-
-  auto x_prev = x.prev_slice();
-  auto x_next = x.next_slice();
-  
-  auto hull = x.codomain();
-  auto input_gate = x.input_gate();
-  auto output_gate = x.output_gate();
-
-  for(Index i = 0 ; i < x.size() ; i++)
-  {
-    hull[i] = slice_hull({0,x.t0_tf().diam()},
-      x.codomain()[i],x.input_gate()[i],x.output_gate()[i],
-      v.codomain()[i]
-    );
-
-    if(x_next && x_next->is_gate())
-      output_gate[i] &= input_gate[i]+x.t0_tf().diam()*v.codomain()[i];
-
-    if(x_prev && x_prev->is_gate())
-      input_gate[i] &= output_gate[i]-x.t0_tf().diam()*v.codomain()[i];
+    if((time_propag & TimePropag::BWD) == TimePropag::BWD)
+      envelope &= output - Interval(0,d.ub()) * v;
   }
 
-  if(x_prev && x_prev->is_gate())
-    x_prev->set(input_gate, false);
-
-  if(x_next && x_next->is_gate())
-    x_next->set(output_gate, false);
-
-  x.set(hull, false); // disable propagation to adjacent slices
-  // v remains unchanged
+  input &= proj_input;
+  output &= proj_output;
 }

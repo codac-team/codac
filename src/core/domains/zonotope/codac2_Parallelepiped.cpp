@@ -8,8 +8,8 @@
  */
 
 #include "codac2_Parallelepiped.h"
+#include "codac2_inversion.h"
 
-using namespace std;
 using namespace codac2;
 
 Parallelepiped::Parallelepiped(const Vector& z_, const Matrix& A_)
@@ -18,7 +18,7 @@ Parallelepiped::Parallelepiped(const Vector& z_, const Matrix& A_)
   assert_release(A.cols() <= z.size() && "too many vectors, you are describing a zonotope");
 }
 
-void generate_vertices(Index i, Index n, const Vector& z, const Matrix& A, vector<Vector>& L_v)
+void generate_vertices(Index i, Index n, const Vector& z, const Matrix& A, std::vector<Vector>& L_v)
 {
   if (i == n)
   {
@@ -33,7 +33,7 @@ void generate_vertices(Index i, Index n, const Vector& z, const Matrix& A, vecto
 
 std::vector<Vector> Parallelepiped::vertices() const
 {
-  vector<Vector> L_v;
+  std::vector<Vector> L_v;
   generate_vertices(0, z.size(),z,A,L_v);
   return L_v;
 }
@@ -46,11 +46,27 @@ IntervalVector Parallelepiped::box() const
   return box;
 }
 
-bool Parallelepiped::contains(const Vector& v) const
+BoolInterval Parallelepiped::contains(const Vector& v) const
+{
+  return is_superset(v.template cast<Interval>());
+}
+
+BoolInterval Parallelepiped::is_superset(const IntervalVector& x) const
 {
   assert_release(A.rows() == A.cols() && "Matrix A must be square to check containment.");
+  assert_release(x.size() == z.size() && "Point dimension must match parallelepiped dimension.");
 
-  IntervalVector IV = Interval(-1,1)*IntervalVector::Ones(A.cols());
+  IntervalVector B = inverse_enclosure(A)*(x - z);
+  IntervalVector IV = IntervalVector::constant(A.cols(),{-1,1});
 
-  return IV.contains(A.inverse()*(v - z));
+  if (!(B.intersects(IV)))
+    return BoolInterval::FALSE;
+
+  else
+  {
+    if (B.is_subset(IV))
+      return BoolInterval::TRUE;
+    else
+      return BoolInterval::UNKNOWN;
+  }
 }

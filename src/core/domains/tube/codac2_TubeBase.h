@@ -11,7 +11,6 @@
 
 #include "codac2_Domain.h"
 #include "codac2_TDomain.h"
-#include "codac2_Slice.h"
 
 namespace codac2
 {

@@ -168,6 +168,29 @@ namespace codac2
        */
       void draw_motor_boat(const Vector& x, float size, const StyleProperties& style = StyleProperties());
 
+      // Miscellaneous
+
+      /**
+       * \brief Draws text on the figure
+       * 
+       * \param text Text to display
+       * \param ul Position of the top-left corner of the text
+       * \param scale Scaling of the text (VIBes only)
+       * \param style Style of the text (color, layer)
+       */
+      void draw_text(const std::string& text, const Vector& ul, double scale, const StyleProperties& style = StyleProperties());
+
+      /**
+       * \brief Draws a raster on the figure
+       * 
+       * \param filename The name of the file, the path is relative to the VIBes' server folder
+       * \param bbox The bounding box of the raster
+       * \param style Style of the raster (only the layer is used)
+       */
+      void draw_raster(const std::string& filename, const IntervalVector& bbox, const StyleProperties& style = StyleProperties());
+
+
+
       /**
        * \brief Converts a StyleProperties object to a VIBes style string
        * 

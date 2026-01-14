@@ -131,3 +131,22 @@ TEST_CASE("SampledTraj: nan case")
   x.set(Vector({0,NAN}),0.);
   CHECK(x(1.).is_nan());
 }
+
+TEST_CASE("SampledTraj: derivative")
+{
+  ScalarVar t;
+  AnalyticFunction f({t}, sqr(t)*exp(sin(t)));
+  SampledTraj<double> x = AnalyticTraj(f,{0,10}).sampled(1e-3);
+  SampledTraj<double> s = AnalyticTraj(AnalyticFunction({t},exp(sin(t))*(2*t+sqr(t)*cos(t))),{0,10}).sampled(1e-2);
+
+  //DefaultFigure::plot_trajectory(x);
+  //DefaultFigure::plot_trajectory(x.derivative(), Color::blue());
+  //DefaultFigure::plot_trajectory(s, Color::light_gray());
+  //DefaultFigure::plot_trajectory(x.derivative().primitive(), Color::red());
+
+  auto d = x.derivative();
+  auto p = d.primitive();
+
+  for(double i = 0 ; i < 10 ; i+=1e-1)
+    CHECK(Approx(p(i),1e-2) == x(i));
+}

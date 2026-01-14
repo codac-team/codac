@@ -49,12 +49,11 @@ jobs:
             - { os: macos-15, shell: bash, arch: arm64, bitness: 64, runtime: sequoia, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Sequoia arm64' }
             - { os: macos-15, shell: bash, arch: x86_64, bitness: 64, runtime: sequoia, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', cross: true, desc: 'macOS Sequoia x86_64 (cross)' }
             - { os: macos-14, shell: bash, arch: arm64, bitness: 64, runtime: sonoma, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Sonoma arm64' }
-            - { os: macos-14, shell: bash, arch: x86_64, bitness: 64, runtime: sonoma, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', cross: true, desc: 'macOS Sonoma x86_64 (cross)' }
-            - { os: macos-13, shell: bash, arch: arm64, bitness: 64, runtime: ventura, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', cross: true, desc: 'macOS Ventura arm64 (cross)' }
-            - { os: macos-13, shell: bash, arch: x86_64, bitness: 64, runtime: ventura, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', desc: 'macOS Ventura x86_64' }
+            - { os: macos-15-intel, shell: bash, arch: x86_64, bitness: 64, runtime: sonoma, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', desc: 'macOS Sonoma x86_64' }
+            # Not clear whether macos-15-intel is more Sequoia or Sonoma, see https://github.com/actions/runner-images/issues/13045...
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: true
         fetch-depth: 0

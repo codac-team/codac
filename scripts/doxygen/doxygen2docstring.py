@@ -49,10 +49,12 @@ def normalize_label(str_label):
     .replace("operator/", "OPERATORDIV") \
     .replace("operator[]", "OPERATORCOMPO") \
     .replace("operator()", "OPERATORCALL") \
-    .replace("operator&=", "OPERATORANDEQ") \
-    .replace("operator|=", "OPERATOROREQ") \
-    .replace("operator&", "OPERATORAND") \
-    .replace("operator|", "OPERATOROR") \
+    .replace("operator&=", "OPERATORINTEREQ") \
+    .replace("operator|=", "OPERATORUNIONEQ") \
+    .replace("operator&&", "OPERATORAND") \
+    .replace("operator&", "OPERATORINTER") \
+    .replace("operator||", "OPERATOROR") \
+    .replace("operator|", "OPERATORUNION") \
     .replace("operator==", "OPERATOREQ") \
     .replace("operator!=", "OPERATORNEQ") \
     .replace("operator=", "OPERATORAFF") \

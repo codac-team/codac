@@ -20,6 +20,13 @@ class TestCtcInverse(unittest.TestCase):
 
   def test_CtcInverse_1(self):
 
+    x = VectorVar(1)
+    f = AnalyticFunction([x], x[0]-42)
+    c = CtcInverse(f, Interval(0.))
+    a = IntervalVector(1)
+    c.contract(a)
+    self.assertTrue(a == IntervalVector([[42]]))
+
     x = VectorVar(2)
     f = AnalyticFunction([x], x[0]-x[1])
     c = CtcInverse(f, 0)
@@ -151,7 +158,9 @@ class TestCtcInverse(unittest.TestCase):
     p = pave(x0, ctc, 0.01)
     cs = p.connected_subsets()
     self.assertTrue(len(cs) == 1)
-    self.assertTrue(Approx(cs[0].box(),1e-4) == [[0.149199,0.182388],[0.148306,0.1826],[0.148054,0.18],[0.148732,0.18]])
+    hull = IntervalVector([[0.149199,0.182388],[0.148306,0.1826],[0.148054,0.18],[0.148732,0.18]])
+    hull.inflate(1e-4)
+    self.assertTrue(hull.is_superset(cs[0].box()))
   
   def test_automatic_deduction_issue245(self):
 

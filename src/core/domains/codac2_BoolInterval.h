@@ -18,6 +18,9 @@ namespace codac2
    * \brief Enumeration representing a boolean interval.
    * 
    * The logical operators ``&`` and ``|`` can be used to combine ``BoolInterval`` values.
+
+   * Set operators ``&`` (intersection) and ``|`` (union) and logical operators ``&&`` (AND) and ``||`` (OR)
+   * are overloaded to combine ``BoolInterval`` values consistently.
    */
   enum class BoolInterval
   {
@@ -29,11 +32,75 @@ namespace codac2
     UNKNOWN = 0x01 | 0x02
   };
 
-  constexpr BoolInterval operator&(BoolInterval a, BoolInterval b)
-  { return static_cast<BoolInterval>(static_cast<int>(a) & static_cast<int>(b)); }
+  /**
+   * \brief Intersection operator for ``BoolInterval`` sets.
+   *
+   * Performs a bitwise AND on the integer representations of two ``BoolInterval`` values.
+   * 
+   * \param x The left-hand ``BoolInterval`` operand.
+   * \param y The right-hand ``BoolInterval`` operand.
+   * \return The result of the intersection.
+   */
+  constexpr BoolInterval operator&(BoolInterval x, BoolInterval y)
+  {
+    return static_cast<BoolInterval>(static_cast<int>(x) & static_cast<int>(y));
+  }
 
-  constexpr BoolInterval operator|(BoolInterval a, BoolInterval b)
-  { return static_cast<BoolInterval>(static_cast<int>(a) | static_cast<int>(b)); }
+  /**
+   * \brief Union operator for ``BoolInterval`` sets.
+   *
+   * Performs a bitwise OR on the integer representations of two ``BoolInterval`` values.
+   * 
+   * \param x The left-hand ``BoolInterval`` operand.
+   * \param y The right-hand ``BoolInterval`` operand.
+   * \return The result of the union.
+   */
+  constexpr BoolInterval operator|(BoolInterval x, BoolInterval y)
+  {
+    return static_cast<BoolInterval>(static_cast<int>(x) | static_cast<int>(y));
+  }
+
+  /**
+   * \brief Logical AND operator for ``BoolInterval`` sets.
+   *
+   * \note Not to be confused with the bitwise AND operator ``&`` 
+   * (which represents an interval *intersection* rather than a logical conjunction).
+   * 
+   * \param x The left-hand ``BoolInterval`` operand.
+   * \param y The right-hand ``BoolInterval`` operand.
+   * \return The logical AND result as a ``BoolInterval``.
+   */
+  constexpr BoolInterval operator&&(BoolInterval x, BoolInterval y)
+  {
+    if((x == BoolInterval::EMPTY) || (y == BoolInterval::EMPTY))
+      return BoolInterval::EMPTY;
+    if((x == BoolInterval::FALSE) || (y == BoolInterval::FALSE))
+      return BoolInterval::FALSE;
+    if((x == BoolInterval::UNKNOWN) || (y == BoolInterval::UNKNOWN))
+      return BoolInterval::UNKNOWN;
+    return BoolInterval::TRUE;
+  }
+
+  /**
+   * \brief Logical OR operator for ``BoolInterval`` sets.
+   *
+   * \note Not to be confused with the bitwise OR operator ``|`` 
+   * (which represents an interval *union* rather than a logical disjunction).
+   * 
+   * \param x The left-hand ``BoolInterval`` operand.
+   * \param y The right-hand ``BoolInterval`` operand.
+   * \return The logical OR result as a ``BoolInterval``.
+   */
+  constexpr BoolInterval operator||(BoolInterval x, BoolInterval y)
+  {
+    if((x == BoolInterval::EMPTY) || (y == BoolInterval::EMPTY))
+      return BoolInterval::EMPTY;
+    if((x == BoolInterval::TRUE) || (y == BoolInterval::TRUE))
+      return BoolInterval::TRUE;
+    if((x == BoolInterval::UNKNOWN) || (y == BoolInterval::UNKNOWN))
+      return BoolInterval::UNKNOWN;
+    return BoolInterval::FALSE;
+  }
 
   /**
    * \brief Returns the complementary of a BoolInterval
@@ -50,7 +117,7 @@ namespace codac2
       case BoolInterval::TRUE:
         return BoolInterval::FALSE;
       default:
-        return BoolInterval::UNKNOWN;
+        return x;
     }
   }
   

@@ -36,11 +36,11 @@ class TestPeibos(unittest.TestCase):
     count_b0, count_b1, count_b2 = 0, 0, 0
 
     for p in v_par_2d:
-      if p.contains(b0):
+      if (p.contains(b0))==BoolInterval.TRUE:
         count_b0 += 1
-      if p.contains(b1):
+      if (p.contains(b1))==BoolInterval.TRUE:
         count_b1 += 1
-      if p.contains(b2):
+      if (p.contains(b2))==BoolInterval.TRUE:
         count_b2 += 1
 
     self.assertTrue(count_b0 == 0)

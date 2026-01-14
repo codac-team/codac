@@ -40,15 +40,19 @@ void export_TDomain(py::module& m)
     .def("tslices_vector", &TDomain::tslices_vector,
       VECTOR_TSLICE_TDOMAIN_TSLICES_VECTOR_CONST)
 
-    .def("tslice", [](TDomain& tdomain, double t) -> TSlice& {
-        return *tdomain.tslice(t);
-      },
+    .def("tslice", [](TDomain& tdomain, double t) -> std::shared_ptr<TSlice>
+        {
+          auto it = tdomain.tslice(t);
+          return std::shared_ptr<TSlice>(&(*it), [](TSlice*){});
+        },
       LIST_TSLICE_ITERATOR_TDOMAIN_TSLICE_DOUBLE
       "t"_a)
 
-    .def("sample", [](TDomain& tdomain, double t, bool with_gate) -> TSlice& {
-        return *tdomain.sample(t, with_gate);
-      },
+    .def("sample", [](TDomain& tdomain, double t, bool with_gate) -> std::shared_ptr<TSlice>
+        {
+          auto it = tdomain.sample(t, with_gate);
+          return std::shared_ptr<TSlice>(&(*it), [](TSlice*){});
+        },
       LIST_TSLICE_ITERATOR_TDOMAIN_SAMPLE_DOUBLE_BOOL,
       "t"_a, "with_gate"_a=false)
 
@@ -78,7 +82,7 @@ void export_TDomain(py::module& m)
 
     .def("create_tdomain", (std::shared_ptr<TDomain> (*)(const Interval&,double,bool)) &create_tdomain,
       SHARED_PTR_TDOMAIN_CREATE_TDOMAIN_CONST_INTERVAL_REF_DOUBLE_BOOL,
-      "t0_tf"_a, "dt"_a, "with_gates"_a=false)
+      "t0_tf"_a, "dt"_a, "with_gates"_a=true)
 
   ;
 }

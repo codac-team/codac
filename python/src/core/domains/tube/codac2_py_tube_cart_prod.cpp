@@ -36,8 +36,8 @@ void export_tube_cart_prod(py::module& m)
           Index i = 0;
           for(const auto& li : l)
           {
-            auto si = cast<SlicedTube<IntervalVector>>(li)(it)->codomain();
-            v(it)->codomain().put(i,si);
+            auto si = cast<SlicedTube<IntervalVector>>(li).slice(it)->codomain();
+            v.slice(it)->codomain().put(i,si);
             i += si.size();
           }
           assert(i == n);

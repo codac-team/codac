@@ -383,6 +383,14 @@ TEST_CASE("bwd mul operations")
   //
   //cout << x << endl;
   //cout << x2 << endl;
+  IntervalMatrix Q { { 1, 0, deltaM }, 
+		     { 0, deltaM, 1 } };
+  IntervalMatrix R { { 1, 0 }, {0 , 1} };
+  IntervalMatrix P { { {0,1}, {0,1} },
+	             { {0,1}, {0,1} },
+		     { {0,1}, {0,1} } };
+  MulOp::bwd(R,Q,P);
+  CHECK(Approx(P,1e-5) == IntervalMatrix({{{0.99,1},{0,0.1}},{{0,1},{0,1}},{{0,0.1},{0.9,1}}}));
 }
 
 TEST_CASE("test chi op")

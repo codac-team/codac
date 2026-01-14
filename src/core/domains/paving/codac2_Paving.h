@@ -148,6 +148,25 @@ namespace codac2
       std::list<PavingOut::ConnectedSubset_> connected_subsets(const PavingOut::NodeValue_& node_value = PavingOut::outer) const;
       std::list<PavingOut::ConnectedSubset_> connected_subsets(const IntervalVector& x0, const PavingOut::NodeValue_& node_value = PavingOut::outer) const;
 
+      inline IntervalVector operator&(const IntervalVector& x) const
+      {
+        assert_release(x.size() == this->size());
+        
+        if(x.is_empty())
+          return IntervalVector::empty(x.size());
+
+        IntervalVector x_ = IntervalVector::empty(x.size());
+        this->tree()->visit([&]
+          (Node_ n)
+          {
+            for(const auto& bi : PavingOut::outer(n))
+              x_ |= bi & x;
+            return n->hull().intersects(x);
+          });
+        assert(x_.is_subset(x));
+        return x_;
+      }
+
       static const NodeValue_ outer, outer_complem;
   };
 

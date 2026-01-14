@@ -34,8 +34,7 @@ class TestPolygon(unittest.TestCase):
     self.assertTrue(p1.contains(IntervalVector(2)) == BoolInterval.FALSE)
     self.assertTrue(p1.is_empty())
     self.assertTrue(len(p1.edges()) == 0)
-    self.assertTrue(len(p1.unsorted_vertices()) == 0)
-    self.assertTrue(len(p1.sorted_vertices()) == 0)
+    self.assertTrue(len(p1.vertices()) == 0)
 
   def test_Polygon(self):
 
@@ -103,6 +102,19 @@ class TestPolygon(unittest.TestCase):
     self.assertTrue(p4.contains(IntervalVector([1,1])) == BoolInterval.TRUE)
     self.assertTrue(p4.contains(IntervalVector([1,3])) == BoolInterval.TRUE)
     self.assertTrue(p4.contains(IntervalVector([1,2])) == BoolInterval.TRUE)
+
+  def test_Polygon_limit_case(self):
+
+    x = Vector([5,3.5])
+    p = Polygon([[4,3.5],[5,4],[4,4.5]])
+    self.assertTrue(p.contains(x) == BoolInterval.FALSE)
+
+    p1 = ConvexPolygon([[4,3.5],[5,4],[4.5,4.25],[4,4]])
+    self.assertTrue(p1.contains([4.5,4.25]) == BoolInterval.TRUE)
+    p2 = ConvexPolygon([[4,4.25],[5,4.25]])
+    i = p1 & p2
+    self.assertTrue(i == ConvexPolygon(IntervalVector([4.5,4.25])))
+    self.assertTrue(len(i.vertices()) == 1)
 
 if __name__ ==  '__main__':
   unittest.main()

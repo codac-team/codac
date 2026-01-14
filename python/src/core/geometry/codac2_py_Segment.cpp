@@ -71,12 +71,8 @@ void export_Segment(py::module& m)
       BOOL_SEGMENT_OPERATOREQ_CONST_SEGMENT_REF_CONST,
       "e"_a)
 
-    .def("__and__",
-        [](const Segment& e1, const Segment& e2) -> IntervalVector
-        {
-          return e1 & e2;
-        },
-      INTERVALVECTOR_OPERATORAND_CONST_SEGMENT_REF_CONST_SEGMENT_REF,
+    .def("__and__", (IntervalVector (*)(const Segment&,const Segment&))&codac2::operator&,
+      INTERVALVECTOR_OPERATORINTER_CONST_SEGMENT_REF_CONST_SEGMENT_REF,
       "e2"_a)
 
     .def("__repr__", [](const Segment& x) {

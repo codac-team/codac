@@ -106,6 +106,16 @@ namespace codac2
 
   template<typename T,int R,int C>
   struct is_sep<Eigen::Matrix<T,R,C>> : std::false_type {};
+
+  template<typename T>
+  concept is_matrix_base_double =
+    requires {
+      typename Eigen::internal::traits<std::decay_t<T>>::Scalar;
+      requires std::same_as<
+        typename Eigen::internal::traits<std::decay_t<T>>::Scalar,
+        double
+      >;
+    };
 }
 
 namespace codac2

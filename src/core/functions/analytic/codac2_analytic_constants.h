@@ -82,13 +82,7 @@ namespace codac2
         return true;
       }
 
-      virtual std::string str(bool in_parentheses = false) const
-      {
-        std::ostringstream s;
-        if(_x.is_degenerated()) s << _x.mid();
-        else s << _x;
-        return in_parentheses ? "(" + s.str() + ")" : s.str();
-      }
+      virtual std::string str(bool in_parentheses = false) const override;
 
       virtual bool is_str_leaf() const
       {
@@ -106,3 +100,5 @@ namespace codac2
     return { std::make_shared<ConstValueExpr<typename ExprType<T>::Type>>(x) };
   }
 }
+
+#include "codac2_analytic_constants_impl.h"

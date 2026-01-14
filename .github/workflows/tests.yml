@@ -20,12 +20,12 @@ jobs:
             - { os: ubuntu-22.04, gcc_v: 11, py_v_maj: 3, py_v_min: 10, with_capd: ON, desc: 'Ubuntu 22.04 GCC 11 Python 3.10 CAPD tests' }
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: true
         fetch-depth: 0
         clean: false
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
     - run: |
@@ -59,6 +59,9 @@ jobs:
         #pip install --upgrade pip
         #pip install pyibex
         #pip install --upgrade pyibex==1.8.0
+
+        # Fort Python tests
+        pip install numpy
 
         pwd
         ls
@@ -102,6 +105,7 @@ jobs:
         cd ../../
         
         python ../tests/core/domains/codac2_tests_BoolInterval.py
+        python ../tests/core/trajectory/codac2_tests_SampledTraj.py
 
         ./tests/codac2_tests_core_contractors_CtcInverse
         ./tests/codac2_tests_core_contractors_CtcPolygon

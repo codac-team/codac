@@ -10,7 +10,7 @@ if __name__=="__main__":
   f_2d = AnalyticFunction([y_2d],[y_2d[1]+1-a*sqr(y_2d[0]),b*y_2d[0]])
 
   X_2d = VectorVar(1)
-  psi0_2d = AnalyticFunction([X_2d],[cos(X_2d[0]*PI/4.-PI/2),sin(X_2d[0]*PI/4.-PI/2)])
+  psi0_2d = AnalyticFunction([X_2d],[sin(X_2d[0]*PI/4.),cos(X_2d[0]*PI/4.)])
   
   id_2d = OctaSym([1, 2])
   s = OctaSym([-2, 1])

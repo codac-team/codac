@@ -24,11 +24,14 @@ namespace codac2
      * Binary structure: <br>
      *   [raw memory of x]
      *
+     * Warning: Using ``int`` or ``long`` may cause portability issues.
+     * Use fixed-width types like ``int32_t`` or ``int64_t`` instead.
+     * 
      * \param f output stream
      * \param x object/variable to be serialized
      */
     template <typename T>
-      requires (std::is_trivially_copyable_v<T>)
+      requires std::is_trivially_copyable_v<T>
     inline void serialize(std::ostream& f, const T& x)
     {
       f.write(reinterpret_cast<const char*>(&x), sizeof(T));
@@ -41,11 +44,14 @@ namespace codac2
      * Binary structure: <br>
      *   [raw memory of x]
      *
+     * Warning: Using ``int`` or ``long`` may cause portability issues.
+     * Use fixed-width types like ``int32_t`` or ``int64_t`` instead.
+     *
      * \param f input stream
      * \param x object to be deserialized
      */
     template <typename T>
-      requires (std::is_trivially_copyable_v<T>)
+      requires std::is_trivially_copyable_v<T>
     inline void deserialize(std::istream& f, T& x)
     {
       f.read(reinterpret_cast<char*>(&x), sizeof(T));
@@ -104,8 +110,8 @@ namespace codac2
     inline void serialize(std::ostream& f, const Eigen::Matrix<T,R,C>& x)
     {
       Index r = x.rows(), c = x.cols();
-      f.write(reinterpret_cast<const char*>(&r), sizeof(Index));
-      f.write(reinterpret_cast<const char*>(&c), sizeof(Index));
+      serialize(f,r);
+      serialize(f,c);
       for(Index i = 0 ; i < r ; i++)
         for(Index j = 0 ; j < c ; j++)
           serialize(f,x(i,j));
@@ -126,15 +132,17 @@ namespace codac2
     inline void deserialize(std::istream& f, Eigen::Matrix<T,R,C>& x)
     {
       Index r, c;
-      f.read(reinterpret_cast<char*>(&r), sizeof(Index));
-      f.read(reinterpret_cast<char*>(&c), sizeof(Index));
+      deserialize(f,r);
+      deserialize(f,c);
 
       if constexpr(R == -1 && C == -1)
         x.resize(r,c);
       else if constexpr(R == -1 || C == -1)
         x.resize(std::max(r,c));
       else
+      {
         assert_release(R == r && C == c);
+      }
 
       for(Index i = 0 ; i < r ; i++)
         for(Index j = 0 ; j < c ; j++)
@@ -157,7 +165,7 @@ namespace codac2
     inline void serialize(std::ostream& f, const SampledTraj<T>& x)
     {
       Index size = x.nb_samples();
-      f.write(reinterpret_cast<const char*>(&size), sizeof(size));
+      serialize(f, size);
 
       for(const auto& [ti, xi] : x)
       {
@@ -181,7 +189,7 @@ namespace codac2
     {
       Index size;
       x.clear();
-      f.read(reinterpret_cast<char*>(&size), sizeof(size));
+      deserialize(f,size);
 
       for(Index i = 0 ; i < size ; i++)
       {

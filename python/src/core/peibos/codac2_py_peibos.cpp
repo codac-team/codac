@@ -15,6 +15,7 @@
 #include <codac2_Vector.h>
 #include <codac2_AnalyticFunction.h>
 #include <codac2_Parallelepiped.h>
+#include <codac2_OctaSym.h>
 #include <codac2_peibos.h>
 #include "codac2_py_peibos_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 

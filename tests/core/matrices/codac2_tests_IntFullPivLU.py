@@ -49,9 +49,36 @@ class TestIntvFullPivLU(unittest.TestCase):
       K = LUdec.kernel()
       self.assertTrue(K.cols()==1)
       self.assertTrue((M*K).norm().ub()<1e-10)
+      coK = LUdec.cokernel()
+      self.assertTrue(coK.rows()==1)
+      self.assertTrue((coK*M).norm().ub()<1e-10)
       Im = LUdec.image(M)
       self.assertTrue(Im.cols()==3)
+      coIm = LUdec.coimage(M)
+      self.assertTrue(coIm.rows()==3)
 
+   def test_IntvFullPivLU_3(self):
+      M = Matrix([
+      [ 1, -4, 6, 7, 6 ],
+      [ 2, 1, 3, 6, -2 ],
+      [ 5, 2, 8 , 9, -1 ]
+      ])
+      LUdec = IntvFullPivLU(M)
+      self.assertTrue(LUdec.is_injective()==BoolInterval.FALSE)
+      self.assertTrue(LUdec.is_surjective()==BoolInterval.TRUE)
+      self.assertTrue(LUdec.rank()==Interval(3))
+      self.assertTrue((LUdec.reconstructed_matrix()-M).norm().ub()<=1e-10)
+      K = LUdec.kernel()
+      self.assertTrue(K.cols()==2)
+      self.assertTrue((M*K).norm().ub()<1e-10)
+      Im = LUdec.image(M)
+      self.assertTrue(Im.cols()==3)
+      I1 = LUdec.solve(IntervalMatrix.eye(3,3));
+      self.assertTrue((M*I1-Matrix.eye(3,3)).norm().ub()<1e-10)
+      A = IntervalMatrix([ [1], [[-20,20]], [2], [[-20,20]], [[-20,20]] ])
+      B = IntervalMatrix([ [2.0], [1.0], [4.0] ])
+      LUdec.solve(B,A)
+      self.assertTrue((M*A-B).norm().ub()<=1e-10)
 
 if __name__ ==  '__main__':
   unittest.main()

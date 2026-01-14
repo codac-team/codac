@@ -24,7 +24,6 @@ namespace codac2
   {
     assert_release(eps > 0.);
     assert_release(!x.is_empty());
-    assert_release(c.size() >= 2 && "cannot reveal 1d contractors");
     
     clock_t t_start = clock();
     Index n_boundary = 0;
@@ -76,7 +75,6 @@ namespace codac2
   {
     assert_release(eps > 0.);
     assert_release(!x.is_empty());
-    assert_release(s.size() >= 2 && "cannot reveal 1d separators");
     
     clock_t t_start = clock();
 

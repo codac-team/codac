@@ -9,7 +9,6 @@
 
 #include "codac2_Zonotope.h"
 
-using namespace std;
 using namespace codac2;
 
 Zonotope::Zonotope(const Vector& z_, const Matrix& A_)

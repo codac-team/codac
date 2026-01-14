@@ -17,7 +17,7 @@ using namespace codac2;
 
 double prim_value(double x)
 {
-  return 1.+(1./3.)*std::pow(x,3);
+  return 0.+(1./3.)*std::pow(x,3);
 }
 
 TEST_CASE("AnalyticTraj")
@@ -51,11 +51,10 @@ TEST_CASE("AnalyticTraj")
   CHECK(Approx(sampled_traj(9.),1e-2) == 81.);
 
   // Testing primitive computation from analytic trajectory
-  double x0 = f.real_eval(-1); // == 1.
-  auto sampled_prim_traj = traj.primitive(x0,0.01);
+  auto sampled_prim_traj = traj.primitive(0.01);
   CHECK(sampled_prim_traj.tdomain() == Interval(-1,10));
   CHECK(Approx(sampled_prim_traj.codomain(),4e-1) == Interval(prim_value(0),prim_value(10.)));
-  CHECK(sampled_prim_traj(-1.) == x0);
+  CHECK(sampled_prim_traj(-1.) == 0.);
   CHECK(Approx(sampled_prim_traj(0.),4e-1) == prim_value(0.));
   CHECK(Approx(sampled_prim_traj(2.),4e-1) == prim_value(2.));
   CHECK(Approx(sampled_prim_traj(5.),4e-1) == prim_value(5.));

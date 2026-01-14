@@ -8,7 +8,7 @@
  */
 
 #include <catch2/catch_test_macros.hpp>
-#include <codac2_Parallelepiped_eval.h>
+#include <codac2_AnalyticFunction.h>
 #include <codac2_Approx.h>
 
 using namespace std;
@@ -25,15 +25,21 @@ TEST_CASE("Parallelepiped_eval")
   AnalyticFunction f2({x1,x2}, {x1, x2, sqr(x1)+sqr(x2)});
   AnalyticFunction f3({x}, {x[0], x[1], sqr(x[0])+sqr(x[1])});
 
-  auto p1 = f1.parallelepiped_eval(Interval(-0.1,0.1));
+  auto p1a = f1.parallelepiped_eval(Interval(-0.1,0.1));
+  auto p1b = f1.parallelepiped_eval(1.0);
 
-  CHECK(Approx(p1.z,1e-6) == Vector({0,0}));
-  CHECK(Approx(p1.A,1e-6) == Matrix({{0.12,0},{0,0.02}}));
+  CHECK(Approx(p1a.z,1e-6) == Vector({0,0}));
+  CHECK(Approx(p1a.A,1e-6) == Matrix({{0.12,0},{0,0.02}}));
+  CHECK(Approx(p1b.z,1e-6) == Vector({1,1}));
+  CHECK(Approx(p1b.A,1e-6) == Matrix({{0,0},{0,0}}));
 
-  auto p = f2.parallelepiped_eval(Interval(-0.1,0.1), Interval(-0.1,0.1));
-  
-  CHECK(Approx(p.z,1e-6) == Vector({0,0,0}));
-  CHECK(Approx(p.A,1e-6) == Matrix({{0.14,0,0},{0,0.14,0},{0,0,0.04}}));
+  auto pa = f2.parallelepiped_eval(Interval(-0.1,0.1), Interval(-0.1,0.1));
+  auto pb = f2.parallelepiped_eval(1.0, Interval(-1,1));
+
+  CHECK(Approx(pa.z,1e-6) == Vector({0,0,0}));
+  CHECK(Approx(pa.A,1e-6) == Matrix({{0.14,0,0},{0,0.14,0},{0,0,0.04}}));
+  CHECK(Approx(pb.z,1e-6) == Vector({1,0,1}));
+  CHECK(Approx(pb.A,1e-5) == Matrix({{0.894428,0,1.78886},{0,3,0},{1.78886,0,-0.894427}}));
 
 
   double dx = 0.4;
