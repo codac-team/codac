@@ -78,7 +78,7 @@ to enable parallel compilation on 4 cores.
 
   .. code-block:: bat
 
-    wget.exe https://packages.ensta-bretagne.fr/choco/mingw-patch.11.2.0.20230603.nupkg --no-check-certificate -nv
+    wget.exe https://webperso.ensta.fr/packages/choco/mingw-patch.11.2.0.20230603.nupkg --no-check-certificate -nv
     choco install -y -s . mingw-patch --version=11.2.0.20230603
 
 .. note::

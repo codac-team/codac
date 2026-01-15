@@ -245,12 +245,12 @@ The same can be done for the ARM Linux configurations (preferably from a powerfu
 
 .. rubric:: [For admins] Upload Ubuntu packages
 
-Get access to https://packages.ensta-bretagne.fr/ server as a network drive from an Ubuntu computer. If not already done, run ``sudo apt install dpkg-dev curl`` to install some prerequisites. Then, run ``sudo ./getlatestcodacrelease.sh`` to download automatically the ``.deb`` files from the latest GitHub release for all the supported configurations and update the :ref:`repository database <sec-installation-full-linux>` (or just ``sudo ./gencodac.sh`` to download automatically a specific version without updating the database). If you downloaded manually the ``.deb`` files, you can update the repository database with ``sudo ./scanpackages.sh``.
+Get access to https://webperso.ensta.fr/packages/ server as a network drive from an Ubuntu computer. If not already done, run ``sudo apt install dpkg-dev curl`` to install some prerequisites. Then, run ``sudo ./getlatestcodacrelease.sh`` to download automatically the ``.deb`` files from the latest GitHub release for all the supported configurations and update the :ref:`repository database <sec-installation-full-linux>` (or just ``sudo ./gencodac.sh`` to download automatically a specific version without updating the database). If you downloaded manually the ``.deb`` files, you can update the repository database with ``sudo ./scanpackages.sh``.
 
 
 .. rubric:: [For admins] Upload Windows packages
 
-Get access to https://packages.ensta-bretagne.fr/ server as a network drive from a Windows computer. If not already done, install `Chocolatey <https://chocolatey.org/install>`_ and then run ``choco install -y wget curl 7z checksum`` to install some prerequisites. Then, in ``choco`` folder, run from the Command Prompt ``getlatestcodacrelease.bat`` to generate a ``.nupkg`` from the latest GitHub release (or just ``gencodacpackages.bat`` to be able to test a specific version), then ``choco push codac.X.Y.Z.nupkg`` (need logged in Chocolatey maintainer) when the version is considered as OK to upload to the `Chocolatey repository <https://community.chocolatey.org/packages/codac/>`_.
+Get access to https://webperso.ensta.fr/packages/ server as a network drive from a Windows computer. If not already done, install `Chocolatey <https://chocolatey.org/install>`_ and then run ``choco install -y wget curl 7z checksum`` to install some prerequisites. Then, in ``choco`` folder, run from the Command Prompt ``getlatestcodacrelease.bat`` to generate a ``.nupkg`` from the latest GitHub release (or just ``gencodacpackages.bat`` to be able to test a specific version), then ``choco push codac.X.Y.Z.nupkg`` (need logged in Chocolatey maintainer) when the version is considered as OK to upload to the `Chocolatey repository <https://community.chocolatey.org/packages/codac/>`_.
 
 
 .. rubric:: MATLAB compatibility
