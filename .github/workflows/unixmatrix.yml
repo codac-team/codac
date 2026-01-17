@@ -175,7 +175,8 @@ jobs:
       shell: bash
       if: matrix.cfg.deb==true
     - run: |
-        brew install eigen
+        wget https://github.com/lebarsfa/xbrew/releases/latest/download/xbrew.sh --no-check-certificate -nv ; sudo mv -f xbrew.sh /usr/local/bin/xbrew ; sudo chmod +x /usr/local/bin/xbrew
+        xbrew reinstall https://raw.githubusercontent.com/Homebrew/homebrew-core/d491a3b4ff7f131f8d08468c21c2c11e867e22fe/Formula/e/eigen.rb ; brew pin eigen
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20250626/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
         unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
         rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip

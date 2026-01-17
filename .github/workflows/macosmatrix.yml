@@ -50,10 +50,12 @@ jobs:
       if: matrix.cfg.py_v_maj!=''
     - run: echo "VERBOSE=1" >> $GITHUB_ENV
       shell: bash
-    - run: brew install eigen
+    - run: |
+        wget https://github.com/lebarsfa/xbrew/releases/latest/download/xbrew.sh --no-check-certificate -nv ; sudo mv -f xbrew.sh /usr/local/bin/xbrew ; sudo chmod +x /usr/local/bin/xbrew
+        xbrew reinstall https://raw.githubusercontent.com/Homebrew/homebrew-core/d491a3b4ff7f131f8d08468c21c2c11e867e22fe/Formula/e/eigen.rb ; brew pin eigen
       if: runner.os=='macOS'
       # doxygen v1.9.7 causes issues...
-    - run: brew install graphviz ; wget https://github.com/Homebrew/homebrew-core/raw/d2267b9f2ad247bc9c8273eb755b39566a474a70/Formula/doxygen.rb ; brew reinstall --formula ./doxygen.rb ; brew pin doxygen ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects
+    - run: brew install graphviz ; xbrew reinstall https://github.com/Homebrew/homebrew-core/raw/d2267b9f2ad247bc9c8273eb755b39566a474a70/Formula/doxygen.rb ; brew pin doxygen ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects
       if: runner.os=='macOS'
     - run: |
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20250626/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
