@@ -108,6 +108,10 @@ For building the API technical documentation using Doxygen:
 
 The API pages will be generated in :file:`build/doc/api/html/`.
 
+.. warning::
+
+  Doxygen: In case you have errors related to Doxygen, try to force the installation of v1.9.6. 
+
 
 .. rubric:: Script :file:`make.sh`
 
@@ -240,7 +244,7 @@ In the :file:`codac` directory, test the x86_64 Linux configuration locally usin
   docker pull lebarsfa/manylinux_2_28_x86_64-for-codac
   docker run --rm -v `pwd`:/io lebarsfa/manylinux_2_28_x86_64-for-codac /io/scripts/docker/build_pybinding.sh
   
-The same can be done for the ARM Linux configurations (preferably from a powerful ARM computer, such as a Mac with Apple Silicon).
+The same can be done for the ARM Linux configurations. See https://github.com/lebarsfa/lebarsfa-docker-images for info about the Docker images used.
 
 
 .. rubric:: [For admins] Upload Ubuntu packages

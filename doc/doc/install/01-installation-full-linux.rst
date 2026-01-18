@@ -7,7 +7,7 @@ Installing Codac v1 on Linux for C++ use
 ########################################
 
 
-Install from package (latest release, for Ubuntu (amd64, arm64), Debian (arm64, armhf) and possibly others)
+Install from package (latest release, for Ubuntu (amd64, arm64), Debian (amd64, arm64, armhf) and possibly others)
 -----------------------------------------------------------------------------------------------------------
 
 A Debian package is available for the last release 1.5.7 of the library:
@@ -88,6 +88,10 @@ For further CMake options, please refer to the IBEX documentation.
 .. warning::
 
   GAOL prerequisite: On some platforms, you might need to install manually `MathLib <https://github.com/lebarsfa/mathlib>`_ and `GAOL <https://github.com/lebarsfa/GAOL>`_ with CMake and `specify where they are <https://ibex-team.github.io/ibex-lib/install-cmake.html#configuration-options>`_ to build IBEX successfully and have accurate computations.
+
+.. warning::
+
+  Eigen3 prerequisite: In case you have errors related to Eigen3, try to force the installation of v3.4.0.
 
 .. admonition:: Debug/development mode
   
