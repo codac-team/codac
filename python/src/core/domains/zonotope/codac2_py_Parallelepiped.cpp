@@ -35,9 +35,6 @@ void export_Parallelepiped(py::module& m)
     .def("vertices", &Parallelepiped::vertices,
       VECTOR_VECTOR_PARALLELEPIPED_VERTICES_CONST)
 
-    .def("box", &Parallelepiped::box,
-      INTERVALVECTOR_PARALLELEPIPED_BOX_CONST)
-
     .def("contains", &Parallelepiped::contains,
       BOOLINTERVAL_PARALLELEPIPED_CONTAINS_CONST_VECTOR_REF_CONST,
       "x"_a)

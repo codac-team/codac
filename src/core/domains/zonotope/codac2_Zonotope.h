@@ -12,6 +12,7 @@
 #include <vector>
 #include "codac2_Vector.h"
 #include "codac2_Matrix.h"
+#include "codac2_IntervalVector.h"
 
 namespace codac2
 {
@@ -34,6 +35,13 @@ namespace codac2
        * \param A Shape matrix of the zonotope (\f$n\times m\f$ matrix)
        */
       Zonotope(const Vector& z, const Matrix& A);
+
+      /**
+       * \brief Computes the axis-aligned bounding box of the zonotope
+       * 
+       * \return An IntervalVector representing the axis-aligned bounding box of the zonotope
+       */
+      IntervalVector box() const;
 
       /**
        * \brief Projects the Zonotope onto the subspace defined by the given indices

@@ -47,6 +47,9 @@ void export_CtcUnion(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInte
       CTCUNION_X_CTCUNION_CONST_C_REF_VARIADIC,
       "c1"_a, "c2"_a)
 
+    .def("nb", &CtcUnion<IntervalVector>::nb,
+      SIZET_CTCUNION_X_NB_CONST)
+
     .def(CONTRACT_BOX_METHOD(CtcUnion<IntervalVector>,
       VOID_CTCUNION_X_CONTRACT_IMPL_X__REF_CONST))
 
@@ -55,6 +58,6 @@ void export_CtcUnion(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInte
           c1 |= std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c2.copy());
           return c1;
         },
-      CTCUNION_X_VARIADIC_REF_CTCUNION_X_OPERATORUNIONEQ_CONST_SHARED_PTR_CTCBASE_X_VARIADIC_REF)
+      CTCUNION_X_VARIADIC_REF_CTCUNION_X_OPERATORUNIONEQ_CONST_C_REF)
   ;
 }

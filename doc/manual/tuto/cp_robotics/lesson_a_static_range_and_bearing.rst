@@ -286,6 +286,14 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
           :end-before: [A-q2-end]
           :dedent: 2
 
+      .. group-tab:: Matlab
+
+        .. literalinclude:: src/lesson_A.m
+          :language: matlab
+          :start-after: [A-q2-beg]
+          :end-before: [A-q2-end]
+          :dedent: 0
+
 
   **A.3.** Create the bounded sets related to the state, the measurement and the landmark position: :math:`[\mathbf{x}]\in\mathbb{IR}^3`, :math:`[\mathbf{y}]\in\mathbb{IR}^2`, :math:`[\mathbf{m}]\in\mathbb{IR}^2`. We can for instance use the ``.inflate(float radius)`` method on intervals or boxes.
 
@@ -320,6 +328,14 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
           :start-after: [A-q3-beg]
           :end-before: [A-q3-end]
           :dedent: 2
+
+      .. group-tab:: Matlab
+
+        .. literalinclude:: src/lesson_A.m
+          :language: matlab
+          :start-after: [A-q3-beg]
+          :end-before: [A-q3-end]
+          :dedent: 0
 
   **A.4.** Display the vehicle and the landmark with:
 
@@ -374,6 +390,14 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
           :end-before: [A-q5-end]
           :dedent: 2
 
+      .. group-tab:: Matlab
+
+        .. literalinclude:: src/lesson_A.m
+          :language: matlab
+          :start-after: [A-q5-beg]
+          :end-before: [A-q5-end]
+          :dedent: 0
+
 As one can see, intervals are not limited to axis-aligned boxes: we sometimes perform rotational mapping to better fit the set to represent. This polar constraint is a case in point.
 
 
@@ -411,6 +435,14 @@ We will implement the decomposition of Question **A.1** using contractors and a 
           :end-before: [A-q6-end]
           :dedent: 2
 
+      .. group-tab:: Matlab
+
+        .. literalinclude:: src/lesson_A.m
+          :language: matlab
+          :start-after: [A-q6-beg]
+          :end-before: [A-q6-end]
+          :dedent: 0
+
   | **A.7.**  Create the intermediate variables introduced in Question **A.1**. They are ``Interval`` and ``IntervalVector`` objects, as for the other variables.
   | Note that the intermediate variables do not have to be initialized with prior values. For ``IntervalVector`` objects, you only have to define their size.
 
@@ -433,6 +465,14 @@ We will implement the decomposition of Question **A.1** using contractors and a 
           :start-after: [A-q7-beg]
           :end-before: [A-q7-end]
           :dedent: 2
+
+      .. group-tab:: Matlab
+
+        .. literalinclude:: src/lesson_A.m
+          :language: matlab
+          :start-after: [A-q7-beg]
+          :end-before: [A-q7-end]
+          :dedent: 0
 
 The current problem can be solved in one step with a smart order of contractors. You may find this order and run the contractors without iterative loop. However, this order may not always exist (due to dependencies in the constraints) or, in a pure declarative paradigm, we may not want to think about it. Using fixed-point iteration can then simplify the algorithm. In Codac, this is allowed using the ``fixpoint(..)`` function that will execute some ``contractors_list`` function until a fixpoint is reached. The `fixpoint` corresponds to a point where the involved domains are not contracted anymore.
 
@@ -485,6 +525,14 @@ The ``fixpoint`` function will execute the content of the function ``contractors
           :end-before: [A-q8-end]
           :dedent: 2
 
+      .. group-tab:: Matlab
+
+        .. literalinclude:: src/lesson_A.m
+          :language: matlab
+          :start-after: [A-q8-beg]
+          :end-before: [A-q8-end]
+          :dedent: 0
+
   | **A.9.**  Run your programm to solve the problem. You should obtain this figure:
 
   .. figure:: img/result_rangebearing.png
@@ -509,6 +557,14 @@ The ``fixpoint`` function will execute the content of the function ``contractors
           :start-after: [A-q9-beg]
           :end-before: [A-q9-end]
           :dedent: 2
+
+      .. group-tab:: Matlab
+
+        .. literalinclude:: src/lesson_A.m
+          :language: matlab
+          :start-after: [A-q9-beg]
+          :end-before: [A-q9-end]
+          :dedent: 0
 
 The black box :math:`[\mathbf{x}]` cumulates all the uncertainties of the problem:
 

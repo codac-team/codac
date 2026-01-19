@@ -26,6 +26,10 @@ void export_pave(py::module& m)
     PAVINGOUT_PAVE_CONST_INTERVALVECTOR_REF_CONST_CTCBASE_INTERVALVECTOR_REF_DOUBLE_BOOL,
     "x"_a, "c"_a, "eps"_a, "verbose"_a=false);
 
+  m.def("pave", (PavingOut (*)(const IntervalVector&,const CtcBase<IntervalVector>&,double,double&,bool))&codac2::pave,
+    PAVINGOUT_PAVE_CONST_INTERVALVECTOR_REF_CONST_CTCBASE_INTERVALVECTOR_REF_DOUBLE_DOUBLE_REF_BOOL,
+    "x"_a, "c"_a, "eps"_a, "time"_a, "verbose"_a=false);
+
   m.def("pave", (PavingInOut (*)(const IntervalVector&,const SepBase&,double,bool))&codac2::pave,
     PAVINGINOUT_PAVE_CONST_INTERVALVECTOR_REF_CONST_SEPBASE_REF_DOUBLE_BOOL,
     "x"_a, "s"_a, "eps"_a, "verbose"_a=false);

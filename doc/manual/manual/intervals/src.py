@@ -71,6 +71,7 @@ class TestIntervalManual(unittest.TestCase):
     x |= 0               # x = [0, π/2]
     y = sin(x)           # y = [0, 1]
     z = exp(x)           # z = [1, e^(π/2)]
+    w = y & z            # w = [1, 1]
     # [interval-class-6-end]
     test.assertTrue(Approx(x) == Interval(0,PI/2))
     test.assertTrue(Approx(y) == Interval(0,1))

@@ -40,6 +40,9 @@ void export_SepUnion(py::module& m, py::class_<SepBase,pySep>& pysep)
       SEPUNION_SEPUNION_CONST_S_REF_VARIADIC,
       "s1"_a, "s2"_a)
 
+    .def("nb", &SepUnion::nb,
+      SIZET_SEPUNION_NB_CONST)
+
     .def("separate", &SepUnion::separate,
       BOXPAIR_SEPUNION_SEPARATE_CONST_INTERVALVECTOR_REF_CONST,
       "x"_a)

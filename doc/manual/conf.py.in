@@ -33,6 +33,7 @@ exclude_patterns = []
 html_static_path = ['_static']
 html_theme = "furo"
 html_logo = "_static/logos/logo_codac.svg"
+#html_logo = "_static/logos/logo_codac_christmas.png"
 html_favicon = "_static/logos/logo_codac.ico"
 
 # These paths are either relative to html_static_path
@@ -106,3 +107,5 @@ breathe_projects = {
 #togglebutton_hint = "<strong style=\"color: #009945;\">Reveal the solution.</strong>"
 togglebutton_hint = "Reveal the solution."
 togglebutton_hint_hide = "Hide the solution."
+
+html_extra_path = ['extra_html']

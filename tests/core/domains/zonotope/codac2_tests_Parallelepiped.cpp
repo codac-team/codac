@@ -28,5 +28,6 @@ TEST_CASE("Parallelepiped")
   Zonotope z = p.proj({2,1,0});
   CHECK(z.z == Vector({4,2,0}));
   CHECK(z.A == Matrix({{0.,1.,1.},{0.,1.,0.},{0.5,0.,0.}}));
+  CHECK(z.box() == IntervalVector({{2.,6.},{1.,3.},{-0.5,0.5}}));
 }
 

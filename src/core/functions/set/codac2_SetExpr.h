@@ -60,7 +60,7 @@ namespace codac2
       {
         bool b = true;
 
-        std::apply([&b,args](auto &&... x)
+        std::apply([&b,&args](auto &&... x)
         {
           ((b &= x->belongs_to_args_list(args)), ...);
         }, this->_x);
@@ -71,7 +71,7 @@ namespace codac2
       std::shared_ptr<CtcBase<IntervalVector>> create_ctc(const FunctionArgsList& args, const std::vector<std::shared_ptr<CtcBase<IntervalVector>>>& values) const
       {
         return std::apply(
-          [this,values,args](auto &&... x)
+          [this,&values,&args](auto &&... x)
           {
             return C::create_ctc(x->create_ctc(args,values)...);
           },
@@ -81,7 +81,7 @@ namespace codac2
       std::shared_ptr<SepBase> create_sep(const FunctionArgsList& args, const std::vector<std::shared_ptr<SepBase>>& values) const
       {
         return std::apply(
-          [this,values,args](auto &&... x)
+          [this,&values,&args](auto &&... x)
           {
             return C::create_sep(x->create_sep(args,values)...);
           },

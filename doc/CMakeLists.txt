@@ -33,12 +33,12 @@
       endif()
 
       message(STATUS "Building API Documentation (mandatory for Python binding or for building the manual)")
+
+      set(SPHINX_EXTRA_API ${CMAKE_CURRENT_BINARY_DIR}/manual/extra_html/api)
+      file(MAKE_DIRECTORY ${SPHINX_EXTRA_API})
+
       execute_process(COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} OUTPUT_QUIET)
       add_custom_target(api COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} OUTPUT_QUIET)
-
-      install(DIRECTORY ${CMAKE_BINARY_DIR}/doc/api/html 
-              DESTINATION share/doc/${CMAKE_PROJECT_NAME}/api
-              OPTIONAL)
 
     endif()
 
@@ -87,6 +87,14 @@
                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                       COMMENT "Generating the manual website using Sphinx")
 
+    add_custom_command(
+      TARGET manual POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_directory
+              ${CMAKE_BINARY_DIR}/doc/api/html
+              ${SPHINX_EXTRA_API}
+      COMMENT "Copying generated Doxygen HTML to Sphinx extra_html/api"
+    )
+    
     install(DIRECTORY ${SPHINX_BUILD}/
             DESTINATION share/codac_website
             OPTIONAL)

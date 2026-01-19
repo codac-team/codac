@@ -17,6 +17,11 @@ Zonotope::Zonotope(const Vector& z_, const Matrix& A_)
   assert_release(z.size() == A.rows());
 }
 
+IntervalVector Zonotope::box() const
+{
+  return z + (A.template cast<Interval>())*IntervalVector::constant(A.cols(),{-1,1});
+}
+
 Zonotope Zonotope::proj(const std::vector<Index>& indices) const
 {
   assert_release(*std::min_element(indices.begin(), indices.end()) >= 0 && "indices out of range");

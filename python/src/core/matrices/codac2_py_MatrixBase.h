@@ -119,15 +119,10 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
         #else
           "__setitem__"
         #endif
-        , [](S& x, const py::tuple& ij, const T& a)
+        , [](S& x, const std::vector<Index_type>& ij, const T& a)
         {
-          if constexpr(FOR_MATLAB)
-            assert_release(py::isinstance<py::int_>(ij[0]) && py::isinstance<py::int_>(ij[1]));
-
-          int i = ij[0].cast<int>();
-          int j = ij[1].cast<int>();
-
-          x(matlab::input_index(i), matlab::input_index(j)) = a;
+          auto ij_conv = matlab::convert_indices(ij);
+          x(ij_conv[0],ij_conv[1]) = a;
         },
       MATRIX_ADDONS_BASE_SCALAR_REF_OPERATORCALL_INDEX_INDEX)
 

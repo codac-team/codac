@@ -21,15 +21,36 @@ namespace codac2
    * \class FunctionArgsList
    * \brief A container class to manage a collection of function arguments.
    */
-  class FunctionArgsList : public std::vector<std::shared_ptr<VarBase>>
+  class FunctionArgsList : private std::vector<std::shared_ptr<VarBase>>
   {
+    using base = std::vector<std::shared_ptr<VarBase>>;
+
+    public:
+
+      // Expose only selected const (read-only) members of the underlying
+      // std::vector via `using` to keep iteration/access convenient.
+      // Mutating operations (push_back/insert/erase/...) are intentionally
+      // not exposed in order to keep consistency with the _total_args_size value.
+
+      using base::size;
+      using base::empty;
+      using base::cbegin;
+      using base::cend;
+      using base::crbegin;
+      using base::crend;
+
+      const std::shared_ptr<VarBase>& operator[](std::size_t i) const { return base::operator[](i); }
+      const std::shared_ptr<VarBase>& at(std::size_t i) const { return base::at(i); }
+
+      base::const_iterator begin() const noexcept { return base::begin(); }
+      base::const_iterator end()   const noexcept { return base::end(); }
+
     public:
 
       /**
        * \brief Default constructor. It creates an empty list of arguments.
        */
-      FunctionArgsList()
-      { }
+      FunctionArgsList() = default;
 
       /**
        * \brief Copy constructor.
@@ -43,7 +64,7 @@ namespace codac2
       {
         size_t i = 0;
         for(const auto& arg : args)
-          (*this)[i++] = arg->arg_copy();
+          base::operator[](i++) = arg->arg_copy();
         compute_unique_arg_names();
       }
 
@@ -74,6 +95,12 @@ namespace codac2
         compute_unique_arg_names();
       }
 
+      FunctionArgsList(const std::vector<std::shared_ptr<VarBase>>& args)
+        : std::vector<std::shared_ptr<VarBase>>(args)
+      {
+        compute_unique_arg_names();
+      }
+
       /**
        * \brief Calculates the total size of the function arguments,
        * as the sum of the sizes of each argument.
@@ -82,11 +109,10 @@ namespace codac2
        */
       Index total_size() const
       {
-        Index n = 0;
-        for(const auto& ai : *this)
-          n += ai->size();
-        return n;
+        return _total_args_size;
       }
+
+    protected:
 
       void compute_unique_arg_names()
       {
@@ -94,9 +120,12 @@ namespace codac2
         for(const auto& arg : *this)
           var_names.push_back(arg->name());
 
+        _total_args_size = 0;
+
         int i = 23; // default first variable is x, then y,z, then starting from a...
         for(auto& arg : *this)
         {
+          _total_args_size += arg->size();
           if(arg->name() == "?")
           {
             std::string new_name;
@@ -107,5 +136,7 @@ namespace codac2
           }
         }
       }
+
+      Index _total_args_size = 0;
   };
 }

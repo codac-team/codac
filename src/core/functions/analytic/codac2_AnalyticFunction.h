@@ -133,7 +133,7 @@ namespace codac2
             // If the centered form is not available for this expression...
             if(x_.da.size() == 0 // .. because some parts have not yet been implemented,
               || !x_.def_domain) // .. or due to restrictions in the derivative definition domain
-              return eval(EvalMode::NATURAL, x...);
+              return x_.a; // natural evaluation
 
             else
             {
@@ -311,7 +311,7 @@ namespace codac2
         else
         {
           fill_from_args(v, x...);
-          return this->expr()->fwd_eval(v, cart_prod(x...).size(), NATURAL_EVAL); // todo: improve size computation
+          return this->expr()->fwd_eval(v, this->input_size(), NATURAL_EVAL);
         }
       }
 

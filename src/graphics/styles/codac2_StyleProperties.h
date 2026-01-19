@@ -38,31 +38,34 @@ namespace codac2
     /**
      * \brief Constructor with only optionnal parameters
      * 
-     * \param param1 Optional parameter, can be layer name, line width or line style
-     * \param param2 Optional parameter, can be layer name, line width or line style
-     * \param param3 Optional parameter, can be layer name, line width or line style
+     * \param param1 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param2 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param3 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param4 Optional parameter, can be layer name, line width, line style or z-value
      */
-    StyleProperties(const std::string& param1, const std::string& param2 = "", const std::string& param3 = "");
+    StyleProperties(const std::string& param1, const std::string& param2 = "", const std::string& param3 = "", const std::string& param4 = "");
 
     /**
      * \brief Constructor from a stroke color, and three optional parameters
      * 
      * \param stroke_color Stroke color
-     * \param param1 Optional parameter, can be layer name, line width or line style
-     * \param param2 Optional parameter, can be layer name, line width or line style
-     * \param param3 Optional parameter, can be layer name, line width or line style
+     * \param param1 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param2 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param3 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param4 Optional parameter, can be layer name, line width, line style or z-value
      */
-    StyleProperties(const Color& stroke_color, const std::string& param1 = "", const std::string& param2 = "", const std::string& param3 = "");
+    StyleProperties(const Color& stroke_color, const std::string& param1 = "", const std::string& param2 = "", const std::string& param3 = "", const std::string& param4 = "");
 
     /**
      * \brief Constructor from a stroke and eventually a fill color, and three optional parameters
      * 
      * \param colors list of colors (stroke color and eventually fill color)
-     * \param param1 Optional parameter, can be layer name, line width or line style
-     * \param param2 Optional parameter, can be layer name, line width or line style
-     * \param param3 Optional parameter, can be layer name, line width or line style
+     * \param param1 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param2 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param3 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param4 Optional parameter, can be layer name, line width, line style or z-value
      */
-    StyleProperties(std::initializer_list<Color> colors, const std::string& param1 = "", const std::string& param2 = "", const std::string& param3 = "");
+    StyleProperties(std::initializer_list<Color> colors, const std::string& param1 = "", const std::string& param2 = "", const std::string& param3 = "", const std::string& param4 = "");
 
     /**
      * \brief Predefined "inside" style, dark gray edge and green fill

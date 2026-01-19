@@ -155,7 +155,7 @@ void Figure2D::draw_box(const IntervalVector& x, const StyleProperties& style)
       if(x.max_diam() == 0.)
         output_fig->draw_point({x[0].lb(),x[1].lb()}, style);
       else
-        output_fig->draw_box(x,style);
+        output_fig->draw_box(x & IntervalVector::constant(x.size(),{-9e10,9e10}),style);
     }
 }
 
@@ -453,8 +453,11 @@ void draw_tube_common(Figure2D& fig, const SlicedTube<IntervalVector>& x, int ma
 
   if(n < max_nb_slices_to_display)
     for(auto it = x.tdomain()->rbegin(); it != x.tdomain()->rend(); ++it)
+    {
+      auto c = slice_color(tube_t0tf,it);
       fig.draw_box(x.slice(it)->codomain(), slice_color(tube_t0tf,it));
-
+    }
+      
   else
   {
     int group_size = std::max(1, (int)(1.*n/max_nb_slices_to_display));
@@ -467,7 +470,6 @@ void draw_tube_common(Figure2D& fig, const SlicedTube<IntervalVector>& x, int ma
 
       for(int j = 0; j < group_size-1 && it != x.tdomain()->rend(); j++,it++)
         p |= ConvexPolygon(x.slice(it)->codomain());
-
       fig.draw_polygon(p, c);
       if(it != x.tdomain()->rend())
       {
@@ -490,7 +492,7 @@ void Figure2D::draw_tube(const SlicedTube<IntervalVector>& x, const StyleGradien
   draw_tube_common(*this, x, max_nb_slices_to_display,
     [&style](const Interval& tube_t0tf, std::list<TSlice>::reverse_iterator it) {
       auto c = style.cmap.color((it->mid()-tube_t0tf.lb())/tube_t0tf.diam());
-      return StyleProperties({c,c}, style.layer, style.line_style, to_string(style.line_width));
+      return StyleProperties({c,c}, style.layer, style.line_style, "w:"+to_string(style.line_width), "z:"+to_string(style.z_value));
     });
 }
 

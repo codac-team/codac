@@ -146,29 +146,20 @@ It can also be deduced from one or two ``Color`` objects.
     fig.draw_box({{2,5},{2,5}}, Color::red()); // red edge, no fill
     fig.draw_box({{2,5},{2,5}}, {Color::blue(),Color::green()}); // blue edge, green fill
 
-In addition, a line style, a line width and/or a layer can be added to the ``StyleProperties`` object. The line style is defined by a string, and the layer is defined by its name (string).
-
-Available line styles are:
-  - ``"-"`` (solid)
-  - ``"--"`` (dashed)
-  - ``".."`` (dotted)
-  - ``"-."`` (dash-dotted)
-  - ``"-.."`` (dash-dot-dotted)
-
-These three arguments are optional, only one can be added and they can be added in any order.
-Note that by convention a parameter starting with a number is interpreted as a line width.
+In addition, optional arguments can be passed to the ``StyleProperties`` object to define line style, line width, layer and Z-value.
+For more information, see :ref:`subsec-graphics-colors-optional-arguments`.
 
 .. tabs::
 
   .. code-tab:: py
     
-    fig.draw_box([[2,5],[2,5]], StyleProperties(Color.red(), "..", "layer1", "0.1"))
-    # Red edge, dotted line, line width of 0.1 and layer1
+    fig.draw_box([[2,5],[2,5]], StyleProperties(Color.red(), "..", "layer1", "w:0.1", "z:1.5"))
+    # Red edge, dotted line, line width of 0.1, z-value of 1.5 and on layer1
 
   .. code-tab:: c++
 
-    fig.draw_box({{2,5},{2,5}}, StyleProperties(Color::red(), "..", "layer1", "0.1"));
-    // Red edge, dotted line, line width of 0.1 and layer1
+    fig.draw_box({{2,5},{2,5}}, StyleProperties(Color::red(), "..", "layer1", "w:0.1", "z:1.5"));
+    // Red edge, dotted line, line width of 0.1, z-value of 1.5 and on layer1
 
 
 Color maps
@@ -274,7 +265,33 @@ It can also be deduced from a ``ColorMap`` object.
     fig.draw_trajectory(traj); // Default style
     fig.draw_trajectory(traj,ColorMap::haxby()); // haxby color map
 
-In addition, a line style, a line width and/or a layer can be added to the ``StyleGradientProperties`` object. The line style is defined by a string, and the layer is defined by its name (string).
+In addition, optional arguments can be passed to the ``StyleGradientProperties`` object to define line style, line width, layer and Z-value.
+For more information, see :ref:`subsec-graphics-colors-optional-arguments`.
+
+.. tabs::
+
+  .. code-tab:: py
+    
+    fig.draw_trajectory(traj, StyleGradientProperties(ColorMap.haxby(), "..", "layer1", "w:0.1", "z:1.5"))
+    # haxby color map, dotted line, line width of 0.1, z-value of 1.5 and on layer1
+
+  .. code-tab:: c++
+
+    fig.draw_trajectory(traj, StyleGradientProperties(ColorMap::haxby(), "..", "layer1", "w:0.1", "z:1.5"));
+    // haxby color map, dotted line, line width of 0.1, z-value of 1.5 and on layer1
+
+.. _subsec-graphics-colors-optional-arguments:
+
+Optional arguments
+------------------
+
+For every constructor of ``StyleProperties`` and ``StyleGradientProperties``, optional arguments can be passed to define a line style, a line width, a layer and/or a Z-value.
+Note that these four arguments are optional, only the desired ones can be added and they can be added in any order.
+
+Line style
+~~~~~~~~~~
+
+A string can be passed to define the line style (default is solid).
 
 Available line styles are:
   - ``"-"`` (solid)
@@ -283,18 +300,44 @@ Available line styles are:
   - ``"-."`` (dash-dotted)
   - ``"-.."`` (dash-dot-dotted)
 
-These three arguments are optional, only one can be added and they can be added in any order.
+Line width
+~~~~~~~~~~
 
-Note that by convention a parameter starting with a number is interpreted as a line width.
+A string starting with ``"w:"`` followed by a float can be passed to define the line width (default is 0)
 
-.. tabs::
+Z-value
+~~~~~~~~
 
-  .. code-tab:: py
-    
-    fig.draw_trajectory(traj, StyleGradientProperties(ColorMap.haxby(), "..", "layer1", "0.1"))
-    # haxby color map, dotted line, line width of 0.1 and layer1
+**Warning: the Z-value has been added to VIBes since PR #150, a release is being prepared**
 
-  .. code-tab:: c++
+A string starting with ``"z:"`` followed by a float can be passed to define the Z-value (default is 0)
 
-    fig.draw_trajectory(traj, StyleGradientProperties(ColorMap::haxby(), "..", "layer1"));
-    // haxby color map, dotted line, line width of 0.1 and layer1
+This Z-value represents the height of an object : the higher the Z-value, the higher the object will be.
+An object with a Z-value of 0.5 will be drawn on top of an object with a Z-value of 0, but behin an object of Z-value 1.
+
+**Notes**
+
+Some objects have a non-null default Z-value.
+
+- Tubes are by default drawn at ``z=-1``
+- On pavings (and in the corresponding predefined styles)
+    - Outside boxes are drawn at ``z=-3``
+    - Boundary boxes are drawn at ``z=-2``
+    - Inside boxes are drawn at ``z=-1``
+
+Layer
+~~~~~
+
+A string can be passed to define the layer to draw on (default is "alpha"). 
+Note that this case is the last as it is the "fallback" case : 
+if the string is not a line style and does not start with ``"w:"`` or ``"z:"``, it is a layer name.
+
+Note that these layers are only used in IPE (see :ref:`sec-graphics-ipe`). Only the layers for paving are converted as VIBes groups.
+
+**Notes**
+
+On pavings and in the corresponding predefined styles
+
+- Outside boxes are drawn on layer ``outside``
+- Boundary boxes are drawn on layer ``boundary``
+- Inside boxes are drawn on layer ``inside``

@@ -16,8 +16,8 @@ f_2d = AnalyticFunction({y_2d},vec(y_2d(2)+1-a*sqr(y_2d(1)),b*y_2d(1)));
 X_2d = VectorVar(1);
 psi0_2d = AnalyticFunction({X_2d},vec(sin(X_2d(1)*PI/4.),cos(X_2d(1)*PI/4.)));
 
-id_2d = OctaSym(int64([1,2]));
-s = OctaSym(int64([-2,1]));
+id_2d = OctaSym([1,2]);
+s = OctaSym([-2,1]);
 
 v_par_2d = PEIBOS(f_2d,psi0_2d,{id_2d,s,s*s,s.invert()},0.2,Vector([-0.2,0.]),true);
 
@@ -45,9 +45,9 @@ f_3d = AnalyticFunction({y_3d},vec(sqr(y_3d(1))-sqr(y_3d(2))+y_3d(1),2*y_3d(1)*y
 X_3d = VectorVar(2);
 psi0_3d = AnalyticFunction({X_3d},vec(1/sqrt(1+sqr(X_3d(1))+sqr(X_3d(2))),X_3d(1)/sqrt(1+sqr(X_3d(1))+sqr(X_3d(2))),X_3d(2)/sqrt(1+sqr(X_3d(1))+sqr(X_3d(2)))));
 
-id_3d = OctaSym(int64([1,2,3]));
-s1 = OctaSym(int64([-2, 1, 3]));
-s2 = OctaSym(int64([3, 2, -1]));
+id_3d = OctaSym([1, 2, 3]);
+s1 = OctaSym([-2, 1, 3]);
+s2 = OctaSym([3, 2, -1]);
 
 v_par_3d = PEIBOS(f_3d,psi0_3d,{id_3d,s1,s1*s1,s1.invert(),s2,s2.invert()},0.2,true);
 
@@ -76,9 +76,9 @@ f_nd = AnalyticFunction({y_nd}, rot_matrix_1 * rot_matrix_2 * g_nd(y_nd));
 X_nd = VectorVar(1);
 psi0_nd = AnalyticFunction({X_nd},vec(X_nd(1),1,1));
 
-id_nd = OctaSym(int64([1, 2, 3]));
-s1_nd = OctaSym(int64([-2, 1, 3]));
-s2_nd = OctaSym(int64([3, 2, -1]));
+id_nd = OctaSym([1, 2, 3]);
+s1_nd = OctaSym([-2, 1, 3]);
+s2_nd = OctaSym([3, 2, -1]);
 
 figure_3d_nd = Figure3D("Cube on Sphere matlab");
 figure_3d_nd.draw_axes(0.5);

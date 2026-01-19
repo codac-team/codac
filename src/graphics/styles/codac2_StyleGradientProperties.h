@@ -37,21 +37,23 @@ namespace codac2
     /**
      * \brief Constructor with only optionnal parameters
      * 
-     * \param param1 Optional parameter, can be layer name, line width or line style
-     * \param param2 Optional parameter, can be layer name, line width or line style
-     * \param param3 Optional parameter, can be layer name, line width or line style
+     * \param param1 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param2 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param3 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param4 Optional parameter, can be layer name, line width, line style or z-value
      */
-    StyleGradientProperties(const std::string& param1, const std::string& param2 = "", const std::string& param3 = "");
+    StyleGradientProperties(const std::string& param1, const std::string& param2 = "", const std::string& param3 = "", const std::string& param4 = "");
 
     /**
      * \brief Constructor from a color map, and three optional parameters
      * 
      * \param cmap Color map
-     * \param param1 Optional parameter, can be layer name, line width or line style
-     * \param param2 Optional parameter, can be layer name, line width or line style
-     * \param param3 Optional parameter, can be layer name, line width or line style
+     * \param param1 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param2 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param3 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param4 Optional parameter, can be layer name, line width, line style or z-value
      */
-    StyleGradientProperties(const ColorMap& cmap, const std::string& param1 = "", const std::string& param2 = "", const std::string& param3 = "");
+    StyleGradientProperties(const ColorMap& cmap, const std::string& param1 = "", const std::string& param2 = "", const std::string& param3 = "", const std::string& param4 = "");
 
   };
 }

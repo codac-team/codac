@@ -26,13 +26,13 @@ void export_StyleGradientProperties(py::module& m)
     .def(py::init<>(),
       STYLEGRADIENTPROPERTIES_STYLEGRADIENTPROPERTIES)
 
-    .def(py::init<const std::string&, const std::string&, const std::string&>(),
-      STYLEGRADIENTPROPERTIES_STYLEGRADIENTPROPERTIES_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF,
-      "param1"_a, "param2"_a="", "param3"_a="")
+    .def(py::init<const std::string&, const std::string&, const std::string&, const std::string&>(),
+      STYLEGRADIENTPROPERTIES_STYLEGRADIENTPROPERTIES_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF,
+      "param1"_a, "param2"_a="", "param3"_a="", "param4"_a="")
   
-    .def(py::init<const ColorMap&, const std::string&, const std::string&, const std::string&>(),
-      STYLEGRADIENTPROPERTIES_STYLEGRADIENTPROPERTIES_CONST_COLORMAP_REF_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF,
-      "cmap"_a, "param1"_a="", "param2"_a="", "param3"_a="")
+    .def(py::init<const ColorMap&, const std::string&, const std::string&, const std::string&, const std::string&>(),
+      STYLEGRADIENTPROPERTIES_STYLEGRADIENTPROPERTIES_CONST_COLORMAP_REF_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF,
+      "cmap"_a, "param1"_a="", "param2"_a="", "param3"_a="", "param4"_a="")
 
   ;
   

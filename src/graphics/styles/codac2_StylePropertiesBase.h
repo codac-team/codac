@@ -27,6 +27,7 @@ namespace codac2
     std::string line_style = "-";
     double line_width = 0.;
     std::string layer = "alpha";
+    double z_value = 0.;
 
     /**
      * \brief Default constructor
@@ -38,11 +39,12 @@ namespace codac2
     /**
      * \brief Constructor with only optionnal parameters
      * 
-     * \param param1 Optional parameter, can be layer name, line width or line style
-     * \param param2 Optional parameter, can be layer name, line width or line style
-     * \param param3 Optional parameter, can be layer name, line width or line style
+     * \param param1 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param2 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param3 Optional parameter, can be layer name, line width, line style or z-value
+     * \param param4 Optional parameter, can be layer name, line width, line style or z-value
      */
-    StylePropertiesBase(const std::string& param1, const std::string& param2 = "", const std::string& param3 = "");
+    StylePropertiesBase(const std::string& param1, const std::string& param2 = "", const std::string& param3 = "", const std::string& param4 = "");
 
     /**
      * \brief Parse a parameter and update the style properties accordingly
