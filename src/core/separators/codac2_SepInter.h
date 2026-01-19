@@ -34,20 +34,18 @@ namespace codac2
         assert_release(all_same_size(s...));
       }
 
+      size_t nb() const
+      {
+        return _seps.size();
+      }
+
       BoxPair separate(const IntervalVector& x) const;
 
       template<typename S>
-        requires std::is_base_of_v<SepBase,S>
+        requires IsSepBaseOrPtr<S>
       SepInter& operator&=(const S& s)
       {
-        assert_release(s.size() == this->size());
-        _seps.push_back(s);
-        return *this;
-      }
-
-      SepInter& operator&=(const std::shared_ptr<SepBase>& s)
-      {
-        assert_release(s->size() == this->size());
+        assert_release(size_of(s) == this->size());
         _seps.push_back(s);
         return *this;
       }

@@ -40,6 +40,9 @@ void export_SepInter(py::module& m, py::class_<SepBase,pySep>& pysep)
       SEPINTER_SEPINTER_CONST_S_REF_VARIADIC,
       "s1"_a, "s2"_a)
 
+    .def("nb", &SepInter::nb,
+      SIZET_SEPINTER_NB_CONST)
+
     .def("separate", &SepInter::separate,
       BOXPAIR_SEPINTER_SEPARATE_CONST_INTERVALVECTOR_REF_CONST,
       "x"_a)

@@ -12,10 +12,10 @@
 using namespace std;
 using namespace codac2;
 
-Index ExprID::_id_counter = 0;
+std::atomic<Index> ExprID::_id_counter{0};
 
 ExprID::ExprID()
-  : _id(ExprID::_id_counter)
+  : _id(ExprID::_id_counter.fetch_add(1, std::memory_order_relaxed))
 {
   ExprID::_id_counter ++;
 }

@@ -45,8 +45,10 @@ int main(){
   DefaultFigure::set(fig1);
   DefaultFigure::draw_box({{2.2,2.5},{2.2,2.5}},{Color::blue(),Color::cyan(0.8)});
 
-  fig2->draw_AUV({1,1,3.14/2},2.,{{Color::black(),Color::yellow()}, "0.1", "vehicles"});
-  fig2->draw_tank({2,1,3.14/2},1.5,{{Color::black(),Color::yellow()},"vehicles","0.1"});
+  fig2->draw_circle({2.,2.},0.5,{{Color::red(),Color::red(0.2)}, "z:1."}); // will alway be on top despite being "drawn" first
+
+  fig2->draw_AUV({1,1,3.14/2},2.,{{Color::black(),Color::yellow()}, "w:0.1", "vehicles"});
+  fig2->draw_tank({2,1,3.14/2},1.5,{{Color::black(),Color::yellow()},"vehicles","w:0.1"});
   fig2->draw_motor_boat({0,0,0}, 1., {{Color::black(),Color::yellow()},"vehicles"});
   fig2->draw_pie({2,2},{1.5,2.5},{(3*3.14/4)-0.5,(3*3.14/4)+0.5},{Color::blue(),Color::cyan()});
   fig2->draw_polyline({{2,-0.5},{4,0.5},{3,1.5},{4,2.5},{3,3}}, {Color::red(),".."});
@@ -55,12 +57,12 @@ int main(){
   fig2->draw_ellipse({1,1},{0.5,2}, 0.2, {Color::blue(),Color::blue(0.3)});
   fig2->draw_line({1,1},{3,3}, Color::blue());
   fig2->draw_arrow({3,1},{2.2,2}, 0.2, {Color::red(),Color::black(0.3)});
-  fig2->draw_parallelepiped({{1.5,2.8},Matrix({{0.5,0.4},{0,0.2}})}, {{Color::red(),Color::green(0.5)}, "parallelepiped", "0.1"});
+  fig2->draw_parallelepiped({{1.5,2.8},Matrix({{0.5,0.4},{0,0.2}})}, {{Color::red(),Color::green(0.5)}, "parallelepiped", "w:0.1"});
 
   fig2->draw_zonotope({{4,1.5},
 		{{-0.2,-0.06,0.2,0.06,0.01,0.08,0},
      {0.1,0.04,0.04,-0.04,-0.03,0.18,0}}},
-	{{Color::red(),Color::yellow(0.4)},"zonotope", "0.05"});
+	{{Color::red(),Color::yellow(0.4)},"zonotope", "w:0.05"});
 
   Parallelepiped p_3d ({1.2,3.5,2.2},Matrix({{0.5,0.4,0},{0,0.2,0.1},{0,0,0.3}}));
   fig2->draw_zonotope(p_3d.proj({0,1}), {{Color::green(),Color::yellow(0.4)}, "zonotope"});
@@ -69,6 +71,8 @@ int main(){
 
   std::filesystem::path p = __FILE__;
   fig2->draw_raster(p.parent_path().string()+"/logo_codac.png", IntervalVector({{2.5,5},{-1,-0.4}}), StyleProperties("raster"));
+
+  fig2->draw_circle({0.5,0.5},0.5,{{Color::orange(),Color::orange(0.2)}, "z:-1."}); // will alway be in the bottom despite being "drawn" last
 
   // Colors
   // predefined colors without and with opacity

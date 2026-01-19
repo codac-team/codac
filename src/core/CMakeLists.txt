@@ -47,6 +47,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolygon.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcProj.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcProj.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcQInter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcQInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcSegment.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcSegment.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcWrapper.h
@@ -205,6 +207,8 @@
 
     ${CMAKE_CURRENT_SOURCE_DIR}/proj/codac2_ProjBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/proj/codac2_ProjBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/proj/codac2_qinter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/proj/codac2_qinter.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_Sep.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepAction.cpp
@@ -230,6 +234,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolygon.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepQInter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepQInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepTransform.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepTransform.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepUnion.cpp

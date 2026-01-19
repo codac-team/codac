@@ -41,6 +41,8 @@ int main()
     {{-8,8},{-4,4}}, bat.create_sep(), 0.1,
     PavingStyle::black_white());
 
+  DefaultFigure::draw_ellipse({0,0}, {7.5,3.5}, 0, {{Color::black(0.5),Color::yellow(0.5)},"z:-2.5"});
+
   #if 0 // towards paving features..
   auto p = pave({{-8,8},{-4,4}}, *bat.create_sep(), e);
   for(const auto& ci : p.connected_subsets())

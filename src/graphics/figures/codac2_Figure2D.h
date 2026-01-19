@@ -422,7 +422,7 @@ namespace codac2
        * \param style StyleGradientProperties to use
        * \param max_nb_slices_to_display Maximum number of slices to display before merging them into convex polygons.
        */
-      void draw_tube(const SlicedTube<IntervalVector>& x, const StyleGradientProperties& style = StyleGradientProperties(ColorMap::blue_tube()), int max_nb_slices_to_display = 5000);
+      void draw_tube(const SlicedTube<IntervalVector>& x, const StyleGradientProperties& style = StyleGradientProperties(ColorMap::blue_tube(), "z:-1"), int max_nb_slices_to_display = 5000);
 
       /**
        * \brief Plots a tube on the figure (x-axis is the time)
@@ -972,7 +972,7 @@ namespace codac2
        * \param x SlicedTube to draw
        * \param style StyleGradientProperties to use
        */
-      static void draw_tube(const SlicedTube<IntervalVector>& x, const StyleGradientProperties& style = StyleGradientProperties(ColorMap::blue_tube()))
+      static void draw_tube(const SlicedTube<IntervalVector>& x, const StyleGradientProperties& style = StyleGradientProperties(ColorMap::blue_tube(), "z:-1"))
       {
         auto_init();
         selected_fig()->draw_tube(x,style);

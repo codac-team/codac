@@ -70,9 +70,9 @@ Any Figure2D object can be used as DefaultFigure with the set method:
   .. code-tab:: c++
 
     std::shared_ptr<codac2::Figure2D> fig = std::make_shared<Figure2D>("My Figure",GraphicOutput::VIBES|GraphicOutput::IPE);
-    fig->is_default() // is false
+    fig->is_default(); // is false
     DefaultFigure::set(fig);
-    fig->is_default() // is true
+    fig->is_default(); // is true
 
 Note that in C++ the figure must be a shared pointer in order to be passed to the `set` method.
 

@@ -15,9 +15,9 @@ using namespace codac2;
 StylePropertiesBase::StylePropertiesBase()
 { }
 
-StylePropertiesBase::StylePropertiesBase(const std::string& param1, const std::string& param2, const std::string& param3)
+StylePropertiesBase::StylePropertiesBase(const std::string& param1, const std::string& param2, const std::string& param3, const std::string& param4)
 {
-  parse_parameter(param1); parse_parameter(param2); parse_parameter(param3);
+  parse_parameter(param1); parse_parameter(param2); parse_parameter(param3); parse_parameter(param4);
 }
 
 void StylePropertiesBase::parse_parameter(const std::string& param)
@@ -27,15 +27,27 @@ void StylePropertiesBase::parse_parameter(const std::string& param)
     if (StylePropertiesBase::available_line_styles().contains(param))
       line_style = param;
 
-    else if (param[0]>='0' && param[0]<='9')
+    else if (param.rfind("w:", 0) == 0)
     {
       try
       {
-        line_width = std::stod(param);
+        line_width = std::stod(param.substr(2));
       }
       catch (const std::invalid_argument& e)
       {
         assert_release_constexpr(false && "Invalid line width value");
+      }
+    }
+
+    else if (param.rfind("z:", 0) == 0)
+    {
+      try
+      {
+        z_value = std::stod(param.substr(2));
+      }
+      catch (const std::invalid_argument& e)
+      {
+        assert_release_constexpr(false && "Invalid z-value");
       }
     }
 

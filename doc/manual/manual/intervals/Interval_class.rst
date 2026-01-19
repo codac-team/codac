@@ -248,10 +248,11 @@ Mathematical functions such as :math:`\sin`, :math:`\cos`, :math:`\exp`, :math:`
 
   .. code-tab:: matlab
 
-    x = Interval.half_pi();
+    x = Interval().half_pi();
     x.self_union(0);        % x = [0, π/2]
     y = sin(x);             % y = [0, 1]
     z = exp(x);             % z = [1, exp(π/2)]
+    w = y.inter(z);         % w = [1, 1]
 
 For a complete list of additional operations, see the page :ref:`sec-functions-analytic-operators`.
 

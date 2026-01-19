@@ -20,3 +20,5 @@ Codac provides a class ``Figure2D_IPE`` to use IPE in a more convenient way. It 
 For more details refer to the :ref:`dedicated page <sec-graphics-2d-figures>`.
 
 Using this graphical output will generate a ``.xml`` file that can be opened and edited with the IPE editor.
+
+**Note : for IPE to be able to scale the figure correctly, it is important to call the function set_axes on the figure before drawing on it.**

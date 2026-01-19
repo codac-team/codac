@@ -33,6 +33,7 @@
     contractors/codac2_py_CtcPolar.cpp
     contractors/codac2_py_CtcPolygon.cpp
     contractors/codac2_py_CtcProj.cpp
+    contractors/codac2_py_CtcQInter.cpp
     contractors/codac2_py_CtcSegment.cpp
     contractors/codac2_py_CtcUnion.cpp
     contractors/codac2_py_CtcWrapper.cpp
@@ -91,6 +92,8 @@
 
     peibos/codac2_py_peibos.cpp
 
+    proj/codac2_py_qinter.cpp
+
     separators/codac2_py_Sep.cpp
     separators/codac2_py_Sep.h
     separators/codac2_py_SepAction.cpp
@@ -105,6 +108,7 @@
     separators/codac2_py_SepNot.cpp
     separators/codac2_py_SepPolygon.cpp
     separators/codac2_py_SepProj.cpp
+    separators/codac2_py_SepQInter.cpp
     separators/codac2_py_SepTransform.cpp
     separators/codac2_py_SepUnion.cpp
     separators/codac2_py_SepWrapper.cpp

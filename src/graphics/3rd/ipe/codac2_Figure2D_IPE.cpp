@@ -15,10 +15,8 @@
 using namespace std;
 using namespace codac2;
 
-
 Figure2D_IPE::Figure2D_IPE(const Figure2D& fig)
   : OutputFigure2D(fig), _f(fig.name() + ".xml"),
-    _f_temp_content(fig.name() + "_tmp.xml"),
     _x_offset(0.03*_fig.axes()[0].limits.diam()),
     _y_offset(0.03*_fig.axes()[1].limits.diam())
 {
@@ -29,12 +27,14 @@ Figure2D_IPE::~Figure2D_IPE()
 { 
   draw_axes();
   print_header_page();
-  _f_temp_content.close();
   _f.close();
 
   _f = std::ofstream(_fig.name() + ".xml", std::ofstream::binary | std::ofstream::app);
   std::ifstream f_temp_content(_fig.name() + "_tmp.xml", std::ofstream::binary);
-  _f << f_temp_content.rdbuf();
+
+  for (const auto& item : _items)
+    _f << item.second;
+    
   f_temp_content.close();
   std::remove((_fig.name() + "_tmp.xml").c_str());
   _f.close();
@@ -187,9 +187,6 @@ void Figure2D_IPE::center_viewbox([[maybe_unused]] const Vector& c, [[maybe_unus
 
 void Figure2D_IPE::clear()
 {
-  _f_temp_content.close();
-  _f_temp_content = std::ofstream(_fig.name() + "_tmp.xml");
-
   // clear _color map and layers
   _colors.clear();
   _layers.clear();
@@ -238,20 +235,20 @@ void Figure2D_IPE::begin_path(const StyleProperties& style, bool tip)
       _layers.push_back(style.layer);
 
   std::string line_width = (style.line_width != 0) ? to_ipe_linewidth(style.line_width, _ratio[0])+"%" : "0.5";
-  
-  _f_temp_content << "\n \
-    <path layer=\"" << style.layer << "\" \n \
-    stroke=\"codac_color_" << ipe_str(style.stroke_color) << "\" \n \
-    fill=\"codac_color_" << ipe_str(style.fill_color) << "\" \n \
-    opacity=\"" << ipe_opacity(style.fill_color) << "%\" \n \
-    stroke-opacity=\"" << ipe_opacity(style.stroke_color) << "%\" \n \
-    dash=\"" << to_ipe_linestyle(style.line_style) << "\" \n \
-    pen=\"" << line_width << "\" \n \
+
+  _working_item += "\n \
+    <path layer=\"" + style.layer + "\" \n \
+    stroke=\"codac_color_" + ipe_str(style.stroke_color) + "\" \n \
+    fill=\"codac_color_" + ipe_str(style.fill_color) + "\" \n \
+    opacity=\"" + to_string(ipe_opacity(style.fill_color)) + "%\" \n \
+    stroke-opacity=\"" + to_string(ipe_opacity(style.stroke_color)) + "%\" \n \
+    dash=\"" + to_ipe_linestyle(style.line_style) + "\" \n \
+    pen=\"" + line_width + "\" \n \
     join=\"2\"";
   if (tip)
-    _f_temp_content << "\n \
+    _working_item += "\n \
     arrow=\"normal/normal\"";
-  _f_temp_content << "> \n";
+  _working_item += "> \n";
 }
 
 void Figure2D_IPE::begin_path_with_matrix(const Vector& x, float length, const StyleProperties& style)
@@ -264,22 +261,22 @@ void Figure2D_IPE::begin_path_with_matrix(const Vector& x, float length, const S
       _layers.push_back(style.layer); 
 
   std::string line_width = (style.line_width != 0) ? to_ipe_linewidth(style.line_width, _ratio[0]) : "0.5";
-  
-  _f_temp_content << "\n \
-    <path layer=\"" << style.layer << "\" \n \
-    stroke=\"codac_color_" << ipe_str(style.stroke_color) << "\" \n \
-    fill=\"codac_color_" << ipe_str(style.fill_color) << "\" \n \
-    opacity=\"" << ipe_opacity(style.fill_color) << "%\" \n \
-    stroke-opacity=\"" << ipe_opacity(style.stroke_color) << "%\" \n \
-    dash=\"" << to_ipe_linestyle(style.line_style) << "\" \n \
-    pen=\"" << line_width << "\" \n \
+
+  _working_item += "\n \
+    <path layer=\"" + style.layer + "\" \n \
+    stroke=\"codac_color_" + ipe_str(style.stroke_color) + "\" \n \
+    fill=\"codac_color_" + ipe_str(style.fill_color) + "\" \n \
+    opacity=\"" + to_string(ipe_opacity(style.fill_color)) + "%\" \n \
+    stroke-opacity=\"" + to_string(ipe_opacity(style.stroke_color)) + "%\" \n \
+    dash=\"" + to_ipe_linestyle(style.line_style) + "\" \n \
+    pen=\"" + line_width + "\" \n \
     join=\"2\" \n \
     matrix=";
 
   // Matrix is composed of the 4 components of the 2D transformation matrix and the translation vector
-  _f_temp_content << "\"" << scale_length(length) * std::cos(x[j()+1]) << " " << scale_length(length) * std::sin(x[j()+1]) << " "
-                  << - scale_length(length) * std::sin(x[j()+1]) << " " << scale_length(length) * std::cos(x[j()+1]) << " " 
-                  << scale_x(x[i()]) << " " << scale_y(x[j()]) << "\">\n";
+  _working_item += "\"" + to_string(scale_length(length) * std::cos(x[j()+1])) + " " + to_string(scale_length(length) * std::sin(x[j()+1])) + " "
+                  + to_string(- scale_length(length) * std::sin(x[j()+1])) + " " + to_string(scale_length(length) * std::cos(x[j()+1])) + " " 
+                  + to_string(scale_x(x[i()])) + " " + to_string(scale_y(x[j()])) + "\">\n";
 }
 
 
@@ -289,41 +286,44 @@ void Figure2D_IPE::draw_tick_label(const Vector& c, const Vector& r, const std::
   _colors.emplace(ipe_str(style.stroke_color), style.stroke_color);
   _colors.emplace(ipe_str(style.fill_color), style.fill_color);
 
-  _f_temp_content << "\n \
-    <text layer=\"" << style.layer << "\" \n \
+  _working_item += "\n \
+    <text layer=\"" + style.layer + "\" \n \
     transformations=\"translations\" \n \
-    pos=\"" << scale_x(c[i()]) << " " << scale_y(c[j()]) << "\" \n \
-    stroke=\"codac_color_" << ipe_str(style.stroke_color) << "\" \n \
-    fill=\"codac_color_" << ipe_str(style.fill_color) << "\" \n \
-    opacity=\"" << ipe_opacity(style.fill_color) << "%\" \n \
-    stroke-opacity=\"" << ipe_opacity(style.stroke_color) << "%\" \n \
+    pos=\"" + to_string(scale_x(c[i()])) + " " + to_string(scale_y(c[j()])) + "\" \n \
+    stroke=\"codac_color_" + ipe_str(style.stroke_color) + "\" \n \
+    fill=\"codac_color_" + ipe_str(style.fill_color) + "\" \n \
+    opacity=\"" + to_string(ipe_opacity(style.fill_color)) + "%\" \n \
+    stroke-opacity=\"" + to_string(ipe_opacity(style.stroke_color)) + "%\" \n \
     type=\"label\" \n \
-    width=\"" << scale_length(r[i()]) << "\" \n \
-    height=\"" << scale_length(r[j()]) << "\" \n \
+    width=\"" + to_string(scale_length(r[i()])) + "\" \n \
+    height=\"" + to_string(scale_length(r[j()])) + "\" \n \
     depth=\"0\" \n \
-    valign=\"baseline\">" << text << "</text>";
+    valign=\"baseline\">" + text + "</text>";
+
+  _items.insert({style.z_value, _working_item});
+  _working_item="";
 }
 
 void Figure2D_IPE::draw_axes()
 {
   double axe_thickness = 1.0/_ratio[0];
   draw_polyline({{_fig.axes()[0].limits.lb(),_fig.axes()[1].limits.lb()},
-                 {_fig.axes()[0].limits.ub(),_fig.axes()[1].limits.lb()}}, 0., StyleProperties({Color::black(),Color::black()}, "axes", to_string(axe_thickness)));
+                 {_fig.axes()[0].limits.ub(),_fig.axes()[1].limits.lb()}}, 0., StyleProperties({Color::black(),Color::black()}, "axes", "w:"+to_string(axe_thickness)));
 
   draw_polyline({{_fig.axes()[0].limits.lb(),_fig.axes()[1].limits.lb()},
-                 {_fig.axes()[0].limits.lb(),_fig.axes()[1].limits.ub()}}, 0., StyleProperties({Color::black(),Color::black()}, "axes", to_string(axe_thickness)));
+                 {_fig.axes()[0].limits.lb(),_fig.axes()[1].limits.ub()}}, 0., StyleProperties({Color::black(),Color::black()}, "axes", "w:"+to_string(axe_thickness)));
 
   for (const auto& x_tick : _x_ticks) 
   {
     auto formatted_x_tick = format_number(x_tick,(_x_ticks[1] - _x_ticks[0]));
-    draw_polyline({{x_tick,_fig.axes()[1].limits.lb()-0.02*_fig.axes()[1].limits.diam()},{x_tick,_fig.axes()[1].limits.lb()}}, 0., StyleProperties({Color::black(),Color::black()}, "axes", to_string(axe_thickness)));
+    draw_polyline({{x_tick,_fig.axes()[1].limits.lb()-0.02*_fig.axes()[1].limits.diam()},{x_tick,_fig.axes()[1].limits.lb()}}, 0., StyleProperties({Color::black(),Color::black()}, "axes", "w:"+to_string(axe_thickness)));
     draw_tick_label({x_tick+0.005*_fig.axes()[0].limits.diam(),_fig.axes()[1].limits.lb()-0.02*_fig.axes()[1].limits.diam()}, {_fig.axes()[0].limits.diam(),_fig.axes()[1].limits.diam()}, formatted_x_tick, StyleProperties({Color::black(),Color::black()}, "axes"));
   }
 
   for (const auto& y_tick : _y_ticks) 
   {
     auto formatted_y_tick = format_number(y_tick,(_y_ticks[1] - _y_ticks[0]));
-    draw_polyline({{_fig.axes()[0].limits.lb()-0.02*_fig.axes()[0].limits.diam(),y_tick},{_fig.axes()[0].limits.lb(),y_tick}}, 0., StyleProperties({Color::black(),Color::black()}, "axes", to_string(axe_thickness)));
+    draw_polyline({{_fig.axes()[0].limits.lb()-0.02*_fig.axes()[0].limits.diam(),y_tick},{_fig.axes()[0].limits.lb(),y_tick}}, 0., StyleProperties({Color::black(),Color::black()}, "axes", "w:"+to_string(axe_thickness)));
     draw_tick_label({_fig.axes()[0].limits.lb()-(0.02+0.0095*(formatted_y_tick.size()-1))*_fig.axes()[0].limits.diam(),y_tick+0.005*_fig.axes()[1].limits.diam()}, {_fig.axes()[0].limits.diam(),_fig.axes()[1].limits.diam()}, formatted_y_tick, StyleProperties({Color::black(),Color::black()}, "axes"));
   }
 }
@@ -334,16 +334,20 @@ void Figure2D_IPE::draw_point(const Vector& c, const StyleProperties& style)
   _colors.emplace(ipe_str(style.stroke_color), style.stroke_color);
   _colors.emplace(ipe_str(style.fill_color), style.fill_color);
 
-  _f_temp_content << "\n \
-    <use layer=\"" << style.layer << "\" \n \
+  _working_item += "\n \
+    <use layer=\"" + style.layer + "\" \n \
     name=\"mark/fdisk(sfx)\"  \n \
-    pos=\"" << scale_x(c[i()]) << " " << scale_y(c[j()]) << "\" \n \
-    stroke=\"codac_color_" << ipe_str(style.stroke_color) << "\" \n \
-    fill=\"codac_color_" << ipe_str(style.fill_color) << "\" \n \
-    opacity=\"" << ipe_opacity(style.fill_color) << "%\" \n \
-    stroke-opacity=\"" << ipe_opacity(style.stroke_color) << "%\" \n \
+    pos=\"" + to_string(scale_x(c[i()])) + " " + to_string(scale_y(c[j()])) + "\" \n \
+    stroke=\"codac_color_" + ipe_str(style.stroke_color) + "\" \n \
+    fill=\"codac_color_" + ipe_str(style.fill_color) + "\" \n \
+    opacity=\"" + to_string(ipe_opacity(style.fill_color)) + "%\" \n \
+    stroke-opacity=\"" + to_string(ipe_opacity(style.stroke_color)) + "%\" \n \
     size=\"normal\"\n/>";
+
+  _items.insert({style.z_value, _working_item});
+  _working_item="";
 }
+
 
 void Figure2D_IPE::draw_box(const IntervalVector& x, const StyleProperties& style)
 {
@@ -360,9 +364,13 @@ void Figure2D_IPE::draw_circle(const Vector& c, double r, const StyleProperties&
   assert(r > 0.);
 
   begin_path(style);
-  _f_temp_content << scale_length(r) << " 0 0 " << scale_length(r) << " "
-                  << scale_x(c[i()]) << " " << scale_y(c[j()]) << " e \n";
-  _f_temp_content << "</path>";
+
+  _working_item += to_string(scale_length(r)) + " 0 0 " + to_string(scale_length(r)) + " "
+                  + to_string(scale_x(c[i()])) + " " + to_string(scale_y(c[j()])) + " e \n";
+  _working_item += "</path>";
+
+  _items.insert({style.z_value, _working_item});
+  _working_item="";
 }
 
 void Figure2D_IPE::draw_ring(const Vector& c, const Interval& r, const StyleProperties& style)
@@ -371,11 +379,15 @@ void Figure2D_IPE::draw_ring(const Vector& c, const Interval& r, const StyleProp
   assert(!r.is_empty() && r.lb() >= 0.);
 
   begin_path(style);
-  _f_temp_content << scale_length(r.lb()) << " 0 0 " << scale_length(r.lb()) << " "
-                  << scale_x(c[i()]) << " " << scale_y(c[j()]) << " e \n";
-  _f_temp_content << scale_length(r.ub()) << " 0 0 " << scale_length(r.ub()) << " "
-                  << scale_x(c[i()]) << " " << scale_y(c[j()]) << " e \n";
-  _f_temp_content << "</path>";
+
+  _working_item += to_string(scale_length(r.lb())) + " 0 0 " + to_string(scale_length(r.lb())) + " "
+                  + to_string(scale_x(c[i()])) + " " + to_string(scale_y(c[j()])) + " e \n";
+  _working_item += to_string(scale_length(r.ub())) + " 0 0 " + to_string(scale_length(r.ub())) + " "
+                  + to_string(scale_x(c[i()])) + " " + to_string(scale_y(c[j()])) + " e \n";
+  _working_item += "</path>";
+
+  _items.insert({style.z_value, _working_item});
+  _working_item="";
 }
 
 void Figure2D_IPE::draw_polyline(const std::vector<Vector>& x, float tip_length, const StyleProperties& style)
@@ -387,10 +399,13 @@ void Figure2D_IPE::draw_polyline(const std::vector<Vector>& x, float tip_length,
   for(size_t k = 0 ; k < x.size() ; k++)
   {
     assert(_fig.size() <= x[k].size());
-    _f_temp_content << scale_x(x[k][i()]) << " " << scale_y(x[k][j()]) << ((k == 0 ? " m \n" : " l \n"));
+    _working_item += to_string(scale_x(x[k][i()])) + " " + to_string(scale_y(x[k][j()])) + ((k == 0 ? " m \n" : " l \n"));
   }
 
-  _f_temp_content << "</path>";
+  _working_item += "</path>";
+
+  _items.insert({style.z_value, _working_item});
+  _working_item="";
 }
 
 void Figure2D_IPE::draw_polygon(const std::vector<Vector>& x, const StyleProperties& style)
@@ -401,12 +416,15 @@ void Figure2D_IPE::draw_polygon(const std::vector<Vector>& x, const StylePropert
   for(size_t k = 0 ; k < x.size() ; k++)
   {
     assert(_fig.size() <= x[k].size());
-    _f_temp_content << scale_x(x[k][i()]) << " " << scale_y(x[k][j()]) << ((k == 0 ? " m \n" : " l \n"));
+    _working_item += to_string(scale_x(x[k][i()])) + " " + to_string(scale_y(x[k][j()])) + ((k == 0 ? " m \n" : " l \n"));
   }
 
-  _f_temp_content << "h\n";  // to close the shape
+  _working_item += "h\n";  // to close the shape
 
-  _f_temp_content << "</path>";
+  _working_item += "</path>";
+
+  _items.insert({style.z_value, _working_item});
+  _working_item="";
 }
 
 void Figure2D_IPE::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& style)
@@ -421,17 +439,20 @@ void Figure2D_IPE::draw_pie(const Vector& c, const Interval& r, const Interval& 
   Vector point3 ({r.ub() * std::cos(theta.ub()), r.ub() * std::sin(theta.ub())});
   Vector point4 ({r.lb() * std::cos(theta.ub()), r.lb() * std::sin(theta.ub())});
 
-  _f_temp_content << scale_x(c[0] + point1[0]) << " " << scale_y(c[1] + point1[1]) << " m \n";
-  _f_temp_content << scale_x(c[0] + point2[0]) << " " << scale_y(c[1] + point2[1]) << " l \n";
-  _f_temp_content << scale_length(r.ub()) << " 0 0 " << scale_length(r.ub()) << " "
-                  << scale_x(c[i()]) << " " << scale_y(c[j()]) << " "
-                  << scale_x(c[0] + point3[0]) << " " << scale_y(c[1] + point3[1]) << " a \n";
-  _f_temp_content << scale_x(c[0] + point4[0]) << " " << scale_y(c[1] + point4[1]) << " l \n";
-  _f_temp_content << scale_length(r.lb()) << " 0 0 " << - scale_length(r.lb()) << " "
-                  << scale_x(c[i()]) << " " << scale_y(c[j()]) << " "
-                  << scale_x(c[0] + point1[0]) << " " << scale_y(c[1] + point1[1]) << " a \n";
+  _working_item += to_string(scale_x(c[0] + point1[0])) + " " + to_string(scale_y(c[1] + point1[1])) + " m \n";
+  _working_item += to_string(scale_x(c[0] + point2[0])) + " " + to_string(scale_y(c[1] + point2[1])) + " l \n";
+  _working_item += to_string(scale_length(r.ub())) + " 0 0 " + to_string(scale_length(r.ub())) + " "
+                  + to_string(scale_x(c[i()])) + " " + to_string(scale_y(c[j()])) + " "
+                  + to_string(scale_x(c[0] + point3[0])) + " " + to_string(scale_y(c[1] + point3[1])) + " a \n";
+  _working_item += to_string(scale_x(c[0] + point4[0])) + " " + to_string(scale_y(c[1] + point4[1])) + " l \n";
+  _working_item += to_string(scale_length(r.lb())) + " 0 0 " + to_string(- scale_length(r.lb())) + " "
+                  + to_string(scale_x(c[i()])) + " " + to_string(scale_y(c[j()])) + " "
+                  + to_string(scale_x(c[0] + point1[0])) + " " + to_string(scale_y(c[1] + point1[1])) + " a \n";
 
-  _f_temp_content << "</path>";
+  _working_item += "</path>";
+
+  _items.insert({style.z_value, _working_item});
+  _working_item="";
 }
 
 void Figure2D_IPE::draw_ellipse(const Vector& c, const Vector& ab, double theta, const StyleProperties& style)
@@ -440,10 +461,14 @@ void Figure2D_IPE::draw_ellipse(const Vector& c, const Vector& ab, double theta,
   assert(ab.size() == 2);
 
   begin_path(style);
-  _f_temp_content << scale_length(ab[0]) * std::cos(theta) << " " << scale_length(ab[0]) * std::sin(theta) << " " 
-                  << - scale_length(ab[1]) * std::sin(theta) << " " << scale_length(ab[1]) * std::cos(theta) << " " 
-                  << scale_x(c[i()]) << " " << scale_y(c[j()]) << " e \n";
-  _f_temp_content << "</path>";
+
+  _working_item += to_string(ab[0] * _ratio[0] * std::cos(theta)) + " " + to_string(ab[0] * _ratio[1] * std::sin(theta)) + " " 
+                  + to_string(- ab[1] * _ratio[0] * std::sin(theta)) + " " + to_string(ab[1] * _ratio[1] * std::cos(theta)) + " " 
+                  + to_string(scale_x(c[i()])) + " " + to_string(scale_y(c[j()])) + " e \n";
+  _working_item += "</path>";
+
+  _items.insert({style.z_value, _working_item});
+  _working_item="";
 }
 
 void Figure2D_IPE::draw_tank(const Vector& x, float size, const StyleProperties& style)
@@ -456,7 +481,10 @@ void Figure2D_IPE::draw_tank(const Vector& x, float size, const StyleProperties&
 
   begin_path_with_matrix(x,length,style);
   constexpr char tank_shape[] = " 1 -1.5 m \n -1 -1.5 l \n 0 -1.5 l \n 0 -1 l \n -1 -1 l \n -1 1 l \n 0 1 l \n 0 1.5 l \n -1 1.5 l \n 1 1.5 l \n 0 1.5 l \n 0 1 l \n 3 0.5 l \n 3 -0.5 l \n 0 -1 l \n 0 -1.5 l \n";
-  _f_temp_content << tank_shape << "h\n" << "</path>";
+  _working_item += std::string(tank_shape) + "h\n" + "</path>";
+
+  _items.insert({style.z_value, _working_item});
+  _working_item="";
 }
 
 void Figure2D_IPE::draw_AUV(const Vector& x, float size, const StyleProperties& style)
@@ -467,20 +495,23 @@ void Figure2D_IPE::draw_AUV(const Vector& x, float size, const StyleProperties& 
 
   float length = size/7.0; // from VIBes : initial vehicle's length is 7
 
-  _f_temp_content << "\n<group layer=\"" << style.layer<< "\">\n";
+  _working_item += "\n<group layer=\"" + style.layer+ "\">\n";
 
   // Body
   begin_path_with_matrix(x,length,style);
   constexpr char body_shape[] = " -4 0 m \n -2 1 l \n 2 1 l \n 2.17365 0.984808 l \n 2.34202 0.939693 l \n 2.5 0.866025 l \n 2.64279 0.766044 l \n 2.76604 0.642788 l \n 2.86603 0.5 l \n 2.93969 0.34202 l \n 2.98481 0.173648 l \n 3 0 l \n 2.98481 -0.173648 l \n 2.93969 -0.34202 l \n 2.86603 -0.5 l \n 2.76604 -0.642788 l \n 2.64279 -0.766044 l \n 2.5 -0.866025 l \n 2.34202 -0.939693 l \n 2.17365 -0.984808 l \n 2 -1 l \n -2 -1 l \n";
-  _f_temp_content << body_shape;
-  _f_temp_content << "h\n";  // to close the shape
-  _f_temp_content << "</path>\n";
+  _working_item += body_shape;
+  _working_item += "h\n";  // to close the shape
+  _working_item += "</path>\n";
 
   // Propulsion unit
   constexpr char propeller_shape[] = " -4 1 m \n -3.25 1 l \n -3.25 -1 l \n -4 -1 l \n";
   begin_path_with_matrix(x,length,style);
-  _f_temp_content << propeller_shape << "h\n" << "</path>\n";
-  _f_temp_content << "</group>";
+  _working_item += std::string(propeller_shape) + "h\n" + "</path>\n";
+  _working_item += "</group>";
+
+  _items.insert({style.z_value, _working_item});
+  _working_item="";
 }
 
 void Figure2D_IPE::draw_motor_boat(const Vector& x, float size, const StyleProperties& style)
@@ -494,39 +525,42 @@ void Figure2D_IPE::draw_motor_boat(const Vector& x, float size, const StylePrope
   StyleProperties s_edge = style; s_edge.fill_color = Color::none();
   StyleProperties s_fill = style; s_fill.fill_color = style.stroke_color;
 
-  _f_temp_content << "\n<group layer=\"" << style.layer<< "\">\n";
+  _working_item += "\n<group layer=\"" + style.layer+ "\">\n";
 
   // Body shape
   begin_path_with_matrix(x,length,style);
   constexpr char body_shape[] = "-72 -80 m \n -72 80 l \n 120 80 l \n 184 80 \n 264 64 \n 312 32 \n 328 0 c \n 312 -32 \n 264 -64 \n 184 -80 \n 120 -80 \n -72 -80 c \n";
-  _f_temp_content << body_shape << "</path>";
+  _working_item += std::string(body_shape) + "</path>";
 
   // Left prop
   begin_path_with_matrix(x,length,s_fill);
   constexpr char left_prop[] = "-72 48 m \n -72 16 l \n -80 16 l \n -80 48 l \n h \n";
-  _f_temp_content << left_prop << "</path>";
+  _working_item += std::string(left_prop) + "</path>";
 
   // Right prop
   begin_path_with_matrix(x,length,s_fill);
   constexpr char right_prop[] = "-72 -16 m \n -72 -48 l \n -80 -48 l \n -80 -16 l \n h \n";
-  _f_temp_content << right_prop << "</path>";
+  _working_item += std::string(right_prop) + "</path>";
 
   // Hull details
   begin_path_with_matrix(x,length,s_edge);
   constexpr char hull_details[] = "120 80 m \n 104 64 l \n -56 64 l \n -56 -64 l \n 104 -64 l \n 120 -80 l \n";
-  _f_temp_content << hull_details << "</path>";
+  _working_item += std::string(hull_details) + "</path>";
 
   // Engine
   begin_path_with_matrix(x,length,s_fill);
   constexpr char engine[] = "-24 32 m \n -24 -32 l \n 40 -32 l \n 40 32 l \n h \n";
-  _f_temp_content << engine << "</path>";
+  _working_item += std::string(engine) + "</path>";
 
   // Circle
   begin_path_with_matrix(x,length,s_edge);
   constexpr char circle[] = "22.6274 \n 0 \n 0 \n 22.6274 \n 200 \n 0 \n e \n";
-  _f_temp_content << circle << "</path>";
+  _working_item += std::string(circle) + "</path>";
 
-  _f_temp_content << "</group>";
+  _working_item += "</group>";
+
+  _items.insert({style.z_value, _working_item});
+  _working_item="";
 }
 
 void Figure2D_IPE::draw_text(const std::string& text, const Vector& ul, [[maybe_unused]] double scale, const StyleProperties& style)
@@ -538,15 +572,18 @@ void Figure2D_IPE::draw_text(const std::string& text, const Vector& ul, [[maybe_
     if (std::find(_layers.begin(), _layers.end(), style.layer) == _layers.end() && style.layer != "")
       _layers.push_back(style.layer);
 
-  _f_temp_content << "\n \
-    <text layer=\"" << style.layer << "\" \n \
+  _working_item += "\n \
+    <text layer=\"" + style.layer + "\" \n \
     transformations=\"translations\" \n \
-    pos=\"" << scale_x(ul[i()]) << " " << scale_y(ul[j()]) << "\" \n \
-    stroke=\"codac_color_" << ipe_str(style.stroke_color) << "\" \n \
-    opacity=\"" << ipe_opacity(style.stroke_color) << "%\" \n \
+    pos=\"" + to_string(scale_x(ul[i()])) + " " + to_string(scale_y(ul[j()])) + "\" \n \
+    stroke=\"codac_color_" + ipe_str(style.stroke_color) + "\" \n \
+    opacity=\"" + to_string(ipe_opacity(style.stroke_color)) + "%\" \n \
     type=\"label\" \n \
     depth=\"0\" \n \
-    valign=\"top\">" << text << "</text>";
+    valign=\"top\">" + text + "</text>";
+
+  _items.insert({style.z_value, _working_item});
+  _working_item="";
 }
 
 void Figure2D_IPE::draw_raster(const std::string& filename, const IntervalVector& bbox, const StyleProperties& style)

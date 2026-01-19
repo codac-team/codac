@@ -42,6 +42,11 @@ namespace codac2
         assert_release(all_same_size(c...));
       }
 
+      size_t nb() const
+      {
+        return _ctcs.size();
+      }
+
       template<typename X_> // single type
       void contract_impl(X_& x) const
       {
@@ -65,17 +70,10 @@ namespace codac2
       }
 
       template<typename C>
-        requires std::is_base_of_v<CtcBase<X...>,C>
+        requires IsCtcBaseOrPtr<C,X...>
       CtcUnion<X...>& operator|=(const C& c)
       {
-        assert_release(c.size() == this->size());
-        _ctcs.push_back(c);
-        return *this;
-      }
-
-      CtcUnion<X...>& operator|=(const std::shared_ptr<CtcBase<X...>>& c)
-      {
-        assert_release(c->size() == this->size());
+        assert_release(size_of(c) == this->size());
         _ctcs.push_back(c);
         return *this;
       }

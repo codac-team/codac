@@ -154,7 +154,7 @@ using namespace pybind11::literals;
 
 inline FunctionArgsList create_FunctionArgsList(const std::vector<py::object>& l)
 {
-  FunctionArgsList args {};
+  std::vector<std::shared_ptr<VarBase>> v_args;
   Index i = 0;
 
   for(const auto& li : l)
@@ -162,20 +162,19 @@ inline FunctionArgsList create_FunctionArgsList(const std::vector<py::object>& l
     i++;
 
     if(py::isinstance<ScalarVar>(li))
-      args.push_back(li.cast<ScalarVar>().arg_copy());
+      v_args.push_back(li.cast<ScalarVar>().arg_copy());
 
     else if(py::isinstance<VectorVar>(li))
-      args.push_back(li.cast<VectorVar>().arg_copy());
+      v_args.push_back(li.cast<VectorVar>().arg_copy());
 
     else if(py::isinstance<MatrixVar>(li))
-      args.push_back(li.cast<MatrixVar>().arg_copy());
+      v_args.push_back(li.cast<MatrixVar>().arg_copy());
 
     else
       throw std::invalid_argument("Argument " + std::to_string(i) + " is invalid. Only variables are accepted.");
   }
-
-  args.compute_unique_arg_names();
-  return args;
+  
+  return { v_args };
 }
 
 template<typename T>

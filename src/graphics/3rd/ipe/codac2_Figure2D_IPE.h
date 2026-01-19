@@ -252,7 +252,9 @@ namespace codac2
       double scale_length(double y) const;
       void print_header_page();
 
-      std::ofstream _f, _f_temp_content;
+      std::ofstream _f;
+      std::string _working_item;
+      std::multimap<double,std::string> _items;
       const double _ipe_grid_size = 500.;
       Vector _ratio { 1., 1. };
 

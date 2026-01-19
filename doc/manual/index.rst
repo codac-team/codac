@@ -138,6 +138,7 @@ This list is in alphabetical order by surname.
   * Auguste Bourgois
   * `Cyril Bouvier <http://www.lirmm.fr/~bouvier/index.en.html>`_
   * `Quentin Brateau <https://teusner.github.io>`_
+  * `Clément Carbonnel <https://www.lirmm.fr/~ccarbonnel/>`_
   * Gilles Chabert
   * `Julien Damers <http://damers.org>`_
   * Benoît Desrochers
@@ -345,6 +346,7 @@ User manual
    * Related papers
    * Contributors
    * How to cite Codac
+   :ref:`sec-ref-codac-logos`
 
 
 How-to guides
@@ -371,10 +373,7 @@ Development
 * :ref:`sec-dev-info`
 * :ref:`sec-dev-common-issues`
 * :ref:`sec-dev-changelog`
-* C++ API
-
-
-
+* :ref:`sec-dev-api`
 
 
 
@@ -453,9 +452,7 @@ Development
    development/info_dev.rst
    development/common_issues.rst
    development/changelog.rst
-.. 
-..    C++ API
-
+   development/api_redirect.rst
 
 
 How to cite Codac
@@ -478,3 +475,7 @@ The main reference to the Codac library is `the following paper <https://www.sim
     month={Mar.},
     pages={871-887}
   }
+
+See the Codac logos page for downloadable logos suitable for projects, presentations, and publications:
+
+* :ref:`sec-ref-codac-logos`

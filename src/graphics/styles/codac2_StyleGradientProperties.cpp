@@ -15,10 +15,10 @@ using namespace codac2;
 StyleGradientProperties::StyleGradientProperties()
 { }
 
-StyleGradientProperties::StyleGradientProperties(const std::string& param1, const std::string& param2, const std::string& param3)
-  : StylePropertiesBase(param1, param2, param3)
+StyleGradientProperties::StyleGradientProperties(const std::string& param1, const std::string& param2, const std::string& param3, const std::string& param4)
+  : StylePropertiesBase(param1, param2, param3, param4)
 { }
 
-StyleGradientProperties::StyleGradientProperties(const ColorMap& cmap_, const std::string& param1, const std::string& param2, const std::string& param3)
-  : StylePropertiesBase(param1, param2, param3), cmap(cmap_)
+StyleGradientProperties::StyleGradientProperties(const ColorMap& cmap_, const std::string& param1, const std::string& param2, const std::string& param3, const std::string& param4)
+  : StylePropertiesBase(param1, param2, param3, param4), cmap(cmap_)
 { }

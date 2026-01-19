@@ -38,14 +38,6 @@ std::vector<Vector> Parallelepiped::vertices() const
   return L_v;
 }
 
-IntervalVector Parallelepiped::box() const
-{
-  IntervalVector box(z);
-  for(const auto& v : vertices())
-    box |= v;
-  return box;
-}
-
 BoolInterval Parallelepiped::contains(const Vector& v) const
 {
   return is_superset(v.template cast<Interval>());

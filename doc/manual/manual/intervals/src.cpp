@@ -87,6 +87,7 @@ TEST_CASE("Interval class - manual")
     x |= 0;                  // x = [0, π/2]
     Interval y = sin(x);     // y = [0, 1]
     Interval z = exp(x);     // z = [1, e^(π/2)]
+    Interval w = y & z;      // w =  [1, 1]
     // [interval-class-6-end]
     CHECK(Approx(x) == Interval(0,PI/2));
     CHECK(Approx(y) == Interval(0,1));

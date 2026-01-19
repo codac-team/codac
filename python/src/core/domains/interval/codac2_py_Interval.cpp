@@ -15,6 +15,7 @@
 #include <codac2_Interval.h>
 #include "codac2_py_Interval_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_Interval_impl_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include "codac2_py_matlab.h"
 
 using namespace std;
 using namespace codac2;
@@ -197,19 +198,27 @@ py::class_<Interval> export_Interval(py::module& m)
       INTERVAL_REF_INTERVAL_OPERATORUNIONEQ_CONST_INTERVAL_REF,
       "x"_a)
 
-    // For MATLAB compatibility
-    .def("self_union", &Interval::operator|=,
-      INTERVAL_REF_INTERVAL_OPERATORUNIONEQ_CONST_INTERVAL_REF,
-      "x"_a)
-
     .def(py::self &= py::self,
       INTERVAL_REF_INTERVAL_OPERATORINTEREQ_CONST_INTERVAL_REF,
       "x"_a)
+  ;
 
+  if constexpr(FOR_MATLAB)
+  {
     // For MATLAB compatibility
-    .def("self_inter", &Interval::operator&=,
-      INTERVAL_REF_INTERVAL_OPERATORINTEREQ_CONST_INTERVAL_REF,
-      "x"_a)
+    exported_interval_class
+
+      .def("self_union", &Interval::operator|=,
+        INTERVAL_REF_INTERVAL_OPERATORUNIONEQ_CONST_INTERVAL_REF,
+        "x"_a)
+
+      .def("self_inter", &Interval::operator&=,
+        INTERVAL_REF_INTERVAL_OPERATORINTEREQ_CONST_INTERVAL_REF,
+        "x"_a)
+    ;
+  }
+
+  exported_interval_class
 
     .def(py::self += double(),
       INTERVAL_REF_INTERVAL_OPERATORPLUSEQ_DOUBLE,

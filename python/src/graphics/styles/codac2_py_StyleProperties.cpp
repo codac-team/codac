@@ -26,29 +26,29 @@ void export_StyleProperties(py::module& m)
     .def(py::init<>(),
       STYLEPROPERTIES_STYLEPROPERTIES)
 
-    .def(py::init<const std::string&, const std::string&, const std::string&>(),
-      STYLEPROPERTIES_STYLEPROPERTIES_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF,
-      "param1"_a, "param2"_a="", "param3"_a="")
+    .def(py::init<const std::string&, const std::string&, const std::string&, const std::string&>(),
+      STYLEPROPERTIES_STYLEPROPERTIES_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF,
+      "param1"_a, "param2"_a="", "param3"_a="", "param4"_a="")
   
-    .def(py::init<const Color&, const std::string&, const std::string&, const std::string&>(),
-      STYLEPROPERTIES_STYLEPROPERTIES_CONST_COLOR_REF_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF,
-      "stroke_color"_a, "param1"_a="", "param2"_a="", "param3"_a="")
+    .def(py::init<const Color&, const std::string&, const std::string&, const std::string&, const std::string&>(),
+      STYLEPROPERTIES_STYLEPROPERTIES_CONST_COLOR_REF_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF,
+      "stroke_color"_a, "param1"_a="", "param2"_a="", "param3"_a="", "param4"_a="")
 
     .def(py::init(
-        [](const std::vector<Color>& v, const std::string& param1, const std::string& param2, const std::string& param3)
+        [](const std::vector<Color>& v, const std::string& param1, const std::string& param2, const std::string& param3, const std::string& param4)
         {
           if(v.size() == 1)
-            return std::make_unique<StyleProperties>(v[0], param1, param2, param3);
+            return std::make_unique<StyleProperties>(v[0], param1, param2, param3, param4);
           else if(v.size() == 2)
-            return std::make_unique<StyleProperties,std::initializer_list<Color>>({ v[0], v[1] }, param1, param2, param3);
+            return std::make_unique<StyleProperties,std::initializer_list<Color>>({ v[0], v[1] }, param1, param2, param3, param4);
           else
           {
             throw invalid_argument("StyleProperties must be built from one (edge) or two (edge/fill) colors.");
             return std::make_unique<StyleProperties>();
           }
         }),
-      STYLEPROPERTIES_STYLEPROPERTIES_INITIALIZER_LIST_COLOR_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF,
-      "v"_a, "param1"_a="", "param2"_a="", "param3"_a="")
+      STYLEPROPERTIES_STYLEPROPERTIES_INITIALIZER_LIST_COLOR_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF_CONST_STRING_REF,
+      "v"_a, "param1"_a="", "param2"_a="", "param3"_a="", "param4"_a="")
 
 
     .def_static("inside", &StyleProperties::inside,

@@ -20,6 +20,7 @@ namespace codac2
   // eps: accuracy of the paving algorithm, the undefined boxes will have their max_diam <= eps
   
   PavingOut pave(const IntervalVector& x, std::shared_ptr<const CtcBase<IntervalVector>> c, double eps, bool verbose = false);
+  PavingOut pave(const IntervalVector& x, const CtcBase<IntervalVector>& c, double eps, double& time, bool verbose = false);
   PavingOut pave(const IntervalVector& x, const CtcBase<IntervalVector>& c, double eps, bool verbose = false);
 
   PavingInOut pave(const IntervalVector& x, std::shared_ptr<const SepBase> s, double eps, bool verbose = false);

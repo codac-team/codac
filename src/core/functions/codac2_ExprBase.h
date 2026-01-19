@@ -13,6 +13,7 @@
 #include <memory>
 #include <cassert>
 #include <utility>
+#include <atomic>
 #include "codac2_Domain.h"
 #include "codac2_Index.h"
 
@@ -70,7 +71,7 @@ namespace codac2
     protected:
 
       const Index _id; //!< unique identifier, cannot be modified after initialization
-      static Index _id_counter; //!< static counter used to generate unique IDs for each ``ExprID`` object
+      static std::atomic<Index> _id_counter; //!< thread-safe counter used to generate unique IDs
   };
 
   /**

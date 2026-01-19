@@ -47,13 +47,6 @@ namespace codac2
       std::vector<Vector> vertices() const;
 
       /**
-       * \brief Computes the axis-aligned bounding box of the parallelepiped
-       * 
-       * \return An IntervalVector representing the axis-aligned bounding box of the parallelepiped
-       */
-      IntervalVector box() const;
-
-      /**
        * \brief Checks if a given point is contained within the parallelepiped. The matrix A has to be square and invertible.
        * 
        * \param v The point to check
