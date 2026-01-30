@@ -3,6 +3,8 @@
 State estimation
 ================
 
+  Main authors: `Simon Rohou <https://www.simon-rohou.fr/research/>`_, `Maël Godard <https://godardma.github.io>`_ (Matlab binding)
+
 | Before starting, make sure you have the VIBes viewer ready to be used.
 | If necesary, please :ref:`have a look at these instructions <sec-graphics-vibes>`.
 

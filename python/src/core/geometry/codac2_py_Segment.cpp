@@ -46,7 +46,7 @@ void export_Segment(py::module& m)
 
     .def(
         #if FOR_MATLAB
-          "setitem"
+          "set_item"
         #else
           "__setitem__"
         #endif

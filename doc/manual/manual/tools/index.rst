@@ -8,3 +8,4 @@ Tools
    
   serialization.rst
   registration.rst
+  octasym.rst

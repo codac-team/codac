@@ -177,3 +177,18 @@ a .download:before {
   background-size: var(--size) var(--size);
   background-position: 0 0, 0 calc(var(--size)/2), calc(var(--size)/2) calc(var(--size)/-2), calc(var(--size)/-2) 0;
 }
+
+/* Adding VIBes + IPE logos in the lateral menu */
+.sidebar-tree li.toctree-l1 > a.reference.internal:has(+ input#toctree-checkbox-8) {
+  background:url("../logos/logos_vibes_ipe.png") no-repeat center / contain;
+}
+
+.sidebar-tree li.toctree-l1 > a.reference.internal:has(+ input#toctree-checkbox-8):hover {
+  background: url("../logos/logos_vibes_ipe.png") no-repeat center / contain,
+              var(--color-sidebar-item-background--hover);
+}
+
+.sidebar-tree li.toctree-l1 > a.reference.internal.current:has(+ input#toctree-checkbox-8) {
+  background: url("../logos/logos_vibes_ipe.png") no-repeat center / contain,
+              var(--color-sidebar-item-background--current);
+}

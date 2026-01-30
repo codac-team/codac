@@ -460,7 +460,7 @@ void draw_tube_common(Figure2D& fig, const SlicedTube<IntervalVector>& x, int ma
       
   else
   {
-    int group_size = std::max(1, (int)(1.*n/max_nb_slices_to_display));
+    int group_size = std::max(1, (int)((1.*n)/max_nb_slices_to_display));
 
     for(auto it = x.tdomain()->rbegin() ; it != x.tdomain()->rend(); )
     {
@@ -468,13 +468,12 @@ void draw_tube_common(Figure2D& fig, const SlicedTube<IntervalVector>& x, int ma
       ConvexPolygon p(x.slice(it)->codomain());
       it++;
 
-      for(int j = 0; j < group_size-1 && it != x.tdomain()->rend(); j++,it++)
+      int j;
+      for(j = 0; j < group_size-1 && it != x.tdomain()->rend(); j++,it++)
         p |= ConvexPolygon(x.slice(it)->codomain());
       fig.draw_polygon(p, c);
-      if(it != x.tdomain()->rend())
-      {
-        it--; it--;
-      }
+      if(j != 0)
+        it--;
     }
   }
 }

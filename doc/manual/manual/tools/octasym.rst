@@ -1,4 +1,4 @@
-.. _sec-actions-octasym:
+.. _sec-tools-octasym:
 
 Octahedral symmetries
 =====================

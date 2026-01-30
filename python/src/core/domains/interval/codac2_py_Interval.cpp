@@ -193,6 +193,11 @@ py::class_<Interval> export_Interval(py::module& m)
     .def("diff", &Interval::diff,
       VECTOR_INTERVAL_INTERVAL_DIFF_CONST_INTERVAL_REF_BOOL_CONST,
       "y"_a, "compactness"_a = true)
+  ;
+
+  if constexpr(!FOR_MATLAB)
+  {
+    exported_interval_class
 
     .def(py::self |= py::self,
       INTERVAL_REF_INTERVAL_OPERATORUNIONEQ_CONST_INTERVAL_REF,
@@ -201,7 +206,9 @@ py::class_<Interval> export_Interval(py::module& m)
     .def(py::self &= py::self,
       INTERVAL_REF_INTERVAL_OPERATORINTEREQ_CONST_INTERVAL_REF,
       "x"_a)
-  ;
+
+    ;
+  }
 
   if constexpr(FOR_MATLAB)
   {

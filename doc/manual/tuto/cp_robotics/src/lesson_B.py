@@ -86,8 +86,8 @@ f_minus = AnalyticFunction([x1,x2,x3], [
 ])
 ctc_minus = CtcInverse(f_minus, [0,0])
 
-x1,x2,x3 = ScalarVar(), ScalarVar(), ScalarVar()
-f_plus = AnalyticFunction([x1,x2,x3], x1+x2-x3)
+s1,s2,s3 = ScalarVar(), ScalarVar(), ScalarVar()
+f_plus = AnalyticFunction([s1,s2,s3], s1+s2-s3)
 ctc_plus = CtcInverse(f_plus, 0)
 
 
@@ -153,7 +153,7 @@ def ctc_all_obs_datasso(x):
     # ========================
     x,yi,mi,ai,di = fixpoint(ctc_one_obs_datasso, x,yi,mi,ai,di)
     # [B-q10-beg]
-    if mi.max_diam() <= 1:
+    if mi.max_diam() < 0.11:
       DefaultFigure.draw_point(mi.mid())
     # [B-q10-end]
   return x

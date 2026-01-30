@@ -42,6 +42,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/contractors/codac2_tests_CtcSegment
   core/contractors/codac2_tests_linear_ctc
   ../doc/manual/manual/contractors/geometric/src
+  ../doc/manual/manual/contractors/analytic/src
 
   core/domains/codac2_tests_BoolInterval
   core/domains/ellipsoid/codac2_tests_Ellipsoid

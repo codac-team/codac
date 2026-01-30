@@ -32,6 +32,7 @@ class TestIntervalVector(unittest.TestCase):
     self.assertTrue(cart_prod(IntervalVector.empty(3)) == IntervalVector.empty(3))
     self.assertTrue(cart_prod([[0,1],[2,3],[4,5]],[[8,9]]) == IntervalVector([[0,1],[2,3],[4,5],[8,9]]))
     self.assertTrue(cart_prod(25.,[[0,1],[2,3],[4,5]],[[8,9]],Vector.ones(3)) == IntervalVector([[25],[0,1],[2,3],[4,5],[8,9],[1],[1],[1]]))
+    self.assertTrue(cart_prod([-oo,oo],[-oo,oo],42.) == IntervalVector([[-oo,oo],[-oo,oo],[42.,42.]]))
 
 if __name__ ==  '__main__':
   unittest.main()
