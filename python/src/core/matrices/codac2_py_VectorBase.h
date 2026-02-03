@@ -46,23 +46,38 @@ void export_VectorBase([[maybe_unused]] py::module& m, py::class_<S>& pyclass)
           "__getitem__"
         #endif
         ,
-        [](const S& x, Index_type index) -> const T&
+        [](const S& x, Index_type i) -> const T&
         {
-          matlab::test_integer(index);
-          return x[matlab::input_index(index)];
+          matlab::test_integer(i);
+          return x[matlab::input_index(i)];
+        }, py::return_value_policy::reference_internal,
+      MATRIX_ADDONS_VECTORBASE_CONST_SCALAR_REF_OPERATORCOMPO_INDEX_CONST)
+
+    .def("get_item_0",
+        [](const S& x, Index_type i) -> const T&
+        {
+          matlab::test_integer(i);
+          return x[i];
         }, py::return_value_policy::reference_internal,
       MATRIX_ADDONS_VECTORBASE_CONST_SCALAR_REF_OPERATORCOMPO_INDEX_CONST)
 
     .def(
         #if FOR_MATLAB
-          "setitem"
+          "set_item"
         #else
           "__setitem__"
         #endif
-        , [](S& x, Index_type index, const T& a)
+        , [](S& x, Index_type i, const T& a)
         {
-          matlab::test_integer(index);
-          x[matlab::input_index(index)] = a;
+          matlab::test_integer(i);
+          x[matlab::input_index(i)] = a;
+        },
+      MATRIX_ADDONS_VECTORBASE_SCALAR_REF_OPERATORCOMPO_INDEX)
+
+    .def("set_item_0", [](S& x, Index_type i, const T& a)
+        {
+          matlab::test_integer(i);
+          x[i] = a;
         },
       MATRIX_ADDONS_VECTORBASE_SCALAR_REF_OPERATORCOMPO_INDEX)
 
@@ -70,6 +85,14 @@ void export_VectorBase([[maybe_unused]] py::module& m, py::class_<S>& pyclass)
         {
           matlab::test_integer(start_id, end_id);
           return x.subvector(matlab::input_index(start_id), matlab::input_index(end_id));
+        },
+      MATRIXBASE_ADDONS_VECTORBASE_AUTO_SUBVECTOR_INDEX_INDEX_CONST,
+      "start_id"_a, "end_id"_a)
+
+    .def("subvector_0", [](const S& x, Index_type start_id, Index_type end_id) -> S
+        {
+          matlab::test_integer(start_id, end_id);
+          return x.subvector(start_id, end_id);
         },
       MATRIXBASE_ADDONS_VECTORBASE_AUTO_SUBVECTOR_INDEX_INDEX_CONST,
       "start_id"_a, "end_id"_a)

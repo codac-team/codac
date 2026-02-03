@@ -27,17 +27,19 @@ void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval
 {
   // Members functions
 
-  py_Interval
+  if constexpr(!FOR_MATLAB)
+  {
+    py_Interval
 
-  .def(py::self & py::self,
-    INTERVAL_OPERATORINTER_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
-    "x"_a)
+      .def(py::self & py::self,
+        INTERVAL_OPERATORINTER_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
+        "x"_a)
 
-  .def(py::self | py::self,
-    INTERVAL_OPERATORUNION_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
-    "x"_a)
-
-  ;
+      .def(py::self | py::self,
+        INTERVAL_OPERATORUNION_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
+        "x"_a)
+    ;
+  }
 
   if constexpr(FOR_MATLAB)
   {

@@ -118,10 +118,10 @@ class CtcInverse(Ctc_IntervalVector):
       f_args = []
       for a in f.args():
         if a.size() == 1:
-          f_args.append(total_var[i])
+          f_args.append(total_var.get_item_0(i))
           i = i+1
         else:
-          f_args.append(total_var.subvector(i,i+a.size()-1))
+          f_args.append(total_var.subvector_0(i,i+a.size()-1))
           i = i+a.size()
 
       g = AnalyticFunction([total_var], f(*f_args))
@@ -156,9 +156,9 @@ class CtcInverse(Ctc_IntervalVector):
       for xi in x:
         k = xi.size()
         if k==1:
-          xi &= total[i]
+          xi &= total.get_item_0(i)
         else:
-          xi &= total.subvector(i,i+k-1)
+          xi &= total.subvector_0(i,i+k-1)
         i = i+k
       return x
 
@@ -174,17 +174,17 @@ class CtcInverse(Ctc_IntervalVector):
       for xi in x:
         k = xi.size()
         if k==1:
-          xi &= total[i]
+          xi &= total.get_item_0(i)
         else:
-          xi &= total.subvector(i,i+k-1)
+          xi &= total.subvector_0(i,i+k-1)
         i = i+k
       return x
 
   def copy(self):
     return self.c.copy()
 
-  def function(self):
-    return self.c.function()
+  def fnc(self):
+    return self.c.fnc()
 
 
 class CtcInverseNotIn(Ctc_IntervalVector):
@@ -565,7 +565,7 @@ def fixpoint(contract, *x):
       x = contract(x)
 
     if not isinstance(x,tuple):
-      vol = x[0].volume()
+      vol = x.get_item_0(0).volume()
     else:
       vol = 0.0
       for xi in x:

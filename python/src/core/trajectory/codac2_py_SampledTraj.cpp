@@ -89,7 +89,7 @@ py::class_<SampledTraj<T>> _export_SampledTraj(py::module& m, const string& clas
 
     .def(
         #if FOR_MATLAB
-          "__call__"
+          "get_item"
         #else
           "__getitem__"
         #endif

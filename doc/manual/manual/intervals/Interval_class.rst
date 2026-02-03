@@ -193,7 +193,27 @@ Advanced operations
 Interval arithmetic
 -------------------
 
-All standard arithmetic operations are supported, both element-wise and with real numbers.
+Interval analysis is based on the extension of all classical real arithmetic operators.
+Consider two intervals :math:`[x]` and :math:`[y]` and an operator :math:`\diamond\in\left\{+,-,\cdot,/\right\}`. We define :math:`[x]\diamond[y]` as the smallest interval containing all feasible values for :math:`x\diamond y`, assuming that :math:`x\in[x]` and :math:`y\in[y]`:
+
+.. math::
+
+  [x]\diamond[y] = \big[\left\{x\diamond y \mid x\in[x],y\in[y]\right\}\big].
+
+Dealing with closed intervals, most of the operations can rely on their bounds. It is for instance the case of addition, difference, union, *etc.*:
+
+.. math::
+
+  \begin{eqnarray}
+    [x]+[y]&=&\left[x^-+y^-,x^++y^+\right],\\
+    \left[x\right]-\left[y\right]& = &\left[x^--y^+,x^+-y^-\right],\\
+    \left[x\right]\sqcup\left[y\right]& = &\left[\min\left(x^-,y^-\right),\max\left(x^+,y^+\right)\right],\\
+    \left[x\right]\cap\left[y\right]& = &\left[\max\left(x^-,y^-\right),\min\left(x^+,y^+\right)\right] \\ & & \textrm{if} \max\left\{x^-,y^-\right\}\leqslant\min\left\{x^+,y^+\right\}, \varnothing \textrm{ otherwise}.
+  \end{eqnarray}
+
+Note that Codac is built upon a low-level interval library, `GAOL <https://github.com/goualard-f/GAOL>`_, which has been built to provide functionalities for computing arithmetic on intervals, involving basic operations as well as non-linear functions.
+
+All standard arithmetic operations are supported in Codac, both element-wise and with real numbers.
 
 .. tabs::
 
@@ -304,4 +324,4 @@ These functions are useful in the context of interval arithmetic to tightly cont
 
 .. admonition:: Technical documentation
 
-  See the `C++ API documentation of this class <../../api/html/classcodac2_1_1_interval.html>`_.
+  See the `C++ API documentation of the Interval class <../../api/html/classcodac2_1_1_interval.html>`_.

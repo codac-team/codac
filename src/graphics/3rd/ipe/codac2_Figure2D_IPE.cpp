@@ -431,21 +431,25 @@ void Figure2D_IPE::draw_pie(const Vector& c, const Interval& r, const Interval& 
 {
   assert(_fig.size() <= c.size());
   assert(r.lb() >= 0.);
+
+  // IPE doesn't support arcs with a radius equal to zero
+  double r_lb = r.lb() < 1e-5 ? 1e-5 : r.lb();
+  double r_ub = r.ub();
   
   begin_path(style);
 
-  Vector point1 ({r.lb() * std::cos(theta.lb()), r.lb() * std::sin(theta.lb())});
-  Vector point2 ({r.ub() * std::cos(theta.lb()), r.ub() * std::sin(theta.lb())});
-  Vector point3 ({r.ub() * std::cos(theta.ub()), r.ub() * std::sin(theta.ub())});
-  Vector point4 ({r.lb() * std::cos(theta.ub()), r.lb() * std::sin(theta.ub())});
+  Vector point1 ({r_lb * std::cos(theta.lb()), r_lb * std::sin(theta.lb())});
+  Vector point2 ({r_ub * std::cos(theta.lb()), r_ub * std::sin(theta.lb())});
+  Vector point3 ({r_ub * std::cos(theta.ub()), r_ub * std::sin(theta.ub())});
+  Vector point4 ({r_lb * std::cos(theta.ub()), r_lb * std::sin(theta.ub())});
 
   _working_item += to_string(scale_x(c[0] + point1[0])) + " " + to_string(scale_y(c[1] + point1[1])) + " m \n";
   _working_item += to_string(scale_x(c[0] + point2[0])) + " " + to_string(scale_y(c[1] + point2[1])) + " l \n";
-  _working_item += to_string(scale_length(r.ub())) + " 0 0 " + to_string(scale_length(r.ub())) + " "
+  _working_item += to_string(scale_length(r_ub)) + " 0 0 " + to_string(scale_length(r_ub)) + " "
                   + to_string(scale_x(c[i()])) + " " + to_string(scale_y(c[j()])) + " "
                   + to_string(scale_x(c[0] + point3[0])) + " " + to_string(scale_y(c[1] + point3[1])) + " a \n";
   _working_item += to_string(scale_x(c[0] + point4[0])) + " " + to_string(scale_y(c[1] + point4[1])) + " l \n";
-  _working_item += to_string(scale_length(r.lb())) + " 0 0 " + to_string(- scale_length(r.lb())) + " "
+  _working_item += to_string(scale_length(r_lb)) + " 0 0 " + to_string(- scale_length(r_lb)) + " "
                   + to_string(scale_x(c[i()])) + " " + to_string(scale_y(c[j()])) + " "
                   + to_string(scale_x(c[0] + point1[0])) + " " + to_string(scale_y(c[1] + point1[1])) + " a \n";
 

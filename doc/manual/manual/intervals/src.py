@@ -14,6 +14,21 @@ from codac import *
 
 class TestIntervalManual(unittest.TestCase):
 
+  def tests_BoolInterval_manual(test):
+
+    # [boolinterval-class-1-beg]
+    BoolInterval.FALSE   # certainly false
+    BoolInterval.TRUE    # certainly true
+    BoolInterval.UNKNOWN # undetermined
+    BoolInterval.EMPTY   # inconsistent / impossible
+    # [boolinterval-class-1-end]
+
+    # [boolinterval-class-2-beg]
+    BoolInterval.UNKNOWN == BoolInterval.TRUE | BoolInterval.FALSE
+    BoolInterval.EMPTY   == BoolInterval.TRUE & BoolInterval.FALSE
+    # [boolinterval-class-2-end]
+
+
   def tests_Interval_manual(test):
 
     # [interval-class-1-beg]
@@ -82,6 +97,81 @@ class TestIntervalManual(unittest.TestCase):
     # x = 0.9999999999999999
     # [interval-class-7-end]
     test.assertTrue(Approx(x) == 0.9999999999999999 and x != 1)
+
+
+  def tests_IntervalVector_manual(test):
+
+    # [intervalvector-class-1-beg]
+    # Default box: [-oo,oo]^n
+    x = IntervalVector(3)
+
+    # Cube [-1,3]^2
+    y = IntervalVector.constant(2,[-1,3])
+
+    # From a list of bounds (each entry is [lb,ub])
+    z = IntervalVector([[3,4],[4,6]]) # [3,4]×[4,6]
+
+    # From a list of components (Intervals and/or bounds pairs)
+    q = IntervalVector([y[1], z[0], [0,oo]]) # [-1,3]×[3,4]×[0,oo]
+
+    # From a point (degenerate intervals)
+    p = Vector([0.42,0.42,0.42])
+    bp = IntervalVector(p) # [0.42,0.42]^3
+    # [intervalvector-class-1-end]
+
+
+    # [intervalvector-class-2-beg]
+    x = IntervalVector.constant(2,[-1,3]) # [-1,3]^2
+    x[1] = Interval(0,10) # [-1,3]×[0,10]
+
+    # Iterating/accessing over components
+    y = IntervalVector(2)
+    for i, xi in enumerate(x):
+      y[i] = xi
+
+    # Unpacking (Python convenience)
+    a,b = x
+    assert a == x[0] and b == x[1]
+
+    # Building a new box from existing components
+    v = IntervalVector([*x, [3,6]]) # concatenation in Python
+    # v == [[-1,3]×[0,10]×[3,6]]
+
+    # Resize: new components are default-initialized ([-oo,oo])
+    v.resize(4) # v == [[-1,3]×[0,10]×[3,6]×[-oo,oo]]
+    s = v.subvector(1,2) # [0,10]×[3,6]
+    # [intervalvector-class-2-end]
+
+
+    # [intervalvector-class-3-beg]
+    x = IntervalVector([[0,2],[-1,3]])
+
+    n = x.size()        # dimension
+    # Common box information (component-wise):
+    lo = x.lb()         # Vector of lower bounds
+    hi = x.ub()         # Vector of upper bounds
+    m  = x.mid()        # Vector of midpoints
+    d  = x.diam()       # Vector of diameters
+    # [intervalvector-class-3-end]
+
+
+    # [intervalvector-class-4-beg]
+    x = IntervalVector([[0,1],[2,3]])
+    y = IntervalVector([[-0.5,2],[1,4]])
+
+    assert x.intersects(y)
+    assert x.is_subset(y)
+    # [intervalvector-class-4-end]
+
+
+    # [intervalvector-class-5-beg]
+    x = IntervalVector([[0,1],[2,3]])
+    y = IntervalVector([[1,2],[0,1]])
+
+    z1 = x+y
+    z2 = 2*x
+    z3 = x/2
+    # [intervalvector-class-5-end]
 
 if __name__ ==  '__main__':
   unittest.main()

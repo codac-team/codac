@@ -117,7 +117,7 @@ namespace codac2
         _f.intersect_from_args(v, x...); // updating input values
       }
 
-      const AnalyticFunction<typename ExprType<Y>::Type>& function() const
+      const AnalyticFunction<typename ExprType<Y>::Type>& fnc() const
       {
         return _f;
       }

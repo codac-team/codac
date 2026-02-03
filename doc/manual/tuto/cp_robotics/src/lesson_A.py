@@ -35,8 +35,8 @@ f_minus = AnalyticFunction([x1,x2,x3], [
 ])
 ctc_minus = CtcInverse(f_minus, [0,0])
 
-x1,x2,x3 = ScalarVar(), ScalarVar(), ScalarVar()
-f_plus = AnalyticFunction([x1,x2,x3], x1+x2-x3)
+s1,s2,s3 = ScalarVar(), ScalarVar(), ScalarVar()
+f_plus = AnalyticFunction([s1,s2,s3], s1+s2-s3)
 ctc_plus = CtcInverse(f_plus, 0)
 # [A-q6-end]
 
@@ -54,13 +54,14 @@ m,x,d = ctc_minus.contract(m,x,d)
 
 # Or using a fixpoint method:
 
-def constraints(x,y,m,a,d):
+def contract(x,y,m,a,d):
   x[2],y[1],a = ctc_plus.contract(x[2],y[1],a)
   d[0],d[1],y[0],a = ctc_polar.contract(d[0],d[1],y[0],a)
   m,x,d = ctc_minus.contract(m,x,d)
   return x,y,m,a,d
 
-x,y,m,a,d = fixpoint(constraints, x,y,m,a,d)
+
+x,y,m,a,d = fixpoint(contract, x,y,m,a,d)
 # [A-q8-end]
 
 # [A-q9-beg]

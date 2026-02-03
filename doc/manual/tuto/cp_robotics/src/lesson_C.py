@@ -123,8 +123,8 @@ f_minus = AnalyticFunction([x1,x2,x3], [
 ])
 ctc_minus = CtcInverse(f_minus, [0,0])
 
-x1,x2,x3 = ScalarVar(), ScalarVar(), ScalarVar()
-f_plus = AnalyticFunction([x1,x2,x3], x1+x2-x3)
+s1,s2,s3 = ScalarVar(), ScalarVar(), ScalarVar()
+f_plus = AnalyticFunction([s1,s2,s3], s1+s2-s3)
 ctc_plus = CtcInverse(f_plus, 0)
 
 
@@ -169,7 +169,7 @@ def ctc_all_obs(x):
     x.set(xi,yi[0]) # restriction on the tube x at time ti=yi[0]
 
   x,v = ctc_f.contract_tube(x,v)
-  x = ctc_deriv.contract(x,v)
+  ctc_deriv.contract(x,v)
 
   return x
 
