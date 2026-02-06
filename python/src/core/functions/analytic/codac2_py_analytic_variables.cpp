@@ -79,10 +79,11 @@ void export_ScalarVar(py::module& m)
   py::implicitly_convertible<ScalarVar,ScalarExpr>();
 }
 
-ScalarExpr get_item(const VectorVar& v, Index_type i)
+ScalarExpr get_item(const VectorVar& v, Index_type i, bool indexing_from_0)
 {
   matlab::test_integer(i);
-  i = matlab::input_index(i);
+  if(!indexing_from_0)
+    i = matlab::input_index(i);
 
   if(i < 0 || i >= static_cast<Index>(v.size()))
     throw py::index_error("index is out of range");
@@ -117,13 +118,24 @@ void export_VectorVar(py::module& m)
         #endif
         , [](const VectorVar& v, Index_type i) -> ScalarExpr
       {
-        return get_item(v, i);
+        return get_item(v, i, !FOR_MATLAB);
+      }, ANALYTICEXPRWRAPPER_SCALARTYPE_VECTORVAR_OPERATORCOMPO_INDEX_CONST)
+
+    .def("get_item_0", [](const VectorVar& v, Index_type i) -> ScalarExpr
+      {
+        return get_item(v, i, true);
       }, ANALYTICEXPRWRAPPER_SCALARTYPE_VECTORVAR_OPERATORCOMPO_INDEX_CONST)
 
     .def("subvector", [](const VectorVar& v, Index_type i, Index_type j) -> VectorExpr
       {
         matlab::test_integer(i, j);
         return v.subvector(matlab::input_index(i),matlab::input_index(j));
+      }, ANALYTICEXPRWRAPPER_VECTORTYPE_VECTORVAR_SUBVECTOR_INDEX_INDEX_CONST)
+
+    .def("subvector_0", [](const VectorVar& v, Index_type i, Index_type j) -> VectorExpr
+      {
+        matlab::test_integer(i, j);
+        return v.subvector(i,j);
       }, ANALYTICEXPRWRAPPER_VECTORTYPE_VECTORVAR_SUBVECTOR_INDEX_INDEX_CONST)
 
     .def("__pos__",  [](const VectorVar& e1)                           { return e1;      }, py::is_operator())

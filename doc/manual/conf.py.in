@@ -32,8 +32,8 @@ exclude_patterns = []
 
 html_static_path = ['_static']
 html_theme = "furo"
-#html_logo = "_static/logos/logo_codac.svg"
-html_logo = "_static/logos/logo_codac_christmas.png"
+html_logo = "_static/logos/logo_codac.svg"
+#html_logo = "_static/logos/logo_codac_christmas.png"
 html_favicon = "_static/logos/logo_codac.ico"
 
 # These paths are either relative to html_static_path

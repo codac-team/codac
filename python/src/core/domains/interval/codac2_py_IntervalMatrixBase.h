@@ -171,23 +171,52 @@ void export_IntervalMatrixBase(py::module& m, py::class_<S>& pyclass)
     .def("bisect_largest", [](const S& x, double ratio = 0.49) { return x.bisect_largest(ratio); },
       MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_BISECT_LARGEST_FLOAT_CONST,
       "ratio"_a = 0.49)
+    ;
 
-    .def(py::self &= py::self,
-      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_REF_OPERATORINTEREQ_CONST_MATRIXBASE_OTHERDERIVED_REF
-      "x"_a)
+    if constexpr(!FOR_MATLAB)
+    {
+      pyclass
 
-    .def(py::self |= py::self,
-      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_REF_OPERATORUNIONEQ_CONST_MATRIXBASE_OTHERDERIVED_REF
-      "x"_a)
+      .def(py::self &= py::self,
+        MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_REF_OPERATORINTEREQ_CONST_MATRIXBASE_OTHERDERIVED_REF
+        "x"_a)
 
-    .def(py::self & py::self,
-      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_OPERATORINTER_CONST_MATRIXBASE_OTHERDERIVED_REF_CONST
-      "x"_a)
+      .def(py::self |= py::self,
+        MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_REF_OPERATORUNIONEQ_CONST_MATRIXBASE_OTHERDERIVED_REF
+        "x"_a)
 
-    .def(py::self | py::self,
-      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_OPERATORUNION_CONST_MATRIXBASE_OTHERDERIVED_REF_CONST,
-      "x"_a)
-  ;
+      .def(py::self & py::self,
+        MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_OPERATORINTER_CONST_MATRIXBASE_OTHERDERIVED_REF_CONST
+        "x"_a)
+
+      .def(py::self | py::self,
+        MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_OPERATORUNION_CONST_MATRIXBASE_OTHERDERIVED_REF_CONST,
+        "x"_a)
+      ;
+    }
+
+    if constexpr(FOR_MATLAB)
+    {
+      // For MATLAB compatibility
+      pyclass
+
+        .def("self_inter", [](S& x, const S& y) { x &= y; return x; },
+          MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_REF_OPERATORINTEREQ_CONST_MATRIXBASE_OTHERDERIVED_REF,
+          "x"_a)
+
+        .def("self_union", [](S& x, const S& y) { x |= y; return x; },
+          MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_REF_OPERATORUNIONEQ_CONST_MATRIXBASE_OTHERDERIVED_REF
+          "x"_a)
+
+        .def("inter", [](const S& x,const S& y) { return x & y; },
+          MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_OPERATORINTER_CONST_MATRIXBASE_OTHERDERIVED_REF_CONST
+          "x"_a)
+
+        .def("union", [](const S& x,const S& y) { return x | y; },
+          MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_OPERATORUNION_CONST_MATRIXBASE_OTHERDERIVED_REF_CONST
+          "x"_a)
+      ;
+    }
 
   py::implicitly_convertible<V,S>();
 }

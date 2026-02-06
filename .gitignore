@@ -70,3 +70,6 @@ wheelhouse/
 # Graphics files
 examples/**/*.xml
 *.ipe
+
+# Matlab files
+*.asv

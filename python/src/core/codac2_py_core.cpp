@@ -341,4 +341,11 @@ PYBIND11_MODULE(_core, m)
       srand(time(NULL));
     },
     DOC_TO_BE_DEFINED);
+
+  m.def("srand", [](unsigned int seed)
+    {
+      srand(seed);
+    },
+    DOC_TO_BE_DEFINED,
+    "seed"_a);
 }

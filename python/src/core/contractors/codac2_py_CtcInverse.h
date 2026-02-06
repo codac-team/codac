@@ -65,8 +65,8 @@ void export_CtcInverse(py::module& m, const std::string& export_name, py::class_
       VOID_CTCBASE_X_CONTRACT_TUBE_SLICEDTUBE_X_REF_VARIADIC_CONST,
       "x"_a)
 
-    .def("function", &C::function,
-      CONST_ANALYTICFUNCTION_TYPENAME_EXPRTYPE_Y_TYPE_REF_CTCINVERSE_YX_FUNCTION_CONST)
+    .def("fnc", &C::fnc,
+      CONST_ANALYTICFUNCTION_TYPENAME_EXPRTYPE_Y_TYPE_REF_CTCINVERSE_YX_FNC_CONST)
     
   ;
 }

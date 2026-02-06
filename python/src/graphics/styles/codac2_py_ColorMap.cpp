@@ -40,7 +40,7 @@ void export_ColorMap(py::module& m)
 
     .def(
         #if FOR_MATLAB
-          "setitem"
+          "set_item"
         #else
           "__setitem__"
         #endif

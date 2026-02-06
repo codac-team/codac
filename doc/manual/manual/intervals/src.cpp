@@ -14,6 +14,26 @@
 using namespace std;
 using namespace codac2;
 
+TEST_CASE("BoolInterval class - manual")
+{
+  {
+    // [boolinterval-class-1-beg]
+    BoolInterval::FALSE;   // certainly false
+    BoolInterval::TRUE;    // certainly true
+    BoolInterval::UNKNOWN; // undetermined
+    BoolInterval::EMPTY;   // inconsistent / impossible
+    // [boolinterval-class-1-end]
+  }
+  /*
+  {
+    // [boolinterval-class-2-beg]
+    BoolInterval::UNKNOWN == BoolInterval::TRUE | BoolInterval::FALSE
+    BoolInterval::EMPTY   == BoolInterval::TRUE & BoolInterval::FALSE
+    // [boolinterval-class-2-end]
+  }
+  */
+}
+
 TEST_CASE("Interval class - manual")
 {
   #if 0
@@ -87,6 +107,7 @@ TEST_CASE("Interval class - manual")
     x |= 0;                  // x = [0, π/2]
     Interval y = sin(x);     // y = [0, 1]
     Interval z = exp(x);     // z = [1, e^(π/2)]
+    Interval w = y & z;      // w =  [1, 1]
     // [interval-class-6-end]
     CHECK(Approx(x) == Interval(0,PI/2));
     CHECK(Approx(y) == Interval(0,1));
@@ -106,5 +127,78 @@ TEST_CASE("Interval class - manual")
     // [interval-class-7-end]
     CHECK(Approx<double>(x) == 0.9999999999999999);
     CHECK(x != 1.);
+  }
+}
+
+TEST_CASE("IntervalVector class - manual")
+{
+  {
+    // [intervalvector-class-1-beg]
+    // Default box: [-oo,oo]^n (Interval default constructor)
+    IntervalVector x(3);
+
+    // Cube [-1,3]^2
+    IntervalVector y = IntervalVector::constant(2,{-1,3});
+
+    // From a list of bounds (initializer-list style)
+    IntervalVector z{{3,4},{4,6}}; // [3,4]×[4,6]
+
+    // From a point (degenerate intervals)
+    Vector p({0.42,0.42,0.42});
+    IntervalVector bp(p); // [0.42,0.42]^3
+    // [intervalvector-class-1-end]
+  }
+  
+  {
+    // [intervalvector-class-2-beg]
+    IntervalVector x = IntervalVector::constant(2,{-1,3}); // [-1,3]^2
+    x[1] = Interval(0,10); // [-1,3]×[0,10]
+
+    // Accessing components
+    const Interval& x0 = x[0];
+
+    // Resize: new components are default-initialized ([-oo,oo])
+    x.resize(4); // x == [-1,3]×[0,10]×[-oo,oo]×[-oo,oo]
+
+    // Subvector / segment extraction
+    IntervalVector s = x.subvector(1,2); // [0,10]×[-oo,oo]
+    // [intervalvector-class-2-end]
+
+    (void)x0; // avoid warning on unused variable
+  }
+  
+  {
+    // [intervalvector-class-3-beg]
+    IntervalVector x{{0,2},{-1,3}};
+
+    Index n   = x.size();
+    Vector lo = x.lb();
+    Vector hi = x.ub();
+    Vector m  = x.mid();
+    Vector d  = x.diam();
+    // [intervalvector-class-3-end]
+
+    (void)n; // avoid warning on unused variable
+  }
+
+  {
+    // [intervalvector-class-4-beg]
+    IntervalVector x{{0,1},{2,3}};
+    IntervalVector y{{-0.5,2},{1,4}};
+
+    assert(x.intersects(y));
+    assert(x.is_subset(y));
+    // [intervalvector-class-4-end]
+  }
+  
+  {
+    // [intervalvector-class-5-beg]
+    IntervalVector x{{0,1},{2,3}};
+    IntervalVector y{{1,2},{0,1}};
+
+    IntervalVector z1 = x+y;
+    IntervalVector z2 = 2.*x;
+    IntervalVector z3 = x/2.;
+    // [intervalvector-class-5-end]
   }
 }

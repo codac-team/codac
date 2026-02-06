@@ -15,9 +15,9 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
-            - { os: ubuntu-24.04, gcc_v: 11, py_v_maj: 3, py_v_min: 10, with_capd: OFF, desc: 'Ubuntu 24.04 GCC 11 Python 3.10 tests' }
-            - { os: ubuntu-24.04, gcc_v: 13, py_v_maj: 3, py_v_min: 12, with_capd: ON, desc: 'Ubuntu 24.04 GCC 13 Python 3.10 CAPD tests' }
-            - { os: ubuntu-22.04, gcc_v: 11, py_v_maj: 3, py_v_min: 10, with_capd: ON, desc: 'Ubuntu 22.04 GCC 11 Python 3.10 CAPD tests' }
+            - { os: ubuntu-24.04    , gcc_v: 11, py_v_maj: 3, py_v_min: 10, with_capd: OFF, desc: 'Ubuntu 24.04 GCC 11 Python 3.10 tests' }
+            - { os: ubuntu-24.04    , gcc_v: 13, py_v_maj: 3, py_v_min: 12, with_capd: ON , desc: 'Ubuntu 24.04 GCC 13 Python 3.10 CAPD tests' }
+            - { os: ubuntu-22.04    , gcc_v: 11, py_v_maj: 3, py_v_min: 10, with_capd: ON , desc: 'Ubuntu 22.04 GCC 11 Python 3.10 CAPD tests' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v5
@@ -42,7 +42,7 @@ jobs:
         python -c "import sys; print(sys.version)"
         pip --version
 
-        sudo sh -c 'echo "deb [trusted=yes] https://packages.ensta-bretagne.fr/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+        sudo sh -c 'echo "deb [trusted=yes] https://webperso.ensta.fr/packages/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
         sudo apt update
 
         sudo apt-get -y install flex bison catch2 # libeigen3-dev

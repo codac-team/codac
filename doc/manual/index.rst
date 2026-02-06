@@ -180,6 +180,8 @@ Overview of Codac
 User manual
 -----------
 
+* :ref:`sec-intro`
+
 * :ref:`sec-install`
    * :ref:`sec-install-py`
    * :ref:`sec-install-cpp`
@@ -334,6 +336,7 @@ User manual
 * :ref:`sec-tools`
    * :ref:`sec-tools-serialization`
    * :ref:`sec-tools-registration`
+   * :ref:`sec-tools-octasym`
 
 * Codac extensions
    * :ref:`sec-extensions-capd`
@@ -374,6 +377,7 @@ Development
 * :ref:`sec-dev-common-issues`
 * :ref:`sec-dev-changelog`
 * :ref:`sec-dev-api`
+* :ref:`sec-dev-v1`
 
 
 
@@ -392,13 +396,13 @@ Development
    :caption: User manual
    :maxdepth: 2
 
+   manual/introduction/index.rst
    manual/installation/index.rst
    manual/intervals/index.rst
    manual/linear/index.rst
    manual/functions/index.rst
    manual/contractors/index.rst
    manual/geometry/index.rst
-   manual/actions/index.rst
    manual/ellipsoids/index.rst
    manual/visualization/index.rst
    manual/tools/index.rst
@@ -453,6 +457,7 @@ Development
    development/common_issues.rst
    development/changelog.rst
    development/api_redirect.rst
+   development/link_v1.rst
 
 
 How to cite Codac

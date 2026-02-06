@@ -6,7 +6,7 @@ int main()
   // [A-q2-beg]
   Vector x_truth({2,1,PI/6});
   Vector y_truth({6,PI/6});
-  Vector m_truth({5,6});
+  Vector m_truth({5,6.2});
   // [A-q2-end]
 
   // [A-q3-beg]

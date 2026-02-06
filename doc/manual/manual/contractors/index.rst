@@ -1,5 +1,5 @@
-Contractors
-===========
+Contractors, separators
+=======================
 
 .. toctree::
 

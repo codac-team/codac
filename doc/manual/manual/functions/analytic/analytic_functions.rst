@@ -19,7 +19,7 @@ This page provides an overview of the ``AnalyticFunction`` class, its key featur
 
 .. note::
 
-  .. Figure:: CtcInverse_small.png
+  .. figure:: CtcInverse_small.png
     :align: right
   
   For defining a contractor based on an ``AnalyticFunction``, the ``CtcInverse`` class is available.

@@ -59,4 +59,69 @@ namespace codac2
         CtcUnion<X>::contract(x);
       }
   };
+
+  // Template deduction guides
+  // Same as CtcInverse
+
+  // ScalarType
+
+    CtcInverseNotIn(const AnalyticFunction<ScalarType>&, std::initializer_list<double>, bool = true, bool = false) -> 
+      CtcInverseNotIn<Interval,IntervalVector>;
+
+    template<typename Y>
+    CtcInverseNotIn(const AnalyticFunction<ScalarType>&, std::initializer_list<Y>, bool = true, bool = false) -> 
+      CtcInverseNotIn<Interval,IntervalVector>;
+
+    CtcInverseNotIn(const AnalyticFunction<ScalarType>&, const Interval&, bool = true, bool = false) -> 
+      CtcInverseNotIn<Interval,IntervalVector>;
+
+    CtcInverseNotIn(const AnalyticFunction<ScalarType>&, double, bool = true, bool = false) -> 
+      CtcInverseNotIn<Interval,IntervalVector>;
+
+    template<typename C>
+      requires IsCtcBaseOrPtr<C,Interval>
+    CtcInverseNotIn(const AnalyticFunction<ScalarType>&, const C&, bool = true, bool = false) -> 
+      CtcInverseNotIn<Interval,IntervalVector>;
+
+  // VectorType
+
+    CtcInverseNotIn(const AnalyticFunction<VectorType>&, std::initializer_list<double>, bool = true, bool = false) -> 
+      CtcInverseNotIn<IntervalVector,IntervalVector>;
+
+    CtcInverseNotIn(const AnalyticFunction<VectorType>&, std::initializer_list<std::initializer_list<double>>, bool = true, bool = false) -> 
+      CtcInverseNotIn<IntervalVector,IntervalVector>;
+
+    CtcInverseNotIn(const AnalyticFunction<VectorType>&, const Vector&, bool = true, bool = false) -> 
+      CtcInverseNotIn<IntervalVector,IntervalVector>;
+
+    CtcInverseNotIn(const AnalyticFunction<VectorType>&, const IntervalVector&, bool = true, bool = false) -> 
+      CtcInverseNotIn<IntervalVector,IntervalVector>;
+
+    template<typename OtherDerived>
+      requires (OtherDerived::RowsAtCompileTime == -1 && OtherDerived::ColsAtCompileTime == 1)
+    CtcInverseNotIn(const AnalyticFunction<VectorType>&, const Eigen::MatrixBase<OtherDerived>&, bool = true, bool = false) -> 
+      CtcInverseNotIn<IntervalVector,IntervalVector>;
+
+    template<typename C>
+      requires IsCtcBaseOrPtr<C,IntervalVector>
+    CtcInverseNotIn(const AnalyticFunction<VectorType>&, const C&, bool = true, bool = false) -> 
+      CtcInverseNotIn<IntervalVector,IntervalVector>;
+
+  // MatrixType
+        
+    CtcInverseNotIn(const AnalyticFunction<MatrixType>&, std::initializer_list<std::initializer_list<double>>, bool = true, bool = false) -> 
+      CtcInverseNotIn<IntervalMatrix,IntervalVector>;
+
+    CtcInverseNotIn(const AnalyticFunction<MatrixType>&, std::initializer_list<std::initializer_list<std::initializer_list<double>>>, bool = true, bool = false) -> 
+      CtcInverseNotIn<IntervalMatrix,IntervalVector>;
+
+    template<typename OtherDerived>
+      requires (OtherDerived::RowsAtCompileTime == -1 && OtherDerived::ColsAtCompileTime == -1)
+    CtcInverseNotIn(const AnalyticFunction<MatrixType>&, const Eigen::MatrixBase<OtherDerived>&, bool = true, bool = false) -> 
+      CtcInverseNotIn<IntervalMatrix,IntervalVector>;
+
+    template<typename C>
+      requires IsCtcBaseOrPtr<C,IntervalMatrix>
+    CtcInverseNotIn(const AnalyticFunction<MatrixType>&, const C&, bool = true, bool = false) -> 
+      CtcInverseNotIn<IntervalMatrix,IntervalVector>;
 }

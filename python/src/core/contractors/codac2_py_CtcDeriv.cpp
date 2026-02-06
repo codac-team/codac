@@ -45,10 +45,10 @@ void export_CtcDeriv(py::module& m)
     .def("contract", [](const CtcDeriv& ctc, py::object& x, const py::object& v, const std::vector<Index_type>& ctc_indices)
         {
           if(is_instance<SlicedTube<Interval>>(x) && is_instance<SlicedTube<Interval>>(v))
-            ctc.contract(cast<SlicedTube<Interval>>(x), cast<SlicedTube<Interval>>(v));
+            return ctc.contract(cast<SlicedTube<Interval>>(x), cast<SlicedTube<Interval>>(v));
 
           else if(is_instance<SlicedTube<IntervalVector>>(x) && is_instance<SlicedTube<IntervalVector>>(v))
-            ctc.contract(cast<SlicedTube<IntervalVector>>(x), cast<SlicedTube<IntervalVector>>(v),
+            return ctc.contract(cast<SlicedTube<IntervalVector>>(x), cast<SlicedTube<IntervalVector>>(v),
               matlab::convert_indices(ctc_indices));
 
           else {

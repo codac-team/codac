@@ -3,6 +3,8 @@
 Lesson A: Static range-and-bearing localization
 ===============================================
 
+  Main authors: `Simon Rohou <https://www.simon-rohou.fr/research/>`_, `Maël Godard <https://godardma.github.io>`_ (Matlab binding)
+
 In this lessson, we focus on the perception of landmarks clearly identified: each observation is related to a known position.
 The problem amounts to estimate the feasible positions of a robot measuring distances and bearing from known landmarks.
 The *bearing* corresponds to the angular position of the landmarks with respect to the heading of the robot.
@@ -128,6 +130,31 @@ where :math:`a,b,\dots,e` are intermediate variables used for the decomposition.
     Interval d(4.5,5); // interval for y
     ctc_g.contract(a,d,b);
 
+  .. code-tab:: matlab
+
+    import py.codac4matlab.*
+
+    % Symbolic variables:
+    y = ScalarVar();
+    [x,m] = deal(VectorVar(2),VectorVar(2));
+    
+    % Analytic scalar function g(x,m,y) involved in the constraint:
+    g = AnalyticFunction({x,y,m}, sqrt(((x(1)-m(1))^2)+((x(2)-m(2))^2))-y);
+
+    % Contractor associated with the constraint g(x,m,y)\in[u], with [u]=[0,0]
+    ctc_g = CtcInverse(g, 0);
+
+    % Now ctc_g can be called with the .contract(..) method to contract all domains:
+    % Example:
+    a = IntervalVector(2); % box for x
+    b = IntervalVector({{2,3},{5,6.2}}); % box for m
+    d = Interval(4.5,5); % interval for y
+
+    res = ctc_g.contract(cart_prod(a,d,b));
+    a = res.subvector(1,2);
+    b = res.subvector(3,4);
+    c = res(5);
+
 
 Optimality of contractors
 -------------------------
@@ -175,6 +202,17 @@ could be implemented by
 
     // Contractor associated with the constraint g(x,m,y)\in[u] with [u]=[[0,0],[0,0]]
     CtcInverse ctc_g(g, {0,0}) // {0,0} is equivalent to Vector::zero(2)
+
+  .. code-tab:: matlab
+
+    % Symbolic variables:
+    [x,m,y] = deal(VectorVar(3),VectorVar(2),VectorVar(2));
+
+    % Analytic vectorial function g(x,y,m) involved in the constraint:
+    g = AnalyticFunction({x,y,m}, vec(x(1)+y(1)*cos(x(3)+y(2))-m(1), x(2)+y(1)*sin(x(3)+y(2))-m(2)));
+
+    % Contractor associated with the constraint g(x,m,y)\in[u] with [u]=[[0,0],[0,0]]
+    ctc_g = CtcInverse(g, Vector([0,0])); % [0,0] is equivalent to Vector.zero(2)
 
 However, this involves a multi-occurrence of variables which leads to pessimism. For instance, the sum :math:`(x_3+y_2)` appears twice in functions :math:`\cos` and :math:`\sin`, which is hardly handled by a classical decomposition.
 
@@ -266,6 +304,13 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
 
       Vector x_truth = {2,1,PI/6}; // actual state vector (pose = position + bearing)
 
+    .. code-tab:: matlab
+
+      % We recall that you can use the Vector class for
+      % representing mathematical vectors. For instance:
+
+      x_truth = Vector([2,1,PI/6]); % actual state vector (pose = position + bearing)
+
   .. container:: toggle, toggle-hidden
 
     .. tabs::
@@ -285,6 +330,14 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
           :start-after: [A-q2-beg]
           :end-before: [A-q2-end]
           :dedent: 2
+
+      .. group-tab:: Matlab
+
+        .. literalinclude:: src/lesson_A.m
+          :language: matlab
+          :start-after: [A-q2-beg]
+          :end-before: [A-q2-end]
+          :dedent: 0
 
 
   **A.3.** Create the bounded sets related to the state, the measurement and the landmark position: :math:`[\mathbf{x}]\in\mathbb{IR}^3`, :math:`[\mathbf{y}]\in\mathbb{IR}^2`, :math:`[\mathbf{m}]\in\mathbb{IR}^2`. We can for instance use the ``.inflate(float radius)`` method on intervals or boxes.
@@ -301,6 +354,10 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
 
       x[2] &= x_truth[2]; // the heading is assumed to be known
 
+    .. code-tab:: matlab
+
+      x(3).self_inter(x_truth(3)); % the heading is assumed to be known
+
   .. container:: toggle, toggle-hidden
 
     .. tabs::
@@ -321,6 +378,14 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
           :end-before: [A-q3-end]
           :dedent: 2
 
+      .. group-tab:: Matlab
+
+        .. literalinclude:: src/lesson_A.m
+          :language: matlab
+          :start-after: [A-q3-beg]
+          :end-before: [A-q3-end]
+          :dedent: 0
+
   **A.4.** Display the vehicle and the landmark with:
 
   .. tabs::
@@ -334,6 +399,11 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
 
       DefaultFigure::draw_tank(x_truth, 1, {Color::black(),Color::yellow()}); // robot's size is 1
       DefaultFigure::draw_box(m, Color::red());
+
+    .. code-tab:: matlab
+
+      DefaultFigure().draw_tank(x_truth, 1, StyleProperties({Color().black(),Color().yellow()}));
+      DefaultFigure().draw_box(m,Color().red());
 
   **A.5.** Display the range-and-bearing measurement with its uncertainties. For this, we will use the function ``.draw_pie(<c>, <[rho]>, <[theta]>)`` to display a portion of a ring :math:`[\rho]\times[\theta]` centered on :math:`(x,y)^\intercal`. Here, we must add in :math:`[\theta]` the robot heading :math:`x_3` and the bounded bearing :math:`[y_2]`.
 
@@ -354,6 +424,10 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
 
       DefaultFigure::draw_pie({<x>, <y>}, <[rho]> | 0, <[theta]>, Color::light_gray()); // with: <[rho]> | 0
 
+    .. code-tab:: matlab
+
+      DefaultFigure().draw_pie(Vector([<x>, <y>]), <[rho]>.union(0), <[theta]>, Color().light_gray()); % with: <[rho]> | 0
+
   .. container:: toggle, toggle-hidden
 
     .. tabs::
@@ -373,6 +447,14 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
           :start-after: [A-q5-beg]
           :end-before: [A-q5-end]
           :dedent: 2
+
+      .. group-tab:: Matlab
+
+        .. literalinclude:: src/lesson_A.m
+          :language: matlab
+          :start-after: [A-q5-beg]
+          :end-before: [A-q5-end]
+          :dedent: 0
 
 As one can see, intervals are not limited to axis-aligned boxes: we sometimes perform rotational mapping to better fit the set to represent. This polar constraint is a case in point.
 
@@ -411,6 +493,14 @@ We will implement the decomposition of Question **A.1** using contractors and a 
           :end-before: [A-q6-end]
           :dedent: 2
 
+      .. group-tab:: Matlab
+
+        .. literalinclude:: src/lesson_A.m
+          :language: matlab
+          :start-after: [A-q6-beg]
+          :end-before: [A-q6-end]
+          :dedent: 0
+
   | **A.7.**  Create the intermediate variables introduced in Question **A.1**. They are ``Interval`` and ``IntervalVector`` objects, as for the other variables.
   | Note that the intermediate variables do not have to be initialized with prior values. For ``IntervalVector`` objects, you only have to define their size.
 
@@ -433,6 +523,14 @@ We will implement the decomposition of Question **A.1** using contractors and a 
           :start-after: [A-q7-beg]
           :end-before: [A-q7-end]
           :dedent: 2
+
+      .. group-tab:: Matlab
+
+        .. literalinclude:: src/lesson_A.m
+          :language: matlab
+          :start-after: [A-q7-beg]
+          :end-before: [A-q7-end]
+          :dedent: 0
 
 The current problem can be solved in one step with a smart order of contractors. You may find this order and run the contractors without iterative loop. However, this order may not always exist (due to dependencies in the constraints) or, in a pure declarative paradigm, we may not want to think about it. Using fixed-point iteration can then simplify the algorithm. In Codac, this is allowed using the ``fixpoint(..)`` function that will execute some ``contractors_list`` function until a fixpoint is reached. The `fixpoint` corresponds to a point where the involved domains are not contracted anymore.
 
@@ -458,6 +556,10 @@ The following code illustrates how to implement such fixpoint:
       <c2>.contract(<domains related to c2>);
       etc.
     }, <domains related to c1,c2,..>);
+
+  .. code-tab:: matlab
+
+    % Not supported yet
 
 The ``fixpoint`` function will execute the content of the function ``contractors_list`` until there are no more contractions on the sets listed in ``<domains related to c1,c2,..>``.
 
@@ -485,6 +587,14 @@ The ``fixpoint`` function will execute the content of the function ``contractors
           :end-before: [A-q8-end]
           :dedent: 2
 
+      .. group-tab:: Matlab
+
+        .. literalinclude:: src/lesson_A.m
+          :language: matlab
+          :start-after: [A-q8-beg]
+          :end-before: [A-q8-end]
+          :dedent: 0
+
   | **A.9.**  Run your programm to solve the problem. You should obtain this figure:
 
   .. figure:: img/result_rangebearing.png
@@ -509,6 +619,14 @@ The ``fixpoint`` function will execute the content of the function ``contractors
           :start-after: [A-q9-beg]
           :end-before: [A-q9-end]
           :dedent: 2
+
+      .. group-tab:: Matlab
+
+        .. literalinclude:: src/lesson_A.m
+          :language: matlab
+          :start-after: [A-q9-beg]
+          :end-before: [A-q9-end]
+          :dedent: 0
 
 The black box :math:`[\mathbf{x}]` cumulates all the uncertainties of the problem:
 
