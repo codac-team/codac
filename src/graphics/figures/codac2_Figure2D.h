@@ -87,9 +87,8 @@ namespace codac2
        * 
        * \param name Name of the figure
        * \param o Output of the figure, can be VIBes or IPE (or both)
-       * \param set_as_default (optionnal) If true, the figure is set as the default view, default is false
        */
-      Figure2D(const std::string& name, GraphicOutput o, bool set_as_default = false);
+      Figure2D(const std::string& name, GraphicOutput o);
 
       /**
        * \brief Returns ``OutputFigure2D`` objects rendering the current figure.
