@@ -22,15 +22,13 @@ using namespace codac2;
 shared_ptr<Figure2D> DefaultFigure::_default_fig = nullptr;
 shared_ptr<Figure2D> DefaultFigure::_selected_fig = DefaultFigure::_default_fig;
 
-Figure2D::Figure2D(const string& name, GraphicOutput o, bool set_as_default_)
+Figure2D::Figure2D(const string& name, GraphicOutput o)
   : _name(name)
 {
   if(o & GraphicOutput::VIBES)
     _output_figures.push_back(make_shared<Figure2D_VIBes>(*this));
   if(o & GraphicOutput::IPE)
     _output_figures.push_back(make_shared<Figure2D_IPE>(*this));
-  if(set_as_default_)
-    set_as_default();
 }
 
 vector<shared_ptr<OutputFigure2D>> Figure2D::output_figures()

@@ -65,9 +65,9 @@ void export_Figure2D(py::module& m)
     exported(m, "Figure2D", FIGURE2D_MAIN);
   exported
   
-    .def(py::init<const std::string&,GraphicOutput,bool>(),
-      FIGURE2D_FIGURE2D_CONST_STRING_REF_GRAPHICOUTPUT_BOOL,
-      "name"_a, "o"_a, "set_as_default"_a=false)
+    .def(py::init<const std::string&,GraphicOutput>(),
+      FIGURE2D_FIGURE2D_CONST_STRING_REF_GRAPHICOUTPUT,
+      "name"_a, "o"_a)
   
     .def("name", &Figure2D::name,
       CONST_STRING_REF_FIGURE2D_NAME_CONST)
