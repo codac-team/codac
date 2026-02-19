@@ -124,14 +124,14 @@ function [xi,yi,mi,ai,si] = ctc_one_obs(xi,yi,mi,ai,si,ctc_plus,ctc_polar,ctc_mi
     [mi,xi,si] = deal(res_ctc_minus.subvector(1,2),res_ctc_minus.subvector(3,6),res_ctc_minus.subvector(7,8));
 
     res_ctc_plus = ctc_plus.contract(py.codac4matlab.cart_prod(xi(3), yi(3), ai)); % The result is a 3D IntervalVector
-    xi.setitem(3,res_ctc_plus(1));
-    yi.setitem(3,res_ctc_plus(2));
+    xi.set_item(3,res_ctc_plus(1));
+    yi.set_item(3,res_ctc_plus(2));
     ai = res_ctc_plus(3);
 
     res_ctc_polar = ctc_polar.contract(py.codac4matlab.cart_prod(si(1),si(2),yi(2),ai)); % The result is a 4D IntervalVector
-    si.setitem(1,res_ctc_polar(1));
-    si.setitem(2,res_ctc_polar(2));
-    yi.setitem(2,res_ctc_polar(3));
+    si.set_item(1,res_ctc_polar(1));
+    si.set_item(2,res_ctc_polar(2));
+    yi.set_item(2,res_ctc_polar(3));
     ai = res_ctc_polar(4);
 
     mi = ctc_constell.contract(mi);

@@ -92,7 +92,9 @@ To represent the vectors :math:`\mathbf{x}\in\mathbb{R}^n` consistent with the c
       :end-before: [ctcinv-1-end]
       :dedent: 0
 
-The contractor can be used as an operator to contract a 2d box :math:`[\mathbf{x}]`. It can also be involved in a paver in order to reveal the constraint:
+The contractor can be used as an operator to contract a :math:`n`-d box :math:`[\mathbf{x}]`.
+
+Note that the contraction may be fast but not minimal, depending on your analytic expression. Therefore, you can also combine a ``CtcInverse`` with a ``CtcFixpoint`` to apply the contraction procedure repeatedly until a fixpoint is reached on the same box. The following code corresponds to a contraction revealed in the next figure, which shows contraction cases in blue and their fixpoint counterparts in red.
 
 .. tabs::
 
@@ -120,14 +122,10 @@ The contractor can be used as an operator to contract a 2d box :math:`[\mathbf{x
       :end-before: [ctcinv-2-end]
       :dedent: 0
 
-Which produces the following output:
-
-.. figure:: ./himmelblau_50.png
+.. figure:: ./himmelblau_boxes.png
   :width: 400px
 
-  Outer approximation of the solution set for :math:`f(\mathbf{x})\in[50,50]`. This paving result reveals three connected subsets approximated with outer boxes. Blue parts are guaranteed not to contain solutions.
-
-We recall that for thick solution sets, one should prefer the use of the ``SepInverse`` separator in order to get both outer and inner approximations. For instance, the solution set associated with :math:`f(\mathbf{x})\leqslant 50` corresponds to:
+As any other contractor, a ``CtcInverse`` can also be involved in a paver in order to reveal the constraint set:
 
 .. tabs::
 
@@ -153,6 +151,41 @@ We recall that for thick solution sets, one should prefer the use of the ``SepIn
       :language: matlab
       :start-after: [ctcinv-3-beg]
       :end-before: [ctcinv-3-end]
+      :dedent: 0
+
+Which produces the following output:
+
+.. figure:: ./himmelblau_50.png
+  :width: 400px
+
+  Outer approximation of the solution set for :math:`f(\mathbf{x})\in[50,50]`. This paving result reveals three connected subsets approximated with outer boxes. Blue parts are guaranteed not to contain solutions.
+
+We recall that for thick solution sets, one should prefer the use of the ``SepInverse`` separator in order to get both outer and inner approximations. For instance, the solution set associated with :math:`f(\mathbf{x})\leqslant 50` corresponds to:
+
+.. tabs::
+
+  .. group-tab:: Python
+
+    .. literalinclude:: src.py
+      :language: py
+      :start-after: [ctcinv-4-beg]
+      :end-before: [ctcinv-4-end]
+      :dedent: 4
+
+  .. group-tab:: C++
+
+    .. literalinclude:: src.cpp
+      :language: c++
+      :start-after: [ctcinv-4-beg]
+      :end-before: [ctcinv-4-end]
+      :dedent: 4
+
+  .. group-tab:: Matlab
+
+    .. literalinclude:: src.m
+      :language: matlab
+      :start-after: [ctcinv-4-beg]
+      :end-before: [ctcinv-4-end]
       :dedent: 0
 
 
@@ -176,24 +209,24 @@ can be easily approximated by the following union of contractors:
 
     .. literalinclude:: src.py
       :language: py
-      :start-after: [ctcinv-4-beg]
-      :end-before: [ctcinv-4-end]
+      :start-after: [ctcinv-5-beg]
+      :end-before: [ctcinv-5-end]
       :dedent: 4
 
   .. group-tab:: C++
 
     .. literalinclude:: src.cpp
       :language: c++
-      :start-after: [ctcinv-4-beg]
-      :end-before: [ctcinv-4-end]
+      :start-after: [ctcinv-5-beg]
+      :end-before: [ctcinv-5-end]
       :dedent: 4
 
   .. group-tab:: Matlab
 
     .. literalinclude:: src.m
       :language: matlab
-      :start-after: [ctcinv-4-beg]
-      :end-before: [ctcinv-4-end]
+      :start-after: [ctcinv-5-beg]
+      :end-before: [ctcinv-5-end]
       :dedent: 0
 
 .. figure:: ./himmelblau_50_150_250.png
@@ -323,24 +356,24 @@ When the constraint is a complement constraint :math:`\mathbf{f}(\mathbf{x})\not
 
     .. literalinclude:: src.py
       :language: py
-      :start-after: [ctcinv-5-beg]
-      :end-before: [ctcinv-5-end]
+      :start-after: [ctcinv-6-beg]
+      :end-before: [ctcinv-6-end]
       :dedent: 4
 
   .. group-tab:: C++
 
     .. literalinclude:: src.cpp
       :language: c++
-      :start-after: [ctcinv-5-beg]
-      :end-before: [ctcinv-5-end]
+      :start-after: [ctcinv-6-beg]
+      :end-before: [ctcinv-6-end]
       :dedent: 4
 
   .. group-tab:: Matlab
 
     .. literalinclude:: src.m
       :language: matlab
-      :start-after: [ctcinv-5-beg]
-      :end-before: [ctcinv-5-end]
+      :start-after: [ctcinv-6-beg]
+      :end-before: [ctcinv-6-end]
       :dedent: 0
 
 
@@ -358,24 +391,24 @@ The underlying analytic function can be accessed through ``.fnc()`` (useful for 
 
     .. literalinclude:: src.py
       :language: py
-      :start-after: [ctcinv-6-beg]
-      :end-before: [ctcinv-6-end]
+      :start-after: [ctcinv-7-beg]
+      :end-before: [ctcinv-7-end]
       :dedent: 4
 
   .. group-tab:: C++
 
     .. literalinclude:: src.cpp
       :language: c++
-      :start-after: [ctcinv-6-beg]
-      :end-before: [ctcinv-6-end]
+      :start-after: [ctcinv-7-beg]
+      :end-before: [ctcinv-7-end]
       :dedent: 4
 
   .. group-tab:: Matlab
 
     .. literalinclude:: src.m
       :language: matlab
-      :start-after: [ctcinv-6-beg]
-      :end-before: [ctcinv-6-end]
+      :start-after: [ctcinv-7-beg]
+      :end-before: [ctcinv-7-end]
       :dedent: 0
 
 Centered form option
