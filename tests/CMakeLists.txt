@@ -116,6 +116,20 @@ file(COPY
 
 set(CODAC_LIBRARIES ${PROJECT_NAME}-core ${PROJECT_NAME}-graphics)
 
+option(BUILD_SYMPY_EMBED_TESTS "Build C++ tests that require embedded Python for Sympy" ON)
+if(WITH_PYTHON AND DEFINED PYBIND11_FINDPYTHON AND NOT PYBIND11_FINDPYTHON)
+  message(STATUS "Disabling Sympy C++ embed tests because PYBIND11_FINDPYTHON=OFF")
+  set(BUILD_SYMPY_EMBED_TESTS OFF)
+endif()
+
+# Sympy test
+if (WITH_PYTHON AND BUILD_SYMPY_EMBED_TESTS)
+  list(APPEND SRC_TESTS
+    extensions/sympy/codac2_tests_sympy
+    ../doc/manual/manual/extensions/sympy/src
+  )
+endif()
+
 # CAPD test
 if (WITH_CAPD)
   list(APPEND SRC_TESTS
@@ -142,6 +156,10 @@ foreach(SRC_TEST ${SRC_TESTS})
   set(CODAC_HEADERS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../include)
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${CODAC_HEADERS_DIR})
   target_link_libraries(${TEST_NAME} PUBLIC Ibex::ibex ${CODAC_LIBRARIES} PRIVATE Catch2::Catch2WithMain)
+
+  if(WITH_PYTHON AND SRC_TEST MATCHES "extensions/sympy/")
+    target_link_libraries(${TEST_NAME} PRIVATE ${PROJECT_NAME}-sympy pybind11::embed)
+  endif()
   add_dependencies(check ${TEST_NAME})
   add_test(NAME ${TEST_NAME}_cpp COMMAND ${TEST_NAME})
 

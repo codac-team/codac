@@ -450,7 +450,7 @@ We will first reuse the fixpoint method of the previous Lesson, and apply it on 
 
 .. admonition:: Exercise
 
-  **D.7.** Use a second fixpoint method to perform the state estimation of the robot (the contraction of :math:`[\mathbf{x}]`) by considering iteratively all the observations.
+  **B.7.** Use a second fixpoint method to perform the state estimation of the robot (the contraction of :math:`[\mathbf{x}]`) by considering iteratively all the observations.
 
   We will assume that:
 

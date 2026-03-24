@@ -76,7 +76,7 @@ while t < tend
             obs{end+1} = yi;
         end
     end
-    t = t + 0.01;
+    t = t + 0.01; % for performance, it is advised to increment by steps of 0.1 instead
 end
 % [C-q5-end]
 

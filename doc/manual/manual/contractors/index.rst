@@ -1,3 +1,4 @@
+.. _sec-ctc:
 Contractors, separators
 =======================
 

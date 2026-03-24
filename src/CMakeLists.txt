@@ -14,9 +14,9 @@
     add_subdirectory(extensions/capd)
   endif()
 
-  #if(WITH_PYTHON)
-  #  add_subdirectory(sympy)
-  #endif()
+  if(WITH_PYTHON)
+    add_subdirectory(extensions/sympy)
+  endif()
   
 
 # Generating PKG file
@@ -94,6 +94,24 @@
   #  ")
   #
   #endif()
+
+  if(WITH_PYTHON)
+
+    file(APPEND ${CODAC_CMAKE_CONFIG_FILE} "
+
+  # Optional 3rd party:
+
+    find_path(CODAC_SYMPY_INCLUDE_DIR ${PROJECT_NAME}-sympy.h
+              PATH_SUFFIXES include/${PROJECT_NAME}-sympy)
+    set(CODAC_INCLUDE_DIRS \${CODAC_INCLUDE_DIRS} \${CODAC_SYMPY_INCLUDE_DIR})
+
+    find_library(CODAC_SYMPY_LIBRARY NAMES ${PROJECT_NAME}-sympy
+                 PATH_SUFFIXES lib)
+                 
+    set(CODAC_LIBRARIES \${CODAC_LIBRARIES} \${CODAC_SYMPY_LIBRARY})
+    ")
+
+  endif()
 
   if(WITH_CAPD)
 

@@ -93,7 +93,7 @@ custom_map[1] = Color([0,0,255])
 subdivisions=40
 fig3.set_axes(axis(0,[-1,subdivisions+1]), axis(1,[-1.25,0.05]))
 
-for i in range (subdivisions):
+for i in range (subdivisions+1):
     ratio=i/subdivisions
     fig3.draw_box([[i,i+1],[-1/5,0]],[Color.black(),cmap_default.color(ratio)])
     fig3.draw_box([[i,i+1],[-2/5,-1/5]],[Color.black(),cmap_haxby.color(ratio)])

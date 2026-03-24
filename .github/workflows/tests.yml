@@ -45,10 +45,10 @@ jobs:
         sudo sh -c 'echo "deb [trusted=yes] https://webperso.ensta.fr/packages/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
         sudo apt update
 
-        sudo apt-get -y install flex bison catch2 # libeigen3-dev
+        sudo apt-get -y install flex bison catch2 pybind11-dev # libeigen3-dev
   
         # For documentation
-        pip install sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme
+        pip install sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sympy
         sudo apt-get -y install doxygen graphviz
 
         # Doxygen might need to be upgraded
@@ -61,7 +61,7 @@ jobs:
         #pip install --upgrade pyibex==1.8.0
 
         # Fort Python tests
-        pip install numpy
+        pip install numpy sympy
 
         pwd
         ls
@@ -121,7 +121,7 @@ jobs:
         cd ../examples
 
         cd 01_batman/
-        mkdir build ; cd build ; cmake -DCMAKE_PREFIX_PATH="~/ibex-lib/build_install;~/codac/build_install" -DCMAKE_BUILD_TYPE=Debug .. ; make ; ./codac_example
+        mkdir build ; cd build ; cmake -DCMAKE_PREFIX_PATH="$HOME/ibex-lib/build_install;$HOME/codac/build_install" -DCMAKE_BUILD_TYPE=Debug .. ; make ; ./codac_example
 
         cd ../../02_centered_form/
-        mkdir build ; cd build ; cmake -DCMAKE_PREFIX_PATH="~/ibex-lib/build_install;~/codac/build_install" -DCMAKE_BUILD_TYPE=Debug .. ; make ; ./codac_example
+        mkdir build ; cd build ; cmake -DCMAKE_PREFIX_PATH="$HOME/ibex-lib/build_install;$HOME/codac/build_install" -DCMAKE_BUILD_TYPE=Debug .. ; make ; ./codac_example

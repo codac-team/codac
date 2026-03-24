@@ -31,6 +31,9 @@ namespace codac2
     AnalyticExprWrapper(const std::shared_ptr<AnalyticExpr<T>>& e)
       : std::shared_ptr<AnalyticExpr<T>>(e)
     { }
+
+    AnalyticExprWrapper<T>& operator=(const AnalyticExprWrapper<T>&) = default;
+    AnalyticExprWrapper<T>& operator=(AnalyticExprWrapper<T>&&) noexcept = default;
     
     template<typename V>
       requires std::is_base_of_v<AnalyticVarExpr<T>,V>
