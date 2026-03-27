@@ -163,6 +163,9 @@ void export_trunc(py::module& m);
 void export_AnalyticTraj(py::module& m);
 void export_SampledTraj(py::module& m);
 
+// Extension > sympy
+void export_sympy(py::module& m);
+
 
 PYBIND11_MODULE(_core, m)
 {
@@ -335,7 +338,6 @@ PYBIND11_MODULE(_core, m)
   export_AnalyticTraj(m);
   export_SampledTraj(m);
 
-
   m.def("srand", []()
     {
       srand(time(NULL));
@@ -348,4 +350,8 @@ PYBIND11_MODULE(_core, m)
     },
     DOC_TO_BE_DEFINED,
     "seed"_a);
+
+  // Extension > sympy
+  auto ms = m.def_submodule("_sympy"); // to keep a dedicated namespace
+  export_sympy(ms);
 }

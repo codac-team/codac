@@ -17,7 +17,7 @@ You need help? Submit an issue on: https://github.com/codac-team/codac/issues
 class AnalyticFunction:
 
   def __init__(self, args, e=None):
-    if e:
+    if e is not None:
       if isinstance(e, (int,float,Interval,ScalarVar,ScalarExpr)):
         self.f = AnalyticFunction_Scalar(args,ScalarExpr(e))
       elif isinstance(e, (Vector,IntervalVector,VectorVar,VectorExpr)):

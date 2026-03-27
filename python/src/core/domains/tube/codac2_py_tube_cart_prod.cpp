@@ -26,17 +26,26 @@ void export_tube_cart_prod(py::module& m)
       {
         Index n = 0;
         for(const auto& li : l)
-          n += cast<SlicedTube<IntervalVector>>(li).size();
+        {
+          assert_release(is_instance<SlicedTube<Interval>>(li) | is_instance<SlicedTube<IntervalVector>>(li));
+          n += is_instance<SlicedTube<Interval>>(li) ? 1 : cast<SlicedTube<IntervalVector>>(li).size();
+        }
 
-        const SlicedTube<IntervalVector>& x0 = cast<SlicedTube<IntervalVector>>(*l.begin());
-        SlicedTube<IntervalVector> v(x0.tdomain(), IntervalVector(n));
+        assert_release(is_instance<SlicedTube<Interval>>(*l.begin()) | is_instance<SlicedTube<IntervalVector>>(*l.begin()));
+        
+        std::shared_ptr<TDomain> tdomain = 
+          is_instance<SlicedTube<Interval>>(*l.begin()) ? cast<SlicedTube<Interval>>(*l.begin()).tdomain() : cast<SlicedTube<IntervalVector>>(*l.begin()).tdomain();
+        SlicedTube<IntervalVector> v(tdomain, IntervalVector(n));
 
-        for(auto it = x0.tdomain()->begin(); it != x0.tdomain()->end(); it++)
+        for(auto it = tdomain->begin(); it != tdomain->end(); it++)
         {
           Index i = 0;
           for(const auto& li : l)
           {
-            auto si = cast<SlicedTube<IntervalVector>>(li).slice(it)->codomain();
+            assert_release(is_instance<SlicedTube<Interval>>(li) | is_instance<SlicedTube<IntervalVector>>(li));
+            IntervalVector si = cart_prod(
+              is_instance<SlicedTube<Interval>>(li) ? cart_prod(cast<SlicedTube<Interval>>(li).slice(it)->codomain()) :
+              cast<SlicedTube<IntervalVector>>(li).slice(it)->codomain());
             v.slice(it)->codomain().put(i,si);
             i += si.size();
           }

@@ -317,6 +317,18 @@ The ``.diff()`` method can be used in the same way as the ``.eval()`` method.
       :dedent: 0
 
 
+Symbolic manipulations with SymPy
+---------------------------------
+
+Besides interval automatic differentiation, Codac also provides an optional SymPy-based extension for symbolic manipulations of ``AnalyticFunction`` objects.
+
+This extension makes it possible to simplify expressions symbolically, compute symbolic partial derivatives, gradients, Hessians and Jacobians, derive truncated Taylor series, rewrite polynomials in Horner form, and test symbolic equality between analytic expressions. The result of these operations is still represented as a Codac ``AnalyticFunction``, which means that the transformed expressions can then be evaluated, composed, or used in interval computations exactly like any other analytic function.
+
+This symbolic extension complements interval automatic differentiation rather than replacing it. Interval differentiation directly returns guaranteed enclosures of derivative values over boxes, whereas the SymPy extension returns explicit symbolic expressions that may then be manipulated or evaluated afterwards.
+
+See the dedicated page :ref:`sec-extensions-sympy`.
+
+
 Other properties
 ----------------
 
@@ -350,5 +362,4 @@ Let us consider a function :math:`[\mathbf{f}]:\mathbb{IR}^n\to\mathbb{IR}^m`, t
 
 In the case of multivariate functions, ``.input_size()`` returns the sum of the dimensions of the arguments.
 
-
-The ``AnalyticFunction`` class supports many mathematical operations, and the full set of operators that can be used is described in the next page.
+The ``AnalyticFunction`` class supports many mathematical operations. The full set of analytic operators is described in the next page, while symbolic manipulations based on SymPy are presented in :ref:`sec-extensions-sympy`.

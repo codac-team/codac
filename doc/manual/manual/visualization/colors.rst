@@ -40,6 +40,20 @@ Predefined colors are available in the ``Color`` class. Each of the static metho
     Color::light_purple(), Color::purple(), Color::dark_purple()
     Color::light_pink(), Color::pink(), Color::dark_pink()
 
+  .. code-tab:: matlab
+
+    Color().none(), Color().white(), Color().black()
+    Color().light_gray(), Color().gray(), Color().dark_gray()
+    Color().light_green(), Color().green(), Color().dark_green()
+    Color().light_blue(), Color().blue(), Color().dark_blue()
+    Color().light_cyan(), Color().cyan(), Color().dark_cyan()
+    Color().light_yellow(), Color().yellow(), Color().dark_yellow()
+    Color().light_orange(), Color().orange(), Color().dark_orange()
+    Color().light_red(), Color().red(), Color().dark_red()
+    Color().light_brown(), Color().brown(), Color().dark_brown()
+    Color().light_purple(), Color().purple(), Color().dark_purple()
+    Color().light_pink(), Color().pink(), Color().dark_pink()
+
 Each basic color is available in three shades: ``light_``, normal and ``dark_``:
 
 .. figure:: img/codac_colors.png
@@ -58,6 +72,11 @@ Custom colors can be defined in the RGB or HSV color spaces. An enumeration ``Mo
 
     Model::RGB; // RGB color space
     Model::HSV; // HSV color space
+
+  .. code-tab:: matlab
+      
+    Model().RGB % RGB color space
+    Model().HSV % HSV color space
 
 A getter ``model()`` is available, and the methods ``rgb()`` and ``hsv()`` are used to do the conversion between the two color spaces.
 
@@ -99,6 +118,16 @@ Additionnal methods are available for any useful purpose:
     // HSV color without and with opacity
     fig2.draw_box({{2.6,3.1},{2.6,3.1}}, {Color({108,90,78},Model::HSV),Color({108,90,78,20},Model::HSV)});
 
+  .. code-tab:: matlab
+
+    % predefined colors without and with opacity
+    fig.draw_point(Vector({2,2}), StyleProperties({Color().red(),Color().yellow(0.5)}));
+    % HTML color without and with opacity
+    fig.draw_box(IntervalVector({{2.4,2.9},{2.4,2.9}}),StyleProperties({Color("#da3907"),Color("#da390755")}));
+    % HSV color without and with opacity
+    fig.draw_box(IntervalVector({{2.6,3.1},{2.6,3.1}}),StyleProperties({Color({108,90,78},Model().HSV),Color({108,90,78,20},Model().HSV)}));
+
+
 
 StyleProperties
 ---------------
@@ -127,6 +156,12 @@ A ``StyleProperties`` object is composed of two ``Color`` objects, one for the e
     StyleProperties edge_style(Color::red()); // edge only
     StyleProperties edge_fill_style({Color::blue(),Color::green()}); // edge and fill
 
+  .. code-tab:: matlab
+
+    default_style = StyleProperties() % default
+    edge_style = StyleProperties(Color().red()) % edge only
+    edge_fill_style = StyleProperties({Color().blue(),Color().green()}) % edge and fill
+
 
 It can also be deduced from one or two ``Color`` objects.
 
@@ -146,6 +181,13 @@ It can also be deduced from one or two ``Color`` objects.
     fig.draw_box({{2,5},{2,5}}, Color::red()); // red edge, no fill
     fig.draw_box({{2,5},{2,5}}, {Color::blue(),Color::green()}); // blue edge, green fill
 
+  .. code-tab:: matlab
+
+    fig.draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}));
+    fig.draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}),StyleProperties().inside());
+    fig.draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}),Color().red());
+    fig.draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}),StyleProperties({Color().blue(),Color().green()}));
+
 In addition, optional arguments can be passed to the ``StyleProperties`` object to define line style, line width, layer and Z-value.
 For more information, see :ref:`subsec-graphics-colors-optional-arguments`.
 
@@ -160,6 +202,11 @@ For more information, see :ref:`subsec-graphics-colors-optional-arguments`.
 
     fig.draw_box({{2,5},{2,5}}, StyleProperties(Color::red(), "..", "layer1", "w:0.1", "z:1.5"));
     // Red edge, dotted line, line width of 0.1, z-value of 1.5 and on layer1
+
+  .. code-tab:: matlab
+
+    fig.draw_box(IntervalVector({{2,5},{2,5}}), StyleProperties(Color().red(), "..", "layer1", "w:0.1", "z:1.5"));
+    % Red edge, dotted line, line width of 0.1, z-value of 1.5 and on layer1
 
 
 Color maps
@@ -185,10 +232,19 @@ Color maps are used to convert a scalar value (between 0 and 1) to a color. The 
     ColorMap::blue_tube(); // blue color map, used mainly for tubes
     ColorMap::red_tube(); // red color map, used mainly for tubes
 
+  .. code-tab:: matlab
+
+    ColorMap().basic(); % default color map
+    ColorMap().haxby(); % Haxby color map
+    ColorMap().rainbow(); % rainbow color map
+    ColorMap().blue_tube(); % blue color map, used mainly for tubes
+    ColorMap().red_tube(); % red color map, used mainly for tubes
+
+
 These five color maps are displayed below:
 
 .. figure:: img/colormaps.png
-  :width: 400px
+  :width: 600px
 
 A paramater ``alpha`` can be passed to the predefined color maps to set the opacity of the colors (between 0 and 1). The default value is 1 (full opacity).
 
@@ -203,6 +259,11 @@ A paramater ``alpha`` can be passed to the predefined color maps to set the opac
 
     // Create a haxby color map with 50% opacity
     ColorMap cmap = ColorMap::haxby(0.5);
+
+  .. code-tab:: matlab
+
+    % Create a haxby color map with 50% opacity
+    cmap = ColorMap.haxby(0.5)
 
 The method ``color()`` is used to get the color corresponding to a scalar value. The argument is a float between 0 and 1.
 
@@ -228,6 +289,14 @@ You can also create your own color map :
     custom_map[0.5] = Color({0,255,0});
     custom_map[1] = Color({0,0,255});
 
+  .. code-tab:: matlab
+
+    % Create a custom color map
+    custom_map = ColorMap(Model().RGB);
+    custom_map.set_item(0,Color({255,0,0}));
+    custom_map.set_item(0.5,Color({0,255,0}));
+    custom_map.set_item(1,Color({0,0,255}));
+
 Note that you can add RGB and HSV colors to the same color map. The model of the color map will define the interpolation space.
 
 StyleGradientProperties
@@ -250,6 +319,10 @@ A ``StyleGradientProperties`` object involves a ``ColorMap``. Two constructors a
     StyleGradientProperties default_style; // default
     StyleGradientProperties custom_style(ColorMap::haxby()); // haxby color map
 
+  .. code-tab:: matlab
+
+    default_style = StyleGradientProperties() % default
+    custom_style = StyleGradientProperties(ColorMap().haxby()) % haxby color map
 
 It can also be deduced from a ``ColorMap`` object.
 
@@ -265,6 +338,11 @@ It can also be deduced from a ``ColorMap`` object.
     fig.draw_trajectory(traj); // Default style
     fig.draw_trajectory(traj,ColorMap::haxby()); // haxby color map
 
+  .. code-tab:: matlab
+
+    fig.draw_trajectory(traj) % Default style
+    fig.draw_trajectory(traj,ColorMap().haxby()) % haxby color map
+
 In addition, optional arguments can be passed to the ``StyleGradientProperties`` object to define line style, line width, layer and Z-value.
 For more information, see :ref:`subsec-graphics-colors-optional-arguments`.
 
@@ -279,6 +357,11 @@ For more information, see :ref:`subsec-graphics-colors-optional-arguments`.
 
     fig.draw_trajectory(traj, StyleGradientProperties(ColorMap::haxby(), "..", "layer1", "w:0.1", "z:1.5"));
     // haxby color map, dotted line, line width of 0.1, z-value of 1.5 and on layer1
+
+  .. code-tab:: matlab
+    
+    fig.draw_trajectory(traj, StyleGradientProperties(ColorMap().haxby(), "..", "layer1", "w:0.1", "z:1.5"))
+    % haxby color map, dotted line, line width of 0.1, z-value of 1.5 and on layer1
 
 .. _subsec-graphics-colors-optional-arguments:
 

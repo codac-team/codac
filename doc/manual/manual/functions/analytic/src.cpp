@@ -19,7 +19,7 @@ TEST_CASE("AnalyticFunction - manual")
 {
   {
     // [1-beg]
-    ScalarVar x1, x2;
+    ScalarVar x1, x2("x2"); // last variable has a specific a name
     VectorVar v(3);
 
     // Example of scalar function: from R to R

@@ -28,6 +28,14 @@ For example :
     // On the DefaultFigure
     DefaultFigure::draw_box({{2.2,2.5},{2.2,2.5}});
 
+  .. code-tab:: matlab
+    
+    % On a figure
+    fig.draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}));
+
+    % On the DefaultFigure
+    DefaultFigure().draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}));
+
 In addition to the arguments described here for every function, an optionnal argument of type StyleProperties can be added to choose the edge
 and fill color (by default black edge no fill). This object can be deduced from one or two Color objects, see :ref:`this page <sec-graphics-colors>` 
 for more information.
@@ -45,6 +53,13 @@ for more information.
     fig.draw_box({{2.2,2.5},{2.2,2.5}},Color.red()); // Red edge
     fig.draw_box({{2.2,2.5},{2.2,2.5}},{Color.red()}); // Red edge
     fig.draw_box({{2.2,2.5},{2.2,2.5}},{Color.red(),Color.blue()}); // Red edge and blue fill
+
+  .. code-tab:: matlab
+
+    DefaultFigure().draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}),Color().red()); % Red edge
+    DefaultFigure().draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}),StyleProperties({Color().red()})); % Red edge
+    DefaultFigure().draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}),StyleProperties({Color().red(),Color().blue()})); % Red edge and blue fill
+
 
 A line style and a layer can be added to the StyleProperties object, see :ref:`the dedicated page <sec-graphics-colors>` for more information.
 

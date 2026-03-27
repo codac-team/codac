@@ -194,7 +194,7 @@ namespace codac2
 
   void TDomain::sample(const Interval& t0_tf, double dt, bool with_gates)
   {
-    assert_release(dt >= 0.);
+    assert_release(dt > 0.);
     assert_release(!t0_tf.is_degenerated());
     for(double t = t0_tf.lb() ; t < t0_tf.ub()+dt ; t=t+dt)
       sample(std::min(t0_tf.ub(),t), with_gates);

@@ -2,7 +2,7 @@ import py.codac4matlab.*
 
 % [1-beg]
 x1 = ScalarVar();
-x2 = ScalarVar();
+x2 = ScalarVar("x2"); % a variable with a name
 v = VectorVar(3);
 
 % Example of scalar function: from R to R

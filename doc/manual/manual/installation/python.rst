@@ -42,7 +42,7 @@ Depending on your configuration, you may encounter difficulties when installing 
 
   .. code-block:: bash
 
-    pip3 install --break-system-packages codac
+    pip3 install --break-system-packages codac --pre
 
 .. admonition:: macOS Big Sur and later (x86_64)
 

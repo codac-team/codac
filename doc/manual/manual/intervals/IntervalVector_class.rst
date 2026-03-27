@@ -134,10 +134,10 @@ Common predicates include:
       :end-before: [intervalvector-class-4-end]
       :dedent: 4
 
-Advanced operations
--------------------
+Other operations
+----------------
 
-As for intervals, typical advanced operations on boxes include:
+As for intervals, typical operations on boxes include:
 
 .. list-table:: Common advanced methods for a given box :math:`[\mathbf{x}]`
    :widths: 30 70
@@ -147,8 +147,10 @@ As for intervals, typical advanced operations on boxes include:
      - Description
    * - ``inflate(rad)``
      - Expands the box by ``±rad`` (scalar radius for common inflation, or vector radius for specifying different inflation on each component).
-   * - ``bisect([ratio])``
+   * - ``bisect_largest([ratio])``
      - Splits the box into two sub-boxes along the widest dimension.
+   * - ``bisect(i,[ratio])``
+     - Splits the box into two sub-boxes along the :math:`i`-th dimension.
    * - ``rand()``
      - Returns a random sample ``Vector`` inside the box (when non-empty).
    * - ``init()``

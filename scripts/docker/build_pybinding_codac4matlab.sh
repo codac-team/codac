@@ -31,6 +31,7 @@ for PYBIN in /opt/python/cp3*/bin; do
   "${PYBIN}/python" -c "import sys; print(sys.version); import codac4matlab; print(codac4matlab.__version__); from codac4matlab import *; print(IntervalVector([[-0.1],[0],[0.2]]))"
   #"${PYBIN}/python" ../examples/02_centered_form/main.py
   #"${PYBIN}/python" -m pip install numpy --prefer-binary
+  #"${PYBIN}/python" -m pip install sympy
   #"${PYBIN}/python" -m unittest discover codac.tests
   
   #make test ARGS="-V --output-on-failure"

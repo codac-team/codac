@@ -1,5 +1,6 @@
 #include <codac>
 #include <filesystem>
+#include <iostream>
 
 using namespace std;
 using namespace codac2;
@@ -98,7 +99,7 @@ int main(){
 
   double subdivisions = 40.;
   fig3.set_axes(axis(0,{-1,subdivisions+1}), axis(1,{-1.25,0.05}));
-  for (double i=0.; i<subdivisions; i+=1.0)
+  for (double i=0.; i<=subdivisions; i+=1.0)
   {
     double ratio = i/subdivisions;
     fig3.draw_box({{i,i+1},{-1./5.,0}},{Color::black(),cmap_default.color(ratio)});
@@ -114,7 +115,7 @@ int main(){
   fig4.set_window_properties({500,50},{500,500});
   fig4.set_axes(axis(0,{-10,10}), axis(1,{-10,10}));
 
-  double a=0.5;
+  double a=0.8;
   ScalarVar t;
   // Fermat's spiral
   AnalyticFunction f1 ({t},{a*sqrt(t)*cos(t),a*sqrt(t)*sin(t)});

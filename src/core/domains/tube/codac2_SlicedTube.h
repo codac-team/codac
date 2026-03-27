@@ -392,7 +392,7 @@ namespace codac2
       friend inline std::ostream& operator<<(std::ostream& os, const SlicedTube<T>& x)
       {
         os << x.t0_tf()
-           << "↦" << x.codomain()
+           << "↦" << (x.is_empty() ? x.empty_value() : x.codomain())
            << ", " << x.nb_slices()
            << " slice" << (x.nb_slices() > 1 ? "s" : "")
            << std::flush;
@@ -425,9 +425,9 @@ namespace codac2
 
         assert(!t_.is_empty() && !t_.is_unbounded());
         for(auto it = _tdomain->tslice(t_.lb()) ;
-          it != _tdomain->end() && it->lb() < t_.ub() ; it++)
+          it != _tdomain->end() && it->lb() <= t_.ub() ; it++)
         {
-          if(it->is_gate())
+          if(!t_.is_degenerated() && it->is_gate())
             continue;
           
           assert(it != _tdomain->end());
@@ -589,6 +589,19 @@ namespace codac2
         T x = first_slice()->codomain();
         x.set_empty();
         return x;
+      }
+
+      template<typename V>
+      //  requires std::is_same_v<typename Wrapper<V>::Domain,T>
+      inline auto mid() const
+      {
+        SampledTraj<V> m;
+        double t0 = _tdomain->t0_tf().lb();
+        m.set((*this)(t0).mid(), t0);
+        for(const auto& s : *this)
+          if(!s.is_gate())
+            m.set(s.output_gate().mid(),s.t0_tf().ub());
+        return m;
       }
 
 
