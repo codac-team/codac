@@ -25,8 +25,8 @@ using namespace pybind11::literals;
 template<typename T>
 void export_SlicedTube(py::module& m, const std::string& name)
 {
-  py::class_<SlicedTube<T>,TubeBase> exported_slicedtubebase_class(m, name.c_str(), SLICEDTUBEBASE_MAIN);
-  exported_slicedtubebase_class
+  py::class_<SlicedTube<T>,TubeBase> exported_slicedtube_class(m, name.c_str(), SLICEDTUBEBASE_MAIN);
+  exported_slicedtube_class
 
     .def(py::init<const std::shared_ptr<TDomain>&,const T&>(),
       SLICEDTUBE_T_SLICEDTUBE_CONST_SHARED_PTR_TDOMAIN_REF_CONST_T_REF,
@@ -144,7 +144,7 @@ void export_SlicedTube(py::module& m, const std::string& name)
 
   if constexpr(std::is_same_v<T,IntervalVector>)
   {
-    exported_slicedtubebase_class
+    exported_slicedtube_class
 
     .def("inflate", (const SlicedTube<T>& (SlicedTube<T>::*)(const Vector&)) &SlicedTube<T>::inflate,
       CONST_SLICEDTUBE_T_REF_SLICEDTUBE_T_INFLATE_CONST_V_REF,
@@ -156,7 +156,7 @@ void export_SlicedTube(py::module& m, const std::string& name)
     ;
   }
 
-  exported_slicedtubebase_class
+  exported_slicedtube_class
 
     .def(py::self == py::self,
       BOOL_SLICEDTUBE_T_OPERATOREQ_CONST_SLICEDTUBE_REF_CONST,
@@ -193,7 +193,7 @@ void export_SlicedTube(py::module& m, const std::string& name)
 
   if constexpr(std::is_same_v<T,Interval> || std::is_same_v<T,IntervalVector>)
   {
-    exported_slicedtubebase_class
+    exported_slicedtube_class
     
       .def("__call__", [](const SlicedTube<T>& x, const Interval& t, const py::object& v)
           {
@@ -251,7 +251,7 @@ void export_SlicedTube(py::module& m, const std::string& name)
 
   if constexpr(std::is_same_v<T,IntervalVector>)
   {
-    exported_slicedtubebase_class
+    exported_slicedtube_class
 
       .def(
           #if FOR_MATLAB
@@ -295,5 +295,26 @@ void export_SlicedTube(py::module& m, const std::string& name)
         SLICEDTUBE_INTERVALVECTOR_SLICEDTUBE_T_SUBVECTOR_INDEX_INDEX_CONST,
         "i"_a, "j"_a)
     ;
+  }
+
+  if constexpr(std::is_same_v<T,Interval>)
+  {
+    exported_slicedtube_class
+      .def("mid", &SlicedTube<Interval>::mid<double>,
+        AUTO_SLICEDTUBE_T_MID_CONST);
+  }
+
+  if constexpr(std::is_same_v<T,IntervalVector>)
+  {
+    exported_slicedtube_class
+      .def("mid", &SlicedTube<IntervalVector>::mid<Vector>,
+        AUTO_SLICEDTUBE_T_MID_CONST);
+  }
+
+  if constexpr(std::is_same_v<T,IntervalMatrix>)
+  {
+    exported_slicedtube_class
+      .def("mid", &SlicedTube<IntervalMatrix>::mid<Matrix>,
+        AUTO_SLICEDTUBE_T_MID_CONST);
   }
 }

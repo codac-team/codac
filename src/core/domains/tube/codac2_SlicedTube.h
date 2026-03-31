@@ -425,9 +425,9 @@ namespace codac2
 
         assert(!t_.is_empty() && !t_.is_unbounded());
         for(auto it = _tdomain->tslice(t_.lb()) ;
-          it != _tdomain->end() && it->lb() < t_.ub() ; it++)
+          it != _tdomain->end() && it->lb() <= t_.ub() ; it++)
         {
-          if(it->is_gate())
+          if(!t_.is_degenerated() && it->is_gate())
             continue;
           
           assert(it != _tdomain->end());

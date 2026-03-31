@@ -49,7 +49,7 @@ end
 
 s = RobotSimulator();
 s.w_max = 0.2; % maximum turning speed
-u = SampledVectorTraj(); % the simulator will return the inputs (not used)
+u = SampledTraj_Vector(); % the simulator will return the inputs (not used)
 x_truth = s.simulate(Vector({0,0,0,0}), 0.01, wpts, u); % initial state (will be supposed unknown) and simulation time step
 % [C-q3-end]
 

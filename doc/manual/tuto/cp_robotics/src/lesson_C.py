@@ -66,7 +66,7 @@ for i in range (0,5): # 5 waypoints
 
 s = RobotSimulator()
 s.w_max = 0.2 # maximum turning speed
-u = SampledVectorTraj() # the simulator will return the inputs (not used)
+u = SampledTraj_Vector() # the simulator will return the inputs (not used)
 x_truth = s.simulate(
   [0,0,0,0], # initial state (will be supposed unknown)
   1e-2, # simulation time step

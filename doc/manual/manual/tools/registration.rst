@@ -27,7 +27,7 @@ Inputs ``src`` and ``dst`` can be provided either as a list of 2d points, or wit
   .. code-tab:: py
 
     def affine_transformation(src, dst):
-    # with src/dst: two lists of Vector objects, or two SampledVectorTraj objects
+    # with src/dst: two lists of Vector objects, or two SampledTraj_Vector objects
 
   .. code-tab:: c++
 
@@ -70,7 +70,7 @@ The following example estimates a transformation between two sampled trajectorie
 
     # Reconstructing the dst trajectory using the estimated transformation
 
-    dst_estim = SampledVectorTraj()
+    dst_estim = SampledTraj_Vector()
     for ti,src_i in src:
       dst_estim.set(ti, tr*src_i)
 

@@ -271,6 +271,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/codac2_SampledTraj.h
     ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/codac2_SampledTraj_operations.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/codac2_SampledTraj_operations.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/codac2_traj_cart_prod.h
     ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/codac2_Traj_operator.h
     ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/codac2_TrajBase.h
   )

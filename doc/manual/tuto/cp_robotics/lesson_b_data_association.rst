@@ -565,7 +565,7 @@ We now assume that the identities of the landmarks are not known. This means tha
           :dedent: 0
 
 
-  **B.11.** *Same result* means that the data association worked: each measurement has been automatically associated to the correct landmark without ambiguity.
+  **B.10.** *Same result* means that the data association worked: each measurement has been automatically associated to the correct landmark without ambiguity.
 
   We can now look at the set ``m`` containing the associations. If one :math:`[\mathbf{m}^i]` contains only one item of :math:`\mathbb{M}`, then it means that the landmark of the measurement :math:`\mathbf{y}^i` has been identified. 
 

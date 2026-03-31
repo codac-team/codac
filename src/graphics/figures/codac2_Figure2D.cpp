@@ -446,6 +446,9 @@ void Figure2D::plot_trajectories(const SampledTraj<Vector>& x, const StyleProper
 template<typename Func>
 void draw_tube_common(Figure2D& fig, const SlicedTube<IntervalVector>& x, int max_nb_slices_to_display, const Func& slice_color)
 {
+  if(x.is_empty())
+    return;
+  
   const int n = x.nb_slices();
   auto tube_t0tf = x.tdomain()->t0_tf();
 

@@ -378,6 +378,13 @@ def tube_cart_prod(*x):
     return tube_cart_prod_list([*x])
 
 
+def traj_cart_prod(*x):
+  if not isinstance(x,tuple):
+    return traj_cart_prod_list([x])
+  else:
+    return traj_cart_prod_list([*x])
+
+
 class AnalyticTraj:
 
   def __init__(self, f, t):
@@ -445,11 +452,11 @@ class SlicedTube:
     else:
       if isinstance(y, AnalyticFunction):
         self.__init__(x, y.f)
-      elif isinstance(y, (Interval,AnalyticFunction_Scalar,SampledScalarTraj)):
+      elif isinstance(y, (Interval,AnalyticFunction_Scalar,SampledTraj_Scalar)):
         self.tube = SlicedTube_Interval(x, y)
-      elif isinstance(y, (IntervalVector,AnalyticFunction_Vector,SampledVectorTraj)):
+      elif isinstance(y, (IntervalVector,AnalyticFunction_Vector,SampledTraj_Vector)):
         self.tube = SlicedTube_IntervalVector(x, y)
-      elif isinstance(y, (IntervalMatrix,AnalyticFunction_Matrix,SampledMatrixTraj)):
+      elif isinstance(y, (IntervalMatrix,AnalyticFunction_Matrix,SampledTraj_Matrix)):
         self.tube = SlicedTube_IntervalMatrix(x, y)
       else:
         codac_error("SlicedTube: can only build this tube from an AnalyticFunction_[Scalar/Vector/Matrix]")
@@ -536,8 +543,8 @@ class SlicedTube:
     else:
       return self.tube.partial_integral(t1,t2)
 
-  def primitive(self):
-    return self.tube.primitive()
+  def primitive(self,*args):
+    return self.tube.primitive(*args)
     
   def as_function(self):
     return AnalyticFunction(self.tube.as_function())
@@ -551,6 +558,9 @@ class SlicedTube:
   def empty_value(self):
     return self.tube.empty_value()
 
+  def mid(self):
+    return self.tube.mid()
+
 
 def fixpoint(contract, *x):
   vol = -1.0
@@ -559,24 +569,26 @@ def fixpoint(contract, *x):
   while vol != prev_vol:
 
     prev_vol = vol
-    if isinstance(x, tuple):
+    if type(x) is tuple:
       x = contract(*x)
     else: # prevent from unpacking
       x = contract(x)
 
-    if not isinstance(x,tuple):
-      vol = x.get_item_0(0).volume()
-    else:
-      vol = 0.0
-      for xi in x:
-        if xi.is_empty():
-          return x
-        w = xi.volume()
-        # As infinity is absorbent, this would not
-        # allow us to identify a contraction, so we
-        # exclude these cases:
-        if w != oo:
-          vol += w
+    # For computing the volume:
+    # only a real Python tuple is considered as a collection of objects.
+    # Otherwise, any iterable object (tube, boxes, etc.) will be divided in the for loop.
+    items = x if type(x) is tuple else (x,)
+
+    vol = 0.0
+    for xi in items:
+      if xi.is_empty():
+        return x
+      w = xi.volume()
+      # As infinity is absorbent, this would not
+      # allow us to identify a contraction, so we
+      # exclude these cases:
+      if w != oo:
+        vol += w
 
   return x
 

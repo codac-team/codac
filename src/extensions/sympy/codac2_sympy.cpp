@@ -40,7 +40,11 @@ namespace codac2
       Index flat_input_index = -1;
       if(layout.flat_index_of(x, flat_input_index))
         return flat_input_index;
-      assert(false && "flat_input_index_of: expected a scalar input variable or a direct component of a vector/matrix input variable");
+      else
+      {
+        assert(false && "flat_input_index_of: expected a scalar input variable or a direct component of a vector/matrix input variable");
+        return 0;
+      }
     }
 
     pybind11::object remap_to_reference_symbols(

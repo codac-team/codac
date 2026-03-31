@@ -15,7 +15,7 @@ class TestSampledTraj(unittest.TestCase):
 
   def test_SampledTraj(self):
 
-    x = SampledVectorTraj({
+    x = SampledTraj_Vector({
       0.25: [-0.5,0.5],
       1.: [0,0],
       2.: [1,0],
@@ -111,7 +111,7 @@ class TestSampledTraj(unittest.TestCase):
 
     # SampledTraj (nan case)
 
-    x = SampledVectorTraj()
+    x = SampledTraj_Vector()
     x.set(Vector([0,0]),0.)
     x.set(Vector([2,2]),2.)
     self.assertTrue(x(1.) == Vector([1,1]))

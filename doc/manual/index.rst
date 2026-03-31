@@ -52,8 +52,7 @@ The solution set is approximated from an initial box :math:`[\mathbf{x}_0]=[0,2]
    int main()
    {
      VectorVar x(3);
-     AnalyticFunction f { {x},
-       {
+     AnalyticFunction f { {x}, {
          -(x[2]^2)+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
          2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
        }
@@ -191,7 +190,8 @@ User manual
 * :ref:`sec-intervals`
    * What is an interval?
    * :ref:`sec-intervals-class`
-   * Boolean intervals
+   * :ref:`sec-intervals-intervalvector-class`
+   * :ref:`sec-intervals-boolinterval-class`
 
 * :ref:`sec-linear`
    * :ref:`sec-linear-vecmat`
@@ -207,11 +207,11 @@ User manual
       * :ref:`sec-functions-analytic-operators`
       * Extension to custom expressions
       * Temporal functions
+      * :ref:`sec-functions-parallelepiped-eval`
+      * :ref:`sec-functions-peibos`
    * Set-membership functions
       * The class SetMembershipFunction
       * Extension to custom expressions
-   * :ref:`sec-functions-parallelepiped-eval`
-   * :ref:`sec-functions-peibos`
 
 * Tubes
    * What is a tube?
@@ -338,10 +338,10 @@ User manual
    * :ref:`sec-tools-registration`
    * :ref:`sec-tools-octasym`
 
-* Codac extensions
+* :ref:`sec-extensions`
    * :ref:`sec-extensions-capd`
+   * :ref:`sec-extensions-sympy`
    * Interface with the IBEX library
-   * Sympy (symbolic computation)
 
 * Frequently Asked Questions
 
@@ -356,9 +356,7 @@ How-to guides
 -------------
 
 * Robotics
-   * Non-linear state estimation
-   * State estimation by solving data association
-   * Range-only SLAM
+   * :ref:`sec-tuto-cprob`
    * Explored area
    * Loop detections and verifications
 
