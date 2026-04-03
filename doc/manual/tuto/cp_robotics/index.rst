@@ -14,3 +14,4 @@ State estimation
   Lesson B: Data association <lesson_b_data_association>
   Lesson C: Dynamic loc. <lesson_c_dynamic_localization>
   Lesson D: Range-only SLAM <lesson_d_slam>
+  Lesson E: Tile-based loc. <lesson_e_tiles>

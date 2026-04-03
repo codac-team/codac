@@ -44,7 +44,7 @@ class TestTransformations(unittest.TestCase):
 
     # Reconstructing the dst trajectory using the estimated transformation
 
-    dst_estim = SampledVectorTraj()
+    dst_estim = SampledTraj_Vector()
     for ti,src_i in src:
       dst_estim.set(tr*src_i, ti)
 
