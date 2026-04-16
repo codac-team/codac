@@ -276,10 +276,13 @@ void Figure2D::draw_parallelepiped(const Parallelepiped& p, const StylePropertie
 
   auto a1 = p.A.col(0), a2 = p.A.col(1);
 
-  draw_polygon(vector<Vector>({
-      Vector(p.z+a1+a2), Vector(p.z-a1+a2),
-      Vector(p.z-a1-a2), Vector(p.z+a1-a2)
-    }), style);
+  if (a1.isZero() || a2.isZero())
+      draw_polyline({p.z-a1-a2,p.z+a1+a2}, style);
+  else
+    draw_polygon({
+        p.z+a1+a2, p.z-a1+a2,
+        p.z-a1-a2, p.z+a1-a2
+      }, style);
 }
 
 void Figure2D::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& style)
@@ -431,6 +434,11 @@ void Figure2D::plot_trajectory(const SampledTraj<double>& x, const StyleProperti
   display_and_clear();
 }
 
+void Figure2D::plot_trajectory(const AnalyticTraj<ScalarType>& x, const StyleProperties& style)
+{
+  plot_trajectory(x.sampled(_axes[0].limits.diam()/1e4), style);
+}
+
 void Figure2D::plot_trajectories(const SampledTraj<Vector>& x)
 {
   for(const auto& xi : as_scalar_trajs(x))
@@ -466,12 +474,12 @@ void draw_tube_common(Figure2D& fig, const SlicedTube<IntervalVector>& x, int ma
     for(auto it = x.tdomain()->rbegin() ; it != x.tdomain()->rend(); )
     {
       auto c = slice_color(tube_t0tf,it);
-      ConvexPolygon p(x.slice(it)->codomain());
+      ConvexPolygon p(x.slice(it)->codomain().subvector(0,1));
       it++;
 
       int j;
       for(j = 0; j < group_size-1 && it != x.tdomain()->rend(); j++,it++)
-        p |= ConvexPolygon(x.slice(it)->codomain());
+        p |= ConvexPolygon(x.slice(it)->codomain().subvector(0,1));
       fig.draw_polygon(p, c);
       if(j != 0)
         it--;

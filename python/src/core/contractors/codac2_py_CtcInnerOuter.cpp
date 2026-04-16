@@ -32,11 +32,10 @@ void export_CtcInnerOuter(py::module& m, py::class_<CtcBase<IntervalVector>,pyCt
         }),
       CTCINNER_CTCINNER_CONST_S_REF,
       "s"_a)
-
-    .def(CONTRACT_BOX_METHOD(CtcInner,
-      VOID_CTCINNER_CONTRACT_INTERVALVECTOR_REF_CONST))
-
   ;
+
+  CONTRACT_METHODS(exported_inner, CtcInner,
+    VOID_CTCINNER_CONTRACT_INTERVALVECTOR_REF_CONST)
 
   py::class_<CtcOuter> exported_outer(m, "CtcOuter", pyctc, CTCOUTER_MAIN);
   exported_outer
@@ -48,9 +47,8 @@ void export_CtcInnerOuter(py::module& m, py::class_<CtcBase<IntervalVector>,pyCt
         }),
       CTCOUTER_CTCOUTER_CONST_S_REF,
       "s"_a)
-
-    .def(CONTRACT_BOX_METHOD(CtcOuter,
-      VOID_CTCOUTER_CONTRACT_INTERVALVECTOR_REF_CONST))
-
   ;
+
+  CONTRACT_METHODS(exported_outer, CtcOuter,
+    VOID_CTCOUTER_CONTRACT_INTERVALVECTOR_REF_CONST)
 }

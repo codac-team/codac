@@ -402,7 +402,21 @@ namespace codac2
   template<typename T>
   inline std::ostream& operator<<(std::ostream& os, const SampledTraj<T>& x)
   {
-    os << "SampledTraj. " << x.tdomain() << "↦" << x.codomain() << ", " << x.nb_samples() << " pts";
+    os << "SampledTraj. " << x.tdomain() << "->";
+    if constexpr(std::is_same_v<T,Vector>)
+    {
+      os << "[";
+      // Iterating in order to avoid global emptiness
+      // if one dimension has empty codomain
+      auto codom = x.codomain();
+      for(Index i = 0 ; i < codom.size() ; i++)
+        os << codom[i];
+      os << "]";
+    }
+
+    else
+      os << x.codomain();
+    os << ", " << x.nb_samples() << " pts";
     return os;
   }
 
@@ -439,3 +453,5 @@ namespace codac2
     return v;
   }
 }
+
+#include "codac2_TrajBase_impl.h"

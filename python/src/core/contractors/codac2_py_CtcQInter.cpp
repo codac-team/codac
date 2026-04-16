@@ -57,8 +57,8 @@ void export_CtcQInter(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInt
     .def("nb", &CtcQInter::nb,
       SIZET_CTCQINTER_NB_CONST)
 
-    .def(CONTRACT_BOX_METHOD(CtcQInter,
-      VOID_CTCQINTER_CONTRACT_INTERVALVECTOR_REF_CONST))
-
   ;
+
+  CONTRACT_METHODS(exported, CtcQInter,
+    VOID_CTCQINTER_CONTRACT_INTERVALVECTOR_REF_CONST)
 }

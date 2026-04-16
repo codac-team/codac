@@ -153,6 +153,7 @@ ctc_deriv = CtcDeriv()
 
 # [E-q13-beg]
 def contractors_list(tube_x12):
+  global tube_v12
   for ti in T:
     tj = ti - 0.01
     pi = tube_x12(tj)
@@ -170,7 +171,7 @@ def contractors_list(tube_x12):
 
     tube_x12.set(pi, tj)
 
-  ctc_deriv.contract(tube_x12, tube_v12)
+  tube_x12,tube_v12 = ctc_deriv.contract(tube_x12,tube_v12)
   return tube_x12
 
 tube_x12 = fixpoint(contractors_list, tube_x12)

@@ -42,7 +42,7 @@ namespace codac2
     }
 
     template<typename I>
-    Index input_index(const I& x)
+    Index_type input_index(const I& x)
     {
       if constexpr(FOR_MATLAB)
         return x-1;
@@ -57,7 +57,7 @@ namespace codac2
       return x;
     }
 
-    inline auto convert_indices(const std::vector<Index_type>& indices)
+    inline std::vector<Index> convert_indices(const std::vector<Index_type>& indices)
     {
       if constexpr(FOR_MATLAB)
       {

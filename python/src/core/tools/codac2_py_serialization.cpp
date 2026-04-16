@@ -15,7 +15,6 @@
 #include <codac2_serialization.h>
 #include <codac2_SampledTraj.h>
 #include "codac2_py_serialization_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
-#include "codac2_py_cast.h"
 
 using namespace std;
 using namespace codac2;
@@ -152,47 +151,39 @@ void export_serialization(py::module& m)
 
   // SampledTraj<T>
 
-    m.def("serialize", [](py::object py_file, const py::object& x_)
-      {
-        if(is_instance<const SampledTraj<double>&>(x_))
-        {
-          const SampledTraj<double>& x = cast<const SampledTraj<double>&>(x_);
-          _serialization()
-        }
-        
-        else if(is_instance<const SampledTraj<Vector>&>(x_))
-        {
-          const SampledTraj<Vector>& x = cast<const SampledTraj<Vector>&>(x_);
-          _serialization()
-        }
-
-        else
-        {
-          assert_release("not able to serialize this object");
-        }
+    m.def("serialize", [](py::object py_file, const SampledTraj<double>& x) {
+        _serialization()
       },
-      VOID_SERIALIZE_OSTREAM_REF_CONST_EIGEN_MATRIX_TRC_REF,
+      VOID_SERIALIZE_OSTREAM_REF_CONST_SAMPLEDTRAJ_T_REF,
       "f"_a, "x"_a);
 
-    m.def("deserialize", [](py::object py_file, py::object& x_)
-      {
-        if(is_instance<const SampledTraj<double>&>(x_))
-        {
-          SampledTraj<double>& x = cast<SampledTraj<double>&>(x_);
-          _deserialization()
-        }
-
-        else if(is_instance<const SampledTraj<Vector>&>(x_))
-        {
-          SampledTraj<Vector>& x = cast<SampledTraj<Vector>&>(x_);
-          _deserialization()
-        }
-
-        else
-        {
-          assert_release("not able to deserialize this object");
-        }
+    m.def("deserialize", [](py::object py_file, SampledTraj<double>& x) {
+        _deserialization()
       },
-      VOID_DESERIALIZE_ISTREAM_REF_EIGEN_MATRIX_TRC_REF,
+      VOID_DESERIALIZE_ISTREAM_REF_SAMPLEDTRAJ_T_REF,
+      "f"_a, "x"_a);
+
+    m.def("serialize", [](py::object py_file, const SampledTraj<Vector>& x) {
+        _serialization()
+      },
+      VOID_SERIALIZE_OSTREAM_REF_CONST_SAMPLEDTRAJ_T_REF,
+      "f"_a, "x"_a);
+
+    m.def("deserialize", [](py::object py_file, SampledTraj<Vector>& x) {
+        _deserialization()
+      },
+      VOID_DESERIALIZE_ISTREAM_REF_SAMPLEDTRAJ_T_REF,
+      "f"_a, "x"_a);
+
+    m.def("serialize", [](py::object py_file, const SampledTraj<Matrix>& x) {
+        _serialization()
+      },
+      VOID_SERIALIZE_OSTREAM_REF_CONST_SAMPLEDTRAJ_T_REF,
+      "f"_a, "x"_a);
+
+    m.def("deserialize", [](py::object py_file, SampledTraj<Matrix>& x) {
+        _deserialization()
+      },
+      VOID_DESERIALIZE_ISTREAM_REF_SAMPLEDTRAJ_T_REF,
       "f"_a, "x"_a);
 }

@@ -43,6 +43,6 @@ int main(){
      time = time+dt;
   }
   
-  AnalyticTraj traj4 (f1,{0,100});
+  AnalyticTraj traj4 ({0,100},f1);
   fig4.draw_trajectory(traj4,Color::black());
 }

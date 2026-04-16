@@ -331,12 +331,15 @@ inline auto bisect(Index i, float ratio = 0.49) const
  * Uses ``max_diam_index()`` to find the element with the largest diameter and bisects
  * it using the given ratio.
  * 
+ * The indices may be restricted to a set of values provided in ``among_indices``.
+ * 
  * \param ratio Ratio to determine the split point within the interval (default 0.49).
+ * \param among_indices Optional set of indices among which the bisection will be performed.
  * \return A pair of matrices resulting from the bisection of the largest diameter interval.
  */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsIntervalDomain<Scalar>
-inline auto bisect_largest(float ratio = 0.49) const
+inline auto bisect_largest(double ratio = 0.49, const std::vector<Index>& among_indices = {}) const
 {
-  return bisect(this->max_diam_index(), ratio);
+  return bisect(this->max_diam_index(among_indices), ratio);
 }

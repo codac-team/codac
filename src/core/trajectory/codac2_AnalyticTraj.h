@@ -22,7 +22,7 @@ namespace codac2
 
       using Type = T;
 
-      AnalyticTraj(const AnalyticFunction<T>& f, const Interval& tdomain)
+      AnalyticTraj(const Interval& tdomain, const AnalyticFunction<T>& f)
         : TrajBase<typename T::Scalar>(), AnalyticFunction<T>(f), _tdomain(tdomain)
       {
         assert_release(f.args().total_size() == 1 && "domain of f must be 1d");
@@ -89,3 +89,5 @@ namespace codac2
       Interval _tdomain;
   };
 }
+
+#include "codac2_TrajBase_impl.h"

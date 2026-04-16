@@ -52,7 +52,7 @@ f = AnalyticFunction({x}, x(1));
 c = CtcInverseNotIn(f, Interval(0,1));
 
 y = IntervalVector({{0.5,3},{-1,1}});
-c.contract(y); % [[1,3],[-1,1]]
+y = c.contract(y); % [[1,3],[-1,1]]
 % Only the first component is constrained by the not-in condition
 % [ctcinv-6-end]
 

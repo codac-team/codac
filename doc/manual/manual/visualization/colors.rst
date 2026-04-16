@@ -391,7 +391,7 @@ A string starting with ``"w:"`` followed by a float can be passed to define the 
 Z-value
 ~~~~~~~~
 
-**Warning: the Z-value has been added to VIBes since PR #150, a release is being prepared**
+**Warning: the Z-value has been added to VIBes since version v0.3.4, please update to this version (or higher) for the Z-value to work**
 
 A string starting with ``"z:"`` followed by a float can be passed to define the Z-value (default is 0)
 

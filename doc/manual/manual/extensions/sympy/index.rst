@@ -43,6 +43,20 @@ The same package is also required by the C++ extension, since the symbolic backe
 The Python interpreter is managed internally by the extension in C++, and is of course already available when Codac is used from Python.
 No explicit interpreter initialization is needed in user code.
 
+In C++ however, you need to link the extension to your project, for instance by updating your ``CMakeLists.txt`` with::
+
+  find_package(pybind11)
+
+  add_executable(${PROJECT_NAME} main.cpp)
+  target_compile_options(${PROJECT_NAME} PUBLIC ${CODAC_CXX_FLAGS})
+  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS} ${CODAC_SYMPY_INCLUDE_DIR})
+  target_link_libraries(${PROJECT_NAME} PRIVATE
+    ${CODAC_LIBRARIES}
+    ${CODAC_SYMPY_LIBRARY} # linking to the codac-sympy extension
+    pybind11::embed # linking to pybind11
+    Ibex::ibex
+  )
+
 Finally, in order to include the features of the extension:
 
 .. tabs::

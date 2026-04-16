@@ -17,6 +17,23 @@
 
 namespace codac2
 {
+  /**
+   * \class Slice
+   * \brief Codomain of a sliced tube over one temporal slice
+   *
+   * A ``Slice<T>`` represents the codomain of a ``SlicedTube<T>`` over one
+   * temporal interval of a ``TDomain``.
+   *
+   * This object is attached to one temporal slice ``TSlice`` and stores a
+   * codomain of type ``T``. The type ``T`` is typically ``Interval`` or
+   * ``IntervalVector``, or any custom domain implemented by the user.
+   *
+   * The inheritance from ``T`` is protected so that modifications of the
+   * codomain remain controlled by the ``Slice`` interface. Indeed, changing the
+   * codomain of a slice may require propagating contractions to adjacent gates.
+   *
+   * \tparam T codomain type
+   */
   template<class T>
   class Slice : public SliceBase,
     protected T
@@ -25,10 +42,26 @@ namespace codac2
   {
     public:
 
+      /**
+       * \brief Creates a slice attached to a tube over a temporal slice
+       *
+       * \param tube sliced tube owning this slice
+       * \param it_tslice iterator to the associated temporal slice
+       * \param codomain codomain associated with this slice
+       */
       explicit Slice(const SlicedTubeBase& tube, const std::list<TSlice>::iterator& it_tslice, const T& codomain)
         : SliceBase(tube, it_tslice), T(codomain)
       { }
 
+      /**
+       * \brief Creates a slice from another one for a given tube
+       *
+       * This constructor duplicates the codomain and keeps the same temporal
+       * support.
+       *
+       * \param s source slice
+       * \param tube sliced tube owning the copied slice
+       */
       Slice(const Slice& s, const SlicedTubeBase& tube)
         : SliceBase(tube, s._it_tslice), T(s.codomain())
       { }
@@ -40,60 +73,124 @@ namespace codac2
       Slice(Slice&&) = delete;
       Slice& operator=(Slice&&) = delete;
 
+      /**
+       * \brief Returns the sliced tube owning this slice
+       *
+       * \return reference to the parent sliced tube
+       */
       inline const SlicedTube<T>& tube() const
       {
         return static_cast<const SlicedTube<T>&>(_tube);
       }
 
-      inline virtual std::shared_ptr<SliceBase> copy() const
+      /**
+       * \brief Duplicates this slice
+       *
+       * \return shared pointer to a copy of this slice
+       */
+      inline std::shared_ptr<SliceBase> copy() const override
       {
         return std::make_shared<Slice>(*this, this->_tube);
       }
 
+      /**
+       * \brief Returns the codomain dimension
+       *
+       * \return size of the codomain
+       */
       inline Index size() const
       {
         return this->T::size();
       }
 
+      /**
+       * \brief Returns a mutable reference to the codomain
+       *
+       * \note Prefer ``set()`` when adjacency propagation is required.
+       *
+       * \return mutable reference to the codomain
+       */
       inline T& codomain()
       {
-        return (T&)(*this);
+        return static_cast<T&>(*this);
       }
 
+      /**
+       * \brief Returns a constant reference to the codomain
+       *
+       * \return constant reference to the codomain
+       */
       inline const T& codomain() const
       {
-        return (const T&)(*this);
+        return static_cast<const T&>(*this);
       }
 
+      /**
+       * \brief Tests whether this slice is a gate
+       *
+       * A slice is considered a gate when its temporal support is degenerate.
+       *
+       * \return ``true`` if this slice is a gate, ``false`` otherwise
+       */
       inline bool is_gate() const
       {
         return t0_tf().is_degenerated();
       }
 
+      /**
+       * \brief Returns the previous slice
+       *
+       * \return shared pointer to the previous slice, or ``nullptr`` if none exists
+       */
       inline std::shared_ptr<const Slice<T>> prev_slice() const
       {
         return std::static_pointer_cast<const Slice<T>>(
           this->SliceBase::prev_slice());
       }
 
+      /**
+       * \brief Returns the previous slice
+       *
+       * \return shared pointer to the previous slice, or ``nullptr`` if none exists
+       */
       inline std::shared_ptr<Slice<T>> prev_slice()
       {
         return std::const_pointer_cast<Slice<T>>(
           static_cast<const Slice<T>&>(*this).prev_slice());
       }
 
+      /**
+       * \brief Returns the next slice
+       *
+       * \return shared pointer to the next slice, or ``nullptr`` if none exists
+       */
       inline std::shared_ptr<const Slice<T>> next_slice() const
       {
         return std::static_pointer_cast<const Slice<T>>(
           this->SliceBase::next_slice());
       }
 
+      /**
+       * \brief Returns the next slice
+       *
+       * \return shared pointer to the next slice, or ``nullptr`` if none exists
+       */
       inline std::shared_ptr<Slice<T>> next_slice()
       {
         return std::const_pointer_cast<Slice<T>>(
           static_cast<const Slice<T>&>(*this).next_slice());
       }
 
+      /**
+       * \brief Returns the input gate of this slice
+       *
+       * If the previous temporal element is an explicit gate, its codomain is
+       * returned. Otherwise, the returned value is the intersection between this
+       * codomain and the codomain of the previous slice. If no previous slice
+       * exists, the codomain of this slice is returned.
+       *
+       * \return enclosure of the input gate
+       */
       inline T input_gate() const
       {
         if(!prev_slice())
@@ -108,6 +205,16 @@ namespace codac2
         }
       }
 
+      /**
+       * \brief Returns the output gate of this slice
+       *
+       * If the next temporal element is an explicit gate, its codomain is
+       * returned. Otherwise, the returned value is the intersection between this
+       * codomain and the codomain of the next slice. If no next slice exists,
+       * the codomain of this slice is returned.
+       *
+       * \return enclosure of the output gate
+       */
       inline T output_gate() const
       {
         if(!next_slice())
@@ -122,6 +229,16 @@ namespace codac2
         }
       }
 
+      /**
+       * \brief Returns enclosed lower and upper bounds over a temporal interval
+       *
+       * This method returns a pair whose first component encloses the reachable
+       * lower bounds and whose second component encloses the reachable upper
+       * bounds over ``t``.
+       *
+       * \param t temporal interval
+       * \return pair made of enclosed lower and upper bounds
+       */
       inline std::pair<T,T> enclosed_bounds(const Interval& t) const
       {
         T x = *this; x.set_empty(); 
@@ -156,6 +273,15 @@ namespace codac2
         return bounds;
       }
 
+      /**
+       * \brief Sets the codomain of this slice
+       *
+       * If ``propagate`` is set to ``true``, adjacent gates are updated in order
+       * to preserve temporal consistency.
+       *
+       * \param x new codomain
+       * \param propagate if set to ``true``, propagates the update to adjacent gates
+       */
       inline void set(const T& x, bool propagate = true)
       {
         assert_release(x.size() == this->size());
@@ -164,22 +290,49 @@ namespace codac2
           update_adjacent_codomains();
       }
 
+      /**
+       * \brief Initializes this codomain to its unbounded value
+       *
+       * No propagation is performed on adjacent slices.
+       */
       inline void init()
       {
         this->T::init();
         // Nothing to propagate to adjacent codomains
       }
 
+      /**
+       * \brief Sets this codomain to the empty set
+       *
+       * Adjacent gates are updated accordingly.
+       */
       inline void set_empty()
       {
         set_empty(true);
       }
 
+      /**
+       * \brief Compares two slices
+       *
+       * The comparison only involves the codomain of the slices.
+       *
+       * \param x slice to compare with
+       * \return ``true`` if both codomains are equal, ``false`` otherwise
+       */
       inline bool operator==(const Slice& x) const
       {
         return codomain() == x.codomain();
       }
 
+      /**
+       * \brief Returns the polygonal enclosure associated with this scalar slice
+       *
+       * The enclosure is built from the codomain of this slice, its input/output
+       * gates and the derivative information provided by ``v``.
+       *
+       * \param v derivative slice
+       * \return polygonal enclosure of this slice
+       */
       inline ConvexPolygon polygon_slice(const Slice<T>& v) const
         requires std::is_same_v<T,Interval>
       {
@@ -200,6 +353,14 @@ namespace codac2
           v);
       }
 
+      /**
+       * \brief Returns the polygonal enclosure associated with one component
+       *        of a vector slice
+       *
+       * \param v derivative slice
+       * \param i component index
+       * \return polygonal enclosure of the \f$i\f$-th component
+       */
       inline ConvexPolygon polygon_slice_i(const Slice<T>& v, Index i) const
         requires std::is_same_v<T,IntervalVector>
       {
@@ -375,14 +536,26 @@ namespace codac2
         }
       }
 
+      /**
+       * \brief Stream output for a slice
+       *
+       * \param os output stream
+       * \param x slice to be displayed
+       * \return reference to the output stream
+       */
       friend inline std::ostream& operator<<(std::ostream& os, const Slice& x)
       {
         os << x.t0_tf()
-           << "↦" << x.codomain()
+           << "->" << x.codomain()
            << std::flush;
         return os;
       }
 
+      /**
+       * \brief Returns the unbounded value associated with this codomain type
+       *
+       * \return unbounded value of type ``T``
+       */
       inline T all_reals_value() const
       {
         T x = codomain();
@@ -390,6 +563,11 @@ namespace codac2
         return x;
       }
 
+      /**
+       * \brief Returns the empty value associated with this codomain type
+       *
+       * \return empty value of type ``T``
+       */
       inline T empty_value() const
       {
         T x = codomain();
@@ -403,6 +581,11 @@ namespace codac2
       template<typename T_>
       friend class SlicedTube;
 
+      /**
+       * \brief Sets this codomain to the empty set
+       *
+       * \param propagate if set to ``true``, propagates the update to adjacent gates
+       */
       inline void set_empty(bool propagate)
       {
         this->T::set_empty();
@@ -410,6 +593,12 @@ namespace codac2
           update_adjacent_codomains();
       }
 
+      /**
+       * \brief Propagates codomain contractions to adjacent gates
+       *
+       * This method preserves consistency between a slice and its neighboring
+       * gates when one of them is contracted.
+       */
       inline void update_adjacent_codomains()
       {
         if(prev_slice())

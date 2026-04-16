@@ -19,7 +19,6 @@
 #include <codac2_CtcAction.h>
 #include <codac2_SepAction.h>
 #include "codac2_py_OctaSym_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
-#include "codac2_py_cast.h"
 
 using namespace std;
 using namespace codac2;

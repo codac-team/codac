@@ -190,7 +190,7 @@ Optionally, for Python binding (*e.g.* ``choco install python --version=3.10.4``
 
 .. code-block:: bash
 
-  choco install doxygen.install --version=1.13
+  choco install doxygen.install --version=1.16
   choco install graphviz
   python -m pip install --upgrade pip
   pip install --upgrade wheel setuptools sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs breathe sphinx_togglebutton

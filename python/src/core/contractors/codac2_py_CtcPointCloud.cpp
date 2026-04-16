@@ -29,8 +29,8 @@ void export_CtcPointCloud(py::module& m, py::class_<CtcBase<IntervalVector>,pyCt
       CTCPOINTCLOUD_CTCPOINTCLOUD_CONST_VECTOR_INTERVALVECTOR_REF,
       "p"_a)
 
-    .def(CONTRACT_BOX_METHOD(CtcPointCloud,
-      VOID_CTCPOINTCLOUD_CONTRACT_INTERVALVECTOR_REF_CONST))
-
   ;
+
+  CONTRACT_METHODS(exported, CtcPointCloud,
+    VOID_CTCPOINTCLOUD_CONTRACT_INTERVALVECTOR_REF_CONST)
 }

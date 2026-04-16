@@ -279,7 +279,7 @@ TEST_CASE("SlicedTube")
     SlicedTube x(tdomain, AnalyticFunction(
       {t},
       {
-        sin(sqrt(t)+((t-5)^2)*Interval(-0.01,0.01)),
+        sin(sqrt(t)+(sqr(t-5))*Interval(-0.01,0.01)),
         cos(t)+sin(t/0.2)*Interval(-0.1,0.1)
       }));
     SlicedTube u(tdomain, IntervalVector(2));
@@ -417,7 +417,7 @@ TEST_CASE("SlicedTube")
   {
     ScalarVar t;
     AnalyticFunction f { {t}, cos(t) };
-    AnalyticTraj analytic_traj(f, {-PI,PI});
+    AnalyticTraj analytic_traj({-PI,PI},f);
     auto sampled_traj = analytic_traj.sampled(1e-2);
     auto tdomain = create_tdomain({-PI,PI},1e-2,false);
     SlicedTube<Interval> tube(tdomain, sampled_traj);
@@ -437,7 +437,7 @@ TEST_CASE("SlicedTube")
       vec(2*cos(t),sin(2*t))
     };
 
-    auto analytic_traj = AnalyticTraj(f, {0,5});
+    auto analytic_traj = AnalyticTraj({0,5},f);
     auto sampled_traj = analytic_traj.sampled(1e-2);
     auto tdomain = create_tdomain({0,5},1e-3,false);
     SlicedTube<IntervalVector> tube(tdomain, sampled_traj);
@@ -656,7 +656,7 @@ TEST_CASE("SlicedTube")
   {
     auto tdomain = create_tdomain({-20,20},0.05);
     ScalarVar t;
-    AnalyticFunction f({t}, Interval(-1,1)*((t^2)+1));
+    AnalyticFunction f({t}, Interval(-1,1)*(sqr(t)+1));
     SlicedTube<Interval> x(tdomain, f);
     CHECK(x.invert(0., x.tdomain()->t0_tf()) == x.tdomain()->t0_tf());
   }

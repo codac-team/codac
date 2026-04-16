@@ -27,6 +27,13 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
+inline void deprecated_xor()
+{
+  std::cout
+    << "Operator '^' is intentionally disabled in Codac. Use pow(x,y), sqr(x), or '**' instead."
+    << std::endl;
+}
+
 inline void export_ScalarExpr(py::module& m)
 {
   py::class_<ScalarExpr>
@@ -59,13 +66,13 @@ inline void export_ScalarExpr(py::module& m)
     .def("__truediv__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1/e2; }, py::is_operator())
     .def("__rtruediv__", [](const ScalarExpr& e1, const Interval& e2)   { return e2/e1; }, py::is_operator())
 
-    .def("__xor__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1^e2; }, py::is_operator())
-    .def("__xor__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1^e2; }, py::is_operator())
-    .def("__rxor__", [](const ScalarExpr& e1, const Interval& e2)   { return e2^e1; }, py::is_operator())
+    .def("__xor__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { deprecated_xor(); return pow(e1,e2); }, py::is_operator())
+    .def("__xor__",  [](const ScalarExpr& e1, const Interval& e2)   { deprecated_xor(); return pow(e1,e2); }, py::is_operator())
+    .def("__rxor__", [](const ScalarExpr& e1, const Interval& e2)   { deprecated_xor(); return pow(e2,e1); }, py::is_operator())
 
-    .def("__pow__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1^e2; }, py::is_operator())
-    .def("__pow__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1^e2; }, py::is_operator())
-    .def("__rpow__", [](const ScalarExpr& e1, const Interval& e2)   { return e2^e1; }, py::is_operator())
+    .def("__pow__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return pow(e1,e2); }, py::is_operator())
+    .def("__pow__",  [](const ScalarExpr& e1, const Interval& e2)   { return pow(e1,e2); }, py::is_operator())
+    .def("__rpow__", [](const ScalarExpr& e1, const Interval& e2)   { return pow(e2,e1); }, py::is_operator())
 
   ;
 

@@ -1,6 +1,6 @@
-# [Codac: constraint-programming for robotics](http://codac.io/v2) [![Build Status](https://github.com/codac-team/codac/workflows/.github/workflows/tests.yml/badge.svg)](https://github.com/codac-team/codac/actions)
+# [Codac: constraint-programming for robotics](http://codac.io) [![Build Status](https://github.com/codac-team/codac/workflows/.github/workflows/tests.yml/badge.svg)](https://github.com/codac-team/codac/actions)
 
-See the official website: http://codac.io/v2
+See the official website: http://codac.io
 
 Codac (Catalog Of Domains And Contractors) is a C++/Python/Matlab library providing tools for interval computations and constraint programming over real numbers, trajectories and sets.
 It has numerous applications in parameter estimation, guaranteed integration, robot localization, and provides reliable outputs.
@@ -30,7 +30,7 @@ from codac import *
 
 x = VectorVar(3)
 f = AnalyticFunction([x], [
-  -(x[2]^2)+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
+  -sqr(x[2])+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
   2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
 ])
 

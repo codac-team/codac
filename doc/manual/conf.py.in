@@ -89,7 +89,7 @@ html_theme_options = {
         "color-toc-item-text--active": "#FFFFFF",
     },
 
-    "announcement": "You are currently reading the new Codac documentation, which is currently in preparation. <a href=\"http://codac.io\">See the v1 website</a>.",
+    #"announcement": "You are currently reading the new Codac documentation, which is currently in preparation. <a href=\"http://codac.io\">See the v1 website</a>.",
 }
 
 # See https://www.sympy.org/sphinx-math-dollar/

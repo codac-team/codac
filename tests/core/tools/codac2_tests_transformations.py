@@ -23,7 +23,7 @@ class TestTransformations(unittest.TestCase):
       2*sin(t)+0.1*sin(10*t)
     ])
 
-    src = AnalyticTraj(f_src,[-1,3]).sampled(0.01)
+    src = AnalyticTraj([-1,3],f_src).sampled(0.01)
 
     # The dst trajectory is obtained analytically with a
     # transformation described by the parameters:
@@ -36,7 +36,7 @@ class TestTransformations(unittest.TestCase):
       b*sin(a)*f_src(t)[0]+b*cos(a)*f_src(t)[1] + T[1] + 0.05*sin(100*t)
     ])
 
-    dst = AnalyticTraj(f_dst,[-1,3]).sampled(0.01)
+    dst = AnalyticTraj([-1,3],f_dst).sampled(0.01)
 
     # Computing the transformation
 

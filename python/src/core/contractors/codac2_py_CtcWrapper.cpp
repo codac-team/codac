@@ -28,11 +28,11 @@ void export_CtcWrapper(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIn
     .def(py::init<const IntervalVector&>(),
       CTCWRAPPER_YX_CTCWRAPPER_CONST_Y_REF,
       "y"_a)
-
-    .def(CONTRACT_BOX_METHOD(CtcWrapper<IntervalVector>,
-      VOID_CTCWRAPPER_YX_CONTRACT_X_REF_CONST))
     
   ;
+
+  CONTRACT_METHODS(exported_ctcwrapper_intervalvector, CtcWrapper<IntervalVector>,
+    VOID_CTCWRAPPER_YX_CONTRACT_X_REF_CONST)
 
   py::class_<CtcWrapper<PavingOut>> exported_ctcwrapper_pavingout(m, "CtcWrapper_PavingOut", pyctc, CTCWRAPPER_MAIN);
   exported_ctcwrapper_pavingout
@@ -40,9 +40,9 @@ void export_CtcWrapper(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIn
     .def(py::init<const PavingOut&>(),
       CTCWRAPPER_YX_CTCWRAPPER_CONST_Y_REF,
       "y"_a)
-
-    .def(CONTRACT_BOX_METHOD(CtcWrapper<PavingOut>,
-      VOID_CTCWRAPPER_YX_CONTRACT_X_REF_CONST))
     
   ;
+
+  CONTRACT_METHODS(exported_ctcwrapper_pavingout, CtcWrapper<PavingOut>,
+    VOID_CTCWRAPPER_YX_CONTRACT_X_REF_CONST)
 }

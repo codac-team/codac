@@ -172,4 +172,53 @@ namespace codac2
       std::unordered_map<Index,FlatInputBinding> _bindings; //!< Bindings indexed by input expression identifier.
       Index _size = 0;                                      //!< Total number of scalar inputs in the flattened domain.
   };
+
+  template<typename T>
+  static std::shared_ptr<ExprBase> as_expr_base(const AnalyticExprWrapper<T>& e)
+  {
+    return std::static_pointer_cast<ExprBase>(
+      std::shared_ptr<AnalyticExpr<T>>(e)
+    );
+  }
+
+  template<typename T>
+    requires std::is_base_of_v<AnalyticTypeBase,T>
+  class AnalyticFunction;
+
+  template<typename T>
+  inline AnalyticFunction<T> unaryize_function(const AnalyticFunction<T>& f)
+  {
+    if(f.nb_args() == 0 || (f.nb_args() == 1 && std::dynamic_pointer_cast<VectorVar>(f.args()[0])))
+      return f;
+
+    FlatInputLayout layout(f.args());
+    VectorVar flat_x(layout.size(), "x");
+
+    auto y = std::dynamic_pointer_cast<AnalyticExpr<T>>(f.expr()->copy());
+    assert(y && "unaryize_function: unable to copy analytic expression");
+
+    for(const auto& arg : f.args())
+    {
+      const auto& b = layout.binding_of(arg->unique_id());
+
+      if(std::dynamic_pointer_cast<ScalarVar>(arg))
+        y->replace_arg(arg->unique_id(), as_expr_base(flat_x[b.offset]));
+
+      else if(std::dynamic_pointer_cast<VectorVar>(arg))
+      {
+        assert(b.cols == 1 && "unaryize_function: invalid flat binding for vector input");
+        y->replace_arg(
+          arg->unique_id(),
+          as_expr_base(flat_x.subvector(b.offset, b.offset + b.rows - 1))
+        );
+      }
+
+      else
+      {
+        assert(false && "unaryize_function: only scalar/vector input arguments are currently supported");
+      }
+    }
+
+    return AnalyticFunction<T>({flat_x}, y);
+  }
 }

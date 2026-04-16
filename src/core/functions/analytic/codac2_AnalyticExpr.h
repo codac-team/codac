@@ -31,7 +31,7 @@ namespace codac2
       virtual std::pair<Index,Index> output_shape() const = 0;
 
       const T& init_value(ValuesMap& v, const T& x) const
-      {
+      {        
         auto& p = v[unique_id()];
 
         if(!p)

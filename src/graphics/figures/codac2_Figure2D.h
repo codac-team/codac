@@ -379,6 +379,14 @@ namespace codac2
       void plot_trajectory(const SampledTraj<double>& x, const StyleProperties& style = StyleProperties());
 
       /**
+       * \brief Plots a trajectory on the figure (x-axis is the time)
+       * 
+       * \param x AnalyticTraj to plot
+       * \param style Style of the trajectory (edge color)
+       */
+      void plot_trajectory(const AnalyticTraj<ScalarType>& x, const StyleProperties& style = StyleProperties());
+
+      /**
        * \brief Plots a set of trajectories on the figure (x-axis is the time) with random colors
        * 
        * \param x SampledTraj<Vector> set of trajectories to plot
@@ -936,6 +944,18 @@ namespace codac2
        * \param style Style of the trajectory (edge color)
        */
       static void plot_trajectory(const SampledTraj<double>& x, const StyleProperties& style = StyleProperties())
+      {
+        auto_init();
+        selected_fig()->plot_trajectory(x,style);
+      }
+
+      /**
+       * \brief Plots a trajectory on the figure (x-axis is the time)
+       * 
+       * \param x AnalyticTraj to plot
+       * \param style Style of the trajectory (edge color)
+       */
+      static void plot_trajectory(const AnalyticTraj<ScalarType>& x, const StyleProperties& style = StyleProperties())
       {
         auto_init();
         selected_fig()->plot_trajectory(x,style);

@@ -2,6 +2,7 @@ from codac import *
 import numpy as np
 
 if __name__=="__main__":
+  set_nb_threads(max_threads())
 
   # 2D example of the PEIBOS algorithm
 
@@ -46,7 +47,7 @@ if __name__=="__main__":
   figure_3d_proj.set_window_properties([25,600],[500,500])
   figure_3d_proj.set_axes(axis(0,[-1.5,2.5]), axis(1,[-2,2]))
 
-  v_par_3d = PEIBOS(f_3d,psi0_3d,[id_3d,s1,s1*s1,s1.invert(),s2,s2.invert()],0.2,True)
+  v_par_3d = PEIBOS(f_3d,psi0_3d,[id_3d,s1,s1*s1,s1.invert(),s2,s2.invert()],0.05,True)
 
   for p in v_par_3d:
     figure_3d.draw_parallelepiped(p,Color.green(0.5))

@@ -27,7 +27,17 @@ void export_linear_ctc(py::module& m)
     .def(py::init(),
       CTCGAUSSELIM_CTCGAUSSELIM)
 
-    .def("contract", &CtcGaussElim::contract,
+    .def("contract",
+      [](const CtcGaussElim& c, IntervalMatrix& A, IntervalVector& x, IntervalVector& b)
+      -> py::tuple
+      {
+        c.contract(A,x,b);
+        return py::make_tuple(
+          py::cast(A, py::return_value_policy::reference),
+          py::cast(x, py::return_value_policy::reference),
+          py::cast(b, py::return_value_policy::reference)
+        );
+      },
       VOID_CTCGAUSSELIM_CONTRACT_INTERVALMATRIX_REF_INTERVALVECTOR_REF_INTERVALVECTOR_REF_CONST,
       "A"_a, "x"_a, "b"_a)
     
@@ -39,7 +49,17 @@ void export_linear_ctc(py::module& m)
     .def(py::init(),
       CTCGAUSSSEIDEL_CTCGAUSSSEIDEL)
 
-    .def("contract", &CtcGaussSeidel::contract,
+    .def("contract",
+      [](const CtcGaussSeidel& c, IntervalMatrix& A, IntervalVector& x, IntervalVector& b)
+      -> py::tuple
+      {
+        c.contract(A,x,b);
+        return py::make_tuple(
+          py::cast(A, py::return_value_policy::reference),
+          py::cast(x, py::return_value_policy::reference),
+          py::cast(b, py::return_value_policy::reference)
+        );
+      },
       VOID_CTCGAUSSSEIDEL_CONTRACT_INTERVALMATRIX_REF_INTERVALVECTOR_REF_INTERVALVECTOR_REF_CONST,
       "A"_a, "x"_a, "b"_a)
     
@@ -64,7 +84,17 @@ void export_linear_ctc(py::module& m)
         }),
       CTCLINEARPRECOND_CTCLINEARPRECOND_CONST_C_REF)
 
-    .def("contract", &CtcLinearPrecond::contract,
+    .def("contract",
+      [](const CtcLinearPrecond& c, IntervalMatrix& A, IntervalVector& x, IntervalVector& b)
+      -> py::tuple
+      {
+        c.contract(A,x,b);
+        return py::make_tuple(
+          py::cast(A, py::return_value_policy::reference),
+          py::cast(x, py::return_value_policy::reference),
+          py::cast(b, py::return_value_policy::reference)
+        );
+      },
       VOID_CTCLINEARPRECOND_CONTRACT_INTERVALMATRIX_REF_INTERVALVECTOR_REF_INTERVALVECTOR_REF_CONST,
       "A"_a, "x"_a, "b"_a)
     

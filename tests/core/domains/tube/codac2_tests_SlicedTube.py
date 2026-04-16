@@ -244,7 +244,7 @@ class TestSlicedTube(unittest.TestCase):
     x = SlicedTube(tdomain, AnalyticFunction(
       [t],
       [
-        sin(sqrt(t)+((t-5)^2)*Interval(-0.01,0.01)),
+        sin(sqrt(t)+(sqr(t-5))*Interval(-0.01,0.01)),
         cos(t)+sin(t/0.2)*Interval(-0.1,0.1)
       ]))
     u = SlicedTube(tdomain, IntervalVector(2))
@@ -321,7 +321,7 @@ class TestSlicedTube(unittest.TestCase):
 
     t = ScalarVar()
     f = AnalyticFunction([t], cos(t))
-    analytic_traj = AnalyticTraj(f, [-PI,PI])
+    analytic_traj = AnalyticTraj([-PI,PI],f)
     sampled_traj = analytic_traj.sampled(1e-2)
     tdomain = create_tdomain([-PI,PI],1e-2,False)
     tube = SlicedTube(tdomain, sampled_traj)
@@ -342,7 +342,7 @@ class TestSlicedTube(unittest.TestCase):
       vec(2*cos(t),sin(2*t))
     )
 
-    analytic_traj = AnalyticTraj(f, [0,5])
+    analytic_traj = AnalyticTraj([0,5],f)
     sampled_traj = analytic_traj.sampled(1e-2)
     tdomain = create_tdomain([0,5],1e-3,False)
     tube = SlicedTube(tdomain, sampled_traj)
@@ -519,7 +519,7 @@ class TestSlicedTube(unittest.TestCase):
 
     tdomain = create_tdomain([-20,20],0.05)
     t = ScalarVar()
-    f = AnalyticFunction([t], Interval(-1,1)*((t^2)+1))
+    f = AnalyticFunction([t], Interval(-1,1)*(sqr(t)+1))
     x = SlicedTube(tdomain, f)
     self.assertTrue(x.invert(0., x.tdomain().t0_tf()) == x.tdomain().t0_tf())
 

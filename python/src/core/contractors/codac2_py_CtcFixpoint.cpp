@@ -32,9 +32,8 @@ void export_CtcFixpoint(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcI
         }),
       CTCFIXPOINT_CTCFIXPOINT_CONST_C_REF_DOUBLE,
       "c"_a, "ratio"_a=0.1)
-
-    .def(CONTRACT_BOX_METHOD(CtcFixpoint,
-      VOID_CTCFIXPOINT_CONTRACT_INTERVALVECTOR_REF_CONST))
-
   ;
+
+  CONTRACT_METHODS(exported, CtcFixpoint,
+    VOID_CTCFIXPOINT_CONTRACT_INTERVALVECTOR_REF_CONST)
 }

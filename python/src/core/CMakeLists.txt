@@ -26,8 +26,8 @@
     contractors/codac2_py_CtcIdentity.cpp
     contractors/codac2_py_CtcInter.cpp
     contractors/codac2_py_CtcInverse.h
-    contractors/codac2_py_CtcInverseNotIn.h
     contractors/codac2_py_CtcLazy.cpp
+    contractors/codac2_py_CtcLohner.cpp
     contractors/codac2_py_CtcNot.cpp
     contractors/codac2_py_CtcPointCloud.cpp
     contractors/codac2_py_CtcPolar.cpp
@@ -36,6 +36,7 @@
     contractors/codac2_py_CtcQInter.cpp
     contractors/codac2_py_CtcSegment.cpp
     contractors/codac2_py_CtcUnion.cpp
+    contractors/codac2_py_CtcVisible.cpp
     contractors/codac2_py_CtcWrapper.cpp
     contractors/codac2_py_linear_ctc.cpp
 
@@ -55,6 +56,7 @@
     domains/zonotope/codac2_py_Zonotope.cpp
     domains/tube/codac2_py_Slice.h
     domains/tube/codac2_py_SlicedTube.h
+    domains/tube/codac2_py_SlicedTube_operations.cpp
     domains/tube/codac2_py_TDomain.cpp
     domains/tube/codac2_py_TimePropag.cpp
     domains/tube/codac2_py_TSlice.cpp
@@ -113,11 +115,13 @@
     separators/codac2_py_SepQInter.cpp
     separators/codac2_py_SepTransform.cpp
     separators/codac2_py_SepUnion.cpp
+    separators/codac2_py_SepVisible.cpp
     separators/codac2_py_SepWrapper.cpp
 
     tools/codac2_py_Approx.cpp
     tools/codac2_py_RobotSimulator.cpp
     tools/codac2_py_serialization.cpp
+    tools/codac2_py_threading.cpp
     tools/codac2_py_transformations.cpp
     tools/codac2_py_trunc.cpp
 

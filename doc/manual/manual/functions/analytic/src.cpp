@@ -32,7 +32,7 @@ TEST_CASE("AnalyticFunction - manual")
     AnalyticFunction f3({v}, Interval(-1,1)*v);
 
     // Example of multivariate vectorial function: from R×R to R³
-    AnalyticFunction f4({x1,x2}, { x1+x2, Interval(0,1)*exp(x1), x2^(1+x1) });
+    AnalyticFunction f4({x1,x2}, { x1+x2, Interval(0,1)*exp(x1), pow(x2,1+x1) });
     // [1-end]
 
 
@@ -100,7 +100,7 @@ TEST_CASE("AnalyticFunction - manual")
     y1 = f1.eval(Interval(0,1));
 
     ScalarVar x2;
-    AnalyticFunction f2({x1,x2}, x1^x2); // example of multivariate function
+    AnalyticFunction f2({x1,x2}, pow(x1,x2)); // example of multivariate function
 
     Interval y2 = f2.eval(Interval(2,3), 2);
 
@@ -138,13 +138,13 @@ TEST_CASE("AnalyticFunction - manual")
     // J1 = intv. matrix 1x1: [[ [-(PI/2),1] ]]
 
     ScalarVar x2;
-    AnalyticFunction f2({x1,x2}, x1^x2); // example of multivariate function
+    AnalyticFunction f2({x1,x2}, pow(x1,x2)); // example of multivariate function
     IntervalMatrix J2 = f2.diff(2.,Interval(2,3));
     // J2 = intv. matrix 1x2: [[ [4,12], [2.77258,5.54518] ]]
 
     VectorVar v(3);
     AnalyticFunction f3({v}, { // vectorial function
-      v[0]-(v[1]^2),
+      v[0]-sqr(v[1]),
       Interval(-1,0)*v[2]
     });
     IntervalMatrix J3 = f3.diff(Vector({5,8,10}));

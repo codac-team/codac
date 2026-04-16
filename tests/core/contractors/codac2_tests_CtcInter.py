@@ -20,19 +20,19 @@ class TestCtcInter(unittest.TestCase):
     c3 = c1 & c2
 
     x = IntervalVector([[-oo,oo],[-oo,oo]])
-    c3.contract(x)
+    x = c3.contract(x)
     self.assertTrue(x == IntervalVector([[-10,2],[0,2]]))
 
     x = IntervalVector([[-oo,0],[-oo,0]])
-    c3.contract(x)
+    x = c3.contract(x)
     self.assertTrue(x == IntervalVector([[-10,0],[0,0]]))
 
     x = IntervalVector([[0,oo],[0,oo]])
-    c3.contract(x)
+    x = c3.contract(x)
     self.assertTrue(x == IntervalVector([[0,2],[0,2]]))
 
     x = IntervalVector([[0,0],[0,0]])
-    c3.contract(x)
+    x = c3.contract(x)
     self.assertTrue(x == IntervalVector.zero(2))
 
 if __name__ ==  '__main__':

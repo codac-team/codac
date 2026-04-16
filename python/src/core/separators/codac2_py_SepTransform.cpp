@@ -14,7 +14,6 @@
 #include <codac2_SepTransform.h>
 #include "codac2_py_Sep.h"
 #include "codac2_py_SepTransform_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
-#include "codac2_py_cast.h"
 
 using namespace std;
 using namespace codac2;
@@ -27,12 +26,10 @@ void export_SepTransform(py::module& m, py::class_<SepBase,pySep>& pysep)
   exported
 
     .def(py::init(
-        [](const SepBase& s, const py::object& f, const py::object& f_inv)
+        [](const SepBase& s, const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& f_inv)
         {
-          return std::make_unique<SepTransform>(
-            s.copy(),
-            cast<AnalyticFunction<VectorType>>(f),
-            cast<AnalyticFunction<VectorType>>(f_inv));
+          return std::make_unique<SepTransform>(s.copy(), f, f_inv);
+          // todo: s.copy necessary?
         }),
       SEPTRANSFORM_SEPTRANSFORM_CONST_S_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF_CONST_ANALYTICFUNCTION_VECTORTYPE_REF,
       "s"_a, "f"_a, "f_inv"_a)

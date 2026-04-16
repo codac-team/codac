@@ -70,36 +70,61 @@ void export_IntervalMatrixBase(py::module& m, py::class_<S>& pyclass)
     .def("diam", [](const S& x) { return x.diam(); },
       MATRIXBASE_ADDONS_INTERVALMATRIXBASE_AUTO_DIAM_CONST)
 
-    .def("min_rad", [](const S& x) { return x.min_rad(); },
-      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_DOUBLE_MIN_RAD_CONST)
-
-    .def("max_rad", [](const S& x) { return x.max_rad(); },
-      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_DOUBLE_MAX_RAD_CONST)
-
-    .def("min_diam", [](const S& x) { return x.min_diam(); },
-      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_DOUBLE_MIN_DIAM_CONST)
-
-    .def("max_diam", [](const S& x) { return x.max_diam(); },
-      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_DOUBLE_MAX_DIAM_CONST)
-
-    .def("min_diam_index", [](const S& x)
+    .def("min_rad", [](const S& x, const std::vector<Index_type>& among_indices)
         {
-          return matlab::output_index(x.min_diam_index());
+          return x.min_rad(
+            among_indices.empty() ? among_indices : matlab::convert_indices(among_indices));
         },
-      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_INDEX_MIN_DIAM_INDEX_CONST)
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_DOUBLE_MIN_RAD_CONST_VECTOR_INDEX_REF_CONST,
+      "among_indices"_a=std::vector<Index_type>())
 
-    .def("max_diam_index", [](const S& x)
+    .def("max_rad", [](const S& x, const std::vector<Index_type>& among_indices)
         {
-          return matlab::output_index(x.max_diam_index());
+          return x.max_rad(
+            among_indices.empty() ? among_indices : matlab::convert_indices(among_indices));
         },
-      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_INDEX_MAX_DIAM_INDEX_CONST)
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_DOUBLE_MAX_RAD_CONST_VECTOR_INDEX_REF_CONST,
+      "among_indices"_a=std::vector<Index_type>())
 
-    .def("extr_diam_index", [](const S& x, bool min)
+    .def("min_diam", [](const S& x, const std::vector<Index_type>& among_indices)
         {
-          return matlab::output_index(x.extr_diam_index(min));
+          return x.min_diam(
+            among_indices.empty() ? among_indices : matlab::convert_indices(among_indices));
         },
-      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_INDEX_EXTR_DIAM_INDEX_BOOL_CONST,
-      "min"_a)
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_DOUBLE_MIN_DIAM_CONST_VECTOR_INDEX_REF_CONST,
+      "among_indices"_a=std::vector<Index_type>())
+
+    .def("max_diam", [](const S& x, const std::vector<Index_type>& among_indices)
+        {
+          return x.max_diam(
+            among_indices.empty() ? among_indices : matlab::convert_indices(among_indices));
+        },
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_DOUBLE_MAX_DIAM_CONST_VECTOR_INDEX_REF_CONST,
+      "among_indices"_a=std::vector<Index_type>())
+
+    .def("min_diam_index", [](const S& x, const std::vector<Index_type>& among_indices)
+        {
+          return matlab::output_index(x.min_diam_index(
+            among_indices.empty() ? among_indices : matlab::convert_indices(among_indices)));
+        },
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_INDEX_MIN_DIAM_INDEX_CONST_VECTOR_INDEX_REF_CONST,
+      "among_indices"_a=std::vector<Index_type>())
+
+    .def("max_diam_index", [](const S& x, const std::vector<Index_type>& among_indices)
+        {
+          return matlab::output_index(x.max_diam_index(
+            among_indices.empty() ? among_indices : matlab::convert_indices(among_indices)));
+        },
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_INDEX_MAX_DIAM_INDEX_CONST_VECTOR_INDEX_REF_CONST,
+      "among_indices"_a=std::vector<Index_type>())
+
+    .def("extr_diam_index", [](const S& x, bool min, const std::vector<Index_type>& among_indices)
+        {
+          return matlab::output_index(x.extr_diam_index(min,
+            among_indices.empty() ? among_indices : matlab::convert_indices(among_indices)));
+        },
+      MATRIXBASE_ADDONS_INTERVALMATRIXBASE_INDEX_EXTR_DIAM_INDEX_BOOL_CONST_VECTOR_INDEX_REF_CONST,
+      "min"_a, "among_indices"_a=std::vector<Index_type>())
 
     .def("__contains__", [](const S& x, const V& y) { return x.contains(y); },
       MATRIXBASE_ADDONS_INTERVALMATRIXBASE_BOOL_CONTAINS_CONST_MATRIXBASE_OTHERDERIVED_REF_CONST)
@@ -168,9 +193,14 @@ void export_IntervalMatrixBase(py::module& m, py::class_<S>& pyclass)
       MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_BISECT_INDEX_FLOAT_CONST,
       "i"_a, "ratio"_a = 0.49)
 
-    .def("bisect_largest", [](const S& x, double ratio = 0.49) { return x.bisect_largest(ratio); },
-      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_BISECT_LARGEST_FLOAT_CONST,
-      "ratio"_a = 0.49)
+    .def("bisect_largest",
+        [](const S& x, double ratio, const std::vector<Index_type>& among_indices)
+        {
+          return x.bisect_largest(ratio,
+            among_indices.empty() ? among_indices : matlab::convert_indices(among_indices));
+        },
+      MATRIX_ADDONS_INTERVALMATRIXBASE_AUTO_BISECT_LARGEST_DOUBLE_CONST_VECTOR_INDEX_REF_CONST,
+      "ratio"_a = 0.49, "among_indices"_a=std::vector<Index_type>())
     ;
 
     if constexpr(!FOR_MATLAB)

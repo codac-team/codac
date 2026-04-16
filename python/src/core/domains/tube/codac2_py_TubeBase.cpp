@@ -20,7 +20,7 @@ using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void export_TubeBase(py::module& m)
+py::class_<TubeBase> export_TubeBase(py::module& m)
 {
   py::class_<TubeBase> exported_tubebase_class(m, "TubeBase", TUBEBASE_MAIN);
   exported_tubebase_class
@@ -32,4 +32,6 @@ void export_TubeBase(py::module& m)
       INTERVAL_TUBEBASE_T0_TF_CONST)
 
   ;
+
+  return exported_tubebase_class;
 }

@@ -49,7 +49,7 @@ If you simply want to use the latest Codac release in Python, you can download t
       cd $HOME
       git clone https://github.com/doxygen/doxygen
       cd doxygen
-      git checkout Release_1_13_0 # 1.13.0, or any newer release
+      git checkout Release_1_16_1 # 1.16.1, or any newer release
       mkdir build ; cd build
       cmake -DCMAKE_INSTALL_PREFIX=$HOME/doxygen/build_install ..
       make ; make install

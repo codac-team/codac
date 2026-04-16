@@ -111,5 +111,5 @@ a = 0.8
 t=ScalarVar()
 # Fermat's spiral
 f1=AnalyticFunction([t], [a*sqrt(t)*cos(t),a*sqrt(t)*sin(t)])
-traj4=AnalyticTraj(f1, [0,100])
+traj4=AnalyticTraj([0,100],f1)
 fig4.draw_trajectory(traj4, StyleGradientProperties(ColorMap.rainbow(),".."))

@@ -3,8 +3,24 @@
 Changelog
 =========
 
+
+Commit 52b81c8 ([cmake] warning for Doxygen version)
+----------------------------------------------------
+
+Python binding build requirement
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Doxygen 1.16.1 or newer is now required when ``WITH_PYTHON`` is enabled.
+If this version is not available, the API documentation will not be generated,
+which may cause issues when building the Python binding from source.
+This has no impact on the C++ build nor on downloading/installing the Python packages.
+
+
 Pull Request from godardma (15/10)
 ----------------------------------
+
+Parallelepiped drawing API
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Due to the addition of the Parallelepiped object the signature of the following functions has changed :
 
@@ -39,6 +55,9 @@ They used to take a Vector and a Matrix as arguments, now they take a Parallelep
     fig_2d.draw_parallelepiped({{1.5,2.8},Matrix({{0.5,0.4},{0,0.2}})});
     fig_3d.draw_parallelepiped({{1,-1.5,1.5},
                 {{1,0,0},{0,0.5,0},{0,0.2,0.1}}});
+
+Zonotope drawing API
+~~~~~~~~~~~~~~~~~~~~
 
 Due to the addition of the Zonotope object the signature of the following functions has changed :
 
@@ -88,4 +107,3 @@ They used to take a Vector and a Matrix as arguments, now they take a Zonotope o
 	      {{0.3,-0.2,-0.2,0.3,-0.1,0.0},
                 {0.2,0.1,-0.1,0.0,0.05,0.2},
                 {0.4,0.3,0.0,-0.1,0.2,0.1}}});
-    

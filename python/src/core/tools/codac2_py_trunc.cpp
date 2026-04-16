@@ -13,8 +13,9 @@
 #include <streambuf>
 #include <istream>
 #include <codac2_trunc.h>
+#include <codac2_IntervalVector.h>
+#include <codac2_IntervalMatrix.h>
 #include "codac2_py_trunc_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
-#include "codac2_py_cast.h"
 
 using namespace std;
 using namespace codac2;

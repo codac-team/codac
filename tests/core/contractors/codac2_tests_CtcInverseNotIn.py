@@ -28,23 +28,23 @@ class TestCtcInverseNotIn(unittest.TestCase):
 
     b = IntervalVector(2)
 
-    c.contract(b)
+    b = c.contract(b)
     self.assertTrue(b == IntervalVector(2))
 
     b = IntervalVector([[1,2],[1,2]])
-    c.contract(b)
+    b = c.contract(b)
     self.assertTrue(b == IntervalVector([[1,2],[1,2]]))
 
     b = IntervalVector([[1,oo],[1,oo]])
-    c.contract(b)
+    b = c.contract(b)
     self.assertTrue(b == IntervalVector([[1,oo],[1,oo]]))
 
     b = IntervalVector([[10],[10]])
-    c.contract(b)
+    b = c.contract(b)
     self.assertTrue(b == IntervalVector([[10],[10]]))
 
     b = IntervalVector([[1,5],[8,9]])
-    c.contract(b)
+    b = c.contract(b)
     self.assertTrue(b == IntervalVector([[1,5],[8,9]]))
   
   def test_CtcInverseNotIn_3(self):
@@ -54,23 +54,23 @@ class TestCtcInverseNotIn(unittest.TestCase):
     c = CtcInverseNotIn(f, [[0,oo],[1]])
 
     b = IntervalVector([[0,0.8],[-2.28,-1.56]])
-    c.contract(b)
+    b = c.contract(b)
     self.assertTrue(b == IntervalVector([[0,0.8],[-2.28,-1.56]]))
 
     b = IntervalVector([[4,5.4],[-0.05,2.45]])
-    c.contract(b)
+    b = c.contract(b)
     self.assertTrue(Approx(b,1e-2) == IntervalVector([[4,5.4],[-0.05,2.45]]))
 
     b = IntervalVector([[6.25,6.7],[0.9,1.85]])
-    c.contract(b)
+    b = c.contract(b)
     self.assertTrue(Approx(b,1e-2) == IntervalVector([[6.25,6.70],[0.9,1.85]]))
 
     b = IntervalVector([[-6,-5],[0,2]])
-    c.contract(b)
+    b = c.contract(b)
     self.assertTrue(b == IntervalVector([[-6,-5],[0,2]]))
 
     b = IntervalVector([[2,3],[-1,1]])
-    c.contract(b)
+    b = c.contract(b)
     self.assertTrue(b == IntervalVector([[2,3],[-1,1]]))
   
   # disabled: def tests_CtcInverseNotIn_3_CtcWrapper(self):
@@ -80,23 +80,23 @@ class TestCtcInverseNotIn(unittest.TestCase):
   # disabled:   c = CtcInverseNotIn(f, CtcWrapper([[0,oo],[1]]))
   # disabled:   
   # disabled:   b = IntervalVector([[0,0.8],[-2.28,-1.56]])
-  # disabled:   c.contract(b)
+  # disabled:   b = c.contract(b)
   # disabled:   self.assertTrue(b == IntervalVector([[0,0.8],[-2.28,-1.56]]))
   # disabled:   
   # disabled:   b = IntervalVector([[4,5.4],[-0.05,2.45]])
-  # disabled:   c.contract(b)
+  # disabled:   b = c.contract(b)
   # disabled:   self.assertTrue(Approx(b,1e-2) == IntervalVector([[4,5.4],[-0.05,2.45]]))
   # disabled:   
   # disabled:   b = IntervalVector([[6.25,6.7],[0.9,1.85]])
-  # disabled:   c.contract(b)
+  # disabled:   b = c.contract(b)
   # disabled:   self.assertTrue(Approx(b,1e-2) == IntervalVector([[6.25,6.70],[0.9,1.85]]))
   # disabled:   
   # disabled:   b = IntervalVector([[-6,-5],[0,2]])
-  # disabled:   c.contract(b)
+  # disabled:   b = c.contract(b)
   # disabled:   self.assertTrue(b == IntervalVector([[-6,-5],[0,2]]))
   # disabled:   
   # disabled:   b = IntervalVector([[2,3],[-1,1]])
-  # disabled:   c.contract(b)
+  # disabled:   b = c.contract(b)
   # disabled:   self.assertTrue(b == IntervalVector([[2,3],[-1,1]]))
   
   def test_CtcInverseNotIn_4(self):
@@ -105,11 +105,11 @@ class TestCtcInverseNotIn(unittest.TestCase):
     c = CtcInverseNotIn(AnalyticFunction([v], v), [[-1,1]])
     x = IntervalVector(1)
 
-    c.contract(x)
+    x = c.contract(x)
     self.assertTrue(x == IntervalVector(1))
 
     x = IntervalVector([[0,8]])
-    c.contract(x)
+    x = c.contract(x)
     self.assertTrue(x == IntervalVector([[1,8]]))
   
   def test_CtcInverseNotIn_5(self):
@@ -118,11 +118,11 @@ class TestCtcInverseNotIn(unittest.TestCase):
     c = CtcInverseNotIn(AnalyticFunction([v], v), IntervalVector([[-1,1],[5,6]]))
     x = IntervalVector(2)
 
-    c.contract(x)
+    x = c.contract(x)
     self.assertTrue(x == IntervalVector(2))
 
     x = IntervalVector([[0,8],[5.5,oo]])
-    c.contract(x)
+    x = c.contract(x)
     self.assertTrue(x == IntervalVector([[0,8],[5.5,oo]])) # unchanged
 
 if __name__ ==  '__main__':

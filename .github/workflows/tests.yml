@@ -52,7 +52,7 @@ jobs:
         sudo apt-get -y install doxygen graphviz
 
         # Doxygen might need to be upgraded
-        git clone --depth 1 -b Release_1_13_0 https://github.com/doxygen/doxygen.git ; cd doxygen ; mkdir build ; cd build ; cmake .. ; sudo cmake --build . -j 4 --config Release --target install ; cd ../..
+        git clone --depth 1 -b Release_1_16_1 https://github.com/doxygen/doxygen.git ; cd doxygen ; mkdir build ; cd build ; cmake .. ; sudo cmake --build . -j 4 --config Release --target install ; cd ../..
 
         # For Python wrapping
         #pip install wheel
