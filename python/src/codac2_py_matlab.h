@@ -57,9 +57,9 @@ namespace codac2
       return x;
     }
 
-    inline std::vector<Index> convert_indices(const std::vector<Index_type>& indices)
-    {
-      if constexpr(FOR_MATLAB)
+    #if FOR_MATLAB
+
+      inline std::vector<Index> convert_indices(const std::vector<Index_type>& indices)
       {
         std::vector<Index> indices_(indices.size());
         for(size_t i = 0 ; i < indices.size() ; i++)
@@ -71,8 +71,14 @@ namespace codac2
         return indices_;
       }
 
-      else
+    #else
+
+      // Returning a reference (avoid a copy as in FOR_MATLAB mode)
+      inline const std::vector<Index>& convert_indices(const std::vector<Index>& indices)
+      {
         return indices;
-    }
+      }
+
+    #endif
   }
 }
