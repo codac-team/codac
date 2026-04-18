@@ -16,6 +16,7 @@
 #include "codac2_py_analytic_variables_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_AnalyticExprWrapper.h"
 #include "codac2_py_matlab.h"
+#include "codac2_py_deprecated.h"
 
 using namespace codac2;
 namespace py = pybind11;

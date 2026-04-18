@@ -60,6 +60,12 @@ Figure2D& Figure2D::set_axes(const FigureAxis& axis1, const FigureAxis& axis2)
   return *this;
 }
 
+Figure2D& Figure2D::set_axes(const IntervalVector& bbox)
+{
+  assert_release(bbox.size()==2);
+  return set_axes(axis(0,bbox[0]),axis(1,bbox[1]));
+}
+
 const Index& Figure2D::i() const
 {
   return axes()[0].dim_id;

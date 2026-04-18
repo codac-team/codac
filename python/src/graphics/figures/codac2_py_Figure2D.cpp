@@ -78,10 +78,14 @@ void export_Figure2D(py::module& m)
   
     .def("axes", &Figure2D::axes,
       CONST_VECTOR_FIGUREAXIS_REF_FIGURE2D_AXES_CONST)
-  
-    .def("set_axes", &Figure2D::set_axes,
+
+    .def("set_axes", (Figure2D& (Figure2D::*)(const FigureAxis&, const FigureAxis&)) &Figure2D::set_axes,
       FIGURE2D_REF_FIGURE2D_SET_AXES_CONST_FIGUREAXIS_REF_CONST_FIGUREAXIS_REF,
       "axis1"_a, "axis2"_a)
+
+    .def("set_axes", (Figure2D& (Figure2D::*)(const IntervalVector&)) &Figure2D::set_axes,
+      FIGURE2D_REF_FIGURE2D_SET_AXES_CONST_INTERVALVECTOR_REF,
+      "bbox"_a)
   
     .def("i", &Figure2D::i,
       CONST_INDEX_REF_FIGURE2D_I_CONST)
@@ -321,10 +325,15 @@ void export_Figure2D(py::module& m)
   
     .def_static("set", &DefaultFigure::set,
       STATIC_VOID_DEFAULTFIGURE_SET_SHARED_PTR_FIGURE2D)
-  
-    .def_static("set_axes", &DefaultFigure::set_axes, py::return_value_policy::reference,
+
+    .def_static("set_axes", (Figure2D& (*)(const FigureAxis&, const FigureAxis&)) &DefaultFigure::set_axes, py::return_value_policy::reference,
       STATIC_FIGURE2D_REF_DEFAULTFIGURE_SET_AXES_CONST_FIGUREAXIS_REF_CONST_FIGUREAXIS_REF,
       "axis1"_a, "axis2"_a)
+
+    .def_static("set_axes", (Figure2D& (*)(const IntervalVector&)) &DefaultFigure::set_axes, py::return_value_policy::reference,
+      STATIC_FIGURE2D_REF_DEFAULTFIGURE_SET_AXES_CONST_INTERVALVECTOR_REF,
+      "bbox"_a)
+  
   
     .def_static("set_window_properties", &DefaultFigure::set_window_properties,
       STATIC_VOID_DEFAULTFIGURE_SET_WINDOW_PROPERTIES_CONST_VECTOR_REF_CONST_VECTOR_REF)

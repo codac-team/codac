@@ -15,6 +15,7 @@
 #include <codac2_TubeBase.h>
 #include "codac2_py_matlab.h"
 #include "codac2_py_SlicedTube_operations_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
+#include "codac2_py_deprecated.h"
 
 using namespace codac2;
 namespace py = pybind11;
@@ -401,4 +402,23 @@ void export_SlicedTube_operations(
       py::is_operator());
 
   bind_scalar_slicedtube_functions(m);
+
+  py_SlicedTube_Interval
+
+    .def("__xor__", [](const SlicedTube<Interval>& x1, int x2) { deprecated_xor(); return codac2::pow(x1,x2); },
+      SLICEDTUBE_INTERVAL_POW_CONST_SLICEDTUBE_INTERVAL_REF_INT,
+      "n"_a)
+
+    .def("__xor__", [](const SlicedTube<Interval>& x1, const Interval& x2) { deprecated_xor(); return codac2::pow(x1,x2); },
+      SLICEDTUBE_INTERVAL_POW_CONST_SLICEDTUBE_INTERVAL_REF_CONST_INTERVAL_REF,
+      "n"_a)
+
+    .def("__pow__", (SlicedTube<Interval> (*)(const SlicedTube<Interval>&,int)) &codac2::pow,
+      SLICEDTUBE_INTERVAL_POW_CONST_SLICEDTUBE_INTERVAL_REF_INT,
+      "n"_a)
+
+    .def("__pow__", (SlicedTube<Interval> (*)(const SlicedTube<Interval>&,const Interval&)) &codac2::pow,
+      SLICEDTUBE_INTERVAL_POW_CONST_SLICEDTUBE_INTERVAL_REF_CONST_INTERVAL_REF,
+      "n"_a)
+  ;
 }

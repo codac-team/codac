@@ -3,9 +3,18 @@
 Changelog
 =========
 
+Pull Request from godardma (17/04/26)
+-------------------------------------
+
 
 Commit 52b81c8 ([cmake] warning for Doxygen version)
 ----------------------------------------------------
+
+set_axes change for Figure2D
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Since this PR, a bounding box can be passed to the set_axes method to specify the ranges of the x and y axes.
+The old method with ``axis(id,Interval)`` still works
 
 Python binding build requirement
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -106,17 +106,17 @@ Once created, the properties of a Figure2D object can be modified using the foll
   .. code-tab:: py
 
     fig.set_window_properties([50,50],[500,500]) # set the window position and size
-    fig.set_axes(axis(0,[-10,10]), axis(1,[-10,10])) # set the x-axis index to 0 and its range to [-10,10], same for y with index 1 
+    fig.set_axes([[-15,5],[-10,10]]) # set the x-axis range to [-15,5] and y-axis range to [-10,10]
 
   .. code-tab:: c++
 
     fig.set_window_properties({50,50},{500,500}); // set the window position and size
-    fig.set_axes(axis(0,{-10,10}), axis(1,{-10,10})); // set the x-axis index to 0 and its range to [-10,10], same for y with index 1 
+    fig.set_axes({{-15,5},{-10,10}}); // set the x-axis range to [-15,5] and y-axis range to [-10,10]
 
   .. code-tab:: matlab
 
-    fig.set_window_properties(Vector({50,50}),Vector({500,500})); % position, window size
-    fig.set_axes(axis(1,Interval(-10,10)), axis(2,Interval(-10,10))); % (axis_id,[range_of_values_on_this_axis])
+    fig.set_window_properties(Vector({50,50}),Vector({500,500})); % set the window position and size
+    fig.set_axes(IntervalVector({{-15,5},{-10,10}})); % set the x-axis range to [-15,5] and y-axis range to [-10,10]
 
 The same methods can be applied on the DefaultFigure object.
 
@@ -125,17 +125,17 @@ The same methods can be applied on the DefaultFigure object.
   .. code-tab:: py
 
     DefaultFigure.set_window_properties([50,50],[500,500]) # set the window position and size
-    DefaultFigure.set_axes(axis(0,[-10,10]), axis(1,[-10,10])) # set the x-axis index to 0 and its range to [-10,10], same for y with index 1 
+    DefaultFigure.set_axes([[-15,5],[-10,10]]) # set the x-axis range to [-15,5] and y-axis range to [-10,10]
 
   .. code-tab:: c++
 
     DefaultFigure::set_window_properties({50,50},{500,500}); // set the window position and size
-    DefaultFigure::set_axes(axis(0,{-10,10}), axis(1,{-10,10})); // set the x-axis index to 0 and its range to [-10,10], same for y with index 1 
+    DefaultFigure::set_axes({{-15,5},{-10,10}}); // set the x-axis range to [-15,5] and y-axis range to [-10,10]
 
   .. code-tab:: matlab
 
     DefaultFigure().set_window_properties(Vector({50,50}),Vector({500,500})); %  set the window position and size
-    DefaultFigure().set_axes(axis(1,Interval(-10,10)), axis(2,Interval(-10,10))); % set the x-axis index to 0 and its range to [-10,10], same for y with index 1 
+    DefaultFigure().set_axes(IntervalVector({{-15,5},{-10,10}})); % set the x-axis range to [-15,5] and y-axis range to [-10,10]
 
 
 Many properties have an associated getter :

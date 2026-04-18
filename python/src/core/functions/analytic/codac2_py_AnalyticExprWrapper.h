@@ -16,23 +16,17 @@
 #include <pybind11/stl.h>
 #include "codac2_AnalyticExprWrapper.h"
 #include "codac2_py_matlab.h"
-#include "codac2_arith_add.h"
-#include "codac2_arith_sub.h"
-#include "codac2_arith_mul.h"
-#include "codac2_arith_div.h"
+#include <codac2_arith_add.h>
+#include <codac2_arith_sub.h>
+#include <codac2_arith_mul.h>
+#include <codac2_arith_div.h>
+#include <codac2_pow.h>
+#include "codac2_py_deprecated.h"
 #include "codac2_py_AnalyticExprWrapper_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
-#include "codac2_pow.h"
 
 using namespace codac2;
 namespace py = pybind11;
 using namespace pybind11::literals;
-
-inline void deprecated_xor()
-{
-  std::cout
-    << "Operator '^' is intentionally disabled in Codac. Use pow(x,y), sqr(x), or '**' instead."
-    << std::endl;
-}
 
 inline void export_ScalarExpr(py::module& m)
 {

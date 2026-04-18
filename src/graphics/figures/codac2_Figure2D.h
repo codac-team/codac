@@ -127,6 +127,13 @@ namespace codac2
       Figure2D& set_axes(const FigureAxis& axis1, const FigureAxis& axis2);
 
       /**
+       * \brief Setter for the axes of the figure
+       * 
+       * \param bbox Bounding box
+       */
+      Figure2D& set_axes(const IntervalVector& bbox);
+
+      /**
        * \brief Getter for the index of the horizontal axis
        * 
        * \return The index of the horizontal axis
@@ -665,6 +672,17 @@ namespace codac2
       {
         auto_init();
         return selected_fig()->set_axes(axis1,axis2);
+      }
+
+      /**
+       * \brief Setter for the axes of the figure
+       * 
+       * \param bbox Bounding box
+       */
+      static Figure2D& set_axes(const IntervalVector& bbox)
+      {
+        auto_init();
+        return selected_fig()->set_axes(bbox);
       }
       
       /**
