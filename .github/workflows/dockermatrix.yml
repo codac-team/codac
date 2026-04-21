@@ -29,7 +29,7 @@ jobs:
             #- { img: 'lebarsfa/pi-64:focal-for-codac'           , os: ubuntu-24.04-arm, shell: bash, arch: arm64  , bitness: 64, runtime: focal         , cmake_flags: '-fPIC', deb: true, desc: 'Ubuntu 20.04 arm64' }
             - { img: 'lebarsfa/amd64:trixie-for-codac'          , os: ubuntu-latest   , shell: bash, arch: amd64  , bitness: 64, runtime: trixie        , cmake_flags: '-fPIC', deb: true, desc: 'Debian Trixie amd64' }
             - { img: 'lebarsfa/pi-64:trixie-for-codac'          , os: ubuntu-24.04-arm, shell: bash, arch: arm64  , bitness: 64, runtime: trixie        , cmake_flags: '-fPIC', deb: true, desc: 'Debian Trixie arm64' }
-            #- { img: 'lebarsfa/pi:trixie-for-codac'             , os: ubuntu-24.04-arm, shell: bash, arch: armhf  , bitness: 32, runtime: trixie        , cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Trixie armv6hf' } # No base image available...
+            - { img: 'lebarsfa/pi:trixie-for-codac'             , os: ubuntu-24.04-arm, shell: bash, arch: armhf  , bitness: 32, runtime: trixie        , cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Trixie armv6hf' }
             - { img: 'lebarsfa/amd64:bookworm-for-codac'        , os: ubuntu-latest   , shell: bash, arch: amd64  , bitness: 64, runtime: bookworm      , cmake_flags: '-fPIC', deb: true, desc: 'Debian Bookworm amd64' }
             - { img: 'lebarsfa/pi-64:bookworm-for-codac'        , os: ubuntu-24.04-arm, shell: bash, arch: arm64  , bitness: 64, runtime: bookworm      , cmake_flags: '-fPIC', deb: true, desc: 'Debian Bookworm arm64' }
             - { img: 'lebarsfa/pi:bookworm-for-codac'           , os: ubuntu-24.04-arm, shell: bash, arch: armhf  , bitness: 32, runtime: bookworm      , cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Bookworm armv6hf' }
@@ -42,7 +42,7 @@ jobs:
             #- { img: 'lebarsfa/pi:buster-for-codac'             , os: ubuntu-24.04-arm, shell: bash, arch: armhf  , bitness: 32, runtime: buster        , cmake_flags: '-fPIC', deb: true, desc: 'Raspbian Buster armv6hf' }
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         submodules: true
         fetch-depth: 0

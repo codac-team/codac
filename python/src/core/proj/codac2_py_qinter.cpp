@@ -13,7 +13,6 @@
 #include <pybind11/functional.h>
 #include <codac2_qinter.h>
 #include "codac2_py_qinter_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
-#include "codac2_py_cast.h"
 
 using namespace std;
 using namespace codac2;

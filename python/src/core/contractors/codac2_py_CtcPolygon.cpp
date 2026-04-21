@@ -29,10 +29,10 @@ void export_CtcPolygon(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIn
       CTCPOLYGON_CTCPOLYGON_CONST_POLYGON_REF,
       "p"_a)
 
-    .def(CONTRACT_BOX_METHOD(CtcPolygon,
-      VOID_CTCPOLYGON_CONTRACT_INTERVALVECTOR_REF_CONST))
-
   ;
+
+  CONTRACT_METHODS(exported, CtcPolygon,
+    VOID_CTCPOLYGON_CONTRACT_INTERVALVECTOR_REF_CONST)
 
   py::implicitly_convertible<Polygon,CtcPolygon>();
 }

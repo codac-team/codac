@@ -28,8 +28,8 @@ void export_CtcConstell(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcI
     .def(py::init<const std::vector<IntervalVector>&>(),
       CTCCONSTELL_CTCCONSTELL_CONST_VECTOR_INTERVALVECTOR_REF,
       "M"_a)
-
-    .def(CONTRACT_BOX_METHOD(CtcConstell,
-      VOID_CTCCONSTELL_CONTRACT_INTERVALVECTOR_REF_CONST))
   ;
+
+  CONTRACT_METHODS(exported, CtcConstell,
+    VOID_CTCCONSTELL_CONTRACT_INTERVALVECTOR_REF_CONST)
 }

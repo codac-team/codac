@@ -128,6 +128,13 @@ namespace codac2
       Figure2D& set_axes(const FigureAxis& axis1, const FigureAxis& axis2);
 
       /**
+       * \brief Setter for the axes of the figure
+       * 
+       * \param bbox Bounding box
+       */
+      Figure2D& set_axes(const IntervalVector& bbox);
+
+      /**
        * \brief Getter for the index of the horizontal axis
        * 
        * \return The index of the horizontal axis
@@ -386,6 +393,14 @@ namespace codac2
        * \param style Style of the trajectory (edge color)
        */
       void plot_trajectory(const SampledTraj<double>& x, const StyleProperties& style = StyleProperties());
+
+      /**
+       * \brief Plots a trajectory on the figure (x-axis is the time)
+       * 
+       * \param x AnalyticTraj to plot
+       * \param style Style of the trajectory (edge color)
+       */
+      void plot_trajectory(const AnalyticTraj<ScalarType>& x, const StyleProperties& style = StyleProperties());
 
       /**
        * \brief Plots a set of trajectories on the figure (x-axis is the time) with random colors
@@ -666,6 +681,17 @@ namespace codac2
       {
         auto_init();
         return selected_fig()->set_axes(axis1,axis2);
+      }
+
+      /**
+       * \brief Setter for the axes of the figure
+       * 
+       * \param bbox Bounding box
+       */
+      static Figure2D& set_axes(const IntervalVector& bbox)
+      {
+        auto_init();
+        return selected_fig()->set_axes(bbox);
       }
       
       /**
@@ -957,6 +983,18 @@ namespace codac2
        * \param style Style of the trajectory (edge color)
        */
       static void plot_trajectory(const SampledTraj<double>& x, const StyleProperties& style = StyleProperties())
+      {
+        auto_init();
+        selected_fig()->plot_trajectory(x,style);
+      }
+
+      /**
+       * \brief Plots a trajectory on the figure (x-axis is the time)
+       * 
+       * \param x AnalyticTraj to plot
+       * \param style Style of the trajectory (edge color)
+       */
+      static void plot_trajectory(const AnalyticTraj<ScalarType>& x, const StyleProperties& style = StyleProperties())
       {
         auto_init();
         selected_fig()->plot_trajectory(x,style);

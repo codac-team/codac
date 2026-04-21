@@ -9,7 +9,7 @@ t0tf = Interval(0,15) # temporal domain [t0,tf]
 # System input
 t = ScalarVar()
 # Input u(.) is given as an analytic trajectory
-u = AnalyticTraj(AnalyticFunction([t],3*(sin(t)^2)+t/100), t0tf).sampled(dt)
+u = AnalyticTraj(AnalyticFunction([t],3*sqr(sin(t))+t/100), t0tf).sampled(dt)
 
 # Implementing manually the evolution function (Eq. (2))
 truth_heading = u.primitive()
@@ -74,8 +74,8 @@ ctc_deriv = CtcDeriv()
 
 
 # [D-q7-beg]
-ctc_f.contract_tube(x,v)
-ctc_deriv.contract(x,v)
+x,v = ctc_f.contract(x,v)
+x,v = ctc_deriv.contract(x,v)
 # [D-q7-end]
 
 
@@ -119,8 +119,8 @@ ctc_dist = CtcInverse(f_dist, 0) # also expressed in a implicit form g(x,b,d)=0
 
 # [D-q13-beg]
 def contractors_list(x,v):
-  ctc_deriv.contract(x,v)
-  ctc_f.contract_tube(x,v)
+  x,v = ctc_deriv.contract(x,v)
+  x,v = ctc_f.contract(x,v)
   for yi in Y: # for each range-only measurement
     ti = yi[1]
     pi = x(ti)
@@ -134,5 +134,7 @@ x,v = fixpoint(contractors_list, x,v)
 # [D-q13-end]
 
 # [D-q14-beg]
-
+DefaultFigure.draw_tube(x, ColorMap.blue_tube())
+DefaultFigure.draw_trajectory(truth_x)
+DefaultFigure.draw_tank(truth_x(t0tf.ub()), 1., [Color.dark_gray(),Color.yellow()])
 # [D-q14-end]

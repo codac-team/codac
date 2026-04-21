@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     if: (github.event_name!='pull_request')&&((github.ref_name=='codac1')||(github.ref_name=='codac2')||(github.ref_name=='codac2_codac4matlab'))
     steps: 
-    - uses: softprops/action-gh-release@v2
+    - uses: softprops/action-gh-release@v3
       id: create_release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -68,7 +68,7 @@ jobs:
             - { os: macos-14        , shell: bash, arch: x86_64 , bitness: 64, runtime: sonoma        , cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64 -D CMAKE_OSX_DEPLOYMENT_TARGET=14.0', cmake_flags: '-fPIC', cross: true, desc: 'macOS Sonoma x86_64 (cross)' }
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         submodules: true
         fetch-depth: 0

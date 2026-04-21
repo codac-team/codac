@@ -96,7 +96,7 @@ where :math:`a,b,\dots,e` are intermediate variables used for the decomposition.
     x,m = VectorVar(2),VectorVar(2)
 
     # Analytic scalar function g(x,m,y) involved in the constraint:
-    g = AnalyticFunction([x,y,m], sqrt(((x[0]-m[0])^2)+((x[1]-m[1])^2))-y)
+    g = AnalyticFunction([x,y,m], sqrt(sqr(x[0]-m[0])+sqr(x[1]-m[1]))-y)
 
     # Contractor associated with the constraint g(x,m,y)\in[u], with [u]=[0,0]
     ctc_g = CtcInverse(g, 0)
@@ -118,7 +118,7 @@ where :math:`a,b,\dots,e` are intermediate variables used for the decomposition.
     VectorVar x(2), m(2);
 
     // Analytic scalar function g(x,m,y) involved in the constraint:
-    AnalyticFunction g({x,y,m}, sqrt((x[0]-m[0])^2+(x[1]-m[1])^2)-y);
+    AnalyticFunction g({x,y,m}, sqrt(sqr(x[0]-m[0])+sqr(x[1]-m[1]))-y);
 
     // Contractor associated with the constraint g(x,m,y)\in[u], with [u]=[0,0]
     CtcInverse ctc_g(g, 0);
@@ -139,7 +139,7 @@ where :math:`a,b,\dots,e` are intermediate variables used for the decomposition.
     [x,m] = deal(VectorVar(2),VectorVar(2));
     
     % Analytic scalar function g(x,m,y) involved in the constraint:
-    g = AnalyticFunction({x,y,m}, sqrt(((x(1)-m(1))^2)+((x(2)-m(2))^2))-y);
+    g = AnalyticFunction({x,y,m}, sqrt(sqr(x(1)-m(1))+sqr(x(2)-m(2)))-y);
 
     % Contractor associated with the constraint g(x,m,y)\in[u], with [u]=[0,0]
     ctc_g = CtcInverse(g, 0);

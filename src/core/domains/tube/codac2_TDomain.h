@@ -144,6 +144,17 @@ namespace codac2
        * After this operation, only non-degenerate temporal slices remain.
        */
       void delete_gates();
+      
+      /**
+       * \brief Restricts this temporal domain to a subdomain
+       *
+       * Temporal slices outside ``new_tdomain`` are removed. Gates are added at the
+       * bounds of ``new_tdomain`` so that the resulting partition exactly matches
+       * the new temporal domain.
+       *
+       * \param new_tdomain temporal interval to keep
+       */
+      void truncate(const Interval& new_tdomain);
 
       /**
        * \brief Stream output for a temporal domain

@@ -1,6 +1,6 @@
-# [Codac: constraint-programming for robotics](http://codac.io/v2) [![Build Status](https://github.com/codac-team/codac/workflows/.github/workflows/tests.yml/badge.svg)](https://github.com/codac-team/codac/actions)
+# [Codac: constraint-programming for robotics](http://codac.io) [![Build Status](https://github.com/codac-team/codac/workflows/.github/workflows/tests.yml/badge.svg)](https://github.com/codac-team/codac/actions)
 
-See the official website: http://codac.io/v2
+See the official website: http://codac.io
 
 Codac (Catalog Of Domains And Contractors) is a C++/Python/Matlab library providing tools for interval computations and constraint programming over real numbers, trajectories and sets.
 It has numerous applications in parameter estimation, guaranteed integration, robot localization, and provides reliable outputs.
@@ -30,7 +30,7 @@ from codac import *
 
 x = VectorVar(3)
 f = AnalyticFunction([x], [
-  -(x[2]^2)+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
+  -sqr(x[2])+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
   2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
 ])
 
@@ -81,8 +81,8 @@ This list is in alphabetical order by surname.
 - [Peter Franek](http://www.cs.cas.cz/~franek)
 - [Maël Godard](https://godardma.github.io)
 - [Nuwan Herath M.](https://members.loria.fr/NHerathMudiyanselage)
-- [Luc Jaulin](https://www.ensta-bretagne.fr/jaulin)
-- [Fabrice Le Bars](https://www.ensta-bretagne.fr/lebars)
+- [Luc Jaulin](https://webperso.ensta.fr/jaulin)
+- [Fabrice Le Bars](https://webperso.ensta.fr/lebars)
 - [Morgan Louédec](https://morgan-louedec.fr)
 - [Damien Massé](https://lab-sticc.univ-brest.fr/~dmasse)
 - [Bertrand Neveu](http://imagine.enpc.fr/~neveub)
@@ -91,7 +91,7 @@ This list is in alphabetical order by surname.
 - [Simon Rohou](http://simon-rohou.fr/research)
 - [Joris Tillet](https://perso.ensta-paris.fr/~tillet/)
 - [Gilles Trombettoni](https://www.lirmm.fr/~trombetton)
-- [Christophe Viel](https://www.ensta-bretagne.fr/viel/)
+- [Christophe Viel](https://webperso.ensta.fr/viel/)
 - [Raphael Voges](https://raphael-voges.de)
 
 We appreciate all contributions, whether they are code, documentation, bug reports, or suggestions. If you believe you should be listed here and are not, please contact us to update the list.

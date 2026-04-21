@@ -28,16 +28,23 @@ void export_CtcDist(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInter
     .def(py::init<>(),
       CTCDIST_CTCDIST)
 
-    .def(CONTRACT_BOX_METHOD(CtcDist,
-      VOID_CTCDIST_CONTRACT_INTERVALVECTOR_REF_CONST))
-
     .def("contract",
       [](const CtcDist& c, Interval& a1, Interval& a2, Interval& b1, Interval& b2, Interval& d)
+      -> py::tuple
       {
         c.contract(a1,a2,b1,b2,d);
-        return std::make_tuple(a1,a2,b1,b2,d);
+        return py::make_tuple(
+          py::cast(a1, py::return_value_policy::reference),
+          py::cast(a2, py::return_value_policy::reference),
+          py::cast(b1, py::return_value_policy::reference),
+          py::cast(b2, py::return_value_policy::reference),
+          py::cast(d, py::return_value_policy::reference)
+        );
       },
       VOID_CTCDIST_CONTRACT_INTERVAL_REF_INTERVAL_REF_INTERVAL_REF_INTERVAL_REF_INTERVAL_REF_CONST,
       "a1"_a, "a2"_a, "b1"_a, "b2"_a, "d"_a)
   ;
+
+  CONTRACT_METHODS(exported, CtcDist,
+    VOID_CTCDIST_CONTRACT_INTERVALVECTOR_REF_CONST)
 }

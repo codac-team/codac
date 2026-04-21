@@ -6,11 +6,11 @@
 
   if(WITH_PYTHON)
     
-    find_package(Doxygen)
+    find_package(Doxygen)# 1.16.1 QUIET)
 
     if(NOT DOXYGEN_FOUND)
 
-      message(STATUS "Doxygen not found, not able to generate/install the API documentation.")
+      message(STATUS "The required version of Doxygen has not been found, the API documentation will not be generated.")
 
     else()
 

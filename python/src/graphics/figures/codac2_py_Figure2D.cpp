@@ -16,7 +16,6 @@
 #include <codac2_Polygon.h>
 #include "codac2_py_Figure2D_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_matlab.h"
-#include "codac2_py_cast.h"
 
 using namespace std;
 using namespace codac2;
@@ -79,10 +78,14 @@ void export_Figure2D(py::module& m)
   
     .def("axes", &Figure2D::axes,
       CONST_VECTOR_FIGUREAXIS_REF_FIGURE2D_AXES_CONST)
-  
-    .def("set_axes", &Figure2D::set_axes,
+
+    .def("set_axes", (Figure2D& (Figure2D::*)(const FigureAxis&, const FigureAxis&)) &Figure2D::set_axes,
       FIGURE2D_REF_FIGURE2D_SET_AXES_CONST_FIGUREAXIS_REF_CONST_FIGUREAXIS_REF,
       "axis1"_a, "axis2"_a)
+
+    .def("set_axes", (Figure2D& (Figure2D::*)(const IntervalVector&)) &Figure2D::set_axes,
+      FIGURE2D_REF_FIGURE2D_SET_AXES_CONST_INTERVALVECTOR_REF,
+      "bbox"_a)
   
     .def("i", &Figure2D::i,
       CONST_INDEX_REF_FIGURE2D_I_CONST)
@@ -188,14 +191,7 @@ void export_Figure2D(py::module& m)
       VOID_FIGURE2D_DRAW_TRAJECTORY_CONST_SAMPLEDTRAJ_VECTOR_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "style"_a=StyleProperties())
 
-    .def("draw_trajectory", [](Figure2D& fig, const py::object& x, const StyleProperties& s)
-        {
-          if(!is_instance<AnalyticTraj<VectorType>>(x)) {
-            assert_release("draw_trajectory: invalid function type");
-          }
-
-          fig.draw_trajectory(cast<AnalyticTraj<VectorType>>(x), s);
-        },
+    .def("draw_trajectory", (void(Figure2D::*)(const AnalyticTraj<VectorType>&,const StyleProperties&))&Figure2D::draw_trajectory,
       VOID_FIGURE2D_DRAW_TRAJECTORY_CONST_ANALYTICTRAJ_VECTORTYPE_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "style"_a=StyleProperties())
 
@@ -203,19 +199,16 @@ void export_Figure2D(py::module& m)
       VOID_FIGURE2D_DRAW_TRAJECTORY_CONST_SAMPLEDTRAJ_VECTOR_REF_CONST_STYLEGRADIENTPROPERTIES_REF,
       "x"_a, "style"_a)
 
-    .def("draw_trajectory", [](Figure2D& fig, const py::object& x, const StyleGradientProperties& style)
-        {
-          if(!is_instance<AnalyticTraj<VectorType>>(x)) {
-            assert_release("draw_trajectory: invalid function type");
-          }
-
-          fig.draw_trajectory(cast<AnalyticTraj<VectorType>>(x), style);
-        },
+    .def("draw_trajectory", (void(Figure2D::*)(const AnalyticTraj<VectorType>&,const StyleGradientProperties&))&Figure2D::draw_trajectory,
       VOID_FIGURE2D_DRAW_TRAJECTORY_CONST_ANALYTICTRAJ_VECTORTYPE_REF_CONST_STYLEGRADIENTPROPERTIES_REF,
       "x"_a, "style"_a)
 
     .def("plot_trajectory", (void(Figure2D::*)(const SampledTraj<double>&,const StyleProperties&))&Figure2D::plot_trajectory,
       VOID_FIGURE2D_PLOT_TRAJECTORY_CONST_SAMPLEDTRAJ_DOUBLE_REF_CONST_STYLEPROPERTIES_REF,
+      "x"_a, "style"_a=StyleProperties())
+
+    .def("plot_trajectory", (void(Figure2D::*)(const AnalyticTraj<ScalarType>&,const StyleProperties&))&Figure2D::plot_trajectory,
+      VOID_FIGURE2D_PLOT_TRAJECTORY_CONST_ANALYTICTRAJ_SCALARTYPE_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "style"_a=StyleProperties())
 
     .def("plot_trajectories", (void(Figure2D::*)(const SampledTraj<Vector>&))&Figure2D::plot_trajectories,
@@ -226,47 +219,19 @@ void export_Figure2D(py::module& m)
       VOID_FIGURE2D_PLOT_TRAJECTORIES_CONST_SAMPLEDTRAJ_VECTOR_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "style"_a)
 
-    .def("draw_tube", [](Figure2D& fig, const py::object& x, const StyleGradientProperties& style, int max_nb_slices_to_display)
-        {
-          if(!is_instance<SlicedTube<IntervalVector>>(x)) {
-            assert_release("draw_tube: invalid function type");
-          }
-
-          fig.draw_tube(cast<SlicedTube<IntervalVector>>(x), style, max_nb_slices_to_display);
-        },
+    .def("draw_tube", (void(Figure2D::*)(const SlicedTube<IntervalVector>&,const StyleGradientProperties&,int))&Figure2D::draw_tube,
       VOID_FIGURE2D_DRAW_TUBE_CONST_SLICEDTUBE_INTERVALVECTOR_REF_CONST_STYLEGRADIENTPROPERTIES_REF_INT,
       "x"_a, "style"_a=StyleGradientProperties(ColorMap::blue_tube(), "z:-1"), "max_nb_slices_to_display"_a=5000)
 
-    .def("draw_tube", [](Figure2D& fig, const py::object& x, const StyleProperties& s, int max_nb_slices_to_display)
-        {
-          if(!is_instance<SlicedTube<IntervalVector>>(x)) {
-            assert_release("draw_tube: invalid function type");
-          }
-
-          fig.draw_tube(cast<SlicedTube<IntervalVector>>(x), s, max_nb_slices_to_display);
-        },
+    .def("draw_tube", (void(Figure2D::*)(const SlicedTube<IntervalVector>&,const StyleProperties&,int))&Figure2D::draw_tube,
       VOID_FIGURE2D_DRAW_TUBE_CONST_SLICEDTUBE_INTERVALVECTOR_REF_CONST_STYLEPROPERTIES_REF_INT,
       "x"_a, "style"_a=StyleProperties(), "max_nb_slices_to_display"_a=5000)
 
-    .def("plot_tube", [](Figure2D& fig, const py::object& x, const StyleProperties& s)
-        {
-          if(!is_instance<SlicedTube<Interval>>(x)) {
-            assert_release("plot_tube: invalid function type");
-          }
-
-          fig.plot_tube(cast<SlicedTube<Interval>>(x), s);
-        },
+    .def("plot_tube", (void(Figure2D::*)(const SlicedTube<Interval>&,const StyleProperties&))&Figure2D::plot_tube,
       VOID_FIGURE2D_PLOT_TUBE_CONST_SLICEDTUBE_INTERVAL_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "style"_a=StyleProperties())
 
-    .def("plot_tube", [](Figure2D& fig, const py::object& x, const py::object& v, const StyleProperties& s)
-        {
-          if(!is_instance<SlicedTube<Interval>>(x) || !is_instance<SlicedTube<Interval>>(v)) {
-            assert_release("plot_tube: invalid function type");
-          }
-
-          fig.plot_tube(cast<SlicedTube<Interval>>(x), cast<SlicedTube<Interval>>(v), s);
-        },
+    .def("plot_tube", (void(Figure2D::*)(const SlicedTube<Interval>&,const SlicedTube<Interval>&,const StyleProperties&))&Figure2D::plot_tube,
       VOID_FIGURE2D_PLOT_TUBE_CONST_SLICEDTUBE_INTERVAL_REF_CONST_SLICEDTUBE_INTERVAL_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "v"_a, "style"_a=StyleProperties())
 
@@ -360,10 +325,15 @@ void export_Figure2D(py::module& m)
   
     .def_static("set", &DefaultFigure::set,
       STATIC_VOID_DEFAULTFIGURE_SET_SHARED_PTR_FIGURE2D)
-  
-    .def_static("set_axes", &DefaultFigure::set_axes, py::return_value_policy::reference,
+
+    .def_static("set_axes", (Figure2D& (*)(const FigureAxis&, const FigureAxis&)) &DefaultFigure::set_axes, py::return_value_policy::reference,
       STATIC_FIGURE2D_REF_DEFAULTFIGURE_SET_AXES_CONST_FIGUREAXIS_REF_CONST_FIGUREAXIS_REF,
       "axis1"_a, "axis2"_a)
+
+    .def_static("set_axes", (Figure2D& (*)(const IntervalVector&)) &DefaultFigure::set_axes, py::return_value_policy::reference,
+      STATIC_FIGURE2D_REF_DEFAULTFIGURE_SET_AXES_CONST_INTERVALVECTOR_REF,
+      "bbox"_a)
+  
   
     .def_static("set_window_properties", &DefaultFigure::set_window_properties,
       STATIC_VOID_DEFAULTFIGURE_SET_WINDOW_PROPERTIES_CONST_VECTOR_REF_CONST_VECTOR_REF)
@@ -436,15 +406,8 @@ void export_Figure2D(py::module& m)
     .def_static("draw_trajectory", (void(*)(const SampledTraj<Vector>&,const StyleProperties&))&DefaultFigure::draw_trajectory,
       STATIC_VOID_DEFAULTFIGURE_DRAW_TRAJECTORY_CONST_SAMPLEDTRAJ_VECTOR_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "style"_a=StyleProperties())
-
-    .def_static("draw_trajectory", [](const py::object& x, const StyleProperties& s)
-        {
-          if(!is_instance<AnalyticTraj<VectorType>>(x)) {
-            assert_release("draw_trajectory: invalid function type");
-          }
-
-          DefaultFigure::draw_trajectory(cast<AnalyticTraj<VectorType>>(x), s);
-        },
+    
+    .def_static("draw_trajectory", (void(*)(const AnalyticTraj<VectorType>&,const StyleProperties&))&DefaultFigure::draw_trajectory,
       STATIC_VOID_DEFAULTFIGURE_DRAW_TRAJECTORY_CONST_ANALYTICTRAJ_VECTORTYPE_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "style"_a=StyleProperties())
 
@@ -452,14 +415,7 @@ void export_Figure2D(py::module& m)
       STATIC_VOID_DEFAULTFIGURE_DRAW_TRAJECTORY_CONST_SAMPLEDTRAJ_VECTOR_REF_CONST_STYLEGRADIENTPROPERTIES_REF,
       "x"_a, "style"_a)
 
-    .def_static("draw_trajectory", [](const py::object& x, const StyleGradientProperties& style)
-        {
-          if(!is_instance<AnalyticTraj<VectorType>>(x)) {
-            assert_release("draw_trajectory: invalid function type");
-          }
-
-          DefaultFigure::draw_trajectory(cast<AnalyticTraj<VectorType>>(x), style);
-        },
+    .def_static("draw_trajectory", (void(*)(const AnalyticTraj<VectorType>&,const StyleGradientProperties&))&DefaultFigure::draw_trajectory,
       STATIC_VOID_DEFAULTFIGURE_DRAW_TRAJECTORY_CONST_ANALYTICTRAJ_VECTORTYPE_REF_CONST_STYLEGRADIENTPROPERTIES_REF,
       "x"_a, "style"_a)
 
@@ -467,51 +423,27 @@ void export_Figure2D(py::module& m)
       STATIC_VOID_DEFAULTFIGURE_PLOT_TRAJECTORY_CONST_SAMPLEDTRAJ_DOUBLE_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "style"_a=StyleProperties())
 
+    .def_static("plot_trajectory", (void(*)(const AnalyticTraj<ScalarType>&,const StyleProperties&))&DefaultFigure::plot_trajectory,
+      STATIC_VOID_DEFAULTFIGURE_PLOT_TRAJECTORY_CONST_ANALYTICTRAJ_SCALARTYPE_REF_CONST_STYLEPROPERTIES_REF
+      "x"_a, "style"_a=StyleProperties())
+
     .def_static("plot_trajectories", (void(*)(const SampledTraj<Vector>&,const StyleProperties&))&DefaultFigure::plot_trajectories,
       STATIC_VOID_DEFAULTFIGURE_PLOT_TRAJECTORIES_CONST_SAMPLEDTRAJ_VECTOR_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "style"_a=StyleProperties())
 
-    .def_static("draw_tube", [](const py::object& x, const StyleProperties& s)
-        {
-          if(!is_instance<SlicedTube<IntervalVector>>(x)) {
-            assert_release("draw_tube: invalid function type");
-          }
-
-          DefaultFigure::draw_tube(cast<SlicedTube<IntervalVector>>(x), s);
-        },
+    .def_static("draw_tube", (void(*)(const SlicedTube<IntervalVector>&,const StyleProperties&))&DefaultFigure::draw_tube,
       STATIC_VOID_DEFAULTFIGURE_DRAW_TUBE_CONST_SLICEDTUBE_INTERVALVECTOR_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "style"_a=StyleProperties())
 
-    .def_static("draw_tube", [](const py::object& x, const StyleGradientProperties& style)
-        {
-          if(!is_instance<SlicedTube<IntervalVector>>(x)) {
-            assert_release("draw_tube: invalid function type");
-          }
-
-          DefaultFigure::draw_tube(cast<SlicedTube<IntervalVector>>(x), style);
-        },
+    .def_static("draw_tube", (void(*)(const SlicedTube<IntervalVector>&,const StyleGradientProperties&))&DefaultFigure::draw_tube,
       STATIC_VOID_DEFAULTFIGURE_DRAW_TUBE_CONST_SLICEDTUBE_INTERVALVECTOR_REF_CONST_STYLEGRADIENTPROPERTIES_REF,
       "x"_a, "style"_a=StyleGradientProperties(ColorMap::blue_tube(), "z:-1"))
 
-    .def_static("plot_tube", [](const py::object& x, const StyleProperties& s)
-        {
-          if(!is_instance<SlicedTube<Interval>>(x)) {
-            assert_release("plot_tube: invalid function type");
-          }
-
-          DefaultFigure::plot_tube(cast<SlicedTube<Interval>>(x), s);
-        },
+    .def_static("plot_tube", (void(*)(const SlicedTube<Interval>&,const StyleProperties&))&DefaultFigure::plot_tube,
       STATIC_VOID_DEFAULTFIGURE_PLOT_TUBE_CONST_SLICEDTUBE_INTERVAL_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "style"_a=StyleProperties())
 
-    .def_static("plot_tube", [](const py::object& x, const py::object& v, const StyleProperties& s)
-        {
-          if(!is_instance<SlicedTube<Interval>>(x) || !is_instance<SlicedTube<Interval>>(v)) {
-            assert_release("plot_tube: invalid function type");
-          }
-
-          DefaultFigure::plot_tube(cast<const SlicedTube<Interval>&>(x), cast<const SlicedTube<Interval>&>(v), s);
-        },
+    .def_static("plot_tube", (void(*)(const SlicedTube<Interval>&,const SlicedTube<Interval>&,const StyleProperties&))&DefaultFigure::plot_tube,
       STATIC_VOID_DEFAULTFIGURE_PLOT_TUBE_CONST_SLICEDTUBE_INTERVAL_REF_CONST_SLICEDTUBE_INTERVAL_REF_CONST_STYLEPROPERTIES_REF,
       "x"_a, "v"_a, "style"_a) // dot not specify default value =StyleProperties(), because of overloading
 

@@ -179,16 +179,21 @@ a .download:before {
 }
 
 /* Adding VIBes + IPE logos in the lateral menu */
-.sidebar-tree li.toctree-l1 > a.reference.internal:has(+ input#toctree-checkbox-8) {
+.sidebar-tree li.toctree-l1 > a.reference.internal:has(+ input#toctree-checkbox-9) {
   background:url("../logos/logos_vibes_ipe.png") no-repeat center / contain;
 }
 
-.sidebar-tree li.toctree-l1 > a.reference.internal:has(+ input#toctree-checkbox-8):hover {
+.sidebar-tree li.toctree-l1 > a.reference.internal:has(+ input#toctree-checkbox-9):hover {
   background: url("../logos/logos_vibes_ipe.png") no-repeat center / contain,
               var(--color-sidebar-item-background--hover);
 }
 
-.sidebar-tree li.toctree-l1 > a.reference.internal.current:has(+ input#toctree-checkbox-8) {
+.sidebar-tree li.toctree-l1 > a.reference.internal.current:has(+ input#toctree-checkbox-9) {
   background: url("../logos/logos_vibes_ipe.png") no-repeat center / contain,
               var(--color-sidebar-item-background--current);
+}
+
+figcaption .caption-text
+{
+  font-style: italic;
 }

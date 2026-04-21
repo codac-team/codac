@@ -77,24 +77,6 @@
     set(CODAC_CXX_FLAGS \"\")
   ")
 
-  #if(WITH_PYTHON)
-  #  
-  #  file(APPEND ${CODAC_CMAKE_CONFIG_FILE} "
-  #
-  ## Adding Sympy interface:
-  #
-  #  find_path(CODAC_SYMPY_INCLUDE_DIR ${PROJECT_NAME}-sympy.h
-  #            PATH_SUFFIXES include/${PROJECT_NAME}-sympy)
-  #
-  #  find_library(CODAC_SYMPY_LIBRARY NAMES ${PROJECT_NAME}-sympy
-  #               PATH_SUFFIXES lib)
-  #
-  #  set(CODAC_LIBRARIES \${CODAC_LIBRARIES} \${CODAC_SYMPY_LIBRARY} pybind11::embed \${CODAC_SYMPY_LIBRARY} pybind11::embed)
-  #  set(CODAC_INCLUDE_DIRS \${CODAC_INCLUDE_DIRS} \${CODAC_SYMPY_INCLUDE_DIR})
-  #  ")
-  #
-  #endif()
-
   if(WITH_PYTHON)
 
     file(APPEND ${CODAC_CMAKE_CONFIG_FILE} "
@@ -103,12 +85,10 @@
 
     find_path(CODAC_SYMPY_INCLUDE_DIR ${PROJECT_NAME}-sympy.h
               PATH_SUFFIXES include/${PROJECT_NAME}-sympy)
-    set(CODAC_INCLUDE_DIRS \${CODAC_INCLUDE_DIRS} \${CODAC_SYMPY_INCLUDE_DIR})
-
     find_library(CODAC_SYMPY_LIBRARY NAMES ${PROJECT_NAME}-sympy
                  PATH_SUFFIXES lib)
                  
-    set(CODAC_LIBRARIES \${CODAC_LIBRARIES} \${CODAC_SYMPY_LIBRARY})
+    set(CODAC_SYMPY_LIBRARY \${CODAC_SYMPY_LIBRARY} \${CODAC_LIBRARIES})
     ")
 
   endif()
@@ -120,15 +100,12 @@
   # Optional 3rd party:
 
     find_package(CAPD REQUIRED)
-
     find_path(CODAC_CAPD_INCLUDE_DIR ${PROJECT_NAME}-capd.h
               PATH_SUFFIXES include/${PROJECT_NAME}-capd)
-    set(CODAC_INCLUDE_DIRS \${CODAC_INCLUDE_DIRS} \${CODAC_CAPD_INCLUDE_DIR})
-
     find_library(CODAC_CAPD_LIBRARY NAMES ${PROJECT_NAME}-capd
                  PATH_SUFFIXES lib)
                  
-    set(CODAC_LIBRARIES \${CODAC_LIBRARIES} \${CODAC_CAPD_LIBRARY} capd::capd)
+    set(CODAC_CAPD_LIBRARY \${CODAC_CAPD_LIBRARY} \${CODAC_LIBRARIES})
     ")
 
   endif()

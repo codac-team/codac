@@ -7,27 +7,38 @@ Python installation
 
 In case you want to use Codac only with Python, then the installation procedure is simply:
 
-1. **Dependencies**: Ensure you have a supported version of Python (>=3.6).
-2. **Install via pip**: Use the following command to install Codac:
+1. **Dependencies**: Ensure you have a supported version of Python (>=3.8).
+2. **Install pip**: For Ubuntu or Debian-like systems:
 
    .. code-block:: bash
    
-      pip install codac --pre
-      # Option --pre has to be set because Codac v2 is only available in pre-release
+      sudo apt install python3-pip
+   
+   For other systems, you can usually install pip with something similar to:
+
+   .. code-block:: bash
+   
+      python -m pip install pip
+
+3. **Install via pip**: Use the following command to install Codac:
+
+   .. code-block:: bash
+   
+      pip install codac
 
 
-You can also update and test your Codac Python package.
+You can also update and test your Codac Python package:
 
 * **Update via pip**: Use the following command to update your already installed Codac package:
    .. code-block:: bash
 
-      pip install codac --upgrade --pre
-      # Option --pre has to be set because Codac v2 is only available in pre-release
+      pip install codac --upgrade
 
 
 * **Testing the installation**: In order to verify that your installation is working properly in Python, you can run:
    .. code-block:: bash
 
+     pip install numpy sympy
      python -m unittest discover codac.tests
 
 
@@ -36,13 +47,21 @@ Troubleshooting
 
 Depending on your configuration, you may encounter difficulties when installing the Codac Python package. Here are a few tips to help you.
 
-.. admonition:: Debian Bookworm and possibly other configurations
+.. admonition:: ``python`` vs ``python3``, ``pip`` vs ``pip3`` commands
+
+  | You may need to use ``python3`` instead of ``python`` command depending on your configuration. Same applies to the ``pip`` command, which may be ``pip3`` in some cases.
+
+.. admonition:: Debian Bookworm, Ubuntu 24.04 and possibly other configurations
 
   | ``pip install ...`` or ``pip3 install ...`` commands may only work inside `virtual environments <https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/>`_ or with ``--break-system-packages`` parameter, *e.g.*:
 
   .. code-block:: bash
 
-    pip3 install --break-system-packages codac --pre
+    pip3 install --break-system-packages codac
+
+.. admonition:: Python package dependencies for Ubuntu or Debian-like systems
+
+  | If available, prefer ``sudo apt install python3-mypackage`` instead of ``pip install mypackage`` commands to install Python package dependencies for Ubuntu or Debian-like systems, to avoid breaking the system packages. However, not all the packages are available with ``apt``.
 
 .. admonition:: macOS Big Sur and later (x86_64)
 

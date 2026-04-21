@@ -32,12 +32,9 @@ void export_TSlice(py::module& m)
     .def("slices", &TSlice::slices,
       CONST_MAP_CONST_SLICEDTUBEBASE_PTRSHARED_PTR_SLICEBASE_REF_TSLICE_SLICES_CONST)
 
-    .def(py::self == py::self,
-      BOOL_TSLICE_OPERATOREQ_CONST_TSLICE_REF_CONST,
-      "x"_a)
+    .def(py::self == py::self, "x"_a)
 
-    .def(py::self != py::self,
-      "x"_a)
+    .def(py::self != py::self, "x"_a)
 
   ;
 }

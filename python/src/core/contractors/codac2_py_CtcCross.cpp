@@ -27,10 +27,10 @@ void export_CtcCross(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInte
     .def(py::init<const Segment&, const IntervalVector&>(),
       CTCCROSS_CTCCROSS_CONST_SEGMENT_REF_CONST_INTERVALVECTOR_REF,
       "e"_a, "r"_a)
-
-    .def(CONTRACT_BOX_METHOD(CtcCross,
-      VOID_CTCCROSS_CONTRACT_INTERVALVECTOR_REF_CONST))
   ;
+
+  CONTRACT_METHODS(exported_cross, CtcCross,
+    VOID_CTCCROSS_CONTRACT_INTERVALVECTOR_REF_CONST)
 
   py::class_<CtcNoCross> exported_nocross(m, "CtcNoCross", pyctc, CTCNOCROSS_MAIN);
   exported_nocross
@@ -38,8 +38,8 @@ void export_CtcCross(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInte
     .def(py::init<const Segment&, const IntervalVector&>(),
       CTCNOCROSS_CTCNOCROSS_CONST_SEGMENT_REF_CONST_INTERVALVECTOR_REF,
       "e"_a, "r"_a)
-
-    .def(CONTRACT_BOX_METHOD(CtcNoCross,
-      VOID_CTCNOCROSS_CONTRACT_INTERVALVECTOR_REF_CONST))
   ;
+
+  CONTRACT_METHODS(exported_nocross, CtcNoCross,
+    VOID_CTCNOCROSS_CONTRACT_INTERVALVECTOR_REF_CONST)
 }

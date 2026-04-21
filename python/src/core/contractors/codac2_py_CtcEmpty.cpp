@@ -27,9 +27,8 @@ void export_CtcEmpty(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInte
     .def(py::init<Index>(),
       CTCEMPTY_CTCEMPTY_INDEX
       "n"_a)
-
-    .def(CONTRACT_BOX_METHOD(CtcEmpty,
-      VOID_CTCEMPTY_CONTRACT_INTERVALVECTOR_REF_CONST))
-
   ;
+
+  CONTRACT_METHODS(exported, CtcEmpty,
+    VOID_CTCEMPTY_CONTRACT_INTERVALVECTOR_REF_CONST)
 }

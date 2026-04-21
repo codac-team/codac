@@ -18,11 +18,11 @@ class TestCtcPolygon(unittest.TestCase):
     c = CtcPolygon([[3,-1],[3,4],[5,6],[-1,1]])
 
     x = IntervalVector(2)
-    c.contract(x)
+    x = c.contract(x)
     self.assertTrue(x == IntervalVector([[-1,5],[-1,6]]))
 
     x = IntervalVector([[3.02,3.16],[2.5,3.2]]) # possible bug
-    c.contract(x)
+    x = c.contract(x)
     self.assertTrue(x.is_empty())
 
   def test_CtcPolygon_fromCodac1(self):
@@ -50,7 +50,7 @@ class TestCtcPolygon(unittest.TestCase):
 
     x = IntervalVector([[0],[0]]).inflate(0.5)
     #DefaultFigure.draw_box(x,Color::purple())
-    c.contract(x)
+    x = c.contract(x)
     self.assertTrue(x.is_empty())
 
     # Check a box inside the polygon
@@ -58,14 +58,14 @@ class TestCtcPolygon(unittest.TestCase):
     x = IntervalVector([[5],[-5]]).inflate(0.5)
     _x = IntervalVector(x)
     #DefaultFigure.draw_box(x,Color::purple())
-    c.contract(x)
+    x = c.contract(x)
     self.assertTrue(x == _x)
 
     # Check a box outside the polygon
 
     x = IntervalVector([[-1],[8]]).inflate(0.5)
     #DefaultFigure.draw_box(x,Color::purple())
-    c.contract(x)
+    x = c.contract(x)
     self.assertTrue(x.is_empty())
 
 
@@ -77,13 +77,13 @@ class TestCtcPolygon(unittest.TestCase):
 
     x = IntervalVector([[5],[-5]]).inflate(0.5)
     _x = IntervalVector(x)
-    c.contract(x)
+    x = c.contract(x)
     self.assertTrue(x == _x)
 
     # Check a box outside the polygon
 
     x = IntervalVector([[-1],[8]]).inflate(0.5)
-    c.contract(x)
+    x = c.contract(x)
     self.assertTrue(x.is_empty())
 
 

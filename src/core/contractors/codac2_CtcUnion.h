@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include <tuple>
 #include <type_traits>
 #include "codac2_CtcWrapper.h"
 #include "codac2_Collection.h"
@@ -47,26 +48,32 @@ namespace codac2
         return _ctcs.size();
       }
 
-      template<typename X_> // single type
-      void contract_impl(X_& x) const
+      void contract(X&... x) const
       {
-        auto result = x;
-        result.set_empty();
+        auto result = std::tuple<X...>(x...);
+        std::apply([](auto&... xi)
+        {
+          (xi.set_empty(), ...);
+        }, result);
+
+        auto accumulate_union = [&]<std::size_t... I>(const std::tuple<X...>& y, std::index_sequence<I...>)
+        {
+          ((std::get<I>(result) |= std::get<I>(y)), ...);
+        };
 
         for(const auto& ci : _ctcs)
         {
-          auto saved_x = x;
-          ci->contract(saved_x);
-          result |= saved_x;
+          auto saved = std::tuple<X...>(x...);
+
+          std::apply([&](auto&... xi)
+          {
+            ci->contract(xi...);
+          }, saved);
+
+          accumulate_union(saved, std::index_sequence_for<X...>{});
         }
 
-        x = result;
-      }
-
-      void contract(X&... x) const
-      {
-        // contract_impl(..) method for multiple types is not yet implemented
-        contract_impl(x...);
+        std::tie(x...) = result;
       }
 
       template<typename C>

@@ -49,7 +49,7 @@ id_3d = OctaSym([1, 2, 3]);
 s1 = OctaSym([-2, 1, 3]);
 s2 = OctaSym([3, 2, -1]);
 
-v_par_3d = PEIBOS(f_3d,psi0_3d,{id_3d,s1,s1*s1,s1.invert(),s2,s2.invert()},0.2,true);
+v_par_3d = PEIBOS(f_3d,psi0_3d,{id_3d,s1,s1*s1,s1.invert(),s2,s2.invert()},0.05,true);
 
 figure_3d = Figure3D("Conform");
 figure_3d.draw_axes();

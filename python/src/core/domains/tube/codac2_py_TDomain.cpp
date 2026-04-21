@@ -63,6 +63,10 @@ void export_TDomain(py::module& m)
     .def("delete_gates", &TDomain::delete_gates,
       VOID_TDOMAIN_DELETE_GATES)
 
+    .def("truncate", &TDomain::truncate,
+      VOID_TDOMAIN_TRUNCATE_CONST_INTERVAL_REF,
+      "new_tdomain"_a)
+
     .def("__repr__", [](const TDomain& x) {
           std::ostringstream stream;
           stream << x;

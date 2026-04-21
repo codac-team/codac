@@ -189,7 +189,7 @@ py::class_<SampledTraj<T>> _export_SampledTraj(py::module& m, const string& clas
 }
 
 template<typename T>
-void add_operators(py::class_<SampledTraj<T>>& pyclass)
+void add_traj_operators(py::class_<SampledTraj<T>>& pyclass)
 {
   pyclass
 
@@ -253,7 +253,7 @@ void export_SampledTraj(py::module& m)
   auto py_SampledTraj_Vector = _export_SampledTraj<Vector>(m, "SampledTraj_Vector");
   auto py_SampledTraj_Matrix = _export_SampledTraj<Matrix>(m, "SampledTraj_Matrix");
 
-  add_operators<double>(py_SampledTraj_double);
+  add_traj_operators<double>(py_SampledTraj_double);
 
   m.def("continuous_traj", &continuous_traj,
     SAMPLEDTRAJ_DOUBLE_CONTINUOUS_TRAJ_CONST_SAMPLEDTRAJ_DOUBLE_REF,
@@ -274,8 +274,8 @@ void export_SampledTraj(py::module& m)
       py::is_operator())
   ;
 
-  add_operators<Matrix>(py_SampledTraj_Matrix);
-  add_operators<Vector>(py_SampledTraj_Vector);
+  add_traj_operators<Matrix>(py_SampledTraj_Matrix);
+  add_traj_operators<Vector>(py_SampledTraj_Vector);
   py_SampledTraj_Matrix
 
     .def("__mul__", [](const SampledTraj<Matrix>& x1, const SampledTraj<Vector>& x2) { return x1*x2; },

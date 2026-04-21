@@ -25,7 +25,7 @@ class TestAnalyticTraj(unittest.TestCase):
       sqr(t)
     )
 
-    traj = AnalyticTraj(f, [-1,10])
+    traj = AnalyticTraj([-1,10],f)
 
     self.assertTrue(traj.tdomain() == Interval(-1,10))
     self.assertTrue(traj.codomain() == Interval(0,100))
