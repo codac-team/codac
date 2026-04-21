@@ -140,12 +140,6 @@ class TestInterval_bwd(unittest.TestCase):
     self.assertTrue(_x1 == -expected_x1)
     self.assertTrue(_x2 == -expected_x2)
 
-  def CHECK_bwd_imod(self, p, x1, x2, expected_x1, expected_x2):
-    _x1 = Interval(); _x2 = Interval()
-    _x1 = x1; _x2 = x2; ModOp.bwd(_x1,_x2,p)
-    self.assertTrue(Approx(_x1) == expected_x1)
-    self.assertTrue(Approx(_x2) == expected_x2)
-
   def test_interval_bwd(self):
 
     pi_lb = Interval.pi().lb()
@@ -291,15 +285,6 @@ class TestInterval_bwd(unittest.TestCase):
     self.CHECK_bwd_sub(Interval(0,0),Interval(-1,1),Interval(-1,1),Interval(-1,1),Interval(-1,1))
     self.CHECK_bwd_sub(Interval(-1,1),Interval(1,2),Interval(-10,5),Interval(1,2),Interval(0,3))
 
-    self.CHECK_bwd_imod(3.,Interval(3.,5.),Interval(1.,2.),Interval(4.,5.),Interval(1.,2.))
-    self.CHECK_bwd_imod(2.,Interval(7.,8.),Interval(.5,2.),Interval(7.,8.),Interval(1.,2.))
-    self.CHECK_bwd_imod(2.,Interval(7.,8.),Interval(0.,2.),Interval(7.,8.),Interval(0.,2.))
-    self.CHECK_bwd_imod(2.*math.pi,Interval(2.*math.pi,3.*math.pi),Interval(math.pi/6,math.pi/2.),Interval(13.*math.pi/6.,5.*math.pi/2.),Interval(math.pi/6,math.pi/2.))
-    self.CHECK_bwd_imod(2.*math.pi,Interval(3.*math.pi,4.*math.pi),Interval(math.pi/3,math.pi/2.),Interval.empty(),Interval.empty())
-    self.CHECK_bwd_imod(2.*math.pi,Interval(3.*math.pi,4.*math.pi),Interval(0.,math.pi/2.),Interval(4*math.pi),Interval(0.))
-    self.CHECK_bwd_imod(2.*math.pi,Interval(2.*math.pi,4.*math.pi),Interval(-math.pi/6,math.pi/2.),Interval(2.*math.pi,4.*math.pi),Interval(-math.pi/6,math.pi/2.))
-    self.CHECK_bwd_imod(2.*math.pi,Interval(7.*math.pi/4.,8.*math.pi/3),Interval(-math.pi/2,math.pi/2.),Interval(7.*math.pi/4.,5.*math.pi/2.),Interval(-math.pi/4,math.pi/2.))
-
     x = Interval(-oo,oo);        FloorOp.bwd(Interval.empty(),x);        self.assertTrue(x == Interval.empty())
     x = Interval(-oo,-0.000001); FloorOp.bwd(Interval(-oo,-1),x);        self.assertTrue(x == Interval(-oo,-0.000001))
     x = Interval(-oo, 0.000001); FloorOp.bwd(Interval(-oo,-1),x);        self.assertTrue(x == Interval(-oo,0))
@@ -372,6 +357,58 @@ class TestInterval_bwd(unittest.TestCase):
     FlattenOp.bwd(N,M)
     self.assertTrue(M == IntervalMatrix([[[1,1.2],[2,2.2],[3,3.2]],[4.0,[5,5.2],[6,6.2]]]))
 
+  def test_interval_modulo(self):
+
+    self.assertTrue(ModOp.fwd(Interval.empty(), Interval(2)) == Interval.empty())
+    self.assertTrue(ModOp.fwd(Interval(-oo,oo), Interval(-oo,0)) == Interval.empty())
+
+    self.assertTrue(ModOp.fwd(Interval(5), Interval(3)) == Interval(2))
+    self.assertTrue(ModOp.fwd(Interval(-1), Interval(3)) == Interval(2))
+
+    self.assertTrue(ModOp.fwd(Interval(0.25,0.75), Interval(1,2)) == Interval(0.25,0.75))
+    self.assertTrue(ModOp.fwd(Interval(3.25,3.75), Interval(2)) == Interval(1.25,1.75))
+
+    self.assertTrue(ModOp.fwd(Interval(-1,5), Interval(2)) == Interval(0,2))
+    self.assertTrue(ModOp.fwd(Interval(1,5), Interval(2,4)) == Interval(0,4))
+    self.assertTrue(ModOp.fwd(Interval(-1,5), Interval(-2,4)) == Interval(0,4))
+
+    x = Interval()
+    p = Interval()
+
+    x = Interval(-oo,oo); p = Interval(-oo,oo)
+    ModOp.bwd(Interval.empty(), x, p)
+    self.assertTrue(x == Interval.empty())
+    self.assertTrue(p == Interval.empty())
+
+    x = Interval(-oo,oo); p = Interval(-oo,0)
+    ModOp.bwd(Interval(0,1), x, p)
+    self.assertTrue(x == Interval.empty())
+    self.assertTrue(p == Interval.empty())
+
+    x = Interval(-oo,oo); p = Interval(2,3)
+    ModOp.bwd(Interval(5,6), x, p)
+    self.assertTrue(x == Interval.empty())
+    self.assertTrue(p == Interval.empty())
+
+    x = Interval(0,3); p = Interval(3,4)
+    ModOp.bwd(Interval(1,2), x, p)
+    self.assertTrue(x == Interval(1,2))
+    self.assertTrue(p == Interval(3,4))
+
+    x = Interval(2.5,4); p = Interval(2,3)
+    ModOp.bwd(Interval(1), x, p)
+    self.assertTrue(x == Interval(3,4))
+    self.assertTrue(p == Interval(2,3))
+
+    x = Interval(5,5); p = Interval(1.9,2.1)
+    ModOp.bwd(Interval(1), x, p)
+    self.assertTrue(Approx(x) == Interval(5))
+    self.assertTrue(Approx(p) == Interval(2))
+
+    x = Interval(0.3,0.4); p = Interval(10,11)
+    ModOp.bwd(Interval(0.1,0.2), x, p)
+    self.assertTrue(x == Interval.empty())
+    self.assertTrue(p == Interval.empty())
   
 if __name__ ==  '__main__':
   unittest.main()

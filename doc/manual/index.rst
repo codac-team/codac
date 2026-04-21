@@ -37,7 +37,7 @@ The solution set is approximated from an initial box :math:`[\mathbf{x}_0]=[0,2]
    
    x = VectorVar(3)
    f = AnalyticFunction([x], [
-     -(x[2]^2)+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
+     -sqr(x[2])+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
      2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
    ])
    
@@ -52,9 +52,8 @@ The solution set is approximated from an initial box :math:`[\mathbf{x}_0]=[0,2]
    int main()
    {
      VectorVar x(3);
-     AnalyticFunction f { {x},
-       {
-         -(x[2]^2)+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
+     AnalyticFunction f { {x}, {
+         -sqr(x[2])+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
          2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
        }
      };
@@ -191,7 +190,8 @@ User manual
 * :ref:`sec-intervals`
    * What is an interval?
    * :ref:`sec-intervals-class`
-   * Boolean intervals
+   * :ref:`sec-intervals-intervalvector-class`
+   * :ref:`sec-intervals-boolinterval-class`
 
 * :ref:`sec-linear`
    * :ref:`sec-linear-vecmat`
@@ -207,16 +207,15 @@ User manual
       * :ref:`sec-functions-analytic-operators`
       * Extension to custom expressions
       * Temporal functions
+      * :ref:`sec-functions-parallelepiped-eval`
+      * :ref:`sec-functions-peibos`
    * Set-membership functions
       * The class SetMembershipFunction
       * Extension to custom expressions
-   * :ref:`sec-functions-parallelepiped-eval`
-   * :ref:`sec-functions-peibos`
 
-* Tubes
-   * What is a tube?
-   * Temporal domains
-   * The Tube classes
+* :ref:`sec-domains-tubes`
+   * :ref:`sec-domains-tubes-tdomain`
+   * :ref:`sec-domains-tubes-slicedtube`
    * The Trajectory classes
    * Increasing performances using views
 
@@ -233,8 +232,8 @@ User manual
       * CtcGaussSeidel
       * CtcLinearPrecond
    * Set contractors
+      * :ref:`sec-ctc-set-ctcinter`
       * CtcUnion
-      * CtcInter
       * CtcQInter
       * CtcCartProd
       * CtcProj
@@ -243,9 +242,12 @@ User manual
    * Analytic contractors
       * :ref:`sec-ctc-analytic-ctcinverse`
       * CtcInverseNotIn
+   * Dynamic contractors
+      * :ref:`sec-ctc-dynamic-ctclohner`
    * Geometric contractors
       * :ref:`sec-ctc-geom-ctcdist`
       * :ref:`sec-ctc-geom-ctcpolar`
+      * :ref:`sec-ctc-geom-ctcvisible`
       * CtcSegment
       * CtcPolygon
       * CtcPointCloud
@@ -284,6 +286,7 @@ User manual
       * SepInverse
       * SepTransform
    * Geometrical separators
+      * SepVisible
       * SepPolarCart or SepCartPolar
       * SepPolygon
       * SepEllipse
@@ -338,10 +341,10 @@ User manual
    * :ref:`sec-tools-registration`
    * :ref:`sec-tools-octasym`
 
-* Codac extensions
+* :ref:`sec-extensions`
    * :ref:`sec-extensions-capd`
+   * :ref:`sec-extensions-sympy`
    * Interface with the IBEX library
-   * Sympy (symbolic computation)
 
 * Frequently Asked Questions
 
@@ -356,9 +359,7 @@ How-to guides
 -------------
 
 * Robotics
-   * Non-linear state estimation
-   * State estimation by solving data association
-   * Range-only SLAM
+   * :ref:`sec-tuto-cprob`
    * Explored area
    * Loop detections and verifications
 
@@ -399,6 +400,7 @@ Development
    manual/introduction/index.rst
    manual/installation/index.rst
    manual/intervals/index.rst
+   manual/tubes/index.rst
    manual/linear/index.rst
    manual/functions/index.rst
    manual/contractors/index.rst

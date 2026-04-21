@@ -1,0 +1,82 @@
+/** 
+ *  \file codac2_TrajBase_impl.h
+ * ----------------------------------------------------------------------------
+ *  \date       2024
+ *  \author     Simon Rohou
+ *  \copyright  Copyright 2024 Codac Team
+ *  \license    GNU Lesser General Public License (LGPL)
+ */
+
+#pragma once
+
+namespace codac2
+{
+  template<typename T>
+  auto TrajBase<T>::nan_value() const
+  {
+    if constexpr(std::is_same_v<T,double> || std::is_same_v<typename ExprType<T>::Type,ScalarType>)
+      return std::numeric_limits<double>::quiet_NaN();
+
+    else
+      return T((*this)(tdomain().lb())) // we obtain the output dimension by an evalution...
+        .init(std::numeric_limits<double>::quiet_NaN());
+  }
+
+  template<typename T>
+  SampledTraj<T> TrajBase<T>::sampled(double dt) const
+  {
+    assert_release(dt > 0.);
+    assert_release(!is_empty());
+
+    auto tdom = tdomain();
+    SampledTraj<T> straj;
+    for(double t = tdom.lb() ; t < tdom.ub() ; t+=dt)
+      straj.set((*this)(t), t);
+    straj.set((*this)(tdom.ub()), tdom.ub());
+    return straj;
+  }
+
+  template<typename T>
+  template<typename Q>
+  SampledTraj<T> TrajBase<T>::sampled_as(const SampledTraj<Q>& x) const
+  {
+    assert_release(x.tdomain().is_subset(this->tdomain()));
+    
+    SampledTraj<T> straj;
+    for(const auto& [ti,dump] : x)
+      straj.set((*this)(ti), ti);
+    return straj;
+  }
+
+  template<typename T>
+  SampledTraj<T> TrajBase<T>::primitive(double dt) const
+  {
+    assert_release(dt > 0.);
+    assert_release(!is_empty());
+
+    T s = [this]() {
+      if constexpr(std::is_same_v<T,double>)
+        return 0.;
+      else
+        return T((*this)(this->tdomain().lb())).init(0.);
+    }();
+
+    SampledTraj<T> p;
+    double t = tdomain().lb(), last_t = t;
+    p.set(s, t); t += dt;
+
+    while(t < tdomain().ub())
+    {
+      s += ((*this)(last_t)+(*this)(t))*dt/2.;
+      p.set(s, t);
+      last_t = t;
+      t += dt;
+    }
+
+    t = tdomain().ub();
+    s += ((*this)(last_t)+(*this)(t))*(t-last_t)/2.;
+    p.set(s, t);
+
+    return p;
+  }
+}

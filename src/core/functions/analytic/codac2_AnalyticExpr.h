@@ -31,7 +31,7 @@ namespace codac2
       virtual std::pair<Index,Index> output_shape() const = 0;
 
       const T& init_value(ValuesMap& v, const T& x) const
-      {
+      {        
         auto& p = v[unique_id()];
 
         if(!p)
@@ -150,6 +150,11 @@ namespace codac2
         }, this->_x);
 
         return b;
+      }
+
+      std::vector<std::shared_ptr<ExprBase>> children_expr_base() const override
+      {
+        return OperationExprBase<AnalyticExpr<X>...>::children_expr_base();
       }
   };
 }

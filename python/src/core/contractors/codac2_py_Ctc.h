@@ -14,6 +14,7 @@
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <codac2_Ctc.h>
+#include <codac2_SlicedTube.h>
 #include <codac2_IntervalVector.h>
 #include "codac2_py_matlab.h"
 
@@ -22,8 +23,37 @@ namespace py = pybind11;
 using namespace py::literals;
 
 
+template<typename C>
+const CtcBase<IntervalVector>& as_ctc_base(const C& c)
+{
+  static_assert(std::is_base_of_v<CtcBase<IntervalVector>, C>,
+    "bind_contract_overloads requires C to derive from CtcBase<IntervalVector>");
+  return static_cast<const CtcBase<IntervalVector>&>(c);
+}
+
+#define CONTRACT_METHODS(exp,clss,doc) \
+  exp \
+    .def("contract", \
+      [](const clss& c, IntervalVector& x) -> const IntervalVector& \
+      { as_ctc_base<clss>(c).contract(x); return x; }, \
+      doc, "x"_a) \
+    .def("contract", \
+      [](const clss& c, SlicedTube<IntervalVector>& x) -> const SlicedTube<IntervalVector>& \
+      { as_ctc_base<clss>(c).contract(x); return x; }, \
+      doc, "x"_a) \
+    /* Deprecated: */ \
+    .def("contract_tube", \
+      [](const clss& c, SlicedTube<IntervalVector>& x) -> const SlicedTube<IntervalVector>& \
+      { \
+        std::cout << "CtcInverse.contract_tube(...) is deprecated; use CtcInverse.contract(...) with SlicedTube arguments instead" << std::endl; \
+        as_ctc_base<clss>(c).contract(x); return x; \
+      }, \
+      doc, "x"_a) \
+  ; \
+
 #define CONTRACT_BOX_METHOD(clss,doc) \
   "contract", [](const clss& c, IntervalVector& x) -> const IntervalVector& { c.contract(x); return x; }, doc, "x"_a
+
 
 class pyCtcIntervalVector : public CtcBase<IntervalVector>
 {

@@ -56,7 +56,7 @@ jobs:
       if: runner.os=='Windows'
     #- run: choco install -y -r --no-progress eigen --version=3.4.0.20240224 ${{ matrix.cfg.choco_flags }}
     #  if: runner.os=='Windows'
-    - run: choco install -y -r --no-progress graphviz doxygen.install & python -m pip install --upgrade pip & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects furo sphinx-math-dollar
+    - run: choco install -y -r --no-progress graphviz doxygen.install & python -m pip install --upgrade pip & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects furo sphinx-math-dollar sympy
       if: runner.os=='Windows'
     - run: |
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20250626/ibex.2.8.9.20250626.nupkg --no-check-certificate -nv
@@ -80,7 +80,7 @@ jobs:
     - run: |
         pip install --no-deps --no-index *.whl
         python -c "import sys; print(sys.version)" ; python examples/02_centered_form/main.py
-        pip install numpy --prefer-binary
+        pip install numpy sympy --prefer-binary
         python -m unittest discover codac.tests
         cd build && ctest -C Release -V --output-on-failure
         cd ..

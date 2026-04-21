@@ -32,9 +32,8 @@ void export_CtcNot(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInterv
         }),
       CTCNOT_CTCNOT_CONST_C_REF,
       "c"_a)
-
-    .def(CONTRACT_BOX_METHOD(CtcNot,
-      VOID_CTCNOT_CONTRACT_INTERVALVECTOR_REF_CONST))
-
   ;
+
+  CONTRACT_METHODS(exported, CtcNot,
+    VOID_CTCNOT_CONTRACT_INTERVALVECTOR_REF_CONST)
 }

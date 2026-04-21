@@ -117,6 +117,16 @@ namespace codac2
       {
         return true;
       }
+      
+      Index i() const
+      {
+        return _i;
+      }
+
+      std::vector<std::shared_ptr<ExprBase>> children_expr_base() const override
+      {
+        return OperationExprBase<AnalyticExpr<VectorType>>::children_expr_base();
+      }
 
     protected:
 
@@ -181,6 +191,21 @@ namespace codac2
       virtual bool is_str_leaf() const
       {
         return true;
+      }
+
+      Index i() const
+      {
+        return _i;
+      }
+
+      Index j() const
+      {
+        return _j;
+      }
+
+      std::vector<std::shared_ptr<ExprBase>> children_expr_base() const override
+      {
+        return OperationExprBase<AnalyticExpr<MatrixType>>::children_expr_base();
       }
 
     protected:

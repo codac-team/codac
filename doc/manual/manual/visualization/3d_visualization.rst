@@ -26,6 +26,10 @@ The constructor takes one arguments: the name of the object file.
 
     Figure3D fig ("my_object"); // for the object file my_object.obj
 
+  .. code-tab:: matlab
+
+    fig = Figure3D("my_object") % for the object file my_object.obj
+
 Drawing functions
 -----------------
 

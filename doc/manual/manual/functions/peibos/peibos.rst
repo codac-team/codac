@@ -8,7 +8,7 @@ The PEIBOS tool provides a way to compute the Parallelepipedic Enclosure of the 
 Let us consider an initial set :math:`\mathbb{X}_0 \subset \mathbb{R}^n` with its boundary :math:`\partial \mathbb{X}_0`. 
 Considering a function :math:`\mathbf{f}:\mathbb{R}^n \to \mathbb{R}^p`, :math:`n \leq p`, the PEIBOS tool allows to compute the set :math:`\mathbf{Y}=\left\{ \mathbf{f}(\mathbf{x}) \mid \mathbf{x} \in \partial \mathbb{X}_0 \right\}`.
 
-
+.. _subsec-functions-peibos-gnomonic-atals:
 Gnomonic atlas
 --------------
 

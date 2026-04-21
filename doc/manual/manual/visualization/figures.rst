@@ -29,6 +29,12 @@ visualization while IPE creates a file that can be edited by the IPE editor. The
     GraphicOutput::IPE  // for IPE
     GraphicOutput::VIBES | GraphicOutput::IPE // for both
 
+  .. code-tab:: matlab
+
+    GraphicOutput().VIBES  % for VIBes
+    GraphicOutput().IPE  % for IPE
+    GraphicOutput().VIBES.union(GraphicOutput().IPE) % for both
+
 Note that for the VIBes output to work, the VIBes viewer must be launched before the program is run.
 
 .. _subsec-graphics-2d-figures-figure2d:
@@ -49,6 +55,10 @@ DefaultFigure (see :ref:`subsec-graphics-2d-figures-defaultfigure`).
   .. code-tab:: c++
 
     Figure2D fig ("My Figure",GraphicOutput::VIBES|GraphicOutput::IPE);
+
+  .. code-tab:: matlab
+
+    fig = Figure2D("My figure 1", GraphicOutput().VIBES.union(GraphicOutput().IPE));
 
 .. _subsec-graphics-2d-figures-defaultfigure:
 
@@ -74,8 +84,15 @@ Any Figure2D object can be used as DefaultFigure with the set method:
     DefaultFigure::set(fig);
     fig->is_default(); // is true
 
-Note that in C++ the figure must be a shared pointer in order to be passed to the `set` method.
+  .. code-tab:: matlab
 
+    fig = Figure2D("My figure", GraphicOutput().VIBES.union(GraphicOutput().IPE));
+    fig.is_default() % is False
+    DefaultFigure().set(fig);
+    fig.is_default() % is True
+
+
+Note that in C++ the figure must be a shared pointer in order to be passed to the `set` method.
 
 .. _subsec-graphics-2d-figures-figure-properties:
 
@@ -89,12 +106,17 @@ Once created, the properties of a Figure2D object can be modified using the foll
   .. code-tab:: py
 
     fig.set_window_properties([50,50],[500,500]) # set the window position and size
-    fig.set_axes(axis(0,[-10,10]), axis(1,[-10,10])) # set the x-axis index to 0 and its range to [-10,10], same for y with index 1 
+    fig.set_axes([[-15,5],[-10,10]]) # set the x-axis range to [-15,5] and y-axis range to [-10,10]
 
   .. code-tab:: c++
 
     fig.set_window_properties({50,50},{500,500}); // set the window position and size
-    fig.set_axes(axis(0,{-10,10}), axis(1,{-10,10})); // set the x-axis index to 0 and its range to [-10,10], same for y with index 1 
+    fig.set_axes({{-15,5},{-10,10}}); // set the x-axis range to [-15,5] and y-axis range to [-10,10]
+
+  .. code-tab:: matlab
+
+    fig.set_window_properties(Vector({50,50}),Vector({500,500})); % set the window position and size
+    fig.set_axes(IntervalVector({{-15,5},{-10,10}})); % set the x-axis range to [-15,5] and y-axis range to [-10,10]
 
 The same methods can be applied on the DefaultFigure object.
 
@@ -103,12 +125,18 @@ The same methods can be applied on the DefaultFigure object.
   .. code-tab:: py
 
     DefaultFigure.set_window_properties([50,50],[500,500]) # set the window position and size
-    DefaultFigure.set_axes(axis(0,[-10,10]), axis(1,[-10,10])) # set the x-axis index to 0 and its range to [-10,10], same for y with index 1 
+    DefaultFigure.set_axes([[-15,5],[-10,10]]) # set the x-axis range to [-15,5] and y-axis range to [-10,10]
 
   .. code-tab:: c++
 
     DefaultFigure::set_window_properties({50,50},{500,500}); // set the window position and size
-    DefaultFigure::set_axes(axis(0,{-10,10}), axis(1,{-10,10})); // set the x-axis index to 0 and its range to [-10,10], same for y with index 1 
+    DefaultFigure::set_axes({{-15,5},{-10,10}}); // set the x-axis range to [-15,5] and y-axis range to [-10,10]
+
+  .. code-tab:: matlab
+
+    DefaultFigure().set_window_properties(Vector({50,50}),Vector({500,500})); %  set the window position and size
+    DefaultFigure().set_axes(IntervalVector({{-15,5},{-10,10}})); % set the x-axis range to [-15,5] and y-axis range to [-10,10]
+
 
 Many properties have an associated getter :
 

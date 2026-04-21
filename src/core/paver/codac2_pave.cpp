@@ -14,31 +14,31 @@ using namespace codac2;
 
 namespace codac2
 {
-  PavingOut pave(const IntervalVector& x, std::shared_ptr<const CtcBase<IntervalVector>> c,
+  PavingOut pave(const IntervalVector& x0, std::shared_ptr<const CtcBase<IntervalVector>> c,
     double eps, bool verbose)
   {
-    return pave(x, *c, eps, verbose);
+    return pave(x0, *c, eps, verbose);
   }
 
-  PavingOut pave(const IntervalVector& x, const CtcBase<IntervalVector>& c, double eps, bool verbose)
+  PavingOut pave(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, bool verbose)
   {
     double time = 0;
-    return pave(x,c,eps,time,verbose);
+    return pave(x0,c,eps,time,verbose);
   }
 
-  PavingOut pave(const IntervalVector& x, const CtcBase<IntervalVector>& c, double eps, double& time, bool verbose)
+  PavingOut pave(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, double& time, bool verbose)
   {
     assert_release(eps > 0.);
-    assert_release(!x.is_empty());
+    assert_release(!x0.is_empty());
     
     clock_t t_start = clock();
     Index n_boundary = 0;
 
-    PavingOut p(x);
+    PavingOut p(x0);
     // In order to be able to reconstruct the initial box, the first level represents the
-    // initial domain x (the left node is x, the right one is an empty box).
+    // initial domain x0 (the left node is x0, the right one is an empty box).
     p.tree()->bisect();
-    p.tree()->left()->boxes() = { x };
+    p.tree()->left()->boxes() = { x0 };
     get<0>(p.tree()->right()->boxes()).set_empty();
 
     std::shared_ptr<PavingOut_Node> n;
@@ -72,20 +72,20 @@ namespace codac2
     return p;
   }
   
-  PavingInOut pave(const IntervalVector& x, std::shared_ptr<const SepBase> s,
+  PavingInOut pave(const IntervalVector& x0, std::shared_ptr<const SepBase> s,
     double eps, bool verbose)
   {
-    return pave(x, *s, eps, verbose);
+    return pave(x0, *s, eps, verbose);
   }
 
-  PavingInOut pave(const IntervalVector& x, const SepBase& s, double eps, bool verbose)
+  PavingInOut pave(const IntervalVector& x0, const SepBase& s, double eps, bool verbose)
   {
     assert_release(eps > 0.);
-    assert_release(!x.is_empty());
+    assert_release(!x0.is_empty());
     
     clock_t t_start = clock();
 
-    PavingInOut p(x);
+    PavingInOut p(x0);
     std::shared_ptr<PavingInOut_Node> n;
     list<std::shared_ptr<PavingInOut_Node>> l { p.tree() };
 
@@ -111,16 +111,16 @@ namespace codac2
     return p;
   }
 
-  PavingInOut regular_pave(const IntervalVector& x,
+  PavingInOut regular_pave(const IntervalVector& x0,
     const std::function<BoolInterval(const IntervalVector&)>& test,
     double eps, bool verbose)
   {
     assert_release(eps > 0.);
-    assert_release(!x.is_empty());
+    assert_release(!x0.is_empty());
 
     clock_t t_start = clock();
 
-    PavingInOut p(x);
+    PavingInOut p(x0);
     std::list<std::shared_ptr<PavingInOut_Node>> l { p.tree() };
 
     while(!l.empty())
@@ -154,5 +154,28 @@ namespace codac2
     if(verbose)
       printf("Computation time: %.4fs\n", (double)(clock()-t_start)/CLOCKS_PER_SEC);
     return p;
+  }
+
+  PavingInOut pave_tube(const IntervalVector& x0, const SlicedTube<IntervalVector>& f, double eps, bool verbose)
+  {
+    return regular_pave(x0,
+      [&f](const IntervalVector& x) -> BoolInterval
+      {
+        bool is_out = true;
+        for(const auto& s : f)
+        {
+          if(!s.is_gate() && s.codomain().intersects(x))
+          {
+            is_out = false;
+            if(s.codomain().is_superset(x))
+              return BoolInterval::TRUE;
+          }
+        }
+
+        if(is_out)
+          return BoolInterval::FALSE;
+        return BoolInterval::UNKNOWN;
+      },
+      eps, verbose);
   }
 }

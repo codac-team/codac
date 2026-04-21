@@ -26,8 +26,8 @@
     contractors/codac2_py_CtcIdentity.cpp
     contractors/codac2_py_CtcInter.cpp
     contractors/codac2_py_CtcInverse.h
-    contractors/codac2_py_CtcInverseNotIn.h
     contractors/codac2_py_CtcLazy.cpp
+    contractors/codac2_py_CtcLohner.cpp
     contractors/codac2_py_CtcNot.cpp
     contractors/codac2_py_CtcPointCloud.cpp
     contractors/codac2_py_CtcPolar.cpp
@@ -36,6 +36,7 @@
     contractors/codac2_py_CtcQInter.cpp
     contractors/codac2_py_CtcSegment.cpp
     contractors/codac2_py_CtcUnion.cpp
+    contractors/codac2_py_CtcVisible.cpp
     contractors/codac2_py_CtcWrapper.cpp
     contractors/codac2_py_linear_ctc.cpp
 
@@ -55,12 +56,15 @@
     domains/zonotope/codac2_py_Zonotope.cpp
     domains/tube/codac2_py_Slice.h
     domains/tube/codac2_py_SlicedTube.h
+    domains/tube/codac2_py_SlicedTube_operations.cpp
     domains/tube/codac2_py_TDomain.cpp
     domains/tube/codac2_py_TimePropag.cpp
     domains/tube/codac2_py_TSlice.cpp
     domains/tube/codac2_py_TubeBase.cpp
     domains/tube/codac2_py_tube_cart_prod.cpp
     domains/codac2_py_BoolInterval.cpp
+
+    extensions/sympy/codac2_py_sympy.cpp
 
     functions/analytic/codac2_py_analytic_variables.cpp
     functions/analytic/codac2_py_AnalyticFunction.h
@@ -111,17 +115,20 @@
     separators/codac2_py_SepQInter.cpp
     separators/codac2_py_SepTransform.cpp
     separators/codac2_py_SepUnion.cpp
+    separators/codac2_py_SepVisible.cpp
     separators/codac2_py_SepWrapper.cpp
 
     tools/codac2_py_Approx.cpp
     tools/codac2_py_RobotSimulator.cpp
     tools/codac2_py_serialization.cpp
+    tools/codac2_py_threading.cpp
     tools/codac2_py_transformations.cpp
     tools/codac2_py_trunc.cpp
 
     trajectory/codac2_py_AnalyticTraj.cpp
     trajectory/codac2_py_SampledTraj.cpp
     trajectory/codac2_py_TrajBase.h
+    trajectory/codac2_py_traj_cart_prod.cpp
   )
 
   target_include_directories(_core
@@ -136,6 +143,7 @@
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/zonotope/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extensions/sympy/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/functions/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/graphics/
@@ -148,7 +156,7 @@
   )
 
   target_link_libraries(_core
-    PRIVATE ${PROJECT_NAME}-core ${LIBS} Ibex::ibex
+    PRIVATE ${PROJECT_NAME}-core ${PROJECT_NAME}-sympy ${LIBS} Ibex::ibex
   )
 
   # Copy the generated library in the package folder

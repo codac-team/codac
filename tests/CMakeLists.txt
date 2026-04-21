@@ -38,11 +38,14 @@ list(APPEND SRC_TESTS # listing files without extension
   core/contractors/codac2_tests_CtcInverse
   core/contractors/codac2_tests_CtcInverseNotIn
   core/contractors/codac2_tests_CtcLazy
+  core/contractors/codac2_tests_CtcLohner
   core/contractors/codac2_tests_CtcPolygon
   core/contractors/codac2_tests_CtcSegment
+  core/contractors/codac2_tests_CtcVisible
   core/contractors/codac2_tests_linear_ctc
   ../doc/manual/manual/contractors/geometric/src
   ../doc/manual/manual/contractors/analytic/src
+  ../doc/manual/manual/contractors/set/src
 
   core/domains/codac2_tests_BoolInterval
   core/domains/ellipsoid/codac2_tests_Ellipsoid
@@ -50,6 +53,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/domains/interval/codac2_tests_Interval_operations
   core/domains/interval/codac2_tests_IntervalMatrix
   core/domains/interval/codac2_tests_IntervalVector
+  ../doc/manual/manual/intervals/src
   core/domains/zonotope/codac2_tests_Parallelepiped
   core/domains/zonotope/codac2_tests_Parallelepiped_eval
   core/domains/tube/codac2_tests_TDomain
@@ -57,7 +61,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/domains/tube/codac2_tests_Slice_polygon
   core/domains/tube/codac2_tests_SlicedTube
   core/domains/tube/codac2_tests_SlicedTube_integral
-  ../doc/manual/manual/intervals/src
+  ../doc/manual/manual/tubes/src
 
   core/functions/analytic/codac2_tests_AnalyticFunction
   ../doc/manual/manual/functions/analytic/src
@@ -91,6 +95,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/separators/codac2_tests_SepPolygon
   core/separators/codac2_tests_SepProj
   core/separators/codac2_tests_SepTransform
+  core/separators/codac2_tests_SepVisible
   
   core/tools/codac2_tests_Approx
   core/tools/codac2_tests_serialization
@@ -116,10 +121,25 @@ file(COPY
 
 set(CODAC_LIBRARIES ${PROJECT_NAME}-core ${PROJECT_NAME}-graphics)
 
+option(BUILD_SYMPY_EMBED_TESTS "Build C++ tests that require embedded Python for Sympy" ON)
+if(WITH_PYTHON AND DEFINED PYBIND11_FINDPYTHON AND NOT PYBIND11_FINDPYTHON)
+  message(STATUS "Disabling Sympy C++ embed tests because PYBIND11_FINDPYTHON=OFF")
+  set(BUILD_SYMPY_EMBED_TESTS OFF)
+endif()
+
+# Sympy test
+if (WITH_PYTHON AND BUILD_SYMPY_EMBED_TESTS)
+  list(APPEND SRC_TESTS
+    extensions/sympy/codac2_tests_sympy
+    ../doc/manual/manual/extensions/sympy/src
+  )
+endif()
+
 # CAPD test
 if (WITH_CAPD)
   list(APPEND SRC_TESTS
     extensions/capd/codac2_tests_capd
+    extensions/capd/codac2_tests_peibos_capd
     ../doc/manual/manual/extensions/capd/src
   )
   set(CODAC_LIBRARIES ${CODAC_LIBRARIES} ${PROJECT_NAME}-capd capd::capd)
@@ -142,6 +162,10 @@ foreach(SRC_TEST ${SRC_TESTS})
   set(CODAC_HEADERS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../include)
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${CODAC_HEADERS_DIR})
   target_link_libraries(${TEST_NAME} PUBLIC Ibex::ibex ${CODAC_LIBRARIES} PRIVATE Catch2::Catch2WithMain)
+
+  if(WITH_PYTHON AND SRC_TEST MATCHES "extensions/sympy/")
+    target_link_libraries(${TEST_NAME} PRIVATE ${PROJECT_NAME}-sympy pybind11::embed)
+  endif()
   add_dependencies(check ${TEST_NAME})
   add_test(NAME ${TEST_NAME}_cpp COMMAND ${TEST_NAME})
 

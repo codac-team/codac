@@ -51,6 +51,18 @@ The header of the ``codac-capd`` extension is not included by default. You need 
   #include <codac-capd.h>
   #include <capd/capdlib.h>
 
+Furthermore, you need to link the extension to your project, for instance by updating your ``CMakeLists.txt`` with::
+
+  add_executable(${PROJECT_NAME} main.cpp)
+  target_compile_options(${PROJECT_NAME} PUBLIC ${CODAC_CXX_FLAGS})
+  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS} ${CODAC_CAPD_INCLUDE_DIR})
+  target_link_libraries(${PROJECT_NAME} PRIVATE
+    ${CODAC_LIBRARIES}
+    ${CODAC_CAPD_LIBRARY} # linking to the codac-capd extension
+    capd::capd # linking to CAPD
+    Ibex::ibex
+  )
+
 You can use the functions ``to_capd`` and ``to_codac`` to convert between CAPD and Codac objects as follows:
 
 .. tabs::

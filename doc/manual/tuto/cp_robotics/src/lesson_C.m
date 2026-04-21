@@ -49,7 +49,7 @@ end
 
 s = RobotSimulator();
 s.w_max = 0.2; % maximum turning speed
-u = SampledVectorTraj(); % the simulator will return the inputs (not used)
+u = SampledTraj_Vector(); % the simulator will return the inputs (not used)
 x_truth = s.simulate(Vector({0,0,0,0}), 0.01, wpts, u); % initial state (will be supposed unknown) and simulation time step
 % [C-q3-end]
 
@@ -76,7 +76,7 @@ while t < tend
             obs{end+1} = yi;
         end
     end
-    t = t + 0.01;
+    t = t + 0.01; % for performance, it is advised to increment by steps of 0.1 instead
 end
 % [C-q5-end]
 
@@ -178,11 +178,13 @@ function [x,v] = ctc_all_obs(x,v,obs,ctc_plus,ctc_polar,ctc_minus,ctc_constell,c
         x.set(xi,yi(1));
     end
 
-    res_ctc_f = ctc_f.contract_tube(x,v);
+    res_ctc_f = ctc_f.contract(x,v);
     x = res_ctc_f{1};
     v = res_ctc_f{2};
 
-    ctc_deriv.contract(x,v);
+    res_ctc_deriv = ctc_deriv.contract(x,v);
+    x = res_ctc_deriv{1};
+    v = res_ctc_deriv{2};
 
 end
 

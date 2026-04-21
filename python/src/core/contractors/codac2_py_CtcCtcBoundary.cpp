@@ -33,9 +33,8 @@ void export_CtcCtcBoundary(py::module& m, py::class_<CtcBase<IntervalVector>,pyC
         }),
       CTCCTCBOUNDARY_CTCCTCBOUNDARY_CONST_C_REF_CONST_FUNCTION_BOOLINTERVAL_CONST_VECTOR_REF__REF,
       "ctc_boundary"_a, "inside_test"_a)
-
-    .def(CONTRACT_BOX_METHOD(CtcCtcBoundary,
-      VOID_CTCCTCBOUNDARY_CONTRACT_INTERVALVECTOR_REF_CONST))
-
   ;
+
+  CONTRACT_METHODS(exported, CtcCtcBoundary,
+    VOID_CTCCTCBOUNDARY_CONTRACT_INTERVALVECTOR_REF_CONST)
 }

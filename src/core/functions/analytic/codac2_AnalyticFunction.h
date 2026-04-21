@@ -160,6 +160,18 @@ namespace codac2
         }
       }
 
+      template<typename... X>
+      typename T::Domain eval_default_codomain() const
+      {
+        static_assert(sizeof...(X) > 0);
+        assert_release(this->args().size() == sizeof...(X)
+          && "eval_default_codomain: function arity does not match contractor signature");
+
+        return eval_default_codomain_impl<X...>(
+          std::index_sequence_for<X...>{}
+        );
+      }
+
       template<typename... Args>
       auto diff(const Args&... x) const
       {
@@ -244,7 +256,7 @@ namespace codac2
         os << "(";
         for(size_t i = 0 ; i < f.args().size() ; i++)
           os << (i!=0 ? "," : "") << f.args()[i]->name();
-        os << ") ↦ " << f.expr()->str();
+        os << ") -> " << f.expr()->str();
         return os;
       }
 
@@ -330,6 +342,26 @@ namespace codac2
         for(const auto& v : this->_args) // variable names are automatically computed in FunctionArgsList,
           // so we propagate them to the expression
           this->_y->replace_arg(v->unique_id(), std::dynamic_pointer_cast<ExprBase>(v));
+      }
+
+      template<typename X>
+      static X default_eval_input(const std::shared_ptr<VarBase>& arg)
+      {
+        if constexpr(std::is_same_v<X,Interval>)
+          return Interval();
+        else if constexpr(std::is_same_v<X,IntervalVector>)
+          return IntervalVector(arg->size());
+        else
+        {
+          static_assert(!std::is_same_v<X,X>,
+            "default_eval_input: unsupported input type");
+        }
+      }
+
+      template<typename... X, std::size_t... I>
+      typename T::Domain eval_default_codomain_impl(std::index_sequence<I...>) const
+      {
+        return this->eval(default_eval_input<X>(this->args()[I])...);
       }
   };
 

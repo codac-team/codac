@@ -1,5 +1,19 @@
+#  Codac Python binding - main file
+# ----------------------------------------------------------------------------
+#  \date       2026
+#  \author     Simon Rohou
+#  \copyright  Copyright 2026 Codac Team
+#  \license    GNU Lesser General Public License (LGPL)
+
 from codac4matlab._core import *
 import sys
+import warnings
+
+try:
+  import numpy as _np
+except ImportError:
+  _np = None
+
 
 def codac_error(message):
   print(f'''
@@ -14,88 +28,99 @@ You need help? Submit an issue on: https://github.com/codac-team/codac/issues
   raise ValueError("")
 
 
-class AnalyticFunction:
+_ANALYTIC_FUNCTION_TYPES = (
+  AnalyticFunction_Scalar,
+  AnalyticFunction_Vector,
+  AnalyticFunction_Matrix,
+)
 
-  def __init__(self, args, e=None):
-    if e:
-      if isinstance(e, (int,float,Interval,ScalarVar,ScalarExpr)):
-        self.f = AnalyticFunction_Scalar(args,ScalarExpr(e))
-      elif isinstance(e, (Vector,IntervalVector,VectorVar,VectorExpr)):
-        self.f = AnalyticFunction_Vector(args,VectorExpr(e))
-      elif isinstance(e, (Matrix,IntervalMatrix,MatrixVar,MatrixExpr)):
-        self.f = AnalyticFunction_Matrix(args,MatrixExpr(e))
-      elif isinstance(e, list):
-        lst=[]
-        for e_i in e:
-          if isinstance(e_i, (int,float,Interval,ScalarVar,ScalarExpr)):
-            lst.append(ScalarExpr(e_i))
-          else:
-            codac_error("AnalyticFunction: invalid vectorial expression")
-        self.f = AnalyticFunction_Vector(args,lst)
+_SLICEDTUBE_TYPES = (
+  SlicedTube_Interval,
+  SlicedTube_IntervalVector,
+  SlicedTube_IntervalMatrix,
+)
+
+_ANALYTIC_TRAJ_TYPES = (
+  AnalyticTraj_Scalar,
+  AnalyticTraj_Vector,
+  AnalyticTraj_Matrix,
+)
+
+_SAMPLED_TRAJ_TYPES = (
+  SampledTraj_Scalar,
+  SampledTraj_Vector,
+  SampledTraj_Matrix,
+)
+
+def _is_scalar_expr_like(x):
+  return isinstance(x, (int, float, Interval, ScalarVar, ScalarExpr))
+
+def _is_vector_expr_like(x):
+  return isinstance(x, (Vector, IntervalVector, VectorVar, VectorExpr))
+
+def _is_matrix_expr_like(x):
+  return isinstance(x, (Matrix, IntervalMatrix, MatrixVar, MatrixExpr))
+
+
+def _to_function_argument_expr(x):
+  if _is_scalar_expr_like(x):
+    return ScalarExpr(x)
+  if _is_vector_expr_like(x):
+    return VectorExpr(x)
+  if _is_matrix_expr_like(x):
+    return MatrixExpr(x)
+  codac_error("AnalyticFunction: invalid input arguments")
+
+
+def AnalyticFunction(args, e=None):
+  if e is None:
+    if isinstance(args, _ANALYTIC_FUNCTION_TYPES):
+      return args
+    codac_error("AnalyticFunction: invalid function argument")
+
+  if _is_scalar_expr_like(e):
+    return AnalyticFunction_Scalar(args, ScalarExpr(e))
+
+  if _is_vector_expr_like(e):
+    return AnalyticFunction_Vector(args, VectorExpr(e))
+
+  if _is_matrix_expr_like(e):
+    return AnalyticFunction_Matrix(args, MatrixExpr(e))
+
+  if isinstance(e, list):
+    lst = []
+    for e_i in e:
+      if _is_scalar_expr_like(e_i):
+        lst.append(ScalarExpr(e_i))
       else:
-        codac_error("AnalyticFunction: can only build functions from scalar or vector expressions")
-    else:
-      if isinstance(args, (AnalyticFunction_Scalar,AnalyticFunction_Vector,AnalyticFunction_Matrix)):
-        self.f = args
-      elif isinstance(args, (AnalyticFunction)):
-        self.f = args.f
-      else:
-        codac_error("AnalyticFunction: invalid function argument")
+        codac_error("AnalyticFunction: invalid vectorial expression")
+    return AnalyticFunction_Vector(args, lst)
 
-  def input_size(self):
-    return self.f.input_size()
+  codac_error("AnalyticFunction: can only build functions from scalar or vector expressions")
 
-  def output_size(self):
-    return self.f.output_size()
 
-  def nb_args(self):
-    return self.f.nb_args()
+def _make_variadic_analytic_function_call(cpp_call):
+  def _call(self, *args):
+    if len(args) == 1 and isinstance(args[0], list):
+      args = tuple(args[0])
 
-  def args(self):
-    return self.f.args()
-
-  def real_eval(self,*args):
-    return self.f.real_eval(*args)
-
-  def eval(self,m,*args):
-    return self.f.eval(m,*args)
-
-  def eval(self,*args):
-    return self.f.eval(*args)
-
-  def traj_eval(self,*args):
-    return self.f.traj_eval(*args)
-
-  def tube_eval(self,*args):
-    return self.f.tube_eval(*args)
-  
-  def parallelepiped_eval(self,*args):
-    return self.f.parallelepiped_eval(*args)
-
-  def diff(self,*args):
-    return self.f.diff(*args)
-
-  def __call__(self,*args):
-    lst=[]
+    lst = []
     for arg in args:
-      if isinstance(arg, (int,float,Interval,ScalarVar,ScalarExpr)):
-        lst.append(ScalarExpr(arg))
-      elif isinstance(arg, (Vector,IntervalVector,VectorVar,VectorExpr)):
-        lst.append(VectorExpr(arg))
-      elif isinstance(arg, (Matrix,IntervalMatrix,MatrixVar,MatrixExpr)):
-        lst.append(MatrixExpr(arg))
-      else:
-        codac_error("AnalyticFunction: invalid input arguments")
-    return self.f(lst)
+      lst.append(_to_function_argument_expr(arg))
+    return cpp_call(self, lst)
 
-  def __repr__(self):
-    return str(self.f)
+  return _call
+
+
+for _cls in _ANALYTIC_FUNCTION_TYPES:
+  _cls._codac_python_cpp_call = _cls.__call__
+  _cls.__call__ = _make_variadic_analytic_function_call(_cls._codac_python_cpp_call)
 
 
 class Ctc_IntervalVector(Ctc_IntervalVector_):
 
   def __init__(self, n):
-    Ctc_IntervalVector_.__init__(self,n)
+    Ctc_IntervalVector_.__init__(self, n)
 
   def copy(self):
     return super().copy()
@@ -107,139 +132,51 @@ class Sep(SepBase):
     return super().copy()
 
 
-class CtcInverse(Ctc_IntervalVector):
+def CtcInverse(f, y, with_centered_form=True):
+  f = AnalyticFunction(f)
 
-  def __init__(self, f, y, with_centered_form = True):
+  if isinstance(f, AnalyticFunction_Scalar):
+    return CtcInverse_Interval(f, y, with_centered_form)
 
-    if f.nb_args() > 1:
-      total_var = VectorVar(f.input_size())
+  if isinstance(f, AnalyticFunction_Vector):
+    return CtcInverse_IntervalVector(f, y, with_centered_form)
 
-      i = 0
-      f_args = []
-      for a in f.args():
-        if a.size() == 1:
-          f_args.append(total_var.get_item_0(i))
-          i = i+1
-        else:
-          f_args.append(total_var.subvector_0(i,i+a.size()-1))
-          i = i+a.size()
-
-      g = AnalyticFunction([total_var], f(*f_args))
-      CtcInverse.__init__(self, g, y, with_centered_form)
-
-    else:
-      Ctc_IntervalVector.__init__(self, f.input_size())
-      if isinstance(f.f, AnalyticFunction_Scalar):
-        if not (isinstance(y, (int,float,Interval))
-                or (isinstance(y, list) and len(y) > 0 and len(y) <= 2 and isinstance(y[0], (int,float)))):
-          codac_error("CtcInverse: inverse argument 'y' should be a scalar type (float,Interval)")
-        self.c = CtcInverse_Interval(f.f,Interval(y),with_centered_form)
-      elif isinstance(f.f, AnalyticFunction_Vector):
-        if not isinstance(y, (Vector,IntervalVector,list,Ctc_IntervalVector,Ctc_IntervalVector_)):
-          codac_error("CtcInverse: inverse argument 'y' should be a vector type (Vector,IntervalVector,Ctc_IntervalVector,Ctc_IntervalVector_)")
-        if isinstance(y, (Ctc_IntervalVector,Ctc_IntervalVector_)):
-          self.c = CtcInverse_IntervalVector(f,y,with_centered_form)
-        else:
-          self.c = CtcInverse_IntervalVector(f.f,IntervalVector(y),with_centered_form)
-      else:
-        codac_error("CtcInverse: can only build CtcInverse from scalar or vector functions")
-
-  def contract(self,*x):
-
-    if len(x) == 1:
-      return self.c.contract(x[0])
-
-    else:
-      total = cart_prod(*x)
-      total = self.c.contract(total)
-      i = 0
-      for xi in x:
-        k = xi.size()
-        if k==1:
-          xi &= total.get_item_0(i)
-        else:
-          xi &= total.subvector_0(i,i+k-1)
-        i = i+k
-      return x
-
-  def contract_tube(self,*x):
-
-    if len(x) == 1:
-      return self.c.contract_tube(x[0])
-
-    else:
-      total = tube_cart_prod(*x)
-      total = self.c.contract_tube(total)
-      i = 0
-      for xi in x:
-        k = xi.size()
-        if k==1:
-          xi &= total.get_item_0(i)
-        else:
-          xi &= total.subvector_0(i,i+k-1)
-        i = i+k
-      return x
-
-  def copy(self):
-    return self.c.copy()
-
-  def fnc(self):
-    return self.c.fnc()
+  codac_error("CtcInverse: can only build CtcInverse from scalar or vector functions")
 
 
-class CtcInverseNotIn(Ctc_IntervalVector):
+def CtcInverseNotIn(f, y, with_centered_form=True):
+  f = AnalyticFunction(f)
 
-  def __init__(self, f, y, with_centered_form = True):
-    Ctc_IntervalVector.__init__(self, f.input_size())
-    if isinstance(f.f, AnalyticFunction_Scalar):
-      if not (isinstance(y, (int,float,Interval))
-              or (isinstance(y, list) and len(y) > 0 and len(y) <= 2 and isinstance(y[0], (int,float)))):
-        codac_error("CtcInverseNotIn: inverse argument 'y' should be a scalar type (float,Interval)")
-      self.c = CtcInverseNotIn_Interval(f.f,Interval(y),with_centered_form)
-    elif isinstance(f.f, AnalyticFunction_Vector):
-      if not isinstance(y, (Vector,IntervalVector,list)):
-        codac_error("CtcInverseNotIn: inverse argument 'y' should be a vector type (Vector,IntervalVector)")
-      self.c = CtcInverseNotIn_IntervalVector(f.f,IntervalVector(y),with_centered_form)
-    else:
-      codac_error("CtcInverseNotIn: can only build CtcInverseNotIn from scalar or vector functions")
+  if isinstance(f, AnalyticFunction_Scalar):
+    return CtcInverseNotIn_Interval(f, y, with_centered_form)
 
-  def contract(self,x):
-    return self.c.contract(x)
+  if isinstance(f, AnalyticFunction_Vector):
+    return CtcInverseNotIn_IntervalVector(f, y, with_centered_form)
 
-  def copy(self):
-    return self.c.copy()
+  codac_error("CtcInverseNotIn: can only build CtcInverseNotIn from scalar or vector functions")
 
 
-class Approx:
-
-  def __init__(self, x, eps = sys.float_info.epsilon*10):
-    if isinstance(x, (int,float)):
-      self.a = Approx_double(x,eps)
-    elif isinstance(x, (Interval)):
-      self.a = Approx_Interval(x,eps)
-    elif isinstance(x, (Vector)):
-      self.a = Approx_Vector(x,eps)
-    elif isinstance(x, (IntervalVector)):
-      self.a = Approx_IntervalVector(x,eps)
-    elif isinstance(x, (Matrix)):
-      self.a = Approx_Matrix(x,eps)
-    elif isinstance(x, (IntervalMatrix)):
-      self.a = Approx_IntervalMatrix(x,eps)
-    elif isinstance(x, (Segment)):
-      self.a = Approx_Segment(x,eps)
-    elif isinstance(x, (Polygon,ConvexPolygon)):
-      self.a = Approx_Polygon(x,eps)
-    elif isinstance(x, tuple) and isinstance(x[0], Interval) and isinstance(x[1], Interval):
-      self.a = Approx_pair_Interval(x,eps)
-    else:
-      codac_error("Approx: can only build Approx for: \
-        double, Interval, [Interval]Vector, Matrix, [Interval]Matrix, Segment, [Convex]Polygon")
-
-  def __eq__(self, x):
-    return self.a == x
-
-  def __repr__(self):
-    return str(self.a)
+def Approx(x, eps=sys.float_info.epsilon*10):
+  if isinstance(x, (int, float)):
+    return Approx_double(x, eps)
+  elif isinstance(x, Interval):
+    return Approx_Interval(x, eps)
+  elif isinstance(x, Vector):
+    return Approx_Vector(x, eps)
+  elif isinstance(x, IntervalVector):
+    return Approx_IntervalVector(x, eps)
+  elif isinstance(x, Matrix):
+    return Approx_Matrix(x, eps)
+  elif isinstance(x, IntervalMatrix):
+    return Approx_IntervalMatrix(x, eps)
+  elif isinstance(x, Segment):
+    return Approx_Segment(x, eps)
+  elif isinstance(x, (Polygon, ConvexPolygon)):
+    return Approx_Polygon(x, eps)
+  elif isinstance(x, tuple) and len(x) == 2 and isinstance(x[0], Interval) and isinstance(x[1], Interval):
+    return Approx_pair_Interval(x, eps)
+  else:
+    codac_error("Approx: invalid input")
 
 
 def hull(*args):
@@ -261,9 +198,9 @@ def hull(*args):
       mode = 1
       lst.append(arg)
     elif isinstance(arg, (list)):
-      if(isinstance(arg[0], (IntervalVector))):
+      if isinstance(arg[0], (IntervalVector)):
         return hull_intervalvector(arg)
-      elif(isinstance(arg[0], (IntervalMatrix))):
+      elif isinstance(arg[0], (IntervalMatrix)):
         return hull_intervalmatrix(arg)
       else:
         codac_error("hull: invalid input arguments")
@@ -272,8 +209,7 @@ def hull(*args):
 
   if mode == 0:
     return hull_intervalvector(lst)
-  else:
-    return hull_intervalmatrix(lst)
+  return hull_intervalmatrix(lst)
 
 
 def cart_prod(*args):
@@ -283,18 +219,18 @@ def cart_prod(*args):
 
   for arg in args:
 
-    if isinstance(arg, (int,float,Vector)):
+    if isinstance(arg, (int, float, Vector)):
       if mode == -1:
         mode = 0
 
-    elif isinstance(arg, (list,Interval,IntervalVector)):
+    elif isinstance(arg, (list, Interval, IntervalVector)):
       if mode != 2 and mode != 3:
         mode = 1
 
-    elif isinstance(arg, (Ctc_IntervalVector,Ctc_IntervalVector_)):
+    elif isinstance(arg, (Ctc_IntervalVector, Ctc_IntervalVector_)):
       mode = 2
 
-    elif isinstance(arg, (Sep,SepBase)):
+    elif isinstance(arg, (Sep, SepBase)):
       mode = 3
 
     else:
@@ -302,7 +238,7 @@ def cart_prod(*args):
 
   for arg in args:
 
-    if isinstance(arg, (int,float)):
+    if isinstance(arg, (int, float)):
       if mode == 0:
         lst.append(Vector([arg]))
       elif mode == 1:
@@ -336,7 +272,7 @@ def cart_prod(*args):
       else:
         codac_error("cart_prod: invalid input arguments (d/" + str(mode) + ")")
 
-    elif isinstance(arg, (list,IntervalVector)) or (isinstance(arg, list) and isinstance(arg[0], list)):
+    elif isinstance(arg, (list, IntervalVector)) or (isinstance(arg, list) and isinstance(arg[0], list)):
       if mode == 1:
         lst.append(IntervalVector(arg))
       elif mode == 2:
@@ -346,210 +282,141 @@ def cart_prod(*args):
       else:
         codac_error("cart_prod: invalid input arguments (e/" + str(mode) + ")")
 
-    elif isinstance(arg, (Ctc_IntervalVector,Ctc_IntervalVector_)):
+    elif isinstance(arg, (Ctc_IntervalVector, Ctc_IntervalVector_)):
       if mode != 2:
         codac_error("cart_prod: invalid input arguments (f/" + str(mode) + ")")
       lst.append(arg)
 
-    elif isinstance(arg, (Sep,SepBase)):
+    elif isinstance(arg, (Sep, SepBase)):
       if mode != 3:
         codac_error("cart_prod: invalid input arguments (g/" + str(mode) + ")")
       lst.append(arg)
 
     else:
-      mode = -2 # will generate an error
+      mode = -2  # will generate an error
 
   if mode == 0:
     return cart_prod_vector(lst)
-  elif mode == 1:
+  if mode == 1:
     return cart_prod_intervalvector(lst)
-  elif mode == 2:
+  if mode == 2:
     return cart_prod_ctc(lst)
-  elif mode == 3:
+  if mode == 3:
     return cart_prod_sep(lst)
-  else:
-    codac_error("cart_prod: invalid input arguments (h/" + str(mode) + ")")
+  codac_error("cart_prod: invalid input arguments (h/" + str(mode) + ")")
 
 
 def tube_cart_prod(*x):
-  if not isinstance(x,tuple):
+  if not isinstance(x, tuple):
     return tube_cart_prod_list([x])
-  else:
-    return tube_cart_prod_list([*x])
+  return tube_cart_prod_list([*x])
 
 
-class AnalyticTraj:
-
-  def __init__(self, f, t):
-    if isinstance(f, AnalyticFunction):
-      self.__init__(f.f,t)
-    elif isinstance(f, AnalyticFunction_Scalar):
-      self.traj = AnalyticTraj_Scalar(f,t)
-    elif isinstance(f, AnalyticFunction_Vector):
-      self.traj = AnalyticTraj_Vector(f,t)
-    else:
-      codac_error("AnalyticTraj: can only build this trajectory from an AnalyticFunction_[Scalar/Vector]")
-
-  # Methods from TrajBase:
-
-  def size(self):
-    return self.traj.size()
-
-  def is_empty(self):
-    return self.traj.is_empty()
-
-  def tdomain(self):
-    return self.traj.tdomain()
-
-  def truncate_tdomain(self, new_tdomain):
-    return self.traj.truncate_tdomain(new_tdomain)
-    
-  def codomain(self):
-    return self.traj.codomain()
-    
-  def __call__(self, t):
-    return self.traj(t)
-    
-  def nan_value(self):
-    return self.traj.nan_value()
-    
-  def sampled(self, dt):
-    return self.traj.sampled(dt)
-    
-  def primitive(self,*args):
-    return self.traj.primitive(*args)
-    
-  def as_function(self):
-    return AnalyticFunction(self.traj.as_function())
-    
-  # Methods from AnalyticTraj:
-  #   none
+def traj_cart_prod(*x):
+  if not isinstance(x, tuple):
+    return traj_cart_prod_list([x])
+  return traj_cart_prod_list([*x])
 
 
-class SlicedTube:
+def _sampled_traj_type_and_value(x):
+  if isinstance(x, (int, float)):
+    return SampledTraj_Scalar, float
 
-  def __init__(self, x, y=None):
+  if isinstance(x, Vector) \
+      or (_np is not None and isinstance(x, _np.ndarray) and x.ndim == 1) \
+      or (isinstance(x, (list, tuple)) and (len(x) == 0 or not isinstance(x[0], (list, tuple)))):
+    return SampledTraj_Vector, lambda y: y if isinstance(y, Vector) else Vector(y)
 
-    if y is None:
-      if isinstance(x, SlicedTube):
-        self.__init__(x.tube)
-      elif isinstance(x, SlicedTube_Interval):
-        self.tube = SlicedTube_Interval(x)
-      elif isinstance(x, SlicedTube_IntervalVector):
-        self.tube = SlicedTube_IntervalVector(x)
-      elif isinstance(x, SlicedTube_IntervalMatrix):
-        self.tube = SlicedTube_IntervalMatrix(x)
-      else:
-        codac_error("SlicedTube: unable to copy this tube from another one")
+  if isinstance(x, Matrix) \
+      or (_np is not None and isinstance(x, _np.ndarray) and x.ndim == 2) \
+      or (isinstance(x, (list, tuple)) and len(x) > 0 and isinstance(x[0], (list, tuple))):
+    return SampledTraj_Matrix, lambda y: y if isinstance(y, Matrix) else Matrix(y)
 
-    else:
-      if isinstance(y, AnalyticFunction):
-        self.__init__(x, y.f)
-      elif isinstance(y, (Interval,AnalyticFunction_Scalar,SampledScalarTraj)):
-        self.tube = SlicedTube_Interval(x, y)
-      elif isinstance(y, (IntervalVector,AnalyticFunction_Vector,SampledVectorTraj)):
-        self.tube = SlicedTube_IntervalVector(x, y)
-      elif isinstance(y, (IntervalMatrix,AnalyticFunction_Matrix,SampledMatrixTraj)):
-        self.tube = SlicedTube_IntervalMatrix(x, y)
-      else:
-        codac_error("SlicedTube: can only build this tube from an AnalyticFunction_[Scalar/Vector/Matrix]")
+  return None, None
 
-  def __iter__(self):
-    return self.tube.__iter__()
 
-  # From TubeBase:
+def SampledTraj(x=None, y=None):
+  if y is None:
+    if x is None:
+      codac_error("SampledTraj: unable to deduce the trajectory type from an empty constructor")
 
-  def tdomain(self):
-    return self.tube.tdomain()
+    for cls in _SAMPLED_TRAJ_TYPES:
+      if isinstance(x, cls):
+        return cls(dict(x))
 
-  def t0_tf(self):
-    return self.tube.t0_tf()
+    if isinstance(x, dict):
+      if not x:
+        codac_error("SampledTraj: unable to deduce the trajectory type from an empty map")
+      cls, cast = _sampled_traj_type_and_value(next(iter(x.values())))
+      if cls is None:
+        codac_error("SampledTraj: wrong constructor argument")
+      return cls({float(t): cast(v) for t, v in x.items()})
 
-  # From SlicedTube<T>:
-  
-  def nb_slices(self):
-    return self.tube.nb_slices()
-  
-  def size(self):
-    return self.tube.size()
-  
-  def volume(self):
-    return self.tube.volume()
-  
-  def first_slice(self):
-    return self.tube.first_slice()
-  
-  def last_slice(self):
-    return self.tube.last_slice()
+    codac_error("SampledTraj: wrong constructor argument")
 
-  def slice(self,*args):
-    return self.tube.slice(*args)
+  if len(y) == 0:
+    codac_error("SampledTraj: unable to deduce the trajectory type from empty samples")
 
-  def is_empty(self):
-    return self.tube.is_empty()
+  cls, cast = _sampled_traj_type_and_value(y[0])
+  if cls is None:
+    codac_error("SampledTraj: unable to deduce the trajectory type from the provided samples")
 
-  def is_unbounded(self):
-    return self.tube.is_unbounded()
+  if cls is SampledTraj_Scalar:
+    return cls(list(x), [float(v) for v in y])
 
-  def codomain(self):
-    return self.tube.codomain()
+  if cls is SampledTraj_Vector and _np is not None and isinstance(x, _np.ndarray) and isinstance(y, _np.ndarray):
+    return cls(x, y)
 
-  def __call__(self,*args):
-    return self.tube.__call__(*args)
+  return cls({float(t): cast(v) for t, v in zip(x, y)})
 
-  def enclosed_bounds(self,t):
-    return self.tube.enclosed_bounds(t)
 
-  def set(self,x,t=None):
-    if t is None:
-      return self.tube.set(x)
-    else:
-      return self.tube.set(x,t)
+def AnalyticTraj(t,f):
 
-  def set_ith_slice(self,x,i):
-    return self.tube.set_ith_slice(x,i)
+  if isinstance(t, _ANALYTIC_FUNCTION_TYPES) and not isinstance(f, _ANALYTIC_FUNCTION_TYPES):
+    warnings.warn(
+      "AnalyticTraj(f,t) is deprecated; use AnalyticTraj(t,f) instead.",
+      FutureWarning,
+      stacklevel=2
+    )
+    t,f = f,t
 
-  def inflate(self,rad):
-    return self.tube.inflate(rad)
+  f = AnalyticFunction(f)
 
-  def __eq__(self,x):
-    return self.tube.__eq__(x.tube)
+  if isinstance(f, AnalyticFunction_Scalar):
+    return AnalyticTraj_Scalar(t,f)
 
-  def __iand__(self,x):
-    return self.tube.__iand__(x)
+  if isinstance(f, AnalyticFunction_Vector):
+    return AnalyticTraj_Vector(t,f)
 
-  def self_inter(self,x):
-    return self.tube.self_inter(x)
+  if isinstance(f, AnalyticFunction_Matrix):
+    return AnalyticTraj_Matrix(t,f)
 
-  def __repr__(self):
-    return str(self.tube)
+  codac_error("AnalyticTraj: can only build this trajectory from an AnalyticFunction_[Scalar/Vector/Matrix]")
 
-  def integral(self,t1,t2=None):
-    if t2 is None:
-      return self.tube.integral(t1)
-    else:
-      return self.tube.integral(t1,t2)
 
-  def partial_integral(self,t1,t2=None):
-    if t2 is None:
-      return self.tube.partial_integral(t1)
-    else:
-      return self.tube.partial_integral(t1,t2)
+def SlicedTube(x, y=None):
 
-  def primitive(self):
-    return self.tube.primitive()
-    
-  def as_function(self):
-    return AnalyticFunction(self.tube.as_function())
+  if y is None:
+    if isinstance(x, SlicedTube_Interval):
+      return SlicedTube_Interval(x)
+    if isinstance(x, SlicedTube_IntervalVector):
+      return SlicedTube_IntervalVector(x)
+    if isinstance(x, SlicedTube_IntervalMatrix):
+      return SlicedTube_IntervalMatrix(x)
+    codac_error("SlicedTube: unable to copy this tube from another one")
 
-  def invert(self,*args):
-    return self.tube.invert(*args)
+  y = AnalyticFunction(y) if isinstance(y, _ANALYTIC_FUNCTION_TYPES) else y
 
-  def all_reals_value(self):
-    return self.tube.all_reals_value()
+  if isinstance(y, (Interval, AnalyticFunction_Scalar, AnalyticTraj_Scalar, SampledTraj_Scalar)):
+    return SlicedTube_Interval(x, y)
 
-  def empty_value(self):
-    return self.tube.empty_value()
+  if isinstance(y, (IntervalVector, AnalyticFunction_Vector, AnalyticTraj_Vector, SampledTraj_Vector)):
+    return SlicedTube_IntervalVector(x, y)
+
+  if isinstance(y, (IntervalMatrix, AnalyticFunction_Matrix, AnalyticTraj_Matrix, SampledTraj_Matrix)):
+    return SlicedTube_IntervalMatrix(x, y)
+
+  codac_error("SlicedTube: wrong constructor argument")
 
 
 def fixpoint(contract, *x):
@@ -559,30 +426,34 @@ def fixpoint(contract, *x):
   while vol != prev_vol:
 
     prev_vol = vol
-    if isinstance(x, tuple):
+    if type(x) is tuple:
       x = contract(*x)
-    else: # prevent from unpacking
+    else:  # prevent from unpacking
       x = contract(x)
 
-    if not isinstance(x,tuple):
-      vol = x.get_item_0(0).volume()
-    else:
-      vol = 0.0
-      for xi in x:
-        if xi.is_empty():
-          return x
-        w = xi.volume()
-        # As infinity is absorbent, this would not
-        # allow us to identify a contraction, so we
-        # exclude these cases:
-        if w != oo:
-          vol += w
+    # For computing the volume:
+    # only a real Python tuple is considered as a collection of objects.
+    # Otherwise, any iterable object (tube, boxes, etc.) will be divided in the for loop.
+    items = x if type(x) is tuple else (x,)
+
+    vol = 0.0
+    for xi in items:
+      if xi.is_empty():
+        return x
+      w = xi.volume()
+      # As infinity is absorbent, this would not
+      # allow us to identify a contraction, so we
+      # exclude these cases:
+      if w != oo:
+        vol += w
 
   return x
 
 
 # Deprecated function draw_while_paving(..)
 draw_while_paving = lambda *args, **kwargs: (_ for _ in ()).throw(
-    NotImplementedError("draw_while_paving(..) is deprecated,\n \
-      please replace by DefaultFigure.pave(..) (or any Figure2D object)")
+  NotImplementedError(
+    "draw_while_paving(..) is deprecated,\n "
+    "      please replace by DefaultFigure.pave(..) (or any Figure2D object)"
+  )
 )

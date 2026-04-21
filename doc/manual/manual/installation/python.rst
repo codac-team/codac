@@ -7,22 +7,20 @@ Python installation
 
 In case you want to use Codac only with Python, then the installation procedure is simply:
 
-1. **Dependencies**: Ensure you have a supported version of Python (>=3.6).
+1. **Dependencies**: Ensure you have a supported version of Python (>=3.8).
 2. **Install via pip**: Use the following command to install Codac:
 
    .. code-block:: bash
    
-      pip install codac --pre
-      # Option --pre has to be set because Codac v2 is only available in pre-release
+      pip install codac
 
 
-You can also update and test your Codac Python package.
+You can also update and test your Codac Python package:
 
 * **Update via pip**: Use the following command to update your already installed Codac package:
    .. code-block:: bash
 
-      pip install codac --upgrade --pre
-      # Option --pre has to be set because Codac v2 is only available in pre-release
+      pip install codac --upgrade
 
 
 * **Testing the installation**: In order to verify that your installation is working properly in Python, you can run:

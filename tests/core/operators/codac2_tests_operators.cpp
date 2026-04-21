@@ -161,15 +161,6 @@ void CHECK_bwd_sub(const Interval& y,
   CHECK(_x2 == -expected_x2);
 }
 
-void CHECK_bwd_imod(double p,
-  const Interval& x1, const Interval& x2, const Interval& expected_x1, const Interval& expected_x2)
-{
-  Interval _x1, _x2;
-  _x1 = x1; _x2 = x2; ModOp::bwd(_x1,_x2,p);
-  CHECK(Approx(_x1) == expected_x1);
-  CHECK(Approx(_x2) == expected_x2);
-}
-
 TEST_CASE("Interval bwd operations")
 {
   const double pi_lb = Interval::pi().lb();
@@ -314,15 +305,6 @@ TEST_CASE("Interval bwd operations")
   CHECK_bwd_sub(Interval(0,0),Interval(-1,1),Interval(-1,1),Interval(-1,1),Interval(-1,1));
   CHECK_bwd_sub(Interval(-1,1),Interval(1,2),Interval(-10,5),Interval(1,2),Interval(0,3));
 
-  CHECK_bwd_imod(3.,Interval(3.,5.),Interval(1.,2.),Interval(4.,5.),Interval(1.,2.));
-  CHECK_bwd_imod(2.,Interval(7.,8.),Interval(.5,2.),Interval(7.,8.),Interval(1.,2.));
-  CHECK_bwd_imod(2.,Interval(7.,8.),Interval(0.,2.),Interval(7.,8.),Interval(0.,2.));
-  CHECK_bwd_imod(2.*PI,Interval(2.*PI,3.*PI),Interval(PI/6,PI/2.),Interval(13.*PI/6.,5.*PI/2.),Interval(PI/6,PI/2.));
-  CHECK_bwd_imod(2.*PI,Interval(3.*PI,4.*PI),Interval(PI/3,PI/2.),Interval::empty(),Interval::empty());
-  CHECK_bwd_imod(2.*PI,Interval(3.*PI,4.*PI),Interval(0.,PI/2.),Interval(4*PI),Interval(0.));
-  CHECK_bwd_imod(2.*PI,Interval(2.*PI,4.*PI),Interval(-PI/6,PI/2.),Interval(2.*PI,4.*PI),Interval(-PI/6,PI/2.));
-  CHECK_bwd_imod(2.*PI,Interval(7.*PI/4.,8.*PI/3),Interval(-PI/2,PI/2.),Interval(7.*PI/4.,5.*PI/2.),Interval(-PI/4,PI/2.));
-
   x = Interval(-oo,oo);        FloorOp::bwd(Interval::empty(),x);       CHECK(x == Interval::empty());
   x = Interval(-oo,-0.000001); FloorOp::bwd(Interval(-oo,-1),x);        CHECK(x == Interval(-oo,-0.000001));
   x = Interval(-oo, 0.000001); FloorOp::bwd(Interval(-oo,-1),x);        CHECK(x == Interval(-oo,0));
@@ -437,4 +419,60 @@ TEST_CASE("test flatten operator")
   CHECK(FlattenOp::fwd(M) == IntervalVector({{1,1.5},{4,4.5},{2,2.5},{5,5.5},{3,3.5},{6,6.5}}));
   FlattenOp::bwd(N,M);
   CHECK(M == IntervalMatrix({ {{1,1.2},{2,2.2},{3,3.2}} , {4.0,{5,5.2},{6,6.2}} }));
+}
+
+TEST_CASE("Interval fwd modulo")
+{
+  CHECK(ModOp::fwd(Interval::empty(), {2}) == Interval::empty());
+  CHECK(ModOp::fwd({-oo,oo}, {-oo,0}) == Interval::empty());
+
+  CHECK(ModOp::fwd({5}, {3}) == Interval(2));
+  CHECK(ModOp::fwd({-1}, {3}) == Interval(2));
+
+  CHECK(ModOp::fwd({0.25,0.75}, {1,2}) == Interval(0.25,0.75));
+  CHECK(ModOp::fwd({3.25,3.75}, {2}) == Interval(1.25,1.75));
+
+  CHECK(ModOp::fwd({-1,5}, {2}) == Interval(0,2));
+  CHECK(ModOp::fwd({1,5}, {2,4}) == Interval(0,4));
+  CHECK(ModOp::fwd({-1,5}, {-2,4}) == Interval(0,4));
+}
+
+TEST_CASE("Interval bwd modulo")
+{
+  Interval x, p;
+
+  x = {-oo,oo}; p = {-oo,oo};
+  ModOp::bwd(Interval::empty(), x, p);
+  CHECK(x == Interval::empty());
+  CHECK(p == Interval::empty());
+
+  x = {-oo,oo}; p = {-oo,0};
+  ModOp::bwd({0,1}, x, p);
+  CHECK(x == Interval::empty());
+  CHECK(p == Interval::empty());
+
+  x = {-oo,oo}; p = {2,3};
+  ModOp::bwd({5,6}, x, p);
+  CHECK(x == Interval::empty());
+  CHECK(p == Interval::empty());
+
+  x = {0,3}; p = {3,4};
+  ModOp::bwd({1,2}, x, p);
+  CHECK(x == Interval(1,2));
+  CHECK(p == Interval(3,4));
+
+  x = {2.5,4}; p = {2,3};
+  ModOp::bwd({1}, x, p);
+  CHECK(x == Interval(3,4));
+  CHECK(p == Interval(2,3));
+
+  x = {5,5}; p = {1.9,2.1};
+  ModOp::bwd({1}, x, p);
+  CHECK(Approx(x) == Interval(5));
+  CHECK(Approx(p) == Interval(2));
+
+  x = {0.3,0.4}; p = {10,11};
+  ModOp::bwd({0.1,0.2}, x, p);
+  CHECK(x == Interval::empty());
+  CHECK(p == Interval::empty());
 }

@@ -15,7 +15,7 @@ class TestSampledTraj(unittest.TestCase):
 
   def test_SampledTraj(self):
 
-    x = SampledVectorTraj({
+    x = SampledTraj_Vector({
       0.25: [-0.5,0.5],
       1.: [0,0],
       2.: [1,0],
@@ -64,7 +64,7 @@ class TestSampledTraj(unittest.TestCase):
     f = AnalyticFunction(
       [t], cos(t)
     )
-    analytic_traj = AnalyticTraj(f, [-math.pi,math.pi])
+    analytic_traj = AnalyticTraj([-math.pi,math.pi],f)
     sampled_traj = analytic_traj.sampled(1e-2)
     g = sampled_traj.as_function()
 
@@ -85,7 +85,7 @@ class TestSampledTraj(unittest.TestCase):
       vec(2*cos(t),sin(2*t))
     )
 
-    analytic_traj = AnalyticTraj(f, [0,5])
+    analytic_traj = AnalyticTraj([0,5],f)
     sampled_traj = analytic_traj.sampled(1e-2)
     g = sampled_traj.as_function()
 
@@ -111,7 +111,7 @@ class TestSampledTraj(unittest.TestCase):
 
     # SampledTraj (nan case)
 
-    x = SampledVectorTraj()
+    x = SampledTraj_Vector()
     x.set(Vector([0,0]),0.)
     x.set(Vector([2,2]),2.)
     self.assertTrue(x(1.) == Vector([1,1]))
@@ -122,8 +122,8 @@ class TestSampledTraj(unittest.TestCase):
 
     t = ScalarVar()
     f = AnalyticFunction([t], sqr(t)*exp(sin(t)))
-    x = AnalyticTraj(f,[0,10]).sampled(1e-3)
-    s = AnalyticTraj(AnalyticFunction([t],exp(sin(t))*(2*t+sqr(t)*cos(t))),[0,10]).sampled(1e-2)
+    x = AnalyticTraj([0,10],f).sampled(1e-3)
+    s = AnalyticTraj([0,10],AnalyticFunction([t],exp(sin(t))*(2*t+sqr(t)*cos(t)))).sampled(1e-2)
 
     d = x.derivative()
     p = d.primitive()

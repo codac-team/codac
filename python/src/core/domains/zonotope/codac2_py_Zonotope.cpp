@@ -13,7 +13,6 @@
 #include <codac2_Zonotope.h>
 #include "codac2_py_Zonotope_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_matlab.h"
-#include "codac2_py_cast.h"
 
 using namespace std;
 using namespace codac2;

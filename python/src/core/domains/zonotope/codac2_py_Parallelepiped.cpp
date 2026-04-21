@@ -15,7 +15,6 @@
 #include <codac2_Parallelepiped.h>
 #include "codac2_py_Parallelepiped_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_matlab.h"
-#include "codac2_py_cast.h"
 
 using namespace std;
 using namespace codac2;

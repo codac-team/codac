@@ -45,7 +45,8 @@ void export_CtcProj(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInter
       VOID_CTCPROJ_CONTRACT_INTERVALVECTOR_REF_DOUBLE_CONST,
       "x"_a, "eps"_a)
 
-    .def(CONTRACT_BOX_METHOD(CtcProj,
-      VOID_CTCPROJ_CONTRACT_INTERVALVECTOR_REF_CONST))
   ;
+    
+  CONTRACT_METHODS(exported, CtcProj,
+    VOID_CTCPROJ_CONTRACT_INTERVALVECTOR_REF_CONST)
 }

@@ -13,8 +13,7 @@ Since 2019, MATLAB allows you to import Python packages into its environment. Co
 
    .. code-block:: bash
    
-      pip install codac4matlab --pre
-      # Option --pre has to be set because Codac v2 is only available in pre-release
+      pip install codac4matlab
 
 Once Codac is installed, you can use it in your MATLAB scripts using the following import command:
 

@@ -11,6 +11,8 @@
 #include <codac2_CtcDist.h>
 #include <codac2_CtcPolar.h>
 #include <codac2_CtcProj.h>
+#include <codac2_CtcVisible.h>
+#include <codac2_SepVisible.h>
 #include <codac2_Approx.h>
 #include <codac2_cart_prod.h>
 #include <codac2_CtcInter.h>
@@ -85,5 +87,60 @@ TEST_CASE("CtcPolar - manual")
     c.contract(x,y,rho,theta);
     // x = [1.5, 2.5] ; y = [6.53834, 7.85812] ; rho = [7, 8] ; theta = [1.20558, 1.38218]
     // [ctcpolar-2-end]
+  }
+}
+
+TEST_CASE("CtcVisible - manual")
+{
+  {
+    // [ctcvisible-beg]
+    Vector a({1, 1});
+    Segment s({1, 4}, {3, 2});
+    CtcVisible ctc(a, s);
+    DefaultFigure::pave(
+      {{-1,6},{-1,6}},
+      ctc,
+      0.1
+    );
+    // [ctcvisible-end]
+  }
+
+  {
+    // [ctcnovisible-beg]
+    Vector a({1, 1});
+    Segment s({1, 4}, {3, 2});
+    CtcNoVisible ctc(a, s);
+    DefaultFigure::pave(
+      {{-1,6},{-1,6}},
+      ctc,
+      0.1
+    );
+    // [ctcnovisible-end]
+  }
+
+  {
+    // [sepvisible_list-begin]
+    Vector a({1, 1});
+    std::vector<Segment> l = {{{1,4}, {2, 3}}, {{2, 3}, {2.5,1}}, {{4, 0.5}, {3.5, -0.5}}};
+    SepVisible sep(a, l);
+    DefaultFigure::pave(
+      {{-1,6},{-1,6}},
+      sep,
+      1e-1
+    );
+    // [sepvisible_list-end]
+  }
+
+  {
+    // [sepvisible_polygon-begin]
+    Vector a({1, 1});
+    Polygon p({{2.5,3}, {2, 2}, {3,1}, {4, 1.5}, {4, 3}});
+    SepVisible sep(a, p);
+    DefaultFigure::pave(
+      {{-1,6},{-1,6}},
+      sep,
+      1e-1
+    );
+    // [sepvisible_polygon-end]
   }
 }

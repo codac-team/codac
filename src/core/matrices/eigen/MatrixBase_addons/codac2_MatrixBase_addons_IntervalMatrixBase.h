@@ -216,67 +216,73 @@ inline auto diam() const
 /**
  * \brief Returns the minimum radius among the interval elements.
  * 
+ * \param among_indices Optional restricted set of dimension indices.
  * \return The smallest radius value in the matrix.
  */
-inline double min_rad() const
+inline double min_rad(const std::vector<Index>& among_indices = {}) const
   requires IsIntervalDomain<Scalar>
 {
-  return coeff(this->extr_diam_index(true)).rad();
+  return coeff(this->extr_diam_index(true,among_indices)).rad();
 }
 
 /**
  * \brief Returns the maximum radius among the interval elements.
  * 
+ * \param among_indices Optional restricted set of dimension indices.
  * \return The largest radius value in the matrix.
  */
-inline double max_rad() const
+inline double max_rad(const std::vector<Index>& among_indices = {}) const
   requires IsIntervalDomain<Scalar>
 {
-  return coeff(this->extr_diam_index(false)).rad();
+  return coeff(this->extr_diam_index(false,among_indices)).rad();
 }
 
 /**
  * \brief Returns the minimum diameter among the interval elements.
  * 
+ * \param among_indices Optional restricted set of dimension indices.
  * \return The smallest diameter value in the matrix.
  */
-inline double min_diam() const
+inline double min_diam(const std::vector<Index>& among_indices = {}) const
   requires IsIntervalDomain<Scalar>
 {
-  return coeff(this->extr_diam_index(true)).diam();
+  return coeff(this->extr_diam_index(true,among_indices)).diam();
 }
 
 /**
  * \brief Returns the maximum diameter among the interval elements.
  * 
+ * \param among_indices Optional restricted set of dimension indices.
  * \return The largest diameter value in the matrix.
  */
-inline double max_diam() const
+inline double max_diam(const std::vector<Index>& among_indices = {}) const
   requires IsIntervalDomain<Scalar>
 {
-  return coeff(this->extr_diam_index(false)).diam();
+  return coeff(this->extr_diam_index(false,among_indices)).diam();
 }
 
 /**
  * \brief Returns the index of the element with the minimum diameter.
  * 
+ * \param among_indices Optional restricted set of dimension indices.
  * \return The index of the matrix element with the smallest diameter.
  */
-inline Index min_diam_index() const
+inline Index min_diam_index(const std::vector<Index>& among_indices = {}) const
   requires IsIntervalDomain<Scalar>
 {
-  return this->extr_diam_index(true);
+  return this->extr_diam_index(true,among_indices);
 }
 
 /**
  * \brief Returns the index of the element with the maximum diameter.
  * 
+ * \param among_indices Optional restricted set of dimension indices.
  * \return The index of the matrix element with the largest diameter.
  */
-inline Index max_diam_index() const
+inline Index max_diam_index(const std::vector<Index>& among_indices = {}) const
   requires IsIntervalDomain<Scalar>
 {
-  return this->extr_diam_index(false);
+  return this->extr_diam_index(false,among_indices);
 }
 
 /**
@@ -290,14 +296,20 @@ inline Index max_diam_index() const
  * - If looking for maximum diameter, unbounded intervals are considered.
  * 
  * \param min If ``true``, returns the index of the element with minimum diameter; otherwise maximum diameter.
+ * \param among_indices Optional restricted set of dimension indices.
  * 
  * \return Index of the element with the minimum or maximum diameter.
  * 
  * \pre The matrix must not be empty (diameter undefined otherwise).
  */
-inline Index extr_diam_index(bool min) const
+inline Index extr_diam_index(bool min, const std::vector<Index>& among_indices = {}) const
   requires IsIntervalDomain<Scalar>
 {
+  assert_release(
+    among_indices.empty() ||
+    std::ranges::all_of(among_indices, [&](Index k){ return 0 <= k && k < this->size(); })
+  );
+
   // This code originates from the ibex-lib
   // See: ibex_TemplateVector.h
   // Author: Gilles Chabert
@@ -311,6 +323,10 @@ inline Index extr_diam_index(bool min) const
 
   for(i = 0 ; i < this->size() ; i++) 
   {
+    if(!among_indices.empty()
+      && std::find(among_indices.begin(),among_indices.end(),i) == among_indices.end())
+      continue; // avoiding this index
+
     if(coeff(i).is_unbounded()) 
     {
       unbounded = true;
@@ -330,8 +346,14 @@ inline Index extr_diam_index(bool min) const
   if(min && selected_index == -1)
   {
     assert(unbounded);
-    // the selected interval is the first one.
-    i = 0;
+
+    if(among_indices.empty())
+    {
+      // the selected interval is the first one.
+      i = 0;
+    }
+    else
+      i = among_indices[0];
   }
 
   // The unbounded intervals are not considered if we look for the minimal diameter
@@ -343,6 +365,10 @@ inline Index extr_diam_index(bool min) const
 
     for(; i < this->size() ; i++)
     {
+      if(!among_indices.empty()
+        && std::find(among_indices.begin(),among_indices.end(),i) == among_indices.end())
+        continue; // avoiding this index
+
       if(coeff(i).lb() == -codac2::oo)
       {
         if(coeff(i).ub() == codac2::oo)
