@@ -181,7 +181,7 @@ namespace codac2
       eps, verbose);
   }
 
-  PavingInOut pave_multithread(const IntervalVector& x0,
+  PavingInOut regular_pave_multithread(const IntervalVector& x0,
     const std::function<BoolInterval(const IntervalVector&)>& test,
     double eps, bool verbose)
   {

@@ -51,12 +51,12 @@ namespace codac2
 
   PavingInOut pave_tube(const IntervalVector& x0, const SlicedTube<IntervalVector>& f, double eps, bool verbose = false);
 
-  PavingInOut pave_multithread(const IntervalVector& x0, const std::function<BoolInterval(const IntervalVector&)>& test, double eps, bool verbose = false);
+  PavingInOut regular_pave_multithread(const IntervalVector& x0, const std::function<BoolInterval(const IntervalVector&)>& test, double eps, bool verbose = false);
 
   template<typename Y>
-  PavingInOut pave_multithread(const IntervalVector& x0, const AnalyticFunction<Y>& f, const typename Y::Domain& y, double eps, bool verbose = false)
+  PavingInOut sivia_multithread(const IntervalVector& x0, const AnalyticFunction<Y>& f, const typename Y::Domain& y, double eps, bool verbose = false)
   {
-    return pave_multithread(x0,
+    return regular_pave_multithread(x0,
       [&y,&f](const IntervalVector& x)
       {
         auto eval = f.eval(x);
