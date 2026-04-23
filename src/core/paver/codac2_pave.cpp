@@ -223,34 +223,30 @@ namespace codac2
         auto ni = li.front();
         li.pop_front();
 
-        if(ni->unknown().max_diam() > eps)
+        auto b = test(std::get<1>(ni->boxes()));
+        switch(b)
         {
-          ni->bisect();
-          li.push_back(ni->left());
-          li.push_back(ni->right());
+          case BoolInterval::TRUE:
+            std::get<1>(ni->boxes()).set_empty();
+            break;
+
+          case BoolInterval::FALSE:
+            std::get<0>(ni->boxes()).set_empty();
+            break;
+
+          default:
+            if(ni->unknown().max_diam() > eps)
+            {
+              ni->bisect();
+              li.push_back(ni->left());
+              li.push_back(ni->right());
+            }
         }
-        else
-        {
-          auto b = test(std::get<1>(ni->boxes()));
-          switch(b)
-          {
-            case BoolInterval::TRUE:
-              std::get<1>(ni->boxes()).set_empty();
-              break;
-
-            case BoolInterval::FALSE:
-              std::get<0>(ni->boxes()).set_empty();
-              break;
-
-            default:
-              continue;
-          }
-        }
-
       }
     };
 
     std::vector<std::thread> threads;
+    int nthreads_unused = 0;
     for (int tid = 0; tid < nthreads; tid++)
     {
       auto xi = l_vec[tid];
@@ -259,10 +255,12 @@ namespace codac2
       {
         case BoolInterval::TRUE:
           std::get<1>(xi->boxes()).set_empty();
+          nthreads_unused++;
           break;
 
         case BoolInterval::FALSE:
           std::get<0>(xi->boxes()).set_empty();
+          nthreads_unused++;
           break;
 
         default:
@@ -276,6 +274,7 @@ namespace codac2
     if (verbose)
     {
       printf("Number of thread used: %d\n", nthreads);
+      printf("Number of thread not launched: %d\n", nthreads_unused);
       std::chrono::duration<double> elapsed = std::chrono::high_resolution_clock::now() - start_time;
       printf("Computation time: %.4fs\n\n", elapsed.count());
     }
