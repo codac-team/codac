@@ -8,11 +8,7 @@
  */
 
 #include "codac2_pave.h"
-#include "codac2_threading.h"
 #include <chrono>
-
-// TO DELETE
-#include <iostream>
 
 using namespace std;
 using namespace codac2;
@@ -161,29 +157,6 @@ namespace codac2
     return p;
   }
 
-  PavingInOut pave_tube(const IntervalVector& x0, const SlicedTube<IntervalVector>& f, double eps, bool verbose)
-  {
-    return regular_pave(x0,
-      [&f](const IntervalVector& x) -> BoolInterval
-      {
-        bool is_out = true;
-        for(const auto& s : f)
-        {
-          if(!s.is_gate() && s.codomain().intersects(x))
-          {
-            is_out = false;
-            if(s.codomain().is_superset(x))
-              return BoolInterval::TRUE;
-          }
-        }
-
-        if(is_out)
-          return BoolInterval::FALSE;
-        return BoolInterval::UNKNOWN;
-      },
-      eps, verbose);
-  }
-
   PavingInOut regular_pave_multithread(const IntervalVector& x0,
     const std::function<BoolInterval(const IntervalVector&)>& test,
     double eps, bool verbose)
@@ -198,7 +171,7 @@ namespace codac2
     PavingInOut p(x0);
     std::list<std::shared_ptr<PavingInOut_Node>> l { p.tree() };
 
-    while (l.size() < nthreads)
+    while (l.size() < static_cast<std::size_t>(nthreads))
     {
       auto n = l.front();
       l.pop_front();
@@ -255,7 +228,7 @@ namespace codac2
     };
 
     std::vector<std::thread> threads;
-    int nthreads_unused = 0;
+
     for (int tid = 0; tid < nthreads; tid++)
       threads.emplace_back(worker, tid);      
 
@@ -269,5 +242,28 @@ namespace codac2
     }
 
     return p;
+  }
+
+  PavingInOut pave_tube(const IntervalVector& x0, const SlicedTube<IntervalVector>& f, double eps, bool verbose)
+  {
+    return regular_pave(x0,
+      [&f](const IntervalVector& x) -> BoolInterval
+      {
+        bool is_out = true;
+        for(const auto& s : f)
+        {
+          if(!s.is_gate() && s.codomain().intersects(x))
+          {
+            is_out = false;
+            if(s.codomain().is_superset(x))
+              return BoolInterval::TRUE;
+          }
+        }
+
+        if(is_out)
+          return BoolInterval::FALSE;
+        return BoolInterval::UNKNOWN;
+      },
+      eps, verbose);
   }
 }
