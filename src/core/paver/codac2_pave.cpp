@@ -11,6 +11,9 @@
 #include "codac2_threading.h"
 #include <chrono>
 
+// TO DELETE
+#include <iostream>
+
 using namespace std;
 using namespace codac2;
 
@@ -190,26 +193,32 @@ namespace codac2
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
-    int bisect_level = int(log2(nb_threads()));
-
-    int nthreads = std::pow(2,bisect_level);
-
-    int bisect_count = 0;
-
-    for (int i = 0; i < bisect_level; i++)
-      bisect_count += std::pow(2,i);
+    int nthreads = nb_threads();
 
     PavingInOut p(x0);
     std::list<std::shared_ptr<PavingInOut_Node>> l { p.tree() };
 
-    for (int i = 0; i < bisect_count; i++)
+    while (l.size() < nthreads)
     {
       auto n = l.front();
       l.pop_front();
 
-      n->bisect();
-      l.push_back(n->left());
-      l.push_back(n->right());
+      auto b = test(std::get<1>(n->boxes()));
+      switch(b)
+      {
+        case BoolInterval::TRUE:
+          std::get<1>(n->boxes()).set_empty();
+          break;
+
+        case BoolInterval::FALSE:
+          std::get<0>(n->boxes()).set_empty();
+          break;
+
+        default:
+          n->bisect();
+          l.push_back(n->left());
+          l.push_back(n->right());
+      }
     }
 
     std::vector<std::shared_ptr<PavingInOut_Node>> l_vec(l.begin(), l.end());
@@ -248,33 +257,13 @@ namespace codac2
     std::vector<std::thread> threads;
     int nthreads_unused = 0;
     for (int tid = 0; tid < nthreads; tid++)
-    {
-      auto xi = l_vec[tid];
-      auto b = test(std::get<1>(xi->boxes()));
-      switch(b)
-      {
-        case BoolInterval::TRUE:
-          std::get<1>(xi->boxes()).set_empty();
-          nthreads_unused++;
-          break;
-
-        case BoolInterval::FALSE:
-          std::get<0>(xi->boxes()).set_empty();
-          nthreads_unused++;
-          break;
-
-        default:
-          threads.emplace_back(worker, tid);
-      }
-    }
-      
+      threads.emplace_back(worker, tid);      
 
     for (auto& th : threads) th.join();
 
     if (verbose)
     {
       printf("Number of thread used: %d\n", nthreads);
-      printf("Number of thread not launched: %d\n", nthreads_unused);
       std::chrono::duration<double> elapsed = std::chrono::high_resolution_clock::now() - start_time;
       printf("Computation time: %.4fs\n\n", elapsed.count());
     }
