@@ -24,10 +24,18 @@ namespace codac2
   PavingOut pave(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, bool verbose)
   {
     double time = 0;
-    return pave(x0,c,eps,time,verbose);
+    return pave(x0, c, eps, time, verbose);
   }
 
   PavingOut pave(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, double& time, bool verbose)
+  {
+    if (nb_threads()==1)
+      return pave_monothread(x0, c, eps, time, verbose);
+    else
+      return pave_multithread(x0, c, eps, time, verbose);
+  }
+
+  PavingOut pave_monothread(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, double& time, bool verbose)
   {
     assert_release(eps > 0.);
     assert_release(!x0.is_empty());
@@ -73,6 +81,87 @@ namespace codac2
     return p;
   }
   
+  PavingOut pave_multithread(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, double& time, bool verbose)
+  {
+    assert_release(eps > 0.);
+    assert_release(!x0.is_empty());
+    
+    auto start_time = std::chrono::high_resolution_clock::now();
+
+    int nthreads = nb_threads();
+
+    PavingOut p(x0);
+    // In order to be able to reconstruct the initial box, the first level represents the
+    // initial domain x0 (the left node is x0, the right one is an empty box).
+    p.tree()->bisect();
+    p.tree()->left()->boxes() = { x0 };
+    get<0>(p.tree()->right()->boxes()).set_empty();
+
+    std::shared_ptr<PavingOut_Node> n;
+    list<std::shared_ptr<PavingOut_Node>> l { p.tree()->left() };
+
+    while (l.size() < static_cast<std::size_t>(nthreads))
+    {
+      n = l.front();
+      l.pop_front();
+
+      c.contract(get<0>(n->boxes()));
+
+      if(!get<0>(n->boxes()).is_empty())
+      {
+        if(get<0>(n->boxes()).max_diam() > eps)
+        {
+          n->bisect();
+          l.push_back(n->left());
+          l.push_back(n->right());
+        }
+      }
+    }
+
+    std::vector<std::shared_ptr<PavingOut_Node>> l_vec(l.begin(), l.end());
+
+    auto worker = [&](int tid) 
+    {
+      auto xi = l_vec[tid];
+      std::list<std::shared_ptr<PavingOut_Node>> li = { xi };
+      while(!li.empty())
+      {
+        auto ni = li.front();
+        li.pop_front();
+
+        c.contract(get<0>(ni->boxes()));
+        
+        if(!get<0>(ni->boxes()).is_empty())
+        {
+          if(get<0>(ni->boxes()).max_diam() > eps)
+          {
+            ni->bisect();
+            li.push_back(ni->left());
+            li.push_back(ni->right());
+          }
+        }
+      }
+    };
+
+    std::vector<std::thread> threads;
+    for (int tid = 0; tid < nthreads; tid++)
+      threads.emplace_back(worker, tid);      
+
+    for (auto& th : threads) th.join();
+
+    std::chrono::duration<double> elapsed = std::chrono::high_resolution_clock::now() - start_time;
+
+    time = elapsed.count();
+
+    if(verbose)
+    {
+      printf("Number of thread used: %d\n", nthreads);
+      printf("Computation time: %.4fs\n\n", time);    
+    }
+
+    return p;
+  }
+
   PavingInOut pave(const IntervalVector& x0, std::shared_ptr<const SepBase> s,
     double eps, bool verbose)
   {
@@ -80,6 +169,14 @@ namespace codac2
   }
 
   PavingInOut pave(const IntervalVector& x0, const SepBase& s, double eps, bool verbose)
+  {
+    if (nb_threads()==1)
+      return pave_monothread(x0, s, eps, verbose);
+    else
+      return pave_multithread(x0, s, eps, verbose);
+  }
+
+  PavingInOut pave_monothread(const IntervalVector& x0, const SepBase& s, double eps, bool verbose)
   {
     assert_release(eps > 0.);
     assert_release(!x0.is_empty());
@@ -109,6 +206,75 @@ namespace codac2
 
     if(verbose)
       printf("Computation time: %.4fs\n", (double)(clock()-t_start)/CLOCKS_PER_SEC);
+    return p;
+  }
+
+  PavingInOut pave_multithread(const IntervalVector& x0, const SepBase& s, double eps, bool verbose)
+  {
+    assert_release(eps > 0.);
+    assert_release(!x0.is_empty());
+    
+    auto start_time = std::chrono::high_resolution_clock::now();
+
+    int nthreads = nb_threads();
+
+    PavingInOut p(x0);
+    std::shared_ptr<PavingInOut_Node> n;
+    list<std::shared_ptr<PavingInOut_Node>> l { p.tree() };
+
+    while (l.size() < static_cast<std::size_t>(nthreads))
+    {
+      n = l.front();
+      l.pop_front();
+
+      auto xs = s.separate(get<0>(n->boxes()));
+      auto boundary = (xs.inner & xs.outer);
+      n->boxes() = { xs.outer, xs.inner };
+
+      if(!boundary.is_empty() && boundary.max_diam() > eps)
+      {
+        n->bisect();
+        l.push_back(n->left());
+        l.push_back(n->right());
+      }
+    }
+
+    std::vector<std::shared_ptr<PavingInOut_Node>> l_vec(l.begin(), l.end());
+
+    auto worker = [&](int tid) 
+    {
+      auto xi = l_vec[tid];
+      std::list<std::shared_ptr<PavingInOut_Node>> li = { xi };
+      while(!li.empty())
+      {
+        auto ni = li.front();
+        li.pop_front();
+
+        auto xs = s.separate(get<0>(ni->boxes()));
+        auto boundary = (xs.inner & xs.outer);
+        ni->boxes() = { xs.outer, xs.inner };
+
+        if(!boundary.is_empty() && boundary.max_diam() > eps)
+        {
+          ni->bisect();
+          li.push_back(ni->left());
+          li.push_back(ni->right());
+        }
+      }
+    };
+
+    std::vector<std::thread> threads;
+    for (int tid = 0; tid < nthreads; tid++)
+      threads.emplace_back(worker, tid);      
+
+    for (auto& th : threads) th.join();
+
+    if(verbose)
+    {
+      printf("Number of thread used: %d\n", nthreads);
+      std::chrono::duration<double> elapsed = std::chrono::high_resolution_clock::now() - start_time;
+      printf("Computation time: %.4fs\n\n", elapsed.count());    
+    }
     return p;
   }
 
@@ -228,7 +394,6 @@ namespace codac2
     };
 
     std::vector<std::thread> threads;
-
     for (int tid = 0; tid < nthreads; tid++)
       threads.emplace_back(worker, tid);      
 
