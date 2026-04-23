@@ -50,4 +50,26 @@ namespace codac2
   }
 
   PavingInOut pave_tube(const IntervalVector& x0, const SlicedTube<IntervalVector>& f, double eps, bool verbose = false);
+
+  PavingInOut pave_multithread(const IntervalVector& x0, const std::function<BoolInterval(const IntervalVector&)>& test, double eps, bool verbose = false);
+
+  template<typename Y>
+  PavingInOut pave_multithread(const IntervalVector& x0, const AnalyticFunction<Y>& f, const typename Y::Domain& y, double eps, bool verbose = false)
+  {
+    return pave_multithread(x0,
+      [&y,&f](const IntervalVector& x)
+      {
+        auto eval = f.eval(x);
+
+        if(eval.is_subset(y))
+          return BoolInterval::TRUE;
+
+        else if(!eval.intersects(y))
+          return BoolInterval::FALSE;
+
+        else
+          return BoolInterval::UNKNOWN;
+      },
+      eps, verbose);
+  }
 }

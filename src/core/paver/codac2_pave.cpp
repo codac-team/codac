@@ -8,6 +8,8 @@
  */
 
 #include "codac2_pave.h"
+#include "codac2_threading.h"
+#include <chrono>
 
 using namespace std;
 using namespace codac2;
@@ -177,5 +179,107 @@ namespace codac2
         return BoolInterval::UNKNOWN;
       },
       eps, verbose);
+  }
+
+  PavingInOut pave_multithread(const IntervalVector& x0,
+    const std::function<BoolInterval(const IntervalVector&)>& test,
+    double eps, bool verbose)
+  {
+    assert_release(eps > 0.);
+    assert_release(!x0.is_empty());
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+
+    int bisect_level = int(log2(nb_threads()));
+
+    int nthreads = std::pow(2,bisect_level);
+
+    int bisect_count = 0;
+
+    for (int i = 0; i < bisect_level; i++)
+      bisect_count += std::pow(2,i);
+
+    PavingInOut p(x0);
+    std::list<std::shared_ptr<PavingInOut_Node>> l { p.tree() };
+
+    for (int i = 0; i < bisect_count; i++)
+    {
+      auto n = l.front();
+      l.pop_front();
+
+      n->bisect();
+      l.push_back(n->left());
+      l.push_back(n->right());
+    }
+
+    std::vector<std::shared_ptr<PavingInOut_Node>> l_vec(l.begin(), l.end());
+
+    auto worker = [&](int tid) 
+    {
+      auto xi = l_vec[tid];
+      std::list<std::shared_ptr<PavingInOut_Node>> li = { xi };
+      while(!li.empty())
+      {
+        auto ni = li.front();
+        li.pop_front();
+
+        if(ni->unknown().max_diam() > eps)
+        {
+          ni->bisect();
+          li.push_back(ni->left());
+          li.push_back(ni->right());
+        }
+        else
+        {
+          auto b = test(std::get<1>(ni->boxes()));
+          switch(b)
+          {
+            case BoolInterval::TRUE:
+              std::get<1>(ni->boxes()).set_empty();
+              break;
+
+            case BoolInterval::FALSE:
+              std::get<0>(ni->boxes()).set_empty();
+              break;
+
+            default:
+              continue;
+          }
+        }
+
+      }
+    };
+
+    std::vector<std::thread> threads;
+    for (int tid = 0; tid < nthreads; tid++)
+    {
+      auto xi = l_vec[tid];
+      auto b = test(std::get<1>(xi->boxes()));
+      switch(b)
+      {
+        case BoolInterval::TRUE:
+          std::get<1>(xi->boxes()).set_empty();
+          break;
+
+        case BoolInterval::FALSE:
+          std::get<0>(xi->boxes()).set_empty();
+          break;
+
+        default:
+          threads.emplace_back(worker, tid);
+      }
+    }
+      
+
+    for (auto& th : threads) th.join();
+
+    if (verbose)
+    {
+      printf("Number of thread used: %d\n", nthreads);
+      std::chrono::duration<double> elapsed = std::chrono::high_resolution_clock::now() - start_time;
+      printf("Computation time: %.4fs\n\n", elapsed.count());
+    }
+
+    return p;
   }
 }
