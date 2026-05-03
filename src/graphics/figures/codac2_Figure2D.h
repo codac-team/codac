@@ -21,6 +21,7 @@
 #include "codac2_PavingStyle.h"
 #include "codac2_Ellipsoid.h"
 #include "codac2_Polygon.h"
+#include "codac2_Polytope.h"
 #include "codac2_SlicedTube.h"
 #include "codac2_Ctc.h"
 #include "codac2_Sep.h"
@@ -310,12 +311,20 @@ namespace codac2
       void draw_parallelepiped(const Parallelepiped& p, const StyleProperties& style = StyleProperties());
 
       /**
-       * \brief Draws a zonotope z+sum_i [-1,1] A_i on the figure
+       * \brief draws a zonotope z+sum_i [-1,1] a_i on the figure
        * 
-       * \param z Zonotope to draw (center and shape matrix)
-       * \param style Style of the zonotope (edge color and fill color)
+       * \param z zonotope to draw (center and shape matrix)
+       * \param style style of the zonotope (edge color and fill color)
        */
       void draw_zonotope(const Zonotope& z, const StyleProperties& style = StyleProperties());
+
+      /**
+       * \brief draws a 2D convex polytope on the figure
+       * 
+       * \param P polytope to draw 
+       * \param style style of the polytope (edge color and fill color)
+       */
+      void draw_polytope(const Polytope& P, const StyleProperties& style = StyleProperties());
 
       /**
        * \brief Draws a pie on the figure
@@ -905,6 +914,18 @@ namespace codac2
       {
         auto_init();
         selected_fig()->draw_ellipsoid(e,style);
+      }
+
+      /**
+       * \brief draws a 2D convex polytope on the figure
+       * 
+       * \param P polytope to draw 
+       * \param style style of the polytope (edge color and fill color)
+       */
+      static void draw_polytope(const Polytope& P, const StyleProperties& style = StyleProperties()) 
+      {
+        auto_init();
+        selected_fig()->draw_polytope(P,style);
       }
 
       /**

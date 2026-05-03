@@ -274,6 +274,14 @@ void Figure2D::draw_zonotope(const Zonotope& z, const StyleProperties& style)
       output_fig->draw_polygon(vertices,style);
 }
 
+void Figure2D::draw_polytope(const Polytope& P, const StyleProperties& style)
+{
+  assert_release(P.size() == 2);
+  vector<Vector> w = P.vertices_2Dfacet();
+  for(const auto& output_fig : _output_figures)
+    output_fig->draw_polygon(w,style);
+}
+
 
 void Figure2D::draw_parallelepiped(const Parallelepiped& p, const StyleProperties& style)
 {

@@ -36,6 +36,22 @@ void export_inversion(py::module& m)
       INTERVALMATRIX_INVERSE_ENCLOSURE_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF,
       "A"_a)
 
+    .def("left_inverse_enclosure", [](const Matrix& A) { return left_inverse_enclosure(A); },
+      INTERVALMATRIX_LEFT_INVERSE_ENCLOSURE_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF,
+      "A"_a)
+
+    .def("left_inverse_enclosure", [](const IntervalMatrix& A) { return left_inverse_enclosure(A); },
+      INTERVALMATRIX_LEFT_INVERSE_ENCLOSURE_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF,
+      "A"_a)
+
+    .def("right_inverse_enclosure", [](const Matrix& A) { return right_inverse_enclosure(A); },
+      INTERVALMATRIX_RIGHT_INVERSE_ENCLOSURE_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF,
+      "A"_a)
+
+    .def("right_inverse_enclosure", [](const IntervalMatrix& A) { return right_inverse_enclosure(A); },
+      INTERVALMATRIX_RIGHT_INVERSE_ENCLOSURE_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF,
+      "A"_a)
+
     .def("inverse_correction",
         [](const IntervalMatrix& A, const IntervalMatrix& B, bool left_inv = true)
         {

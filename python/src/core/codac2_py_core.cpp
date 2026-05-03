@@ -52,6 +52,7 @@ void export_CtcNot(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInterv
 void export_CtcPointCloud(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcPolar(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcPolygon(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
+void export_CtcPolytope(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcProj(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcQInter(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
 void export_CtcSegment(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIntervalVector>& ctc);
@@ -75,6 +76,8 @@ void export_PavingNode(py::module& m);
 void export_Subpaving(py::module& m);
 void export_Zonotope(py::module& m);
 void export_Parallelepiped(py::module& m);
+void export_Facet(py::module& m);
+void export_Polytope(py::module& m);
 void export_TDomain(py::module& m);
 void export_TimePropag(py::module& m);
 void export_TSlice(py::module& m);
@@ -149,6 +152,7 @@ void export_SepInter(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepInverse(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepNot(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepPolygon(py::module& m, py::class_<SepBase,pySep>& sep);
+void export_SepPolytope(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepProj(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepQInter(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepTransform(py::module& m, py::class_<SepBase,pySep>& sep);
@@ -213,6 +217,7 @@ PYBIND11_MODULE(_core, m)
   export_CtcPointCloud(m, py_ctc_iv);
   export_CtcPolar(m, py_ctc_iv);
   export_CtcPolygon(m, py_ctc_iv);
+  export_CtcPolytope(m, py_ctc_iv);
   export_CtcProj(m, py_ctc_iv);
   export_CtcQInter(m, py_ctc_iv);
   export_CtcSegment(m, py_ctc_iv);
@@ -224,7 +229,8 @@ PYBIND11_MODULE(_core, m)
 
   // matrices
   export_cart_prod(m);
-  py::class_<Row> exported_row_class(m, "Row", DOC_TO_BE_DEFINED);
+//  py::class_<Row> exported_row_class(m, "Row", DOC_TO_BE_DEFINED);
+  export_Row(m);
   auto py_V = export_Vector(m);
   auto py_M = export_Matrix(m);
   auto py_B = export_EigenBlock<Matrix>(m, "MatrixBlock");
@@ -275,6 +281,9 @@ PYBIND11_MODULE(_core, m)
 
   export_Zonotope(m);
   export_Parallelepiped(m);
+
+  export_Facet(m);
+  export_Polytope(m);
 
   // function
   py::enum_<EvalMode>(m, "EvalMode")
@@ -332,6 +341,7 @@ PYBIND11_MODULE(_core, m)
   export_SepInverse(m,py_sep);
   export_SepNot(m,py_sep);
   export_SepPolygon(m,py_sep);
+  export_SepPolytope(m,py_sep);
   export_SepProj(m,py_sep);
   export_SepQInter(m,py_sep);
   export_SepTransform(m,py_sep);

@@ -14,10 +14,12 @@
 #include <codac2_inversion.h>
 #include <codac2_Approx.h>
 
+#include <iostream>
+
 using namespace std;
 using namespace codac2;
 
-TEST_CASE("Matrix")
+TEST_CASE("Square matrices")
 {
   IntervalMatrix x({
   	{ {0.0,0.0}, {-0.1,-0.1}, {0.2,0.2}  },
@@ -50,5 +52,38 @@ TEST_CASE("Matrix")
   });
 
   y = inverse_enclosure(w);
+  CHECK((w.template cast<Interval>()*y).contains(Matrix::Identity(3,3)));
+}
+
+TEST_CASE("Non-square matrices")
+{
+  IntervalMatrix x({
+  	{ {0.0,0.0}, {-0.1,-0.1}, {0.2,0.2}, {0.1,0.1}  },
+  	{ {0.0,0.0}, {-0.2,-0.2}, {0.1,0.1}, {0.3,0.3} },
+  	{ {0.1,0.1}, {-0.1,-0.1}, {0.1,0.1}, {-0.1,-0.1} }
+  });
+
+  IntervalMatrix z = right_inverse_enclosure(x);
+  CHECK(Approx<IntervalMatrix>(x*z,1e-8)==IntervalMatrix::Identity(3,3));
+
+  Matrix u( {
+     { 1,2,3 },
+     { 1,3,5 },
+     { 2,6,10 },
+     { 3,4,5 },
+     { 2,1,3 },
+     { 6,2,4 }
+   });
+
+  IntervalMatrix v=left_inverse_enclosure(u);
+  CHECK((v*u.template cast<Interval>()).contains(Matrix::Identity(3,3)));
+
+  Matrix w({
+    { 1, 2, 0, 3, 1, 5 },
+    { 0, 4, 1, 8, 2, 4 },
+    { 0, 1, 0, 4, 5, 1 }
+  });
+
+  IntervalMatrix y = right_inverse_enclosure(w);
   CHECK((w.template cast<Interval>()*y).contains(Matrix::Identity(3,3)));
 }

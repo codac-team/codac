@@ -49,6 +49,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolar.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolygon.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolygon.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolytope.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolytope.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcProj.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcProj.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcQInter.cpp
@@ -84,6 +86,14 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/zonotope/codac2_Parallelepiped.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/zonotope/codac2_Zonotope.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/zonotope/codac2_Zonotope.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/polytope/codac2_Facet.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/polytope/codac2_Facet.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/polytope/codac2_Polytope_util.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/polytope/codac2_Polytope_util.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/polytope/codac2_Polytope_dd.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/polytope/codac2_Polytope_dd.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/polytope/codac2_Polytope.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/polytope/codac2_Polytope.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_Slice.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SliceBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SliceBase.h
@@ -243,6 +253,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepNot.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolygon.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolygon.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolytope.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolytope.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepQInter.cpp
@@ -306,6 +318,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/eigen
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/paving
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/zonotope
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/polytope
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube
     ${CMAKE_CURRENT_SOURCE_DIR}/functions
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic

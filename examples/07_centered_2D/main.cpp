@@ -39,6 +39,8 @@ int main(){
 
       Parallelepiped p = f1.parallelepiped_eval(T);
       fig4.draw_parallelepiped(p,{{Color::black(),Color::green(0.1)},"parallelepipeds"});
+      Polytope p2 = f1.polytope_eval(T);
+      fig4.draw_polytope(p2,{{Color::black(),Color::red(0.1)},"polytopes"});
      }
      time = time+dt;
   }

@@ -48,7 +48,7 @@ namespace codac2
 
         /**
          * \brief Check if the matrix is injective,
-         * *i.e.* its rank is equal to its number of rows.
+         * *i.e.* its rank is equal to its number of cols.
          * 
          * \return a ``BoolInterval``
          */
@@ -64,7 +64,7 @@ namespace codac2
 
         /**
          * \brief Check if the matrix is surjective
-         * *i.e.* its rank is equal to its number of cols.
+         * *i.e.* its rank is equal to its number of rows.
          * 
          * \return a ``BoolInterval``
          */

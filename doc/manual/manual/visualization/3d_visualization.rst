@@ -42,6 +42,7 @@ Geometric shapes
   - Box
   - Parallelepiped
   - Zonotope
+  - Polytope
   - Arrow
   - Parametric surface
   - Sphere
@@ -87,6 +88,9 @@ generally a sequence of adjacent triangles sharing a same vertex.
   :project: codac
 
 .. doxygenfunction:: codac2::Figure3D::draw_zonotope(const Zonotope&, const StyleProperties&)
+  :project: codac
+
+.. doxygenfunction:: codac2::Figure3D::draw_polytope(const Polytope&, const StyleProperties&)
   :project: codac
 
 .. doxygenfunction:: codac2::Figure3D::draw_arrow(const Vector&, const Matrix& A, const StyleProperties&)

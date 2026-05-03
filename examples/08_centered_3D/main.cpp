@@ -5,6 +5,7 @@
 using namespace std;
 using namespace codac2;
 
+
 int main()
 {
   VectorVar x(2);
@@ -47,6 +48,29 @@ int main()
       }
       phi=phi+dphi;
   }
+  phi=0.0;
+  while (phi<2*PI) {
+      psi=0.0;
+      while (psi<2*PI) {
+        IntervalVector T { {phi,phi+dphi}, {psi,psi+dpsi} };
+        Polytope P = f.polytope_eval(T);
+        fig_zon.draw_polytope(P, { Color::blue(0.5), "polytope" });
+        psi=psi+dpsi;
+      }
+      phi=phi+dphi;
+  }
+
+  phi=0.0;
+  while (phi<2*PI) {
+      psi=0.0;
+      while (psi<2*PI) {
+        IntervalVector T { {phi,phi+dphi}, {psi,psi+dpsi} };
+        IntervalVector Q = f.eval(T);
+        fig_zon.draw_box(Q, { Color::purple(0.5), "box" });
+        psi=psi+dpsi;
+      }
+      phi=phi+dphi;
+  }
 
   fig_zon.draw_surface({0,0,0}, Matrix::Identity(3,3),
 		 Interval(0,2*PI),
@@ -58,6 +82,6 @@ int main()
           2.0*sin(phi)*cos(phi)/(1+(sin(phi)*sin(phi)))
       }; 
     } ,
-		{ Color::green(0.6), "surface" });
+		{ Color::green(0.8), "surface" });
   
 }

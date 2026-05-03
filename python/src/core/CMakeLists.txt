@@ -32,6 +32,7 @@
     contractors/codac2_py_CtcPointCloud.cpp
     contractors/codac2_py_CtcPolar.cpp
     contractors/codac2_py_CtcPolygon.cpp
+    contractors/codac2_py_CtcPolytope.cpp
     contractors/codac2_py_CtcProj.cpp
     contractors/codac2_py_CtcQInter.cpp
     contractors/codac2_py_CtcSegment.cpp
@@ -54,6 +55,8 @@
     domains/paving/codac2_py_Subpaving.cpp
     domains/zonotope/codac2_py_Parallelepiped.cpp
     domains/zonotope/codac2_py_Zonotope.cpp
+    domains/polytope/codac2_py_Facet.cpp
+    domains/polytope/codac2_py_Polytope.cpp
     domains/tube/codac2_py_Slice.h
     domains/tube/codac2_py_SlicedTube.h
     domains/tube/codac2_py_SlicedTube_operations.cpp
@@ -88,6 +91,7 @@
     matrices/codac2_py_MatrixBase.h
     matrices/codac2_py_MatrixBlock.h
     matrices/codac2_py_Vector.cpp
+    matrices/codac2_py_Row.cpp
     matrices/codac2_py_VectorBase.h
 
     operators/codac2_py_operators.cpp
@@ -111,6 +115,7 @@
     separators/codac2_py_SepInverse.cpp
     separators/codac2_py_SepNot.cpp
     separators/codac2_py_SepPolygon.cpp
+    separators/codac2_py_SepPolytope.cpp
     separators/codac2_py_SepProj.cpp
     separators/codac2_py_SepQInter.cpp
     separators/codac2_py_SepTransform.cpp

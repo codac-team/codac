@@ -80,6 +80,7 @@ Geometric shapes
   - Polygone
   - Parallelepiped
   - Zonotope
+  - Polytope
   - Pie
   - Ellipse
   - Ellipsoid
@@ -135,6 +136,9 @@ Geometric shapes
   :project: codac
 
 .. doxygenfunction:: codac2::Figure2D::draw_zonotope(const Zonotope&, const StyleProperties&)
+  :project: codac
+
+.. doxygenfunction:: codac2::Figure2D::draw_polytope(const Polytope&, const StyleProperties&)
   :project: codac
 
 .. doxygenfunction:: codac2::Figure2D::draw_pie(const Vector&, const Interval&, const Interval&, const StyleProperties&)

@@ -3,7 +3,7 @@
 Geometry
 ========
 
-Codac provides a set of utility functions for basic 2d geometric calculations.
+Codac provides a set of utility functions for basic geometric calculations.
 
 Several basic geometric types are available under the form of classes representing enclosures of these types. For instance, a 2d point if represented by an ``IntervalVector`` enclosing it, a segment between two 2d points is implemented by the ``Segment`` class, the endpoints of which are ``IntervalVector`` objects. Furthermore, ``Polygon`` and ``ConvexPolygon`` are also available. Operations between these structure will reliably meet the uncertainties associated with the enclosure of points (vertices), as well as floating-point calculations.
 
@@ -16,6 +16,7 @@ Because computations are based on interval arithmetic, all these functions provi
   segment.rst
   polygon.rst
   zonotope.rst
+  polytope.rst
 
 Related interval enumerations
 -----------------------------

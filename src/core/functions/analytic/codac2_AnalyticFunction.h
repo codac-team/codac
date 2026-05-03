@@ -21,6 +21,7 @@
 #include "codac2_vec.h"
 #include "codac2_Wrapper.h"
 #include "codac2_Parallelepiped.h"
+#include "codac2_Polytope.h"
 #include "codac2_peibos_tools.h"
 
 namespace codac2
@@ -231,6 +232,48 @@ namespace codac2
         Matrix A_inf = inflate_flat_parallelepiped(A, (cart_prod(x...).template cast<Interval>()).rad(), rho);
 
         return Parallelepiped(z, A_inf);
+      }
+
+      template<typename... Args>
+        requires std::is_same_v<VectorType,T> 
+      Polytope polytope_eval(const Args&... x) const
+      {
+         this->check_valid_inputs(x...);
+
+ 	 /* use centered evaluation */
+         auto x_ = eval_<false>(x...);
+         if(x_.da.size() == 0 || !x_.def_domain) {
+              return Polytope(eval(EvalMode::NATURAL, x...));
+         }
+         auto flatten_x = IntervalVector(cart_prod(x...));
+         assert(x_.da.rows() == x_.a.size() && 
+			x_.da.cols() == flatten_x.size());
+         
+         IntervalVector centered_flatten = flatten_x-flatten_x.mid();   
+         Polytope res = Polytope(centered_flatten).affine_transform
+		(x_.da, x_.m, x_.a);
+         return res;
+      }
+
+      template<typename... Args>
+        requires std::is_same_v<VectorType,T> 
+      Polytope polytope_eval(const Polytope& input) const
+      {
+         IntervalVector box = input.box();
+         this->check_valid_inputs(box);
+
+ 	 /* use centered evaluation */
+         auto x_ = eval_<false>(box);
+         if(x_.da.size() == 0 || !x_.def_domain) 
+              return Polytope(eval(EvalMode::NATURAL, box));
+         assert(x_.da.rows() == x_.a.size() && 
+			x_.da.cols() == box.dim());
+            
+         Polytope input_copy(input);
+         input_copy.inflate(IntervalVector(-box.mid()));
+         Polytope res = input_copy.direct_affine_transform(x_.da, x_.m);
+         res.meet_with_box(x_.a);
+         return res;
       }
 
       Index output_size() const

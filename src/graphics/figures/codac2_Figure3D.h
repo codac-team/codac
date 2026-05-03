@@ -20,6 +20,7 @@
 #include "codac2_IntervalMatrix.h"
 #include "codac2_Ellipsoid.h"
 #include "codac2_Parallelepiped.h"
+#include "codac2_Polytope.h"
 
 namespace codac2
 {
@@ -122,6 +123,14 @@ namespace codac2
        * \param style Style of the zonotope (edge color)
        */
       void draw_zonotope(const Zonotope& z, const StyleProperties& style = { Color::dark_gray(0.5) });
+
+      /**
+       * \brief Draws a polytope on the figure
+       * 
+       * \param P Polytope to draw 
+       * \param style Style of the polytope (edge color)
+       */
+      void draw_polytope(const Polytope& P, const StyleProperties& style = { Color::dark_gray(0.5) });
 
       /**
        * \brief Draws a box on the figure

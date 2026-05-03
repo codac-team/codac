@@ -34,14 +34,13 @@ namespace codac2
   template<LeftOrRightInv O=LEFT_INV,typename OtherDerived,typename OtherDerived_>
   inline IntervalMatrix inverse_correction(const Eigen::MatrixBase<OtherDerived>& A, const Eigen::MatrixBase<OtherDerived_>& B)
   {
-    assert_release(A.is_squared());
-    assert_release(B.is_squared());
+    assert_release(B.cols()==A.rows());
+    assert_release(A.cols()==B.rows());
 
     auto A_ = A.template cast<Interval>();
     auto B_ = B.template cast<Interval>();
 
-    Index N = A_.rows();
-    assert_release(N==B_.rows());
+    Index N = (O == LEFT_INV ? A_.cols() : A_.rows());
 
     auto Id = IntervalMatrix::Identity(N,N);
     auto erMat = [&]() { if constexpr(O == LEFT_INV) return -B_*A_+Id; else return -A_*B_+Id; }();
@@ -60,12 +59,10 @@ namespace codac2
        for (Index c=0;c<N;c++) {
          for (Index r=0;r<N;r++) {
            if (Ep(r,c).is_unbounded()) {
-              for (Index k=0;k<N;k++) {
-                   if constexpr(O == LEFT_INV)
-                       res(r,k) = Interval();
-                   else 
-                       res(k,c) = Interval();
-              }
+              if constexpr(O == LEFT_INV)
+                 res.row(r).setConstant(Interval());
+              else
+                 res.col(r).setConstant(Interval());
            }
          }
        }
@@ -96,6 +93,69 @@ namespace codac2
     else
       return inverse_correction<LEFT_INV>(A, 
         A.fullPivLu().solve(Matrix::Identity(N,N)));
+  }
+
+
+  /** 
+   * \brief Enclosure of a left inverse of a (full-rank) matrix
+   * expression, possibly an interval matrix.
+   *
+   * \pre \f$\mathbf{A}\f$ has more rows than columns.
+   *
+   * \param A A non-square matrix expression
+   * \return The enclosure of a left-inverse. Can have 
+   * \f$(-\infty,\infty)\f$ coefficients if the inversion "failed",
+   * either because the matrix is (almost) not full-rank, or the full pivot
+   * LU decomposition did not use the ''correct'' pivots 
+   * (for Interval matrix) */
+  template<typename OtherDerived>
+  inline IntervalMatrix left_inverse_enclosure
+		(const Eigen::MatrixBase<OtherDerived>& A)
+  {
+    Index N = A.rows();
+    Index M = A.cols();
+    assert_release(N>M);
+    /* we use the transpose to solve, then we correct with LEFT_INV */
+    if constexpr(std::is_same_v<typename OtherDerived::Scalar,Interval>) {
+        return inverse_correction<LEFT_INV>(A,
+			(A.mid().transpose()).fullPivLu()
+                                .solve(Matrix::Identity(M,M)).transpose());
+    } else {
+        return inverse_correction<LEFT_INV>(A,
+			(A.transpose()).fullPivLu()
+                                .solve(Matrix::Identity(M,M)).transpose());
+    }
+  }
+
+  /** 
+   * \brief Enclosure of a right inverse of a (full-rank) matrix
+   * expression, possibly an interval matrix.
+   *
+   * \pre \f$\mathbf{A}\f$ has more columns than rows.
+   *
+   * \param A A non-square matrix expression
+   * \return The enclosure of a right-inverse. Can have 
+   * \f$(-\infty,\infty)\f$ coefficients if the inversion "failed",
+   * either because the matrix is (almost) not full-rank, or the full pivot
+   * LU decomposition did not use the ''correct'' pivots 
+   * (for Interval matrix) */
+  template<typename OtherDerived>
+  inline IntervalMatrix right_inverse_enclosure
+		(const Eigen::MatrixBase<OtherDerived>& A)
+  {
+    Index N = A.rows();
+    Index M = A.cols();
+    assert_release(M>N);
+    /* we solve directly, and transpose for the inverse_correction (?) */
+    if constexpr(std::is_same_v<typename OtherDerived::Scalar,Interval>) {
+        return inverse_correction<LEFT_INV> (A.transpose(),
+	(A.mid()).fullPivLu().solve(Matrix::Identity(N,N)).transpose())
+			.transpose();
+    } else {
+        return inverse_correction<LEFT_INV> (A.transpose(),
+		A.fullPivLu().solve(Matrix::Identity(N,N)).transpose())
+			.transpose();
+    }
   }
 
   /**

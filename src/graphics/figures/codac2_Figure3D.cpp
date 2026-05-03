@@ -137,7 +137,7 @@ void Figure3D::draw_box(const IntervalVector& x, const StyleProperties& style)
 }
 
 void Figure3D::draw_zonotope(const Zonotope& z, const StyleProperties& style) {
-  assert_release(z.z.size() == 3);
+   assert_release(z.z.size() == 3);
    Matrix id = Matrix::Identity(3,3);
    this->set_style_internal(style);
    lock_style=true;
@@ -191,6 +191,19 @@ void Figure3D::draw_zonotope(const Zonotope& z, const StyleProperties& style) {
        }
     }
     lock_style=false;
+}
+
+void Figure3D::draw_polytope(const Polytope& P, const StyleProperties& style) {
+   assert_release(P.size() == 3);
+   this->set_style_internal(style);
+   lock_style=true;
+   const Vector center = Vector::zero(3);
+   const Matrix transfo = Matrix::Identity(3,3);
+   std::vector<std::vector<Vector>> facets3D=P.vertices_3Dfacets();
+   for (const std::vector<Vector> &vec : facets3D) {
+      this->draw_polygon(center,transfo,vec,style);
+   }
+   lock_style=false;
 }
 
 void Figure3D::draw_arrow(const Vector& c, const Matrix &A,
