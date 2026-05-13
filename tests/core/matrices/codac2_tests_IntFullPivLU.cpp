@@ -146,3 +146,68 @@ TEST_CASE("IntvFullPivLU")
   }
   
 }
+
+TEST_CASE("IntvFullPivLU solve tall matrix")
+{
+  Matrix A({
+    { 1, 0 },
+    { 0, 1 },
+    { 1, 1 },
+    { 2,-1 },
+    {-1, 2 },
+  });
+
+  Matrix X({
+    { 2,-1 },
+    {-1, 3 },
+  });
+
+  Matrix rhs_mid = A*X;
+  IntervalMatrix rhs(rhs_mid);
+
+  IntvFullPivLU lu(A);
+
+  SECTION("solve(rhs) with rows >= cols + 2")
+  {
+    IntervalMatrix sol = lu.solve(rhs);
+
+    CHECK(!sol.is_empty());
+    CHECK(sol.contains(X));
+    CHECK((A.template cast<Interval>() * sol).contains(rhs_mid));
+  }
+
+  SECTION("solve(rhs, B) with rows >= cols + 2")
+  {
+    IntervalMatrix B = IntervalMatrix::Constant(2,2,{-10.0,10.0});
+
+    lu.solve(rhs, B);
+
+    CHECK(!B.is_empty());
+    CHECK(B.contains(X));
+    CHECK((A.template cast<Interval>() * B).contains(rhs_mid));
+  }
+
+  SECTION("solve(rhs) detects inconsistent rhs")
+  {
+    Matrix rhs_bad_mid = rhs_mid;
+    rhs_bad_mid(4,0) += 1.0; // breaks consistency on the extra row
+
+    IntervalMatrix rhs_bad(rhs_bad_mid);
+    IntervalMatrix sol = lu.solve(rhs_bad);
+
+    CHECK(sol.is_empty());
+  }
+
+  SECTION("solve(rhs, B) detects inconsistent rhs")
+  {
+    Matrix rhs_bad_mid = rhs_mid;
+    rhs_bad_mid(4,0) += 1.0; // breaks consistency on the extra row
+
+    IntervalMatrix rhs_bad(rhs_bad_mid);
+    IntervalMatrix B = IntervalMatrix::Constant(2,2,{-10.0,10.0});
+
+    lu.solve(rhs_bad, B);
+
+    CHECK(B.is_empty());
+  }
+}

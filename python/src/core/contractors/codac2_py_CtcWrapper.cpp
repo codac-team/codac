@@ -34,6 +34,18 @@ void export_CtcWrapper(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcIn
   CONTRACT_METHODS(exported_ctcwrapper_intervalvector, CtcWrapper<IntervalVector>,
     VOID_CTCWRAPPER_YX_CONTRACT_X_REF_CONST)
 
+  py::class_<CtcWrapper<Parallelepiped>> exported_ctcwrapper_parallelepiped(m, "CtcWrapper_Parallelepiped", pyctc, CTCWRAPPER_MAIN);
+  exported_ctcwrapper_parallelepiped
+
+    .def(py::init<const Parallelepiped&>(),
+      CTCWRAPPER_YX_CTCWRAPPER_CONST_Y_REF,
+      "y"_a)
+    
+  ;
+
+  CONTRACT_METHODS(exported_ctcwrapper_parallelepiped, CtcWrapper<Parallelepiped>,
+    VOID_CTCWRAPPER_YX_CONTRACT_X_REF_CONST)
+
   py::class_<CtcWrapper<PavingOut>> exported_ctcwrapper_pavingout(m, "CtcWrapper_PavingOut", pyctc, CTCWRAPPER_MAIN);
   exported_ctcwrapper_pavingout
 

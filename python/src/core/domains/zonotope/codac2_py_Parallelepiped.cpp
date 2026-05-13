@@ -31,6 +31,10 @@ void export_Parallelepiped(py::module& m)
       PARALLELEPIPED_PARALLELEPIPED_CONST_VECTOR_REF_CONST_MATRIX_REF,
       "z"_a, "A"_a)
 
+    .def_static("empty", &Parallelepiped::empty,
+      STATIC_PARALLELEPIPED_PARALLELEPIPED_EMPTY_INDEX,
+      "n"_a)
+
     .def("vertices", &Parallelepiped::vertices,
       VECTOR_VECTOR_PARALLELEPIPED_VERTICES_CONST)
 
@@ -42,5 +46,15 @@ void export_Parallelepiped(py::module& m)
       BOOLINTERVAL_PARALLELEPIPED_IS_SUPERSET_CONST_INTERVALVECTOR_REF_CONST,
       "x"_a)
 
+    .def("__and__", &Parallelepiped::operator&,
+      PARALLELEPIPED_PARALLELEPIPED_OPERATORINTER_CONST_INTERVALVECTOR_REF_CONST,
+      "x"_a)
+
+    .def("__rand__", [](const Parallelepiped& p, const IntervalVector& x)
+        {
+          return x & p;
+        },
+      INTERVALVECTOR_OPERATORINTER_CONST_INTERVALVECTOR_REF_CONST_PARALLELEPIPED_REF,
+      "x"_a)
   ;
 }

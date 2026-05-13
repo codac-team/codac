@@ -3,6 +3,14 @@
 Changelog
 =========
 
+Upcoming version 
+****************
+
+Pull Request #379 from godardma (27/04)
+---------------------------------------
+
+``Zonotope`` and ``Parallelepiped`` center is now ``c`` instead of ``z`` to avoid ambiguity.
+
 Version 2.0.2
 *************
 

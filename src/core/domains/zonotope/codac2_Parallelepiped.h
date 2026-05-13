@@ -21,9 +21,9 @@ namespace codac2
   /**
    * \class Parallelepiped
    * 
-   * \brief Class representing a parallelepiped \f$\mathbf{z} + \mathbf{A}\cdot[-1,1]^m\f$
+   * \brief Class representing a parallelepiped \f$\mathbf{c} + \mathbf{A}\cdot[-1,1]^m\f$
    * 
-   * This class represents a parallelepiped in n-dimensional space, defined by a center point \f$\mathbf{z}\f$ and a shape matrix \f$\mathbf{A}\f$.
+   * This class represents a parallelepiped in n-dimensional space, defined by a center point \f$\mathbf{c}\f$ and a shape matrix \f$\mathbf{A}\f$.
    * 
    * A parallelepiped is a special case of a zonotope where the shape matrix \f$\mathbf{A}\f$ has \f$m\f$ columns with \f$m \leqslant n\f$.
    */
@@ -34,10 +34,18 @@ namespace codac2
       /**
        * \brief Constructs a n-parallelepiped object with a given center and shape matrix
        * 
-       * \param z Center of the parallelepiped (n-dimensional vector)
+       * \param c Center of the parallelepiped (n-dimensional vector)
        * \param A Shape matrix of the parallelepiped (\f$n\times m\f$ matrix with \f$m \leqslant n\f$)
        */
-      Parallelepiped(const Vector& z, const Matrix& A);
+      Parallelepiped(const Vector& c, const Matrix& A);
+
+      /**
+       * \brief Constructs an empty n-parallelepiped
+       * 
+       * \param n Dimension of the parallelepiped
+       * \return A new Parallelepiped object representing an empty parallelepiped in n-dimensional space
+       */
+      static Parallelepiped empty(Index n);
       
       /**
        * \brief Computes the vertices of the parallelepiped
@@ -64,5 +72,23 @@ namespace codac2
        */
       BoolInterval is_superset(const IntervalVector& x) const;
 
+      /**
+       * \brief Computes the intersection of the parallelepiped with a given box. The matrix A has to be square and invertible.
+       * 
+       * \param x The box to intersect with
+       * 
+       * \return A new Parallelepiped representing the intersection of the original parallelepiped with the box.
+       */
+      Parallelepiped operator&(const IntervalVector& x) const;
   };
+
+  /**
+   * \brief Computes the intersection of a box with a parallelepiped. The matrix A has to be square and invertible.
+   * 
+   * \param x The box to intersect with
+   * \param p The parallelepiped to intersect with
+   * 
+   * \return A new IntervalVector representing the intersection of the box with the parallelepiped.
+   */
+  IntervalVector operator&(const IntervalVector& x, const Parallelepiped& p);
 }
