@@ -9,9 +9,47 @@
 
 #include "codac2_pave.h"
 #include <chrono>
+#include <mutex>
+#include <condition_variable>
 
 using namespace std;
 using namespace codac2;
+
+class SharedTreeDataInOut 
+{
+  public:
+      std::list<std::shared_ptr<PavingInOut_Node>> workList;
+
+      std::mutex mutex;
+      std::condition_variable cv;
+
+      int activeWorkers = 0;
+
+      bool finished = false;
+
+      SharedTreeDataInOut(std::shared_ptr<PavingInOut_Node> input)
+      {
+        workList.push_back(input);
+      }
+};
+
+class SharedTreeDataOut 
+{
+  public:
+      std::list<std::shared_ptr<PavingOut_Node>> workList;
+
+      std::mutex mutex;
+      std::condition_variable cv;
+
+      int activeWorkers = 0;
+
+      bool finished = false;
+
+      SharedTreeDataOut(std::shared_ptr<PavingOut_Node> input)
+      {
+        workList.push_back(input);
+      }
+};
 
 namespace codac2
 {
@@ -97,55 +135,61 @@ namespace codac2
     p.tree()->left()->boxes() = { x0 };
     get<0>(p.tree()->right()->boxes()).set_empty();
 
-    std::shared_ptr<PavingOut_Node> n;
-    list<std::shared_ptr<PavingOut_Node>> l { p.tree()->left() };
+    SharedTreeDataOut shared_tree_data(p.tree()->left());
 
-    while (l.size() < static_cast<std::size_t>(nthreads))
+    auto worker = [&](SharedTreeDataOut& tree_data) 
     {
-      n = l.front();
-      l.pop_front();
-
-      c.contract(get<0>(n->boxes()));
-
-      if(!get<0>(n->boxes()).is_empty())
+      while (true) 
       {
-        if(get<0>(n->boxes()).max_diam() > eps)
+        std::shared_ptr<PavingOut_Node> n;
         {
-          n->bisect();
-          l.push_back(n->left());
-          l.push_back(n->right());
+            std::unique_lock<std::mutex> lock(tree_data.mutex);
+
+            tree_data.cv.wait(lock, [&]() 
+            {
+              return !tree_data.workList.empty() || tree_data.finished;
+            });
+
+            if (tree_data.finished && tree_data.workList.empty())
+                return;
+
+            n = tree_data.workList.front();
+            tree_data.workList.pop_front();
+
+            tree_data.activeWorkers++;
         }
-      }
-    }
 
-    std::vector<std::shared_ptr<PavingOut_Node>> l_vec(l.begin(), l.end());
+        c.contract(get<0>(n->boxes()));
 
-    auto worker = [&](int tid) 
-    {
-      auto xi = l_vec[tid];
-      std::list<std::shared_ptr<PavingOut_Node>> li = { xi };
-      while(!li.empty())
-      {
-        auto ni = li.front();
-        li.pop_front();
-
-        c.contract(get<0>(ni->boxes()));
-        
-        if(!get<0>(ni->boxes()).is_empty())
+        if(!get<0>(n->boxes()).is_empty())
         {
-          if(get<0>(ni->boxes()).max_diam() > eps)
+          if(get<0>(n->boxes()).max_diam() > eps)
           {
-            ni->bisect();
-            li.push_back(ni->left());
-            li.push_back(ni->right());
+            n->bisect();
+            {
+              std::unique_lock<std::mutex> lock(tree_data.mutex);
+
+              tree_data.workList.push_back(n->left());
+              tree_data.workList.push_back(n->right());
+            }
           }
         }
+
+        {
+          std::unique_lock<std::mutex> lock(tree_data.mutex);
+          tree_data.activeWorkers--;
+          if (tree_data.workList.empty() && tree_data.activeWorkers == 0) 
+          {
+            tree_data.finished = true;
+          }
+        }
+        tree_data.cv.notify_all();
       }
     };
 
     std::vector<std::thread> threads;
     for (int tid = 0; tid < nthreads; tid++)
-      threads.emplace_back(worker, tid);      
+      threads.emplace_back(worker, std::ref(shared_tree_data));      
 
     for (auto& th : threads) th.join();
 
@@ -156,7 +200,7 @@ namespace codac2
     if(verbose)
     {
       printf("Number of thread used: %d\n", nthreads);
-      printf("Computation time: %.4fs\n\n", time);    
+      printf("Computation time: %.4fs\n", time);    
     }
 
     return p;
@@ -219,53 +263,59 @@ namespace codac2
     int nthreads = nb_threads();
 
     PavingInOut p(x0);
-    std::shared_ptr<PavingInOut_Node> n;
-    list<std::shared_ptr<PavingInOut_Node>> l { p.tree() };
+    SharedTreeDataInOut shared_tree_data(p.tree());
 
-    while (l.size() < static_cast<std::size_t>(nthreads))
+    auto worker = [&](SharedTreeDataInOut& tree_data) 
     {
-      n = l.front();
-      l.pop_front();
-
-      auto xs = s.separate(get<0>(n->boxes()));
-      auto boundary = (xs.inner & xs.outer);
-      n->boxes() = { xs.outer, xs.inner };
-
-      if(!boundary.is_empty() && boundary.max_diam() > eps)
+      while (true) 
       {
-        n->bisect();
-        l.push_back(n->left());
-        l.push_back(n->right());
-      }
-    }
+        std::shared_ptr<PavingInOut_Node> n;
+        {
+            std::unique_lock<std::mutex> lock(tree_data.mutex);
 
-    std::vector<std::shared_ptr<PavingInOut_Node>> l_vec(l.begin(), l.end());
+            tree_data.cv.wait(lock, [&]() 
+            {
+              return !tree_data.workList.empty() || tree_data.finished;
+            });
 
-    auto worker = [&](int tid) 
-    {
-      auto xi = l_vec[tid];
-      std::list<std::shared_ptr<PavingInOut_Node>> li = { xi };
-      while(!li.empty())
-      {
-        auto ni = li.front();
-        li.pop_front();
+            if (tree_data.finished && tree_data.workList.empty())
+                return;
 
-        auto xs = s.separate(get<0>(ni->boxes()));
+            n = tree_data.workList.front();
+            tree_data.workList.pop_front();
+
+            tree_data.activeWorkers++;
+        }
+
+        auto xs = s.separate(get<0>(n->boxes()));
         auto boundary = (xs.inner & xs.outer);
-        ni->boxes() = { xs.outer, xs.inner };
+        n->boxes() = { xs.outer, xs.inner };
 
         if(!boundary.is_empty() && boundary.max_diam() > eps)
         {
-          ni->bisect();
-          li.push_back(ni->left());
-          li.push_back(ni->right());
+          n->bisect();
+          {
+            std::unique_lock<std::mutex> lock(tree_data.mutex);
+
+            tree_data.workList.push_back(n->left());
+            tree_data.workList.push_back(n->right());
+          }
         }
+        {
+          std::unique_lock<std::mutex> lock(tree_data.mutex);
+          tree_data.activeWorkers--;
+          if (tree_data.workList.empty() && tree_data.activeWorkers == 0) 
+          {
+            tree_data.finished = true;
+          }
+        }
+        tree_data.cv.notify_all();
       }
     };
 
     std::vector<std::thread> threads;
     for (int tid = 0; tid < nthreads; tid++)
-      threads.emplace_back(worker, tid);      
+      threads.emplace_back(worker, std::ref(shared_tree_data));      
 
     for (auto& th : threads) th.join();
 
@@ -273,7 +323,7 @@ namespace codac2
     {
       printf("Number of thread used: %d\n", nthreads);
       std::chrono::duration<double> elapsed = std::chrono::high_resolution_clock::now() - start_time;
-      printf("Computation time: %.4fs\n\n", elapsed.count());    
+      printf("Computation time: %.4fs\n", elapsed.count());    
     }
     return p;
   }
@@ -335,67 +385,69 @@ namespace codac2
     int nthreads = nb_threads();
 
     PavingInOut p(x0);
-    std::list<std::shared_ptr<PavingInOut_Node>> l { p.tree() };
 
-    while (l.size() < static_cast<std::size_t>(nthreads))
+    SharedTreeDataInOut shared_tree_data(p.tree());
+
+    auto worker = [&](SharedTreeDataInOut& tree_data) 
     {
-      auto n = l.front();
-      l.pop_front();
-
-      auto b = test(std::get<1>(n->boxes()));
-      switch(b)
+      while (true) 
       {
-        case BoolInterval::TRUE:
-          std::get<1>(n->boxes()).set_empty();
-          break;
+        std::shared_ptr<PavingInOut_Node> n;
+        {
+            std::unique_lock<std::mutex> lock(tree_data.mutex);
 
-        case BoolInterval::FALSE:
-          std::get<0>(n->boxes()).set_empty();
-          break;
+            tree_data.cv.wait(lock, [&]() 
+            {
+              return !tree_data.workList.empty() || tree_data.finished;
+            });
 
-        default:
-          n->bisect();
-          l.push_back(n->left());
-          l.push_back(n->right());
-      }
-    }
+            if (tree_data.finished && tree_data.workList.empty())
+                return;
 
-    std::vector<std::shared_ptr<PavingInOut_Node>> l_vec(l.begin(), l.end());
+            n = tree_data.workList.front();
+            tree_data.workList.pop_front();
 
-    auto worker = [&](int tid) 
-    {
-      auto xi = l_vec[tid];
-      std::list<std::shared_ptr<PavingInOut_Node>> li = { xi };
-      while(!li.empty())
-      {
-        auto ni = li.front();
-        li.pop_front();
+            tree_data.activeWorkers++;
+        }
 
-        auto b = test(std::get<1>(ni->boxes()));
+        auto b = test(std::get<1>(n->boxes()));
         switch(b)
         {
           case BoolInterval::TRUE:
-            std::get<1>(ni->boxes()).set_empty();
+            std::get<1>(n->boxes()).set_empty();
             break;
 
           case BoolInterval::FALSE:
-            std::get<0>(ni->boxes()).set_empty();
+            std::get<0>(n->boxes()).set_empty();
             break;
 
           default:
-            if(ni->unknown().max_diam() > eps)
+            if(n->unknown().max_diam() > eps)
             {
-              ni->bisect();
-              li.push_back(ni->left());
-              li.push_back(ni->right());
+              n->bisect();
+              {
+                std::unique_lock<std::mutex> lock(tree_data.mutex);
+
+                tree_data.workList.push_back(n->left());
+                tree_data.workList.push_back(n->right());
+              }
             }
         }
+        {
+          std::unique_lock<std::mutex> lock(tree_data.mutex);
+          tree_data.activeWorkers--;
+          if (tree_data.workList.empty() && tree_data.activeWorkers == 0) 
+          {
+            tree_data.finished = true;
+          }
+        }
+        tree_data.cv.notify_all();
       }
     };
 
     std::vector<std::thread> threads;
     for (int tid = 0; tid < nthreads; tid++)
-      threads.emplace_back(worker, tid);      
+      threads.emplace_back(worker,std::ref(shared_tree_data));      
 
     for (auto& th : threads) th.join();
 
@@ -403,7 +455,7 @@ namespace codac2
     {
       printf("Number of thread used: %d\n", nthreads);
       std::chrono::duration<double> elapsed = std::chrono::high_resolution_clock::now() - start_time;
-      printf("Computation time: %.4fs\n\n", elapsed.count());
+      printf("Computation time: %.4fs\n", elapsed.count());
     }
 
     return p;
