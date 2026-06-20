@@ -16,6 +16,14 @@ An exhaustive list of the functions that can parallelized in Codac is :
 
   - :ref:`PEIBOS for ODE integration <sec-extensions-capd-peibos>`
 
+- Pavings
+
+  - SIVIA
+
+  - Pave with contractor
+
+  - Pave with separator
+
 How it works
 ------------
 

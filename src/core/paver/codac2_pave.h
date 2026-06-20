@@ -15,24 +15,32 @@
 #include "codac2_AnalyticFunction.h"
 #include "codac2_BoolInterval.h"
 #include "codac2_SlicedTube.h"
+#include "codac2_threading.h"
 
 namespace codac2
 {
   // eps: accuracy of the paving algorithm, the undefined boxes will have their max_diam <= eps
   
-  PavingOut pave(const IntervalVector& x0, std::shared_ptr<const CtcBase<IntervalVector>> c, double eps, bool verbose = false);
   PavingOut pave(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, double& time, bool verbose = false);
+  PavingOut pave(const IntervalVector& x0, std::shared_ptr<const CtcBase<IntervalVector>> c, double eps, bool verbose = false);
   PavingOut pave(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, bool verbose = false);
+  PavingOut pave_monothread(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, double& time, bool verbose = false);
+  PavingOut pave_multithread(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, double& time, bool verbose = false);
 
   PavingInOut pave(const IntervalVector& x0, std::shared_ptr<const SepBase> s, double eps, bool verbose = false);
   PavingInOut pave(const IntervalVector& x0, const SepBase& s, double eps, bool verbose = false);
+  PavingInOut pave_monothread(const IntervalVector& x0, const SepBase& s, double eps, bool verbose = false);
+  PavingInOut pave_multithread(const IntervalVector& x0, const SepBase& s, double eps, bool verbose = false);
 
   PavingInOut regular_pave(const IntervalVector& x0, const std::function<BoolInterval(const IntervalVector&)>& test, double eps, bool verbose = false);
+  PavingInOut regular_pave_multithread(const IntervalVector& x0, const std::function<BoolInterval(const IntervalVector&)>& test, double eps, bool verbose = false);
 
   template<typename Y>
   PavingInOut sivia(const IntervalVector& x0, const AnalyticFunction<Y>& f, const typename Y::Domain& y, double eps, bool verbose = false)
   {
-    return regular_pave(x0,
+    if (nb_threads()==1)
+    {
+      return regular_pave(x0,
       [&y,&f](const IntervalVector& x)
       {
         auto eval = f.eval(x);
@@ -47,6 +55,25 @@ namespace codac2
           return BoolInterval::UNKNOWN;
       },
       eps, verbose);
+    }
+    else
+    {
+      return regular_pave_multithread(x0,
+      [&y,&f](const IntervalVector& x)
+      {
+        auto eval = f.eval(x);
+
+        if(eval.is_subset(y))
+          return BoolInterval::TRUE;
+
+        else if(!eval.intersects(y))
+          return BoolInterval::FALSE;
+
+        else
+          return BoolInterval::UNKNOWN;
+      },
+      eps, verbose);
+    }
   }
 
   PavingInOut pave_tube(const IntervalVector& x0, const SlicedTube<IntervalVector>& f, double eps, bool verbose = false);
