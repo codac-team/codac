@@ -21,6 +21,7 @@
 #include "codac2_Domain.h"
 #include "codac2_assert.h"
 #include "codac2_TypeInfo.h"
+#include "codac2_BoolInterval.h"
 
 namespace codac2
 {
@@ -159,6 +160,40 @@ namespace codac2
        * \return true iff this and x are not exactly the same intervals
        */
       bool operator!=(const Interval& x) const;
+
+      /**
+       * \brief Comparison (strict less-than) between this and x
+       * 
+       * The returned ``BoolInterval`` encloses the truth value of
+       * \f$t<s\f$ for \f$t\in[\mathrm{this}]\f$ and \f$s\in[x]\f$.
+       * 
+       * \note Returns:
+       *       - ``BoolInterval::EMPTY`` if this or x is empty
+       *       - ``BoolInterval::TRUE`` iff \f$\mathrm{ub}([\mathrm{this}])<\mathrm{lb}([x])\f$
+       *       - ``BoolInterval::FALSE`` iff \f$\mathrm{ub}([x])\leq\mathrm{lb}([\mathrm{this}])\f$
+       *       - ``BoolInterval::UNKNOWN`` otherwise
+       * 
+       * \param x interval to be compared with
+       * \return interval Boolean result
+       */
+      BoolInterval operator<(const Interval& x) const;
+
+      /**
+       * \brief Comparison (strict greater-than) between this and x
+       * 
+       * The returned BoolInterval encloses the truth value of
+       * \f$t>s\f$ for \f$t\in[\mathrm{this}]\f$ and \f$s\in[x]\f$.
+       * 
+       * \note Returns:
+       *       - ``BoolInterval::EMPTY`` if this or x is empty
+       *       - ``BoolInterval::TRUE`` iff \f$\mathrm{lb}([\mathrm{this}])>\mathrm{ub}([x])\f$
+       *       - ``BoolInterval::FALSE`` iff \f$\mathrm{lb}([x])\geq\mathrm{ub}([\mathrm{this}])\f$
+       *       - ``BoolInterval::UNKNOWN`` otherwise
+       * 
+       * \param x interval to be compared with
+       * \return interval Boolean result
+       */
+      BoolInterval operator>(const Interval& x) const;
 
       /**
        * \brief Returns the lower bound of this

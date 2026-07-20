@@ -1,74 +1,115 @@
 /** 
- *  codac2_SepPolarCart.cpp
+ *  \file codac2_SepPolarCart.cpp
  * ----------------------------------------------------------------------------
  *  \date       2026
- *  \author     Benoît Desrochers, (Simon Rohou)
+ *  \author     Simon Rohou, from a former implementation of Benoît Desrochers
  *  \copyright  Copyright 2026 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
 #include "codac2_SepPolarCart.h"
 #include "codac2_CtcPolar.h"
+#include "codac2_cart_prod.h"
+#include "codac2_hull.h"
 
 using namespace codac2;
+
+/**
+ * Contracts x with the Cartesian projection of the complement of a polar box.
+ *
+ * For a polar box [rho]x[theta], the complement is represented as the union
+ * of four polar boxes:
+ *   - rho <= rho.lb(), with theta in [theta]
+ *   - rho >= rho.ub(), with theta in [theta]
+ *   - theta before theta.lb(), with rho in R+
+ *   - theta after theta.ub(), with rho in R+
+ *
+ * The angular complement is computed in the 2*pi-wide window centered on [theta].
+ */
+IntervalVector contract_polar_box_complement(
+  const CtcPolar& ctc_polar,
+  const IntervalVector& x,
+  const IntervalVector& x_pol)
+{
+  assert_release(x.size() == 2);
+  assert_release(x_pol.size() == 2);
+
+  if(x.is_empty())
+    return x;
+
+  // Complement of the empty polar box: no point is removed by the inner
+  // contractor, so the Cartesian box is left unchanged.
+  if(x_pol.is_empty())
+    return x;
+
+  const Interval& rho = x_pol[0];
+  const Interval& theta = x_pol[1];
+
+  std::list<IntervalVector> parts;
+
+  auto add_polar_part = [&ctc_polar,&parts](const IntervalVector& x,
+    const Interval& rho,
+    const Interval& theta)
+  {
+    if(rho.is_empty() || theta.is_empty())
+      return;
+
+    Interval rho_(rho), theta_(theta);
+    IntervalVector x_(x);
+    ctc_polar.contract(x_[0],x_[1],rho_,theta_);
+    parts.push_back(x_);
+  };
+
+  // Radial complement, restricted to the current angular sector. The angular
+  // outside parts below cover the remaining angles.
+  if(std::isfinite(rho.lb()) && rho.lb() >= 0)
+    add_polar_part(x, {0,rho.lb()}, theta);
+
+  if(std::isfinite(rho.ub()))
+    add_polar_part(x, {rho.ub(),oo}, theta);
+
+  // Angular complement. If [theta] already covers at least one full turn,
+  // there is no angular complement in the 2*pi-periodic sense.
+  if(std::isfinite(theta.lb()) && std::isfinite(theta.ub())
+    && theta.ub() - theta.lb() < 2*PI)
+  {
+    double limit = theta.mid()-PI;
+    add_polar_part(x, {0,oo}, {limit,theta.lb()});
+    add_polar_part(x, {0,oo}, {theta.ub(),limit+2*PI});
+  }
+
+  return x & hull(parts);
+}
 
 BoxPair SepPolarCart::separate(const IntervalVector& x) const
 {
   assert_release(x.size() == 2);
 
+  BoxPair x_cart_sep { x, x };
+
+  if(x.is_empty())
+    return x_cart_sep;
+
   CtcPolar ctc_polar;
-  IntervalVector x_cart(2), x_pol(x);
+  IntervalVector x_cart(x), x_pol(2);
 
+  // Cartesian input -> polar enclosure
   ctc_polar.contract(x_cart[0], x_cart[1], x_pol[0], x_pol[1]);
-  auto x_cart_sep = _sep.front()->separate(x_cart);
-  BoxPair x_polar_sep { x, x };
-  ctc_polar.contract(x_cart_sep.inner[0], x_cart_sep.inner[1], x_polar_sep.inner[0], x_polar_sep.inner[1]);
-  ctc_polar.contract(x_cart_sep.outer[0], x_cart_sep.outer[1], x_polar_sep.outer[0], x_polar_sep.outer[1]);
 
-  return x_polar_sep;
-}
+  if(x_cart.is_empty() || x_pol.is_empty())
+    return x_cart_sep;
 
+  // Separation in the polar space
+  const BoxPair x_pol_sep = _sep.front()->separate(x_pol);
 
-SepPolarXY::SepPolarXY(Interval rho, Interval theta) : rho(rho), theta(theta), Sep(2) {
-  rho_m = Interval(0, rho.lb());
-  rho_p = Interval(rho.ub(), POS_INFINITY);
-  double limit = theta.mid() - M_PI;
-  theta_m = Interval(limit, theta.lb());
-  theta_p = Interval(theta.ub(), limit + 2*M_PI);
-  cmpl = Interval(0, 2*M_PI);
-}
+  // Outer contraction: keep the Cartesian points whose polar coordinates may
+  // belong to the polar separator output
+  IntervalVector copy_x_pol_sep = x_pol_sep.outer.subvector(0,1);
+  ctc_polar.contract(x_cart_sep.outer[0], x_cart_sep.outer[1], copy_x_pol_sep[0], copy_x_pol_sep[1]);
 
+  // Inner contraction: remove points belonging to the polar set by contracting
+  // with the complement of the polar outer box
+  x_cart_sep.inner = contract_polar_box_complement(ctc_polar, x_cart_sep.inner, x_pol_sep.outer);
 
-void SepPolarXY::contractOut(IntervalVector &x_out){
-  Interval th = this->theta;
-  Interval r = this->rho;
-  this->ctc.contract(x_out[0], x_out[1], r, th);
-  if(x_out[0].is_empty() || x_out[1].is_empty())
-    x_out.set_empty();
-}
-
-
-void SepPolarXY::contractIn(IntervalVector &x_in){
-  Interval x1(x_in[0]); Interval y1(x_in[1]);
-  Interval x2(x_in[0]); Interval y2(x_in[1]);
-  Interval x3(x_in[0]); Interval y3(x_in[1]);
-  Interval x4(x_in[0]); Interval y4(x_in[1]);
-  
-  Interval ALLREALS1 = Interval::POS_REALS;
-  Interval ALLREALS2 = Interval::POS_REALS;
-  Interval cmpl1(cmpl);
-  Interval cmpl2(cmpl);
-  Interval theta_m_tmp(theta_m);
-  Interval theta_p_tmp(theta_p);
-  Interval rho_m_tmp(rho_m);
-  Interval rho_p_tmp(rho_p);
-
-  this->ctc.contract(x1, y1, ALLREALS1, theta_m_tmp);
-  this->ctc.contract(x2, y2, ALLREALS2, theta_p_tmp);
-  this->ctc.contract(x3, y3, rho_m_tmp, cmpl1);
-  this->ctc.contract(x4, y4, rho_p_tmp, cmpl2);
-  x_in[0] &= (x1 | x2 | x3 | x4);
-  x_in[1] &= (y1 | y2 | y3 | y4);
-  if(x_in[0].is_empty() || x_in[1].is_empty())
-    x_in.set_empty();
+  return x_cart_sep;
 }

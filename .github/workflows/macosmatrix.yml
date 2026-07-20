@@ -34,7 +34,7 @@ jobs:
             - { os: macos-15-intel  , shell: bash, arch: x86_64 , runtime: sequoia , cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 8 , desc: 'macOS Sequoia Python 3.8 x86_64' }
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         submodules: true
         fetch-depth: 0
@@ -54,7 +54,7 @@ jobs:
     #  if: runner.os=='macOS'
     - run: brew install catch2 # Issues with binary packages when cross-compiling...
       if: (runner.os=='macOS')&&(matrix.cfg.cross!=true)
-    - run: brew install graphviz ; brew install --formula doxygen ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects furo sphinx-math-dollar sympy
+    - run: brew install graphviz ; brew install --formula doxygen ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
       if: runner.os=='macOS'
     - run: |
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20250626/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv

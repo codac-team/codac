@@ -241,6 +241,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepNot.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolarCart.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolarCart.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolygon.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolygon.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.cpp

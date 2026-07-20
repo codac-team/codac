@@ -8,10 +8,11 @@ Building the Manual with Sphinx
 
 To build this manual using Sphinx, follow these steps:
 
-1. **Requirements**: Install `Sphinx <https://www.sphinx-doc.org/>`_ together with the extensions used by Codac, if they are not already installed.
+1. **Requirements**: Install `Sphinx <https://www.sphinx-doc.org/>`_ together with the extensions used by Codac, if they are not already installed. You will need also the ``dot`` command from `Graphviz <https://graphviz.org/>`_.
 
    .. code-block:: bash
 
+      sudo apt-get install sphinx-common graphviz
       pip install sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs breathe sphinx_togglebutton
 
 2. **Building the manual**: After configuring the CMake project, the manual can be build with:
@@ -41,8 +42,8 @@ If you simply want to use the latest Codac release in Python, you can download t
 
       sudo apt-get install -y g++ gcc cmake git flex bison
 
-   - a supported version of Python (>=3.6).
-   - a recent `Doxygen <https://www.doxygen.nl>`_ version (for instance, release 1.13.0 or newest). On Linux systems, latest releases are not available as Debian packages, so we advice to install Doxygen from the sources:
+   - a supported version of Python (>=3.8).
+   - a recent `Doxygen <https://www.doxygen.nl>`_ version (for instance, release 1.16.1 or newest). On Linux systems, latest releases are not available as Debian packages, so we advise to install Doxygen from the sources:
 
    .. code-block:: bash
 
@@ -95,12 +96,12 @@ If you simply want to use the latest Codac release in Python, you can download t
 
       Note that you will then have to ``import codac2`` instead of ``import codac`` in your Python scripts.
 
-   In addition to the ``-fPIC`` options, you will have to configure ``WITH_PYTHON=ON`` and ``PYBIND11_FINDPYTHON=OFF``. Note that CMake will automatically get the `pybind11 <https://pybind11.readthedocs.io>`_ files required for the binding.
+   In addition to the ``-fPIC`` options, you will have to configure ``WITH_PYTHON=ON`` and ``PYBIND11_FINDPYTHON=OFF``. Note that CMake will automatically get the `pybind11 <https://pybind11.readthedocs.io>`_ files required for the binding. Also, you will have to configure ``BUILD_TESTS=ON`` if you want to run the unit tests.
    
    .. code-block:: bash
       
       mkdir build ; cd build
-      cmake -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH="$HOME/ibex-lib/build_install;$HOME/doxygen/build_install" -DCMAKE_BUILD_TYPE=Release ..
+      cmake -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF -DBUILD_TESTS=ON -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH="$HOME/ibex-lib/build_install;$HOME/doxygen/build_install" -DCMAKE_BUILD_TYPE=Release ..
       make ; make install
 
 4. **Configure your Python environment**:
@@ -135,7 +136,7 @@ If you simply want to use the latest Codac release in Python, you can download t
       cd $HOME/codac/examples/03_sivia
       python main.py
 
-   Note that before executing the example, you will have to launch the VIBes viewer.
+   Note that before executing the example, you will have to launch the `VIBes viewer <../visualization/vibes.html>`_.
    You should obtain a graphical output corresponding to a set inversion.
 
 

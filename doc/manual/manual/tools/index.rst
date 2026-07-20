@@ -10,3 +10,4 @@ Tools
   registration.rst
   octasym.rst
   sampled_traj_npz.rst
+  threading.rst

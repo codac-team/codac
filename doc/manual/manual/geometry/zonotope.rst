@@ -16,13 +16,13 @@ A zonotope is a convex and symmetric polytope.
 It can be represented as the Minkowski sum of a finite number of line segments, which are called its generators.
 
 In Codac, zonotopes are represented by the class :class:`Zonotope`. A zonotope is defined by its center and its generators.
-The center is a :class:`Vector`, noted :math:`z`, and the generators are stored in a :class:`Matrix`, noted :math:`A`. 
+The center is a :class:`Vector`, noted :math:`\mathbf{c}`, and the generators are stored in a :class:`Matrix`, noted :math:`\mathbf{A}`. 
 Each column of the matrix corresponds to a generator.
 
 The resulting zonotope is:
 
 .. math::
-  Z = z + A \cdot [-1,1]^m
+  Z = \mathbf{c} + \mathbf{A} \cdot [-1,1]^m
 
 Where :math:`m` is the number of generators (i.e., the number of columns of the matrix :math:`A`).
 
@@ -37,24 +37,24 @@ It can be constructed in Codac as follows:
   
   .. code-tab:: py
 
-    z = Vector([1,2])
+    c = Vector([1,2])
     A = Matrix([[1,0,2],[0,1,1]])
 
-    Z = Zonotope(z, A)
+    Z = Zonotope(c, A)
 
   .. code-tab:: c++
 
-    Vector z({1,2});
+    Vector c({1,2});
     Matrix A({{1,0,2},{0,1,1}});
 
-    Zonotope Z(z, A);
+    Zonotope Z(c, A);
 
   .. code-tab:: matlab
 
-    z = Vector({1,2});
+    c = Vector({1,2});
     A = Matrix({{1,0,2},{0,1,1}});
 
-    Z = Zonotope(z,A);
+    Z = Zonotope(c,A);
 
 The resulting zonotope is represented in the figure below:
 

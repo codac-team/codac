@@ -173,6 +173,8 @@ namespace codac2
       static const NodeValue_ outer, outer_complem;
   };
 
+  IntervalVector operator&(const IntervalVector& x, const PavingOut& p);
+
 
   class PavingInOut;
   using PavingInOut_Node = PavingNode<PavingInOut>;

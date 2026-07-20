@@ -220,17 +220,17 @@ namespace codac2
                     "Parallelepiped evaluation requires at least one input.");
 
         IntervalVector Y = this->eval(((typename Wrapper<Args>::Domain)(x)).mid()...);
-        Vector z = Y.mid();
+        Vector c = Y.mid();
 
         Matrix A = this->diff(((typename Wrapper<Args>::Domain)(x)).mid()...).mid();
 
         // Maximum error computation
-        double rho = error_peibos(Y, z, this->diff(x...), A, cart_prod(x...));
+        double rho = error_peibos(Y, c, this->diff(x...), A, cart_prod(x...));
 
         // Inflation of the parallelepiped
         Matrix A_inf = inflate_flat_parallelepiped(A, (cart_prod(x...).template cast<Interval>()).rad(), rho);
 
-        return Parallelepiped(z, A_inf);
+        return Parallelepiped(c, A_inf);
       }
 
       Index output_size() const

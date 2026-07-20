@@ -249,6 +249,26 @@ class TestInterval(unittest.TestCase):
     b = Interval(1,3) & Interval(6,7) # [b] is empty
     c = a+b
     self.assertTrue(c.is_empty())
+
+    # Comparisons
+
+    self.assertTrue((Interval(0,1) < Interval(2,3)) == BoolInterval.TRUE)
+    self.assertTrue((Interval(0,1) < Interval(1,2)) == BoolInterval.UNKNOWN)
+    self.assertTrue((Interval(0,1) < Interval(0,1)) == BoolInterval.UNKNOWN)
+    self.assertTrue((Interval(2,3) < Interval(0,1)) == BoolInterval.FALSE)
+    self.assertTrue((Interval(2,3) < Interval(-oo,2)) == BoolInterval.FALSE)
+    self.assertTrue((Interval(-oo,2) < Interval(3,oo)) == BoolInterval.TRUE)
+    self.assertTrue((Interval.empty() < Interval(0,1)) == BoolInterval.EMPTY)
+    self.assertTrue((Interval(0,1) < Interval.empty()) == BoolInterval.EMPTY)
+
+    self.assertTrue((Interval(2,3) > Interval(0,1)) == BoolInterval.TRUE)
+    self.assertTrue((Interval(1,2) > Interval(0,1)) == BoolInterval.UNKNOWN)
+    self.assertTrue((Interval(0,1) > Interval(0,1)) == BoolInterval.UNKNOWN)
+    self.assertTrue((Interval(0,1) > Interval(2,3)) == BoolInterval.FALSE)
+    self.assertTrue((Interval(-oo,2) > Interval(2,3)) == BoolInterval.FALSE)
+    self.assertTrue((Interval(3,oo) > Interval(-oo,2)) == BoolInterval.TRUE)
+    self.assertTrue((Interval.empty() > Interval(0,1)) == BoolInterval.EMPTY)
+    self.assertTrue((Interval(0,1) > Interval.empty()) == BoolInterval.EMPTY)
       
 if __name__ ==  '__main__':
   unittest.main()

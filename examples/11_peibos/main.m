@@ -5,6 +5,9 @@ currentFilePath = mfilename('fullpath');
 cd(currentDir);
 
 %% 
+set_nb_threads(max_threads());
+
+%% 
 % 2D example of the PEIBOS algorithm
 
 y_2d=VectorVar(2);

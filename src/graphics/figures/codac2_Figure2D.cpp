@@ -240,55 +240,61 @@ void Figure2D::draw_polygon(const Polygon& x, const StyleProperties& style)
 
 void Figure2D::draw_zonotope(const Zonotope& z, const StyleProperties& style)
 {
-   map<double,Vector> sides;
-   for (int i=0; i < z.A.cols(); i++) {
-       auto u = z.A.col(i);
-       assert_release(u.size()==2);
-       if (u==Vector::zero(2)) continue;
-       double theta = std::atan2(u[1],u[0]);
-       Vector v(u);
-       if (theta<=0.0) { theta=theta+PI; v=-v; } 
+  if (!z.is_empty())
+  {
+    map<double,Vector> sides;
+    for (int i=0; i < z.A.cols(); i++) {
+        auto u = z.A.col(i);
+        assert_release(u.size()==2);
+        if (u==Vector::zero(2)) continue;
+        double theta = std::atan2(u[1],u[0]);
+        Vector v(u);
+        if (theta<=0.0) { theta=theta+PI; v=-v; } 
     // Theta in ]0,PI] , v[1]>=0 and if v[1]=0, v[0]<0
-       auto try_insert=sides.insert({theta,v});
-       if (try_insert.second==false) {
-           (try_insert.first)->second += v;
-       }
-   }
-   vector<Vector> vertices;
-   Vector point=z.z;
-   // Start from v[1] maximum (and v[0] min for horizontal side)
-   for (const auto& a : sides) {
-       point+=a.second;
-   }
-   // Turn anticlockwise : first half
-   for (const auto& a : sides) {
-       vertices.push_back(point);
-       point-=2*a.second;
-   }
-   // Turn anticlockwise : second half
-   for (const auto& a : sides) {
-       vertices.push_back(point);
-       point+=2*a.second;
-   }
-   for(const auto& output_fig : _output_figures)
+        auto try_insert=sides.insert({theta,v});
+        if (try_insert.second==false) {
+            (try_insert.first)->second += v;
+        }
+    }
+    vector<Vector> vertices;
+    Vector point=z.c;
+    // Start from v[1] maximum (and v[0] min for horizontal side)
+    for (const auto& a : sides) {
+        point+=a.second;
+    }
+    // Turn anticlockwise : first half
+    for (const auto& a : sides) {
+        vertices.push_back(point);
+        point-=2*a.second;
+    }
+    // Turn anticlockwise : second half
+    for (const auto& a : sides) {
+        vertices.push_back(point);
+        point+=2*a.second;
+    }
+    for(const auto& output_fig : _output_figures)
       output_fig->draw_polygon(vertices,style);
+  }
 }
 
 
 void Figure2D::draw_parallelepiped(const Parallelepiped& p, const StyleProperties& style)
 {
-  assert_release(p.A.is_squared() && p.A.rows() == p.z.size());
-  assert_release(p.z.size() == 2);
+  assert_release(p.A.is_squared() && p.A.rows() == p.c.size());
+  assert_release(p.c.size() == 2);
 
-  auto a1 = p.A.col(0), a2 = p.A.col(1);
+  if (!p.is_empty())
+  {
+    auto a1 = p.A.col(0), a2 = p.A.col(1);
 
-  if (a1.isZero() || a2.isZero())
-      draw_polyline({p.z-a1-a2,p.z+a1+a2}, style);
-  else
-    draw_polygon({
-        p.z+a1+a2, p.z-a1+a2,
-        p.z-a1-a2, p.z+a1-a2
-      }, style);
+    if (a1.isZero() || a2.isZero())
+        draw_polyline({p.c-a1-a2,p.c+a1+a2}, style);
+    else
+      draw_polygon({
+          p.c+a1+a2, p.c-a1+a2,
+          p.c-a1-a2, p.c+a1-a2
+        }, style);
+  }
 }
 
 void Figure2D::draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& style)

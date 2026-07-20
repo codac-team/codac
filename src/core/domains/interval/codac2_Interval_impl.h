@@ -107,6 +107,22 @@ namespace codac2
     return !(*this == x);
   }
 
+  inline BoolInterval Interval::operator<(const Interval& x) const
+  {
+    if(is_empty() || x.is_empty())
+      return BoolInterval::EMPTY;
+    if(this->ub() < x.lb())
+      return BoolInterval::TRUE;
+    if(x.ub() <= this->lb())
+      return BoolInterval::FALSE;
+    return BoolInterval::UNKNOWN;
+  }
+
+  inline BoolInterval Interval::operator>(const Interval& x) const
+  {
+    return x < *this;
+  }
+
   inline double Interval::lb() const
   {
     return gaol::interval::left();

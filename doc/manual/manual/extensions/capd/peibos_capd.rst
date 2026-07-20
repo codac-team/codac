@@ -3,6 +3,10 @@
 PEIBOS-CAPD
 ===========
 
+  Main author: `Maël Godard <https://godardma.github.io>`_
+
+The content from this page supports multi-threading, see :ref:`here <sec-tools-threading>` for details.
+
 When compiling CODAC with the codac-capd extension (see :ref:`here <subsec-extensions-capd-capd-install>`), the CAPD version of the PEIBOS library is also compiled.
 
 Let us consider an initial set :math:`\mathbb{X}_0 \subset \mathbb{R}^n` with its boundary :math:`\partial \mathbb{X}_0`. 
