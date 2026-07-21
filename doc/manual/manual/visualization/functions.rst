@@ -56,9 +56,9 @@ for more information.
 
   .. code-tab:: matlab
 
-    DefaultFigure().draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}),Color().red()); % Red edge
-    DefaultFigure().draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}),StyleProperties({Color().red()})); % Red edge
-    DefaultFigure().draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}),StyleProperties({Color().red(),Color().blue()})); % Red edge and blue fill
+    fig.draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}),Color().red()); % Red edge
+    fig.draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}),StyleProperties({Color().red()})); % Red edge
+    fig.draw_box(IntervalVector({{2.2,2.5},{2.2,2.5}}),StyleProperties({Color().red(),Color().blue()})); % Red edge and blue fill
 
 
 A line style and a layer can be added to the StyleProperties object, see :ref:`the dedicated page <sec-graphics-colors>` for more information.

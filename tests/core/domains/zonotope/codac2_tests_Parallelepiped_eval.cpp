@@ -28,17 +28,17 @@ TEST_CASE("Parallelepiped_eval")
   auto p1a = f1.parallelepiped_eval(Interval(-0.1,0.1));
   auto p1b = f1.parallelepiped_eval(1.0);
 
-  CHECK(Approx(p1a.z,1e-6) == Vector({0,0}));
+  CHECK(Approx(p1a.c,1e-6) == Vector({0,0}));
   CHECK(Approx(p1a.A,1e-6) == Matrix({{0.12,0},{0,0.02}}));
-  CHECK(Approx(p1b.z,1e-6) == Vector({1,1}));
+  CHECK(Approx(p1b.c,1e-6) == Vector({1,1}));
   CHECK(Approx(p1b.A,1e-6) == Matrix({{0,0},{0,0}}));
 
   auto pa = f2.parallelepiped_eval(Interval(-0.1,0.1), Interval(-0.1,0.1));
   auto pb = f2.parallelepiped_eval(1.0, Interval(-1,1));
 
-  CHECK(Approx(pa.z,1e-6) == Vector({0,0,0}));
+  CHECK(Approx(pa.c,1e-6) == Vector({0,0,0}));
   CHECK(Approx(pa.A,1e-6) == Matrix({{0.14,0,0},{0,0.14,0},{0,0,0.04}}));
-  CHECK(Approx(pb.z,1e-6) == Vector({1,0,1}));
+  CHECK(Approx(pb.c,1e-6) == Vector({1,0,1}));
   CHECK(Approx(pb.A,1e-5) == Matrix({{0.894428,0,1.78886},{0,3,0},{1.78886,0,-0.894427}}));
 
 
@@ -55,7 +55,7 @@ TEST_CASE("Parallelepiped_eval")
         auto p2 = f2.parallelepiped_eval(X0,Y0);
         auto p3 = f3.parallelepiped_eval(IntervalVector({X0,Y0}));
 
-        CHECK(Approx(p2.z,1e-6) == p3.z);
+        CHECK(Approx(p2.c,1e-6) == p3.c);
         CHECK(Approx(p2.A,1e-6) == p3.A);
         y0+=dx;
       }

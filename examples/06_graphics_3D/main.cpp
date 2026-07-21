@@ -38,7 +38,9 @@ int main()
 
 
   Figure3D fig_examples("3D examples");
-  fig_examples.draw_axes(1.0);
+  fig_examples.draw_axes();
+  fig_examples.draw_axes(0.5);
+  fig_examples.draw_axes(2.0,{0.5,0.5,0.5});
   fig_examples.draw_triangle({1,0,0},{0,1,0},{0,0,1},{ Color::dark_green(0.5), "triangle1" });
   fig_examples.draw_triangle({2,0,0},{{-1,0,0},{0,1,1},{0,0,-1}},
 		{1,0,0},{0,1,0},{0,0,1},Color::purple(0.5));

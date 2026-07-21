@@ -110,6 +110,7 @@
     separators/codac2_py_SepInter.cpp
     separators/codac2_py_SepInverse.cpp
     separators/codac2_py_SepNot.cpp
+    separators/codac2_py_SepPolarCart.cpp
     separators/codac2_py_SepPolygon.cpp
     separators/codac2_py_SepProj.cpp
     separators/codac2_py_SepQInter.cpp

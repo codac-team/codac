@@ -35,7 +35,7 @@ jobs:
             - { os: windows-2022    , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 8 , desc: 'Windows Visual Studio 2022 x64 Python 3.8' }
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         submodules: true
         fetch-depth: 0
@@ -56,7 +56,7 @@ jobs:
       if: runner.os=='Windows'
     #- run: choco install -y -r --no-progress eigen --version=3.4.0.20240224 ${{ matrix.cfg.choco_flags }}
     #  if: runner.os=='Windows'
-    - run: choco install -y -r --no-progress graphviz doxygen.install & python -m pip install --upgrade pip & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects furo sphinx-math-dollar sympy
+    - run: choco install -y -r --no-progress graphviz doxygen.install & python -m pip install --upgrade pip & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
       if: runner.os=='Windows'
     - run: |
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20250626/ibex.2.8.9.20250626.nupkg --no-check-certificate -nv

@@ -105,19 +105,19 @@ void Figure3D::draw_parallelogram(const Vector &c, const Matrix &A,
 
 void Figure3D::draw_parallelepiped(const Parallelepiped& p, const StyleProperties& style)
 {
-  assert_release(p.z.size() == 3);
+  assert_release(p.c.size() == 3);
   assert_release(p.A.rows() == 3 && p.A.cols() == 3);
 
   this->set_style_internal(style);
 
-  size_t ip0 = this->move_write_v(p.z,p.A,Vector({-1,-1,-1}));
-  size_t ip1 = this->move_write_v(p.z,p.A,Vector({-1,-1,1}));
-  size_t ip2 = this->move_write_v(p.z,p.A,Vector({-1,1,-1}));
-  size_t ip3 = this->move_write_v(p.z,p.A,Vector({-1,1,1}));
-  size_t ip4 = this->move_write_v(p.z,p.A,Vector({1,-1,-1}));
-  size_t ip5 = this->move_write_v(p.z,p.A,Vector({1,-1,1}));
-  size_t ip6 = this->move_write_v(p.z,p.A,Vector({1,1,-1}));
-  size_t ip7 = this->move_write_v(p.z,p.A,Vector({1,1,1}));
+  size_t ip0 = this->move_write_v(p.c,p.A,Vector({-1,-1,-1}));
+  size_t ip1 = this->move_write_v(p.c,p.A,Vector({-1,-1,1}));
+  size_t ip2 = this->move_write_v(p.c,p.A,Vector({-1,1,-1}));
+  size_t ip3 = this->move_write_v(p.c,p.A,Vector({-1,1,1}));
+  size_t ip4 = this->move_write_v(p.c,p.A,Vector({1,-1,-1}));
+  size_t ip5 = this->move_write_v(p.c,p.A,Vector({1,-1,1}));
+  size_t ip6 = this->move_write_v(p.c,p.A,Vector({1,1,-1}));
+  size_t ip7 = this->move_write_v(p.c,p.A,Vector({1,1,1}));
 
   _file << "f " << ip0 << " " << ip1 << " " << ip3 << " " << ip2 << "\n";
   _file << "f " << ip4 << " " << ip5 << " " << ip7 << " " << ip6 << "\n";
@@ -137,7 +137,7 @@ void Figure3D::draw_box(const IntervalVector& x, const StyleProperties& style)
 }
 
 void Figure3D::draw_zonotope(const Zonotope& z, const StyleProperties& style) {
-  assert_release(z.z.size() == 3);
+  assert_release(z.c.size() == 3);
    Matrix id = Matrix::Identity(3,3);
    this->set_style_internal(style);
    lock_style=true;
@@ -186,8 +186,8 @@ void Figure3D::draw_zonotope(const Zonotope& z, const StyleProperties& style) {
                   R1 -= Ak;
                }
           }
-          this->draw_parallelogram(z.z,id,R1+R2,Ai,Aj,style);
-          this->draw_parallelogram(z.z,id,-R1+R2,Ai,Aj,style);
+          this->draw_parallelogram(z.c,id,R1+R2,Ai,Aj,style);
+          this->draw_parallelogram(z.c,id,-R1+R2,Ai,Aj,style);
        }
     }
     lock_style=false;
@@ -214,10 +214,11 @@ void Figure3D::draw_arrow(const Vector& c, const Matrix &A,
 }
 
 
-void Figure3D::draw_axes(double size)
+void Figure3D::draw_axes(double size, const Vector& origin)
 {
+  assert_release(origin.size()==3);
   const std::string name="axes";
-  Vector z = Vector::zero(3);
+  Vector z = origin;
   // X axis
   Matrix AX = Matrix::Identity(3,3);
   draw_arrow(z,size*AX,StyleProperties(Color::red(),name));

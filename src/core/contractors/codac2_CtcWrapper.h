@@ -29,7 +29,7 @@ namespace codac2
       void contract(X& x) const
       {
         assert_release(x.size() == this->size());
-        x = _y & x;
+        x = x & _y;
       }
 
     protected:

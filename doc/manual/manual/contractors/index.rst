@@ -10,6 +10,7 @@ Contractors, separators
   CtcDist <geometric/ctcdist>
   CtcPolar <geometric/ctcpolar>
   CtcVisible <geometric/ctcvisible>
+  CtcWrapper <shape/ctcwrapper>
 
 ..   What are contractors? <http://codac.io>
 ..   The Ctc class <http://codac.io>
@@ -109,7 +110,7 @@ Overview of contractors and separators
    * - ``CtcCtcBoundary``
      - ``SepCtcBoundary``
 
-   * - ``CtcWrapper``
+   * - :ref:`CtcWrapper <sec-ctc-shape-ctcwrapper>`
      - ``SepWrapper``
 
    * - ``CtcImage``

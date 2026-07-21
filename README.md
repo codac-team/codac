@@ -81,8 +81,8 @@ This list is in alphabetical order by surname.
 - [Peter Franek](http://www.cs.cas.cz/~franek)
 - [Maël Godard](https://godardma.github.io)
 - [Nuwan Herath M.](https://members.loria.fr/NHerathMudiyanselage)
-- [Luc Jaulin](https://www.ensta-bretagne.fr/jaulin)
-- [Fabrice Le Bars](https://www.ensta-bretagne.fr/lebars)
+- [Luc Jaulin](https://webperso.ensta.fr/jaulin)
+- [Fabrice Le Bars](https://webperso.ensta.fr/lebars)
 - [Morgan Louédec](https://morgan-louedec.fr)
 - [Damien Massé](https://lab-sticc.univ-brest.fr/~dmasse)
 - [Bertrand Neveu](http://imagine.enpc.fr/~neveub)
@@ -91,7 +91,7 @@ This list is in alphabetical order by surname.
 - [Simon Rohou](http://simon-rohou.fr/research)
 - [Joris Tillet](https://perso.ensta-paris.fr/~tillet/)
 - [Gilles Trombettoni](https://www.lirmm.fr/~trombetton)
-- [Christophe Viel](https://www.ensta-bretagne.fr/viel/)
+- [Christophe Viel](https://webperso.ensta.fr/viel/)
 - [Raphael Voges](https://raphael-voges.de)
 
 We appreciate all contributions, whether they are code, documentation, bug reports, or suggestions. If you believe you should be listed here and are not, please contact us to update the list.

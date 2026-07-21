@@ -76,6 +76,14 @@ py::class_<Interval> export_Interval(py::module& m)
       BOOL_INTERVAL_OPERATORNEQ_CONST_INTERVAL_REF_CONST,
       "x"_a)
 
+    .def(py::self < py::self,
+      BOOLINTERVAL_INTERVAL_OPERATOR__CONST_INTERVAL_REF_CONST,
+      "x"_a)
+
+    .def(py::self > py::self,
+      BOOLINTERVAL_INTERVAL_OPERATOR_CONST_INTERVAL_REF_CONST,
+      "x"_a)
+
     .def("lb", &Interval::lb,
       DOUBLE_INTERVAL_LB_CONST)
 

@@ -255,7 +255,7 @@ User manual
       * CtcCross / CtcNoCross
    * Shape contractors
       * CtcCtcBoundary
-      * CtcWrapper
+      * :ref:`sec-ctc-shape-ctcwrapper`
       * CtcImage
       * CtcDiscreteSet
    * Temporal contractors
@@ -317,8 +317,8 @@ User manual
    * :ref:`sec-zonotope`
    * Polyhedron
 
-* :ref:`sec-actions`
-   * :ref:`sec-actions-octasym`
+* :ref:`sec-tools`
+   * :ref:`sec-tools-octasym`
 
 * :ref:`sec-ellipsoids`
    * :ref:`sec-ellipsoids-intro`

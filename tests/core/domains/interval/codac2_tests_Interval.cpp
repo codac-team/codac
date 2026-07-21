@@ -281,6 +281,27 @@ TEST_CASE("Interval - other tests")
   CHECK(Approx(a.second,1e-7) == Interval(2,10));
 }
 
+TEST_CASE("Interval - comparison")
+{
+  CHECK((Interval(0,1) < Interval(2,3)) == BoolInterval::TRUE);
+  CHECK((Interval(0,1) < Interval(1,2)) == BoolInterval::UNKNOWN);
+  CHECK((Interval(0,1) < Interval(0,1)) == BoolInterval::UNKNOWN);
+  CHECK((Interval(2,3) < Interval(0,1)) == BoolInterval::FALSE);
+  CHECK((Interval(2,3) < Interval(-oo,2)) == BoolInterval::FALSE);
+  CHECK((Interval(-oo,2) < Interval(3,oo)) == BoolInterval::TRUE);
+  CHECK((Interval::empty() < Interval(0,1)) == BoolInterval::EMPTY);
+  CHECK((Interval(0,1) < Interval::empty()) == BoolInterval::EMPTY);
+
+  CHECK((Interval(2,3) > Interval(0,1)) == BoolInterval::TRUE);
+  CHECK((Interval(1,2) > Interval(0,1)) == BoolInterval::UNKNOWN);
+  CHECK((Interval(0,1) > Interval(0,1)) == BoolInterval::UNKNOWN);
+  CHECK((Interval(0,1) > Interval(2,3)) == BoolInterval::FALSE);
+  CHECK((Interval(-oo,2) > Interval(2,3)) == BoolInterval::FALSE);
+  CHECK((Interval(3,oo) > Interval(-oo,2)) == BoolInterval::TRUE);
+  CHECK((Interval::empty() > Interval(0,1)) == BoolInterval::EMPTY);
+  CHECK((Interval(0,1) > Interval::empty()) == BoolInterval::EMPTY);
+}
+
 #if 0
 // Tests from the IBEX lib that are not considered in this file:
 

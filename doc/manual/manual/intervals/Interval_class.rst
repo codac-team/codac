@@ -243,6 +243,20 @@ All standard arithmetic operations are supported in Codac, both element-wise and
     z = x / y              % [1, 3]
 
 
+Interval comparisons
+--------------------
+
+The comparison operators ``<`` and ``>`` are also overloaded for intervals.
+They return a :ref:`BoolInterval value <sec-intervals-boolinterval-class>` rather than a classical Boolean, in order to encode the set of feasible truth values when the exact operands are only known within interval bounds.
+
+For instance, ``x < y`` returns:
+
+- ``BoolInterval.EMPTY`` if one of the two intervals is empty;
+- ``BoolInterval.TRUE`` if :math:`\forall a\in[x],\forall b\in[y],\ a<b`;
+- ``BoolInterval.FALSE`` if :math:`\forall a\in[x],\forall b\in[y],\ a\geqslant b`;
+- ``BoolInterval.UNKNOWN`` otherwise.
+
+
 Unary and binary functions
 --------------------------
 

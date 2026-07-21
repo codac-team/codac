@@ -14,6 +14,10 @@ This page describes how to install the C++ library on Linux, Windows, and macOS.
 Linux Installation
 ------------------
 
+.. admonition:: Linux distributions
+   
+  Ubuntu or Debian-like systems are implied in most of the instructions (especially the ``sudo apt`` commands to install packages).
+
 
 .. Install from packages (latest release)
 .. ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -68,7 +72,7 @@ Steps
 
    These prerequisites can be installed directly with the command::
 
-      sudo apt-get install -y g++ gcc cmake git
+      sudo apt-get install -y build-essential cmake git
 
 2. **Install the IBEX dependency**:
    
@@ -145,7 +149,7 @@ Steps
       cmake ..
       make
 
-   Before executing the example, you will have to launch the VIBes viewer. Then,
+   Before executing the example, you will have to launch the `VIBes viewer <../visualization/vibes.html>`_. Then,
 
    .. code-block:: bash
 
@@ -163,7 +167,11 @@ Install from packages (latest release)
 Using MinGW
 ~~~~~~~~~~~
 
-Check https://community.chocolatey.org/packages/codac.
+.. Check https://community.chocolatey.org/packages/codac.
+
+Install `Chocolatey package manager <https://chocolatey.org/install>`_, run `choco install -y ibex cmake make qtcreator` in PowerShell and then download and extract *e.g.* ``codac_standalone_x64_mingw13.zip`` (for MinGW 13) from https://github.com/codac-team/codac/releases/latest, launch Qt Creator and choose Open Project, open ``example\CMakelists.txt``, ensure Desktop is selected and click Configure Project (might be hidden behind notifications at the bottom-right), wait 10 s then click on the big bottom-left green Run button, and finally check that the graphical output appears.
+
+Note that in order to obtain graphical outputs, you will have to download and run https://github.com/ENSTABretagneRobotics/VIBES/releases/latest/download/VIBes-viewer_x86.exe before running the project.
 
 
 Using Visual Studio
@@ -171,7 +179,7 @@ Using Visual Studio
 
 Download and extract *e.g.* ``codac_standalone_x64_vc17.zip`` (for Visual Studio 2022) from https://github.com/codac-team/codac/releases/latest, open ``example\CMakelists.txt``, choose ``x64-Release`` configuration in Visual Studio (instead of ``x64-Debug``), double-click on ``main.cpp`` in the Solution Explorer and then click on the green Start button, and finally check that the graphical output appears.
 
-Note that in order to obtain graphical outputs, you will have to download and run https://github.com/ENSTABretagneRobotics/VIBES/releases/download/0.2.3/VIBes-0.2.3-win32.exe before running the project.
+Note that in order to obtain graphical outputs, you will have to download and run https://github.com/ENSTABretagneRobotics/VIBES/releases/latest/download/VIBes-viewer_x86.exe before running the project.
 
 
 Install from the sources (latest developments)
@@ -190,15 +198,16 @@ Optionally, for Python binding (*e.g.* ``choco install python --version=3.10.4``
 
 .. code-block:: bash
 
-  choco install doxygen.install --version=1.16
+  choco install doxygen.install --version=1.16.1
   choco install graphviz
   python -m pip install --upgrade pip
   pip install --upgrade wheel setuptools sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs breathe sphinx_togglebutton
 
-The logic to follow will then be similar to Linux (note that for Visual Studio, commands such as ``make install`` need to be replaced with something similar to:
+The logic to follow will then be similar to Linux. You might want to right-click in your desired folder and choose ``Git Bash Here`` to run the commands related to Git and compilation. Note that for Visual Studio, commands such as ``make`` and ``make install`` need to be replaced with something similar to:
 
 .. code-block:: bash
 
+  cmake --build . --config Release
   cmake --build . --config Release --target install
 
 .. warning::
@@ -221,7 +230,7 @@ Install `Homebrew package manager <https://brew.sh/>`_ and then build tools:
   brew install wget autoconf automake libtool
   brew install --cask cmake
 
-Download and extract *e.g.* ``codac_standalone_arm64_monterey.zip`` from `<https://github.com/codac-team/codac/releases/tag/v1.5.6/>`_, then in ``example`` folder run:
+Download and extract *e.g.* ``codac_standalone_arm64_sonoma.zip`` from https://github.com/codac-team/codac/releases/latest, then in ``example`` folder run:
 
 .. code-block:: bash
 
@@ -229,12 +238,12 @@ Download and extract *e.g.* ``codac_standalone_arm64_monterey.zip`` from `<https
 
 and check that the graphical output appears.
 
-.. admonition:: For macOS 12 Monterey
+.. admonition:: Apple silicon vs Intel processors
    
-   For macOS 12 Monterey on a Mac with Apple silicon (arm64 processor), use ``codac_standalone_x86_64_monterey.zip`` for a Mac with an Intel processor (x86_64 processor), see https://support.apple.com/en-us/116943.
+   For *e.g.* macOS 13 Sonoma on a Mac with Apple silicon (arm64 processor), use ``codac_standalone_arm64_sonoma.zip``, while for a Mac with an Intel processor (x86_64 processor) use ``codac_standalone_x86_64_sonoma.zip``, see https://support.apple.com/en-us/116943.
 
 
-Note that in order to obtain graphical outputs, you will have to download and run https://github.com/ENSTABretagneRobotics/VIBES/releases/download/0.2.3/VIBes-0.2.2-osx.dmg before running the project.
+Note that in order to obtain graphical outputs, you will have to download and run https://github.com/ENSTABretagneRobotics/VIBES/releases/latest/download/VIBes-viewer_x86_64.dmg before running the project.
 
 
 
