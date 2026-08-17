@@ -28,7 +28,12 @@ namespace codac2
 
   PavingOut pave(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, double& time, bool verbose)
   {
-    assert_release(eps > 0.);
+    return pave(x0,c,Vector::constant(x0.size(),eps),time,verbose);
+  }
+
+  PavingOut pave(const IntervalVector& x0, const CtcBase<IntervalVector>& c, const Vector& veps, double& time, bool verbose)
+  {
+    assert_release(veps.min_coeff() > 0.);
     assert_release(!x0.is_empty());
     
     clock_t t_start = clock();
@@ -53,9 +58,11 @@ namespace codac2
 
       if(!get<0>(n->boxes()).is_empty())
       {
-        if(get<0>(n->boxes()).max_diam() > eps)
+        IntervalVector w = get<0>(n->boxes()).array() / veps.array();
+
+        if(w.max_diam() > 1.)
         {
-          n->bisect();
+          n->bisect([&w](const IntervalVector& x) { return x.bisect(w.max_diam_index()); });
           l.push_back(n->left());
           l.push_back(n->right());
         }

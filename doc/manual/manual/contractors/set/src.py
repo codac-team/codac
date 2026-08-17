@@ -20,6 +20,8 @@ class TestCtcSetManual(unittest.TestCase):
     c1 = CtcWrapper([[-10,10],[-2,2]])
     c2 = CtcWrapper([[-12,2],[0,4]])
 
+    c3 = CtcInter(c1,c2)
+    # or...
     c3 = c1 & c2
     # c3 is a CtcInter gathering the two contractors.
     # [ctcinter-1-end]

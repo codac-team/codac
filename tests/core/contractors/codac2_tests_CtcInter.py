@@ -34,6 +34,18 @@ class TestCtcInter(unittest.TestCase):
     x = IntervalVector([[0,0],[0,0]])
     x = c3.contract(x)
     self.assertTrue(x == IntervalVector.zero(2))
+    
+    # Testing constructors
+    test_construct_1 = CtcInter(c1,c2)
+    self.assertTrue(test_construct_1.nb() == 2)
+    test_construct_2 = CtcInter(c1,c2,c3) # different types
+    self.assertTrue(test_construct_2.nb() == 3)
+    
+    # Testing constructors (lists)
+    test_construct_1 = CtcInter([c1,c2])
+    self.assertTrue(test_construct_1.nb() == 2)
+    test_construct_2 = CtcInter([c1,c2,c3]) # different types
+    self.assertTrue(test_construct_2.nb() == 3)
 
 if __name__ ==  '__main__':
   unittest.main()

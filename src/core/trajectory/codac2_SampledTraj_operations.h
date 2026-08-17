@@ -93,6 +93,12 @@ namespace codac2
 
   inline Matrix operator_mul_vec(const Matrix& x1, const Vector& x2) { return x1 * x2; }
 
+  inline Vector operator_mul_aff(const Eigen::Affine2d& x1, const Vector& x2)
+  {
+    assert(x2.size() == 2);
+    return x1 * Eigen::Vector2d(x2);
+  }
+
   template<typename T,typename X1,typename X2>
   inline T operator_div(const X1& x1, const X2& x2) { return x1 / x2; }
 
@@ -265,6 +271,14 @@ namespace codac2
     */
   inline SampledTraj<Vector> operator*(const SampledTraj<Matrix>& x1, const SampledTraj<Vector>& x2)
     macro_binary_traj_traj(operator_mul_vec);
+
+  /** \brief \f$x_1(\cdot)\cdot x_2\f$
+    * \param x1
+    * \param x2
+    * \return trajectory output
+    */
+  inline SampledTraj<Vector> operator*(const Eigen::Affine2d& x1, const SampledTraj<Vector>& x2)
+    macro_binary_real_traj(operator_mul_aff);
 
   /**
    * \brief Operates *=

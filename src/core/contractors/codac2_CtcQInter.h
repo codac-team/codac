@@ -21,28 +21,39 @@ namespace codac2
   {
     public:
 
+      CtcQInter(unsigned int q, const Collection<CtcBase<IntervalVector>>& c)
+        : Ctc<CtcQInter,IntervalVector>([&c]() {
+            assert_release(!c.empty());
+            Index n = size_of(c.front());
+            for(const auto& s : c) {
+              assert_release(size_of(s) == n && "all contractors must be of same size");
+            }
+            return n;
+          }()), _q(q), _ctcs(c)
+      {
+        assert_release(q <= c.size());
+      }
+
       explicit CtcQInter(unsigned int q, Index n, const Collection<CtcBase<IntervalVector>>& ctcs = {})
         : Ctc<CtcQInter,IntervalVector>(n), _q(q), _ctcs(ctcs)
       {
+        std::cout << "CtcQInter::CtcQInter(unsigned int q, Index n, ..) is deprecated." << std::endl;
+        std::cout << "Use CtcQInter::CtcQInter(unsigned int q, ..) instead." << std::endl;
         assert_release(n > 0);
+        assert_release(q <= ctcs.size());
       }
 
       template<typename C>
         requires (IsCtcBaseOrPtr<C,IntervalVector> && !std::is_same_v<CtcQInter,C>)
       CtcQInter(unsigned int q, const C& c)
-        : CtcQInter(q, size_of(c), {c})
-      {
-        assert_release(q <= 1);
-      }
+        : CtcQInter(q, {c})
+      { }
 
       template<typename... C>
         requires (IsCtcBaseOrPtr<C,IntervalVector> && ...)
       CtcQInter(unsigned int q, const C&... c)
-        : CtcQInter(q, size_first_item(c...), {c...})
-      {
-        assert_release(all_same_size(c...));
-        assert_release(q <= sizeof...(c));
-      }
+        : CtcQInter(q, {c...})
+      { }
 
       size_t nb() const;
 

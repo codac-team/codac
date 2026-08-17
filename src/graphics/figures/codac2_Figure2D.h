@@ -183,6 +183,13 @@ namespace codac2
       void clear();
 
       /**
+       * \brief Saves the figure to a file
+       * 
+       * \param filename Name of the file to save the figure to
+       */
+      void save(const std::string& filename);
+
+      /**
        * \brief Getter for the scaling factor of the figure
        * 
        * \return The scaling factor of the figure
@@ -713,6 +720,17 @@ namespace codac2
       {
         auto_init();
         selected_fig()->clear();
+      }
+
+      /**
+       * \brief Saves the figure to a file
+       * 
+       * \param filename Name of the file to save the figure to
+       */
+      static void save(const std::string& filename)
+      {
+        auto_init();
+        selected_fig()->save(filename);
       }
 
       // Geometric shapes

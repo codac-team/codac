@@ -93,6 +93,11 @@ void Figure2D_VIBes::clear()
   _layers.clear();
 }
 
+void Figure2D_VIBes::save(const std::string& filename)
+{
+  vibes::saveImage(filename, _fig.name());
+}
+
 void Figure2D_VIBes::draw_point(const Vector& c, const StyleProperties& style)
 {
   assert(_fig.size() <= c.size());

@@ -43,6 +43,21 @@ namespace codac2
         assert_release(all_same_size(c...));
       }
 
+      CtcUnion(const Collection<CtcBase<X...>>& ctcs)
+        : Ctc<CtcUnion<X...>,X...>(ctcs.front()->size()), _ctcs(ctcs)
+      {
+        for(const auto& ci : _ctcs)
+        {
+          assert_release(ci->size() == this->size());
+        }
+      }
+      
+      template<typename C>
+        requires IsCtcBaseOrPtr<C,X...>
+      CtcUnion(std::initializer_list<C> ctcs)
+        : CtcUnion(Collection<CtcBase<X...>>(ctcs))
+      { }
+
       size_t nb() const
       {
         return _ctcs.size();
@@ -144,4 +159,11 @@ namespace codac2
 
   // Template deduction guides
   CtcUnion(Index) -> CtcUnion<IntervalVector>;
+
+  template<typename... C>
+    requires (IsCtcBaseOrPtr<C,IntervalVector> && ...)
+  CtcUnion(const C&...) -> CtcUnion<IntervalVector>;
+
+  template<typename C>
+  CtcUnion(std::initializer_list<C>) -> CtcUnion<IntervalVector>;
 }

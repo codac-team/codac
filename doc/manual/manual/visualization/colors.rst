@@ -128,7 +128,7 @@ Additionnal methods are available for any useful purpose:
     fig.draw_box(IntervalVector({{2.6,3.1},{2.6,3.1}}),StyleProperties({Color({108,90,78},Model().HSV),Color({108,90,78,20},Model().HSV)}));
 
 
-
+.. _subsec-graphics-colors-style-properties:
 StyleProperties
 ---------------
 
@@ -208,6 +208,48 @@ For more information, see :ref:`subsec-graphics-colors-optional-arguments`.
     fig.draw_box(IntervalVector({{2,5},{2,5}}), StyleProperties(Color().red(), "..", "layer1", "w:0.1", "z:1.5"));
     % Red edge, dotted line, line width of 0.1, z-value of 1.5 and on layer1
 
+.. _subsec-graphics-colors-paving-style:
+Paving style
+------------
+
+To change the color used to draw a paving, the ``draw_paving`` functions can take an optional argument which is the ``PavingStyle``.
+Predefined styles are
+
+- blue_green (default_style)
+- blue_white
+- blue_pink
+- black_white
+
+A custom ``PavingStyle`` can also be created from three ``StyleProperties`` : the boundary, the outside and the inside. 
+Below is an example of the different possibilities.
+
+.. tabs::
+
+  .. code-tab:: py
+    
+    DefaultFigure.draw_paving(p)  # default style, blue_green
+    DefaultFigure.draw_paving(p,PavingStyle.blue_pink())  #blue_pink style
+    # orange boundary, purple outside and blue inside
+    paving_style = PavingStyle([Color.dark_orange(),Color.orange()],[Color.dark_purple(),Color.purple()],[Color.dark_blue(),Color.blue()])
+    DefaultFigure.draw_paving(p,paving_style)
+
+
+
+  .. code-tab:: c++
+
+    DefaultFigure::draw_paving(p);
+    DefaultFigure::draw_paving(p,PavingStyle::blue_pink());
+    // orange boundary, purple outside and blue inside
+    PavingStyle paving_style ({Color::dark_orange(),Color::orange()},{Color::dark_purple(),Color::purple()},{Color::dark_blue(),Color::blue()});
+    DefaultFigure::draw_paving(p,paving_style);
+
+  .. code-tab:: matlab
+
+    DefaultFigure().draw_paving(p);
+    DefaultFigure().draw_paving(p,PavingStyle().blue_pink());
+    % orange boundary, purple outside and blue inside
+    paving_style = PavingStyle(StyleProperties({Color().dark_orange(),Color().orange()}),StyleProperties({Color().dark_purple(),Color().purple()}),StyleProperties({Color().dark_blue(),Color().blue()}));
+    DefaultFigure().draw_paving(p,paving_style);
 
 Color maps
 ----------
@@ -299,6 +341,7 @@ You can also create your own color map :
 
 Note that you can add RGB and HSV colors to the same color map. The model of the color map will define the interpolation space.
 
+.. _subsec-graphics-colors-style-gradient-properties:
 StyleGradientProperties
 -----------------------
 

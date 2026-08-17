@@ -1,5 +1,5 @@
-Geometric contractors
-=====================
+Shape contractors
+=================
 
 .. toctree::
 

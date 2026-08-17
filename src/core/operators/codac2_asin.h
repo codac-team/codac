@@ -56,7 +56,7 @@ namespace codac2
     return {
       fwd(x1.a),
       x1.a.is_subset({-1,1}) // def domain of asin
-      && x1.a != 1. // def domain of the derivative of asin
+      && !x1.a.contains(1.) // def domain of the derivative of asin
       && x1.def_domain
     };
   }

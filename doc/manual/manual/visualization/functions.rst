@@ -101,115 +101,175 @@ Paving
 Geometric shapes
 ----------------
 
-.. doxygenfunction:: codac2::Figure2D::draw_point(const Vector&, const StyleProperties&)
-  :project: codac
+All the drawable geometric objects can take a last optionnal argument to set up their stroke color, fill color, line style etc.
+For further details, refer to :ref:`subsec-graphics-colors-style-properties`. 
 
-.. doxygenfunction:: codac2::Figure2D::draw_box(const IntervalVector&, const StyleProperties&)
-  :project: codac
+The geometric shapes that can be drawn and their arguments are listed below :
 
-.. doxygenfunction:: codac2::Figure2D::draw_circle(const Vector&, double, const StyleProperties&)
-  :project: codac
+- draw_point
 
-.. doxygenfunction:: codac2::Figure2D::draw_ring(const Vector&, const Interval&, const StyleProperties&)
-  :project: codac
+  - Vector : 2D coordinate of the point to draw
 
-.. doxygenfunction:: codac2::Figure2D::draw_line(const Vector&, const Vector&, const StyleProperties&)
-  :project: codac
+- draw_box
 
-.. doxygenfunction:: codac2::Figure2D::draw_line(const Segment&, const StyleProperties&)
-  :project: codac
+  - IntervalVector : the 2D box to draw
 
-.. doxygenfunction:: codac2::Figure2D::draw_arrow(const Vector&, const Vector&, float, const StyleProperties&)
-  :project: codac
+- draw_circle
 
-.. doxygenfunction:: codac2::Figure2D::draw_polyline(const std::vector<Vector>&, const StyleProperties&)
-  :project: codac
+  - Vector : the center of the circle
+  - double : the radius of the circle
+  
+- draw_ring
 
-.. doxygenfunction:: codac2::Figure2D::draw_polyline(const std::vector<Vector>&, float, const StyleProperties&)
-  :project: codac
+  - Vector : the center of the ring
+  - Interval : the ring range : inner and outer radius
 
-.. doxygenfunction:: codac2::Figure2D::draw_polygon(const Polygon&, const StyleProperties&)
-  :project: codac
+- draw_pie
 
-.. doxygenfunction:: codac2::Figure2D::draw_parallelepiped(const Parallelepiped&, const StyleProperties&)
-  :project: codac
+  - Vector : the center of the pie
+  - Interval : the pie range : inner and outer radius
+  - Interval : the pie angle : begin and end angle (in radian)
 
-.. doxygenfunction:: codac2::Figure2D::draw_zonotope(const Zonotope&, const StyleProperties&)
-  :project: codac
+- draw_line
 
-.. doxygenfunction:: codac2::Figure2D::draw_pie(const Vector&, const Interval&, const Interval&, const StyleProperties&)
-  :project: codac
+  - Vector : the first point of the line
+  - vector : the second point of the line
 
-.. doxygenfunction:: codac2::Figure2D::draw_ellipse(const Vector&, const Vector&, double, const StyleProperties&)
-  :project: codac
+- draw_line
 
-.. doxygenfunction:: codac2::Figure2D::draw_ellipsoid(const Ellipsoid&, const StyleProperties&)
-  :project: codac
+  - Segment : the segment to draw
+
+- draw_arrow
+
+  - Vector : the first point of the line
+  - vector : the second point of the line
+  - float : the length of the tip of the arrow
+
+- draw_polyline
+
+  - vector<Vector> : vector where each element is a point of the polyline to draw
+
+- draw_polyline
+
+  - vector<Vector> : vector where each element is a point of the polyline to draw
+  - float : the length of the tip of the arrow
+
+- draw_polygone
+
+  - Polygon : the polygon to draw
+
+- draw_parallelepiped
+
+  - Parallelepiped : the parallelepiped to draw
+
+- draw_zonotope
+
+  - Zonotope : the zonotope to draw
+
+- draw_ellipse
+
+  - Vector : center of the ellipse
+  - Vector : Half-lengths of the ellipse
+  - double : rotation angle of the ellipse (in radian)
+
+- draw_ellipsoid
+
+  - Ellipsoid : the ellipsoid to draw
 
 Trajectories and tubes
 ----------------------
 
-.. doxygenfunction:: codac2::Figure2D::draw_trajectory(const SampledTraj<Vector>&, const StyleProperties&)
-  :project: codac
 
-.. doxygenfunction:: codac2::Figure2D::draw_trajectory(const AnalyticTraj<VectorType>&, const StyleProperties&)
-  :project: codac
+All the drawable trajectories and tubes can take a last optionnal argument to set up their stroke color, fill color, line style etc.
+For further details, refer to :ref:`subsec-graphics-colors-style-properties` for constant fill and edge color, 
+and :ref:`subsec-graphics-colors-style-gradient-properties` for the use of a colormap.
 
-Trajectories can be drawn with a ColorMap instead of the classic StyleProperties. This can be done by passing a ColorMap object as the second argument.
+The trajectories and tubes that can be drawn are listed below:
 
-.. doxygenfunction:: codac2::Figure2D::draw_trajectory(const SampledTraj<Vector>&, const StyleGradientProperties&)
-  :project: codac
+- plot_trajectory
 
-.. doxygenfunction:: codac2::Figure2D::draw_trajectory(const AnalyticTraj<VectorType>&, const StyleGradientProperties&)
-  :project: codac
+  - SampledTraj | AnalyticTraj : the 1D trajectory to draw (x-axis is the time)
 
-.. doxygenfunction:: codac2::Figure2D::draw_tube(const SlicedTube<IntervalVector>&, const StyleProperties&, int)
-  :project: codac
+- plot_trajectories
 
-.. doxygenfunction:: codac2::Figure2D::draw_tube(const SlicedTube<IntervalVector>&, const StyleGradientProperties&, int)
-  :project: codac
+  - SampledTraj | AnalyticTraj : the nD trajectory to draw component by component (x-axis is the time)
 
-.. doxygenfunction:: codac2::Figure2D::plot_tube(const SlicedTube<Interval>&, const StyleProperties&)
-  :project: codac
+- plot_tube
 
-.. doxygenfunction:: codac2::Figure2D::plot_tube(const SlicedTube<Interval>&, const SlicedTube<Interval>&, const StyleProperties&)
-  :project: codac
+  - SlicedTube : the 1D tube to draw (x-axis is the time)
+
+- plot_tube
+
+  - SlicedTube : the 1D tube to draw (x-axis is the time)
+  - SlicedTube : the derivative of the tube to draw
+
+- draw_trajectory
+
+  - SampledTraj | AnalyticTraj : the 2D trajectory to draw
+
+- draw_tube
+
+  - SlicedTube : the 2D tube to draw
 
 Vehicles
 --------
 
-.. doxygenfunction:: codac2::Figure2D::draw_tank(const Vector&, float, const StyleProperties&)
-  :project: codac
+All the drawable vehicles can take a last optionnal argument to set up their stroke color, fill color, line style etc.
+For further details, refer to :ref:`subsec-graphics-colors-style-properties`. 
 
-.. doxygenfunction:: codac2::Figure2D::draw_AUV(const Vector&, float, const StyleProperties&)
-  :project: codac
+The vehicles that can be drawn and their arguments are listed below :
 
-.. doxygenfunction:: codac2::Figure2D::draw_motor_boat(const Vector&, float, const StyleProperties&)
-  :project: codac
+- draw_tank
 
-Miscellaneous
--------------
+  - Vector : the 3D state of the tank to draw (x,y,theta in radian)
+  - float : the size of the tank
 
-.. doxygenfunction:: codac2::Figure2D::draw_text(const std::string&, const Vector&, double, const StyleProperties&)
-  :project: codac
+- draw_AUV
 
-.. doxygenfunction:: codac2::Figure2D::draw_raster(const std::string&, const IntervalVector&, const StyleProperties&)
-  :project: codac
+  - Vector : the 3D state of the AUV to draw (x,y,theta in radian)
+  - float : the size of the AUV
+
+- draw_motor_boat
+
+  - Vector : the 3D state of the motor boat to draw (x,y,theta in radian)
+  - float : the size of the motor boat
 
 Paving
 ------
 
-.. doxygenfunction:: codac2::Figure2D::draw_paving(const PavingOut&, const PavingStyle&)
-  :project: codac
+All the drawable pavings can take a last optionnal argument to set up their style for the inside, boundary and outside boxes.
+For further details, refer to :ref:`subsec-graphics-colors-paving-style`. 
 
-.. doxygenfunction:: codac2::Figure2D::draw_paving(const PavingOut&, const std::function<void(Figure2D&,const IntervalVector&,const StyleProperties&)>&, const PavingStyle&)
-  :project: codac
+The paving that can be drawn and their arguments are listed below :
 
-.. doxygenfunction:: codac2::Figure2D::draw_paving(const PavingInOut&, const PavingStyle&)
-  :project: codac
+- draw_paving
 
-.. doxygenfunction:: codac2::Figure2D::draw_paving(const PavingInOut&, const std::function<void(Figure2D&,const IntervalVector&,const StyleProperties&)>&, const PavingStyle&)
-  :project: codac
+  - PavingOut | PavingInOut : the paving to draw
 
-.. doxygenfunction:: codac2::Figure2D::draw_subpaving(const Subpaving<P>&, const StyleProperties&)
-  :project: codac
+- draw_paving
+
+  - PavingOut | PavingInOut : the paving to draw
+  - function(Figure2D,IntervalVector,StyleProperties) : Custom drawing function (for instance, if one wants to draw in polar coordinates)
+
+- draw_subpaving
+
+  - Subpaving : the subpaving to draw
+
+Miscellaneous
+-------------
+
+Other objects can be drawn and can take a last optionnal argument to set up their stroke color, fill color, line style etc.
+For further details, refer to :ref:`subsec-graphics-colors-style-properties`. 
+
+These objects are :
+
+- draw_text
+
+  - string : the text to draw
+  - Vector : the 2D Vector for the position of the top-left corner of the text
+  - float : the scale of the text (VIBes only)
+
+- draw_raster
+
+  - string : The name of the file (the path is relative to the VIBes' server folder)
+  - IntervalVector : The bounding box of the raster

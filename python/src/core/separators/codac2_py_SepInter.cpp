@@ -25,20 +25,33 @@ void export_SepInter(py::module& m, py::class_<SepBase,pySep>& pysep)
   exported
 
     .def(py::init(
-        [](const SepBase& s)
+        [](py::args args)
         {
-          return std::make_unique<SepInter>(s.copy());
-        }),
-      SEPINTER_SEPINTER_CONST_S_REF,
-      "s"_a)
+          Collection<SepBase> seps;
 
-    .def(py::init(
-        [](const SepBase& s1, const SepBase& s2)
-        {
-          return std::make_unique<SepInter>(s1.copy(),s2.copy());
+          auto add = [&seps](py::handle s)
+          {
+            seps.push_back(
+              s.cast<SepBase&>().copy()
+            );
+          };
+
+          // Backward compatibility: SepInter([s1,s2,s3])
+          if(args.size() == 1 && py::isinstance<py::list>(args[0]))
+          {
+            for(const auto& s : args[0].cast<py::list>())
+              add(s);
+          }
+          else
+          {
+            // New syntax: SepInter(s1,s2,s3)
+            for(const auto& s : args)
+              add(s);
+          }
+
+          return std::make_unique<SepInter>(seps);
         }),
-      SEPINTER_SEPINTER_CONST_S_REF_VARIADIC,
-      "s1"_a, "s2"_a)
+      SEPINTER_SEPINTER_CONST_COLLECTION_SEPBASE_REF)
 
     .def("nb", &SepInter::nb,
       SIZET_SEPINTER_NB_CONST)
@@ -47,11 +60,30 @@ void export_SepInter(py::module& m, py::class_<SepBase,pySep>& pysep)
       BOXPAIR_SEPINTER_SEPARATE_CONST_INTERVALVECTOR_REF_CONST,
       "x"_a)
 
-    .def("__iand__", [](SepInter& s1, const SepBase& s2)
-        {
-          s1 &= s2.copy();
-          return s1;
-        },
-      SEPINTER_REF_SEPINTER_OPERATORINTEREQ_CONST_S_REF)
-  ;
+    ;
+
+    if constexpr(!FOR_MATLAB)
+    {
+      exported
+
+      .def("__iand__", [](SepInter& s1, const SepBase& s2)
+          {
+            s1 &= s2.copy();
+            return s1;
+          },
+        SEPINTER_REF_SEPINTER_OPERATORINTEREQ_CONST_S_REF)
+      ;
+    }
+
+    if constexpr(FOR_MATLAB)
+    {
+      exported
+      .def("self_inter", [](SepInter& s1, const SepBase& s2)
+          {
+            s1 &= s2.copy();
+            return s1;
+          },
+        SEPINTER_REF_SEPINTER_OPERATORINTEREQ_CONST_S_REF)    
+      ;
+    }
 }

@@ -48,9 +48,9 @@ int main()
 		{ Color::yellow(0.6), "sphere" });
   fig_examples.draw_arrow({0,2,0},{{-1,0,0},{0,1,1},{0,0,-1}},
 		Color::red(1.0));
-  fig_examples.draw_car({-1,0,0},0.3*Matrix::Identity(3,3),
+  fig_examples.draw_car({-1,0,0},0.3*Matrix::eye(3,3),
 		{ Color::green(0.8), "car" });
-  fig_examples.draw_plane({3,0,0},0.5*Matrix::Identity(3,3),true,
+  fig_examples.draw_plane({3,0,0},0.5*Matrix::eye(3,3),true,
 		{ Color::dark_gray(0.8), "plane" });
 
 
@@ -69,7 +69,7 @@ int main()
     {{1,0,0},{0,0.5,0},{0,0.2,0.1}}},
     { Color::blue(0.5), "parallelepiped" });
 
-  fig_examples.draw_surface({0,-2,0}, 0.5*Matrix::Identity(3,3), Interval(0,2*PI),
+  fig_examples.draw_surface({0,-2,0}, 0.5*Matrix::eye(3,3), Interval(0,2*PI),
 		0.05*PI, Interval(0,2*PI), 0.05*PI,
 		[](double phi,double psi) -> Vector
 		{ return {(1-cos(phi))*sin(phi),

@@ -27,7 +27,7 @@ fig_examples.draw_axes(0.5)
 fig_examples.draw_axes(2.0,[0.5,0.5,0.5])
 fig_examples.draw_triangle([1,0,0],[0,1,0],[0,0,1],StyleProperties(Color.dark_green(0.5),"triangle"))
 fig_examples.draw_triangle([2,0,0],
-                        Matrix([[2,0,0],[-1,0,0],[0,1,1]]),
+                        Matrix([[-1,0,0],[0,1,1],[0,0,-1]]),
                             [1,0,0],[0,1,0],[0,0,1],Color.purple(0.5))
 fig_examples.draw_sphere([0,0,2],Matrix([[-1,0,0],[0,1,1],[0,0,-1]]),
                             StyleProperties(Color.yellow(0.6),"sphere"))

@@ -111,7 +111,7 @@ namespace codac2
        *
        * \param ctcs Collection of contractors sequentially.
        */
-      CtcInter(const Collection<CtcBase<IntervalVector>>& ctcs)
+      CtcInter(const Collection<CtcBase<X...>>& ctcs)
         : Ctc<CtcInter<X...>,X...>(ctcs.front()->size()), _ctcs(ctcs)
       {
         for(const auto& ci : _ctcs)
@@ -119,6 +119,19 @@ namespace codac2
           assert_release(ci->size() == this->size());
         }
       }
+
+      /**
+       * \brief Builds an intersection contractor from a std::initializer_list of contractors.
+       *
+       * All contractors must act on contracted objects of the same size.
+       *
+       * \param ctcs list of contractors.
+       */
+      template<typename C>
+        requires IsCtcBaseOrPtr<C,X...>
+      CtcInter(std::initializer_list<C> ctcs)
+        : CtcInter(Collection<CtcBase<X...>>(ctcs))
+      { }
 
       /**
        * \brief Returns the number of stored contractors.
@@ -302,4 +315,11 @@ namespace codac2
   // Template deduction guides
 
   CtcInter(Index) -> CtcInter<IntervalVector>;
+
+  template<typename... C>
+    requires (IsCtcBaseOrPtr<C,IntervalVector> && ...)
+  CtcInter(const C&...) -> CtcInter<IntervalVector>;
+
+  template<typename C>
+  CtcInter(std::initializer_list<C>) -> CtcInter<IntervalVector>;
 }

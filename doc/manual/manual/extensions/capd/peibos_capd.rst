@@ -31,7 +31,7 @@ The PEIBOS function takes at least six arguments :
 - The final time for the integration of the ODE.
 - A timestep to get intermediate states.
 - The inverse chart for the gnomonic atlas (an analytic function).
-- The list of symmetries for the gnomonic atlas. Note that each symmetry is represented as a hyperoctahedral symmetry, see :ref:`sec-actions-octasym`.
+- The list of symmetries for the gnomonic atlas. Note that each symmetry is represented as a hyperoctahedral symmetry, see :ref:`sec-tools-octasym`.
 - A resolution :math:`\epsilon`. The initial box :math:`\left[-1,1\right]^m` will initiallly be splitted in boxes with a diameter smaller than :math:`\epsilon`.
 - Eventually an offset vector can be specified if the initial set is not centered around the origin.
 - Eventually a flag can be set to True to get the verbose.

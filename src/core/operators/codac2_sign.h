@@ -55,7 +55,7 @@ namespace codac2
   {
     return {
       fwd(x1.a),
-      x1.def_domain && x1.a != 0. // def domain of the derivative of sign
+      x1.def_domain && !x1.a.contains(0.) // def domain of the derivative of sign
     };
   }
 
@@ -68,7 +68,7 @@ namespace codac2
       fwd(x1.m),
       fwd(x1.a),
       IntervalMatrix::zero(1,x1.da.size()),
-      x1.def_domain && x1.a != 0. // def domain of the derivative of sign
+      x1.def_domain && !x1.a.contains(0.) // def domain of the derivative of sign
     };
   }
 

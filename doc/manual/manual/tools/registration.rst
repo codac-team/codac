@@ -72,7 +72,7 @@ The following example estimates a transformation between two sampled trajectorie
 
     dst_estim = SampledTraj_Vector()
     for ti,src_i in src:
-      dst_estim.set(ti, tr*src_i)
+      dst_estim.set(tr*src_i, ti)
 
   .. code-tab:: c++
 
@@ -108,7 +108,7 @@ The following example estimates a transformation between two sampled trajectorie
 
       SampledTraj<Vector> dst_estim;
       for(const auto& [ti,src_i] : src)
-        dst_estim.set(ti, tr*Eigen::Vector2d(src_i));
+        dst_estim.set(tr*Eigen::Vector2d(src_i), ti);
 
 
 .. figure:: registration.png

@@ -13,7 +13,7 @@ Basic usage
 -----------
 
 The most common way to create an intersection contractor is to combine two existing
-contractors with ``&``.
+contractors using ``&`` or the ``CtcInter`` constructor.
 
 .. tabs::
 
@@ -23,7 +23,7 @@ contractors with ``&``.
       :language: py
       :start-after: [ctcinter-1-beg]
       :end-before: [ctcinter-1-end]
-      :dedent: 2
+      :dedent: 4
 
   .. group-tab:: C++
 
@@ -33,7 +33,8 @@ contractors with ``&``.
       :end-before: [ctcinter-1-end]
       :dedent: 2
 
-Once built, the contractor can be applied as any other box contractor.
+| A ``CtcInter`` can also be built from a Python/C++ list of contractor objects.
+| Once built, the contractor can be called as any other box contractor.
 
 .. tabs::
 
@@ -43,7 +44,7 @@ Once built, the contractor can be applied as any other box contractor.
       :language: py
       :start-after: [ctcinter-2-beg]
       :end-before: [ctcinter-2-end]
-      :dedent: 2
+      :dedent: 4
 
   .. group-tab:: C++
 

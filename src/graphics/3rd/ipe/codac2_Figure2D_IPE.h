@@ -73,6 +73,13 @@ namespace codac2
       void clear();
 
       /**
+       * \brief Saves the figure to a file
+       * 
+       * \param filename Name of the file to save the figure to
+       */
+      void save(const std::string& filename);
+
+      /**
        * \brief Begins a new path in the IPE file
        * 
        * \param style the style properties for the path (color, line width, etc.)

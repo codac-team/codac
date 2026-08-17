@@ -23,6 +23,7 @@ namespace codac2
   PavingOut pave(const IntervalVector& x0, std::shared_ptr<const CtcBase<IntervalVector>> c, double eps, bool verbose = false);
   PavingOut pave(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, double& time, bool verbose = false);
   PavingOut pave(const IntervalVector& x0, const CtcBase<IntervalVector>& c, double eps, bool verbose = false);
+  PavingOut pave(const IntervalVector& x0, const CtcBase<IntervalVector>& c, const Vector& v_eps, double& time, bool verbose = false);
 
   PavingInOut pave(const IntervalVector& x0, std::shared_ptr<const SepBase> s, double eps, bool verbose = false);
   PavingInOut pave(const IntervalVector& x0, const SepBase& s, double eps, bool verbose = false);

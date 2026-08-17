@@ -109,6 +109,10 @@ void export_Figure2D(py::module& m)
 
     .def("clear", &Figure2D::clear,
       VOID_FIGURE2D_CLEAR)
+
+    .def("save", &Figure2D::save,
+      VOID_FIGURE2D_SAVE_CONST_STRING_REF,
+      "filename"_a)
   
     .def("scaled_unit", &Figure2D::scaled_unit,
       DOUBLE_FIGURE2D_SCALED_UNIT_CONST)

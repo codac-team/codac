@@ -25,34 +25,35 @@ void export_CtcQInter(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInt
   exported
 
     .def(py::init(
-        [](unsigned int q, const CtcBase<IntervalVector>& c)
+        [](Index q, py::args args)
         {
-          return std::make_unique<CtcQInter>(q,
-            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c.copy()));
+          matlab::test_integer(q);
+          Collection<CtcBase<IntervalVector>> ctcs;
+
+          auto add = [&ctcs](py::handle c)
+          {
+            ctcs.push_back(
+              c.cast<CtcBase<IntervalVector>&>().copy()
+            );
+          };
+
+          // Backward compatibility: CtcQInter(q, [c1,c2,c3])
+          if(args.size() == 1 && py::isinstance<py::list>(args[0]))
+          {
+            for(const auto& c : args[0].cast<py::list>())
+              add(c);
+          }
+          else
+          {
+            // New syntax: CtcQInter(q, c1,c2,c3)
+            for(const auto& c : args)
+              add(c);
+          }
+
+          return std::make_unique<CtcQInter>(q, ctcs);
         }),
       CTCQINTER_CTCQINTER_UNSIGNED_INT_CONST_C_REF,
-      "q"_a, "c"_a)
-
-    .def(py::init(
-        [](unsigned int q, const CtcBase<IntervalVector>& c1, const CtcBase<IntervalVector>& c2)
-        {
-          return std::make_unique<CtcQInter>(q,
-            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c1.copy()),
-            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c2.copy()));
-        }),
-      CTCQINTER_CTCQINTER_UNSIGNED_INT_CONST_C_REF_VARIADIC,
-      "q"_a, "c1"_a, "c2"_a)
-
-    .def(py::init(
-        [](unsigned int q, const CtcBase<IntervalVector>& c1, const CtcBase<IntervalVector>& c2, const CtcBase<IntervalVector>& c3)
-        {
-          return std::make_unique<CtcQInter>(q,
-            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c1.copy()),
-            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c2.copy()),
-            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c3.copy()));
-        }),
-      CTCQINTER_CTCQINTER_UNSIGNED_INT_CONST_C_REF_VARIADIC,
-      "q"_a, "c1"_a, "c2"_a, "c3"_a)
+      "q"_a)
 
     .def("nb", &CtcQInter::nb,
       SIZET_CTCQINTER_NB_CONST)

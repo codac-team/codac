@@ -35,6 +35,14 @@ namespace codac2
         : std::list<std::shared_ptr<T>>(init)
       { }
 
+      template<typename T_>
+        requires std::is_base_of_v<T,T_>
+      Collection(std::initializer_list<T_> x)
+      {
+        for(const auto& xi : x)
+          this->push_back(xi);
+      }
+
       Collection(const Collection<T>& c)
         : std::list<std::shared_ptr<T>>()
       {

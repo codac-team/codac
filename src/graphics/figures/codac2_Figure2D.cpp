@@ -111,6 +111,12 @@ void Figure2D::clear()
     output_fig->clear();
 }
 
+void Figure2D::save(const std::string& filename)
+{
+  for(const auto& output_fig : _output_figures)
+    output_fig->save(filename);
+}
+
 double Figure2D::scaled_unit() const
 {
   return std::max(_axes[0].limits.diam(),_axes[1].limits.diam()) / _window_size.max_coeff();

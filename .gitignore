@@ -69,6 +69,10 @@ wheelhouse/
 
 # Graphics files
 examples/**/*.xml
+examples/**/*.bmp
+examples/**/*.png
+examples/**/*.jpg
+examples/**/*.svg
 *.ipe
 
 # Matlab files

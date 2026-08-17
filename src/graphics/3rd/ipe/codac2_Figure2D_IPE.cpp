@@ -16,7 +16,7 @@ using namespace std;
 using namespace codac2;
 
 Figure2D_IPE::Figure2D_IPE(const Figure2D& fig)
-  : OutputFigure2D(fig), _f(fig.name() + ".xml"),
+  : OutputFigure2D(fig),
     _x_offset(0.03*_fig.axes()[0].limits.diam()),
     _y_offset(0.03*_fig.axes()[1].limits.diam())
 {
@@ -25,23 +25,7 @@ Figure2D_IPE::Figure2D_IPE(const Figure2D& fig)
 
 Figure2D_IPE::~Figure2D_IPE()
 { 
-  draw_axes();
-  print_header_page();
-  _f.close();
-
-  _f = std::ofstream(_fig.name() + ".xml", std::ofstream::binary | std::ofstream::app);
-  std::ifstream f_temp_content(_fig.name() + "_tmp.xml", std::ofstream::binary);
-
-  for (const auto& item : _items)
-    _f << item.second;
-    
-  f_temp_content.close();
-  std::remove((_fig.name() + "_tmp.xml").c_str());
-  _f.close();
-
-  _f = std::ofstream(_fig.name() + ".xml", std::ofstream::app);
-  _f << "\n</page>\n</ipe>";
-  _f.close();
+  save(_fig.name()+".");
 }
 
 void Figure2D_IPE::init_figure()
@@ -172,6 +156,8 @@ void Figure2D_IPE::update_axes()
     _ipe_grid_size/(_fig.axes()[0].limits.diam()+_x_offset),
     _ipe_grid_size/(_fig.axes()[1].limits.diam()+_y_offset)
   };
+  
+  draw_axes();
 }
 
 void Figure2D_IPE::update_window_properties()
@@ -190,8 +176,24 @@ void Figure2D_IPE::clear()
   // clear _color map and layers
   _colors.clear();
   _layers.clear();
+  _items.clear();
 
   init_figure();
+}
+
+void Figure2D_IPE::save(const std::string& filename)
+{
+  std::size_t dot_position = filename.find_last_of('.');
+  std::string file_name = filename.substr(0, dot_position);
+  _f = std::ofstream(file_name + ".xml", std::ofstream::binary | std::ofstream::app);
+
+  print_header_page();
+
+  for (const auto& item : _items)
+    _f << item.second;
+    
+  _f << "\n</page>\n</ipe>";
+  _f.close();
 }
 
 std::string ipe_str(const Color& c)

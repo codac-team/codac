@@ -82,7 +82,7 @@ namespace codac2
   {
     return {
       fwd(x1.a, x2.a),
-      x1.def_domain && x2.def_domain && x2.a != 0. // def domain of the derivative of div
+      x1.def_domain && x2.def_domain && !x2.a.contains(0.) // def domain of the derivative of div
     };
   }
 
@@ -101,7 +101,7 @@ namespace codac2
       fwd(x1.m, x2.m),
       fwd(x1.a, x2.a),
       d,
-      x1.def_domain && x2.def_domain && x2.a != 0. // def domain of the derivative of div
+      x1.def_domain && x2.def_domain && !x2.a.contains(0.) // def domain of the derivative of div
     };
   }
 
@@ -128,7 +128,7 @@ namespace codac2
   {
     return {
       fwd(x1.a, x2.a),
-      x1.def_domain && x2.def_domain && x2.a != 0. // def domain of the derivative of div
+      x1.def_domain && x2.def_domain && !x2.a.contains(0.) // def domain of the derivative of div
     };
   }
 
@@ -149,7 +149,7 @@ namespace codac2
       fwd(x1.m, x2.m),
       fwd(x1.a, x2.a),
       d,
-      x1.def_domain && x2.def_domain && x2.a != 0. // def domain of the derivative of div
+      x1.def_domain && x2.def_domain && !x2.a.contains(0.) // def domain of the derivative of div
     };
   }
 
@@ -169,7 +169,7 @@ namespace codac2
   {
     return {
       fwd(x1.a, x2.a),
-      x1.def_domain && x2.def_domain && x2.a != 0. // def domain of the derivative of div
+      x1.def_domain && x2.def_domain && !x2.a.contains(0.) // def domain of the derivative of div
     };
   }
 
@@ -191,7 +191,7 @@ namespace codac2
       fwd(x1.m, x2.m),
       fwd(x1.a, x2.a),
       d, 
-      x1.def_domain && x2.def_domain && x2.a != 0. // def domain of the derivative of div
+      x1.def_domain && x2.def_domain && !x2.a.contains(0.) // def domain of the derivative of div
     };
   }
 

@@ -29,23 +29,33 @@ void export_CtcUnion(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInte
       "n"_a)
 
     .def(py::init(
-        [](const CtcBase<IntervalVector>& c)
+        [](py::args args)
         {
-          return std::make_unique<CtcUnion<IntervalVector>>(
-            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c.copy()));
-        }),
-      CTCUNION_X_CTCUNION_CONST_C_REF,
-      "c"_a)
+          Collection<CtcBase<IntervalVector>> ctcs;
 
-    .def(py::init(
-        [](const CtcBase<IntervalVector>& c1, const CtcBase<IntervalVector>& c2)
-        {
-          return std::make_unique<CtcUnion<IntervalVector>>(
-            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c1.copy()),
-            std::dynamic_pointer_cast<CtcBase<IntervalVector>>(c2.copy()));
+          auto add = [&ctcs](py::handle c)
+          {
+            ctcs.push_back(
+              c.cast<CtcBase<IntervalVector>&>().copy()
+            );
+          };
+
+          // Backward compatibility: CtcUnion([c1,c2,c3])
+          if(args.size() == 1 && py::isinstance<py::list>(args[0]))
+          {
+            for(const auto& c : args[0].cast<py::list>())
+              add(c);
+          }
+          else
+          {
+            // New syntax: CtcUnion(c1,c2,c3)
+            for(const auto& c : args)
+              add(c);
+          }
+
+          return std::make_unique<CtcUnion<IntervalVector>>(ctcs);
         }),
-      CTCUNION_X_CTCUNION_CONST_C_REF_VARIADIC,
-      "c1"_a, "c2"_a)
+      CTCUNION_X_CTCUNION_INITIALIZER_LIST_C)
 
     .def("nb", &CtcUnion<IntervalVector>::nb,
       SIZET_CTCUNION_X_NB_CONST)

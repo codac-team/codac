@@ -157,3 +157,4 @@ Some methods are exclusive to the real-time display with VIBes :
 
 - center_viewbox : takes two Vector as arguments, the center and radius of each axis
 - auto_scale : takes no argument, the figure will be automatically scaled to fit the window
+- save : takes the name of the file as argument and saves the current state of the VIBes window to the file. Allowed formats are png, jpg, bmp and svg.
