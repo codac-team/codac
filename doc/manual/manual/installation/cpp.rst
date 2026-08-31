@@ -6,7 +6,7 @@
 C++ installation
 ================
 
-  Main authors: `Fabrice Le Bars <https://www.ensta-bretagne.fr/lebars/>`_, `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main authors: `Fabrice Le Bars <https://webperso.ensta.fr/lebars/>`_, `Simon Rohou <https://www.simon-rohou.fr/research/>`_
 
 This page describes how to install the C++ library on Linux, Windows, and macOS. Follow the steps outlined for your operating system.
 

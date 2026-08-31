@@ -140,7 +140,7 @@ Related content
 
 .. admonition:: Mathematical documentation
 
-  See `Auguste Bourgois' thesis <https://www.ensta-bretagne.fr/jaulin/thesis_auguste.pdf>`_. In particular, check Chapter 4.
+  See `Auguste Bourgois' thesis <https://webperso.ensta.fr/jaulin/thesis_auguste.pdf>`_. In particular, check Chapter 4.
 
 .. admonition:: Technical documentation
 

@@ -3,7 +3,7 @@
 MATLAB installation
 ===================
 
-  Main authors: `Fabrice Le Bars <https://www.ensta-bretagne.fr/lebars/>`_, `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main authors: `Fabrice Le Bars <https://webperso.ensta.fr/lebars/>`_, `Simon Rohou <https://www.simon-rohou.fr/research/>`_
 
 Since 2019, MATLAB allows you to import Python packages into its environment. Codac offers a Python package dedicated to MATLAB, with the necessary adaptations to run in this environment (for example: indices starting at ``1``, alternatives to unsupported ``&`` and ``|`` operations, *etc.*). This Python package dedicated to MATLAB is called ``codac4matlab``. See `the related PyPI page <https://pypi.org/project/codac4matlab>`_.
 

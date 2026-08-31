@@ -18,7 +18,7 @@
 Codac is a library providing tools for constraint programming over reals, trajectories and sets.
 
 ## Quick start
-- After [installing Chocolatey](https://chocolatey.org/install), run `choco install -y codac cmake make qtcreator` in PowerShell and then launch Qt Creator and choose Open Project, open `test_codac\CMakelists.txt` (get the folder from https://www.ensta-bretagne.fr/lebars/Share/test_codac.zip), ensure Desktop is selected and click Configure Project (might be hidden behind notifications at the bottom-right), wait 10 s then click on the big bottom-left green Run button, finally check that "Computation time: XXXs, XXX boxes" appears.
+- After [installing Chocolatey](https://chocolatey.org/install), run `choco install -y codac cmake make qtcreator` in PowerShell and then launch Qt Creator and choose Open Project, open `test_codac\CMakelists.txt` (get the folder from https://webperso.ensta.fr/lebars/Share/test_codac.zip), ensure Desktop is selected and click Configure Project (might be hidden behind notifications at the bottom-right), wait 10 s then click on the big bottom-left green Run button, finally check that "Computation time: XXXs, XXX boxes" appears.
 - Download and run https://github.com/ENSTABretagneRobotics/VIBES/releases/latest/download/VIBes-viewer_x86.exe before running the project, and check that the graphical output appears.
 
 ## Troubleshooting
@@ -45,7 +45,7 @@ choco install -y --ignore-dependencies codac --params "'/url:https://github.com/
     <dependencies>
       <dependency id="chocolatey-core.extension" version="1.1.0" />
       <dependency id="mingw" version="[13.2.0]" />
-      <dependency id="ibex" version="2.8.9.20250626" />
+      <dependency id="ibex" version="2.8.9.20260819" />
     </dependencies>
   </metadata>
 </package>
