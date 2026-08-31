@@ -29,12 +29,11 @@ BoxPair SepWrapper<PavingInOut>::separate(const IntervalVector& x) const
 
   // The parts of the box that are outside of the paving can not be classified
   auto d = x.diff(_P.tree()->hull());
-  for (const auto& di : d)
+  for(const auto& di : d)
   {
     result.inner |= di;
     result.outer |= di;
   }
-
 
   // Inner computation
   for(const auto &box: _P.boxes(PavingInOut::outer_complem, x))
