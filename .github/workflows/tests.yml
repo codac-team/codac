@@ -15,17 +15,17 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
-            - { os: ubuntu-24.04    , gcc_v: 11, py_v_maj: 3, py_v_min: 10, with_capd: OFF, desc: 'Ubuntu 24.04 GCC 11 Python 3.10 tests' }
-            - { os: ubuntu-24.04    , gcc_v: 13, py_v_maj: 3, py_v_min: 12, with_capd: ON , desc: 'Ubuntu 24.04 GCC 13 Python 3.10 CAPD tests' }
-            - { os: ubuntu-22.04    , gcc_v: 11, py_v_maj: 3, py_v_min: 10, with_capd: ON , desc: 'Ubuntu 22.04 GCC 11 Python 3.10 CAPD tests' }
+            - { os: ubuntu-24.04         , gcc_v: 11, py_v_maj: 3, py_v_min: 10, with_capd: OFF, desc: 'Ubuntu 24.04 GCC 11 Python 3.10 tests' }
+            - { os: ubuntu-24.04         , gcc_v: 13, py_v_maj: 3, py_v_min: 12, with_capd: ON , desc: 'Ubuntu 24.04 GCC 13 Python 3.10 CAPD tests' }
+            - { os: ubuntu-22.04         , gcc_v: 11, py_v_maj: 3, py_v_min: 10, with_capd: ON , desc: 'Ubuntu 22.04 GCC 11 Python 3.10 CAPD tests' }
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         submodules: true
         fetch-depth: 0
         clean: false
-    - uses: actions/setup-python@v6
+    - uses: actions/setup-python@v7
       with:
         python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
     - run: |
