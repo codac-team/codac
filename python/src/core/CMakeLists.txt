@@ -114,6 +114,7 @@
     separators/codac2_py_SepPolygon.cpp
     separators/codac2_py_SepProj.cpp
     separators/codac2_py_SepQInter.cpp
+    separators/codac2_py_SepTest.cpp
     separators/codac2_py_SepTransform.cpp
     separators/codac2_py_SepUnion.cpp
     separators/codac2_py_SepVisible.cpp
