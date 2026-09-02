@@ -9,8 +9,10 @@
 
 #pragma once
 
+#include <type_traits>
 #include "codac2_Sep.h"
 #include "codac2_Collection.h"
+#include "codac2_template_tools.h"
 
 namespace codac2
 {
@@ -30,7 +32,7 @@ namespace codac2
       template<typename S>
         requires IsSepBaseOrPtr<S>
       SepTest(const S& s)
-        : Sep<SepTest>(size_of(s)), _sep({s})
+        : Sep<SepTest>(size_of(s)), _sep(s)
       { }
 
       /**

@@ -24,7 +24,9 @@ void export_SepTest(py::module& m, py::class_<SepBase,pySep>& pysep)
   py::class_<SepTest> exported(m, "SepTest", pysep, SEPTEST_MAIN);
   exported
 
-    .def(py::init<const SepBase&>(),
+    .def(py::init([](const SepBase& s) {
+          return std::make_unique<SepTest>(s.copy());
+        }),
       SEPTEST_SEPTEST_CONST_S_REF,
       "s"_a)
 
