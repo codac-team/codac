@@ -18,7 +18,7 @@ namespace codac2
   {
     assert_release(x.size() == _sep.size());
 
-    BoxPair b_pair = _sep.separate(x);
+    BoxPair b_pair = _sep.front()->separate(x);
 
     if (!b_pair.inner.is_empty())
       b_pair.inner=x;

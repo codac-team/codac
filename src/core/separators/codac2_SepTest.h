@@ -9,10 +9,8 @@
 
 #pragma once
 
-#include <memory>
-#include "codac2_IntervalVector.h"
 #include "codac2_Sep.h"
-#include "codac2_template_tools.h"
+#include "codac2_Collection.h"
 
 namespace codac2
 {
@@ -44,6 +42,6 @@ namespace codac2
 
     protected:
 
-      const SepBase& _sep;
+      const Collection<SepBase>& _sep;
   };
 }
