@@ -24,22 +24,12 @@ namespace codac2
   {
     public:
 
-      /**
-       * \brief Constructor for the separator.
-       * 
-       * \param s The separator to test.
-       */
       template<typename S>
         requires IsSepBaseOrPtr<S>
       SepTest(const S& s)
         : Sep<SepTest>(size_of(s)), _sep(s)
       { }
 
-      /**
-       * \brief Separates the box. Both the inner and outer are either empty or the box itself.
-       * 
-       * \param x The box to separate.
-       */
       BoxPair separate(const IntervalVector& x) const;
 
     protected:
