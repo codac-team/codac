@@ -47,6 +47,35 @@
 #define EIGEN_HAS_SINGLE_INSTRUCTION_MADD
 #endif
 
+/* Eigen's own EIGEN_ASSUME_ALIGNED(PTR, ALIGN_BYTES), defined in
+ * Eigen/src/Core/util/Memory.h, hints the compiler that a packet load/store
+ * is aligned by calling std::assume_aligned<8 * (ALIGN_BYTES)>(PTR) when the
+ * standard library provides it (as libc++ does). ALIGN_BYTES is always
+ * called with an already-byte-valued Alignment enumerator (Aligned16 = 16,
+ * Aligned32 = 32...), so that extra "8 *" claims eight times the alignment
+ * Eigen itself computed -- e.g. a NEON Packet2d, whose unpacket_traits
+ * report Aligned16, ends up asserted as 128-byte aligned. libc++'s
+ * std::assume_aligned() is, among major standard libraries, the one that
+ * actually verifies such a claim at run time under -fsanitize=alignment
+ * (GCC/libstdc++'s __builtin_assume_aligned() treats it as a silent
+ * optimizer hint instead), which is why every heap-allocated Eigen::Matrix
+ * op trips it under UBSan on macOS/Clang -- e.g. in codac2::gauss_jordan()
+ * or any AffineMatrix/Matrix product -- while the same code is silent on
+ * Linux/GCC. The buffers themselves are never actually misaligned for the
+ * SIMD width Eigen emits; only this hint's arithmetic is wrong. Memory.h
+ * guards its own definition with #ifndef EIGEN_ASSUME_ALIGNED, so defining
+ * it here first -- before Eigen is included, like EIGEN_HAS_SINGLE_
+ * INSTRUCTION_MADD above -- replaces the miscomputed hint with a no-op
+ * (Eigen's own fallback for compilers lacking std::assume_aligned/
+ * __builtin_assume_aligned) rather than trying to patch the multiplier,
+ * so this keeps working even if a future Eigen release changes it again.
+ * It does not change which aligned/unaligned load or store instruction
+ * Eigen selects for a given expression, only this compiler-hint call.
+ */
+#ifndef EIGEN_ASSUME_ALIGNED
+#define EIGEN_ASSUME_ALIGNED(PTR, ALIGN_BYTES)
+#endif
+
 #include <type_traits>
 #include "codac2_Interval.h"
 #include "codac2_Interval_operations.h"

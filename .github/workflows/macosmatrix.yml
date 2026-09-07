@@ -130,7 +130,15 @@ jobs:
         python -c "import sys; print(sys.version)" ; python examples/02_centered_form/main.py
         pip install numpy sympy --prefer-binary
         python -m unittest discover codac.tests
-        cd build && ctest -C Release -V --output-on-failure
+        # Only the Python half of the suite is run here. These jobs exist to
+        # build and check a wheel per Python version, and the C++ tests do not
+        # depend on that version: running them again on every entry repeated
+        # the same 87 tests 18 times on Windows and 11 times on macOS. They are
+        # still compiled, so a C++ regression still breaks this workflow, and
+        # they are still executed in Release on the very same systems by
+        # unixmatrix.yml -- Visual Studio 2022 on x86/x64/arm64, macOS Sonoma
+        # arm64 and Sequoia x86_64.
+        cd build && ctest -C Release -R "_py" -V --output-on-failure
         cd ..
       shell: bash
       if: (matrix.cfg.cross!=true)&&(github.ref_name!='codac2_codac4matlab')&&(github.event.pull_request.base.ref!='codac2_codac4matlab')

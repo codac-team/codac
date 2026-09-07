@@ -11,9 +11,6 @@ To use CAPD with Codac, you first need to install the CAPD library. You can find
 
 Note that as CAPD is a C++ only library, the content present in this page is **only available in C++**.
 
-.. _subsec-extensions-capd-capd-install:
-
-.. _subsec-extensions-capd-capd-install:
 
 .. _subsec-extensions-capd-capd-install:
 

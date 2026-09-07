@@ -223,6 +223,11 @@ if(WITH_PYTHON AND DEFINED PYBIND11_FINDPYTHON AND NOT PYBIND11_FINDPYTHON)
   set(BUILD_SYMPY_EMBED_TESTS OFF)
 endif()
 
+# BUILD_SYMPY_EMBED_TESTS is an option(), hence a cache entry: the set() above
+# only overrides it for this directory, and examples/ would otherwise read the
+# cached ON again and build the sympy example where its own test is disabled.
+set(BUILD_SYMPY_EMBED_TESTS "${BUILD_SYMPY_EMBED_TESTS}" PARENT_SCOPE)
+
 # Sympy test
 if (WITH_PYTHON AND BUILD_SYMPY_EMBED_TESTS)
   list(APPEND SRC_TESTS
@@ -403,11 +408,22 @@ if(WITH_PYTHON AND (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_CONFIGURATION_TYP
       endif()
     endif()
 
+    # The ASan runtime only, deliberately: built with -fsanitize=address,
+    # undefined, Clang puts the UndefinedBehaviorSanitizer inside the ASan
+    # runtime, and ships libclang_rt.ubsan_standalone-* for the builds that
+    # use UBSan on its own. Preloading both therefore loads two copies of the
+    # same initialisation and the same interceptors into one process. Clang 18
+    # tolerated it; Clang 21 wedges the interpreter so thoroughly that even
+    # SIGKILL does not remove it, which is what made every Python test of the
+    # Clang jobs of .github/workflows/unixdebug.yml run into its timeout while
+    # the GCC jobs of the same matrix passed them in about two seconds --
+    # GCC's libasan and libubsan being genuinely separate libraries, designed
+    # to be loaded together. Preloading ASan alone still gives both sets of
+    # checks, since one runtime implements them both.
     set(_sanitizer_rt_candidates "")
     if(_sanitizer_rt_arch)
       set(_sanitizer_rt_candidates
         libclang_rt.asan-${_sanitizer_rt_arch}.so
-        libclang_rt.ubsan_standalone-${_sanitizer_rt_arch}.so
       )
     endif()
 
@@ -508,6 +524,39 @@ if(MSVC AND CODAC_MSVC_ASAN_RUNTIME_DLL)
   list(APPEND PYTHON_TEST_ENV_ARGS "${CODAC_MSVC_ASAN_PATH_ENV}")
 endif()
 
+
+# Environment of the C++ tests and examples
+# ==================================================================
+#
+# The same environment is needed by every C++ binary this project runs under
+# ctest, the examples of examples/CMakeLists.txt included, so it is built once
+# here and exported to the parent scope rather than recomputed per test.
+#
+# UBSAN_OPTIONS only means something to the GCC/Clang single-configuration
+# builds, where CMAKE_BUILD_TYPE holds the answer. The MSVC AddressSanitizer
+# runtime is a DLL that has to be discoverable at load time by every binary
+# compiled with /fsanitize=address: without it on PATH a Debug test cannot even
+# start, Windows failing the process creation with 0xC0000135
+# (STATUS_DLL_NOT_FOUND) before a single assertion runs. It is added whatever
+# the configuration, because the multi-configuration generators MSVC is driven
+# through only choose theirs at build time, and prepending a toolchain
+# directory to PATH costs a Release run nothing.
+
+set(CODAC_CPP_TEST_ENV "")
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  list(APPEND CODAC_CPP_TEST_ENV "UBSAN_OPTIONS=print_stacktrace=1")
+endif()
+
+if(CODAC_MSVC_ASAN_PATH_ENV)
+  list(APPEND CODAC_CPP_TEST_ENV "${CODAC_MSVC_ASAN_PATH_ENV}")
+endif()
+
+# examples/ is added by the top-level CMakeLists.txt right after this directory
+# and runs the same kind of binaries, so both environments are handed over to it.
+set(CODAC_CPP_TEST_ENV "${CODAC_CPP_TEST_ENV}" PARENT_SCOPE)
+set(PYTHON_TEST_ENV_ARGS "${PYTHON_TEST_ENV_ARGS}" PARENT_SCOPE)
+
 # Build every test
 # ==================================================================
 
@@ -594,37 +643,9 @@ foreach(SRC_TEST ${SRC_TESTS})
     COMMAND ${TEST_NAME}
   )
 
-  # The MSVC AddressSanitizer runtime is a DLL that has to be discoverable at
-  # load time by every binary compiled with /fsanitize=address. Without it on
-  # PATH a Debug test executable cannot even start: Windows fails the process
-  # creation with 0xC0000135 (STATUS_DLL_NOT_FOUND) before a single assertion
-  # runs, which is how the whole C++ suite came out red on the MSVC Debug jobs
-  # of .github/workflows/windebugmatrix.yml. CODAC_MSVC_ASAN_PATH_ENV carries
-  # that directory and was so far handed to the Python tests only.
-  #
-  # It is set here for every configuration rather than for Debug alone: the
-  # multi-configuration generators MSVC is driven through choose their
-  # configuration at build time, so neither CMAKE_BUILD_TYPE (empty for them)
-  # nor a plain if() can tell Debug from Release at this point, and prepending
-  # a toolchain directory to PATH is harmless to a Release run. That same
-  # reason is why CMAKE_BUILD_TYPE must not gate it, as it used to: under a
-  # Visual Studio generator the test below is simply never taken.
-  #
-  # UBSAN_OPTIONS, on the other hand, is only meaningful to the GCC/Clang
-  # single-configuration builds, where CMAKE_BUILD_TYPE does hold the answer.
-  set(_cpp_test_env "")
-
-  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    list(APPEND _cpp_test_env "UBSAN_OPTIONS=print_stacktrace=1")
-  endif()
-
-  if(CODAC_MSVC_ASAN_PATH_ENV)
-    list(APPEND _cpp_test_env "${CODAC_MSVC_ASAN_PATH_ENV}")
-  endif()
-
-  if(_cpp_test_env)
+  if(CODAC_CPP_TEST_ENV)
     set_tests_properties(${TEST_NAME}_cpp PROPERTIES
-      ENVIRONMENT "${_cpp_test_env}"
+      ENVIRONMENT "${CODAC_CPP_TEST_ENV}"
     )
   endif()
 

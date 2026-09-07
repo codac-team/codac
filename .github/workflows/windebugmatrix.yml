@@ -22,15 +22,17 @@
 # the details of what that trades away (debug-CRT heap/iterator checking)
 # versus what it keeps (unoptimized code, debug symbols, ASan).
 #
-# The MinGW entries do not pin a single MinGW version: the choco `mingw`
-# package does not ship libasan.a/libubsan.a for every version (15.2.0 does
-# not, for x64), so codac's unconditional -fsanitize=address,undefined in
-# Debug mode fails at link time with "ld.exe: cannot find -lasan/-lubsan"
-# on those. `runtime_candidates` lists versions newest-first; the install
-# step below probes each in turn (via `g++ -print-file-name=libasan*`/
-# `libubsan*`) and keeps the first one that actually has both, so the job
-# still ends up on the newest ASan/UBSan-capable MinGW rather than one
-# fixed, possibly-unsanitized version.
+# The MinGW entries simply pin the newest MinGW version (same as
+# unixmatrix.yml's own mingw15 entries): unlike MSVC, the choco `mingw`
+# package does not ship libasan.a/libubsan.a at all here, for either x86 or
+# x64, in any of the versions it offers (checked via `g++
+# -print-file-name=libasan*`/`libubsan*` across mingw15 down to mingw11) --
+# there is no version/architecture combination worth hunting for. The
+# top-level CMakeLists.txt detects this (the same capability probe used for
+# the MSVC ASan runtime DLL below) and simply leaves Debug builds
+# unsanitized on a toolchain that lacks the runtime, rather than failing at
+# link time with "ld.exe: cannot find -lasan/-lubsan"; actual ASan coverage
+# on Windows comes from the MSVC entries in this matrix instead.
 on:
     push:
         branches-ignore:
@@ -40,9 +42,31 @@ on:
         branches-ignore:
         - codac2_codac4matlab
 
+concurrency:
+    # Keep only the newest run of this workflow for a given branch or pull
+    # request: a push that supersedes another leaves the older run computing a
+    # result nobody will read, while its jobs hold runners the newest run is
+    # waiting for.
+    #
+    # The three release branches are excluded. They are where the jobs upload
+    # their packages to a GitHub release (see the "github.ref_name==" conditions
+    # further down), and cancelling such a run halfway would leave the release
+    # with only part of its assets. The same expression is used in every
+    # workflow of this directory, including the ones that publish nothing, so
+    # that the rule stays a single thing to know.
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: ${{ github.ref_name != 'codac1' && github.ref_name != 'codac2' && github.ref_name != 'codac2_codac4matlab' }}
+
 jobs:
  windebugmatrix:
     runs-on: ${{ matrix.cfg.os }}
+    # A test binary that cannot load a DLL it needs does not always fail fast:
+    # on the Visual Studio 2026 images every test of the suite instead sat
+    # until ctest's own 1500 s timeout, so the job kept going for the six hours
+    # GitHub allows before killing it, twice per run. Two hours is well above
+    # the twenty minutes a healthy job takes here and turns such a hang into a
+    # quick red job rather than a day of runner time.
+    timeout-minutes: 120
     env:
         IBEX_RUNTIME: ${{ matrix.cfg.runtime }}
     defaults:
@@ -52,8 +76,8 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
-            - { os: windows-2022, shell: cmd, arch: x64  , bitness: 64, runtime: mingw15, runtime_candidates: 'mingw15 mingw14 mingw13 mingw12 mingw11', cmake_params: '-G "MinGW Makefiles" -D CMAKE_BUILD_TYPE=Debug', cmake_flags: '-fPIC', desc: 'Windows MinGW x64 Debug (latest ASan/UBSan-capable)' }
-            - { os: windows-2022, shell: cmd, arch: x86  , bitness: 32, runtime: mingw15, runtime_candidates: 'mingw15 mingw14 mingw13 mingw12 mingw11', cmake_params: '-G "MinGW Makefiles" -D CMAKE_BUILD_TYPE=Debug', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW x86 Debug (latest ASan/UBSan-capable)' }
+            - { os: windows-2022, shell: cmd, arch: x64  , bitness: 64, runtime: mingw15, cmake_params: '-G "MinGW Makefiles" -D CMAKE_BUILD_TYPE=Debug', cmake_flags: '-fPIC', desc: 'Windows MinGW x64 Debug (unsanitized)' }
+            - { os: windows-2022, shell: cmd, arch: x86  , bitness: 32, runtime: mingw15, cmake_params: '-G "MinGW Makefiles" -D CMAKE_BUILD_TYPE=Debug', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW x86 Debug (unsanitized)' }
             - { os: windows-2022, shell: cmd, arch: x64  , bitness: 64, runtime: vc17   , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cmake_flags: ' /MP4 /wd4267 /wd4244 /wd4305 /wd4996', desc: 'Windows Visual Studio 2022 x64 Debug' }
             - { os: windows-2022, shell: cmd, arch: x86  , bitness: 32, runtime: vc17   , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', cmake_flags: ' /MP4 /wd4267 /wd4244 /wd4305 /wd4996', choco_flags: '--x86', desc: 'Windows Visual Studio 2022 x86 Debug' }
             - { os: windows-11-arm, shell: cmd, arch: arm64, bitness: 64, runtime: vc17 , cmake_params: '-G "Visual Studio 17" -T v143 -A arm64', cmake_flags: ' /MP4 /wd4267 /wd4244 /wd4305 /wd4996', desc: 'Windows Visual Studio 2022 arm64 Debug' }
@@ -76,77 +100,17 @@ jobs:
         del /f /q cmake_extra_tools.zip
         wget https://gist.github.com/lebarsfa/237841f9e5dad55ef192713b3b1b2f16/raw/04d77ced3457346c55f183ca12a10dbcb850e6d5/refreshenv.bashrc --no-check-certificate -nv
         move /y refreshenv.bashrc %USERPROFILE%
-    # For MinGW, install the newest candidate in runtime_candidates whose
-    # g++ actually ships both libasan and libubsan import libraries (see
-    # the header comment for why this probes instead of pinning mingw15
-    # unconditionally): mingw15/14/13 install under
-    # C:\ProgramData\mingw64\mingw<bitness> (choco's current mingw
-    # package layout), mingw12/11 under the older
-    # C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw<bitness>
-    # layout -- both paths already used, per version, in
-    # .github/workflows/unixmatrix.yml. BASHMINGWPATH and IBEX_RUNTIME are
-    # written to $GITHUB_ENV so every later step (regardless of shell)
-    # picks them up automatically, without needing choco's own
-    # refreshenv.bashrc dance.
+    # MinGW is pinned to the single newest version choco offers (15.2.0):
+    # none of its versions ship libasan/libubsan for this package, for
+    # either x86 or x64 (see the header comment above), so there is no
+    # ASan/UBSan-capable candidate left to probe for -- the top-level
+    # CMakeLists.txt detects the missing runtime itself and builds
+    # unsanitized instead. BASHMINGWPATH is written to $GITHUB_ENV so every
+    # later step (regardless of shell) picks it up automatically, without
+    # needing choco's own refreshenv.bashrc dance.
     - run: |
-        set -euo pipefail
-        found_runtime=''
-        for runtime in ${{ matrix.cfg.runtime_candidates }}; do
-          case "$runtime" in
-            mingw15)
-              mingw_version='15.2.0'
-              mingw_bin="/c/ProgramData/mingw64/mingw${{ matrix.cfg.bitness }}/bin"
-              ;;
-            mingw14)
-              mingw_version='14.2.0'
-              mingw_bin="/c/ProgramData/mingw64/mingw${{ matrix.cfg.bitness }}/bin"
-              ;;
-            mingw13)
-              mingw_version='13.2.0'
-              mingw_bin="/c/ProgramData/mingw64/mingw${{ matrix.cfg.bitness }}/bin"
-              ;;
-            mingw12)
-              mingw_version='12.2.0.03042023'
-              mingw_bin="/c/ProgramData/chocolatey/lib/mingw/tools/install/mingw${{ matrix.cfg.bitness }}/bin"
-              ;;
-            mingw11)
-              mingw_version='11.2.0.07112021'
-              mingw_bin="/c/ProgramData/chocolatey/lib/mingw/tools/install/mingw${{ matrix.cfg.bitness }}/bin"
-              ;;
-            *)
-              echo "::error::Unsupported MinGW runtime candidate '$runtime'"
-              exit 1
-              ;;
-          esac
-
-          choco install -y -r --no-progress mingw --version="$mingw_version" --force ${{ matrix.cfg.choco_flags }}
-
-          if [ ! -x "$mingw_bin/g++.exe" ]; then
-            continue
-          fi
-
-          asan_path="$("$mingw_bin/g++.exe" -print-file-name=libasan.dll.a)"
-          if [ "$asan_path" = 'libasan.dll.a' ]; then
-            asan_path="$("$mingw_bin/g++.exe" -print-file-name=libasan.a)"
-          fi
-
-          ubsan_path="$("$mingw_bin/g++.exe" -print-file-name=libubsan.dll.a)"
-          if [ "$ubsan_path" = 'libubsan.dll.a' ]; then
-            ubsan_path="$("$mingw_bin/g++.exe" -print-file-name=libubsan.a)"
-          fi
-
-          if [ -f "$asan_path" ] && [ -f "$ubsan_path" ]; then
-            found_runtime="$runtime"
-            echo "BASHMINGWPATH=$mingw_bin" >> "$GITHUB_ENV"
-            echo "IBEX_RUNTIME=$runtime" >> "$GITHUB_ENV"
-            break
-          fi
-        done
-
-        if [ -z "$found_runtime" ]; then
-          echo "::error::No ASan/UBSan-capable MinGW runtime found for ${{ matrix.cfg.arch }} among: ${{ matrix.cfg.runtime_candidates }}"
-          exit 1
-        fi
+        choco install -y -r --no-progress mingw --version=15.2.0 --force ${{ matrix.cfg.choco_flags }}
+        echo "BASHMINGWPATH=/c/ProgramData/mingw64/mingw${{ matrix.cfg.bitness }}/bin" >> "$GITHUB_ENV"
       if: startsWith(matrix.cfg.runtime, 'mingw')
       shell: bash
     - run: |
@@ -165,3 +129,43 @@ jobs:
         cd build && ctest -C Debug -V --output-on-failure
         cd ..
       shell: bash
+    # A test killed by a signal loses everything it had written to its
+    # block-buffered standard output, so ctest reports the signal and nothing
+    # else. That is all this job has ever shown for the tests that crash on it,
+    # every one of them a user of Eigen's matrix product (arithmetic_mul and
+    # arithmetic_div crash where arithmetic_add and arithmetic_sub pass), and a
+    # bare signal says nothing about where. Re-running the first few failures
+    # under gdb prints the faulting frame, which is the one thing missing to
+    # diagnose them. The step reports rather than judges: it only runs after a
+    # failure, and never turns a green job red on its own.
+    - name: Backtrace of the failed tests
+      if: failure()
+      continue-on-error: true
+      run: |
+        if [ -n "${BASHMINGWPATH:-}" ]; then export PATH="$BASHMINGWPATH:$PATH" ; fi
+
+        if ! command -v gdb > /dev/null 2>&1 ; then
+          echo "No gdb in this toolchain, skipping the backtraces."
+          exit 0
+        fi
+
+        failed=build/Testing/Temporary/LastTestsFailed.log
+        if [ ! -f "$failed" ] ; then
+          echo "ctest recorded no failed test, nothing to trace."
+          exit 0
+        fi
+
+        cd build
+        # LastTestsFailed.log holds one "<index>:<test name>" per line; the C++
+        # tests are the "<target>_cpp" ones and their executable is the target
+        # itself, next to the tests directory of this single-configuration
+        # build. Three backtraces are plenty to identify a common frame, and
+        # keep this step short.
+        sed 's/^[0-9]*://' "../$failed" | grep '_cpp$' | head -3 | while read -r name ; do
+          exe="tests/${name%_cpp}.exe"
+          [ -f "$exe" ] || continue
+          echo "===================== $exe ====================="
+          gdb -batch -ex "set confirm off" -ex run -ex "bt 40" --args "./$exe" 2>&1 | tail -60
+        done
+      shell: bash
+

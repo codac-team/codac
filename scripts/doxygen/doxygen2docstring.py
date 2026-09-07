@@ -40,6 +40,18 @@ def normalize_template_label(str_template_label):
 # python/src/core/domains/affine/codac2_py_AffineMatrix.cpp.
 def normalize_label(str_label):
 
+  # Runs of whitespace are collapsed first, because the text below turns every
+  # space into an underscore and doxygen does not word its definitions the same
+  # way from one version to the next: 1.15.0 renders the definition of an alias
+  # with one space more than 1.17.0 does, which alone renamed
+  # USING_AFFINEMAINMATRIX_EQ_EIGEN_MATRIX_... into
+  # USING_AFFINEMAINMATRIX_EQ__EIGEN_MATRIX_... and stopped the bindings from
+  # compiling on Ubuntu 26.04. Collapsing the underscores afterwards would not
+  # do: plenty of macro names hold a legitimate double underscore, from a
+  # trailing underscore in an identifier followed by _REF or _CONST
+  # (NODEVALUE__REF and its like), and squeezing those would rename them all.
+  str_label = re.sub(r'\s+', ' ', str_label)
+
   str_label = str_label \
     .replace("or<<", "OROUT") \
     .replace("or>>", "ORIN")
