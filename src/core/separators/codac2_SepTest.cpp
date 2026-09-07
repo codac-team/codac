@@ -16,7 +16,7 @@ namespace codac2
 {
   BoxPair SepTest::separate(const IntervalVector& x) const
   {
-    assert_release(x.size() == _sep.size());
+    assert_release(x.size() == this->size());
 
     BoxPair b_pair = _sep.front()->separate(x);
 

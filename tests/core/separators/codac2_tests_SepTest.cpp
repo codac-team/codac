@@ -19,16 +19,14 @@ using namespace codac2;
 TEST_CASE("SepTest")
 {
   IntervalVector X ({{1,3},{2,8},{-1,1}});
-  SepWrapper_IntervalVector sep_wrapper (X);
+  SepWrapper<IntervalVector> sep_wrapper (X);
   SepTest sep_test (sep_wrapper);
 
   IntervalVector x1 ({{1.5,2.5},{2.5,7.5},{-0.5,0.5}});
   IntervalVector x2 ({{10,11},{10,11},{10,11}});
   IntervalVector x3 ({{1,3},{2,8},{-1,1}});
 
-  BoxPair xs;
-
-  xs = sep_test.separate(x1);
+  BoxPair xs = sep_test.separate(x1);
   CHECK(xs.inner==IntervalVector::empty(3));
   CHECK(xs.outer==x1);
 
