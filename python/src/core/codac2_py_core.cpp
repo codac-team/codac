@@ -152,6 +152,7 @@ void export_SepPolarCart(py::module& m, py::class_<SepBase,pySep>& pysep);
 void export_SepPolygon(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepProj(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepQInter(py::module& m, py::class_<SepBase,pySep>& sep);
+void export_SepTest(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepTransform(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepUnion(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepVisible(py::module& m, py::class_<SepBase,pySep>& sep);
@@ -336,6 +337,7 @@ PYBIND11_MODULE(_core, m)
   export_SepPolygon(m,py_sep);
   export_SepProj(m,py_sep);
   export_SepQInter(m,py_sep);
+  export_SepTest(m,py_sep);
   export_SepTransform(m,py_sep);
   export_SepUnion(m,py_sep);
   export_SepVisible(m,py_sep);

@@ -99,6 +99,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/separators/codac2_tests_SepPolygon
   core/separators/codac2_tests_SepProj
   core/separators/codac2_tests_SepQInter
+  core/separators/codac2_tests_SepTest
   core/separators/codac2_tests_SepTransform
   core/separators/codac2_tests_SepUnion
   core/separators/codac2_tests_SepVisible
