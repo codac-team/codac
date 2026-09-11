@@ -42,17 +42,36 @@ namespace codac2
     if(p == -oo || p == oo)
       return Interval::empty();
 
-    else
-    {
-      Interval y = gaol::pow(x,p);
-      gaol::round_upward();
-      return y;
-    }
+    // gaol only provides pow(interval,int) and pow(interval,interval): an
+    // integer-valued exponent keeps the int overload, which is defined for a
+    // negative base too, and any other double goes through the interval one.
+    if(std::trunc(p) == p &&
+      p >= static_cast<double>(std::numeric_limits<int>::min()) &&
+      p <= static_cast<double>(std::numeric_limits<int>::max()))
+      return pow(x, static_cast<int>(p));
+
+    // The domain of a non-integer power is handled by the interval overload
+    return pow(x, Interval(p));
   }
 
   inline Interval pow(const Interval& x, const Interval& p)
   {
-    Interval y = gaol::pow(x,p);
+    if(x.is_empty() || p.is_empty())
+      return Interval::empty();
+
+    // x^p is real-valued for a negative base only at an integer exponent.
+    // gaol computes on the magnitude instead of restricting the domain:
+    // pow([-4,-1],[0.5,0.5]) returns [-1,2] where sqrt([-4,-1]) is empty.
+    // A non-degenerate exponent already drops the negative part, so only a
+    // degenerate integer exponent keeps it.
+    const bool integer_exponent =
+      p.is_degenerated() && std::trunc(p.lb()) == p.lb();
+    const Interval base = integer_exponent ? x : (x & Interval(0,oo));
+
+    if(base.is_empty())
+      return Interval::empty();
+
+    Interval y = gaol::pow(base,p);
     gaol::round_upward();
     return y;
   }
