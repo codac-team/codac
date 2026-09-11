@@ -112,6 +112,8 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
         ${CODAC_SOURCE_INCLUDE_DIRS}
 
         ${CMAKE_BINARY_DIR}/src      # the generated "codac" umbrella header and module headers (codac-core.h, codac-graphics.h, etc.)
+        ${CMAKE_BINARY_DIR}/src/core
+        ${CMAKE_BINARY_DIR}/src/graphics
     )
 
     target_link_libraries(
