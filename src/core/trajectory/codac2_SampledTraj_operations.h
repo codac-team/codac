@@ -286,14 +286,6 @@ namespace codac2
   inline SampledTraj<Vector> operator*(const Eigen::Affine2d& x1, const SampledTraj<Vector>& x2)
     macro_binary_real_traj(operator_mul_aff)
 
-  /** \brief \f$x_1(\cdot)\cdot x_2\f$
-    * \param x1
-    * \param x2
-    * \return trajectory output
-    */
-  inline SampledTraj<Vector> operator*(const Eigen::Affine2d& x1, const SampledTraj<Vector>& x2)
-    macro_binary_real_traj(operator_mul_aff);
-
   /**
    * \brief Operates *=
    * \param x1

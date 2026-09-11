@@ -2503,7 +2503,24 @@ PREDEFINED             =
 # definition found in the source code.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-EXPAND_AS_DEFINED      =
+# Codac: the tube and trajectory operations declare their functions with a macro
+# standing in for the body (see codac2_SlicedTube_operations.h and
+# codac2_SampledTraj_operations.h). Without expansion Doxygen documents the macro
+# call instead of the function, and the Python bindings then reference docstring
+# identifiers that no longer exist. Keep this list in sync with those headers.
+
+EXPAND_AS_DEFINED      = macro_unary_tube \
+                         macro_binary_tube_tube \
+                         macro_binary_real_tube \
+                         macro_binary_tube_real \
+                         macro_member_binary_tube_tube \
+                         macro_member_binary_tube_real \
+                         macro_unary_traj \
+                         macro_binary_traj_traj \
+                         macro_binary_real_traj \
+                         macro_binary_traj_real \
+                         macro_member_binary_traj_traj \
+                         macro_member_binary_traj_real
 
 # If the SKIP_FUNCTION_MACROS tag is set to YES then Doxygen's preprocessor will
 # remove all references to function-like macros that are alone on a line, have
