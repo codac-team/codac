@@ -80,7 +80,7 @@ namespace codac2
     IntervalVector operator&(const IntervalVector& x, const PavingOut& p)
     {
       return p & x;
-    };
+    }
 
 
   // PavingInOut class

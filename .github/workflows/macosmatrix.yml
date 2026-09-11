@@ -102,7 +102,7 @@ jobs:
           echo "$HOME/doxygen/doxygen-${DOXYGEN_VERSION}" >> "$GITHUB_PATH"
         fi
         python -m pip install --upgrade pip
-        pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
+        pip install --upgrade wheel setuptools build sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
       if: runner.os=='macOS'
     - run: |
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv

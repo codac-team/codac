@@ -221,6 +221,15 @@
 
       if(CODAC_MSVC_ASAN_RUNTIME_DLL)
         add_compile_options($<$<CONFIG:Debug>:/fsanitize=address>)
+        # Incremental linking cannot be combined with ASan: the linker drops
+        # /INCREMENTAL as soon as an input module carries ASan metadata, and
+        # says so once per link (warning LNK4300, 870 times across the five
+        # MSVC Debug jobs of .github/workflows/windebugmatrix.yml, VS 2022 and
+        # VS 2026 alike). Asking for it off removes the cause rather than the
+        # message, and leaves LNK4300 free to report any other option ASan
+        # would silently disable. One item per generator expression, for the
+        # DIRECTORY-scope reason explained below.
+        add_link_options($<$<CONFIG:Debug>:/INCREMENTAL:NO>)
         # Enabling ASan on MSVC also switches on the MSVC STL's own
         # "container annotation" instrumentation for std::string,
         # std::vector and (recent toolsets) std::optional: it poisons
@@ -274,7 +283,6 @@
       # apply project-wide, not to one target), so instead each flag gets
       # its own single-flag generator expression below.
       add_compile_options($<$<CONFIG:Debug>:-Wreturn-type>)
-      add_compile_options($<$<CONFIG:Debug>:-Wno-unused-parameter>)
       add_compile_options($<$<CONFIG:Debug>:-fno-omit-frame-pointer>)
       add_compile_options($<$<CONFIG:Debug>:-g>)
       add_compile_options($<$<CONFIG:Debug>:-O0>)
@@ -392,7 +400,23 @@
         message(STATUS "FMA is supported but left disabled: GCC targeting Windows cannot align the stack for the AVX code it enables.")
       endif()
   elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
-      check_cxx_compiler_flag("-mfma" COMPILER_SUPPORTS_FMA)
+      # Probe what -mfma does, not whether the driver accepts it. Clang accepts
+      # an ISA flag it cannot honour -- on arm64 it takes -mfma, ignores it, and
+      # merely warns -- so check_cxx_compiler_flag() reports success and every
+      # translation unit then carries a flag with no effect. That is where the
+      # 1138 -Wunused-command-line-argument warnings of the macOS arm64 jobs came
+      # from. __FMA__ is defined only when FMA is actually turned on for the
+      # target, so compiling against it asks the question we mean to ask, and
+      # keeps working for any future ISA flag handled the same way.
+      include(CheckCXXSourceCompiles)
+      set(CMAKE_REQUIRED_FLAGS "-mfma")
+      check_cxx_source_compiles("
+        #ifndef __FMA__
+        #error -mfma was accepted but had no effect on this target
+        #endif
+        int main() { return 0; }"
+        COMPILER_SUPPORTS_FMA)
+      unset(CMAKE_REQUIRED_FLAGS)
       if(COMPILER_SUPPORTS_FMA)
         add_compile_options(-mfma )
         set(CODAC_ARCH_CXX_FLAGS "-mfma")
@@ -427,11 +451,13 @@
 #  else()
 #    message(FATAL_ERROR "Codac needs a compiler with C++20 support")
 #  endif()
+#  if(NOT CMAKE_CXX_STANDARD)
 
-  #if(NOT CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 20)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
-  #endif()
+  set(CMAKE_CXX_STANDARD 20)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  set(CMAKE_CXX_EXTENSIONS OFF)
+    
+#  endif()
 
 
 ################################################################################
@@ -441,6 +467,72 @@
   find_package(IBEX REQUIRED)
   ibex_init_common() # IBEX should have installed this function
   message(STATUS "Found IBEX version ${IBEX_VERSION}")
+
+
+################################################################################
+# Treating dependencies' headers as system headers
+################################################################################
+
+  # This project compiles with /W4 or -Wall -Wextra -Wpedantic, and a dependency
+  # pulled in with FetchContent inherits that level: its headers are ordinary
+  # include directories, not system ones. Eigen and Catch2 alone accounted for
+  # about 8300 MSVC warnings per job (C4459, C5054, C4308, C4324) and the 557
+  # -Wc2y-extensions Clang reports for Catch2's __COUNTER__, drowning the
+  # handful of warnings that actually belong to Codac.
+  #
+  # FetchContent_Declare(... SYSTEM) does exactly this, but only since CMake
+  # 3.25, while this project accepts 3.14. Setting the property by hand is
+  # equivalent and has worked for far longer: the compiler then receives
+  # -isystem (or /external:I, which CMake already emits for the Visual Studio
+  # generator alongside /external:W0).
+  function(codac_mark_target_system tgt)
+    if(NOT TARGET ${tgt})
+      return()
+    endif()
+    # A property cannot be set on an ALIAS, so resolve it to the target it names
+    # (Eigen exports Eigen3::Eigen as an alias of eigen).
+    get_target_property(_aliased ${tgt} ALIASED_TARGET)
+    if(_aliased)
+      set(tgt ${_aliased})
+    endif()
+    get_target_property(_inc ${tgt} INTERFACE_INCLUDE_DIRECTORIES)
+    if(_inc)
+      set_target_properties(${tgt} PROPERTIES
+                            INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${_inc}")
+    endif()
+  endfunction()
+
+
+  # codac_publish_include_dirs records the directories in which a module keeps its public headers, in
+  # their canonical location under src/. Every consumer (the tests, the examples and the Python bindings)
+  # puts CODAC_SOURCE_INCLUDE_DIRS ahead of build/include, so that a header is opened at src/... rather than through
+  # its link. Both compile identically, but the path used is the path gcov records: reached both ways, a header
+  # ends up as two unrelated entries in the coverage report, each showing only what its own callers exercised.
+  # That is what reported src/core/domains/affine/codac2_AffineMain_impl.h at 40% when its real coverage,
+  # the union of the two entries, was over 90%.
+  #
+  # The variable is a cache entry because it is filled in by src/*/CMakeLists.txt and read from tests/,
+  # examples/ and python/, which are separate directory scopes; src/CMakeLists.txt empties it before the
+  # modules append to it, so that a reconfigure does not append to what the previous one left behind.
+
+  # Records the directories in which a module keeps its public headers, in
+  # their canonical location under src/. Every consumer (the tests, the
+  # examples and the Python bindings) puts CODAC_SOURCE_INCLUDE_DIRS ahead of
+  # build/include, so that a header is opened at src/... rather than through
+  # its link. Both compile identically, but the path used is the path gcov
+  # records: reached both ways, a header ends up as two unrelated entries in
+  # the coverage report, each showing only what its own callers exercised.
+  # That is what reported src/core/domains/affine/codac2_AffineMain_impl.h at
+  # 40% when its real coverage, the union of the two entries, was over 90%.
+  #
+  # The variable is a cache entry because it is filled in by src/*/CMakeLists.txt
+  # and read from tests/, examples/ and python/, which are separate directory
+  # scopes; src/CMakeLists.txt empties it before the modules append to it, so
+  # that a reconfigure does not append to what the previous one left behind.
+  function(codac_publish_include_dirs)
+    set(CODAC_SOURCE_INCLUDE_DIRS ${CODAC_SOURCE_INCLUDE_DIRS} ${ARGN}
+        CACHE INTERNAL "Directories holding the public headers of the codac modules")
+  endfunction()
 
 
 ################################################################################
@@ -458,6 +550,9 @@
     FetchContent_Declare(Eigen3 URL http://github.com/codac-team/eigen/archive/refs/heads/eigen-5.0.zip)
     #FetchContent_Declare(Eigen3 URL ${CMAKE_CURRENT_SOURCE_DIR}/3rd/eigen-a0dc3994bd5d4e804dab58decb78c56a5af516ba.zip) # If needed to be self-contained...
     FetchContent_MakeAvailable(Eigen3)
+    # Only needed for the FetchContent path: a target coming from
+    # find_package() is IMPORTED, and CMake already treats those as system.
+    codac_mark_target_system(Eigen3::Eigen)
   endif()
   # Adds Eigen3::Eigen
 
@@ -476,6 +571,160 @@
   if(WITH_CAPD)
     find_package(CAPD REQUIRED)
   endif()
+
+################################################################################
+# Code coverage
+################################################################################
+
+  # WITH_COVERAGE instruments the build and adds two targets: `coverage`, which
+  # runs the whole ctest suite and turns the counters gcov leaves behind into a
+  # report, and `coverage-report`, which only does the second half. That is what
+  # the "Ubuntu 26.04 GCC x86_64 Release coverage" job of
+  # .github/workflows/unixdebug.yml now calls, so that a developer measuring
+  # coverage by hand and the job reporting it use the same flags, the same gcov
+  # and the same filters, and cannot drift apart. Deciding all of that here
+  # rather than leaving it to the caller is also what spares everyone the traps
+  # below.
+  #
+  # Coverage answers "what do the tests reach", so it is worth turning
+  # BUILD_TESTS and TEST_EXAMPLES on with it -- the examples are integration
+  # tests and reach code the unit tests do not.
+  #
+  # This block has to come before the add_subdirectory() calls below:
+  # add_compile_options() is a directory property, and only reaches the targets
+  # created after it. Declared any later, it configures cleanly, builds
+  # cleanly, and leaves no .gcno file behind at all -- an empty report rather
+  # than an error.
+  option(WITH_COVERAGE "Instrument the build for code coverage (GCC/Clang)" OFF)
+
+  if(WITH_COVERAGE)
+
+    if(MSVC)
+      message(FATAL_ERROR "WITH_COVERAGE relies on gcov, which MSVC does not provide.")
+    endif()
+
+    add_compile_options(--coverage)
+    add_link_options(--coverage)
+
+    # pybind11 adds -flto to the modules it builds, and GCC cannot combine that
+    # with gcov instrumentation: the link then fails on an undefined vtable,
+    # the vtable being emitted nowhere once both are on. pybind11 leaves LTO
+    # alone as soon as CMAKE_INTERPROCEDURAL_OPTIMIZATION is set, which is what
+    # this does -- silently, because a coverage build that does not link is of
+    # no use to anyone.
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION OFF)
+
+    # gcov itself is toolchain-specific: the notes and counters Clang writes are
+    # read by `llvm-cov gcov`, not by GCC's gcov, and pointing gcovr at the
+    # wrong one yields an empty report rather than an error. The one shipped
+    # next to the compiler in use is therefore named explicitly.
+    set(CODAC_GCOV_ARG "")
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+      # Debian and its derivatives ship the tools of each LLVM release under a
+      # versioned name in /usr/bin and unversioned in the release's own prefix,
+      # so both spellings and both places are tried, the version being taken
+      # from the compiler that will produce the notes.
+      get_filename_component(_codac_cxx_dir "${CMAKE_CXX_COMPILER}" DIRECTORY)
+      string(REGEX MATCH "^[0-9]+" _codac_llvm_major "${CMAKE_CXX_COMPILER_VERSION}")
+      find_program(LLVM_COV_EXECUTABLE
+                   NAMES llvm-cov llvm-cov-${_codac_llvm_major}
+                   HINTS ${_codac_cxx_dir}
+                         /usr/lib/llvm-${_codac_llvm_major}/bin)
+      if(LLVM_COV_EXECUTABLE)
+        set(CODAC_GCOV_ARG --gcov-executable "${LLVM_COV_EXECUTABLE} gcov")
+      else()
+        message(STATUS "${COLOR_RED}llvm-cov was not found next to ${CMAKE_CXX_COMPILER}: the coverage report would come out empty.${COLOR_RESET}")
+      endif()
+    endif()
+
+    find_program(GCOVR_EXECUTABLE gcovr)
+
+    if(NOT GCOVR_EXECUTABLE)
+
+      message(STATUS "${COLOR_RED}gcovr was not found: the build is instrumented, but the `coverage` target is unavailable (pip install gcovr).${COLOR_RESET}")
+
+    else()
+
+      # A note on paths, since it decides what the report is worth: gcov
+      # records the path each translation unit actually opened a header
+      # through, so a header reached both directly and through the flat tree
+      # of build/include comes out as two unrelated entries, each showing only
+      # what its own callers exercised. Every consumer (tests, examples,
+      # Python bindings) therefore puts CODAC_SOURCE_INCLUDE_DIRS ahead of
+      # build/include, and every module links its headers there instead of
+      # copying them -- see codac_publish_include_dirs() and
+      # codac_link_header_into_build_tree() above. Without that, a header such
+      # as codac2_AffineMain_impl.h was reported at 40% instead of its real
+      # 90%, and every header of graphics/, unsupported/ and extensions/ was
+      # measured on a build-tree copy that is not the file anyone edits.
+      #
+      # --gcov-exclude-directories keeps gcovr from even descending into the
+      # dependencies FetchContent puts in the build tree, which --exclude alone
+      # would only drop from the finished report. It matters beyond noise:
+      # Catch2 compiles with -ffile-prefix-map, so the paths recorded in its
+      # notes do not resolve from anywhere and gcov fails outright on them; and
+      # gcov reports negative hit counts on heavily inlined code, Eigen being
+      # where that first shows, which gcovr treats as fatal unless told
+      # otherwise. The pattern has no leading ".*/" on purpose: gcovr matches it
+      # against a path relative to the working directory, which here starts with
+      # "_deps/" and so has nothing for that slash to match.
+      set(CODAC_GCOVR_COMMAND
+          ${GCOVR_EXECUTABLE}
+          --root ${CMAKE_SOURCE_DIR}
+          ${CODAC_GCOV_ARG}
+          --gcov-exclude-directories ".*_deps.*"
+          --gcov-ignore-parse-errors=negative_hits.warn_once_per_file
+          --exclude ".*/tests/.*"
+          --exclude ".*/examples/.*"
+          --exclude ".*/python/.*"
+          --print-summary
+          --html-details ${CMAKE_BINARY_DIR}/coverage.html
+          --xml ${CMAKE_BINARY_DIR}/coverage.xml
+          # Where to look for the counters. Without it gcovr falls back on
+          # --root, i.e. the source tree, and walks every build directory
+          # sitting under it: a second configuration kept next to this one
+          # (a Debug tree, an older coverage tree) then has its own .gcda
+          # read into this report, mixing counters produced by a different
+          # build of different sources. "." rather than an absolute path
+          # because the working directory below is already the build tree,
+          # and because --gcov-exclude-directories above matches against
+          # paths relative to it.
+          .)
+
+      # Two targets rather than one, because the counters gcov leaves behind
+      # accumulate across runs and are read independently of what produced
+      # them: `coverage` is the whole thing, `coverage-report` re-reads whatever
+      # the last ctest invocation happened to touch. The second is what to use
+      # after running part of the suite by hand -- ctest -R something -- which
+      # is the usual way of asking what one test reaches.
+      #
+      # VERBATIM on both, because the arguments above are regular expressions:
+      # without it CMake hands them to the shell unquoted, which expands
+      # ".*/tests/.*" as a file pattern -- gcovr then receives "./tests/.." and
+      # refuses it.
+      add_custom_target(coverage
+        COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+        COMMAND ${CODAC_GCOVR_COMMAND}
+        COMMAND ${CMAKE_COMMAND} -E echo
+                "Coverage report: ${CMAKE_BINARY_DIR}/coverage.html (and coverage.xml, Cobertura)"
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Running the tests and measuring what they reach"
+        VERBATIM)
+
+      add_custom_target(coverage-report
+        COMMAND ${CODAC_GCOVR_COMMAND}
+        COMMAND ${CMAKE_COMMAND} -E echo
+                "Coverage report: ${CMAKE_BINARY_DIR}/coverage.html (and coverage.xml, Cobertura)"
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Turning the counters left by the last test run into a report"
+        VERBATIM)
+
+      message(STATUS "${COLOR_BLUE}Coverage instrumentation enabled; run `make coverage` to produce the report.${COLOR_RESET}")
+
+    endif()
+
+  endif()
+
 
 ################################################################################
 # Compile sources
@@ -505,9 +754,30 @@
   endif()
   if(BUILD_TESTS)
     include(CTest)
+    # `check` is `test` plus two things: it prints the output of what failed,
+    # and it rebuilds the suite before running it. CMake's own `test` target
+    # does neither -- it runs ctest on whatever happens to be in the build tree.
+    #
+    # There is no DEPENDS here on purpose. In add_custom_target(), DEPENDS names
+    # *files*, not targets, and this target used to carry "DEPENDS
+    # ${PROJECT_NAME}", which is neither: no file and no target is called
+    # "codac", the libraries being codac-core, codac-graphics and so on. make
+    # therefore stopped on "No rule to make target 'codac'" after rebuilding
+    # everything and never reached ctest, so `make check` could not run the
+    # suite at all. What must exist before the suite runs is attached with
+    # add_dependencies() instead: every test executable, by
+    # tests/CMakeLists.txt; every example, by examples/CMakeLists.txt; and the
+    # Python extension modules just below, which the Python half of the suite
+    # imports.
     add_custom_target(check
                       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure $(ARGS)
-                      DEPENDS ${PROJECT_NAME} COMMENT "Running the tests")
+                      COMMENT "Running the tests")
+
+    foreach(_codac_py_module _core _graphics _unsupported)
+      if(TARGET ${_codac_py_module})
+        add_dependencies(check ${_codac_py_module})
+      endif()
+    endforeach()
 
     add_subdirectory(tests)
   endif()

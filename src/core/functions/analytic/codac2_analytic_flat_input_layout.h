@@ -174,7 +174,7 @@ namespace codac2
   };
 
   template<typename T>
-  static std::shared_ptr<ExprBase> as_expr_base(const AnalyticExprWrapper<T>& e)
+  inline std::shared_ptr<ExprBase> as_expr_base(const AnalyticExprWrapper<T>& e)
   {
     return std::static_pointer_cast<ExprBase>(
       std::shared_ptr<AnalyticExpr<T>>(e)

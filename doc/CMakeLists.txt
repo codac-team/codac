@@ -73,14 +73,22 @@
     set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/manual/html)
 
     # Copying _static files of Sphinx to build directories
-    foreach(static_file ${CMAKE_CURRENT_SOURCE_DIR}/manual/_static/)
-      file(COPY ${static_file} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/manual/_static/)
-    endforeach()
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/manual/_static")
+      execute_process(
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+          "${CMAKE_CURRENT_SOURCE_DIR}/manual/_static"
+          "${CMAKE_CURRENT_BINARY_DIR}/manual/_static"
+      )
+    endif()
 
     # Copying tmp files
-    foreach(static_file ${CMAKE_CURRENT_SOURCE_DIR}/manual/tmp/)
-      file(COPY ${static_file} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/manual/tmp/)
-    endforeach()
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/manual/tmp")
+      execute_process(
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+          "${CMAKE_CURRENT_SOURCE_DIR}/manual/tmp"
+          "${CMAKE_CURRENT_BINARY_DIR}/manual/tmp"
+      )
+    endif()
 
     # todo: the SPHINX_EXECUTABLE is already set by FindSphinx.cmake:
     # check that it works without the following overload for Win and Linux:

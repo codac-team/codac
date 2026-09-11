@@ -85,8 +85,19 @@
 
   
   add_custom_target(pip_package)
+  # Built through "python -m build" rather than by invoking setup.py directly:
+  # setuptools deprecated the latter, and bdist_wheel reaches the wheel by way
+  # of the install command, so each build printed "setup.py install is
+  # deprecated". Both are scheduled for removal.
+  #
+  # --no-isolation reuses the setuptools and wheel of the environment instead of
+  # creating a virtual environment and downloading them again for every wheel.
+  # Every place that reaches this target installs them first (the two
+  # scripts/docker/build_pybinding*.sh, and the macosmatrix/vcmatrix
+  # workflows), so the isolated environment would only cost a download and
+  # would silently build against a different setuptools than the one tested.
   add_custom_command(TARGET pip_package PRE_BUILD
-    COMMAND ${PYTHON_EXECUTABLE} ARGS setup.py bdist_wheel -d ${CMAKE_BINARY_DIR}
+    COMMAND ${PYTHON_EXECUTABLE} ARGS -m build --wheel --no-isolation --outdir ${CMAKE_BINARY_DIR}
     WORKING_DIRECTORY ${PYTHON_PACKAGE_DIR}
   )
 

@@ -36,6 +36,7 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
     13_qinter/main
     14_lohner/main
     16_visibility/main
+    17_affine/ex_affineform
     ellipsoid_example/main
   )
 
@@ -105,8 +106,13 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
       ${EXAMPLE_NAME}
       SYSTEM PUBLIC
 
-        ${CMAKE_BINARY_DIR}/src      # the generated "codac" umbrella header
-        ${CMAKE_BINARY_DIR}/include  # codac-core.h, codac-graphics.h and the rest
+        # First, so that a header is opened at src/... rather than through
+        # build/include: the path a translation unit used is the path gcov records,
+        # and the two spellings would split every header into two entries in the
+        # coverage report. See codac_publish_include_dirs() in the top-level CMakeLists.txt.
+        ${CODAC_SOURCE_INCLUDE_DIRS}
+
+        ${CMAKE_BINARY_DIR}/src      # the generated "codac" umbrella header and module headers (codac-core.h, codac-graphics.h, etc.)
     )
 
     target_link_libraries(
@@ -116,6 +122,11 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
         Ibex::ibex
         ${CODAC_EXAMPLE_LIBRARIES}
     )
+
+    # Propager les flags d'architecture (FMA, etc.) vers les exemples (Option 2)
+    if(CODAC_ARCH_CXX_FLAGS)
+      target_compile_options(${EXAMPLE_NAME} PRIVATE ${CODAC_ARCH_CXX_FLAGS})
+    endif()
 
     add_test(
       NAME ${EXAMPLE_NAME}_cpp
@@ -127,6 +138,15 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
       set_tests_properties(${EXAMPLE_NAME}_cpp PROPERTIES
         ENVIRONMENT "${CODAC_CPP_TEST_ENV}"
       )
+    endif()
+
+    # The examples are part of the ctest suite here, so `make check` -- which
+    # rebuilds the suite before running it -- has to build them too. Without
+    # this it would run ctest against executables that may not exist yet, the
+    # way it does for the unit tests through the same call in
+    # tests/CMakeLists.txt.
+    if(TARGET check)
+      add_dependencies(check ${EXAMPLE_NAME})
     endif()
 
   endforeach()
