@@ -19,12 +19,12 @@ using namespace std;
 
 namespace codac2
 {
-  std::map<double, std::vector<T>> PEIBOS(const capd::IMap& i_map, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<OctaSym>& Sigma, double epsilon, bool verbose)
+  std::map<double, std::vector<PEIBOS_CAPD_Result>> PEIBOS(const capd::IMap& i_map, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<OctaSym>& Sigma, double epsilon, bool verbose)
   {
     return PEIBOS(i_map, tf, dt, psi_0, Sigma, epsilon, Vector::zero(psi_0.output_size()), verbose);
   }
 
-  std::map<double, std::vector<T>> PEIBOS(const capd::IMap& i_map, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<OctaSym>& Sigma, double epsilon, const Vector& offset, bool verbose)
+  std::map<double, std::vector<PEIBOS_CAPD_Result>> PEIBOS(const capd::IMap& i_map, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const vector<OctaSym>& Sigma, double epsilon, const Vector& offset, bool verbose)
   {
     std::vector<double> time_points;
     for (double t = 0.; t <= tf; t += dt)
@@ -48,7 +48,7 @@ namespace codac2
     double true_eps = split(Interval(-1.,1.)*IntervalVector::Ones(m), epsilon, boxes);
 
     int nthreads = nb_threads();
-    std::vector<std::map<double, std::vector<T>>> thread_outputs(nthreads);
+    std::vector<std::map<double, std::vector<PEIBOS_CAPD_Result>>> thread_outputs(nthreads);
 
     struct WorkItem { const OctaSym* sigma; const IntervalVector* box; };
     std::vector<WorkItem> work;
@@ -109,7 +109,7 @@ namespace codac2
 
     for (auto& th : threads) th.join();
 
-    std::map<double, std::vector<T>> output;
+    std::map<double, std::vector<PEIBOS_CAPD_Result>> output;
 
     for (auto& vec : thread_outputs)
         for (auto t : time_points)
@@ -130,7 +130,7 @@ namespace codac2
     return output;
   }
 
-  std::map<double,std::vector<Parallelepiped>> reach_set(const std::map<double, std::vector<T>>& peibos_output)
+  std::map<double,std::vector<Parallelepiped>> reach_set(const std::map<double, std::vector<PEIBOS_CAPD_Result>>& peibos_output)
   {
     std::map<double,std::vector<Parallelepiped>> output;
 
