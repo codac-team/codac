@@ -231,6 +231,40 @@
 
 
 ################################################################################
+# Treating dependencies' headers as system headers
+################################################################################
+
+  # This project compiles with /W4 or -Wall -Wextra -Wpedantic, and a dependency
+  # pulled in with FetchContent inherits that level: its headers are ordinary
+  # include directories, not system ones. Eigen and Catch2 alone accounted for
+  # about 8300 MSVC warnings per job (C4459, C5054, C4308, C4324) and the 557
+  # -Wc2y-extensions Clang reports for Catch2's __COUNTER__, drowning the
+  # handful of warnings that actually belong to Codac.
+  #
+  # FetchContent_Declare(... SYSTEM) does exactly this, but only since CMake
+  # 3.25, while this project accepts 3.14. Setting the property by hand is
+  # equivalent and has worked for far longer: the compiler then receives
+  # -isystem (or /external:I, which CMake already emits for the Visual Studio
+  # generator alongside /external:W0).
+  function(codac_mark_target_system tgt)
+    if(NOT TARGET ${tgt})
+      return()
+    endif()
+    # A property cannot be set on an ALIAS, so resolve it to the target it names
+    # (Eigen exports Eigen3::Eigen as an alias of eigen).
+    get_target_property(_aliased ${tgt} ALIASED_TARGET)
+    if(_aliased)
+      set(tgt ${_aliased})
+    endif()
+    get_target_property(_inc ${tgt} INTERFACE_INCLUDE_DIRECTORIES)
+    if(_inc)
+      set_target_properties(${tgt} PROPERTIES
+                            INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${_inc}")
+    endif()
+  endfunction()
+
+
+################################################################################
 # Looking for Eigen3
 ################################################################################
 
@@ -245,6 +279,9 @@
     FetchContent_Declare(Eigen3 URL http://github.com/codac-team/eigen/archive/refs/heads/eigen-5.0.zip)
     #FetchContent_Declare(Eigen3 URL ${CMAKE_CURRENT_SOURCE_DIR}/3rd/eigen-a0dc3994bd5d4e804dab58decb78c56a5af516ba.zip) # If needed to be self-contained...
     FetchContent_MakeAvailable(Eigen3)
+    # Only needed for the FetchContent path: a target coming from
+    # find_package() is IMPORTED, and CMake already treats those as system.
+    codac_mark_target_system(Eigen3::Eigen)
   endif()
   # Adds Eigen3::Eigen
 
