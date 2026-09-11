@@ -18,15 +18,29 @@ else()
 endif()
 # Adds Catch2::Catch2WithMain
 
+
+# Test sources
+# ==================================================================
+
 list(APPEND SRC_TESTS # listing files without extension
 
+  # ----------------------------------------------------------------
   # 3rd
-
-  # Core
+  # ----------------------------------------------------------------
 
   core/3rd/codac2_tests_eigen
 
+
+  # ----------------------------------------------------------------
+  # Actions
+  # ----------------------------------------------------------------
+
   core/actions/codac2_tests_OctaSym
+
+
+  # ----------------------------------------------------------------
+  # Contractors
+  # ----------------------------------------------------------------
 
   core/contractors/codac2_tests_CtcAction
   core/contractors/codac2_tests_CtcCartProd
@@ -45,35 +59,66 @@ list(APPEND SRC_TESTS # listing files without extension
   core/contractors/codac2_tests_CtcUnion
   core/contractors/codac2_tests_CtcVisible
   core/contractors/codac2_tests_linear_ctc
+
   ../doc/manual/manual/contractors/geometric/src
   ../doc/manual/manual/contractors/analytic/src
   ../doc/manual/manual/contractors/set/src
+  ../doc/manual/manual/contractors/shape/src
+
+
+  # ----------------------------------------------------------------
+  # Domains
+  # ----------------------------------------------------------------
 
   core/domains/codac2_tests_BoolInterval
+
   core/domains/ellipsoid/codac2_tests_Ellipsoid
+
   core/domains/interval/codac2_tests_Interval
   core/domains/interval/codac2_tests_Interval_operations
   core/domains/interval/codac2_tests_IntervalMatrix
   core/domains/interval/codac2_tests_IntervalVector
+
   ../doc/manual/manual/intervals/src
+
   core/domains/zonotope/codac2_tests_Parallelepiped_eval
   core/domains/zonotope/codac2_tests_Parallelepiped
   core/domains/zonotope/codac2_tests_Zonotope
+
   core/domains/tube/codac2_tests_TDomain
   core/domains/tube/codac2_tests_Slice
   core/domains/tube/codac2_tests_Slice_polygon
   core/domains/tube/codac2_tests_SlicedTube
   core/domains/tube/codac2_tests_SlicedTube_integral
+
   ../doc/manual/manual/tubes/src
 
+
+  # ----------------------------------------------------------------
+  # Functions
+  # ----------------------------------------------------------------
+
   core/functions/analytic/codac2_tests_AnalyticFunction
+
   ../doc/manual/manual/functions/analytic/src
+  ../doc/manual/manual/functions/parallelepiped/src
+
+
+  # ----------------------------------------------------------------
+  # Geometry
+  # ----------------------------------------------------------------
 
   core/geometry/codac2_tests_ConvexPolygon
   core/geometry/codac2_tests_geometry
   core/geometry/codac2_tests_Polygon
   core/geometry/codac2_tests_Segment
+
   ../doc/manual/manual/geometry/src
+
+
+  # ----------------------------------------------------------------
+  # Matrices
+  # ----------------------------------------------------------------
 
   core/matrices/codac2_tests_arithmetic_add
   core/matrices/codac2_tests_arithmetic_div
@@ -86,11 +131,29 @@ list(APPEND SRC_TESTS # listing files without extension
   core/matrices/codac2_tests_inversion
   core/matrices/codac2_tests_IntFullPivLU
   core/matrices/codac2_tests_GaussJordan
+
   ../doc/manual/manual/linear/src
+
+
+  # ----------------------------------------------------------------
+  # Operators
+  # ----------------------------------------------------------------
 
   core/operators/codac2_tests_operators
 
+
+  # ----------------------------------------------------------------
+  # Peibos
+  # ----------------------------------------------------------------
+
   core/peibos/codac2_tests_peibos
+
+  ../doc/manual/manual/functions/peibos/src
+
+
+  # ----------------------------------------------------------------
+  # Separators
+  # ----------------------------------------------------------------
 
   core/separators/codac2_tests_SepCartProd
   core/separators/codac2_tests_SepCtcBoundary
@@ -102,19 +165,39 @@ list(APPEND SRC_TESTS # listing files without extension
   core/separators/codac2_tests_SepTransform
   core/separators/codac2_tests_SepUnion
   core/separators/codac2_tests_SepVisible
-  
+
+
+  # ----------------------------------------------------------------
+  # Tools
+  # ----------------------------------------------------------------
+
   core/tools/codac2_tests_Approx
   core/tools/codac2_tests_serialization
   core/tools/codac2_tests_transformations
   core/tools/codac2_tests_trunc
   core/tools/ibex/codac2_tests_ibex
+
   ../doc/manual/manual/tools/src
-  
+
+
+  # ----------------------------------------------------------------
+  # Trajectory
+  # ----------------------------------------------------------------
+
   core/trajectory/codac2_tests_AnalyticTraj
   core/trajectory/codac2_tests_SampledTraj
 
+
+  # ----------------------------------------------------------------
+  # Graphics
+  # ----------------------------------------------------------------
+
   graphics/styles/codac2_tests_Color
 )
+
+
+# Python files required by tests
+# ==================================================================
 
 file(COPY
   ${CMAKE_CURRENT_SOURCE_DIR}/core/domains/tube/codac2_tests_predefined_tubes.py
@@ -125,7 +208,14 @@ file(COPY
   ${CMAKE_BINARY_DIR}/python/python_package/codac/tests
 )
 
+
+# Libraries
+# ==================================================================
+
 set(CODAC_LIBRARIES ${PROJECT_NAME}-core ${PROJECT_NAME}-graphics)
+
+# Sympy
+# ==================================================================
 
 option(BUILD_SYMPY_EMBED_TESTS "Build C++ tests that require embedded Python for Sympy" ON)
 if(WITH_PYTHON AND DEFINED PYBIND11_FINDPYTHON AND NOT PYBIND11_FINDPYTHON)
@@ -141,7 +231,9 @@ if (WITH_PYTHON AND BUILD_SYMPY_EMBED_TESTS)
   )
 endif()
 
-# CAPD test
+
+# CAPD
+# ==================================================================
 if (WITH_CAPD)
   list(APPEND SRC_TESTS
     extensions/capd/codac2_tests_capd
