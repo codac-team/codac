@@ -85,7 +85,7 @@ jobs:
           echo "WITH_PYTHON=OFF" >> $GITHUB_ENV
         fi
       if: runner.os=='Windows'
-    - run: python -m pip install --upgrade pip && pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
+    - run: python -m pip install --upgrade pip && pip install --upgrade wheel setuptools build sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
       shell: bash
       if: runner.os=='Windows'
     - run: |
