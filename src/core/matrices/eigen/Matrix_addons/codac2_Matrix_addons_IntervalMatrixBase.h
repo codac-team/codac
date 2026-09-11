@@ -141,7 +141,7 @@ inline bool operator==(const MatrixBase<OtherDerived>& x) const
 inline void set_empty()
   requires IsIntervalDomain<Scalar>
 {
-  this->init(codac2::Interval::empty());
+  this->init(Scalar::empty());
 }
 
 /**
