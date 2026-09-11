@@ -76,17 +76,17 @@ namespace codac2
         : OperationExprBase<AnalyticExpr<X>...>(e)
       { }
 
-      std::shared_ptr<ExprBase> copy() const
+      std::shared_ptr<ExprBase> copy() const override
       {
         return std::make_shared<AnalyticOperationExpr<C,Y,X...>>(*this);
       }
 
-      void replace_arg(const ExprID& old_arg_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_arg(const ExprID& old_arg_id, const std::shared_ptr<ExprBase>& new_expr) override
       {
         return OperationExprBase<AnalyticExpr<X>...>::replace_arg(old_arg_id, new_expr);
       }
 
-      Y fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
+      Y fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
       {
         return std::apply(
           [this,&v,total_input_size,natural_eval](auto &&... x)
@@ -102,7 +102,7 @@ namespace codac2
         this->_x);
       }
 
-      void bwd_eval(ValuesMap& v) const
+      void bwd_eval(ValuesMap& v) const override
       {
         auto y = AnalyticExpr<Y>::value(v);
 
@@ -117,7 +117,7 @@ namespace codac2
         }, this->_x);
       }
 
-      virtual std::string str(bool in_parentheses = false) const
+      virtual std::string str(bool in_parentheses = false) const override
       {
         std::string s = std::apply([](auto &&... x) {
           return C::str(x...);
@@ -125,12 +125,12 @@ namespace codac2
         return in_parentheses ? "(" + s + ")" : s;
       }
 
-      virtual bool is_str_leaf() const
+      virtual bool is_str_leaf() const override
       {
         return false;
       }
 
-      std::pair<Index,Index> output_shape() const
+      std::pair<Index,Index> output_shape() const override
       {
         std::pair<Index,Index> s;
         std::apply([&s](auto &&... x)
@@ -140,7 +140,7 @@ namespace codac2
         return s;
       }
 
-      virtual bool belongs_to_args_list(const FunctionArgsList& args) const
+      virtual bool belongs_to_args_list(const FunctionArgsList& args) const override
       {
         bool b = true;
 
