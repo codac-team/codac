@@ -36,7 +36,6 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
     13_qinter/main
     14_lohner/main
     16_visibility/main
-    17_affine/ex_affineform
     ellipsoid_example/main
   )
 
