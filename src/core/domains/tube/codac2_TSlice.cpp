@@ -35,4 +35,6 @@ namespace codac2
   {
     return _slices;
   }
+
+  TSlice::~TSlice() = default;
 }
