@@ -77,7 +77,7 @@ Geometric shapes
   - Line
   - Arrow
   - Polyline
-  - Polygone
+  - Polygon
   - Parallelepiped
   - Zonotope
   - Pie
@@ -154,7 +154,7 @@ The geometric shapes that can be drawn and their arguments are listed below :
   - vector<Vector> : vector where each element is a point of the polyline to draw
   - float : the length of the tip of the arrow
 
-- draw_polygone
+- draw_polygon
 
   - Polygon : the polygon to draw
 
