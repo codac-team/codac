@@ -28,8 +28,13 @@
   )
 
   target_link_libraries(_graphics
-    PRIVATE ${PROJECT_NAME}-graphics ${LIBS} Ibex::ibex
+    PRIVATE ${PROJECT_NAME}-graphics Threads::Threads Ibex::ibex
   )
+
+  # Propagate the architecture flags (FMA, etc.) to the Python modules
+  if(CODAC_ARCH_CXX_FLAGS)
+    target_compile_options(_graphics PRIVATE ${CODAC_ARCH_CXX_FLAGS})
+  endif()
 
   # Copy the generated library in the package folder
   add_custom_command(TARGET _graphics POST_BUILD

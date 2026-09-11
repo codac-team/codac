@@ -267,6 +267,11 @@ foreach(SRC_TEST ${SRC_TESTS})
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${CODAC_HEADERS_DIR})
   target_link_libraries(${TEST_NAME} PUBLIC Ibex::ibex ${CODAC_LIBRARIES} PRIVATE Catch2::Catch2WithMain)
 
+  # Propagate the architecture flags (FMA, etc.) to the tests
+  if(CODAC_ARCH_CXX_FLAGS)
+    target_compile_options(${TEST_NAME} PRIVATE ${CODAC_ARCH_CXX_FLAGS})
+  endif()
+
   if(WITH_PYTHON AND SRC_TEST MATCHES "extensions/sympy/")
     target_link_libraries(${TEST_NAME} PRIVATE ${PROJECT_NAME}-sympy pybind11::embed)
   endif()

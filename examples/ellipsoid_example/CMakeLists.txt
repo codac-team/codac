@@ -20,25 +20,28 @@
 
 # Adding Eigen3
 
-  # In case you installed Eigen3 in a local directory, you need
-  # to specify its path with the CMAKE_PREFIX_PATH option, e.g.
-  # set(CMAKE_PREFIX_PATH "~/eigen/build_install")
-
-  find_package(Eigen3 3.4 REQUIRED NO_MODULE)
-  message(STATUS "Found Eigen3 version ${Eigen3_VERSION}")
+  # Codac builds and installs its own Eigen3 (see CODAC_INCLUDE_DIRS below),
+  # so no separate find_package(Eigen3) is needed -- and none would find it,
+  # since that build isn't registered as a system-discoverable package.
+  # Searching for an unrelated system Eigen3 here would risk pulling in a
+  # different version than the one codac-core/codac-graphics were compiled
+  # against, which is exactly the kind of ABI mismatch that broke examples
+  # like 01_batman, and that CODAC_CXX_FLAGS -- which carries -mfma when codac
+  # was built with it -- is there to prevent.
 
 # Adding Codac
 
-  # In case you installed Codac in a local directory, you need 
+  # In case you installed Codac in a local directory, you need
   # to specify its path with the CMAKE_PREFIX_PATH option.
-  set(CMAKE_PREFIX_PATH "~/Documents/Code_these/codac/build_install")
+  # set(CMAKE_PREFIX_PATH "~/codac/build_install")
 
   find_package(CODAC REQUIRED)
   message(STATUS "Found Codac version ${CODAC_VERSION}")
+
 
 # Compilation
 
   add_executable(${PROJECT_NAME} main.cpp)
   target_compile_options(${PROJECT_NAME} PUBLIC ${CODAC_CXX_FLAGS})
   target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES} Ibex::ibex Eigen3::Eigen)
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES} Ibex::ibex)

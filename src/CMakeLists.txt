@@ -47,6 +47,59 @@
 # Generating codac-config.cmake file
 # ==================================
 
+  # Builds CODAC_LIBRARIES and CODAC_INCLUDE_DIRS in a single place
+  function(codac_build_config_vars)
+    # Base libraries, always included
+    set(CODAC_LIBRARIES
+      \${CODAC_CORE_LIBRARY}
+      \${CODAC_GRAPHICS_LIBRARY}
+      \${CODAC_UNSUPPORTED_LIBRARY}
+      Ibex::ibex
+      Threads::Threads
+      CACHE INTERNAL "Libraries to link against for CODAC"
+    )
+
+    set(CODAC_INCLUDE_DIRS
+      \${CODAC_CORE_INCLUDE_DIR}/../  # header root, for <codac>
+      \${CODAC_CORE_INCLUDE_DIR}/../eigen3/
+      \${CODAC_CORE_INCLUDE_DIR}
+      \${CODAC_GRAPHICS_INCLUDE_DIR}
+      \${CODAC_UNSUPPORTED_INCLUDE_DIR}
+      CACHE INTERNAL "Include directories for CODAC"
+    )
+
+    # Optional dependencies (CAPD, SymPy)
+    if(WITH_CAPD)
+      list(APPEND CODAC_LIBRARIES
+        \${CODAC_CAPD_LIBRARY}
+        capd::capd
+      )
+      list(APPEND CODAC_INCLUDE_DIRS
+        \${CODAC_CAPD_INCLUDE_DIR}
+      )
+      # CODAC_CAPD_LIBRARY is kept as its own variable too, for any consumer
+      # that prefers to opt into CAPD explicitly rather than pull it in via
+      # the general CODAC_LIBRARIES.
+      set(CODAC_CAPD_LIBRARY \${CODAC_CAPD_LIBRARY} \${CODAC_LIBRARIES} CACHE INTERNAL "CAPD library with all dependencies")
+    endif()
+
+    if(WITH_PYTHON)
+      list(APPEND CODAC_LIBRARIES
+        \${CODAC_SYMPY_LIBRARY}
+      )
+      list(APPEND CODAC_INCLUDE_DIRS
+        \${CODAC_SYMPY_INCLUDE_DIR}
+      )
+      set(CODAC_SYMPY_LIBRARY \${CODAC_SYMPY_LIBRARY} \${CODAC_LIBRARIES} CACHE INTERNAL "SymPy library with all dependencies")
+    endif()
+
+    # Propagate the architecture flags (FMA, etc.) to external projects
+    set(CODAC_CXX_FLAGS "${CODAC_ARCH_CXX_FLAGS}" CACHE INTERNAL "C++ flags for CODAC")
+  endfunction()
+
+  # Build the variables written into codac-config.cmake below
+  codac_build_config_vars()
+
   set(CODAC_CMAKE_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake)
 
   file(WRITE ${CODAC_CMAKE_CONFIG_FILE}
@@ -69,12 +122,21 @@
 
     find_package(IBEX REQUIRED)
 
+    # codac-core links PUBLIC against Threads::Threads (see src/core/CMakeLists.txt),
+    # e.g. for peibos/threading code. That requirement doesn't come back through
+    # find_library() above (a plain path has no transitive usage requirements),
+    # so it has to be re-declared here -- otherwise any downstream target that
+    # actually pulls in that code (such as the 11_peibos example) fails to link
+    # with an undefined reference to pthread_create.
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
+
     set(CODAC_VERSION ${PROJECT_VERSION})
-    set(CODAC_LIBRARIES \${CODAC_CORE_LIBRARY} \${CODAC_GRAPHICS_LIBRARY} \${CODAC_UNSUPPORTED_LIBRARY} Ibex::ibex)
-    set(CODAC_INCLUDE_DIRS \${CODAC_CORE_INCLUDE_DIR}/../ \${CODAC_CORE_INCLUDE_DIR}/../eigen3/ \${CODAC_CORE_INCLUDE_DIR} \${CODAC_GRAPHICS_INCLUDE_DIR} \${CODAC_UNSUPPORTED_INCLUDE_DIR})
+    set(CODAC_LIBRARIES ${CODAC_LIBRARIES})
+    set(CODAC_INCLUDE_DIRS ${CODAC_INCLUDE_DIRS})
 
     set(CODAC_C_FLAGS \"\")
-    set(CODAC_CXX_FLAGS \"\")
+    set(CODAC_CXX_FLAGS \"${CODAC_CXX_FLAGS}\")
   ")
 
   if(WITH_PYTHON)
@@ -87,8 +149,6 @@
               PATH_SUFFIXES include/${PROJECT_NAME}-sympy)
     find_library(CODAC_SYMPY_LIBRARY NAMES ${PROJECT_NAME}-sympy
                  PATH_SUFFIXES lib)
-                 
-    set(CODAC_SYMPY_LIBRARY \${CODAC_SYMPY_LIBRARY} \${CODAC_LIBRARIES})
     ")
 
   endif()
@@ -104,15 +164,9 @@
               PATH_SUFFIXES include/${PROJECT_NAME}-capd)
     find_library(CODAC_CAPD_LIBRARY NAMES ${PROJECT_NAME}-capd
                  PATH_SUFFIXES lib)
-                 
-    set(CODAC_CAPD_LIBRARY \${CODAC_CAPD_LIBRARY} \${CODAC_LIBRARIES})
     ")
 
   endif()
-
-  file(APPEND ${CODAC_CMAKE_CONFIG_FILE} "
-    set(CODAC_LIBRARIES \${CODAC_LIBRARIES} \${CODAC_GRAPHICS_LIBRARY} \${CODAC_CORE_LIBRARY})
-    ")
 
 
   install(FILES ${CODAC_CMAKE_CONFIG_FILE} DESTINATION ${CMAKE_INSTALL_CMAKE})

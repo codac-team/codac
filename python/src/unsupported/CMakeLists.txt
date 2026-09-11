@@ -16,8 +16,13 @@
   )
 
   target_link_libraries(_unsupported
-    PRIVATE ${PROJECT_NAME}-unsupported ${LIBS} Ibex::ibex
+    PRIVATE ${PROJECT_NAME}-unsupported Threads::Threads Ibex::ibex
   )
+
+  # Propagate the architecture flags (FMA, etc.) to the Python modules
+  if(CODAC_ARCH_CXX_FLAGS)
+    target_compile_options(_unsupported PRIVATE ${CODAC_ARCH_CXX_FLAGS})
+  endif()
 
   # Copy the generated library in the package folder
   add_custom_command(TARGET _unsupported POST_BUILD

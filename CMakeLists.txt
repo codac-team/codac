@@ -84,6 +84,109 @@
     add_compile_options(-Wall -Wextra -Wpedantic)
   endif()
 
+  # FMA (fused multiply-add) is only ever activated here through an explicit
+  # compiler flag, and only when check_cxx_compiler_flag() confirms it is
+  # actually recognized. This matters because "the FMA flag" is not a
+  # portable concept:
+  #  - x86/x86_64 (GCC/Clang): -mfma enables the FMA3 ISA extension.
+  #  - x86/x64 (MSVC): there is no dedicated FMA flag; /arch:AVX2 implies it.
+  #  - AArch64 (ARMv8-A, e.g. regular Raspberry Pi OS 64-bit): FMA
+  #    (FMADD/FMLA) is part of the base ISA, scalar and NEON alike, so no
+  #    flag exists or is needed; -mfma is simply unknown to the compiler
+  #    there, the check below fails, and the flag is skipped (the compiler
+  #    still emits FMA instructions on its own when it can).
+  #  - ARMv7-A / 32-bit ARMv8-A (e.g. a Raspberry Pi 2 in AArch32, or a
+  #    Raspberry Pi 3/4 running a 32-bit OS: the silicon is ARMv8-A but the
+  #    32-bit userland reports itself as armv7l or armv8l): FMA hardware is
+  #    optional on ARMv7-A but mandatory on ARMv8-A even in its 32-bit
+  #    execution state, and in both cases it is exposed the same way, via
+  #    the NEON-VFPv4 FPU extension, activated by
+  #    -mfpu=neon-vfpv4 -mfloat-abi=hard (plus -ffp-contract=fast, since
+  #    C++ does not permit fusing a*b+c into FMA by default). -mfma itself
+  #    is not a recognized flag on any 32-bit ARM target, so this is
+  #    handled in its own branch below rather than falling through to the
+  #    generic GCC/Clang case.
+  #  - ARMv6 hard-float (e.g. Raspbian Bullseye armv6hf, Raspberry Pi
+  #    Zero/1): the FPU predates fused multiply-add support (FMA was only
+  #    introduced with VFPv4/ARMv7-A), so there is no equivalent flag to
+  #    fall back to either; the check fails and we correctly get plain
+  #    (unfused) multiply+add on that target.
+  # In all unsupported cases the check below simply leaves the flag out,
+  # which is the correct behavior rather than a build failure.
+  # CODAC_ARCH_CXX_FLAGS collects whichever of the flags below actually got
+  # applied, so that it can be re-exported as part of CODAC_CXX_FLAGS in the
+  # generated codac-config.cmake (see src/CMakeLists.txt). Without this,
+  # downstream consumers (examples, user projects built via find_package(CODAC))
+  # compile Eigen's header-only templates with different alignment/instruction-set
+  # assumptions than the ones baked into the prebuilt static libraries they link
+  # against -- an ODR/ABI mismatch that Eigen documents as unsafe, and that in
+  # practice corrupts the heap (mismatched aligned_malloc/aligned_free paths).
+  set(CODAC_ARCH_CXX_FLAGS "")
+
+  include(CheckCXXCompilerFlag)
+  if(MSVC)
+      check_cxx_compiler_flag("/arch:AVX2" COMPILER_SUPPORTS_FMA)
+      if(COMPILER_SUPPORTS_FMA)
+        add_compile_options(/arch:AVX2)
+        set(CODAC_ARCH_CXX_FLAGS "/arch:AVX2")
+      endif()
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang" AND CMAKE_SYSTEM_PROCESSOR MATCHES "^armv[7-9]")
+      check_cxx_compiler_flag("-mfpu=neon-vfpv4 -mfloat-abi=hard" COMPILER_SUPPORTS_FMA)
+      if(COMPILER_SUPPORTS_FMA)
+        add_compile_options(-mfpu=neon-vfpv4 -mfloat-abi=hard -ffp-contract=fast)
+        set(CODAC_ARCH_CXX_FLAGS "-mfpu=neon-vfpv4;-mfloat-abi=hard;-ffp-contract=fast")
+      endif()
+  elseif(WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+      # -mfma turns AVX on, and AVX asks for a 32-byte aligned stack, which GCC
+      # targeting Windows cannot deliver: the x64 calling convention there only
+      # guarantees 16 bytes and GCC does not realign on entry, so any spill of a
+      # 256-bit register faults. Eigen's own AVX helpers are where this lands --
+      # segment_mask_4x64() computes a load mask entirely in registers, has no
+      # memory operand of its own, and still died on SIGSEGV in 32 of the 87
+      # tests of the MinGW x64 Debug job of .github/workflows/windebugmatrix.yml,
+      # every one of them through a partial packet load. The same build in
+      # Release survives only because -O3 inlines those helpers and keeps their
+      # values in registers, where -Os spills them: a matter of luck, not of
+      # correctness. The 32-bit MinGW job is spared because GCC realigns the
+      # stack there as a matter of course.
+      #
+      # Leaving the flag out on this toolchain costs very little. Codac compiles
+      # with -ffp-contract=off, so no fused multiply-add is generated from
+      # ordinary arithmetic anyway; what is given up is Eigen using 256-bit
+      # packets, and only on Windows/GCC. It also protects the users of the
+      # MinGW packages this project publishes: CODAC_ARCH_CXX_FLAGS is
+      # re-exported through codac-config.cmake, so they would otherwise inherit
+      # the flag and the same crash in their own Debug builds.
+      check_cxx_compiler_flag("-mfma" COMPILER_SUPPORTS_FMA)
+      if(COMPILER_SUPPORTS_FMA)
+        message(STATUS "FMA is supported but left disabled: GCC targeting Windows cannot align the stack for the AVX code it enables.")
+      endif()
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
+      # Probe what -mfma does, not whether the driver accepts it. Clang accepts
+      # an ISA flag it cannot honour -- on arm64 it takes -mfma, ignores it, and
+      # merely warns -- so check_cxx_compiler_flag() reports success and every
+      # translation unit then carries a flag with no effect. That is where the
+      # 1138 -Wunused-command-line-argument warnings of the macOS arm64 jobs came
+      # from. __FMA__ is defined only when FMA is actually turned on for the
+      # target, so compiling against it asks the question we mean to ask, and
+      # keeps working for any future ISA flag handled the same way.
+      include(CheckCXXSourceCompiles)
+      set(CMAKE_REQUIRED_FLAGS "-mfma")
+      check_cxx_source_compiles("
+        #ifndef __FMA__
+        #error -mfma was accepted but had no effect on this target
+        #endif
+        int main() { return 0; }"
+        COMPILER_SUPPORTS_FMA)
+      unset(CMAKE_REQUIRED_FLAGS)
+      if(COMPILER_SUPPORTS_FMA)
+        add_compile_options(-mfma )
+        set(CODAC_ARCH_CXX_FLAGS "-mfma")
+      endif()
+  endif()
+
+
+
   # Temporary attempts to fix errors similar to: 
   # _ number of sections exceeded object file format limit.
   # _ out of memory allocating XXX bytes.

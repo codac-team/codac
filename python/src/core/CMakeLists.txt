@@ -157,8 +157,13 @@
   )
 
   target_link_libraries(_core
-    PRIVATE ${PROJECT_NAME}-core ${PROJECT_NAME}-sympy ${LIBS} Ibex::ibex
+    PRIVATE ${PROJECT_NAME}-core ${PROJECT_NAME}-sympy Threads::Threads Ibex::ibex
   )
+
+  # Propagate the architecture flags (FMA, etc.) to the Python modules
+  if(CODAC_ARCH_CXX_FLAGS)
+    target_compile_options(_core PRIVATE ${CODAC_ARCH_CXX_FLAGS})
+  endif()
 
   # Copy the generated library in the package folder
   add_custom_command(TARGET _core POST_BUILD
