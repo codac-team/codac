@@ -56,7 +56,43 @@ jobs:
     #  if: runner.os=='macOS'
     - run: brew install catch2 # Issues with binary packages when cross-compiling...
       if: (runner.os=='macOS')&&(matrix.cfg.cross!=true)
-    - run: brew install graphviz ; brew install --formula doxygen ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
+    # Doxygen 1.18.0, the version Homebrew currently installs, segfaults on the
+    # Intel runners while parsing this project's headers, and does so before
+    # writing doc/api/xml/index.xml, so cmake cannot even configure --
+    # doc/CMakeLists.txt tolerates a crash that still produced usable XML, but
+    # there is nothing to salvage here. Those jobs therefore take doxygen from
+    # the project's own release, which is the only place an older version is
+    # available in binary form: Homebrew never offers anything but the newest.
+    #
+    # The arm64 runners keep Homebrew's doxygen. They survive 1.18.0, and the
+    # arm build of the official release cannot run there anyway: it is linked
+    # against macOS 15 while these runners are macOS 14, so it aborts at load
+    # time on a missing libc++ symbol. Two doxygen versions across the matrix is
+    # not ideal -- the names of the docstring macros are derived from the text
+    # doxygen produces, so a wording change between versions renames them and
+    # the bindings that spell them out stop compiling, which is exactly what the
+    # manylinux images hit (see scripts/doxygen/doxygen2docstring.py). Keeping
+    # the two versions close, and normalizing that text rather than trusting it,
+    # is what guards against it.
+    - run: |
+        brew install graphviz
+        if [ "${{ matrix.cfg.arch }}" = "arm64" ]; then
+          brew install --formula doxygen
+          doxygen --version
+        else
+          DOXYGEN_VERSION=1.17.0
+          curl -fsSL -o doxygen.zip "https://github.com/doxygen/doxygen/releases/download/Release_${DOXYGEN_VERSION//./_}/doxygen-${DOXYGEN_VERSION}-mac-intel.zip"
+          unzip -q doxygen.zip -d "$HOME/doxygen"
+          rm -f doxygen.zip
+          chmod +x "$HOME/doxygen/doxygen-${DOXYGEN_VERSION}/doxygen"
+          # $GITHUB_PATH only reaches the later steps, so the check below has to
+          # name the binary; it runs here rather than there so that a download
+          # that cannot execute fails at once, next to what produced it.
+          "$HOME/doxygen/doxygen-${DOXYGEN_VERSION}/doxygen" --version
+          echo "$HOME/doxygen/doxygen-${DOXYGEN_VERSION}" >> "$GITHUB_PATH"
+        fi
+        python -m pip install --upgrade pip
+        pip install --upgrade wheel setuptools build sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
       if: runner.os=='macOS'
     - run: |
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
