@@ -557,6 +557,158 @@
   endif()
 
 ################################################################################
+# Code coverage
+################################################################################
+
+  # WITH_COVERAGE instruments the build and adds two targets: `coverage`, which
+  # runs the whole ctest suite and turns the counters gcov leaves behind into a
+  # report, and `coverage-report`, which only does the second half. That is what
+  # the "Ubuntu 26.04 GCC x86_64 Release coverage" job of
+  # .github/workflows/unixdebug.yml now calls, so that a developer measuring
+  # coverage by hand and the job reporting it use the same flags, the same gcov
+  # and the same filters, and cannot drift apart. Deciding all of that here
+  # rather than leaving it to the caller is also what spares everyone the traps
+  # below.
+  #
+  # Coverage answers "what do the tests reach", so it is worth turning
+  # BUILD_TESTS and TEST_EXAMPLES on with it -- the examples are integration
+  # tests and reach code the unit tests do not.
+  #
+  # This block has to come before the add_subdirectory() calls below:
+  # add_compile_options() is a directory property, and only reaches the targets
+  # created after it. Declared any later, it configures cleanly, builds
+  # cleanly, and leaves no .gcno file behind at all -- an empty report rather
+  # than an error.
+  option(WITH_COVERAGE "Instrument the build for code coverage (GCC/Clang)" OFF)
+
+  if(WITH_COVERAGE)
+
+    if(MSVC)
+      message(FATAL_ERROR "WITH_COVERAGE relies on gcov, which MSVC does not provide.")
+    endif()
+
+    add_compile_options(--coverage)
+    add_link_options(--coverage)
+
+    # pybind11 adds -flto to the modules it builds, and GCC cannot combine that
+    # with gcov instrumentation: the link then fails on an undefined vtable,
+    # the vtable being emitted nowhere once both are on. pybind11 leaves LTO
+    # alone as soon as CMAKE_INTERPROCEDURAL_OPTIMIZATION is set, which is what
+    # this does -- silently, because a coverage build that does not link is of
+    # no use to anyone.
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION OFF)
+
+    # gcov itself is toolchain-specific: the notes and counters Clang writes are
+    # read by `llvm-cov gcov`, not by GCC's gcov, and pointing gcovr at the
+    # wrong one yields an empty report rather than an error. The one shipped
+    # next to the compiler in use is therefore named explicitly.
+    set(CODAC_GCOV_ARG "")
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+      # Debian and its derivatives ship the tools of each LLVM release under a
+      # versioned name in /usr/bin and unversioned in the release's own prefix,
+      # so both spellings and both places are tried, the version being taken
+      # from the compiler that will produce the notes.
+      get_filename_component(_codac_cxx_dir "${CMAKE_CXX_COMPILER}" DIRECTORY)
+      string(REGEX MATCH "^[0-9]+" _codac_llvm_major "${CMAKE_CXX_COMPILER_VERSION}")
+      find_program(LLVM_COV_EXECUTABLE
+                   NAMES llvm-cov llvm-cov-${_codac_llvm_major}
+                   HINTS ${_codac_cxx_dir}
+                         /usr/lib/llvm-${_codac_llvm_major}/bin)
+      if(LLVM_COV_EXECUTABLE)
+        set(CODAC_GCOV_ARG --gcov-executable "${LLVM_COV_EXECUTABLE} gcov")
+      else()
+        message(STATUS "${COLOR_RED}llvm-cov was not found next to ${CMAKE_CXX_COMPILER}: the coverage report would come out empty.${COLOR_RESET}")
+      endif()
+    endif()
+
+    find_program(GCOVR_EXECUTABLE gcovr)
+
+    if(NOT GCOVR_EXECUTABLE)
+
+      message(STATUS "${COLOR_RED}gcovr was not found: the build is instrumented, but the `coverage` target is unavailable (pip install gcovr).${COLOR_RESET}")
+
+    else()
+
+      # A note on paths, since it decides what the report is worth: gcov
+      # records the path each translation unit actually opened a header
+      # through, so a header reached both directly and through a copy in
+      # the build tree comes out as two unrelated entries, each showing
+      # only what its own callers exercised. Every consumer (tests,
+      # examples, Python bindings) therefore lists CODAC_SOURCE_INCLUDE_DIRS
+      # first -- see codac_publish_include_dirs() above. Without that, a
+      # header was reported well below its real coverage, and every header
+      # of graphics/, unsupported/ and extensions/ was measured on a
+      # build-tree copy that is not the file anyone edits.
+      #
+      # --gcov-exclude-directories keeps gcovr from even descending into the
+      # dependencies FetchContent puts in the build tree, which --exclude alone
+      # would only drop from the finished report. It matters beyond noise:
+      # Catch2 compiles with -ffile-prefix-map, so the paths recorded in its
+      # notes do not resolve from anywhere and gcov fails outright on them; and
+      # gcov reports negative hit counts on heavily inlined code, Eigen being
+      # where that first shows, which gcovr treats as fatal unless told
+      # otherwise. The pattern has no leading ".*/" on purpose: gcovr matches it
+      # against a path relative to the working directory, which here starts with
+      # "_deps/" and so has nothing for that slash to match.
+      set(CODAC_GCOVR_COMMAND
+          ${GCOVR_EXECUTABLE}
+          --root ${CMAKE_SOURCE_DIR}
+          ${CODAC_GCOV_ARG}
+          --gcov-exclude-directories ".*_deps.*"
+          --gcov-ignore-parse-errors=negative_hits.warn_once_per_file
+          --exclude ".*/tests/.*"
+          --exclude ".*/examples/.*"
+          --exclude ".*/python/.*"
+          --print-summary
+          --html-details ${CMAKE_BINARY_DIR}/coverage.html
+          --xml ${CMAKE_BINARY_DIR}/coverage.xml
+          # Where to look for the counters. Without it gcovr falls back on
+          # --root, i.e. the source tree, and walks every build directory
+          # sitting under it: a second configuration kept next to this one
+          # (a Debug tree, an older coverage tree) then has its own .gcda
+          # read into this report, mixing counters produced by a different
+          # build of different sources. "." rather than an absolute path
+          # because the working directory below is already the build tree,
+          # and because --gcov-exclude-directories above matches against
+          # paths relative to it.
+          .)
+
+      # Two targets rather than one, because the counters gcov leaves behind
+      # accumulate across runs and are read independently of what produced
+      # them: `coverage` is the whole thing, `coverage-report` re-reads whatever
+      # the last ctest invocation happened to touch. The second is what to use
+      # after running part of the suite by hand -- ctest -R something -- which
+      # is the usual way of asking what one test reaches.
+      #
+      # VERBATIM on both, because the arguments above are regular expressions:
+      # without it CMake hands them to the shell unquoted, which expands
+      # ".*/tests/.*" as a file pattern -- gcovr then receives "./tests/.." and
+      # refuses it.
+      add_custom_target(coverage
+        COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+        COMMAND ${CODAC_GCOVR_COMMAND}
+        COMMAND ${CMAKE_COMMAND} -E echo
+                "Coverage report: ${CMAKE_BINARY_DIR}/coverage.html (and coverage.xml, Cobertura)"
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Running the tests and measuring what they reach"
+        VERBATIM)
+
+      add_custom_target(coverage-report
+        COMMAND ${CODAC_GCOVR_COMMAND}
+        COMMAND ${CMAKE_COMMAND} -E echo
+                "Coverage report: ${CMAKE_BINARY_DIR}/coverage.html (and coverage.xml, Cobertura)"
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Turning the counters left by the last test run into a report"
+        VERBATIM)
+
+      message(STATUS "${COLOR_BLUE}Coverage instrumentation enabled; run `make coverage` to produce the report.${COLOR_RESET}")
+
+    endif()
+
+  endif()
+
+
+################################################################################
 # Compile sources
 ################################################################################
   
