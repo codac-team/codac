@@ -165,6 +165,62 @@
     target_compile_options(_core PRIVATE ${CODAC_ARCH_CXX_FLAGS})
   endif()
 
+  # --------------------------------------------------------------
+  # Sanitizer runtime as a shared library (Debug builds only)
+  # --------------------------------------------------------------
+  #
+  # _core.so is loaded via dlopen() by an unsanitized python
+  # interpreter. By default Clang/GCC embed the ASan/UBSan runtime
+  # statically into shared libraries, which leaves symbols like
+  # __ubsan_vptr_type_cache or __asan_* unresolved at dlopen() time
+  # (python has no sanitizer runtime of its own to provide them).
+  # -shared-libsan makes _core.so depend on the sanitizer runtime as
+  # a proper shared library instead; that runtime is then LD_PRELOAD-ed
+  # for the python tests (see tests/CMakeLists.txt).
+  # Not gated behind CMAKE_BUILD_TYPE (see the matching note in the root
+  # CMakeLists.txt): that variable is meaningless for multi-configuration
+  # generators, so -shared-libsan is applied via a $<CONFIG:Debug>
+  # generator expression instead, which CMake evaluates correctly for
+  # both single- and multi-config generators.
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(_core PRIVATE $<$<CONFIG:Debug>:-shared-libsan>)
+    target_link_options(_core PRIVATE $<$<CONFIG:Debug>:-shared-libsan>)
+  endif()
+
+  # --------------------------------------------------------------
+  # MSVC AddressSanitizer runtime DLL (Debug builds only)
+  # --------------------------------------------------------------
+  #
+  # /fsanitize=address (enabled in Debug mode only if a matching runtime
+  # was found -- see the MSVC branch in the root CMakeLists.txt, which
+  # sets CODAC_MSVC_ASAN_RUNTIME_DLL) makes _core.pyd import that runtime
+  # DLL. Unlike Clang/GCC on Linux, there is no LD_PRELOAD-style env var
+  # and no "must be the first library loaded" requirement to work around
+  # on Windows -- the loader simply needs to be able to find that DLL when
+  # Python calls LoadLibrary() on _core.pyd, which it does by searching
+  # the directory of the loading module before PATH. So it is enough to
+  # copy the runtime DLL next to the built _core.pyd, the same way
+  # _core.pyd itself is already copied into the package folder below.
+  # CODAC_MSVC_ASAN_RUNTIME_DLL is already empty (and this is then a
+  # no-op) whenever the root CMakeLists.txt couldn't locate that runtime,
+  # so /fsanitize=address was in that case never even added.
+  if(MSVC AND CODAC_MSVC_ASAN_RUNTIME_DLL)
+    # CODAC_MSVC_ASAN_RUNTIME_DLL is now found regardless of which
+    # configuration will be built (see the root CMakeLists.txt), since a
+    # multi-config generator does not know that yet at configure time. So
+    # the copy itself has to stay conditional on the configuration that is
+    # actually being built, which a plain if() cannot express:
+    # $<IF:$<CONFIG:Debug>,copy_if_different,echo> selects between the real
+    # "-E copy_if_different" and "-E echo", which merely prints the two
+    # paths, so the DLL is only copied for a Debug-configuration build, in
+    # any generator. "-E true" would read better, but it only exists since
+    # CMake 3.16 while this project accepts 3.14.
+    add_custom_command(TARGET _core POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E $<IF:$<CONFIG:Debug>,copy_if_different,echo> "${CODAC_MSVC_ASAN_RUNTIME_DLL}" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
+    )
+  endif()
+
+
   # Copy the generated library in the package folder
   add_custom_command(TARGET _core POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:_core>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
