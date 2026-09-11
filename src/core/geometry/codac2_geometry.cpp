@@ -69,8 +69,7 @@ namespace codac2
       });
     pts.erase(unique(pts.begin(), pts.end()), pts.end());
 
-    if(pts.size() < 3)
-      return pts;
+    if(pts.size() < 3) return pts;
 
     // Implementation of a Graham scan method.
     // Based on some sources from OpenGenus Foundation.
