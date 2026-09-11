@@ -257,6 +257,12 @@ foreach(SRC_TEST ${SRC_TESTS})
 
   # C++ test
   add_executable(${TEST_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/${SRC_TEST}.cpp)
+
+  set_target_properties(${TEST_NAME} PROPERTIES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+  )
   set(CODAC_HEADERS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../include)
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${CODAC_HEADERS_DIR})
   target_link_libraries(${TEST_NAME} PUBLIC Ibex::ibex ${CODAC_LIBRARIES} PRIVATE Catch2::Catch2WithMain)

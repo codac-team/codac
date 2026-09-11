@@ -293,12 +293,13 @@
 # Create the target for libcodac-core
 ################################################################################
 
-  #if(NOT CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 20)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
-  #endif()
-
   add_library(${PROJECT_NAME}-core ${CODAC_CORE_SRC})
+
+  set_target_properties(${PROJECT_NAME}-core PROPERTIES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+  )
   target_include_directories(${PROJECT_NAME}-core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/actions
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors
