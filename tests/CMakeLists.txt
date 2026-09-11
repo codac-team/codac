@@ -229,6 +229,11 @@ if(WITH_PYTHON AND DEFINED PYBIND11_FINDPYTHON AND NOT PYBIND11_FINDPYTHON)
   set(BUILD_SYMPY_EMBED_TESTS OFF)
 endif()
 
+# BUILD_SYMPY_EMBED_TESTS is an option(), hence a cache entry: the set() above
+# only overrides it for this directory, and examples/ would otherwise read the
+# cached ON again and build the sympy example where its own test is disabled.
+set(BUILD_SYMPY_EMBED_TESTS "${BUILD_SYMPY_EMBED_TESTS}" PARENT_SCOPE)
+
 # Sympy test
 if (WITH_PYTHON AND BUILD_SYMPY_EMBED_TESTS)
   list(APPEND SRC_TESTS
@@ -525,6 +530,10 @@ if(CODAC_MSVC_ASAN_PATH_ENV)
   list(APPEND CODAC_CPP_TEST_ENV "${CODAC_MSVC_ASAN_PATH_ENV}")
 endif()
 
+# examples/ is added by the top-level CMakeLists.txt right after this directory
+# and runs the same kind of binaries, so both environments are handed over to it.
+set(CODAC_CPP_TEST_ENV "${CODAC_CPP_TEST_ENV}" PARENT_SCOPE)
+set(PYTHON_TEST_ENV_ARGS "${PYTHON_TEST_ENV_ARGS}" PARENT_SCOPE)
 
 # Build every test
 # ==================================================================
