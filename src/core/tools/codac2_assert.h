@@ -20,6 +20,7 @@ namespace codac2
 
     #define assert_release(ignore_test) ((void)0)
     #define assert_release_constexpr(ignore_test) ((void)0)
+    #define assert_release_unreachable(ignore_msg) ((void)0)
 
   #else
 
@@ -52,6 +53,17 @@ namespace codac2
           }                        \
         } while (0)
 
+      // For a branch that must never be reached. Written as
+      // assert_release(false && "...") until now, whose condition is a
+      // compile-time constant: MSVC reported one C4127 ("conditional
+      // expression is constant") per site. Failing unconditionally states the
+      // intent directly and leaves no condition to warn about; the message is
+      // also reported on its own, rather than as the text of a false test.
+      #define assert_release_unreachable(msg) \
+        do {                                  \
+          CODAC_ASSERT_MESSAGE(msg, __FILE__, __LINE__, __PRETTY_FUNCTION__); \
+        } while (0)
+
     #else
 
       #define assert_release(test) \
@@ -66,6 +78,12 @@ namespace codac2
           if constexpr(!(test)) {            \
             CODAC_ASSERT_MESSAGE(#test, __FILE__, __LINE__, __func__); \
           }                        \
+        } while (0)
+
+      // See the comment on the __PRETTY_FUNCTION__ variant above.
+      #define assert_release_unreachable(msg) \
+        do {                                  \
+          CODAC_ASSERT_MESSAGE(msg, __FILE__, __LINE__, __func__); \
         } while (0)
 
     #endif

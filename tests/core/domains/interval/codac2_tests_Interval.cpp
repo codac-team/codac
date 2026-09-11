@@ -16,6 +16,7 @@
 #include <codac2_Interval.h>
 #include <codac2_Approx.h>
 #include <limits>
+#include <stdexcept>
 
 using namespace std;
 using namespace codac2;
@@ -52,6 +53,19 @@ TEST_CASE("Interval - tests from IBEX")
   CHECK(-3._i == Interval(-3.));
 
   Interval x, y, z;
+
+  // An interval is a point or a pair of bounds; any other list length is a
+  // caller error and is reported through the assertion layer. A FAST_RELEASE
+  // build compiles that layer out, which is the one configuration where
+  // nothing is raised -- the guard mirrors the one in codac2_assert.h.
+#if !(defined(FAST_RELEASE) && defined(NDEBUG))
+  {
+    Interval from_list(0.,1.);
+    CHECK_THROWS_AS(from_list.init_from_list({1.,2.,3.}), std::invalid_argument);
+    CHECK_THROWS_AS(from_list.init_from_list({}), std::invalid_argument);
+    CHECK_THROWS_AS(Interval({1.,2.,3.}), std::invalid_argument);
+  }
+#endif
 
   x = Interval(0,1); x.set_empty();
   CHECK(x == Interval::empty());

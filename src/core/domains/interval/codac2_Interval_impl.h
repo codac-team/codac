@@ -75,7 +75,7 @@ namespace codac2
 
     else
     {
-      assert_release("'Interval' can only be defined by one or two 'double' values.");
+      assert_release_unreachable("'Interval' can only be defined by one or two 'double' values.");
     }
 
     return *this;
