@@ -174,7 +174,7 @@ SlicedTube<Interval> tube_test4()
 
   x.set({1,2}, {0,9});
   x.set({0.5,1.5}, {9,11});
-  x.set({-1,1}, {10.2}); // degenerate time interval
+  x.set({-1,1}, Interval(10.2)); // degenerate time interval
   x.set({-1.5,-0.5}, {11,12});
   x.set({-1,1}, {12,13});
   x.set({0.5,1.5}, {13,14});
