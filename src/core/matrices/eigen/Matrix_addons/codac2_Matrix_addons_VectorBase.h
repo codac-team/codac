@@ -195,24 +195,24 @@ inline void put(Index start_id, const MatrixBase<OtherDerived>& x)
   this->segment(start_id,x.size()) << x;
 }
 
-/**
- * \brief Resizes the vector or row matrix to size \p n, preserving existing values.
- * 
- * \pre The matrix is a vector or row vector.
- * 
- * \param n The new size.
- * 
- * \details
- * Eigen's ``resize()`` discards existing data, so this function copies existing
- * values before resizing and restores them afterward.
- */
-template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
-  requires IsVectorOrRow<R,C>
-inline void resize_save_values(Index n)
-{
-  // With resize() of Eigen, the data is reallocated and all previous values are lost.
-  auto copy = *this;
-  this->resize(n);
-  for(Index i = 0 ; i < std::min((Index)copy.size(),n) ; i++)
-    (*this)[i] = copy[i];
-}
+// /**
+//  * \brief Resizes the vector or row matrix to size \p n, preserving existing values.
+//  * 
+//  * \pre The matrix is a vector or row vector.
+//  * 
+//  * \param n The new size.
+//  * 
+//  * \details
+//  * Eigen's ``resize()`` discards existing data, so this function copies existing
+//  * values before resizing and restores them afterward.
+//  */
+// template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
+//   requires IsVectorOrRow<R,C>
+// inline void resize_save_values(Index n)
+// {
+//   // With resize() of Eigen, the data is reallocated and all previous values are lost.
+//   auto copy = *this;
+//   this->resize(n);
+//   for(Index i = 0 ; i < std::min((Index)copy.size(),n) ; i++)
+//     (*this)[i] = copy[i];
+// }

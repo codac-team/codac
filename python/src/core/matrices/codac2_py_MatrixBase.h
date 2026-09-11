@@ -261,12 +261,12 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
         DOC_TO_BE_DEFINED,
         "nb_rows"_a, "nb_cols"_a)
 
-      .def("resize_save_values", [](S& x, Index_type nb_rows, Index_type nb_cols)
+      .def("conservativeResize", [](S& x, Index_type nb_rows, Index_type nb_cols)
           {
             matlab::test_integer(nb_rows, nb_cols);
-            x.resize_save_values(nb_rows, nb_cols);
+            x.conservativeResize(nb_rows, nb_cols);
           },
-        MATRIX_ADDONS_MATRIXBASE_VOID_RESIZE_SAVE_VALUES_INDEX_INDEX,
+           "Resize the matrix while preserving the existing coefficients.",
         "nb_rows"_a, "nb_cols"_a)
 
       .def_static("zero", [](Index_type r, Index_type c)
