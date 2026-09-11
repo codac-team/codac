@@ -736,9 +736,30 @@
   endif()
   if(BUILD_TESTS)
     include(CTest)
+    # `check` is `test` plus two things: it prints the output of what failed,
+    # and it rebuilds the suite before running it. CMake's own `test` target
+    # does neither -- it runs ctest on whatever happens to be in the build tree.
+    #
+    # There is no DEPENDS here on purpose. In add_custom_target(), DEPENDS names
+    # *files*, not targets, and this target used to carry "DEPENDS
+    # ${PROJECT_NAME}", which is neither: no file and no target is called
+    # "codac", the libraries being codac-core, codac-graphics and so on. make
+    # therefore stopped on "No rule to make target 'codac'" after rebuilding
+    # everything and never reached ctest, so `make check` could not run the
+    # suite at all. What must exist before the suite runs is attached with
+    # add_dependencies() instead: every test executable, by
+    # tests/CMakeLists.txt; every example, by examples/CMakeLists.txt; and the
+    # Python extension modules just below, which the Python half of the suite
+    # imports.
     add_custom_target(check
                       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure $(ARGS)
-                      DEPENDS ${PROJECT_NAME} COMMENT "Running the tests")
+                      COMMENT "Running the tests")
+
+    foreach(_codac_py_module _core _graphics _unsupported)
+      if(TARGET ${_codac_py_module})
+        add_dependencies(check ${_codac_py_module})
+      endif()
+    endforeach()
 
     add_subdirectory(tests)
   endif()
