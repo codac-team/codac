@@ -490,6 +490,71 @@
   message(STATUS "Found IBEX version ${IBEX_VERSION}")
   message(STATUS "Interval arithmetic flags from IBEX: ${CODAC_IBEX_CXX_FLAGS}")
 
+  # Where IBEX's headers and archives actually are, walked out of the imported
+  # targets ibex-config.cmake defines: Ibex::ibex, and Ibex::gaol and
+  # Ibex::ultim behind it.
+  #
+  # This is for codac.pc alone. The CMake side has no use for it -- a consumer
+  # of codac-config.cmake reaches IBEX through find_package(IBEX) and the same
+  # targets. But the ibex.pc shipped in the prebuilt IBEX packages this project
+  # uses, on all three platforms, carries the prefix of the machine IBEX was
+  # built on rather than the one it was installed under
+  # (prefix=/home/runner/work/ibex-lib/... in the Debian package, and the
+  # equivalent in the macOS and Windows archives), so every -I and -L it hands
+  # out points nowhere. codac.pc still names ibex on its Requires: line, which
+  # is the right thing to declare and what will carry the answer once IBEX is
+  # fixed; until then it also names these directories itself, and the
+  # duplicates that will result are harmless.
+  #
+  # ibex-config.cmake, unlike ibex.pc, computes its prefix from its own
+  # location, which is why what is collected here is correct.
+  set(CODAC_IBEX_INCLUDE_DIRS "")
+  set(CODAC_IBEX_LIBRARY_FILES "")
+  set(_codac_ibex_queue Ibex::ibex)
+  set(_codac_ibex_seen "")
+  while(_codac_ibex_queue)
+    list(GET _codac_ibex_queue 0 _codac_ibex_target)
+    list(REMOVE_AT _codac_ibex_queue 0)
+    if(_codac_ibex_target IN_LIST _codac_ibex_seen)
+      continue()
+    endif()
+    list(APPEND _codac_ibex_seen ${_codac_ibex_target})
+    if(NOT TARGET ${_codac_ibex_target})
+      continue()
+    endif()
+
+    get_target_property(_codac_ibex_inc ${_codac_ibex_target} INTERFACE_INCLUDE_DIRECTORIES)
+    if(_codac_ibex_inc)
+      list(APPEND CODAC_IBEX_INCLUDE_DIRS ${_codac_ibex_inc})
+    endif()
+
+    # An imported archive names its file either outright or per configuration.
+    get_target_property(_codac_ibex_loc ${_codac_ibex_target} IMPORTED_LOCATION)
+    if(NOT _codac_ibex_loc)
+      get_target_property(_codac_ibex_cfgs ${_codac_ibex_target} IMPORTED_CONFIGURATIONS)
+      if(_codac_ibex_cfgs)
+        list(GET _codac_ibex_cfgs 0 _codac_ibex_cfg)
+        get_target_property(_codac_ibex_loc ${_codac_ibex_target} IMPORTED_LOCATION_${_codac_ibex_cfg})
+      endif()
+    endif()
+    if(_codac_ibex_loc)
+      list(APPEND CODAC_IBEX_LIBRARY_FILES ${_codac_ibex_loc})
+    endif()
+
+    get_target_property(_codac_ibex_deps ${_codac_ibex_target} INTERFACE_LINK_LIBRARIES)
+    if(_codac_ibex_deps)
+      list(APPEND _codac_ibex_queue ${_codac_ibex_deps})
+    endif()
+  endwhile()
+  if(CODAC_IBEX_INCLUDE_DIRS)
+    list(REMOVE_DUPLICATES CODAC_IBEX_INCLUDE_DIRS)
+  endif()
+  if(CODAC_IBEX_LIBRARY_FILES)
+    list(REMOVE_DUPLICATES CODAC_IBEX_LIBRARY_FILES)
+  endif()
+  message(STATUS "IBEX include directories: ${CODAC_IBEX_INCLUDE_DIRS}")
+  message(STATUS "IBEX libraries: ${CODAC_IBEX_LIBRARY_FILES}")
+
 
 ################################################################################
 # Treating dependencies' headers as system headers

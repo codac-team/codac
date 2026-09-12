@@ -101,6 +101,38 @@
     string(APPEND CODAC_PKG_CONFIG_CFLAGS " ${CODAC_PKG_CONFIG_IBEX_FLAGS}")
   endif()
 
+  # The directories of IBEX, collected from its imported targets in the
+  # top-level CMakeLists.txt because the ibex.pc of the prebuilt packages names
+  # the prefix of the machine IBEX was built on. "Requires: ibex" above stays,
+  # and stays right; these are what make the file work in the meantime.
+  foreach(dir ${CODAC_IBEX_INCLUDE_DIRS})
+    string(APPEND CODAC_PKG_CONFIG_CFLAGS " -I${dir}")
+  endforeach()
+  # Named by their full path, as CMake hands them to the linker on the
+  # find_package side, rather than as -L plus -l: there is then no chance of
+  # another directory on the search path answering for libibex first, and
+  # nothing to guess about how the file is named on each platform. They come
+  # after the Codac archives, which depend on them.
+  foreach(lib ${CODAC_IBEX_LIBRARY_FILES})
+    string(APPEND CODAC_PKG_CONFIG_LIBS " ${lib}")
+  endforeach()
+  # Their directories as well, which is a separate need: a broken ibex.pc still
+  # contributes "-libex -lgaol -lultim" through Requires:, and those have to
+  # resolve somewhere or the link fails on three libraries that are in fact
+  # already on the command line by full path just above. -L is where the
+  # linker looks for them.
+  set(CODAC_IBEX_LIBRARY_DIRS "")
+  foreach(lib ${CODAC_IBEX_LIBRARY_FILES})
+    get_filename_component(dir "${lib}" DIRECTORY)
+    list(APPEND CODAC_IBEX_LIBRARY_DIRS "${dir}")
+  endforeach()
+  if(CODAC_IBEX_LIBRARY_DIRS)
+    list(REMOVE_DUPLICATES CODAC_IBEX_LIBRARY_DIRS)
+  endif()
+  foreach(dir ${CODAC_IBEX_LIBRARY_DIRS})
+    string(APPEND CODAC_PKG_CONFIG_LIBS " -L${dir}")
+  endforeach()
+
   # codac-core links PUBLIC against Threads::Threads, and so must anything that
   # links codac-core: without it, a program that reaches the peibos threading
   # code (the 11_peibos example, say) fails with an undefined reference to

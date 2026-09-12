@@ -152,29 +152,48 @@ echo
 # --------------------------------------------------------------------------
 # Is pkg-config usable here?
 # --------------------------------------------------------------------------
-# PKG_CONFIG_PATH is separated by ";" for the native Windows pkg-config (the
-# one chocolatey's pkgconfiglite installs) and by ":" everywhere else -- and on
-# Windows a ":" separator could not work anyway, a path there starting "C:".
-# The directories are handed over in the form that pkg-config reads: cygpath -m
+# The directories are handed to pkg-config in the form it reads: cygpath -m
 # turns the "/c/..." of a shell running under MSYS into the "C:/..." a native
-# binary expects, and is a no-op elsewhere because it is not installed.
-case "${OSTYPE:-}" in
-  msys*|win32*) pc_sep=";" ;;
-  *)            pc_sep=":" ;;
-esac
-
+# Windows binary expects, and is absent, hence a no-op, everywhere else.
 to_pkg_config_path() {
   if command -v cygpath >/dev/null 2>&1 ; then cygpath -m "$1" ; else printf '%s' "$1" ; fi
 }
 
-pkg_config_path=$(to_pkg_config_path "$prefix/share/pkgconfig")
-if [ -n "$extra_pkg_config_path" ]; then
-  pkg_config_path="$pkg_config_path$pc_sep$(to_pkg_config_path "$extra_pkg_config_path")"
+# Captured before the loop below starts overwriting PKG_CONFIG_PATH, so that
+# the second attempt joins the same three pieces as the first rather than the
+# result of the first.
+inherited_pkg_config_path="${PKG_CONFIG_PATH:-}"
+
+join_pkg_config_path() {
+  local sep="$1" joined
+  joined=$(to_pkg_config_path "$prefix/share/pkgconfig")
+  if [ -n "$extra_pkg_config_path" ]; then
+    joined="$joined$sep$(to_pkg_config_path "$extra_pkg_config_path")"
+  fi
+  if [ -n "$inherited_pkg_config_path" ]; then
+    joined="$joined$sep$inherited_pkg_config_path"
+  fi
+  printf '%s' "$joined"
+}
+
+# The separator is ";" for the native Windows pkg-config -- the one
+# chocolatey's pkgconfiglite installs -- and ":" everywhere else. It is settled
+# by trying rather than by reading $OSTYPE, which said "msys" nowhere the first
+# time this ran on a GitHub Windows runner and left every directory joined by a
+# ":" that pkg-config could not take apart, a path there beginning "C:".
+# Whichever separator lets pkg-config find codac is the right one, and on a
+# platform where it cannot be found at all the loop simply leaves the preferred
+# spelling in place for the diagnostic below.
+if command -v pkg-config >/dev/null 2>&1 ; then
+  for sep in ";" ":" ; do
+    export PKG_CONFIG_PATH="$(join_pkg_config_path "$sep")"
+    if pkg-config --exists codac 2>/dev/null ; then
+      break
+    fi
+  done
+else
+  export PKG_CONFIG_PATH="$(join_pkg_config_path ":")"
 fi
-if [ -n "${PKG_CONFIG_PATH:-}" ]; then
-  pkg_config_path="$pkg_config_path$pc_sep$PKG_CONFIG_PATH"
-fi
-export PKG_CONFIG_PATH="$pkg_config_path"
 echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH"
 
 skip_reason=""
@@ -305,8 +324,30 @@ split_libs() {
 tmp="$build_dir/parity"
 mkdir -p "$tmp"
 
-printf '%s\n' "$cmake_compile" | drop_neutral | split_cflags | normalize_paths | sort -u > "$tmp/cmake_cflags.txt"
-pkg-config --cflags codac    | tr ' ' '\n' | drop_neutral | split_cflags | normalize_paths | sort -u > "$tmp/pc_cflags.txt"
+# A -I naming a directory that is not there contributes nothing to the
+# compile, so it is set aside rather than compared -- but printed, because it
+# is a defect in whatever wrote it. The ibex.pc shipped in the prebuilt IBEX
+# packages is the reason this exists: its prefix= is the directory IBEX was
+# built in on the release machine rather than the one it was installed under,
+# so "Requires: ibex" drags three such directories in on every platform.
+partition_existing() {
+  local keep="$1" gone="$2" line dir
+  : > "$keep" ; : > "$gone"
+  while IFS= read -r line ; do
+    case "$line" in
+      "INC "*)
+        dir=${line#INC }
+        if [ -d "$dir" ]; then echo "$line" >> "$keep" ; else echo "$line" >> "$gone" ; fi
+        ;;
+      *) echo "$line" >> "$keep" ;;
+    esac
+  done
+}
+
+printf '%s\n' "$cmake_compile" | drop_neutral | split_cflags | normalize_paths | sort -u \
+  | partition_existing "$tmp/cmake_cflags.txt" "$tmp/cmake_cflags_missing.txt"
+pkg-config --cflags codac    | tr ' ' '\n' | drop_neutral | split_cflags | normalize_paths | sort -u \
+  | partition_existing "$tmp/pc_cflags.txt" "$tmp/pc_cflags_missing.txt"
 
 printf '%s\n' "$cmake_link"  | drop_neutral | split_libs   | normalize_paths | sort -u > "$tmp/cmake_libs.txt"
 pkg-config --libs codac      | tr ' ' '\n' | drop_neutral | split_libs   | normalize_paths | sort -u > "$tmp/pc_libs.txt"
@@ -326,6 +367,15 @@ report() {
 
 report "compile: include directories and flags" "$tmp/cmake_cflags.txt" "$tmp/pc_cflags.txt"
 report "link: libraries and flags"              "$tmp/cmake_libs.txt"   "$tmp/pc_libs.txt"
+
+if [ -s "$tmp/cmake_cflags_missing.txt" ] || [ -s "$tmp/pc_cflags_missing.txt" ]; then
+  echo "--- include directories that do not exist (not compared) ---"
+  [ -s "$tmp/cmake_cflags_missing.txt" ] && sed 's/^/    find_package: /' "$tmp/cmake_cflags_missing.txt"
+  [ -s "$tmp/pc_cflags_missing.txt" ]    && sed 's/^/    pkg-config:   /' "$tmp/pc_cflags_missing.txt"
+  echo "  Harmless to the compiler, but each is a wrong path in whatever file"
+  echo "  named it. The prebuilt IBEX packages ship an ibex.pc whose prefix= is"
+  echo "  the build machine's directory, which is where these come from."
+fi
 
 echo
 if [ "$status" -eq 0 ]; then
