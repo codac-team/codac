@@ -259,22 +259,25 @@ jobs:
         pkg-config --version
         clang++ --version
 
-    # The prebuilt IBEX, unpacked into /usr/local as the jobs above do. Its
-    # share/pkgconfig/ibex.pc lands in /usr/local/share/pkgconfig, which is on
-    # pkg-config's default search path, so the "Requires: ibex" of codac.pc
-    # resolves without any help.
+    # The prebuilt IBEX, left where it is unpacked rather than copied over
+    # /usr/local as the jobs above do. Homebrew owns that prefix on the Intel
+    # image, and the pkgconf installed in the step before this one puts a
+    # symlink at /usr/local/share/pkgconfig that the copy then fails on:
+    # "cp: /usr/local/share/pkgconfig: Not a directory". Pointing at the
+    # directory instead needs no privileges and leaves the image alone.
     - name: IBEX
       run: |
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
         unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
         rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
-        sudo cp -Rf ibex/* /usr/local/
+        echo "IBEX_PREFIX=$PWD/ibex" >> "$GITHUB_ENV"
 
     - name: Build and install Codac
       run: |
         mkdir build ; cd build
         cmake \
           -D CMAKE_BUILD_TYPE=Release \
+          -D CMAKE_PREFIX_PATH="$IBEX_PREFIX" \
           -D CMAKE_INSTALL_PREFIX="$PWD/../codac_install" \
           -D BUILD_TESTS=OFF \
           -D WITH_PYTHON=OFF \
@@ -287,5 +290,6 @@ jobs:
         bash tests/packaging/check_consumer_parity.sh \
           --prefix "$PWD/codac_install" \
           --build-dir "$PWD/build_packaging_check" \
-          --pkg-config-path "/usr/local/share/pkgconfig" \
+          --cmake-prefix-path "$IBEX_PREFIX" \
+          --pkg-config-path "$IBEX_PREFIX/share/pkgconfig" \
           --require-pkgconfig

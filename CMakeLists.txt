@@ -529,16 +529,25 @@
     endif()
 
     # An imported archive names its file either outright or per configuration.
-    get_target_property(_codac_ibex_loc ${_codac_ibex_target} IMPORTED_LOCATION)
-    if(NOT _codac_ibex_loc)
-      get_target_property(_codac_ibex_cfgs ${_codac_ibex_target} IMPORTED_CONFIGURATIONS)
-      if(_codac_ibex_cfgs)
-        list(GET _codac_ibex_cfgs 0 _codac_ibex_cfg)
-        get_target_property(_codac_ibex_loc ${_codac_ibex_target} IMPORTED_LOCATION_${_codac_ibex_cfg})
+    # An INTERFACE library has no file at all, and before CMake 3.19 merely
+    # asking one for IMPORTED_LOCATION is a fatal error rather than an empty
+    # answer ("INTERFACE_LIBRARY targets may only have whitelisted
+    # properties") -- which is what Debian Bullseye, on CMake 3.18.4, reported.
+    # TYPE is whitelisted, so it can be asked first, as can the two INTERFACE_
+    # properties read above and below.
+    get_target_property(_codac_ibex_type ${_codac_ibex_target} TYPE)
+    if(NOT _codac_ibex_type STREQUAL "INTERFACE_LIBRARY")
+      get_target_property(_codac_ibex_loc ${_codac_ibex_target} IMPORTED_LOCATION)
+      if(NOT _codac_ibex_loc)
+        get_target_property(_codac_ibex_cfgs ${_codac_ibex_target} IMPORTED_CONFIGURATIONS)
+        if(_codac_ibex_cfgs)
+          list(GET _codac_ibex_cfgs 0 _codac_ibex_cfg)
+          get_target_property(_codac_ibex_loc ${_codac_ibex_target} IMPORTED_LOCATION_${_codac_ibex_cfg})
+        endif()
       endif()
-    endif()
-    if(_codac_ibex_loc)
-      list(APPEND CODAC_IBEX_LIBRARY_FILES ${_codac_ibex_loc})
+      if(_codac_ibex_loc)
+        list(APPEND CODAC_IBEX_LIBRARY_FILES ${_codac_ibex_loc})
+      endif()
     endif()
 
     get_target_property(_codac_ibex_deps ${_codac_ibex_target} INTERFACE_LINK_LIBRARIES)
@@ -651,6 +660,12 @@
 # Looking for Threads
 ################################################################################
 
+  # The same preference the generated codac-config.cmake asks of consumers, so
+  # that both sides of a link end up with the same answer: without it this
+  # build could settle on -lpthread while a consumer, which does set it, got
+  # -pthread, and codac.pc -- written from what is found here -- would then
+  # describe something other than what find_package(CODAC) hands out.
+  set(THREADS_PREFER_PTHREAD_FLAG ON)
   find_package(Threads REQUIRED)
 
 ################################################################################

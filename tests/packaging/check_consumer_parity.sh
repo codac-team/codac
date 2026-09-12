@@ -253,11 +253,42 @@ echo
 # --------------------------------------------------------------------------
 # Comparison
 # --------------------------------------------------------------------------
+# CMake does not always put the flags on the command line: past a certain
+# length, and as a matter of course for the MinGW Makefiles generator, it
+# writes them into a response file and passes "@that_file" instead. Unexpanded,
+# the find_package half then looks empty and every flag of the pkg-config half
+# reads as a difference -- which is exactly what the first Windows run of this
+# check reported.
+expand_response_files() {
+  local base="$1" tok file
+  while IFS= read -r tok ; do
+    case "$tok" in
+      @*)
+        file=${tok#@}
+        case "$file" in
+          /*|[A-Za-z]:*) ;;
+          *) file="$base/$file" ;;
+        esac
+        if [ -f "$file" ]; then
+          tr -d '\r' < "$file" | tr ' \t' '\n\n' | sed -e 's/^"//' -e 's/"$//' | grep . || true
+        else
+          printf '%s\n' "$tok"
+        fi
+        ;;
+      *) printf '%s\n' "$tok" ;;
+    esac
+  done
+}
+
 # Collapses "a/b/../c" to "a/c" so that the two spellings of one directory --
 # codac-config.cmake reaches the include root as <prefix>/include/codac-core/..
 # while codac.pc names <prefix>/include -- compare equal.
+# A response file on Windows may spell its directories with backslashes while
+# pkg-config answers with forward ones; only the path-bearing lines are
+# rewritten, so that a flag containing a backslash is left alone.
 normalize_paths() {
-  sed -e ':a' -e 's#/[^/][^/]*/\.\./#/#; ta' \
+  sed -e '/^\(INC\|LIB\) /s#\\#/#g' \
+      -e ':a' -e 's#/[^/][^/]*/\.\./#/#; ta' \
       -e ':b' -e 's#/[^/][^/]*/\.\.$##; tb' \
       -e 's#/\./#/#g' -e 's#/$##'
 }
@@ -316,7 +347,11 @@ split_libs() {
       next
     }
     /^(-pthread|-rdynamic|-shared|-static.*)$/ { print "FLAG " $0; next }
-    /^-Wl,/ { print "FLAG " $0; next }
+    # -Wl, options are how the generator drives the linker on this platform --
+    # --whole-archive, --out-implib, --major-image-version and the like on
+    # MinGW. They describe the executable being produced, not the library being
+    # consumed, and no .pc file has any business carrying them.
+    /^-Wl,/ { next }
     { next }
   '
 }
@@ -344,12 +379,12 @@ partition_existing() {
   done
 }
 
-printf '%s\n' "$cmake_compile" | drop_neutral | split_cflags | normalize_paths | sort -u \
+printf '%s\n' "$cmake_compile" | expand_response_files "$cmake_build" | drop_neutral | split_cflags | normalize_paths | sort -u \
   | partition_existing "$tmp/cmake_cflags.txt" "$tmp/cmake_cflags_missing.txt"
 pkg-config --cflags codac    | tr ' ' '\n' | drop_neutral | split_cflags | normalize_paths | sort -u \
   | partition_existing "$tmp/pc_cflags.txt" "$tmp/pc_cflags_missing.txt"
 
-printf '%s\n' "$cmake_link"  | drop_neutral | split_libs   | normalize_paths | sort -u > "$tmp/cmake_libs.txt"
+printf '%s\n' "$cmake_link"  | expand_response_files "$cmake_build" | drop_neutral | split_libs   | normalize_paths | sort -u > "$tmp/cmake_libs.txt"
 pkg-config --libs codac      | tr ' ' '\n' | drop_neutral | split_libs   | normalize_paths | sort -u > "$tmp/pc_libs.txt"
 
 status=0
@@ -381,6 +416,16 @@ echo
 if [ "$status" -eq 0 ]; then
   echo "PARITY CHECK PASSED: find_package(CODAC) and pkg-config agree."
 else
+  # The raw command lines, so that a difference reported on a platform that
+  # cannot be reproduced at hand can still be read rather than guessed at.
+  echo "--- the two command lines, as they were read ---"
+  echo "  find_package compile:"
+  printf '%s\n' "$cmake_compile" | expand_response_files "$cmake_build" | sed 's/^/    /'
+  echo "  find_package link:"
+  printf '%s\n' "$cmake_link" | expand_response_files "$cmake_build" | sed 's/^/    /'
+  echo "  pkg-config --cflags: $(pkg-config --cflags codac)"
+  echo "  pkg-config --libs:   $(pkg-config --libs codac)"
+  echo
   echo "PARITY CHECK FAILED: the two ways of consuming Codac disagree." >&2
   echo "Both are written in src/CMakeLists.txt; whatever one of them gained," >&2
   echo "the other needs too." >&2

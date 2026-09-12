@@ -137,12 +137,18 @@
   # links codac-core: without it, a program that reaches the peibos threading
   # code (the 11_peibos example, say) fails with an undefined reference to
   # pthread_create. codac-config.cmake gets there through find_package(Threads);
-  # a .pc file has to name the flag, on both lines, exactly as CMake puts it on
-  # both the compile and the link command for Threads::Threads.
-  if(CMAKE_USE_PTHREADS_INIT)
+  # a .pc file has to name what that produces itself.
+  #
+  # What it produces, and not -pthread on principle: since glibc 2.34 the
+  # pthread functions are in libc, FindThreads finds them there, and
+  # Threads::Threads then contributes nothing at all -- so a .pc file naming
+  # -pthread would be describing a flag the CMake side does not pass. The two
+  # variables below are FindThreads' own answer: whether the compiler needs the
+  # flag, and what has to go on the link line, either of which may be empty.
+  if(THREADS_HAVE_PTHREAD_ARG)
     string(APPEND CODAC_PKG_CONFIG_CFLAGS " -pthread")
-    string(APPEND CODAC_PKG_CONFIG_LIBS " -pthread")
-  elseif(CMAKE_THREAD_LIBS_INIT)
+  endif()
+  if(CMAKE_THREAD_LIBS_INIT)
     string(APPEND CODAC_PKG_CONFIG_LIBS " ${CMAKE_THREAD_LIBS_INIT}")
   endif()
 
