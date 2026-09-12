@@ -294,12 +294,18 @@ normalize_paths() {
 }
 
 # Everything neither file has any business carrying: the consumer's own build
-# type, language level and position independence, and the mechanics of a single
-# command line. "-o" takes the name of the output next to it, and "-MT"/"-MF"
-# likewise, so those have to go in pairs rather than one token at a time.
+# type, language level, target architecture and position independence, and the
+# mechanics of a single command line. "-o" takes the name of the output next to
+# it, and "-MT"/"-MF"/"-arch" likewise, so those have to go in pairs rather
+# than one token at a time.
+#
+# -arch is why this lists an architecture at all: on Apple Silicon CMake passes
+# "-arch arm64", and on the Intel image it passes nothing, so leaving it in
+# made the arm64 job the only one to disagree. Which architecture a consumer
+# builds for is its own business, as much as its optimisation level.
 drop_neutral() {
   awk '
-    /^(-o|-MT|-MF|-isysroot|--sysroot)$/ { getline ; next }
+    /^(-o|-MT|-MF|-isysroot|--sysroot|-arch|--target)$/ { getline ; next }
     /^(-O[0-9s]?|-DNDEBUG|-g[0-9]?|-fPIC|-c|-MD|-MMD)$/ { next }
     /^-std=/ { next }
     /\.(o|obj|cpp|cc|d|json)$/ { next }
