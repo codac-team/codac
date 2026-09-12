@@ -74,6 +74,11 @@ Steps
 
       sudo apt-get install -y build-essential cmake git
 
+   .. admonition:: The Eigen dependency
+
+     | Codac is built on `Eigen <https://eigen.tuxfamily.org>`_ (version 3.4 or newer), but you do not have to install it: by default the CMake configuration downloads and builds the version Codac is tested against, so nothing has to be added to the command above.
+     | To build against an Eigen already installed on your system instead, configure Codac with ``-DENABLE_FIND_PACKAGE_EIGEN3=ON``; CMake then looks for it with ``find_package(Eigen3 3.4.0)``, and ``Eigen3_DIR`` or ``CMAKE_PREFIX_PATH`` can point at a custom installation path. This is what the ``choco install eigen`` of the Windows instructions below provides. Note that the Eigen headers are part of Codac's public interface, so a program using Codac compiles them too: this is why they are installed next to Codac's own headers, and why :ref:`the configuration of a user project <sec-start-cpp-project>` lists them among its include directories.
+
 2. **Install the IBEX dependency**:
    
    Codac still uses some features of the `IBEX library <https://ibex-team.github.io/ibex-lib/install-cmake.html>`_ that you have to install first (currently, the only thing Codac uses from IBEX is a wrapper of the `GAOL library <https://github.com/goualard-f/GAOL>`_). The last version of IBEX is maintained on `this unofficial development repository <https://github.com/lebarsfa/ibex-lib/tree/master>`_:
@@ -156,6 +161,13 @@ Steps
       ./codac_example
 
    You should obtain a graphical output corresponding to a curious set inversion.
+
+7. **Start your own project**:
+
+   ``examples/01_batman/CMakeLists.txt`` is also the shortest possible template
+   for a project of your own. :ref:`sec-start-cpp-project` goes through it line
+   by line, says which paths CMake needs and where it looks for them, and covers
+   the ``pkg-config`` alternative.
 
 
 Windows Installation
@@ -259,7 +271,7 @@ Optionally, for Python binding and documentation:
   wget https://github.com/Homebrew/homebrew-core/raw/d2267b9f2ad247bc9c8273eb755b39566a474a70/Formula/doxygen.rb ; brew reinstall ./doxygen.rb ; brew pin doxygen
   brew install graphviz
   python -m pip install --upgrade pip
-  pip install --upgrade wheel setuptools sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs sphinx_togglebutton
+  pip install --upgrade wheel setuptools sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs breathe sphinx_togglebutton
 
 
 Troubleshooting

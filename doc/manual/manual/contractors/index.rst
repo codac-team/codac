@@ -22,6 +22,7 @@ Contractors, separators
 ..   analytic/index.rst
 ..   geometric/index.rst
 ..   shape/index.rst
+..   dynamic/index.rst
 ..   temporal/index.rst
 
 
