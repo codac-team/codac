@@ -70,7 +70,7 @@ namespace codac2
       }
     }
 
-    printf("Computation time: %.4fs, %ld boxes\n", (double)(clock()-t_start)/CLOCKS_PER_SEC, n);
+    printf("Computation time: %.4fs, %td boxes\n", (double)(clock()-t_start)/CLOCKS_PER_SEC, n);
   }
   
   template<typename C>

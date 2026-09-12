@@ -17,7 +17,9 @@
   # Adds pybind11::headers, pybind11::module, pybind11::embed
 
   set(PYTHON_PACKAGE_NAME ${PROJECT_NAME})
-  set(PYTHON_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_package")
+  set(PYTHON_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_package"
+    CACHE INTERNAL "Codac Python package build directory"
+  )
 
   file(MAKE_DIRECTORY ${PYTHON_PACKAGE_DIR})
   execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/${PYTHON_PACKAGE_NAME}/" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}")
@@ -64,7 +66,11 @@
     execute_process(COMMAND ${PYTHON_EXECUTABLE}
       ${PROJECT_SOURCE_DIR}/scripts/doxygen/doxygen2docstring.py
       ${CMAKE_CURRENT_BINARY_DIR}/../doc/api/xml/
-      ${CMAKE_CURRENT_BINARY_DIR}/docstring)
+      ${CMAKE_CURRENT_BINARY_DIR}/docstring
+      RESULT_VARIABLE DOCSTRING_RESULT)
+    if(NOT DOCSTRING_RESULT EQUAL 0)
+      message(FATAL_ERROR "doxygen2docstring.py failed (exit code ${DOCSTRING_RESULT}) while generating the Python docstring headers.")
+    endif()
 
   endif()
 
@@ -79,8 +85,19 @@
 
   
   add_custom_target(pip_package)
+  # Built through "python -m build" rather than by invoking setup.py directly:
+  # setuptools deprecated the latter, and bdist_wheel reaches the wheel by way
+  # of the install command, so each build printed "setup.py install is
+  # deprecated". Both are scheduled for removal.
+  #
+  # --no-isolation reuses the setuptools and wheel of the environment instead of
+  # creating a virtual environment and downloading them again for every wheel.
+  # Every place that reaches this target installs them first (the two
+  # scripts/docker/build_pybinding*.sh, and the macosmatrix/vcmatrix
+  # workflows), so the isolated environment would only cost a download and
+  # would silently build against a different setuptools than the one tested.
   add_custom_command(TARGET pip_package PRE_BUILD
-    COMMAND ${PYTHON_EXECUTABLE} ARGS setup.py bdist_wheel -d ${CMAKE_BINARY_DIR}
+    COMMAND ${PYTHON_EXECUTABLE} ARGS -m build --wheel --no-isolation --outdir ${CMAKE_BINARY_DIR}
     WORKING_DIRECTORY ${PYTHON_PACKAGE_DIR}
   )
 

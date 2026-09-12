@@ -18,8 +18,13 @@
   )
 
   target_include_directories(_graphics
+    # First, so that a header is opened at src/... rather than through
+    # build/include: the path a translation unit used is the path gcov records,
+    # and the two spellings would split every header into two entries in the
+    # coverage report. See codac_publish_include_dirs() in the top-level CMakeLists.txt.
+    PRIVATE ${CODAC_SOURCE_INCLUDE_DIRS}
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../../docstring
-    PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../../../include 
+    PRIVATE ${CMAKE_BINARY_DIR}/src
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../core/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
@@ -28,8 +33,13 @@
   )
 
   target_link_libraries(_graphics
-    PRIVATE ${PROJECT_NAME}-graphics ${LIBS} Ibex::ibex
+    PRIVATE ${PROJECT_NAME}-graphics Threads::Threads Ibex::ibex
   )
+
+  # Propagate the architecture flags (FMA, etc.) to the Python modules
+  if(CODAC_ARCH_CXX_FLAGS)
+    target_compile_options(_graphics PRIVATE ${CODAC_ARCH_CXX_FLAGS})
+  endif()
 
   # Copy the generated library in the package folder
   add_custom_command(TARGET _graphics POST_BUILD

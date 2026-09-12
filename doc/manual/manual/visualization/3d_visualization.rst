@@ -56,6 +56,8 @@ Paving
   - Subpaving
 
 
+.. doxygenfunction:: codac2::Figure3D::draw_axes(double, const Vector&)
+  :project: codac
 
 Note that only the stroke color is used in all of the supported drawing functions.
 

@@ -22,7 +22,7 @@ int main()
 
   Figure2D figure_2d ("Henon Map", GraphicOutput::VIBES);
   figure_2d.set_window_properties({25,50},{500,500});
-  figure_2d.set_axes({0,{-1.4,2.2}}, {1,{-0.4,0.3}});
+  figure_2d.set_axes(axis(0,{-1.4,2.2}), axis(1,{-0.4,0.3}));
 
   for (const auto& p : v_par_2d)
   {
@@ -49,7 +49,7 @@ int main()
 
   Figure2D figure_3d_proj ("Conform projected", GraphicOutput::VIBES);
   figure_3d_proj.set_window_properties({25,600},{500,500});
-  figure_3d_proj.set_axes({0,{-1.5,2.5}}, {1,{-2,2}});
+  figure_3d_proj.set_axes(axis(0,{-1.5,2.5}), axis(1,{-2,2}));
 
   auto v_par_3d = PEIBOS(f_3d, psi0_3d, {id_3d,s1,s1*s1,s1.invert(),s2,s2.invert()}, 0.05, true);  
 

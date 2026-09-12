@@ -61,7 +61,7 @@ namespace codac2
 
       std::shared_ptr<const PavingNode<P>> top() const
       {
-        return _top;
+        return _top.lock();
       }
 
       std::shared_ptr<PavingNode<P>> top()
@@ -102,7 +102,7 @@ namespace codac2
 
       void visit(std::function<bool(std::shared_ptr<const PavingNode<P>>)> visitor) const
       {
-        if(!_top && !_right && _left && left()->boxes() == _x)
+        if(_top.expired() && !_right && _left && left()->boxes() == _x)
           left()->visit(visitor);
 
         else if(visitor(this->shared_from_this()))
@@ -114,7 +114,7 @@ namespace codac2
 
       void visit(std::function<bool(std::shared_ptr<PavingNode<P>>)> visitor)
       {
-        if(!_top && !_right && _left && left()->boxes() == _x)
+        if(_top.expired() && !_right && _left && left()->boxes() == _x)
           _left->visit(visitor);
 
         else if(visitor(this->shared_from_this()))
@@ -157,7 +157,7 @@ namespace codac2
 
       const P& _paving;
       typename P::NodeTuple_ _x;
-      std::shared_ptr<PavingNode<P>> _top = nullptr;
+      std::weak_ptr<PavingNode<P>> _top;
       std::shared_ptr<PavingNode<P>> _left = nullptr, _right = nullptr;
   };
 }

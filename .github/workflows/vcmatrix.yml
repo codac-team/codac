@@ -1,12 +1,27 @@
 # This file generates Python wheels for Windows
 on:
     push:
-        branches:
-        - codac1
-        - codac2
-        - codac2_codac4matlab
+        branches: ['**']
         tags-ignore: ['**']  # Ignore all tag pushes
     pull_request:
+
+permissions:
+    contents: write
+
+concurrency:
+    # Keep only the newest run of this workflow for a given branch or pull
+    # request: a push that supersedes another leaves the older run computing a
+    # result nobody will read, while its jobs hold runners the newest run is
+    # waiting for.
+    #
+    # The three release branches are excluded. They are where the jobs upload
+    # their packages to a GitHub release (see the "github.ref_name==" conditions
+    # further down), and cancelling such a run halfway would leave the release
+    # with only part of its assets. The same expression is used in every
+    # workflow of this directory, including the ones that publish nothing, so
+    # that the rule stays a single thing to know.
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: ${{ github.ref_name != 'codac1' && github.ref_name != 'codac2' && github.ref_name != 'codac2_codac4matlab' }}
 
 jobs:
  vcmatrix:
@@ -60,17 +75,49 @@ jobs:
       if: runner.os=='Windows'
     #- run: choco install -y -r --no-progress eigen --version=3.4.0.20240224 ${{ matrix.cfg.choco_flags }}
     #  if: runner.os=='Windows'
-    - run: choco install -y -r --no-progress graphviz doxygen.install & python -m pip install --upgrade pip & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
+    - run: choco install -y -r --no-progress graphviz
+      if: runner.os=='Windows'
+    - name: Install Doxygen (up to 5 attempts, non fatal)
+      shell: bash
+      run: |
+        export PATH="/c/ProgramData/chocolatey/bin:$PATH"
+        ok=0
+        for i in 1 2 3 4 5; do
+          echo "=== Doxygen install attempt $i/5 ==="
+          choco install -y -r --no-progress doxygen.install
+          rc=$?
+          if [ $rc -eq 0 ] || [ $rc -eq 3010 ]; then
+            if doxygen --version; then ok=1; break; fi
+            echo "choco reported success but doxygen is not callable."
+          fi
+          echo "Attempt $i failed (exit code $rc), retrying in 20 s..."
+          sleep 20
+        done
+        if [ $ok -eq 1 ]; then
+          echo "WITH_PYTHON=ON" >> $GITHUB_ENV
+        else
+          echo "::warning::Doxygen could not be installed after 5 attempts - building without documentation and without Python bindings."
+          echo "WITH_PYTHON=OFF" >> $GITHUB_ENV
+        fi
+      if: runner.os=='Windows'
+    - run: python -m pip install --upgrade pip && pip install --upgrade wheel setuptools build sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
+      shell: bash
       if: runner.os=='Windows'
     - run: |
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex.2.8.9.20260819.nupkg --no-check-certificate -nv
         choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20260819 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
         del /f /q ibex.2.8.9.20260819.nupkg
     - run: |
+        WITH_PYTHON=${WITH_PYTHON:-ON}
+        echo "Configuring with WITH_PYTHON=$WITH_PYTHON"
         mkdir build ; cd build
-        cmake -E env CXXFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D WITH_CAPD=OFF -D WITH_PYTHON=ON -D PYBIND11_FINDPYTHON=OFF ..
+        cmake -E env CXXFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D WITH_CAPD=OFF -D WITH_PYTHON=$WITH_PYTHON -D PYBIND11_FINDPYTHON=OFF ..
         cmake --build . -j 4 --config Release --target install
-        cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
+        if [ "$WITH_PYTHON" = "ON" ]; then
+          cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
+        else
+          echo "Skipping pip_package target (no Doxygen docstrings available)."
+        fi
         cd ..
       shell: bash
     - uses: xresloader/upload-to-github-release@v1
@@ -80,13 +127,25 @@ jobs:
         file: "*.whl"
         overwrite: true
         tag_name: autotagname-${{ github.sha }}
-      if: (github.event_name!='pull_request')&&((github.ref_name=='codac1')||(github.ref_name=='codac2')||(github.ref_name=='codac2_codac4matlab'))
+      if: (env.WITH_PYTHON!='OFF')&&(github.event_name!='pull_request')&&((github.ref_name=='codac1')||(github.ref_name=='codac2')||(github.ref_name=='codac2_codac4matlab'))
     - run: |
         pip install --no-deps --no-index *.whl
         python -c "import sys; print(sys.version)" ; python examples/02_centered_form/main.py
         pip install numpy sympy --prefer-binary
         python -m unittest discover codac.tests
-        cd build && ctest -C Release -V --output-on-failure
+      shell: bash
+      if: (env.WITH_PYTHON!='OFF')&&(github.ref_name!='codac2_codac4matlab')&&(github.event.pull_request.base.ref!='codac2_codac4matlab')
+    - run: |
+        # Only the Python half of the suite is run here. These jobs exist to
+        # build and check a wheel per Python version, and the C++ tests do not
+        # depend on that version: running them again on every entry repeated
+        # the same 87 tests 18 times on Windows and 11 times on macOS. They are
+        # still compiled, so a C++ regression still breaks this workflow, and
+        # they are still executed in Release on the very same systems by
+        # unixmatrix.yml -- Visual Studio 2022 on x86/x64/arm64, macOS Sonoma
+        # arm64 and Sequoia x86_64.
+        cd build && ctest -C Release -R "_py" -V --output-on-failure
         cd ..
       shell: bash
-      if: (github.ref_name!='codac2_codac4matlab')&&(github.event.pull_request.base.ref!='codac2_codac4matlab')
+      if: (env.WITH_PYTHON!='OFF')&&(github.ref_name!='codac2_codac4matlab')&&(github.event.pull_request.base.ref!='codac2_codac4matlab')
+

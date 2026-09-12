@@ -18,14 +18,17 @@ namespace codac2
   // PavingOut class
 
     PavingOut::PavingOut(Index n)
-      : Paving<PavingOut,IntervalVector>(n)
+      : Paving<PavingOut,IntervalVector>()
     {
       assert_release(n > 0);
+      this->init_tree(IntervalVector(n));
     }
 
     PavingOut::PavingOut(const IntervalVector& x)
-      : Paving<PavingOut,IntervalVector>(x)
-    { }
+      : Paving<PavingOut,IntervalVector>()
+    {
+      this->init_tree(x);
+    }
 
     std::list<PavingOut::ConnectedSubset_> PavingOut::connected_subsets(const PavingOut::NodeValue_& node_value) const
     {
@@ -77,20 +80,23 @@ namespace codac2
     IntervalVector operator&(const IntervalVector& x, const PavingOut& p)
     {
       return p & x;
-    };
+    }
 
 
   // PavingInOut class
 
     PavingInOut::PavingInOut(Index n)
-      : Paving<PavingInOut,IntervalVector,IntervalVector>(n)
+      : Paving<PavingInOut,IntervalVector,IntervalVector>()
     {
       assert_release(n > 0);
+      this->init_tree(IntervalVector(n));
     }
 
     PavingInOut::PavingInOut(const IntervalVector& x)
-      : Paving<PavingInOut,IntervalVector,IntervalVector>(x)
-    { }
+      : Paving<PavingInOut,IntervalVector,IntervalVector>()
+    {
+      this->init_tree(x);
+    }
 
     std::list<PavingInOut::ConnectedSubset_> PavingInOut::connected_subsets(const PavingInOut::NodeValue_& node_value) const
     {

@@ -49,7 +49,7 @@ int main()
   
   AnalyticFunction psi0_pend ({X_2d},{0.1*X_2d[0],0.1});
 
-  auto peibos_output_pend = PEIBOS(vectorField_pend, tf_pend, dt_pend, psi0_pend, {id_2d,s,s*s,s.invert()}, 0.02, {-M_PI/2.,0.}, true);
+  auto peibos_output_pend = PEIBOS(vectorField_pend, tf_pend, dt_pend, psi0_pend, {id_2d,s,s*s,s.invert()}, 0.02, {-PI/2.,0.}, true);
 
   Figure2D output_pend ("Pendulum",GraphicOutput::VIBES | GraphicOutput::IPE);
   output_pend.set_axes(axis(0,{-2,2}),axis(1,{-3,3}));

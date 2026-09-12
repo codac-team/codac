@@ -14,8 +14,8 @@ int main()
   Figure2D g("Robot simulation", GraphicOutput::VIBES | GraphicOutput::IPE);
 
   g.set_axes(
-    {0,x.codomain()[0].inflate(1.)},
-    {1,x.codomain()[1].inflate(1.)}
+    axis(0,x.codomain()[0].inflate(1.)),
+    axis(1,x.codomain()[1].inflate(1.))
   ).auto_scale();
 
   g.draw_tank(x(5.), 0.5, {Color::black(),Color::yellow()});

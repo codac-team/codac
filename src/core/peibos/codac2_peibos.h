@@ -17,7 +17,7 @@
 namespace codac2
 {
   // Forward declarations to reduce compilation load caused by heavy template use:
-  class AnalyticTypeBase;
+  struct AnalyticTypeBase;
   
   template<typename T>
     requires std::is_base_of_v<AnalyticTypeBase,T>

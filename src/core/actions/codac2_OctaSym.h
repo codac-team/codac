@@ -23,7 +23,7 @@ namespace codac2
   class SepBase;
   class SepAction;
   class SetExpr;
-  class OctaSymOp;
+  struct OctaSymOp;
 
   /**
    * \class Action

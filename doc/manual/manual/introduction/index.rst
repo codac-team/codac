@@ -75,6 +75,45 @@ Codac already provides a catalog a contractors that one can use to deal with man
   Another main distinction lies in the way things are computed: with set-membership methods, estimations are not randomly performed. **Computations are deterministic**: given a set of parameters or inputs, algorithms will always output the same result.
 
 
+.. _sec-intro-separators:
+
+Separators
+----------
+
+A contractor answers one question: *which part of this box can be discarded, because it surely contains no solution?* It says nothing about the part it keeps, which may hold solutions, non-solutions, or both.
+
+A **separator** answers the two symmetrical questions at once. Applied to a box :math:`[\mathbf{x}]`, a separator :math:`\mathcal{S}` associated with a set :math:`\mathbb{S}` returns a pair of boxes:
+
+- an **inner** box, obtained by removing from :math:`[\mathbf{x}]` what is certainly *inside* :math:`\mathbb{S}`;
+- an **outer** box, obtained by removing from :math:`[\mathbf{x}]` what is certainly *outside* :math:`\mathbb{S}`.
+
+A separator is therefore the pair made of a contractor for :math:`\mathbb{S}` and a contractor for its complement :math:`\overline{\mathbb{S}}`, and what falls outside both boxes is the part of :math:`[\mathbf{x}]` that has been *proved* to belong to :math:`\mathbb{S}`. This is the essential gain over a contractor alone: besides eliminating, we can now certify.
+
+In Codac, this is the ``Sep`` interface: its ``separate()`` method takes a box and returns a ``BoxPair``, whose ``inner`` and ``outer`` members are the two boxes described above. Most contractors of the catalog have a separator counterpart, ``CtcInverse`` and ``SepInverse`` for instance, and the two families are listed side by side in :ref:`sec-ctc`.
+
+The practical consequence is visible on the two examples of the home page. The first one is solved with the contractor ``CtcInverse``: the blue boxes are guaranteed to be solution-free, and nothing is claimed about the rest. The second one is solved with the separator ``SepInverse``: the blue boxes are again guaranteed to have no solution, but *in addition* any vector taken in a green box is a solution of the inequality.
+
+
+.. _sec-intro-pavings:
+
+Pavings
+-------
+
+Contractors and separators reduce a box, but a single box is rarely a satisfactory description of a solution set: as soon as the set is not box-shaped, its interval enclosure is a coarse over-approximation — the *pessimism* mentioned below.
+
+The way out is to **bisect**. A box that can no longer be contracted is cut in two, and each half is contracted in turn; the process is repeated until the remaining boxes are smaller than a precision :math:`\epsilon` given by the user. The resulting collection of non-overlapping boxes is called a **paving**, and the algorithm producing it is known as **SIVIA** (*Set Inversion Via Interval Analysis*).
+
+The boxes of a paving are of three kinds:
+
+- those proved to contain no solution;
+- those proved to contain only solutions — which only a separator, or a direct inclusion test, can establish;
+- those still undecided, which are the ones the bisection stops on when they become smaller than :math:`\epsilon`. They form the boundary of the solution set, and their total volume is the price paid for the guarantee.
+
+In Codac, the paving of a box is obtained with a single call, ``pave(x0, c, eps)``, which accepts a contractor or a separator and returns a ``PavingOut`` or a ``PavingInOut`` accordingly. This is what both examples of the home page do. The function ``sivia(x0, f, y, eps)`` provides the same service directly from a function :math:`\mathbf{f}` and a target domain :math:`[\mathbf{y}]`, without an explicit contractor.
+
+The choice of :math:`\epsilon` is the usual compromise: the finer it is, the thinner the undecided boundary, and the more boxes to compute.
+
+
 Reliable outputs
 ----------------
 

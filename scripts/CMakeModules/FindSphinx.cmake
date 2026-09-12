@@ -1,9 +1,9 @@
 include(FindPackageHandleStandardArgs)
 
 # We are likely to find Sphinx near the Python interpreter
-find_package(PythonInterp)
-if(PYTHONINTERP_FOUND)
-    get_filename_component(_PYTHON_DIR "${PYTHON_EXECUTABLE}" DIRECTORY)
+find_package(Python COMPONENTS Interpreter)
+if(Python_Interpreter_FOUND)
+    get_filename_component(_PYTHON_DIR "${Python_EXECUTABLE}" DIRECTORY)
     set(
         _PYTHON_PATHS
         "${_PYTHON_DIR}"

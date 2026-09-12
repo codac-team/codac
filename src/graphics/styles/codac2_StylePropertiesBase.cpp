@@ -7,6 +7,7 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
+#include <iostream>
 #include "codac2_StylePropertiesBase.h"
 
 using namespace std;
@@ -35,6 +36,7 @@ void StylePropertiesBase::parse_parameter(const std::string& param)
       }
       catch (const std::invalid_argument& e)
       {
+        std::cerr << "codac2: invalid line width value \"" << param.substr(2) << "\": " << e.what() << std::endl;
         assert_release_constexpr(false && "Invalid line width value");
       }
     }
@@ -47,6 +49,7 @@ void StylePropertiesBase::parse_parameter(const std::string& param)
       }
       catch (const std::invalid_argument& e)
       {
+        std::cerr << "codac2: invalid z-value \"" << param.substr(2) << "\": " << e.what() << std::endl;
         assert_release_constexpr(false && "Invalid z-value");
       }
     }

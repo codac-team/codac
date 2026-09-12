@@ -1,0 +1,295 @@
+# Debug builds on macOS, under AddressSanitizer and UndefinedBehaviorSanitizer.
+#
+# The macOS counterpart of unixdebug.yml, and the same reasoning: every other
+# workflow builds macOS in Release, so nothing was ever run there under a
+# sanitizer. It also runs the examples, which -D TEST_EXAMPLES=ON registers as
+# ctest integration tests (see examples/CMakeLists.txt).
+#
+# As on Linux, GitHub offers only two instruction sets here, so the third
+# configuration is a compiler rather than a third architecture: AppleClang next
+# to GCC, on arm64.
+#
+# Two things make macOS harder than Linux, and shape the matrix below.
+#
+# GCC on macOS links against libstdc++ while AppleClang links against libc++.
+# The prebuilt IBEX this project publishes is built with AppleClang, so a GCC
+# build of codac cannot link it -- the two standard libraries are not
+# ABI-compatible. The GCC jobs therefore build IBEX from source with the same
+# compiler, which is what scripts/dependencies/install_ibex.sh does, and the
+# result is cached between runs since it depends only on the IBEX version and
+# the compiler.
+#
+# The Python bindings are left out of every job here, sanitized macOS being a
+# configuration the test suite cannot currently run them in: the block of
+# tests/CMakeLists.txt that hands the sanitizer runtime to the interpreter is
+# Linux-only by construction, and says so -- LD_PRELOAD has no equivalent there,
+# macOS needing DYLD_INSERT_LIBRARIES and a differently named runtime. Without
+# that preload the extension module fails to load on the first unresolved
+# __asan_* symbol. The Python half of the suite therefore runs under a sanitizer
+# in unixdebug.yml, where the mechanism exists, and macOS covers the C++ half:
+# the library, its unit tests and the C++ examples. Turning WITH_PYTHON off also
+# removes the need for doxygen here, which doc/CMakeLists.txt only requires for
+# the bindings.
+on:
+    push:
+        branches: ['**']
+        tags-ignore: ['**']  # Ignore all tag pushes
+    pull_request:
+
+concurrency:
+    # Keep only the newest run of this workflow for a given branch or pull
+    # request: a push that supersedes another leaves the older run computing a
+    # result nobody will read, while its jobs hold runners the newest run is
+    # waiting for.
+    #
+    # The three release branches are excluded. They are where the jobs upload
+    # their packages to a GitHub release (see the "github.ref_name==" conditions
+    # further down), and cancelling such a run halfway would leave the release
+    # with only part of its assets. The same expression is used in every
+    # workflow of this directory, including the ones that publish nothing, so
+    # that the rule stays a single thing to know.
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: ${{ github.ref_name != 'codac1' && github.ref_name != 'codac2' && github.ref_name != 'codac2_codac4matlab' }}
+
+jobs:
+ macdebug:
+    runs-on: ${{ matrix.cfg.os }}
+    # A sanitized Debug build is roughly an order of magnitude slower to run
+    # than the Release builds of the other workflows, the examples are run on
+    # top of the test suite, and the GCC jobs build IBEX from source the first
+    # time. Three hours leaves room for that while still turning a hang into a
+    # red job rather than into six hours of runner time.
+    timeout-minutes: 180
+    defaults:
+        run:
+            shell: bash
+    strategy:
+        fail-fast: false
+        matrix:
+            cfg:
+            - { os: macos-26      , arch: arm64 , runtime: tahoe  , compiler: gcc       , with_python: 'OFF', desc: 'macOS Tahoe GCC arm64 Debug ASan+UBSan' }
+            - { os: macos-15-intel, arch: x86_64, runtime: sequoia, compiler: gcc       , with_python: 'OFF', desc: 'macOS Sequoia GCC x86_64 Debug ASan+UBSan' }
+            - { os: macos-26      , arch: arm64 , runtime: tahoe  , compiler: appleclang, with_python: 'OFF', desc: 'macOS Tahoe AppleClang arm64 Debug ASan+UBSan' }
+            - { os: macos-26      , arch: arm64 , runtime: tahoe  , compiler: llvm      , with_python: 'OFF', desc: 'macOS Tahoe LLVM Clang arm64 Debug ASan+UBSan' }
+    name: ${{ matrix.cfg.desc }}
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        submodules: true
+        fetch-depth: 0
+        clean: false
+
+    - run: echo "VERBOSE=1" >> $GITHUB_ENV
+
+    # Homebrew's "gcc" formula is the newest GCC it packages, and the binaries
+    # it installs carry the major version in their name (g++-15 and so on), the
+    # plain g++ of macOS being a symlink to AppleClang. The version is therefore
+    # resolved here rather than pinned, and written to the environment for the
+    # later steps.
+    # Catch2 is deliberately not installed from Homebrew: the bottle is built
+    # with AppleClang against libc++, so the GCC jobs cannot link it -- the same
+    # standard-library split that makes them rebuild IBEX below, showing up as
+    # undefined std::__1:: symbols at link time. Leaving it out lets
+    # tests/CMakeLists.txt fetch Catch2 and build it with the compiler of the
+    # job, which is correct for every entry of this matrix.
+    - name: Toolchain
+      run: |
+        case "${{ matrix.cfg.compiler }}" in
+          gcc)
+            brew install gcc
+            GCC_MAJOR=$(brew list --versions gcc | awk '{print $2}' | cut -d. -f1)
+            echo "CC=gcc-${GCC_MAJOR}" >> "$GITHUB_ENV"
+            echo "CXX=g++-${GCC_MAJOR}" >> "$GITHUB_ENV"
+            ;;
+          llvm)
+            # Upstream Clang, which is a different compiler from the AppleClang
+            # of the entry above: its own release cycle, its own diagnostics and
+            # its own sanitizer runtimes. Homebrew keeps it out of the way of the
+            # system toolchain, so it has to be named by its prefix, and it needs
+            # to be pointed at its own libc++ -- the formula says as much -- or
+            # it compiles against headers newer than the library it links.
+            brew install llvm
+            LLVM_PREFIX=$(brew --prefix llvm)
+            echo "CC=$LLVM_PREFIX/bin/clang" >> "$GITHUB_ENV"
+            echo "CXX=$LLVM_PREFIX/bin/clang++" >> "$GITHUB_ENV"
+            echo "LDFLAGS=-L$LLVM_PREFIX/lib/c++ -Wl,-rpath,$LLVM_PREFIX/lib/c++" >> "$GITHUB_ENV"
+            ;;
+          *)
+            echo "CC=clang" >> "$GITHUB_ENV"
+            echo "CXX=clang++" >> "$GITHUB_ENV"
+            ;;
+        esac
+
+    - name: Compiler version
+      run: $CXX --version
+
+    - name: Cache IBEX built from source
+      if: matrix.cfg.compiler != 'appleclang'
+      uses: actions/cache@v4
+      with:
+        path: ~/ibex-lib
+        key: ibex-2.8.9.20260819-${{ matrix.cfg.os }}-${{ matrix.cfg.compiler }}
+
+    # The GCC jobs rebuild IBEX with the compiler that will link it, for the
+    # standard-library reason given at the top of this file. install_ibex.sh
+    # skips the build when the directory is already there, so a cache hit only
+    # re-runs its install step.
+    - name: IBEX
+      run: |
+        if [ "${{ matrix.cfg.compiler }}" != "appleclang" ]; then
+          bash scripts/dependencies/install_ibex.sh
+          echo "CMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install" >> "$GITHUB_ENV"
+        else
+          wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
+          unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
+          rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
+          sudo cp -Rf ibex/* /usr/local/
+        fi
+
+    - name: Configure and build
+      run: |
+        mkdir build ; cd build
+        cmake \
+          -D CMAKE_BUILD_TYPE=Debug \
+          -D CMAKE_CXX_FLAGS="-fPIC" \
+          -D CMAKE_C_FLAGS="-fPIC" \
+          -D CMAKE_INSTALL_PREFIX="../codac" \
+          -D BUILD_TESTS=ON \
+          -D TEST_EXAMPLES=ON \
+          -D WITH_PYTHON=${{ matrix.cfg.with_python }} \
+          -D PYBIND11_FINDPYTHON=OFF \
+          -D WITH_CAPD=OFF \
+          .. 2>&1 | tee configure.log
+        cmake --build . -j 4
+
+    # The point of this workflow is the sanitizers, and the top-level
+    # CMakeLists.txt deliberately falls back to an unsanitized Debug build when
+    # it cannot find their runtime rather than failing to link. That fallback is
+    # the right default for someone building codac by hand, and exactly the
+    # wrong outcome here: the job would come out green having checked nothing it
+    # was written for. GCC's Darwin sanitizer support is the reason this is not
+    # theoretical.
+    - name: Check that the sanitizers really are enabled
+      run: |
+        if grep -q "will not be sanitized" build/configure.log ; then
+          echo "This job exists to run the suite under ASan and UBSan, and cmake reported:"
+          grep "will not be sanitized" build/configure.log
+          exit 1
+        fi
+        echo "Sanitizers enabled."
+
+    # The unit tests and the examples are the same ctest suite: examples are
+    # registered as tests by examples/CMakeLists.txt, so this one command runs
+    # both, and a sanitizer report in either fails the job.
+    - name: Unit tests and examples
+      run: |
+        cd build
+        ctest -V --output-on-failure 2>&1 | tee ctest.log
+
+    # ctest is run verbose so that everything the sanitizers print reaches the
+    # log. ASan and UBSan do not agree on what a diagnostic costs: a leak or a
+    # buffer overflow aborts the process and fails the test, but a UBSan runtime
+    # error only prints and lets the run continue, so a test can pass having
+    # reported dozens of undefined behaviours. Without -V that output is thrown
+    # away for every test that passes -- which is precisely the output worth
+    # reading here.
+    - name: Sanitizer diagnostics
+      if: always()
+      run: |
+        log=build/ctest.log
+        [ -f "$log" ] || { echo "No ctest output to scan." ; exit 0 ; }
+        # A digest, because the verbose log of the whole suite is far too long
+        # to scan by eye. The step reports rather than judges: it never fails
+        # the job, the tests themselves decide that.
+        n=$(grep -cE "runtime error:|ERROR: AddressSanitizer|ERROR: LeakSanitizer|SUMMARY: (Address|Undefined|Leak)Sanitizer" "$log" || true)
+        echo "Sanitizer diagnostics found: $n"
+        if [ "$n" -gt 0 ]; then
+          echo "--- distinct messages, most frequent first ---"
+          # awk rather than head: this shell runs with pipefail, and head
+          # closing the pipe early makes sort die on SIGPIPE, which failed the
+          # step -- the one thing it was written never to do.
+          grep -hoE "runtime error: .*|ERROR: (Address|Leak)Sanitizer: [a-z-]+" "$log" \
+            | sed -E "s/0x[0-9a-f]+/0xADDR/g" | sort | uniq -c | sort -rn | awk 'NR<=40'
+          echo "--- first occurrences in context ---"
+          grep -nE "runtime error:|ERROR: (Address|Leak)Sanitizer" "$log" | awk 'NR<=20'
+        fi
+
+ # The macOS counterpart of the packaging job of unixdebug.yml, and the same
+ # reasoning: the two ways of consuming an installed Codac -- find_package(CODAC)
+ # through codac-config.cmake and the export set beside it, and pkg-config
+ # through codac.pc -- are written by hand in different places of
+ # src/CMakeLists.txt, had drifted apart in both directions, and nothing in CI
+ # built anything against an installed Codac at all. See
+ # tests/packaging/check_consumer_parity.sh.
+ #
+ # A job of its own, not a step of the matrix above, because the library there
+ # is Debug under AddressSanitizer and an ordinary consumer cannot link such an
+ # archive. Only AppleClang appears here: the parity check reads what the
+ # install tree says about itself, which does not depend on the compiler, and
+ # AppleClang is the one that can use the prebuilt IBEX without building it from
+ # source first.
+ packaging:
+    runs-on: ${{ matrix.cfg.os }}
+    timeout-minutes: 60
+    defaults:
+        run:
+            shell: bash
+    strategy:
+        fail-fast: false
+        matrix:
+            cfg:
+            # Both instruction sets GitHub offers for macOS.
+            - { os: macos-26      , arch: arm64 , runtime: tahoe   , desc: 'macOS Tahoe arm64 packaging (find_package vs pkg-config)' }
+            - { os: macos-15-intel, arch: x86_64, runtime: sequoia , desc: 'macOS Sequoia x86_64 packaging (find_package vs pkg-config)' }
+    name: ${{ matrix.cfg.desc }}
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        submodules: true
+        fetch-depth: 0
+        clean: false
+
+    # pkgconf is what provides pkg-config on Homebrew. It is already on the
+    # images, so this only guards against an image that drops it; the parity
+    # check below is run with --require-pkgconfig and fails loudly if it is
+    # missing rather than checking half of what it was added for.
+    - name: Toolchain and dependencies
+      run: |
+        brew install pkgconf || true
+        pkg-config --version
+        clang++ --version
+
+    # The prebuilt IBEX, left where it is unpacked rather than copied over
+    # /usr/local as the jobs above do. Homebrew owns that prefix on the Intel
+    # image, and the pkgconf installed in the step before this one puts a
+    # symlink at /usr/local/share/pkgconfig that the copy then fails on:
+    # "cp: /usr/local/share/pkgconfig: Not a directory". Pointing at the
+    # directory instead needs no privileges and leaves the image alone.
+    - name: IBEX
+      run: |
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
+        unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
+        rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
+        echo "IBEX_PREFIX=$PWD/ibex" >> "$GITHUB_ENV"
+
+    - name: Build and install Codac
+      run: |
+        mkdir build ; cd build
+        cmake \
+          -D CMAKE_BUILD_TYPE=Release \
+          -D CMAKE_PREFIX_PATH="$IBEX_PREFIX" \
+          -D CMAKE_INSTALL_PREFIX="$PWD/../codac_install" \
+          -D BUILD_TESTS=OFF \
+          -D WITH_PYTHON=OFF \
+          -D WITH_CAPD=OFF \
+          ..
+        cmake --build . -j 4 --target install
+
+    - name: find_package and pkg-config must agree
+      run: |
+        bash tests/packaging/check_consumer_parity.sh \
+          --prefix "$PWD/codac_install" \
+          --build-dir "$PWD/build_packaging_check" \
+          --cmake-prefix-path "$IBEX_PREFIX" \
+          --pkg-config-path "$IBEX_PREFIX/share/pkgconfig" \
+          --require-pkgconfig

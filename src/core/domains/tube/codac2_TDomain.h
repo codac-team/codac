@@ -183,8 +183,8 @@ namespace codac2
 
     protected:
       
-      friend std::shared_ptr<TDomain> create_tdomain(const Interval&);
-      friend std::shared_ptr<TDomain> create_tdomain(const Interval&,double,bool);
+      friend std::shared_ptr<TDomain> create_tdomain(const Interval& t0_tf);
+      friend std::shared_ptr<TDomain> create_tdomain(const Interval& t0_tf,double dt,bool with_gates);
   };
 
   /**

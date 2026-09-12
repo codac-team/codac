@@ -59,8 +59,8 @@ f_if = AnalyticFunction([X_if], [X_if,Interval(1.1,1.2)*sqr(X_if)])
 # [5-end]
 
 # [6-beg]
-f_lb = AnalyticTraj(AnalyticFunction([X_if],1.1*sqr(X_if)),Interval(-2.0,2.0))
-f_ub = AnalyticTraj(AnalyticFunction([X_if],1.2*sqr(X_if)),Interval(-2.0,2.0))
+f_lb = AnalyticTraj(Interval(-2.0,2.0),AnalyticFunction([X_if],1.1*sqr(X_if)))
+f_ub = AnalyticTraj(Interval(-2.0,2.0),AnalyticFunction([X_if],1.2*sqr(X_if)))
 
 DefaultFigure.plot_trajectory(f_lb.sampled(0.01))
 DefaultFigure.plot_trajectory(f_ub.sampled(0.01))

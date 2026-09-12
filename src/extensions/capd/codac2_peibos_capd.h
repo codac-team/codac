@@ -36,7 +36,7 @@ namespace codac2
     Vector offset;
   };
 
-  using T = std::tuple<PEIBOS_CAPD_Key,IntervalVector,IntervalMatrix>;
+  using PEIBOS_CAPD_Result = std::tuple<PEIBOS_CAPD_Key,IntervalVector,IntervalMatrix>;
 
   /**
    * \brief PEIBOS algorithm using CAPD for guaranteed ODE propagation.
@@ -54,7 +54,7 @@ namespace codac2
    * \li The interval vector \f$\mathbf{z}\f$ containing the image \f$\bar{\mathbf{x}}(t))\f$
    * \li The interval Jacobian matrix \f$\mathbf{J_f}\f$ containing \f$D\mathbf{\left[x\right]}(t)\f$
    */
-  std::map<double, std::vector<T>> PEIBOS(const capd::IMap& i_map, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const std::vector<OctaSym>& Sigma, double epsilon, bool verbose = false);
+  std::map<double, std::vector<PEIBOS_CAPD_Result>> PEIBOS(const capd::IMap& i_map, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const std::vector<OctaSym>& Sigma, double epsilon, bool verbose = false);
   
   /**
    * \brief PEIBOS algorithm using CAPD for guaranteed ODE propagation.
@@ -73,7 +73,7 @@ namespace codac2
    * \li The interval vector \f$\mathbf{z}\f$ containing the image \f$\bar{\mathbf{x}}(t))\f$
    * \li The interval Jacobian matrix \f$\mathbf{J_f}\f$ containing \f$D\mathbf{\left[x\right]}(t)\f$
    */
-  std::map<double, std::vector<T>> PEIBOS(const capd::IMap& i_map, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const std::vector<OctaSym>& Sigma, double epsilon, const Vector& offset, bool verbose = false);
+  std::map<double, std::vector<PEIBOS_CAPD_Result>> PEIBOS(const capd::IMap& i_map, double tf, double dt, const AnalyticFunction<VectorType>& psi_0, const std::vector<OctaSym>& Sigma, double epsilon, const Vector& offset, bool verbose = false);
 
 
   /**
@@ -84,5 +84,5 @@ namespace codac2
    * \return A timed map of reach set parallelepipeds. At each time \f$t\f$, the value is a vector of Parallelepipeds enclosing the reach set at time \f$t\f$.
    * The function \ref parallelepiped_inclusion is used to compute each Parallelepiped from the PEIBOS CAPD output.
    */
-  std::map<double, std::vector<Parallelepiped>> reach_set(const std::map<double, std::vector<T>>& peibos_output);
+  std::map<double, std::vector<Parallelepiped>> reach_set(const std::map<double, std::vector<PEIBOS_CAPD_Result>>& peibos_output);
 }

@@ -112,7 +112,7 @@ TEST_CASE("IntervalVector")
   {
     IntervalVector x(1);
     x[0] = Interval(1,2);
-    x.resize_save_values(3);
+    x.conservativeResize(3);
     CHECK(x.size() == 3);
     CHECK(x[0] == Interval(1,2));
     CHECK(x[1] == Interval(-oo,oo));
@@ -122,7 +122,7 @@ TEST_CASE("IntervalVector")
   {
     IntervalVector x(1);
     x[0] = Interval(1,2);
-    x.resize_save_values(1);
+    x.conservativeResize(1);
     CHECK(x.size() == 1);
     CHECK(x[0] == Interval(1,2));
   }
@@ -131,7 +131,7 @@ TEST_CASE("IntervalVector")
     IntervalVector x(2);
     x[0] = Interval(1,2);
     x.set_empty();
-    x.resize_save_values(3);
+    x.conservativeResize(3);
     CHECK(x.size() == 3);
     CHECK(x.is_empty());
     CHECK(x[2] == Interval(-oo,oo));
@@ -141,7 +141,7 @@ TEST_CASE("IntervalVector")
     IntervalVector x(5);
     x[0] = Interval(1,2);
     x[1] = Interval(3,4);
-    x.resize_save_values(2);
+    x.conservativeResize(2);
     CHECK(x.size() == 2);
     CHECK(x[0] == Interval(1,2));
     CHECK(x[1] == Interval(3,4));
@@ -638,9 +638,9 @@ TEST_CASE("IntervalVector")
 
   {
     IntervalVector a{Interval::empty(),{-1,1}};
-    IntervalVector b{{-1,1},Interval::empty()};
-    IntervalVector c = a | b;
-    CHECK(c.is_empty());
+    IntervalVector b2{{-1,1},Interval::empty()};
+    IntervalVector c2 = a | b2;
+    CHECK(c2.is_empty());
   }
 }
 

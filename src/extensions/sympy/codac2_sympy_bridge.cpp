@@ -238,7 +238,7 @@ namespace codac2
           continue;
         }
 
-        assert_release(false && "Unsupported variable type in FlatSymbolTable");
+        assert_release_unreachable("Unsupported variable type in FlatSymbolTable");
       }
     }
 
@@ -492,7 +492,7 @@ namespace codac2
         return export_matrix_component(child_at(ch,0), op->i(), op->j());
       }
 
-      assert_release(false && "Unsupported Codac scalar node in SympyExporter");
+      assert_release_unreachable("Unsupported Codac scalar node in SympyExporter");
       return pybind11::none();
     }
 
@@ -509,8 +509,7 @@ namespace codac2
           return export_node(child_at(children,i));
       }
 
-      assert_release(false
-        && "Unsupported vector-component expression. Supported cases: direct VectorVar components, or vector expressions exposing scalar children via children_expr_base().");
+      assert_release_unreachable("Unsupported vector-component expression. Supported cases: direct VectorVar components, or vector expressions exposing scalar children via children_expr_base().");
       return pybind11::none();
     }
 
@@ -528,8 +527,7 @@ namespace codac2
           return export_vector_component(child_at(children,j), i);
       }
 
-      assert_release(false
-        && "Unsupported matrix-component expression. Supported cases: direct MatrixVar components, or matrix expressions exposing column children via children_expr_base().");
+      assert_release_unreachable("Unsupported matrix-component expression. Supported cases: direct MatrixVar components, or matrix expressions exposing column children via children_expr_base().");
       return pybind11::none();
     }
 
@@ -681,7 +679,7 @@ namespace codac2
         if(func.is(sympy.attr("atan2"))) return atan2(x1, x2);
       }
 
-      assert_release(false && "Unsupported SymPy node in importer");
+      assert_release_unreachable("Unsupported SymPy node in importer");
       return const_value(0.);
     }
   }

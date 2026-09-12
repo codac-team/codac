@@ -40,11 +40,13 @@ setup(
     'pip>=19.0.0',
     'vibes'
   ],
-  license="LGPLv3+",
+  # PEP 639: the licence is carried by an SPDX expression, and the matching
+  # "License :: ..." classifier is deprecated -- setuptools warns about it on
+  # every wheel build. The two must not be given together.
+  license="LGPL-3.0-or-later",
   classifiers=[
     "Development Status :: 3 - Alpha",
     "Topic :: Scientific/Engineering :: Mathematics",
-    "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
   ],
   include_package_data=True,
   zip_safe=False
