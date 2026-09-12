@@ -67,7 +67,7 @@
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}-graphics>
   )
   codac_publish_include_dirs(${CODAC_GRAPHICS_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME}-graphics PUBLIC ${PROJECT_NAME}-core Ibex::ibex $<BUILD_INTERFACE:Eigen3::Eigen> ${PROJECT_NAME}-core)
+  target_link_libraries(${PROJECT_NAME}-graphics PUBLIC ${PROJECT_NAME}-core Ibex::ibex $<BUILD_INTERFACE:Eigen3::Eigen>)
   
 
 ################################################################################
