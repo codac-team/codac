@@ -41,7 +41,13 @@ To build this manual using Sphinx, follow these steps:
 
       make manual
 
-   The generated website will be locally available in ``./build/doc/manual``.
+   This first runs Doxygen on the sources, whatever
+   ``WITH_PYTHON`` is: its output provides the API references of the manual and
+   the ``api/`` pages of the website. Doxygen therefore has to be installed when
+   the CMake project is configured, otherwise the manual is generated without
+   them.
+
+   The generated website will be locally available in ``./build/doc/manual/html``.
 
 To contribute and extend this manual, please consult the Sphinx documentation:  
 https://www.sphinx-doc.org

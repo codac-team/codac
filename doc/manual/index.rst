@@ -180,11 +180,16 @@ User manual
 -----------
 
 * :ref:`sec-intro`
+   * Variables, domains, constraints
+   * Contractors
+   * :ref:`sec-intro-separators`
+   * :ref:`sec-intro-pavings`
 
 * :ref:`sec-install`
    * :ref:`sec-install-py`
    * :ref:`sec-install-cpp`
    * :ref:`sec-install-matlab`
+   * :ref:`sec-start-cpp-project`
    * :ref:`sec-install-performances`
 
 * :ref:`sec-intervals`
@@ -346,6 +351,8 @@ User manual
    * :ref:`sec-extensions-sympy`
    * Interface with the IBEX library
 
+* :ref:`sec-examples`
+
 * Frequently Asked Questions
 
 * References
@@ -409,7 +416,8 @@ Development
    manual/visualization/index.rst
    manual/tools/index.rst
    manual/extensions/index.rst
-   
+   manual/examples/index.rst
+
 ..    linear/index.rst
 ..    functions/index.rst
 ..    tubes/index.rst
