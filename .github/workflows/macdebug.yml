@@ -213,3 +213,79 @@ jobs:
           echo "--- first occurrences in context ---"
           grep -nE "runtime error:|ERROR: (Address|Leak)Sanitizer" "$log" | awk 'NR<=20'
         fi
+
+ # The macOS counterpart of the packaging job of unixdebug.yml, and the same
+ # reasoning: the two ways of consuming an installed Codac -- find_package(CODAC)
+ # through codac-config.cmake and the export set beside it, and pkg-config
+ # through codac.pc -- are written by hand in different places of
+ # src/CMakeLists.txt, had drifted apart in both directions, and nothing in CI
+ # built anything against an installed Codac at all. See
+ # tests/packaging/check_consumer_parity.sh.
+ #
+ # A job of its own, not a step of the matrix above, because the library there
+ # is Debug under AddressSanitizer and an ordinary consumer cannot link such an
+ # archive. Only AppleClang appears here: the parity check reads what the
+ # install tree says about itself, which does not depend on the compiler, and
+ # AppleClang is the one that can use the prebuilt IBEX without building it from
+ # source first.
+ packaging:
+    runs-on: ${{ matrix.cfg.os }}
+    timeout-minutes: 60
+    defaults:
+        run:
+            shell: bash
+    strategy:
+        fail-fast: false
+        matrix:
+            cfg:
+            # Both instruction sets GitHub offers for macOS.
+            - { os: macos-26      , arch: arm64 , runtime: tahoe   , desc: 'macOS Tahoe arm64 packaging (find_package vs pkg-config)' }
+            - { os: macos-15-intel, arch: x86_64, runtime: sequoia , desc: 'macOS Sequoia x86_64 packaging (find_package vs pkg-config)' }
+    name: ${{ matrix.cfg.desc }}
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        submodules: true
+        fetch-depth: 0
+        clean: false
+
+    # pkgconf is what provides pkg-config on Homebrew. It is already on the
+    # images, so this only guards against an image that drops it; the parity
+    # check below is run with --require-pkgconfig and fails loudly if it is
+    # missing rather than checking half of what it was added for.
+    - name: Toolchain and dependencies
+      run: |
+        brew install pkgconf || true
+        pkg-config --version
+        clang++ --version
+
+    # The prebuilt IBEX, unpacked into /usr/local as the jobs above do. Its
+    # share/pkgconfig/ibex.pc lands in /usr/local/share/pkgconfig, which is on
+    # pkg-config's default search path, so the "Requires: ibex" of codac.pc
+    # resolves without any help.
+    - name: IBEX
+      run: |
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
+        unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
+        rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
+        sudo cp -Rf ibex/* /usr/local/
+
+    - name: Build and install Codac
+      run: |
+        mkdir build ; cd build
+        cmake \
+          -D CMAKE_BUILD_TYPE=Release \
+          -D CMAKE_INSTALL_PREFIX="$PWD/../codac_install" \
+          -D BUILD_TESTS=OFF \
+          -D WITH_PYTHON=OFF \
+          -D WITH_CAPD=OFF \
+          ..
+        cmake --build . -j 4 --target install
+
+    - name: find_package and pkg-config must agree
+      run: |
+        bash tests/packaging/check_consumer_parity.sh \
+          --prefix "$PWD/codac_install" \
+          --build-dir "$PWD/build_packaging_check" \
+          --pkg-config-path "/usr/local/share/pkgconfig" \
+          --require-pkgconfig

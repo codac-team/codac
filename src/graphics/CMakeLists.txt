@@ -60,9 +60,14 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/styles
   )
 
-  target_include_directories(${PROJECT_NAME}-graphics PUBLIC ${CODAC_GRAPHICS_INCLUDE_DIRS})
+  # Build-tree paths on one side, install-tree paths on the other: see the
+  # same split in src/core/CMakeLists.txt for why install(EXPORT) needs it.
+  target_include_directories(${PROJECT_NAME}-graphics PUBLIC
+    "$<BUILD_INTERFACE:${CODAC_GRAPHICS_INCLUDE_DIRS}>"
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}-graphics>
+  )
   codac_publish_include_dirs(${CODAC_GRAPHICS_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME}-graphics PUBLIC ${PROJECT_NAME}-core Ibex::ibex Eigen3::Eigen ${PROJECT_NAME}-core)
+  target_link_libraries(${PROJECT_NAME}-graphics PUBLIC ${PROJECT_NAME}-core Ibex::ibex $<BUILD_INTERFACE:Eigen3::Eigen> ${PROJECT_NAME}-core)
   
 
 ################################################################################
@@ -70,7 +75,7 @@
 ################################################################################
   
   set(CODAC_PKG_CONFIG_CFLAGS "${CODAC_PKG_CONFIG_CFLAGS} -I\${includedir}/${PROJECT_NAME}-graphics" PARENT_SCOPE)
-  set(CODAC_PKG_CONFIG_LIBS "${CODAC_PKG_CONFIG_LIBS} -l${PROJECT_NAME}-graphics" PARENT_SCOPE)
+  set(CODAC_PKG_CONFIG_MODULE_LIBS "${CODAC_PKG_CONFIG_MODULE_LIBS} -l${PROJECT_NAME}-graphics" PARENT_SCOPE)
 
   
 ################################################################################
@@ -88,6 +93,7 @@
 # Generating the file codac-graphics.h
 
   set(CODAC_GRAPHICS_MAIN_HEADER ${CMAKE_CURRENT_BINARY_DIR}/codac-graphics.h)
+  codac_publish_generated_include_dirs(${CMAKE_CURRENT_BINARY_DIR})
   set(CODAC_MAIN_SUBHEADERS ${CODAC_MAIN_SUBHEADERS} "codac-graphics.h" PARENT_SCOPE)
   
   # Generate the content of the umbrella header
@@ -114,6 +120,10 @@
 
 # Install files in system directories
 
-  install(TARGETS ${PROJECT_NAME}-graphics DESTINATION ${CMAKE_INSTALL_LIBDIR})
+  install(TARGETS ${PROJECT_NAME}-graphics
+          EXPORT ${PROJECT_NAME}-targets
+          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
   install(FILES ${CODAC_GRAPHICS_HDR} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}-graphics)
   install(FILES ${CODAC_GRAPHICS_MAIN_HEADER} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}-graphics)

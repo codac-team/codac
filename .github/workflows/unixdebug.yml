@@ -237,3 +237,79 @@ jobs:
         path: |
           build/coverage.*
         retention-days: 14
+
+ # The two ways of consuming an installed Codac, compared against each other:
+ # find_package(CODAC), which reads codac-config.cmake and the export set beside
+ # it, and pkg-config, which reads codac.pc. Both are written by hand, in
+ # different places of src/CMakeLists.txt, and had drifted apart in both
+ # directions -- see tests/packaging/check_consumer_parity.sh for what each was
+ # missing. Nothing caught it, because no workflow built anything against an
+ # installed Codac at all: the matrix above sets CMAKE_INSTALL_PREFIX and never
+ # installs.
+ #
+ # It is a job of its own rather than a step of the matrix above because the
+ # library there is built Debug under AddressSanitizer, and an ordinary consumer
+ # cannot link such an archive -- it would fail on the first unresolved __asan_*
+ # symbol, in both halves, and prove nothing about either. This one builds
+ # Release, with neither the tests nor the bindings, which is also what makes it
+ # short next to its neighbours.
+ packaging:
+    runs-on: ${{ matrix.cfg.os }}
+    timeout-minutes: 60
+    defaults:
+        run:
+            shell: bash
+    strategy:
+        fail-fast: false
+        matrix:
+            cfg:
+            # Both instruction sets GitHub offers for Linux. The compiler is
+            # not varied: what is under test is what the install tree says
+            # about itself, not code generation.
+            - { os: ubuntu-26.04    , runtime: resolute, desc: 'Ubuntu 26.04 x86_64 packaging (find_package vs pkg-config)' }
+            - { os: ubuntu-26.04-arm, runtime: resolute, desc: 'Ubuntu 26.04 arm64 packaging (find_package vs pkg-config)' }
+    name: ${{ matrix.cfg.desc }}
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        submodules: true
+        fetch-depth: 0
+        clean: false
+
+    - name: Toolchain and dependencies
+      run: |
+        sudo apt-get -q update
+        sudo apt-get -y install g++ cmake pkg-config dpkg-dev || true
+        pkg-config --version
+
+    # The same prebuilt IBEX as the jobs above. Its package puts ibex.pc in
+    # /usr/share/pkgconfig, which is on pkg-config's default search path, so
+    # the "Requires: ibex" of codac.pc resolves without any help.
+    - name: IBEX
+      run: |
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/libibex-dev-2.8.9.20260819-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb --no-check-certificate -nv
+        sudo dpkg -i libibex-dev-2.8.9.20260819-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb
+        rm -f libibex-dev-2.8.9.20260819-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb
+
+    - name: Build and install Codac
+      run: |
+        mkdir build ; cd build
+        cmake \
+          -D CMAKE_BUILD_TYPE=Release \
+          -D CMAKE_INSTALL_PREFIX="$PWD/../codac_install" \
+          -D BUILD_TESTS=OFF \
+          -D WITH_PYTHON=OFF \
+          -D WITH_CAPD=OFF \
+          ..
+        cmake --build . -j 4 --target install
+
+    # --require-pkgconfig: on this platform pkg-config is expected to work, so
+    # a codac.pc that cannot be resolved -- a Requires: naming a module no .pc
+    # answers for, say -- has to fail the job rather than quietly reduce it to
+    # its find_package half.
+    - name: find_package and pkg-config must agree
+      run: |
+        bash tests/packaging/check_consumer_parity.sh \
+          --prefix "$PWD/codac_install" \
+          --build-dir "$PWD/build_packaging_check" \
+          --require-pkgconfig

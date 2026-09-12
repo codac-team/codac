@@ -462,8 +462,33 @@
 ################################################################################
 
   find_package(IBEX REQUIRED)
+
+  # ibex_init_common() is what puts -frounding-math and its companions on the
+  # command line -- the flags that stop the compiler from constant-folding in
+  # the wrong rounding mode, without which an interval is no longer a bound.
+  # Consumers need them as much as this build does. The CMake ones call
+  # ibex_init_common() themselves (every examples/*/CMakeLists.txt does), but a
+  # pkg-config consumer has no such hook, so codac.pc has to carry the flags
+  # instead -- see the Cflags line in src/CMakeLists.txt.
+  #
+  # Taking the difference the call makes to CMAKE_CXX_FLAGS, which is where it
+  # puts them, records exactly what IBEX added, without re-deriving its
+  # compiler checks and without picking up any of the flags Codac adds for
+  # itself (warnings, sanitizers, coverage), which have no business in an
+  # installed .pc file.
+  separate_arguments(CODAC_CXX_FLAGS_BEFORE_IBEX NATIVE_COMMAND "${CMAKE_CXX_FLAGS}")
   ibex_init_common() # IBEX should have installed this function
+  separate_arguments(CODAC_CXX_FLAGS_AFTER_IBEX NATIVE_COMMAND "${CMAKE_CXX_FLAGS}")
+
+  set(CODAC_IBEX_CXX_FLAGS "")
+  foreach(flag ${CODAC_CXX_FLAGS_AFTER_IBEX})
+    if(NOT flag IN_LIST CODAC_CXX_FLAGS_BEFORE_IBEX)
+      list(APPEND CODAC_IBEX_CXX_FLAGS ${flag})
+    endif()
+  endforeach()
+
   message(STATUS "Found IBEX version ${IBEX_VERSION}")
+  message(STATUS "Interval arithmetic flags from IBEX: ${CODAC_IBEX_CXX_FLAGS}")
 
 
 ################################################################################
@@ -516,6 +541,23 @@
   function(codac_publish_include_dirs)
     set(CODAC_SOURCE_INCLUDE_DIRS ${CODAC_SOURCE_INCLUDE_DIRS} ${ARGN}
         CACHE INTERNAL "Directories holding the public headers of the codac modules")
+  endfunction()
+
+
+  # The companion of the above, for the umbrella headers CMake generates rather
+  # than the ones kept in the source tree: codac-core.h, codac-graphics.h and
+  # the rest. Each module writes its own into its own binary directory, so
+  # ${CMAKE_BINARY_DIR}/src -- where the tests used to look, and the only place
+  # they looked -- holds none of them. Only the CAPD snippet of the manual
+  # includes them (every other test reaches for a codac2_*.h directly), which
+  # is why the omission surfaced as nothing but the CAPD jobs failing on
+  # "codac-core.h: No such file or directory".
+  #
+  # It is a cache entry, and emptied by src/CMakeLists.txt before the modules
+  # fill it, for the same reasons as CODAC_SOURCE_INCLUDE_DIRS above.
+  function(codac_publish_generated_include_dirs)
+    set(CODAC_GENERATED_INCLUDE_DIRS ${CODAC_GENERATED_INCLUDE_DIRS} ${ARGN}
+        CACHE INTERNAL "Directories holding the umbrella headers generated for the codac modules")
   endfunction()
 
 

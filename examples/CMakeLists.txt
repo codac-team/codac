@@ -111,9 +111,8 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
         # coverage report. See codac_publish_include_dirs() in the top-level CMakeLists.txt.
         ${CODAC_SOURCE_INCLUDE_DIRS}
 
-        ${CMAKE_BINARY_DIR}/src      # the generated "codac" umbrella header and module headers (codac-core.h, codac-graphics.h, etc.)
-        ${CMAKE_BINARY_DIR}/src/core
-        ${CMAKE_BINARY_DIR}/src/graphics
+        ${CMAKE_BINARY_DIR}/src         # the generated "codac" umbrella header
+        ${CODAC_GENERATED_INCLUDE_DIRS}  # and the per-module ones (codac-core.h, codac-graphics.h, etc.), each in its own module's binary directory
     )
 
     target_link_libraries(

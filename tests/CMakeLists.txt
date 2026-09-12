@@ -280,9 +280,14 @@ endif()
 set(CODAC_CORE_SOURCE_INCLUDE_DIRS ${CODAC_SOURCE_INCLUDE_DIRS})
 
 
+# ${CMAKE_BINARY_DIR}/src holds the generated "codac" umbrella header;
+# CODAC_GENERATED_INCLUDE_DIRS, filled in by the src/*/CMakeLists.txt of every
+# module, holds the per-module ones (codac-core.h and the rest), each of which
+# is written into its own module's binary directory rather than into this one.
 set(
   CODAC_HEADERS_DIR
   ${CMAKE_BINARY_DIR}/src
+  ${CODAC_GENERATED_INCLUDE_DIRS}
 )
 
 
@@ -562,7 +567,7 @@ foreach(SRC_TEST ${SRC_TESTS})
   # top-level CMakeLists.txt).
   #
   # CODAC_HEADERS_DIR is kept, after them, because it holds the generated
-  # umbrella headers: codac-core.h, codac-graphics.h and the rest.
+  # umbrella headers: codac, codac-core.h, codac-graphics.h and the rest.
 
   target_include_directories(
     ${TEST_NAME}

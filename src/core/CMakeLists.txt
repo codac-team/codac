@@ -343,9 +343,25 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/trajectory
     CACHE INTERNAL "Directories holding the public headers of codac-core")
 
-  target_include_directories(${PROJECT_NAME}-core PUBLIC ${CODAC_CORE_INCLUDE_DIRS})
+  # The source directories describe the build tree only: they are gone once
+  # Codac is installed, and install(EXPORT) below refuses to export a target
+  # whose interface names a path inside the source tree. The install tree
+  # answers with the directories the headers were copied into -- include/
+  # itself, through which the <codac> umbrella header is reached, and
+  # include/eigen3, where Eigen's headers land.
+  #
+  # Eigen is a build-tree dependency for the same reason: it is fetched by this
+  # build rather than found, so Eigen3::Eigen is a target of ours that no
+  # consumer's find_package() could produce. Downstream it is reached as the
+  # plain include directory above, which is all a header-only library needs.
+  target_include_directories(${PROJECT_NAME}-core PUBLIC
+    "$<BUILD_INTERFACE:${CODAC_CORE_INCLUDE_DIRS}>"
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}-core>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/eigen3>
+  )
   codac_publish_include_dirs(${CODAC_CORE_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME}-core PUBLIC Ibex::ibex Eigen3::Eigen Threads::Threads)
+  target_link_libraries(${PROJECT_NAME}-core PUBLIC Ibex::ibex $<BUILD_INTERFACE:Eigen3::Eigen> Threads::Threads)
   
 
 ################################################################################
@@ -353,7 +369,7 @@
 ################################################################################
   
   set(CODAC_PKG_CONFIG_CFLAGS "${CODAC_PKG_CONFIG_CFLAGS} -I\${includedir}/${PROJECT_NAME}-core" PARENT_SCOPE)
-  set(CODAC_PKG_CONFIG_LIBS "${CODAC_PKG_CONFIG_LIBS} -l${PROJECT_NAME}-core" PARENT_SCOPE)
+  set(CODAC_PKG_CONFIG_MODULE_LIBS "${CODAC_PKG_CONFIG_MODULE_LIBS} -l${PROJECT_NAME}-core" PARENT_SCOPE)
 
 
 ################################################################################
@@ -371,6 +387,7 @@
 # ================================
 
   set(CODAC_CORE_MAIN_HEADER ${CMAKE_CURRENT_BINARY_DIR}/codac-core.h)
+  codac_publish_generated_include_dirs(${CMAKE_CURRENT_BINARY_DIR})
   set(CODAC_MAIN_SUBHEADERS ${CODAC_MAIN_SUBHEADERS} "codac-core.h" PARENT_SCOPE)
   
   # Generate the content of the umbrella header
@@ -401,6 +418,10 @@
 # Install files in system directories
 # ====================================
 
-  install(TARGETS ${PROJECT_NAME}-core DESTINATION ${CMAKE_INSTALL_LIBDIR})
+  install(TARGETS ${PROJECT_NAME}-core
+          EXPORT ${PROJECT_NAME}-targets
+          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
   install(FILES ${CODAC_CORE_HDR} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}-core)
   install(FILES ${CODAC_CORE_MAIN_HEADER} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}-core)

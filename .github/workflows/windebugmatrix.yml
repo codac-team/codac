@@ -169,3 +169,111 @@ jobs:
         done
       shell: bash
 
+ # The Windows counterpart of the packaging jobs of unixdebug.yml and
+ # macdebug.yml: the two ways of consuming an installed Codac --
+ # find_package(CODAC) through codac-config.cmake and the export set beside it,
+ # and pkg-config through codac.pc -- are written by hand in different places of
+ # src/CMakeLists.txt, had drifted apart in both directions, and nothing in CI
+ # built anything against an installed Codac at all. See
+ # tests/packaging/check_consumer_parity.sh.
+ #
+ # How much of the check runs depends on the toolchain, and the matrix says so
+ # per entry rather than leaving it to be discovered:
+ #
+ #  - MinGW gets both halves. pkg-config answers in -I/-L/-l, which is what a
+ #    GCC driver takes, and the Makefile generator records the command lines the
+ #    comparison reads back.
+ #  - MSVC gets the find_package half alone. cl.exe takes none of those flags,
+ #    and the Visual Studio generators write neither compile_commands.json nor
+ #    link.txt. That half is still worth its runner time: it is the only place
+ #    anything is built against an installed Codac with MSVC at all, and it is
+ #    what covers arm64, for which this matrix has no MinGW entry.
+ #
+ # Release, without the tests, which is what keeps these jobs short next to
+ # their neighbours -- and, unlike the Debug matrix above, what an ordinary
+ # consumer can actually link against on the MSVC entries, whose archives are
+ # built with /MDd and under ASan.
+ packaging:
+    runs-on: ${{ matrix.cfg.os }}
+    timeout-minutes: 90
+    defaults:
+        run:
+            shell: bash
+    strategy:
+        fail-fast: false
+        matrix:
+            cfg:
+            - { os: windows-2022  , arch: x64  , bitness: 64, runtime: mingw15, generator: 'MinGW Makefiles'  , cmake_arch: '', mingw: true , require_pkgconfig: true , desc: 'Windows MinGW x64 packaging (find_package vs pkg-config)' }
+            - { os: windows-2022  , arch: x86  , bitness: 32, runtime: mingw15, generator: 'MinGW Makefiles'  , cmake_arch: '', mingw: true , require_pkgconfig: true , choco_flags: '--x86', desc: 'Windows MinGW x86 packaging (find_package vs pkg-config)' }
+            - { os: windows-11-arm, arch: arm64, bitness: 64, runtime: vc17   , generator: 'Visual Studio 17', cmake_arch: 'arm64', mingw: false, require_pkgconfig: false, desc: 'Windows Visual Studio 2022 arm64 packaging (find_package only)' }
+    name: ${{ matrix.cfg.desc }}
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        submodules: true
+        fetch-depth: 0
+        clean: false
+
+    - name: Tools
+      run: |
+        choco install -y -r --no-progress wget
+        if [ "${{ matrix.cfg.mingw }}" = "true" ]; then
+          choco install -y -r --no-progress mingw --version=15.2.0 --force ${{ matrix.cfg.choco_flags }}
+          echo "BASHMINGWPATH=/c/ProgramData/mingw64/mingw${{ matrix.cfg.bitness }}/bin" >> "$GITHUB_ENV"
+          # pkgconfiglite is what puts pkg-config.exe on PATH; the image has no
+          # pkg-config of its own.
+          choco install -y -r --no-progress pkgconfiglite
+        fi
+
+    - name: IBEX
+      run: |
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex.2.8.9.20260819.nupkg --no-check-certificate -nv
+        choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20260819 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
+        rm -f ibex.2.8.9.20260819.nupkg
+
+    - name: Build and install Codac
+      run: |
+        if [ -n "${BASHMINGWPATH:-}" ]; then export PATH="$BASHMINGWPATH:$PATH" ; fi
+        mkdir build ; cd build
+        ARCH_ARG=""
+        if [ -n "${{ matrix.cfg.cmake_arch }}" ]; then ARCH_ARG="-A ${{ matrix.cfg.cmake_arch }}" ; fi
+        cmake -G "${{ matrix.cfg.generator }}" $ARCH_ARG \
+          -D CMAKE_BUILD_TYPE=Release \
+          -D CMAKE_INSTALL_PREFIX="$PWD/../codac_install" \
+          -D BUILD_TESTS=OFF \
+          -D WITH_PYTHON=OFF \
+          -D WITH_CAPD=OFF \
+          ..
+        cmake --build . -j 4 --config Release --target install
+
+    # Where IBEX ended up is decided by its chocolatey package, so it is read
+    # back from the cache CMake just wrote rather than guessed: IBEX_DIR points
+    # at <prefix>/share/ibex/cmake, and ibex.pc sits in <prefix>/share/pkgconfig
+    # next to it. codac.pc names ibex on its Requires: line and cannot be
+    # resolved without it.
+    - name: Locate the pkg-config file of IBEX
+      if: matrix.cfg.mingw
+      run: |
+        ibex_cmake_dir=$(grep '^IBEX_DIR:' build/CMakeCache.txt | cut -d= -f2-)
+        ibex_prefix=$(cd "$ibex_cmake_dir/../../.." && pwd)
+        echo "IBEX prefix: $ibex_prefix"
+        ls "$ibex_prefix/share/pkgconfig"
+        # Left in the shell's own "/c/..." form; check_consumer_parity.sh runs
+        # it through cygpath before handing it to pkg-config, which is a native
+        # Windows binary and reads "C:/...".
+        echo "IBEX_PKG_CONFIG_PATH=$ibex_prefix/share/pkgconfig" >> "$GITHUB_ENV"
+
+    - name: find_package and pkg-config must agree
+      run: |
+        if [ -n "${BASHMINGWPATH:-}" ]; then export PATH="$BASHMINGWPATH:$PATH" ; fi
+        args=(--prefix "$PWD/codac_install" --build-dir "$PWD/build_packaging_check")
+        if [ "${{ matrix.cfg.require_pkgconfig }}" = "true" ]; then
+          args+=(--require-pkgconfig --pkg-config-path "$IBEX_PKG_CONFIG_PATH")
+        else
+          # The Visual Studio generators record no command line to compare, so
+          # the script is told to build the consumer the way this job builds
+          # Codac and runs the find_package half alone.
+          args+=(--generator "${{ matrix.cfg.generator }}")
+          args+=(--cmake-arg -A --cmake-arg "${{ matrix.cfg.cmake_arch }}")
+        fi
+        bash tests/packaging/check_consumer_parity.sh "${args[@]}"
