@@ -277,3 +277,57 @@ jobs:
           args+=(--cmake-arg -A --cmake-arg "${{ matrix.cfg.cmake_arch }}")
         fi
         bash tests/packaging/check_consumer_parity.sh "${args[@]}"
+
+ # Les exemples, construits contre la bibliothèque de l'arbre et exécutés comme
+ # tests d'intégration par ctest. -D TEST_EXAMPLES=ON n'était activé que par
+ # tests.yml, unixdebug.yml et macdebug.yml : les exemples n'avaient donc jamais
+ # tourné sous Windows, la plateforme où le traitement des chemins, les sorties
+ # graphiques et la chaîne d'outils s'écartent le plus de celles qui les
+ # exercent.
+ #
+ # Un job à part plutôt qu'un drapeau sur la matrice ci-dessus : les exemples
+ # forment une suite d'intégration à eux seuls, et les ajouter aux huit jobs
+ # Debug multiplierait un workflow qui occupe déjà près d'une heure. Une seule
+ # chaîne d'outils suffit à répondre « les exemples tournent-ils sous
+ # Windows ? », et MSVC x64 est celle sur laquelle se trouvent la plupart des
+ # utilisateurs de Codac.
+ examples:
+    runs-on: windows-2022
+    timeout-minutes: 120
+    defaults:
+        run:
+            shell: cmd
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        submodules: true
+        fetch-depth: 0
+        clean: false
+    - run: echo "VERBOSE=1" >> $GITHUB_ENV
+      shell: bash
+    - run: |
+        choco install -y -r --no-progress wget
+        wget https://lebarsfa.github.io/cache/cmake_extra_tools.zip --no-check-certificate -nv
+        7z x cmake_extra_tools.zip -o"%SystemDrive%" -y
+        del /f /q cmake_extra_tools.zip
+    - run: |
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex.2.8.9.20260819.nupkg --no-check-certificate -nv
+        choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20260819 --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_x64_vc17.zip'"
+        del /f /q ibex.2.8.9.20260819.nupkg
+
+    # Debug, comme le reste de ce workflow, donc désinfecté : le CMakeLists de
+    # premier niveau active /fsanitize=address sur MSVC et place lui-même le
+    # runtime clang_rt.asan à portée des exécutables.
+    - run: |
+        mkdir build ; cd build
+        cmake -E env CXXFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" cmake -G "Visual Studio 17" -T v143 -A x64 -D BUILD_TESTS=ON -D TEST_EXAMPLES=ON -D CMAKE_INSTALL_PREFIX="../codac" ..
+        cmake --build . -j 4 --config Debug
+      shell: bash
+
+    # Les exemples seuls : la suite unitaire est déjà couverte par la matrice
+    # ci-dessus sur ce même jeu d'outils, et la relancer ici ne dirait rien de
+    # neuf.
+    - run: |
+        cd build
+        ctest -C Debug -R codac2_examples_ -V --output-on-failure
+      shell: bash
