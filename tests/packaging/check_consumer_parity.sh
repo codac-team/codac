@@ -336,6 +336,17 @@ split_cflags() {
 # of them.
 split_libs() {
   awk '
+    # -Wl, options are how the generator drives the linker on this platform --
+    # --whole-archive, --out-implib, --major-image-version and the like on
+    # MinGW. They describe the executable being produced, not the library being
+    # consumed, and no .pc file has any business carrying them. This comes
+    # first because --out-implib names a file ending in .dll.a, which the
+    # archive rule below would otherwise take for a library.
+    /^-Wl,/ { next }
+    # Anything under CMakeFiles belongs to the consumer being built, not to
+    # Codac: on MinGW the generator bundles the objects into
+    # CMakeFiles/<target>.dir/objects.a and links that.
+    /CMakeFiles[\/\\]/ { next }
     /^-l/ { print "LIB " substr($0,3); next }
     /^-L/ { next }
     /\.(a|lib)$/ {
@@ -347,11 +358,6 @@ split_libs() {
       next
     }
     /^(-pthread|-rdynamic|-shared|-static.*)$/ { print "FLAG " $0; next }
-    # -Wl, options are how the generator drives the linker on this platform --
-    # --whole-archive, --out-implib, --major-image-version and the like on
-    # MinGW. They describe the executable being produced, not the library being
-    # consumed, and no .pc file has any business carrying them.
-    /^-Wl,/ { next }
     { next }
   '
 }
@@ -384,8 +390,18 @@ printf '%s\n' "$cmake_compile" | expand_response_files "$cmake_build" | drop_neu
 pkg-config --cflags codac    | tr ' ' '\n' | drop_neutral | split_cflags | normalize_paths | sort -u \
   | partition_existing "$tmp/pc_cflags.txt" "$tmp/pc_cflags_missing.txt"
 
-printf '%s\n' "$cmake_link"  | expand_response_files "$cmake_build" | drop_neutral | split_libs   | normalize_paths | sort -u > "$tmp/cmake_libs.txt"
-pkg-config --libs codac      | tr ' ' '\n' | drop_neutral | split_libs   | normalize_paths | sort -u > "$tmp/pc_libs.txt"
+# The libraries the toolchain puts on every link line of its own accord --
+# kernel32, user32 and the rest of them on Windows. They are the platform's,
+# not Codac's, the compiler driver adds them whether or not anyone asks, and no
+# .pc file lists them. Read from the consumer's own cache rather than hardcoded,
+# so this stays true of whatever platform the check is run on.
+sed -n 's/^CMAKE_CXX_STANDARD_LIBRARIES:[^=]*=//p' "$cmake_build/CMakeCache.txt" 2>/dev/null \
+  | tr ' ' '\n' | sed -n 's/^-l/LIB /p' | sort -u > "$tmp/standard_libs.txt"
+
+printf '%s\n' "$cmake_link"  | expand_response_files "$cmake_build" | drop_neutral | split_libs   | normalize_paths | sort -u \
+  | comm -23 - "$tmp/standard_libs.txt" > "$tmp/cmake_libs.txt"
+pkg-config --libs codac      | tr ' ' '\n' | drop_neutral | split_libs   | normalize_paths | sort -u \
+  | comm -23 - "$tmp/standard_libs.txt" > "$tmp/pc_libs.txt"
 
 status=0
 report() {
