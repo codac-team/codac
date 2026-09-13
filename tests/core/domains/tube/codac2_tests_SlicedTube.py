@@ -557,6 +557,24 @@ class TestSlicedTube(unittest.TestCase):
     inv = x.invert(inv_val, restricted)
     self.assertTrue(inv == Interval(15.2,38))
 
+  @unittest.skipIf(FOR_MATLAB, "the @ operator is not available in Matlab")
+  def test_matrix_tube_matmul_operator(self):
+
+    tdomain = create_tdomain(Interval(0,1), 0.5, False)
+    M,N = IntervalMatrix([[1,2],[3,4]]),IntervalMatrix([[0,1],[1,0]])
+    A = SlicedTube(tdomain, M)
+    B = SlicedTube(tdomain, N)
+    x = SlicedTube(tdomain, IntervalVector([5,6]))
+
+    self.assertTrue((A@B).codomain() == IntervalMatrix([[2,1],[4,3]]))
+    self.assertTrue((A@N).codomain() == IntervalMatrix([[2,1],[4,3]]))
+    self.assertTrue((M@B).codomain() == IntervalMatrix([[2,1],[4,3]]))
+    self.assertTrue((Matrix([[1,2],[3,4]])@B).codomain() == IntervalMatrix([[2,1],[4,3]]))
+    self.assertTrue((A@x).codomain() == IntervalVector([17,39]))
+    self.assertTrue((A@x).codomain() == (A*x).codomain())
+    with self.assertRaises(TypeError):
+      x@x
+
 
 if __name__ ==  '__main__':
   unittest.main()
