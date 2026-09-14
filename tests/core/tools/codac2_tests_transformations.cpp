@@ -27,7 +27,7 @@ TEST_CASE("Affine transformation")
       2*sin(t)+0.1*sin(10*t)
     });
 
-    SampledTraj<Vector> src = AnalyticTraj(f_src,{-1,3}).sampled(0.01);
+    SampledTraj<Vector> src = AnalyticTraj({-1,3},f_src).sampled(0.01);
 
   // The dst trajectory is obtained analytically with a
   // transformation described by the parameters:
@@ -43,7 +43,7 @@ TEST_CASE("Affine transformation")
       b*sin(a)*f_src(t)[0]+b*cos(a)*f_src(t)[1] + T[1] + 0.05*sin(100*t)
     });
 
-    SampledTraj<Vector> dst = AnalyticTraj(f_dst,{-1,3}).sampled(0.01);
+    SampledTraj<Vector> dst = AnalyticTraj({-1,3},f_dst).sampled(0.01);
 
   //DefaultFigure::set_window_properties({75,75},{700,700});
   //DefaultFigure::set_axes(axis(0,{-8,4}), axis(1,{-4,8}));

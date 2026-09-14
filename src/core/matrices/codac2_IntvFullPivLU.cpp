@@ -410,8 +410,9 @@ IntervalMatrix IntvFullPivLU::cokernel() const {
 IntervalMatrix IntvFullPivLU::solve(const IntervalMatrix &rhs) const {
     assert_release(rhs.rows()==matrixLU_.rows());
     IntervalMatrix prhs = _LU.permutationP()*rhs;
+    Index dim = std::min(matrixLU_.rows(),matrixLU_.cols());
     /* inverse L */
-    for (Index r = 0; r<matrixLU_.rows()-1; r++) {
+    for (Index r = 0; r<dim; r++) {
        for (Index r1=r+1;r1<matrixLU_.rows();r1++) {
           prhs.row(r1) -= matrixLU_(r1,r)*prhs.row(r);
        }
@@ -428,7 +429,6 @@ IntervalMatrix IntvFullPivLU::solve(const IntervalMatrix &rhs) const {
     }
     /* then use the diagonal elements */
     IntervalMatrix res = IntervalMatrix::Zero(matrixLU_.cols(),rhs.cols());
-    Index dim = std::min(matrixLU_.cols(),matrixLU_.rows());
     for (Index r = dim-1;r>=0;r--) {
         for (Index r1=r+1;r1<dim;r1++) {
            prhs.row(r) -= matrixLU_(r,r1)*res.row(r1);
@@ -450,8 +450,9 @@ IntervalMatrix IntvFullPivLU::solve(const IntervalMatrix &rhs) const {
 void IntvFullPivLU::solve(const IntervalMatrix &rhs, IntervalMatrix &B) const {
     assert_release(rhs.rows()==matrixLU_.rows() && B.rows()==matrixLU_.cols());
     IntervalMatrix prhs = _LU.permutationP()*rhs;
+    Index dim = std::min(matrixLU_.cols(),matrixLU_.rows());
     /* inverse L */
-    for (Index r = 0; r<matrixLU_.rows()-1; r++) {
+    for (Index r = 0; r<dim; r++) {
        for (Index r1=r+1;r1<matrixLU_.rows();r1++) {
           prhs.row(r1) -= matrixLU_(r1,r)*prhs.row(r);
        }
@@ -467,7 +468,6 @@ void IntvFullPivLU::solve(const IntervalMatrix &rhs, IntervalMatrix &B) const {
     IntervalMatrix qB = _LU.permutationQ().inverse()*B;
     /* then use the diagonal elements */
 //    IntervalMatrix res = IntervalMatrix::Zero(matrixLU_.cols(),rhs.cols());
-    Index dim = std::min(matrixLU_.cols(),matrixLU_.rows());
     IntervalMatrix U = matrixLU_.triangularView<Eigen::Upper>();
     for (Index r = dim-1;r>=0;r--) {
         IntervalRow rw=U.row(r);

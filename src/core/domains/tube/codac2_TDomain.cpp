@@ -58,32 +58,22 @@ namespace codac2
 
   bool TDomain::all_gates_defined() const
   {
-    if(t0_tf().is_degenerated())
-      return true;
-
-    else if(nb_tslices() == 1)
+    if(this->empty())
       return false;
-    
-    else
-    {
-      list<TSlice>::const_iterator it = std::next(this->begin());
-      while(it != this->end())
-      {
-        if(it->is_gate())
-          return false;
 
-        it++;
-        
-        if(it != this->end())
-        {
-          if(!it->is_gate())
-            return false;
-          it++;
-        }
-      }
-      
-      return true;
+    bool expect_gate = true;
+
+    for(const auto& s : *this)
+    {
+      if(s.is_gate() != expect_gate)
+        return false;
+
+      expect_gate = !expect_gate;
     }
+
+    // We must end on a gate:
+    // valid patterns are [gate] or [gate, slice, ..., gate]
+    return !expect_gate;
   }
   
   std::vector<TSlice> TDomain::tslices_vector() const
@@ -194,7 +184,7 @@ namespace codac2
 
   void TDomain::sample(const Interval& t0_tf, double dt, bool with_gates)
   {
-    assert_release(dt >= 0.);
+    assert_release(dt > 0.);
     assert_release(!t0_tf.is_degenerated());
     for(double t = t0_tf.lb() ; t < t0_tf.ub()+dt ; t=t+dt)
       sample(std::min(t0_tf.ub(),t), with_gates);
@@ -208,6 +198,18 @@ namespace codac2
       if(it->is_gate()) this->erase(it++);
       else ++it;
     }
+  }
+  
+  void TDomain::truncate(const Interval& new_tdomain)
+  {
+    assert_release(new_tdomain.is_subset(t0_tf()));
+    sample(new_tdomain.lb());
+    sample(new_tdomain.ub());
+    this->remove_if(
+      [&new_tdomain](const TSlice& s)
+      {
+        return !s.intersects(new_tdomain);
+      });
   }
 
   ostream& operator<<(ostream& os, const TDomain& x)

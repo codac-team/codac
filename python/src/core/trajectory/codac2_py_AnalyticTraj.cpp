@@ -32,21 +32,15 @@ void _export_AnalyticTraj(py::module& m, const string& class_name)
 
   exported_class
 
-    .def(py::init<const AnalyticFunction<T>&,const Interval&>(),
-      ANALYTICTRAJ_T_ANALYTICTRAJ_CONST_ANALYTICFUNCTION_T_REF_CONST_INTERVAL_REF,
-      "f"_a, "tdomain"_a)
+    .def(py::init<const Interval&,const AnalyticFunction<T>&>(),
+      ANALYTICTRAJ_T_ANALYTICTRAJ_CONST_INTERVAL_REF_CONST_ANALYTICFUNCTION_T_REF,
+      "tdomain"_a, "f"_a)
 
-    .def("__call__", [](const AnalyticTraj<T>& x, double t)
-        {
-          return x(t);
-        },
+    .def("__call__", (typename T::Scalar (AnalyticTraj<T>::*) (double) const) &AnalyticTraj<T>::operator(),
       VIRTUAL_T_SCALAR_ANALYTICTRAJ_T_OPERATORCALL_DOUBLE_CONST,
       "t"_a)
 
-    .def("__call__", [](const AnalyticTraj<T>& x, const Interval& t)
-        {
-          return x(t);
-        },
+    .def("__call__", (typename T::Domain (AnalyticTraj<T>::*) (const Interval&) const) &AnalyticTraj<T>::operator(),
       VIRTUAL_WRAPPER_T_DOMAIN_SAMPLEDTRAJ_T_OPERATORCALL_CONST_INTERVAL_REF_CONST,
       "t"_a)
 
@@ -60,4 +54,5 @@ void export_AnalyticTraj(py::module& m)
 {
   _export_AnalyticTraj<ScalarType>(m, "AnalyticTraj_Scalar");
   _export_AnalyticTraj<VectorType>(m, "AnalyticTraj_Vector");
+  _export_AnalyticTraj<MatrixType>(m, "AnalyticTraj_Matrix");
 }

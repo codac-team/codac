@@ -25,28 +25,35 @@ void export_SepQInter(py::module& m, py::class_<SepBase,pySep>& pysep)
   exported
 
     .def(py::init(
-        [](unsigned int q, const SepBase& s)
+        [](Index q, py::args args)
         {
-          return std::make_unique<SepQInter>(q,s.copy());
-        }),
-      SEPQINTER_SEPQINTER_UNSIGNED_INT_CONST_S_REF,
-      "q"_a, "s"_a)
+          matlab::test_integer(q);
+          Collection<SepBase> seps;
 
-    .def(py::init(
-        [](unsigned int q, const SepBase& s1, const SepBase& s2)
-        {
-          return std::make_unique<SepQInter>(q,s1.copy(),s2.copy());
-        }),
-      SEPQINTER_SEPQINTER_UNSIGNED_INT_CONST_S_REF_VARIADIC,
-      "q"_a, "s1"_a, "s2"_a)
+          auto add = [&seps](py::handle s)
+          {
+            seps.push_back(
+              s.cast<SepBase&>().copy()
+            );
+          };
 
-    .def(py::init(
-        [](unsigned int q, const SepBase& s1, const SepBase& s2, const SepBase& s3)
-        {
-          return std::make_unique<SepQInter>(q,s1.copy(),s2.copy(),s3.copy());
+          // Backward compatibility: SepQInter(q, [s1,s2,s3])
+          if(args.size() == 1 && py::isinstance<py::list>(args[0]))
+          {
+            for(const auto& s : args[0].cast<py::list>())
+              add(s);
+          }
+          else
+          {
+            // New syntax: SepQInter(q, s1,s2,s3)
+            for(const auto& s : args)
+              add(s);
+          }
+
+          return std::make_unique<SepQInter>(q, seps);
         }),
-      SEPQINTER_SEPQINTER_UNSIGNED_INT_CONST_S_REF_VARIADIC,
-      "q"_a, "s1"_a, "s2"_a, "s3"_a)
+      SEPQINTER_SEPQINTER_UNSIGNED_INT_CONST_COLLECTION_SEPBASE_REF,
+      "q"_a)
 
     .def("nb", &SepQInter::nb,
       SIZET_SEPQINTER_NB_CONST)

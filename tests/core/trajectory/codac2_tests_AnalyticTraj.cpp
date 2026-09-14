@@ -28,7 +28,7 @@ TEST_CASE("AnalyticTraj")
     sqr(t)
   };
 
-  AnalyticTraj traj(f, {-1,10});
+  AnalyticTraj traj({-1,10},f);
 
   CHECK(traj.tdomain() == Interval(-1,10));
   CHECK(traj.codomain() == Interval(0,100));

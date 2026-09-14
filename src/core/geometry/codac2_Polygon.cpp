@@ -95,13 +95,39 @@ namespace codac2
   { }
 
   Polygon::Polygon(initializer_list<Segment> edges)
-    : vector<Segment>(edges)
+    : Polygon(std::vector<Segment>(edges))
   { }
 
   Polygon::Polygon(const vector<Segment>& edges)
-    : vector<Segment>(edges)
+    : std::vector<Segment>(
+        [&edges]()
+        {
+          if(edges.size() <= 1)
+            return edges;
+
+          [[maybe_unused]] size_t ring_begin = 0;
+          for(size_t i = 0; i+1 < edges.size(); ++i)
+          {
+            if(edges[i][1].intersects(edges[i+1][0]))
+              continue;
+
+            assert_release(edges[i][1].intersects(edges[ring_begin][0]) &&
+              "Polygon: a contour must be closed before starting a new one");
+            assert_release(i + 1-ring_begin >= 3 &&
+              "Polygon: each contour must have at least 3 segments");
+
+            ring_begin = i+1;
+          }
+
+          assert_release(edges.back()[1].intersects(edges[ring_begin][0]) &&
+            "Polygon: last contour must be closed");
+          assert_release(edges.size() - ring_begin >= 3 &&
+            "Polygon: each contour must have at least 3 segments");
+
+          return edges;
+        }())
   { }
-  
+
   Polygon::Polygon(const IntervalVector& x)
     : Polygon([&x]() -> vector<IntervalVector>
       {

@@ -116,7 +116,7 @@ namespace codac2
       void draw_parallelepiped(const Parallelepiped& p, const StyleProperties& style = { Color::dark_gray(0.5) });
 
       /**
-       * \brief Draws a zonotope z+sum_i [-1,1] A_i on the figure
+       * \brief Draws a zonotope c+sum_i [-1,1] A_i on the figure
        * 
        * \param z Zonotope to draw (center and shape matrix)
        * \param style Style of the zonotope (edge color)
@@ -146,8 +146,9 @@ namespace codac2
        * \brief Draws the (x,y,z) axes on the figure in red, green and blue
        * 
        * \param size Size of the axes
+       * \param origin Origin of the axes
        */
-      void draw_axes(double size = 1.0);
+      void draw_axes(double size = 1.0, const Vector& origin = Vector::Zero(3));
 
       /**
        * \brief Draws a parametric surface

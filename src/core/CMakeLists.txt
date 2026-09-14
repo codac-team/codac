@@ -41,8 +41,12 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcInverseNotIn.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcLazy.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcLazy.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcLohner.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcLohner.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcNot.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcUnion.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcVisible.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcVisible.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPointCloud.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPointCloud.h
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac2_CtcPolar.cpp
@@ -61,6 +65,7 @@
 
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/codac2_BoolInterval.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/codac2_Domain.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/codac2_Scalar.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/codac2_Wrapper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/ellipsoid/codac2_Ellipsoid.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/ellipsoid/codac2_Ellipsoid_checks.cpp
@@ -88,6 +93,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SliceBase.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SlicedTube.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SlicedTube_integral_impl.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SlicedTube_operations.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SlicedTube_operations.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_SlicedTubeBase.h
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_TDomain.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac2_TDomain.h
@@ -103,8 +110,12 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_FunctionArgsList.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_FunctionBase.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac2_VarBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_componentwise.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_componentwise.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_constants.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_constants_impl.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_flat_input_layout.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_flat_input_layout.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_variables.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_analytic_variables.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/codac2_AnalyticExpr.h
@@ -234,6 +245,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepNot.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolarCart.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolarCart.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolygon.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepPolygon.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.cpp
@@ -244,6 +257,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepTransform.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepUnion.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepUnion.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepVisible.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepWrapper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepWrapper.h
 
@@ -259,6 +273,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_RobotSimulator.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_serialization.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_template_tools.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_threading.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_threading.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_transformations.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_transformations.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac2_trunc.cpp
@@ -271,8 +287,10 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/codac2_SampledTraj.h
     ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/codac2_SampledTraj_operations.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/codac2_SampledTraj_operations.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/codac2_traj_cart_prod.h
     ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/codac2_Traj_operator.h
     ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/codac2_TrajBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/trajectory/codac2_TrajBase_impl.h
   )
 
 ################################################################################
@@ -313,7 +331,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/tools
     ${CMAKE_CURRENT_SOURCE_DIR}/trajectory
   )
-  target_link_libraries(${PROJECT_NAME}-core PUBLIC Ibex::ibex Eigen3::Eigen)
+  target_link_libraries(${PROJECT_NAME}-core PUBLIC Ibex::ibex Eigen3::Eigen Threads::Threads)
   
 
 ################################################################################

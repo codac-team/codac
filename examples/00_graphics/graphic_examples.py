@@ -23,13 +23,13 @@ fig1 = Figure2D("My figure 1", GraphicOutput.VIBES | GraphicOutput.IPE)
 # For IPE, it generates a file named "My figure 1.xml" that can be edited with IPE, and converted to PDF
 
 fig1.set_window_properties([50,50],[500,500]) # position, window size
-fig1.set_axes(axis(0,[-10,10]), axis(1,[-10,10])) # (axis_id,[range_of_values_on_this_axis])
+fig1.set_axes(IntervalVector.constant(2,[-10,10])) # bounding box
 fig1.draw_box([[-1,1],[-1,1]],[Color.green(),Color.red(0.2)]) # drawing a green box with red opacity values inside
 fig1.draw_circle([1,1],0.5,Color([255,155,5])) # drawing a circle at (1,1) of radius 0.5 with a custom RGB color
 fig1.draw_ring([1,1],[4,6],Color.red()) # drawing a ring at (1,1) of radius [4,6] with a predefined red color
 
 fig2 = Figure2D("My figure 2", GraphicOutput.VIBES | GraphicOutput.IPE)
-fig2.set_axes(axis(0,[-1,5]), axis(1,[-1,5]))
+fig2.set_axes(axis(0,[-1,5]), axis(1,[-1,5])) # (axis_id,[range_of_values_on_this_axis])
 fig2.set_window_properties([250,250],[500,500])
 
 # The previously declared figure "fig2" can now be used as a DefaultFigure
@@ -93,7 +93,7 @@ custom_map[1] = Color([0,0,255])
 subdivisions=40
 fig3.set_axes(axis(0,[-1,subdivisions+1]), axis(1,[-1.25,0.05]))
 
-for i in range (subdivisions):
+for i in range (subdivisions+1):
     ratio=i/subdivisions
     fig3.draw_box([[i,i+1],[-1/5,0]],[Color.black(),cmap_default.color(ratio)])
     fig3.draw_box([[i,i+1],[-2/5,-1/5]],[Color.black(),cmap_haxby.color(ratio)])
@@ -111,5 +111,5 @@ a = 0.8
 t=ScalarVar()
 # Fermat's spiral
 f1=AnalyticFunction([t], [a*sqrt(t)*cos(t),a*sqrt(t)*sin(t)])
-traj4=AnalyticTraj(f1, [0,100])
+traj4=AnalyticTraj([0,100],f1)
 fig4.draw_trajectory(traj4, StyleGradientProperties(ColorMap.rainbow(),".."))

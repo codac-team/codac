@@ -35,14 +35,4 @@ namespace codac2
   {
     return _slices;
   }
-
-  bool TSlice::operator==(const TSlice& x) const
-  {
-    return Interval::operator==(x);
-  }
-
-  bool TSlice::operator==(const Interval& x) const
-  {
-    return Interval::operator==(x);
-  }
 }

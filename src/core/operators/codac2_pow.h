@@ -21,7 +21,7 @@ namespace codac2
     template<typename X1,typename X2>
     static std::string str(const X1& x1, const X2& x2)
     {
-      return x1->str(!x1->is_str_leaf()) + "^" + x2->str(!x2->is_str_leaf());
+      return "(" + x1->str(!x1->is_str_leaf()) + ")^(" + x2->str(!x2->is_str_leaf()) + ")";
     }
 
     template<typename X1, typename X2>
@@ -56,6 +56,9 @@ namespace codac2
   inline ScalarExpr
   operator^(const ScalarExpr& x1, const ScalarExpr& x2)
   {
+    std::cout
+      << "Operator '^' is discouraged in Codac. Use pow(x,y), or sqr(x) instead."
+      << std::endl;
     return pow(x1,x2);
   }
 

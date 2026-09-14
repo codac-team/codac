@@ -5,7 +5,7 @@ from codac import *
 
 x = VectorVar(3)
 f = AnalyticFunction([x], [
-  -(x[2]^2)+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
+  -sqr(x[2])+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
   2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
 ])
 

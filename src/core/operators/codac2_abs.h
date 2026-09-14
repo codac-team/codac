@@ -55,7 +55,7 @@ namespace codac2
   {
     return {
       fwd(x1.a),
-      x1.def_domain && x1.a != 0. // def domain of the derivative of abs
+      x1.def_domain && !x1.a.contains(0.) // def domain of the derivative of abs
     };
   }
 
@@ -72,7 +72,7 @@ namespace codac2
       fwd(x1.m),
       fwd(x1.a),
       d,
-      x1.def_domain && x1.a != 0. // def domain of the derivative of abs
+      x1.def_domain && !x1.a.contains(0.) // def domain of the derivative of abs
     };
   }
 

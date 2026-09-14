@@ -84,11 +84,11 @@ void export_CtcCartProd(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcI
         }),
       CTCCARTPROD_CTCCARTPROD_CONST_C_REF_VARIADIC,
       "c1"_a, "c2"_a, "c3"_a, "c4"_a, "c5"_a, "c6"_a, "c7"_a, "c8"_a, "c9"_a, "c10"_a)
-
-    .def(CONTRACT_BOX_METHOD(CtcCartProd,
-      VOID_CTCCARTPROD_CONTRACT_INTERVALVECTOR_REF_CONST))
     
   ;
+
+  CONTRACT_METHODS(exported, CtcCartProd,
+    VOID_CTCCARTPROD_CONTRACT_INTERVALVECTOR_REF_CONST)
 
   m.def("cart_prod_ctc", [](const std::list<std::reference_wrapper<CtcBase<IntervalVector>>>& l)
       {

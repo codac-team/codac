@@ -88,5 +88,51 @@ class TestCtcGeometricManual(unittest.TestCase):
     test.assertTrue(Approx(rho,1e-5) == Interval([7,8]))
     test.assertTrue(Approx(theta,1e-5) == Interval([1.20558,1.38218]))
 
+  def test_CtcVisible(test):
+    # [ctcvisible-beg]
+    a = [1, 1]
+    s = Segment([1, 4], [3, 2])
+    ctc = CtcVisible(a, s)
+    DefaultFigure.pave(
+        [[-1,6],[-1,6]],
+        ctc,
+        0.1
+      )
+    # [ctcvisible-end]
+
+    # [ctcnovisible-beg]
+    a = [1, 1]
+    s = Segment([1, 4], [3, 2])
+    ctc = CtcNoVisible(a, s)
+    DefaultFigure.pave(
+        [[-1,6],[-1,6]],
+        ctc,
+        0.1
+      )
+    # [ctcnovisible-end]
+
+    # [sepvisible_list-begin]
+    a = [1, 1]
+    l = [Segment([1,4], [2, 3]), Segment([2, 3], [2.5,1]), Segment([4, 0.5], [3.5, -0.5])]
+    sep = SepVisible(a, l)
+    DefaultFigure.pave(
+        [[-1,6],[-1,6]],
+        sep,
+        0.1
+      )
+    # [sepvisible_list-end]
+
+    # [sepvisible_polygon-begin]
+    a = [1, 1]
+    p = Polygon([[2.5,3], [2, 2], [3,1], [4, 1.5], [4, 3]])
+    sep = SepVisible(a, p)
+    DefaultFigure.pave(
+        [[-1,6],[-1,6]],
+        sep,
+        0.1
+      )
+    # [sepvisible_polygon-end]
+
+
 if __name__ ==  '__main__':
   unittest.main()

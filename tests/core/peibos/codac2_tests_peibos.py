@@ -63,12 +63,12 @@ class TestPeibos(unittest.TestCase):
 
     self.assertTrue(len(v_par_3d) == 6)
 
-    self.assertTrue(Approx(v_par_3d[0].z,1e-6) == Vector([1.,0.,0.]))
-    self.assertTrue(Approx(v_par_3d[1].z,1e-6) == Vector([0.,1.,0.]))
-    self.assertTrue(Approx(v_par_3d[2].z,1e-6) == Vector([-1,0.,0.]))
-    self.assertTrue(Approx(v_par_3d[3].z,1e-6) == Vector([0.,-1.,0.]))
-    self.assertTrue(Approx(v_par_3d[4].z,1e-6) == Vector([0.,0.,-1.]))
-    self.assertTrue(Approx(v_par_3d[5].z,1e-6) == Vector([0.,0.,1.]))
+    self.assertTrue(Approx(v_par_3d[0].c,1e-6) == Vector([1.,0.,0.]))
+    self.assertTrue(Approx(v_par_3d[1].c,1e-6) == Vector([0.,1.,0.]))
+    self.assertTrue(Approx(v_par_3d[2].c,1e-6) == Vector([-1,0.,0.]))
+    self.assertTrue(Approx(v_par_3d[3].c,1e-6) == Vector([0.,-1.,0.]))
+    self.assertTrue(Approx(v_par_3d[4].c,1e-6) == Vector([0.,0.,-1.]))
+    self.assertTrue(Approx(v_par_3d[5].c,1e-6) == Vector([0.,0.,1.]))
 
     a = 4.35066
 

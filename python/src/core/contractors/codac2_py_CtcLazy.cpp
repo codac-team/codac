@@ -32,9 +32,8 @@ void export_CtcLazy(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInter
         }),
       CTCLAZY_CTCLAZY_CONST_C_REF,
       "c"_a)
-
-    .def(CONTRACT_BOX_METHOD(CtcLazy,
-      VOID_CTCLAZY_CONTRACT_INTERVALVECTOR_REF_CONST))
-
   ;
+
+  CONTRACT_METHODS(exported, CtcLazy,
+    VOID_CTCLAZY_CONTRACT_INTERVALVECTOR_REF_CONST)
 }

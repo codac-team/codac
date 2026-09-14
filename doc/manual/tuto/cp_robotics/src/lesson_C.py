@@ -66,7 +66,7 @@ for i in range (0,5): # 5 waypoints
 
 s = RobotSimulator()
 s.w_max = 0.2 # maximum turning speed
-u = SampledVectorTraj() # the simulator will return the inputs (not used)
+u = SampledTraj_Vector() # the simulator will return the inputs (not used)
 x_truth = s.simulate(
   [0,0,0,0], # initial state (will be supposed unknown)
   1e-2, # simulation time step
@@ -82,13 +82,15 @@ obs = []
 t = x_truth.tdomain().lb()
 while t < x_truth.tdomain().ub():
 
+  xt = x_truth(t)
+
   if t-prev_t > time_between_obs:
-    obs_ti = g(t,x_truth(t),M) # computing the observation vector
+    obs_ti = g(t,xt,M) # computing the observation vector
 
     for yi in obs_ti:
       prev_t = yi[0].mid()
-      fig.draw_pie(x_truth(t).subvector(0,1), yi[1]|0., yi[2]+x_truth(t)[2], Color.light_gray())
-      fig.draw_pie(x_truth(t).subvector(0,1), yi[1],    yi[2]+x_truth(t)[2], Color.red())
+      fig.draw_pie(xt.subvector(0,1), yi[1]|0., yi[2]+xt[2], Color.light_gray())
+      fig.draw_pie(xt.subvector(0,1), yi[1],    yi[2]+xt[2], Color.red())
 
     obs.extend(obs_ti)
 
@@ -123,8 +125,8 @@ f_minus = AnalyticFunction([x1,x2,x3], [
 ])
 ctc_minus = CtcInverse(f_minus, [0,0])
 
-x1,x2,x3 = ScalarVar(), ScalarVar(), ScalarVar()
-f_plus = AnalyticFunction([x1,x2,x3], x1+x2-x3)
+s1,s2,s3 = ScalarVar(), ScalarVar(), ScalarVar()
+f_plus = AnalyticFunction([s1,s2,s3], s1+s2-s3)
 ctc_plus = CtcInverse(f_plus, 0)
 
 
@@ -168,8 +170,8 @@ def ctc_all_obs(x):
     xi,yi,mi,ai,si = fixpoint(ctc_one_obs, xi,yi,mi,ai,si)
     x.set(xi,yi[0]) # restriction on the tube x at time ti=yi[0]
 
-  x,v = ctc_f.contract_tube(x,v)
-  x = ctc_deriv.contract(x,v)
+  x,v = ctc_f.contract(x,v)
+  x,v = ctc_deriv.contract(x,v)
 
   return x
 

@@ -3,11 +3,16 @@
 PEIBOS
 ======
 
+  Main author: `Maël Godard <https://godardma.github.io>`_
+
+The content from this page supports multi-threading, see :ref:`here <sec-tools-threading>` for details.
+
 The PEIBOS tool provides a way to compute the Parallelepipedic Enclosure of the Image of the BOundary of a Set.
 
 Let us consider an initial set :math:`\mathbb{X}_0 \subset \mathbb{R}^n` with its boundary :math:`\partial \mathbb{X}_0`. 
 Considering a function :math:`\mathbf{f}:\mathbb{R}^n \to \mathbb{R}^p`, :math:`n \leq p`, the PEIBOS tool allows to compute the set :math:`\mathbf{Y}=\left\{ \mathbf{f}(\mathbf{x}) \mid \mathbf{x} \in \partial \mathbb{X}_0 \right\}`.
 
+.. _subsec-functions-peibos-gnomonic-atals:
 
 Gnomonic atlas
 --------------
@@ -56,7 +61,7 @@ The PEIBOS function takes at least four arguments :
 
 - The studied analytic function.
 - The inverse chart for the gnomonic atlas (an analytic function).
-- The list of symmetries for the gnomonic atlas. Note that each symmetry is represented as a hyperoctahedral symmetry, see :ref:`sec-actions-octasym`.
+- The list of symmetries for the gnomonic atlas. Note that each symmetry is represented as a hyperoctahedral symmetry, see :ref:`sec-tools-octasym`.
 - A resolution :math:`\epsilon`. The initial box :math:`\left[-1,1\right]^m` will initiallly be splitted in boxes with a diameter smaller than :math:`\epsilon`.
 - Eventually an offset vector can be specified if the initial set is not centered around the origin.
 - Eventually a flag can be set to True to get the verbose.

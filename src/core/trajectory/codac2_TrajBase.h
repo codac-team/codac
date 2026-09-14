@@ -36,69 +36,11 @@ namespace codac2
       virtual T operator()(double t) const = 0;
       virtual typename Wrapper<T>::Domain operator()(const Interval& t) const = 0;
 
-      auto nan_value() const
-      {
-        if constexpr(std::is_same_v<T,double> || std::is_same_v<typename ExprType<T>::Type,ScalarType>)
-          return std::numeric_limits<double>::quiet_NaN();
-
-        else
-          return T((*this)(tdomain().lb())) // we obtain the output dimension by an evalution...
-            .init(std::numeric_limits<double>::quiet_NaN());
-      }
-
-      virtual SampledTraj<T> sampled(double dt) const
-      {
-        assert_release(dt > 0.);
-        assert_release(!is_empty());
-
-        auto tdom = tdomain();
-        SampledTraj<T> straj;
-        for(double t = tdom.lb() ; t < tdom.ub() ; t+=dt)
-          straj.set((*this)(t), t);
-        straj.set((*this)(tdom.ub()), tdom.ub());
-        return straj;
-      }
-
+      // Implementation in codac2_TrajBase_impl.h
+      auto nan_value() const;
+      virtual SampledTraj<T> sampled(double dt) const;
       template<typename Q>
-      SampledTraj<T> sampled_as(const SampledTraj<Q>& x) const
-      {
-        assert_release(x.tdomain().is_subset(this->tdomain()));
-        
-        SampledTraj<T> straj;
-        for(const auto& [ti,dump] : x)
-          straj.set((*this)(ti), ti);
-        return straj;
-      }
-
-      SampledTraj<T> primitive(double dt) const
-      {
-        assert_release(dt > 0.);
-        assert_release(!is_empty());
-
-        T s = [this]() {
-          if constexpr(std::is_same_v<T,double>)
-            return 0.;
-          else
-            return T((*this)(this->tdomain().lb())).init(0.);
-        }();
-
-        SampledTraj<T> p;
-        double t = tdomain().lb(), last_t = t;
-        p.set(s, t); t += dt;
-
-        while(t < tdomain().ub())
-        {
-          s += ((*this)(last_t)+(*this)(t))*dt/2.;
-          p.set(s, t);
-          last_t = t;
-          t += dt;
-        }
-
-        t = tdomain().ub();
-        s += ((*this)(last_t)+(*this)(t))*(t-last_t)/2.;
-        p.set(s, t);
-
-        return p;
-      }
+      SampledTraj<T> sampled_as(const SampledTraj<Q>& x) const;
+      SampledTraj<T> primitive(double dt) const;
   };
 }

@@ -12,6 +12,7 @@
 #include <pybind11/stl.h>
 #include <codac2_ColorMap.h>
 #include "codac2_py_ColorMap_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include "codac2_py_matlab.h"
 
 using namespace std;
 using namespace codac2;
@@ -40,7 +41,7 @@ void export_ColorMap(py::module& m)
 
     .def(
         #if FOR_MATLAB
-          "setitem"
+          "set_item"
         #else
           "__setitem__"
         #endif

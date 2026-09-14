@@ -16,7 +16,7 @@ using namespace std;
 using namespace codac2;
 
 Figure2D_IPE::Figure2D_IPE(const Figure2D& fig)
-  : OutputFigure2D(fig), _f(fig.name() + ".xml"),
+  : OutputFigure2D(fig),
     _x_offset(0.03*_fig.axes()[0].limits.diam()),
     _y_offset(0.03*_fig.axes()[1].limits.diam())
 {
@@ -25,23 +25,7 @@ Figure2D_IPE::Figure2D_IPE(const Figure2D& fig)
 
 Figure2D_IPE::~Figure2D_IPE()
 { 
-  draw_axes();
-  print_header_page();
-  _f.close();
-
-  _f = std::ofstream(_fig.name() + ".xml", std::ofstream::binary | std::ofstream::app);
-  std::ifstream f_temp_content(_fig.name() + "_tmp.xml", std::ofstream::binary);
-
-  for (const auto& item : _items)
-    _f << item.second;
-    
-  f_temp_content.close();
-  std::remove((_fig.name() + "_tmp.xml").c_str());
-  _f.close();
-
-  _f = std::ofstream(_fig.name() + ".xml", std::ofstream::app);
-  _f << "\n</page>\n</ipe>";
-  _f.close();
+  save(_fig.name()+".");
 }
 
 void Figure2D_IPE::init_figure()
@@ -172,6 +156,8 @@ void Figure2D_IPE::update_axes()
     _ipe_grid_size/(_fig.axes()[0].limits.diam()+_x_offset),
     _ipe_grid_size/(_fig.axes()[1].limits.diam()+_y_offset)
   };
+  
+  draw_axes();
 }
 
 void Figure2D_IPE::update_window_properties()
@@ -190,8 +176,24 @@ void Figure2D_IPE::clear()
   // clear _color map and layers
   _colors.clear();
   _layers.clear();
+  _items.clear();
 
   init_figure();
+}
+
+void Figure2D_IPE::save(const std::string& filename)
+{
+  std::size_t dot_position = filename.find_last_of('.');
+  std::string file_name = filename.substr(0, dot_position);
+  _f = std::ofstream(file_name + ".xml", std::ofstream::binary | std::ofstream::app);
+
+  print_header_page();
+
+  for (const auto& item : _items)
+    _f << item.second;
+    
+  _f << "\n</page>\n</ipe>";
+  _f.close();
 }
 
 std::string ipe_str(const Color& c)
@@ -431,21 +433,25 @@ void Figure2D_IPE::draw_pie(const Vector& c, const Interval& r, const Interval& 
 {
   assert(_fig.size() <= c.size());
   assert(r.lb() >= 0.);
+
+  // IPE doesn't support arcs with a radius equal to zero
+  double r_lb = r.lb() < 1e-5 ? 1e-5 : r.lb();
+  double r_ub = r.ub();
   
   begin_path(style);
 
-  Vector point1 ({r.lb() * std::cos(theta.lb()), r.lb() * std::sin(theta.lb())});
-  Vector point2 ({r.ub() * std::cos(theta.lb()), r.ub() * std::sin(theta.lb())});
-  Vector point3 ({r.ub() * std::cos(theta.ub()), r.ub() * std::sin(theta.ub())});
-  Vector point4 ({r.lb() * std::cos(theta.ub()), r.lb() * std::sin(theta.ub())});
+  Vector point1 ({r_lb * std::cos(theta.lb()), r_lb * std::sin(theta.lb())});
+  Vector point2 ({r_ub * std::cos(theta.lb()), r_ub * std::sin(theta.lb())});
+  Vector point3 ({r_ub * std::cos(theta.ub()), r_ub * std::sin(theta.ub())});
+  Vector point4 ({r_lb * std::cos(theta.ub()), r_lb * std::sin(theta.ub())});
 
   _working_item += to_string(scale_x(c[0] + point1[0])) + " " + to_string(scale_y(c[1] + point1[1])) + " m \n";
   _working_item += to_string(scale_x(c[0] + point2[0])) + " " + to_string(scale_y(c[1] + point2[1])) + " l \n";
-  _working_item += to_string(scale_length(r.ub())) + " 0 0 " + to_string(scale_length(r.ub())) + " "
+  _working_item += to_string(scale_length(r_ub)) + " 0 0 " + to_string(scale_length(r_ub)) + " "
                   + to_string(scale_x(c[i()])) + " " + to_string(scale_y(c[j()])) + " "
                   + to_string(scale_x(c[0] + point3[0])) + " " + to_string(scale_y(c[1] + point3[1])) + " a \n";
   _working_item += to_string(scale_x(c[0] + point4[0])) + " " + to_string(scale_y(c[1] + point4[1])) + " l \n";
-  _working_item += to_string(scale_length(r.lb())) + " 0 0 " + to_string(- scale_length(r.lb())) + " "
+  _working_item += to_string(scale_length(r_lb)) + " 0 0 " + to_string(- scale_length(r_lb)) + " "
                   + to_string(scale_x(c[i()])) + " " + to_string(scale_y(c[j()])) + " "
                   + to_string(scale_x(c[0] + point1[0])) + " " + to_string(scale_y(c[1] + point1[1])) + " a \n";
 

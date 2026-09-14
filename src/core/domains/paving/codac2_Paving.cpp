@@ -74,6 +74,11 @@ namespace codac2
         return list<IntervalVector>();
     };
 
+    IntervalVector operator&(const IntervalVector& x, const PavingOut& p)
+    {
+      return p & x;
+    };
+
 
   // PavingInOut class
 

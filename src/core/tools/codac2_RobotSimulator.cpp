@@ -51,7 +51,7 @@ namespace codac2
     assert_release(x0.size() == 4);
 
     double t = 0., dtheta = 0.;
-    Vector xi = x0;
+    Vector xi = x0, ui(2);
     SampledTraj<Vector> x;
     x.set(xi,t);
 
@@ -59,7 +59,7 @@ namespace codac2
     while(!wpts.empty())
     {
       const auto& wpt = wpts.front();
-      auto ui = controller(xi, wpt);
+      ui = controller(xi, wpt);
 
       xi[3] += ui[1]*dt;
       xi[3] = std::clamp(xi[3], v_min, v_max);
@@ -71,9 +71,9 @@ namespace codac2
       dtheta += r;
       xi[2] += r;
 
+      u.set(ui,t);
       t += dt;
       x.set(xi,t);
-      u.set(ui,t);
 
       double dist_to_goal = std::sqrt(std::pow(wpt[0]-xi[0],2)+std::pow(wpt[1]-xi[1],2));
       // If the new waypoint is already below the attainment threshold,
@@ -87,7 +87,8 @@ namespace codac2
         wpts.pop_front();
       }
     }
-
+    
+    u.set(ui,t);
     return x;
   }
 }

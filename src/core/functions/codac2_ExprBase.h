@@ -141,6 +141,19 @@ namespace codac2
        */
       virtual ~ExprBase() = default;
 
+      /**
+       * Returns the direct children of this expression node.
+       *
+       * The children are returned in the same order as the operands of the
+       * underlying operator.
+       *
+       * \return A vector of child expressions.
+       */
+      virtual std::vector<std::shared_ptr<ExprBase>> children_expr_base() const
+      {
+        return {};
+      }
+
     protected:
 
       const ExprID _unique_id; //!< unique identifier for this expression
@@ -214,6 +227,26 @@ namespace codac2
           {
             (__replace_arg(x,old_arg_id,new_expr), ...);
           }, _x);
+      }
+
+      /**
+       * Returns the direct children of this expression node.
+       *
+       * The children are returned in the same order as the operands of the
+       * underlying operator.
+       *
+       * \return A vector of child expressions.
+       */
+      std::vector<std::shared_ptr<ExprBase>> children_expr_base() const
+      {
+        std::vector<std::shared_ptr<ExprBase>> children;
+        children.reserve(sizeof...(X));
+        std::apply(
+          [&children](const auto&... x)
+          {
+            (children.push_back(std::static_pointer_cast<ExprBase>(x)), ...);
+          }, _x);
+        return children;
       }
 
     protected:

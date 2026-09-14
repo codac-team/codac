@@ -73,6 +73,13 @@ namespace codac2
        * \brief Clears the figure
        */
       virtual void clear() = 0;
+      
+      /**
+       * \brief Saves the figure to a file
+       * 
+       * \param filename Name of the file to save the figure to
+       */
+      virtual void save(const std::string& filename) = 0;
 
     protected:
 

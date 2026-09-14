@@ -5,7 +5,7 @@ wpts = [
 ]
 
 s = RobotSimulator()
-u = SampledVectorTraj()
+u = SampledTraj_Vector()
 x = s.simulate([0,0,0,0], 1e-2, wpts, u)
 
 g = Figure2D("Robot simulation", GraphicOutput.VIBES | GraphicOutput.IPE)

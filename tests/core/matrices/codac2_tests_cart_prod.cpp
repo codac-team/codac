@@ -49,4 +49,5 @@ TEST_CASE("cart_prod IntervalVector")
   CHECK(cart_prod(IntervalVector::empty(3)) == IntervalVector::empty(3));
   CHECK(cart_prod(IntervalVector({{0,1},{2,3},{4,5}}),IntervalVector({{8,9}})) == IntervalVector({{0,1},{2,3},{4,5},{8,9}}));
   CHECK(cart_prod(25.,IntervalVector({{0,1},{2,3},{4,5}}),IntervalVector({{8,9}}),Vector::ones(3)) == IntervalVector({{25},{0,1},{2,3},{4,5},{8,9},{1},{1},{1}}));
+  CHECK(cart_prod(Interval(),Interval(),42.) == IntervalVector({{-oo,oo},{-oo,oo},{42.,42.}})); // cart_prod({-oo,oo},{-oo,oo},42.) not supported
 }

@@ -16,12 +16,13 @@
 #include <pybind11/stl.h>
 #include "codac2_AnalyticExprWrapper.h"
 #include "codac2_py_matlab.h"
-#include "codac2_arith_add.h"
-#include "codac2_arith_sub.h"
-#include "codac2_arith_mul.h"
-#include "codac2_arith_div.h"
+#include <codac2_arith_add.h>
+#include <codac2_arith_sub.h>
+#include <codac2_arith_mul.h>
+#include <codac2_arith_div.h>
+#include <codac2_pow.h>
+#include "codac2_py_deprecated.h"
 #include "codac2_py_AnalyticExprWrapper_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py)
-#include "codac2_pow.h"
 
 using namespace codac2;
 namespace py = pybind11;
@@ -59,13 +60,13 @@ inline void export_ScalarExpr(py::module& m)
     .def("__truediv__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1/e2; }, py::is_operator())
     .def("__rtruediv__", [](const ScalarExpr& e1, const Interval& e2)   { return e2/e1; }, py::is_operator())
 
-    .def("__xor__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1^e2; }, py::is_operator())
-    .def("__xor__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1^e2; }, py::is_operator())
-    .def("__rxor__", [](const ScalarExpr& e1, const Interval& e2)   { return e2^e1; }, py::is_operator())
+    .def("__xor__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { deprecated_xor(); return pow(e1,e2); }, py::is_operator())
+    .def("__xor__",  [](const ScalarExpr& e1, const Interval& e2)   { deprecated_xor(); return pow(e1,e2); }, py::is_operator())
+    .def("__rxor__", [](const ScalarExpr& e1, const Interval& e2)   { deprecated_xor(); return pow(e2,e1); }, py::is_operator())
 
-    .def("__pow__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return e1^e2; }, py::is_operator())
-    .def("__pow__",  [](const ScalarExpr& e1, const Interval& e2)   { return e1^e2; }, py::is_operator())
-    .def("__rpow__", [](const ScalarExpr& e1, const Interval& e2)   { return e2^e1; }, py::is_operator())
+    .def("__pow__",  [](const ScalarExpr& e1, const ScalarExpr& e2) { return pow(e1,e2); }, py::is_operator())
+    .def("__pow__",  [](const ScalarExpr& e1, const Interval& e2)   { return pow(e1,e2); }, py::is_operator())
+    .def("__rpow__", [](const ScalarExpr& e1, const Interval& e2)   { return pow(e2,e1); }, py::is_operator())
 
   ;
 

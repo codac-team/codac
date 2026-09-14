@@ -56,7 +56,7 @@ namespace codac2
     return {
       fwd(x1.a),
       x1.a.is_subset({0,oo}) // def domain of sqrt
-      && x1.a != 0. // def domain of the derivative of sqrt
+      && !x1.a.contains(0.) // def domain of the derivative of sqrt
       && x1.def_domain
     };
   }
@@ -75,7 +75,7 @@ namespace codac2
       fwd(x1.a),
       d,
       x1.a.is_subset({0,oo}) // def domain of sqrt
-      && x1.a != 0. // def domain of the derivative of sqrt
+      && !x1.a.contains(0.) // def domain of the derivative of sqrt
       && x1.def_domain
     };
   }

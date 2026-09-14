@@ -5,6 +5,7 @@ Geometric contractors
 
    ctcdist.rst
    ctcpolar.rst
+   ctcvisible.rst
    CtcSegment <http://codac.io>
    CtcPolygon <http://codac.io>
    CtcEllipse <http://codac.io>

@@ -67,44 +67,19 @@ else {
 	Install-ChocolateyZipPackage @packageArgs
 
 	# Analyze url to guess what to add to Windows PATH or registry...
+	$arch = "x64"
 	if ($url -match "x86") {
 		$arch = "x86"
 	}
-	else {
-		$arch = "x64"
+	elseif ($url -match "arm64") {
+		$arch = "arm64"
 	}
-	if ($url -match "vc8") {
-		$runtime = "vc8"
-	}
-	if ($url -match "vc9") {
-		$runtime = "vc9"
-	}
-	elseif ($url -match "vc10") {
-		$runtime = "vc10"
-	}
-	elseif ($url -match "vc11") {
-		$runtime = "vc11"
-	}
-	elseif ($url -match "vc12") {
-		$runtime = "vc12"
-	}
-	elseif ($url -match "vc14") {
-		$runtime = "vc14"
-	}
-	elseif ($url -match "vc15") {
-		$runtime = "vc15"
-	}
-	elseif ($url -match "vc16") {
-		$runtime = "vc16"
-	}
-	elseif ($url -match "vc17") {
-		$runtime = "vc17"
-	}
-	elseif ($url -match "vc18") {
-		$runtime = "vc18"
-	}
-	else {
-		$runtime = "mingw"
+	$runtime = 'mingw'
+	if ($url -match 'vc(\d{1,2})') {
+		$ver = [int]$matches[1]
+		if ($ver -ge 8 -and $ver -le 22) {
+			$runtime = "vc$ver"
+		}
 	}
 }
 
@@ -136,44 +111,19 @@ for ($i = 1; $i -le 99; $i++) {
 		Install-ChocolateyZipPackage @packageArgs
 
 		# Analyze url to guess what to add to Windows PATH or registry...
+		$arch = "x64"
 		if ($url -match "x86") {
 			$arch = "x86"
 		}
-		else {
-			$arch = "x64"
+		elseif ($url -match "arm64") {
+			$arch = "arm64"
 		}
-		if ($url -match "vc8") {
-			$runtime = "vc8"
-		}
-		if ($url -match "vc9") {
-			$runtime = "vc9"
-		}
-		elseif ($url -match "vc10") {
-			$runtime = "vc10"
-		}
-		elseif ($url -match "vc11") {
-			$runtime = "vc11"
-		}
-		elseif ($url -match "vc12") {
-			$runtime = "vc12"
-		}
-		elseif ($url -match "vc14") {
-			$runtime = "vc14"
-		}
-		elseif ($url -match "vc15") {
-			$runtime = "vc15"
-		}
-		elseif ($url -match "vc16") {
-			$runtime = "vc16"
-		}
-		elseif ($url -match "vc17") {
-			$runtime = "vc17"
-		}
-		elseif ($url -match "vc18") {
-			$runtime = "vc18"
-		}
-		else {
-			$runtime = "mingw"
+		$runtime = 'mingw'
+		if ($url -match 'vc(\d{1,2})') {
+			$ver = [int]$matches[1]
+			if ($ver -ge 8 -and $ver -le 22) {
+				$runtime = "vc$ver"
+			}
 		}
 
 		$cmakepathtoadd = "$root\share\$CMakePackageName\cmake"

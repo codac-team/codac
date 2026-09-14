@@ -35,25 +35,6 @@ namespace codac2
       return x.cast<const T&>();
     }
 
-  // Casting to trajectory types
-
-    template<typename T>
-      requires std::is_same_v<T,AnalyticTraj<VectorType>>
-    bool is_instance(const py::object& x)
-    {
-      const py::object& x_traj = x.attr("traj");
-      return x_traj && py::isinstance<T>(x_traj);
-    }
-
-    template<typename T>
-      requires std::is_same_v<T,AnalyticTraj<VectorType>>
-    const T& cast(const py::object& x)
-    {
-      assert(is_instance<T>(x));
-      const py::object& x_traj = x.attr("traj");
-      return x_traj.cast<const T&>();
-    }
-
   // Casting to function/expression types
 
     template<typename T>
@@ -82,65 +63,5 @@ namespace codac2
 
       else
         return x.cast<MatrixExpr>()->copy();
-    }
-
-    template<typename T>
-      requires (std::is_same_v<AnalyticFunction<ScalarType>,T>
-        || std::is_same_v<AnalyticFunction<VectorType>,T>
-        || std::is_same_v<AnalyticFunction<MatrixType>,T>)
-    bool is_instance(const py::object& x)
-    {
-      const py::object& f_ = x.attr("f");
-      return f_ && py::isinstance<T>(f_);
-    }
-
-    template<typename T>
-      requires (std::is_same_v<AnalyticFunction<ScalarType>,T>
-        || std::is_same_v<AnalyticFunction<VectorType>,T>
-        || std::is_same_v<AnalyticFunction<MatrixType>,T>)
-    const T& cast(const py::object& x)
-    {
-      assert(is_instance<T>(x));
-      const py::object& f_ = x.attr("f");
-      return f_.cast<const T&>();
-    }
-
-    template<typename T>
-      requires (std::is_same_v<SlicedTube<Interval>,T>
-        || std::is_same_v<SlicedTube<IntervalVector>,T>
-        || std::is_same_v<SlicedTube<IntervalMatrix>,T>)
-    bool is_instance(const py::object& x)
-    {
-      if(py::isinstance<T>(x))
-        return true;
-      if(!py::hasattr(x,"tube"))
-        return false;
-      const py::object& x_ = x.attr("tube");
-      return x_ && py::isinstance<T>(x_);
-    }
-
-    template<typename T>
-      requires (std::is_same_v<SlicedTube<Interval>,T>
-        || std::is_same_v<SlicedTube<IntervalVector>,T>
-        || std::is_same_v<SlicedTube<IntervalMatrix>,T>)
-    const T& cast(const py::object& x)
-    {
-      if(py::isinstance<T>(x))
-        return x.cast<const T&>();
-      assert(is_instance<T>(x));
-      const py::object& x_ = x.attr("tube");
-      return x_.cast<const T&>();
-    }
-
-    template<typename T>
-      requires (std::is_same_v<SlicedTube<Interval>,T>
-        || std::is_same_v<SlicedTube<IntervalVector>,T>
-        || std::is_same_v<SlicedTube<IntervalMatrix>,T>)
-    T& cast(py::object& x)
-    {
-      if(py::isinstance<T>(x))
-        return x.cast<T&>();
-      assert(is_instance<T>(x));
-      return x.attr("tube").cast<T&>();
     }
 }

@@ -71,11 +71,11 @@ TEST_CASE("AnalyticFunction")
         CHECK(Approx(f.eval(m, Interval(3))) == 9);
       }
       {
-        AnalyticFunction f({x}, x^2);
+        AnalyticFunction f({x}, sqr(x));
         CHECK(Approx(f.eval(m, Interval(3))) == 9);
       }
       {
-        AnalyticFunction f({x}, (0.+x)^(1.*x));
+        AnalyticFunction f({x}, pow(0.+x,1.*x));
         CHECK(Approx(f.eval(m, Interval(3))) == 27);
       }
       {

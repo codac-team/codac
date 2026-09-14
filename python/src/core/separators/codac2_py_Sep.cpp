@@ -82,21 +82,49 @@ py::class_<SepBase,pySep> export_Sep(py::module& m)
       py::return_value_policy::reference_internal,
       py::keep_alive<1,0>())
 
+    ;
+
     // Intersection of separators
+    if constexpr(!FOR_MATLAB)
+    {
+      py_sep
+        .def("__and__", [](const SepBase& s1, const SepBase& s2)
+            {
+              return SepInter(s1.copy(),s2.copy());
+            },
+          SEPINTER_OPERATORINTER_CONST_S1_REF_CONST_S2_REF)
 
-    .def("__and__", [](const SepBase& s1, const SepBase& s2)
-        {
-          return SepInter(s1.copy(),s2.copy());
-        },
-      SEPINTER_OPERATORINTER_CONST_S1_REF_CONST_S2_REF)
+        .def("__and__", [](const SepBase& s1, const IntervalVector& x2)
+            {
+              auto s2 = SepWrapper(x2);
+              return SepInter(s1.copy(),s2.copy());
+            },
+          SEPINTER_OPERATORINTER_CONST_INTERVALVECTOR_REF_CONST_S2_REF)
 
-    .def("__and__", [](const SepBase& s1, const IntervalVector& x2)
-        {
-          auto s2 = SepWrapper(x2);
-          return SepInter(s1.copy(),s2.copy());
-        },
-      SEPINTER_OPERATORINTER_CONST_INTERVALVECTOR_REF_CONST_S2_REF)
+        ;
+    }
 
+    if constexpr(FOR_MATLAB)
+    {
+      py_sep
+        .def("inter", [](const SepBase& s1, const SepBase& s2)
+            {
+              return SepInter(s1.copy(),s2.copy());
+            },
+          SEPINTER_OPERATORINTER_CONST_S1_REF_CONST_S2_REF)
+
+        .def("inter", [](const SepBase& s1, const IntervalVector& x2)
+            {
+              auto s2 = SepWrapper(x2);
+              return SepInter(s1.copy(),s2.copy());
+            },
+          SEPINTER_OPERATORINTER_CONST_INTERVALVECTOR_REF_CONST_S2_REF)
+
+        ;
+    }
+
+
+  py_sep
     .def("__rand__", [](const SepBase& s1, const IntervalVector& x2)
         {
           auto s2 = SepWrapper(x2);

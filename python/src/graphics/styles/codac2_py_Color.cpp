@@ -13,6 +13,7 @@
 #include <codac2_Color.h>
 #include <codac2_StyleProperties.h>
 #include "codac2_py_Color_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include "codac2_py_matlab.h"
 
 using namespace std;
 using namespace codac2;
@@ -23,10 +24,23 @@ using namespace pybind11::literals;
 void export_Color(py::module& m)
 {
 
-  py::enum_<Model>(m, "Model")
-    .value("RGB", Model::RGB)
-    .value("HSV", Model::HSV)
-  ;
+  if constexpr(FOR_MATLAB)
+  {
+    py::class_<Model>(m, "Model")
+      .def(py::init<>())
+      .def_static("RGB", [](){ return Model::RGB; })
+      .def_static("HSV", [](){ return Model::HSV; })
+    ;
+  }
+
+  else
+  {
+    py::enum_<Model>(m, "Model")
+      .value("RGB", Model::RGB)
+      .value("HSV", Model::HSV)
+    ;
+  }
+  
 
   py::class_<Color> exported_color(m, "Color", COLOR_MAIN);
   exported_color

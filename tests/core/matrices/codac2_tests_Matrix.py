@@ -67,7 +67,6 @@ class TestMatrix(unittest.TestCase):
   def test_def_Matrix_zero_init(self):
 
     x = Matrix(2,2)
-    print(x)
     self.assertTrue(x(0,0) == 0)
     self.assertTrue(x(1,0) == 0)
     self.assertTrue(x(0,1) == 0)

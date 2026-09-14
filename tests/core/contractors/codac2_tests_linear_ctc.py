@@ -31,7 +31,7 @@ class TestLinearCtc(unittest.TestCase):
     # CtcGaussElim
 
     ctc_ge = CtcGaussElim()
-    ctc_ge.contract(A,x,b)
+    A,x,b = ctc_ge.contract(A,x,b)
     self.assertTrue(Approx(x) == IntervalVector([
       [-1.819278874340436,1.168720384766974],
       [-0.4140698379116945,1.725229626734416],
@@ -43,7 +43,7 @@ class TestLinearCtc(unittest.TestCase):
     ctc_gs = CtcGaussSeidel()
     x = IntervalVector([[-10,10],[-10,10],[-10,10]])
     for k in range(0,100):
-      ctc_gs.contract(A,x,b)
+      A,x,b = ctc_gs.contract(A,x,b)
     self.assertTrue(Approx(x) == IntervalVector([
       [-2.084512144759555,1.63672286912456],
       [-0.7369829550424718,1.74356809144887],
@@ -55,7 +55,7 @@ class TestLinearCtc(unittest.TestCase):
     ctc_gsp = CtcLinearPrecond(ctc_gs)
     x = IntervalVector([[-10,10],[-10,10],[-10,10]])
     for k in range(0,100):
-      ctc_gsp.contract(A,x,b)
+      A,x,b = ctc_gsp.contract(A,x,b)
     self.assertTrue(Approx(x) == IntervalVector([
       [-1.106970597649814,1.383669626776028],
       [-0.8113846871807701,1.332001097010008],
@@ -66,7 +66,7 @@ class TestLinearCtc(unittest.TestCase):
 
     ctc_gep = CtcLinearPrecond(ctc_ge)
     x = IntervalVector([[-oo,oo],[-oo,oo],[-oo,oo]])
-    ctc_gep.contract(A,x,b)
+    A,x,b = ctc_gep.contract(A,x,b)
     self.assertTrue(Approx(x) == IntervalVector([
       [-1.106970597649814,1.383669626776028],
       [-0.7852408901116992,1.332001097010009],

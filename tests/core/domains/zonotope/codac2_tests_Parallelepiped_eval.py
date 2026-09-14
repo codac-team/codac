@@ -27,17 +27,17 @@ class TestParallelepipedEval(unittest.TestCase):
     p1a = f1.parallelepiped_eval(Interval(-0.1,0.1))
     p1b = f1.parallelepiped_eval(1.0)
     
-    self.assertTrue(Approx(p1a.z,1e-6)==Vector([0.0,0.0]))
+    self.assertTrue(Approx(p1a.c,1e-6)==Vector([0.0,0.0]))
     self.assertTrue(Approx(p1a.A,1e-6)==Matrix([[0.12,0.0],[0.0,0.02]]))
-    self.assertTrue(Approx(p1b.z,1e-6)==Vector([1.0,1.0]))
+    self.assertTrue(Approx(p1b.c,1e-6)==Vector([1.0,1.0]))
     self.assertTrue(Approx(p1b.A,1e-6)==Matrix([[0.0,0.0],[0.0,0.0]]))
 
     pa = f2.parallelepiped_eval(Interval(-0.1,0.1), Interval(-0.1,0.1))
     pb = f2.parallelepiped_eval(1.0,Interval(-1,1))
 
-    self.assertTrue(Approx(pa.z,1e-6)==Vector([0,0,0]))
+    self.assertTrue(Approx(pa.c,1e-6)==Vector([0,0,0]))
     self.assertTrue(Approx(pa.A,1e-6)==Matrix([[0.14,0,0],[0,0.14,0],[0,0,0.04]]))
-    self.assertTrue(Approx(pb.z,1e-6)==Vector([1,0,1]))
+    self.assertTrue(Approx(pb.c,1e-6)==Vector([1,0,1]))
     self.assertTrue(Approx(pb.A,1e-5)==Matrix([[0.894428,0,1.78886],[0,3,0],[1.78886,0,-0.894427]]))
 
 
@@ -52,7 +52,7 @@ class TestParallelepipedEval(unittest.TestCase):
         p2 = f2.parallelepiped_eval(X0,Y0)
         p3 = f3.parallelepiped_eval(IntervalVector([X0,Y0]))
 
-        self.assertTrue(Approx(p2.z,1e-6)==p3.z)
+        self.assertTrue(Approx(p2.c,1e-6)==p3.c)
         self.assertTrue(Approx(p2.A,1e-6)==p3.A)
         y0 += dx
       x0 += dx

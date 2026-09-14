@@ -20,20 +20,32 @@ class TestCtcInter(unittest.TestCase):
     c3 = c1 & c2
 
     x = IntervalVector([[-oo,oo],[-oo,oo]])
-    c3.contract(x)
+    x = c3.contract(x)
     self.assertTrue(x == IntervalVector([[-10,2],[0,2]]))
 
     x = IntervalVector([[-oo,0],[-oo,0]])
-    c3.contract(x)
+    x = c3.contract(x)
     self.assertTrue(x == IntervalVector([[-10,0],[0,0]]))
 
     x = IntervalVector([[0,oo],[0,oo]])
-    c3.contract(x)
+    x = c3.contract(x)
     self.assertTrue(x == IntervalVector([[0,2],[0,2]]))
 
     x = IntervalVector([[0,0],[0,0]])
-    c3.contract(x)
+    x = c3.contract(x)
     self.assertTrue(x == IntervalVector.zero(2))
+    
+    # Testing constructors
+    test_construct_1 = CtcInter(c1,c2)
+    self.assertTrue(test_construct_1.nb() == 2)
+    test_construct_2 = CtcInter(c1,c2,c3) # different types
+    self.assertTrue(test_construct_2.nb() == 3)
+    
+    # Testing constructors (lists)
+    test_construct_1 = CtcInter([c1,c2])
+    self.assertTrue(test_construct_1.nb() == 2)
+    test_construct_2 = CtcInter([c1,c2,c3]) # different types
+    self.assertTrue(test_construct_2.nb() == 3)
 
 if __name__ ==  '__main__':
   unittest.main()

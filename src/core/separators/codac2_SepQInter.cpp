@@ -22,7 +22,8 @@ namespace codac2
 
   BoxPair SepQInter::separate(const IntervalVector& x) const
   {
-    if(_q == 0)
+    // If all constraints may be violated, the represented set is the whole space.
+    if(_q == _seps.size())
       return { IntervalVector::empty(x.size()), x };
 
     std::list<IntervalVector> l_inner, l_outer;
@@ -34,7 +35,7 @@ namespace codac2
     }
 
     BoxPair x_sep {
-      qinter(_seps.size()-_q+1, l_inner),
+      qinter(_seps.size()-_q-1, l_inner),
       qinter(_q, l_outer)
     };
 

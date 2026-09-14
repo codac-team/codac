@@ -38,26 +38,26 @@ class TestCtcFixpoint(unittest.TestCase):
     ctc_fixed = CtcFixpoint(ctc_custom, 0.)
     
     x = IntervalVector([[-1000,1000],[-1000,1000]])
-    ctc_fixed.contract(x)
+    x = ctc_fixed.contract(x)
     self.assertTrue(Approx(x,1e-1) == IntervalVector([[-1,1],[-1,1]]))
     x = IntervalVector([[-500,500],[-500,500]])
-    ctc_fixed.contract(x)
+    x = ctc_fixed.contract(x)
     self.assertTrue(Approx(x,1e-1) == IntervalVector([[-1,1],[-1,1]]))
 
     ctc_fixed = CtcFixpoint(ctc_custom, 0.8)
     
     x = IntervalVector([[-1000,1000],[-1000,1000]])
-    ctc_fixed.contract(x)
+    x = ctc_fixed.contract(x)
     self.assertTrue(Approx(x) == IntervalVector([[-500,500],[-500,500]]))
-    ctc_fixed.contract(x)
+    x = ctc_fixed.contract(x)
     self.assertTrue(Approx(x) == IntervalVector([[-250,250],[-250,250]]))
 
     ctc_fixed = CtcFixpoint(ctc_custom, 1.)
     
     x = IntervalVector([[-1000,1000],[-1000,1000]])
-    ctc_fixed.contract(x)
+    x = ctc_fixed.contract(x)
     self.assertTrue(Approx(x) == IntervalVector([[-500,500],[-500,500]]))
-    ctc_fixed.contract(x)
+    x = ctc_fixed.contract(x)
     self.assertTrue(Approx(x) == IntervalVector([[-250,250],[-250,250]]))
 
 

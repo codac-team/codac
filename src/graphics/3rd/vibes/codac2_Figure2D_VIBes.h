@@ -65,6 +65,13 @@ namespace codac2
        * \brief Clears the figure
        */
       void clear();
+
+      /**
+       * \brief Saves the figure to a file
+       * 
+       * \param filename Name of the file to save the figure to
+       */
+      void save(const std::string& filename);
       
       // Geometric shapes
 

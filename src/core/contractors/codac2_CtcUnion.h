@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include <tuple>
 #include <type_traits>
 #include "codac2_CtcWrapper.h"
 #include "codac2_Collection.h"
@@ -42,31 +43,61 @@ namespace codac2
         assert_release(all_same_size(c...));
       }
 
+      CtcUnion(const Collection<CtcBase<X...>>& ctcs)
+        : Ctc<CtcUnion<X...>,X...>(ctcs.front()->size()), _ctcs(ctcs)
+      {
+        for(const auto& ci : _ctcs)
+        {
+          (void)ci;
+          assert_release(ci->size() == this->size());
+        }
+      }
+      
+      template<typename C>
+        requires IsCtcBaseOrPtr<C,X...>
+      CtcUnion(std::initializer_list<C> ctcs)
+        : CtcUnion(Collection<CtcBase<X...>>(ctcs))
+      { }
+
       size_t nb() const
       {
         return _ctcs.size();
       }
 
-      template<typename X_> // single type
-      void contract_impl(X_& x) const
+      void contract(X&... x) const
       {
-        auto result = x;
-        result.set_empty();
+        const auto input = std::tuple<X...>(x...);
+
+        auto result = input;
+        std::apply([](auto&... xi)
+        {
+          (xi.set_empty(), ...);
+        }, result);
+
+        auto accumulate_union = [&]<std::size_t... I>(const std::tuple<X...>& y, std::index_sequence<I...>)
+        {
+          ((std::get<I>(result) |= std::get<I>(y)), ...);
+        };
 
         for(const auto& ci : _ctcs)
         {
-          auto saved_x = x;
-          ci->contract(saved_x);
-          result |= saved_x;
+          auto saved = input;
+
+          std::apply([&](auto&... xi)
+          {
+            ci->contract(xi...);
+          }, saved);
+
+          accumulate_union(saved, std::index_sequence_for<X...>{});
+
+          // Each contractor is contractant, hence every remaining branch
+          // can only return a subset of input. Once the accumulated union
+          // has reached input, the final result is already known.
+          if(result == input)
+            return;
         }
 
-        x = result;
-      }
-
-      void contract(X&... x) const
-      {
-        // contract_impl(..) method for multiple types is not yet implemented
-        contract_impl(x...);
+        std::tie(x...) = result;
       }
 
       template<typename C>
@@ -137,4 +168,11 @@ namespace codac2
 
   // Template deduction guides
   CtcUnion(Index) -> CtcUnion<IntervalVector>;
+
+  template<typename... C>
+    requires (IsCtcBaseOrPtr<C,IntervalVector> && ...)
+  CtcUnion(const C&...) -> CtcUnion<IntervalVector>;
+
+  template<typename C>
+  CtcUnion(std::initializer_list<C>) -> CtcUnion<IntervalVector>;
 }

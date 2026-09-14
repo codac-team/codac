@@ -606,13 +606,23 @@ void export_operators(py::module& m)
 
   py::class_<ModOp>(m, "ModOp")
     .def(py::init<>()) // for using static methods in Matlab
-    .def_static("bwd", (void(*)(Interval&,Interval&,double)) &ModOp::bwd,
-      STATIC_VOID_MODOP_BWD_INTERVAL_REF_INTERVAL_REF_DOUBLE,
-      "x1"_a, "x2"_a, "p"_a)
-    .def_static("bwd", (void(*)(Interval&,Interval&,Interval&)) &ModOp::bwd,
-      STATIC_VOID_MODOP_BWD_INTERVAL_REF_INTERVAL_REF_INTERVAL_REF,
-      "x1"_a, "x2"_a, "p"_a)
+    .def_static("fwd", (Interval(*)(const Interval&,const Interval&)) &ModOp::fwd,
+      STATIC_INTERVAL_MODOP_FWD_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
+      "x1"_a, "p"_a)
+    .def_static("bwd", (void(*)(const Interval&,Interval&,Interval&)) &ModOp::bwd,
+      STATIC_VOID_MODOP_BWD_CONST_INTERVAL_REF_INTERVAL_REF_INTERVAL_REF,
+      "y"_a, "x1"_a, "p"_a)
+    .def_static("fwd_bwd", (void(*)(Interval&,Interval&,double)) &ModOp::fwd_bwd,
+      STATIC_VOID_MODOP_FWD_BWD_INTERVAL_REF_INTERVAL_REF_DOUBLE,
+      "y"_a, "x1"_a, "p"_a)
+    .def_static("fwd_bwd", (void(*)(Interval&,Interval&,Interval&)) &ModOp::fwd_bwd,
+      STATIC_VOID_MODOP_FWD_BWD_INTERVAL_REF_INTERVAL_REF_INTERVAL_REF,
+      "y"_a, "x1"_a, "p"_a)
   ;
+
+  m.def("mod", [](const ScalarExpr& e1, const ScalarExpr& p) { return mod(e1,p); },
+    SCALAREXPR_MOD_CONST_SCALAREXPR_REF_CONST_SCALAREXPR_REF,
+    "x1"_a, "p"_a);
 
   py::class_<PowOp>(m, "PowOp")
     .def(py::init<>()) // for using static methods in Matlab

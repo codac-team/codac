@@ -10,7 +10,7 @@ class MySep(Sep):
 
   def separate(self, x):
     inner,outer = self.S.separate(x) # separates x into two boxes
-    return [outer,inner] # inner/outer boxes are permuted
+    return BoxPair(inner,outer) # inner/outer boxes are permuted
 
 # Trying this custom separator
 

@@ -27,9 +27,8 @@ void export_CtcIdentity(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcI
     .def(py::init<Index>(),
       CTCIDENTITY_CTCIDENTITY_INDEX
       "n"_a)
-
-    .def(CONTRACT_BOX_METHOD(CtcIdentity,
-      VOID_CTCIDENTITY_CONTRACT_INTERVALVECTOR_REF_CONST))
-
   ;
+
+  CONTRACT_METHODS(exported, CtcIdentity,
+    VOID_CTCIDENTITY_CONTRACT_INTERVALVECTOR_REF_CONST)
 }

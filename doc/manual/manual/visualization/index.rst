@@ -11,4 +11,6 @@ Visualization
   colors.rst
   vibes.rst
   ipe.rst
+  2d_example.rst
   3d_visualization.rst
+  3d_example.rst

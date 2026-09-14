@@ -13,8 +13,12 @@
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <codac2_Interval.h>
+#include <codac2_Interval_operations.h>
 #include "codac2_py_Interval_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_Interval_impl_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include "codac2_py_Interval_operations_impl_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+#include "codac2_py_matlab.h"
+#include "codac2_py_deprecated.h"
 
 using namespace std;
 using namespace codac2;
@@ -70,6 +74,14 @@ py::class_<Interval> export_Interval(py::module& m)
 
     .def(py::self != py::self,
       BOOL_INTERVAL_OPERATORNEQ_CONST_INTERVAL_REF_CONST,
+      "x"_a)
+
+    .def(py::self < py::self,
+      BOOLINTERVAL_INTERVAL_OPERATOR__CONST_INTERVAL_REF_CONST,
+      "x"_a)
+
+    .def(py::self > py::self,
+      BOOLINTERVAL_INTERVAL_OPERATOR_CONST_INTERVAL_REF_CONST,
       "x"_a)
 
     .def("lb", &Interval::lb,
@@ -192,13 +204,13 @@ py::class_<Interval> export_Interval(py::module& m)
     .def("diff", &Interval::diff,
       VECTOR_INTERVAL_INTERVAL_DIFF_CONST_INTERVAL_REF_BOOL_CONST,
       "y"_a, "compactness"_a = true)
+  ;
+
+  if constexpr(!FOR_MATLAB)
+  {
+    exported_interval_class
 
     .def(py::self |= py::self,
-      INTERVAL_REF_INTERVAL_OPERATORUNIONEQ_CONST_INTERVAL_REF,
-      "x"_a)
-
-    // For MATLAB compatibility
-    .def("self_union", &Interval::operator|=,
       INTERVAL_REF_INTERVAL_OPERATORUNIONEQ_CONST_INTERVAL_REF,
       "x"_a)
 
@@ -206,10 +218,25 @@ py::class_<Interval> export_Interval(py::module& m)
       INTERVAL_REF_INTERVAL_OPERATORINTEREQ_CONST_INTERVAL_REF,
       "x"_a)
 
+    ;
+  }
+
+  if constexpr(FOR_MATLAB)
+  {
     // For MATLAB compatibility
-    .def("self_inter", &Interval::operator&=,
-      INTERVAL_REF_INTERVAL_OPERATORINTEREQ_CONST_INTERVAL_REF,
-      "x"_a)
+    exported_interval_class
+
+      .def("self_union", &Interval::operator|=,
+        INTERVAL_REF_INTERVAL_OPERATORUNIONEQ_CONST_INTERVAL_REF,
+        "x"_a)
+
+      .def("self_inter", &Interval::operator&=,
+        INTERVAL_REF_INTERVAL_OPERATORINTEREQ_CONST_INTERVAL_REF,
+        "x"_a)
+    ;
+  }
+
+  exported_interval_class
 
     .def(py::self += double(),
       INTERVAL_REF_INTERVAL_OPERATORPLUSEQ_DOUBLE,
@@ -245,6 +272,30 @@ py::class_<Interval> export_Interval(py::module& m)
     .def(py::self /= py::self,
       INTERVAL_REF_INTERVAL_OPERATORDIVEQ_CONST_INTERVAL_REF,
       "x"_a)
+
+    .def("__xor__", [](const Interval& x1, int x2) { deprecated_xor(); return codac2::pow(x1,x2); },
+      INTERVAL_POW_CONST_INTERVAL_REF_INT,
+      "n"_a)
+
+    .def("__xor__", [](const Interval& x1, double x2) { deprecated_xor(); return codac2::pow(x1,x2); },
+      INTERVAL_POW_CONST_INTERVAL_REF_DOUBLE,
+      "n"_a)
+
+    .def("__xor__", [](const Interval& x1, const Interval& x2) { deprecated_xor(); return codac2::pow(x1,x2); },
+      INTERVAL_POW_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
+      "n"_a)
+
+    .def("__pow__", (Interval(*)(const Interval&,int)) &codac2::pow,
+      INTERVAL_POW_CONST_INTERVAL_REF_INT,
+      "n"_a)
+
+    .def("__pow__", (Interval(*)(const Interval&,double)) &codac2::pow,
+      INTERVAL_POW_CONST_INTERVAL_REF_DOUBLE,
+      "n"_a)
+
+    .def("__pow__", (Interval(*)(const Interval&,const Interval&)) &codac2::pow,
+      INTERVAL_POW_CONST_INTERVAL_REF_CONST_INTERVAL_REF,
+      "n"_a)
 
     .def_static("empty", &Interval::empty,
       STATIC_INTERVAL_INTERVAL_EMPTY)

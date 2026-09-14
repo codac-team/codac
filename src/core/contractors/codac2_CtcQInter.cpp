@@ -21,7 +21,8 @@ namespace codac2
 
   void CtcQInter::contract(IntervalVector& x) const
   {
-    if(_q == 0)
+    // If all constraints may be violated, no contraction can be performed.
+    if(_q == _ctcs.size())
       return;
     
     std::list<IntervalVector> l;

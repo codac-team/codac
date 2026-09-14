@@ -37,7 +37,7 @@ The solution set is approximated from an initial box :math:`[\mathbf{x}_0]=[0,2]
    
    x = VectorVar(3)
    f = AnalyticFunction([x], [
-     -(x[2]^2)+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
+     -sqr(x[2])+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
      2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
    ])
    
@@ -52,9 +52,8 @@ The solution set is approximated from an initial box :math:`[\mathbf{x}_0]=[0,2]
    int main()
    {
      VectorVar x(3);
-     AnalyticFunction f { {x},
-       {
-         -(x[2]^2)+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
+     AnalyticFunction f { {x}, {
+         -sqr(x[2])+2*x[2]*sin(x[2]*x[0])+cos(x[2]*x[1]),
          2*x[2]*cos(x[2]*x[0])-sin(x[2]*x[1])
        }
      };
@@ -145,8 +144,8 @@ This list is in alphabetical order by surname.
   * `Peter Franek <http://www.cs.cas.cz/~franek>`_
   * `Maël Godard <https://godardma.github.io>`_
   * `Nuwan Herath M. <https://members.loria.fr/NHerathMudiyanselage>`_
-  * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin>`_
-  * `Fabrice Le Bars <https://www.ensta-bretagne.fr/lebars>`_
+  * `Luc Jaulin <https://webperso.ensta.fr/jaulin>`_
+  * `Fabrice Le Bars <https://webperso.ensta.fr/lebars>`_
   * `Morgan Louédec <https://morgan-louedec.fr>`_
   * `Damien Massé <https://lab-sticc.univ-brest.fr/~dmasse>`_
   * `Bertrand Neveu <http://imagine.enpc.fr/~neveub>`_
@@ -155,7 +154,7 @@ This list is in alphabetical order by surname.
   * `Simon Rohou <http://simon-rohou.fr/research>`_
   * `Joris Tillet <https://perso.ensta-paris.fr/~tillet/>`_
   * `Gilles Trombettoni <https://www.lirmm.fr/~trombetton>`_
-  * `Christophe Viel <https://www.ensta-bretagne.fr/viel/>`_
+  * `Christophe Viel <https://webperso.ensta.fr/viel/>`_
   * `Raphael Voges <https://raphael-voges.de>`_
 
 We appreciate all contributions, whether code, documentation, bug reports, or suggestions. If you believe your name should be included here and it is not, please contact us so we can update the list.
@@ -180,6 +179,8 @@ Overview of Codac
 User manual
 -----------
 
+* :ref:`sec-intro`
+
 * :ref:`sec-install`
    * :ref:`sec-install-py`
    * :ref:`sec-install-cpp`
@@ -189,7 +190,8 @@ User manual
 * :ref:`sec-intervals`
    * What is an interval?
    * :ref:`sec-intervals-class`
-   * Boolean intervals
+   * :ref:`sec-intervals-intervalvector-class`
+   * :ref:`sec-intervals-boolinterval-class`
 
 * :ref:`sec-linear`
    * :ref:`sec-linear-vecmat`
@@ -205,16 +207,15 @@ User manual
       * :ref:`sec-functions-analytic-operators`
       * Extension to custom expressions
       * Temporal functions
+      * :ref:`sec-functions-parallelepiped-eval`
+      * :ref:`sec-functions-peibos`
    * Set-membership functions
       * The class SetMembershipFunction
       * Extension to custom expressions
-   * :ref:`sec-functions-parallelepiped-eval`
-   * :ref:`sec-functions-peibos`
 
-* Tubes
-   * What is a tube?
-   * Temporal domains
-   * The Tube classes
+* :ref:`sec-domains-tubes`
+   * :ref:`sec-domains-tubes-tdomain`
+   * :ref:`sec-domains-tubes-slicedtube`
    * The Trajectory classes
    * Increasing performances using views
 
@@ -231,8 +232,8 @@ User manual
       * CtcGaussSeidel
       * CtcLinearPrecond
    * Set contractors
+      * :ref:`sec-ctc-set-ctcinter`
       * CtcUnion
-      * CtcInter
       * CtcQInter
       * CtcCartProd
       * CtcProj
@@ -241,9 +242,12 @@ User manual
    * Analytic contractors
       * :ref:`sec-ctc-analytic-ctcinverse`
       * CtcInverseNotIn
+   * Dynamic contractors
+      * :ref:`sec-ctc-dynamic-ctclohner`
    * Geometric contractors
       * :ref:`sec-ctc-geom-ctcdist`
       * :ref:`sec-ctc-geom-ctcpolar`
+      * :ref:`sec-ctc-geom-ctcvisible`
       * CtcSegment
       * CtcPolygon
       * CtcPointCloud
@@ -251,7 +255,7 @@ User manual
       * CtcCross / CtcNoCross
    * Shape contractors
       * CtcCtcBoundary
-      * CtcWrapper
+      * :ref:`sec-ctc-shape-ctcwrapper`
       * CtcImage
       * CtcDiscreteSet
    * Temporal contractors
@@ -282,6 +286,7 @@ User manual
       * SepInverse
       * SepTransform
    * Geometrical separators
+      * SepVisible
       * SepPolarCart or SepCartPolar
       * SepPolygon
       * SepEllipse
@@ -312,8 +317,8 @@ User manual
    * :ref:`sec-zonotope`
    * Polyhedron
 
-* :ref:`sec-actions`
-   * :ref:`sec-actions-octasym`
+* :ref:`sec-tools`
+   * :ref:`sec-tools-octasym`
 
 * :ref:`sec-ellipsoids`
    * :ref:`sec-ellipsoids-intro`
@@ -334,11 +339,12 @@ User manual
 * :ref:`sec-tools`
    * :ref:`sec-tools-serialization`
    * :ref:`sec-tools-registration`
+   * :ref:`sec-tools-octasym`
 
-* Codac extensions
+* :ref:`sec-extensions`
    * :ref:`sec-extensions-capd`
+   * :ref:`sec-extensions-sympy`
    * Interface with the IBEX library
-   * Sympy (symbolic computation)
 
 * Frequently Asked Questions
 
@@ -353,9 +359,7 @@ How-to guides
 -------------
 
 * Robotics
-   * Non-linear state estimation
-   * State estimation by solving data association
-   * Range-only SLAM
+   * :ref:`sec-tuto-cprob`
    * Explored area
    * Loop detections and verifications
 
@@ -374,6 +378,7 @@ Development
 * :ref:`sec-dev-common-issues`
 * :ref:`sec-dev-changelog`
 * :ref:`sec-dev-api`
+* :ref:`sec-dev-v1`
 
 
 
@@ -392,13 +397,14 @@ Development
    :caption: User manual
    :maxdepth: 2
 
+   manual/introduction/index.rst
    manual/installation/index.rst
    manual/intervals/index.rst
+   manual/tubes/index.rst
    manual/linear/index.rst
    manual/functions/index.rst
    manual/contractors/index.rst
    manual/geometry/index.rst
-   manual/actions/index.rst
    manual/ellipsoids/index.rst
    manual/visualization/index.rst
    manual/tools/index.rst
@@ -453,6 +459,7 @@ Development
    development/common_issues.rst
    development/changelog.rst
    development/api_redirect.rst
+   development/link_v1.rst
 
 
 How to cite Codac

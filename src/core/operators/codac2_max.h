@@ -69,7 +69,7 @@ namespace codac2
       fwd(x1.a, x2.a),
       d,
       x1.def_domain && x2.def_domain
-        && (x1.a != x2.a) // def domain of the derivative of max
+        && !x1.a.intersects(x2.a) // def domain of the derivative of max
     };
   }
 

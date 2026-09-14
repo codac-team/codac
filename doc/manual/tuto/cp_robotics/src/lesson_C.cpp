@@ -191,7 +191,7 @@ int main()
       x.set(xi,yi[0]); // restriction on the tube x at time ti=yi[0]
     }
 
-    ctc_f.contract_tube(x,v);
+    ctc_f.contract(x,v);
     ctc_deriv.contract(x,v);
 
   }, x);

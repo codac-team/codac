@@ -14,9 +14,9 @@ int main()
 
   AnalyticFunction f { {x},
     {
-          (2.0+cos(x[0])/(1+(sin(x[0])^2.0)))*sin(x[1]),
-          (2.0+cos(x[0])/(1+(sin(x[0])^2.0)))*cos(x[1]),
-          2.0*sin(x[0])*cos(x[0])/(1+(sin(x[0])^2.0))
+          (2.0+cos(x[0])/(1+sqr(sin(x[0]))))*sin(x[1]),
+          (2.0+cos(x[0])/(1+sqr(sin(x[0]))))*cos(x[1]),
+          2.0*sin(x[0])*cos(x[0])/(1+sqr(sin(x[0])))
           
     }
   };
