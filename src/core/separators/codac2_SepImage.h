@@ -26,6 +26,9 @@
 #include "codac2_pave.h"
 #include <codac2_hull.h>
 
+// TO DELETE
+#include <iostream>
+
 namespace codac2
 {
   class SepImage : public Sep<SepImage>
@@ -42,15 +45,16 @@ namespace codac2
         IntervalVector X0 (dim);
         ctc_init.contract(X0);
 
-        auto Y0 = f.eval(X0);
-        Y0.inflate(Y0.min_diam()/10.);
-
         // Contractor on the boundary
         CtcUnion ctc_union (dim);
         for (const auto& par : v_par)
           ctc_union |= CtcWrapper(par);
 
         SepCtcPair sep_boundary(CtcIdentity(dim), ctc_union);
+
+        IntervalVector Y0 (dim);
+        ctc_union.contract(Y0);
+        Y0.inflate(Y0.min_diam()/10.);
 
         // paving resolution, can be tuned
         if (epsilon_pave == -1)
@@ -73,6 +77,10 @@ namespace codac2
           IntervalVector X0_copy (X0);
           ctc_inv.contract(X0_copy);
           ctc_init.contract(X0_copy);
+
+          if (X0_copy == X0)
+            printf("was not able to determine inner areas\n");
+
           if (!X0_copy.is_empty())
             cs_to_color.push_back(std::make_shared<PavingInOut::ConnectedSubset_>(cs));
         }
