@@ -26,9 +26,6 @@
 #include "codac2_pave.h"
 #include <codac2_hull.h>
 
-// TO DELETE
-#include <iostream>
-
 namespace codac2
 {
   class SepImage : public Sep<SepImage>
@@ -75,14 +72,43 @@ namespace codac2
 
           CtcInverse ctc_inv (f, max_box.mid());
           IntervalVector X0_copy (X0);
+          bool could_contract = false;
+          
           ctc_inv.contract(X0_copy);
           ctc_init.contract(X0_copy);
 
-          if (X0_copy == X0)
-            printf("was not able to determine inner areas\n");
+          if (X0_copy != X0)
+          {
+            could_contract = true;
+            if (!X0_copy.is_empty())
+              cs_to_color.push_back(std::make_shared<PavingInOut::ConnectedSubset_>(cs));
+          }
 
-          if (!X0_copy.is_empty())
-            cs_to_color.push_back(std::make_shared<PavingInOut::ConnectedSubset_>(cs));
+          // if the CtcInverse was not able to conclude directly, we subdivide the initial box
+
+          if (!could_contract)
+          {
+            std::vector<IntervalVector> boxes;
+            split(X0_copy,0.125,boxes);
+            for (auto box: boxes)
+            {
+              IntervalVector box_copy (box); 
+              ctc_inv.contract(box);
+              ctc_init.contract(box);
+              if (box != box_copy)
+                {
+                  could_contract = true;
+                  if (!box.is_empty())
+                  {
+                    cs_to_color.push_back(std::make_shared<PavingInOut::ConnectedSubset_>(cs));
+                    break;
+                  }
+                }
+            }
+          }
+
+          if (!could_contract)
+            printf("warning, the SepImage was not able to conclude on the inner regions\n");
         }
 
         // Turning the previously identified connected subsets as inner (displayed green)
