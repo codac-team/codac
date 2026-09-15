@@ -28,17 +28,32 @@
 
 namespace codac2
 {
+  /**
+   * \brief A separator on the direct image of a set by a function. It relies on a boundary approach
+   */
   class SepImage : public Sep<SepImage>
   {
     public:
 
-      SepImage(AnalyticFunction<VectorType>& f, AnalyticFunction<VectorType>& psi_0, std::vector<OctaSym>& Sigma, double epsilon, CtcBase<IntervalVector>& ctc_init, double epsilon_pave = -1)
+      /**
+       * \brief Constructor of the separator
+       * 
+       * \param f The analytic function \f$\mathbf{f}:\mathbb{R}^n\rightarrow\mathbb{R}^p,p\geq n\f$ 
+       * \param psi_0 The transformation function \f$\psi_0:\mathbb{R}^m\rightarrow\mathbb{R}^n\f$ to construct the atlas
+       * \param Sigma The set of symmetry operators \f$\sigma\f$ to construct the atlas
+       * \param epsilon The maximum diameter of the boxes to split \f$[-1,1]^m\f$ before computing the parallelepiped inclusions
+       * \param ctc_init The contractor on the initial set
+       * \param epsilon_pave An optionnal parameter to custom the resolution of the paving step
+       */
+      template<typename C>
+        requires IsCtcBaseOrPtr<C,IntervalVector>
+      SepImage(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const std::vector<OctaSym>& Sigma, double epsilon, const C& ctc_init, double epsilon_pave = -1)
         :Sep<SepImage>(f.output_size())
       {
         // Using PEIBOS to get the boundary of the image set
         int dim = f.output_size();
         auto v_par = PEIBOS(f,psi_0,Sigma,epsilon);
-
+        
         IntervalVector X0 (dim);
         ctc_init.contract(X0);
 
@@ -60,7 +75,7 @@ namespace codac2
         // Initial paving, with only an outer aproximation
         PavingInOut p = pave(Y0,sep_boundary,epsilon_pave);
 
-        // Determination of the inner connected subsets
+        // Determination of the inner connected susets
         auto v_cs = p.connected_subsets(PavingInOut::outer_complem);
         std::list<std::shared_ptr<PavingInOut::ConnectedSubset_>> cs_to_color;
         for (const auto& cs: v_cs)
@@ -183,7 +198,30 @@ namespace codac2
 
         _sep.push_back(sep_inter);
       }
+
+      /**
+       * \brief Constructor of the separator
+       * 
+       * \param f The analytic function \f$\mathbf{f}:\mathbb{R}^n\rightarrow\mathbb{R}^p,p\geq n\f$ 
+       * \param psi_0 The transformation function \f$\psi_0:\mathbb{R}^m\rightarrow\mathbb{R}^n\f$ to construct the atlas
+       * \param Sigma The set of symmetry operators \f$\sigma\f$ to construct the atlas
+       * \param epsilon The maximum diameter of the boxes to split \f$[-1,1]^m\f$ before computing the parallelepiped inclusions
+       * \param ctc_init A shared pointer to the contractor on the initial set
+       * \param epsilon_pave An optionnal parameter to custom the resolution of the paving step
+       */
+      template<typename C>
+        requires IsCtcBaseOrPtr<C,IntervalVector>
+      SepImage(const AnalyticFunction<VectorType>& f, const AnalyticFunction<VectorType>& psi_0, const std::vector<OctaSym>& Sigma, double epsilon, const std::shared_ptr<C>& ctc_init, double epsilon_pave = -1)
+        : SepImage(f, psi_0, Sigma, epsilon, *ctc_init, epsilon_pave)
+      { }
       
+      /**
+       * \brief Separates the box.
+       * 
+       * \param x The box to separate.
+       * 
+       * \return A box pair according to separator arithmetics.
+       */
       BoxPair separate(const IntervalVector& x) const;
 
     protected:

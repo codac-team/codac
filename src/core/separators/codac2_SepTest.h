@@ -39,6 +39,8 @@ namespace codac2
        * \brief Separates the box. Both the inner and outer are either empty or the box itself.
        * 
        * \param x The box to separate.
+       * 
+       * \return A box pair according to separator arithmetics.
        */
       BoxPair separate(const IntervalVector& x) const;
 

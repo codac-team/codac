@@ -145,6 +145,7 @@ void export_SepChi(py::module& m, py::class_<SepBase,pySep>& pysep);
 void export_SepCross(py::module& m, py::class_<SepBase,pySep>& pysep);
 void export_SepCtcBoundary(py::module& m, py::class_<SepBase,pySep>& pysep);
 void export_SepCtcPair(py::module& m, py::class_<SepBase,pySep>& pysep);
+void export_SepImage(py::module& m, py::class_<SepBase,pySep>& pysep);
 void export_SepInter(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepInverse(py::module& m, py::class_<SepBase,pySep>& sep);
 void export_SepNot(py::module& m, py::class_<SepBase,pySep>& sep);
@@ -330,6 +331,7 @@ PYBIND11_MODULE(_core, m)
   export_SepCross(m,py_sep);
   export_SepCtcBoundary(m,py_sep);
   export_SepCtcPair(m,py_sep);
+  export_SepImage(m,py_sep);
   export_SepInter(m,py_sep);
   export_SepInverse(m,py_sep);
   export_SepNot(m,py_sep);
