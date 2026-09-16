@@ -12,7 +12,6 @@
 #include <pybind11/stl.h>
 #include <codac2_template_tools.h>
 #include <codac2_AnalyticFunction.h>
-#include <codac2_OctaSym.h>
 #include <codac2_SepImage.h>
 #include "codac2_py_Sep.h"
 #include "codac2_py_SepImage_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):

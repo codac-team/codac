@@ -15,6 +15,7 @@
 #include "codac2_PavingNode.h"
 #include "codac2_Subpaving.h"
 #include "codac2_AnalyticFunction.h"
+#include "codac2_OctaSym.h"
 #include "codac2_peibos.h"
 #include "codac2_CtcUnion.h"
 #include "codac2_CtcWrapper.h"
