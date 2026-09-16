@@ -36,7 +36,7 @@ The typical workflow is:
 Example
 -------
 
-Consider that we want to construct a separator on the image of the unit circle by the function
+Consider that we want to construct a separator on the image of the unit disk by the function
 
 .. math:: 
   \mathbf{f}(\mathbf{x})=
@@ -67,7 +67,7 @@ This function can be constructed in codac as follows
       :end-before: [sepimage-1-end]
       :dedent: 4
 
-We then need a contractor for the unit disk, and gnomonic atlas for its boundary (the unit circle).
+We then need a contractor for the unit disk, and a gnomonic atlas for its boundary (the unit circle).
 For the atlas, the image of :math:`\left[-1,1\right]` by the function
 
 .. math:: 
