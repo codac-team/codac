@@ -30,7 +30,7 @@ The typical workflow is:
 2. Build an :class:`~codac2.AnalyticFunction`.
 3. Define a gnomonic atlas on the boundary of the initial set
 4. Define a contractor on this same initial set
-5. Instantiate ``SepImage`` the atlas, the function, the resolution :math:`\epsilon` and the contractor.
+5. Instantiate ``SepImage`` with the atlas, the function, the resolution :math:`\epsilon` and the contractor.
 6. Contract an input box :math:`[\mathbf{y}]` or pave the separator in the image space.
 
 Example
