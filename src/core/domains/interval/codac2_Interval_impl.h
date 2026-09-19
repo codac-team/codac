@@ -563,7 +563,7 @@ namespace codac2
 
   inline Interval operator""_i(long double x)
   {
-    return Interval(x);
+    return Interval(static_cast<double>(x));
   }
 
   inline double prev_float(double x)
