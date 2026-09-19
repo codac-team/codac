@@ -1,10 +1,23 @@
-#include <codac>
+/**
+ *  Codac tests
+ * ----------------------------------------------------------------------------
+ *  \date       2025
+ *  \author     Maël Godard
+ *  \copyright  Copyright 2024 Codac Team
+ *  \license    GNU Lesser General Public License (LGPL)
+ */
+
+#include <catch2/catch_test_macros.hpp>
+#include <codac2_AnalyticFunction.h>
+#include <codac2_AnalyticTraj.h>
+#include <codac2_Figure2D.h>
+#include <codac2_Figure3D.h>
+#include <codac2_StyleProperties.h>
 
 using namespace std;
 using namespace codac2;
 
-
-int main()
+TEST_CASE("Parallelepiped evaluation - manual")
 {
     // 2D case
 
@@ -72,8 +85,8 @@ int main()
     // [5-end]
 
     // [6-beg]
-    AnalyticTraj f_lb (AnalyticFunction({X_if},1.1*sqr(X_if)),Interval(-2.0,2.0));
-    AnalyticTraj f_ub (AnalyticFunction({X_if},1.2*sqr(X_if)),Interval(-2.0,2.0));
+    AnalyticTraj f_lb (Interval(-2.0,2.0),AnalyticFunction({X_if},1.1*sqr(X_if)));
+    AnalyticTraj f_ub (Interval(-2.0,2.0),AnalyticFunction({X_if},1.2*sqr(X_if)));
 
     DefaultFigure::plot_trajectory(f_lb.sampled(0.01));
     DefaultFigure::plot_trajectory(f_ub.sampled(0.01));
@@ -88,7 +101,7 @@ int main()
         Interval X0_if(x0_if, x0_if+dx_if);
         auto p = f_if.parallelepiped_eval(X0_if);
         DefaultFigure::draw_parallelepiped(p, Color::dark_green());
-        
+
         x0_if+=dx_if;
     }
     // [7-end]
