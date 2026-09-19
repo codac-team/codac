@@ -226,6 +226,11 @@
 # Looking for Threads
 ################################################################################
 
+  # The same preference the generated codac-config.cmake asks of consumers, so
+  # that both sides of a link end up with the same answer: without it this
+  # build could settle on -lpthread while a consumer, which does set it, got
+  # -pthread.
+  set(THREADS_PREFER_PTHREAD_FLAG ON)
   find_package(Threads REQUIRED)
 
 ################################################################################
