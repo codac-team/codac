@@ -151,6 +151,37 @@ if (WITH_CAPD)
 endif()
 
 
+
+
+# Common Codac include directories
+# ==================================================================
+#
+# IMPORTANT:
+# Use the source tree as the canonical header tree.
+#
+# The headers are now used directly from the source tree.
+
+# CODAC_SOURCE_INCLUDE_DIRS is filled in by the src/*/CMakeLists.txt of every
+# module (core, graphics, unsupported, and capd/sympy when enabled), which are
+# all configured before this directory. Using it rather than a second copy of
+# the same list keeps the tests compiling against exactly the headers the
+# libraries were built from; the copy that used to live here covered core only
+# and had already drifted from it.
+set(CODAC_CORE_SOURCE_INCLUDE_DIRS ${CODAC_SOURCE_INCLUDE_DIRS})
+
+
+# ${CMAKE_BINARY_DIR}/src holds the generated "codac" umbrella header;
+# CODAC_GENERATED_INCLUDE_DIRS, filled in by the src/*/CMakeLists.txt of every
+# module, holds the per-module ones (codac-core.h and the rest), each of which
+# is written into its own module's binary directory rather than into this one.
+set(
+  CODAC_HEADERS_DIR
+  ${CMAKE_BINARY_DIR}/src
+  ${CODAC_GENERATED_INCLUDE_DIRS}
+)
+
+
+
 # ------------------------------------------------------------------
 # Sanitizer runtime preload for Python tests (Debug builds only)
 # ------------------------------------------------------------------
@@ -394,22 +425,84 @@ if(CODAC_MSVC_ASAN_PATH_ENV)
   list(APPEND CODAC_CPP_TEST_ENV "${CODAC_MSVC_ASAN_PATH_ENV}")
 endif()
 
+
+# Build every test
+# ==================================================================
+
 foreach(SRC_TEST ${SRC_TESTS})
   string(REPLACE "/" "_" TEST_NAME ${SRC_TEST})
   string(REPLACE "codac2_tests_" "" TEST_NAME ${TEST_NAME})
   set(TEST_NAME codac2_tests_${TEST_NAME})
 
-  # C++ test
-  add_executable(${TEST_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/${SRC_TEST}.cpp)
-  set(CODAC_HEADERS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../include)
-  target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${CODAC_HEADERS_DIR})
-  target_link_libraries(${TEST_NAME} PUBLIC ${CODAC_LIBRARIES} PRIVATE Catch2::Catch2WithMain)
 
-  if(WITH_PYTHON AND SRC_TEST MATCHES "extensions/sympy/")
-    target_link_libraries(${TEST_NAME} PRIVATE ${PROJECT_NAME}-sympy pybind11::embed)
+  # ---------------------------------------------------------------
+  # C++ test
+  # ---------------------------------------------------------------
+
+  add_executable(
+    ${TEST_NAME}
+    ${CMAKE_CURRENT_SOURCE_DIR}/${SRC_TEST}.cpp
+  )
+
+
+  # Use the same canonical source headers as the libraries, and reach them by
+  # the same path: the source directories come first so that a header is
+  # opened at src/... Both compile identically, but the path used is the path gcov
+  # records, and different paths would split every header into two unrelated
+  # entries in the coverage report (see codac_publish_include_dirs() in the
+  # top-level CMakeLists.txt).
+  #
+  # CODAC_HEADERS_DIR is kept, after them, because it holds the generated
+  # umbrella headers: codac, codac-core.h, codac-graphics.h and the rest.
+
+  target_include_directories(
+    ${TEST_NAME}
+    SYSTEM PUBLIC
+
+      ${CODAC_CORE_SOURCE_INCLUDE_DIRS}
+
+      ${CODAC_HEADERS_DIR}
+  )
+
+
+  target_link_libraries(
+    ${TEST_NAME}
+    PUBLIC
+
+      ${CODAC_LIBRARIES}
+
+    PRIVATE
+
+      Catch2::Catch2WithMain
+  )
+
+
+  # Sympy embedded tests
+  if(
+    WITH_PYTHON
+    AND SRC_TEST MATCHES "extensions/sympy/"
+  )
+
+    target_link_libraries(
+      ${TEST_NAME}
+      PRIVATE
+
+        ${PROJECT_NAME}-sympy
+        pybind11::embed
+    )
+
   endif()
-  add_dependencies(check ${TEST_NAME})
-  add_test(NAME ${TEST_NAME}_cpp COMMAND ${TEST_NAME})
+
+
+  add_dependencies(
+    check
+    ${TEST_NAME}
+  )
+
+  add_test(
+    NAME ${TEST_NAME}_cpp
+    COMMAND ${TEST_NAME}
+  )
 
   if(CODAC_CPP_TEST_ENV)
     set_tests_properties(${TEST_NAME}_cpp PROPERTIES
@@ -417,7 +510,10 @@ foreach(SRC_TEST ${SRC_TESTS})
     )
   endif()
 
+  # ---------------------------------------------------------------
   # Python test
+  # ---------------------------------------------------------------
+
   if(WITH_PYTHON AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${SRC_TEST}.py")
     add_test(
       NAME ${TEST_NAME}_py
