@@ -21,6 +21,15 @@
     cmake_policy(SET CMP0091 NEW)
   endif()
 
+  # CMP0156 (CMake >=3.29) lets CMake name a static library once on a link
+  # line for the linkers that do not need it repeated -- Apple's, MSVC's, LLD.
+  # With the OLD behavior, every test and example linking codac-core and the
+  # modules depending on it named libcodac-core.a twice, and the Apple linker
+  # warned "ignoring duplicate libraries" for each of them.
+  if(POLICY CMP0156)
+    cmake_policy(SET CMP0156 NEW)
+  endif()
+
   # C as well as C++: the codac sources are all C++, but mathlib, which GAOL
   # depends on, is C, and codac_gaol_build() builds it when no GAOL is installed
   # (see scripts/CMakeModules/codac_gaol.cmake). Enabled here, the C compiler
