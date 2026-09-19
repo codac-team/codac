@@ -127,8 +127,17 @@ ${CODAC_GAOL_CONFIG_SNIPPET}
       endfunction()
     endif()
 
+    # codac-core links PUBLIC against Threads::Threads (see src/core/CMakeLists.txt),
+    # e.g. for peibos/threading code. That requirement doesn't come back through
+    # find_library() above (a plain path has no transitive usage requirements),
+    # so it has to be re-declared here -- otherwise any downstream target that
+    # actually pulls in that code (such as the 11_peibos example) fails to link
+    # with an undefined reference to pthread_create.
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
+
     set(CODAC_VERSION ${PROJECT_VERSION})
-    set(CODAC_LIBRARIES \${CODAC_CORE_LIBRARY} \${CODAC_GRAPHICS_LIBRARY} \${CODAC_UNSUPPORTED_LIBRARY} Codac::gaol)
+    set(CODAC_LIBRARIES \${CODAC_CORE_LIBRARY} \${CODAC_GRAPHICS_LIBRARY} \${CODAC_UNSUPPORTED_LIBRARY} Codac::gaol Threads::Threads)
     set(CODAC_INCLUDE_DIRS \${CODAC_CORE_INCLUDE_DIR}/../ \${CODAC_CORE_INCLUDE_DIR}/../eigen3/ \${CODAC_CORE_INCLUDE_DIR} \${CODAC_GRAPHICS_INCLUDE_DIR} \${CODAC_UNSUPPORTED_INCLUDE_DIR})
 
     set(CODAC_C_FLAGS \"\")
@@ -169,7 +178,7 @@ ${CODAC_GAOL_CONFIG_SNIPPET}
   endif()
 
   file(APPEND ${CODAC_CMAKE_CONFIG_FILE} "
-    set(CODAC_LIBRARIES \${CODAC_LIBRARIES} \${CODAC_GRAPHICS_LIBRARY} \${CODAC_CORE_LIBRARY} Codac::gaol)
+    set(CODAC_LIBRARIES \${CODAC_LIBRARIES} \${CODAC_GRAPHICS_LIBRARY} \${CODAC_CORE_LIBRARY} Codac::gaol Threads::Threads)
     ")
 
 
