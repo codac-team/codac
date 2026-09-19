@@ -151,8 +151,8 @@ TEST_CASE("Computing integration from 0, interval argument")
     CHECK(Approx(x.integral(Interval(12.5))) == Interval(6.5,20.5));
     CHECK(Approx(x.integral(Interval(14.5))) == Interval(7,23.5));
     auto p_intv = x.partial_integral(Interval(12.5,14.5));
-    CHECK(p_intv.first == Interval(6.,7.));
-    CHECK(p_intv.second == Interval(20.5,23.5));
+    CHECK(Approx(p_intv.first) == Interval(6.,7.));
+    CHECK(Approx(p_intv.second) == Interval(20.5,23.5));
     CHECK(Approx(x.integral(Interval(12.5,14.5))) == Interval(6.0,23.5));
     CHECK(Approx(x.integral(Interval(0))) == Interval(0));
     CHECK(Approx(x.integral(Interval(10.2))) == Interval(9.3,19.7));
