@@ -26,7 +26,18 @@ void export_CtcLazy(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInter
   exported
 
     .def(py::init(
-        [](const pyCtcIntervalVector& c)
+        // The contractor is taken as a CtcBase<IntervalVector>, and not as a
+        // pyCtcIntervalVector as it used to be. pyCtcIntervalVector is only the
+        // trampoline class of the binding: the contractors written in Python are
+        // instances of it, those written in C++ (CtcInverse, CtcWrapper...) are not.
+        // pybind11 files the trampoline type under the same registration as its base,
+        // so it accepted any contractor for a pyCtcIntervalVector& and treated it as
+        // one: given a C++ contractor, c referred to an object of another type, and
+        // c.copy() was a member call through a reference of the wrong type, which is
+        // undefined behaviour (UBSan's vptr check reports it). Through the base class,
+        // copy() is an ordinary virtual call, which reaches the right override
+        // whether the contractor comes from C++ or from Python.
+        [](const CtcBase<IntervalVector>& c)
         {
           return std::make_unique<CtcLazy>(c.copy());
         }),
