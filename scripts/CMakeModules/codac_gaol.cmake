@@ -184,13 +184,14 @@ endfunction()
 # CMakeLists.txt had to force the Release runtime on Codac while GAOL was built
 # apart, in Release.
 #
-# Not compiled with Codac's warnings and definitions, though (/W4, -Wall -Wextra
-# -Wpedantic, /bigobj, FAST_RELEASE...): the top-level CMakeLists.txt adds them
-# with add_compile_options() and add_compile_definitions(), whose directory
-# properties a subdirectory takes from its parent when it is added. They are
-# emptied while GAOL is added, and given back right after: GAOL is compiled with
-# the flags it chooses, and with CMAKE_CXX_FLAGS as it is given to this build
-# (codac_gaol_portability_flags() is added to it afterwards).
+# Not compiled with Codac's warnings, sanitizers and definitions, though (/W4,
+# -Wall -Wextra -Wpedantic, /bigobj, -fsanitize=address,undefined and
+# /fsanitize=address in Debug, FAST_RELEASE...): the top-level CMakeLists.txt
+# adds them with add_compile_options() and add_compile_definitions(), whose
+# directory properties a subdirectory takes from its parent when it is added.
+# They are emptied while GAOL is added, and given back right after: GAOL is
+# compiled with the flags it chooses, and with CMAKE_CXX_FLAGS as it is given to
+# this build (codac_gaol_portability_flags() is added to it afterwards).
 #
 # From the head of the master branch, so that the fixes pushed to GAOL reach
 # Codac without a change here. Cloned with Git, the sources are brought up to
