@@ -85,7 +85,7 @@ namespace Eigen
   concept IsVectorOrRow = (C == 1 || R == 1);
 
   template<typename Scalar>
-  concept IsIntervalDomain = std::is_same_v<Scalar,codac2::Interval>;
+  concept IsIntervalDomain = codac2::is_interval_based<Scalar>::value;
 }
 
 #define EIGEN_MATRIXBASE_PLUGIN "codac2_MatrixBase_addons_include.h"
