@@ -28,12 +28,12 @@ namespace codac2
         return _x;
       }
 
-      std::shared_ptr<ExprBase> copy() const
+      std::shared_ptr<ExprBase> copy() const override
       {
         return std::make_shared<ConstValueExpr<T>>(*this);
       }
 
-      T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
+      T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
       {
         if(natural_eval)
           return AnalyticExpr<T>::init_value(v, T(
@@ -55,12 +55,12 @@ namespace codac2
             ));
       }
       
-      void bwd_eval(ValuesMap& v) const
+      void bwd_eval(ValuesMap& v) const override
       {
         AnalyticExpr<T>::value(v).a &= _x;
       }
 
-      std::pair<Index,Index> output_shape() const
+      std::pair<Index,Index> output_shape() const override
       {
         if constexpr(std::is_same_v<T,ScalarType>)
           return {1,1};
@@ -74,17 +74,17 @@ namespace codac2
         assert_release_constexpr(false && "unknow output shape for constant");
       }
 
-      void replace_arg([[maybe_unused]] const ExprID& old_arg_id, [[maybe_unused]] const std::shared_ptr<ExprBase>& new_expr)
+      void replace_arg([[maybe_unused]] const ExprID& old_arg_id, [[maybe_unused]] const std::shared_ptr<ExprBase>& new_expr) override
       { }
 
-      virtual bool belongs_to_args_list([[maybe_unused]] const FunctionArgsList& args) const
+      virtual bool belongs_to_args_list([[maybe_unused]] const FunctionArgsList& args) const override
       {
         return true;
       }
 
       virtual std::string str(bool in_parentheses = false) const override;
 
-      virtual bool is_str_leaf() const
+      virtual bool is_str_leaf() const override
       {
         return true;
       }

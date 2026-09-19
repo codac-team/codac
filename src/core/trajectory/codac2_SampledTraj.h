@@ -280,6 +280,7 @@ namespace codac2
       SampledTraj<T> primitive() const
       {
         T s = [this]() {
+          (void)this;
           if constexpr(std::is_same_v<T,double>)
             return 0.;
           else
