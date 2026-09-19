@@ -64,8 +64,10 @@ jobs:
     # on the Visual Studio 2026 images every test of the suite instead sat
     # until ctest's own 1500 s timeout, so the job kept going for the six hours
     # GitHub allows before killing it, twice per run. Two hours is well above
-    # the twenty minutes a healthy job takes here and turns such a hang into a
-    # quick red job rather than a day of runner time.
+    # the forty minutes or so a healthy job takes here -- twenty for the build
+    # and the unit tests, and about as much again for the examples under ASan
+    # on MSVC -- and turns such a hang into a quick red job rather than a day of
+    # runner time.
     timeout-minutes: 120
     defaults:
         run:
@@ -114,7 +116,7 @@ jobs:
     - run: |
         if [ -n "${BASHMINGWPATH:-}" ]; then export PATH="$BASHMINGWPATH:$PATH" ; fi
         mkdir build ; cd build
-        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON ..
+        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D TEST_EXAMPLES=ON ..
         cmake --build . -j 4 --config Debug --target install
         cd ..
       shell: bash
@@ -153,10 +155,12 @@ jobs:
         # LastTestsFailed.log holds one "<index>:<test name>" per line; the C++
         # tests are the "<target>_cpp" ones and their executable is the target
         # itself, next to the tests directory of this single-configuration
-        # build. Three backtraces are plenty to identify a common frame, and
-        # keep this step short.
+        # build -- or in the examples directory, for the examples that
+        # -D TEST_EXAMPLES=ON registers the same way. Three backtraces are
+        # plenty to identify a common frame, and keep this step short.
         sed 's/^[0-9]*://' "../$failed" | grep '_cpp$' | head -3 | while read -r name ; do
           exe="tests/${name%_cpp}.exe"
+          [ -f "$exe" ] || exe="examples/${name%_cpp}.exe"
           [ -f "$exe" ] || continue
           echo "===================== $exe ====================="
           gdb -batch -ex "set confirm off" -ex run -ex "bt 40" --args "./$exe" 2>&1 | tail -60
