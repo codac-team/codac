@@ -244,7 +244,7 @@ namespace codac2
     list<TSlice>::const_iterator it1 = tdom1->cbegin(), it2 = tdom2->cbegin();
     while(it1 != tdom1->cend())
     {
-      if(*it1 != *it2) return false;
+      if(!((*it1) == (*it2))) return false;
       it1++; it2++;
     }
     return true;
