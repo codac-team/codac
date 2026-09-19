@@ -71,17 +71,17 @@ namespace codac2
         : OperationExprBase<AnalyticExpr<VectorType>>(e), _i(e._i)
       { }
 
-      std::shared_ptr<ExprBase> copy() const
+      std::shared_ptr<ExprBase> copy() const override
       {
         return std::make_shared<AnalyticOperationExpr<ComponentOp,ScalarType,VectorType>>(*this);
       }
 
-      void replace_arg(const ExprID& old_arg_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_arg(const ExprID& old_arg_id, const std::shared_ptr<ExprBase>& new_expr) override
       {
         return OperationExprBase<AnalyticExpr<VectorType>>::replace_arg(old_arg_id, new_expr);
       }
 
-      ScalarType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
+      ScalarType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
       {
         if(natural_eval)
           return AnalyticExpr<ScalarType>::init_value(
@@ -91,29 +91,29 @@ namespace codac2
             v, ComponentOp::fwd_centered(std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval), _i));
       }
       
-      void bwd_eval(ValuesMap& v) const
+      void bwd_eval(ValuesMap& v) const override
       {
         ComponentOp::bwd(AnalyticExpr<ScalarType>::value(v).a, std::get<0>(this->_x)->value(v).a, _i);
         std::get<0>(this->_x)->bwd_eval(v);
       }
 
-      std::pair<Index,Index> output_shape() const
+      std::pair<Index,Index> output_shape() const override
       {
         return ComponentOp::output_shape(std::get<0>(this->_x),_i);
       }
 
-      virtual bool belongs_to_args_list(const FunctionArgsList& args) const
+      virtual bool belongs_to_args_list(const FunctionArgsList& args) const override
       {
         return std::get<0>(this->_x)->belongs_to_args_list(args);
       }
 
-      std::string str(bool in_parentheses = false) const
+      std::string str(bool in_parentheses = false) const override
       {
         std::string s = ComponentOp::str(std::get<0>(this->_x), _i);
         return in_parentheses ? "(" + s + ")" : s;
       }
 
-      virtual bool is_str_leaf() const
+      virtual bool is_str_leaf() const override
       {
         return true;
       }
@@ -146,17 +146,17 @@ namespace codac2
         : OperationExprBase<AnalyticExpr<MatrixType>>(e), _i(e._i), _j(e._j)
       { }
 
-      std::shared_ptr<ExprBase> copy() const
+      std::shared_ptr<ExprBase> copy() const override
       {
         return std::make_shared<AnalyticOperationExpr<ComponentOp,ScalarType,MatrixType>>(*this);
       }
 
-      void replace_arg(const ExprID& old_arg_id, const std::shared_ptr<ExprBase>& new_expr)
+      void replace_arg(const ExprID& old_arg_id, const std::shared_ptr<ExprBase>& new_expr) override
       {
         return OperationExprBase<AnalyticExpr<MatrixType>>::replace_arg(old_arg_id, new_expr);
       }
 
-      ScalarType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
+      ScalarType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
       {
         if(natural_eval)
           return AnalyticExpr<ScalarType>::init_value(
@@ -166,29 +166,29 @@ namespace codac2
             v, ComponentOp::fwd_centered(std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval), _i, _j));
       }
       
-      void bwd_eval(ValuesMap& v) const
+      void bwd_eval(ValuesMap& v) const override
       {
         ComponentOp::bwd(AnalyticExpr<ScalarType>::value(v).a, std::get<0>(this->_x)->value(v).a, _i, _j);
         std::get<0>(this->_x)->bwd_eval(v);
       }
 
-      std::pair<Index,Index> output_shape() const
+      std::pair<Index,Index> output_shape() const override
       {
         return ComponentOp::output_shape(std::get<0>(this->_x),_i,_j);
       }
 
-      virtual bool belongs_to_args_list(const FunctionArgsList& args) const
+      virtual bool belongs_to_args_list(const FunctionArgsList& args) const override
       {
         return std::get<0>(this->_x)->belongs_to_args_list(args);
       }
 
-      std::string str(bool in_parentheses = false) const
+      std::string str(bool in_parentheses = false) const override
       {
         std::string s = ComponentOp::str(std::get<0>(this->_x), _i, _j);
         return in_parentheses ? "(" + s + ")" : s;
       }
 
-      virtual bool is_str_leaf() const
+      virtual bool is_str_leaf() const override
       {
         return true;
       }

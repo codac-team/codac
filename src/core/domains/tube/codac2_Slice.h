@@ -295,7 +295,7 @@ namespace codac2
        *
        * No propagation is performed on adjacent slices.
        */
-      inline void init()
+      inline void init() override
       {
         this->T::init();
         // Nothing to propagate to adjacent codomains
@@ -306,7 +306,7 @@ namespace codac2
        *
        * Adjacent gates are updated accordingly.
        */
-      inline void set_empty()
+      inline void set_empty() override
       {
         set_empty(true);
       }
