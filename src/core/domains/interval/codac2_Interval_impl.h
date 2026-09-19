@@ -26,10 +26,7 @@ namespace codac2
 
   inline Interval::Interval(double a)
     : gaol::interval(a)
-  {
-    if(a == -oo || a == oo)
-      set_empty();
-  }
+  { }
 
   inline Interval::Interval(double a, double b)
     : gaol::interval(a,b)
@@ -83,11 +80,7 @@ namespace codac2
 
   inline Interval& Interval::operator=(double x)
   {
-    if(x == -oo || x == oo)
-      set_empty();
-    else
-      gaol::interval::operator=(x);
-
+    gaol::interval::operator=(x);
     return *this;
   }
 
@@ -135,9 +128,7 @@ namespace codac2
 
   inline double Interval::mid() const
   {
-    double m = gaol::interval::midpoint();
-    gaol::round_upward();
-    return m;
+    return gaol::interval::midpoint();
   }
 
   inline double Interval::mag() const
@@ -192,15 +183,7 @@ namespace codac2
 
   inline double Interval::diam() const
   {
-    if(is_empty())
-      return std::numeric_limits<double>::quiet_NaN();
-
-    else
-    {
-      double d = gaol::interval::width();
-      gaol::round_upward();
-      return d;
-    }
+    return gaol::interval::width();
   }
 
   inline double Interval::volume() const
@@ -414,20 +397,12 @@ namespace codac2
 
   inline Interval operator+(const Interval& x, double y)
   {
-    if(y == -oo || y == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator+(x,y);
+    return gaol::operator+(x,y);
   }
 
   inline Interval operator+(double x, const Interval& y)
   {
-    if(x == -oo || x == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator+(x,y);
+    return gaol::operator+(x,y);
   }
 
   inline Interval operator+(const Interval& x, const Interval& y)
@@ -437,20 +412,12 @@ namespace codac2
 
   inline Interval operator-(const Interval& x, double y)
   {
-    if(y == -oo || y == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator-(x, y);
+    return gaol::operator-(x, y);
   }
 
   inline Interval operator-(double x, const Interval& y)
   {
-    if(x == -oo || x == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator-(x, y);
+    return gaol::operator-(x, y);
   }
 
   inline Interval operator-(const Interval& x, const Interval& y)
@@ -460,20 +427,12 @@ namespace codac2
 
   inline Interval operator*(const Interval& x, double y)
   {
-    if(y == -oo || y == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator*(x,y);
+    return gaol::operator*(x,y);
   }
 
   inline Interval operator*(double x, const Interval& y)
   {
-    if(x == -oo || x == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator*(x,y);
+    return gaol::operator*(x,y);
   }
 
   inline Interval operator*(const Interval& x, const Interval& y)
@@ -483,20 +442,12 @@ namespace codac2
 
   inline Interval operator/(const Interval& x, double y)
   {
-    if(y == -oo || y == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator/(x,y);
+    return gaol::operator/(x,y);
   }
 
   inline Interval operator/(double x, const Interval& y)
   {
-    if(x == -oo || x == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator/(x,y);
+    return gaol::operator/(x,y);
   }
 
   inline Interval operator/(const Interval& x, const Interval& y)
@@ -518,10 +469,7 @@ namespace codac2
 
   inline Interval& Interval::operator+=(double x)
   {
-    if(x == -oo || x == oo)
-      set_empty();
-    else
-      gaol::interval::operator+=(x);
+    gaol::interval::operator+=(x);
     return *this;
   }
 
@@ -538,10 +486,7 @@ namespace codac2
 
   inline Interval& Interval::operator-=(double x)
   {
-    if(x == -oo || x == oo)
-      set_empty();
-    else
-      gaol::interval::operator-=(x);
+    gaol::interval::operator-=(x);
     return *this;
   }
 
@@ -553,10 +498,7 @@ namespace codac2
 
   inline Interval& Interval::operator*=(double x)
   {
-    if(x == -oo || x == oo)
-      set_empty();
-    else
-      gaol::interval::operator*=(x);
+    gaol::interval::operator*=(x);
     return *this;
   }
 
@@ -568,10 +510,7 @@ namespace codac2
 
   inline Interval& Interval::operator/=(double x)
   {
-    if(x == -oo || x == oo)
-      set_empty();
-    else
-      gaol::interval::operator/=(x);
+    gaol::interval::operator/=(x);
     return *this;
   }
 
