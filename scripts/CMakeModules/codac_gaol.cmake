@@ -379,10 +379,6 @@ function(codac_gaol_build)
   # The mathlib the fork downloads and builds, never one installed on this
   # machine: the installation of Codac counts on it
   codac_gaol_cache_entry(GAOL_FIND_MATHLIB BOOL OFF)
-  # Without the fused multiply-add instructions of the processor, whose flags
-  # would reach every target linking GAOL: a library for any processor of the
-  # architecture
-  codac_gaol_cache_entry(GAOL_FMA BOOL OFF)
   codac_gaol_cache_entry(CMAKE_CXX_FLAGS STRING "${CMAKE_CXX_FLAGS}")
   codac_gaol_cache_entry(CMAKE_C_FLAGS STRING "${CMAKE_C_FLAGS}")
 
