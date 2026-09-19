@@ -404,6 +404,42 @@
   string(APPEND CMAKE_CXX_FLAGS " ${_codac_portability_cxx_flags}")
 
 
+  # Records the directories in which a module keeps its public headers, in
+  # their canonical location under src/. Every consumer (the tests, the
+  # examples and the Python bindings) lists CODAC_SOURCE_INCLUDE_DIRS first,
+  # so that a header is opened at src/... rather than through a copy in the
+  # build tree. Both compile identically, but the path used is the path gcov
+  # records: reached both ways, a header ends up as two unrelated entries in
+  # the coverage report, each showing only what its own callers exercised,
+  # and is reported well below its real coverage.
+  #
+  # The variable is a cache entry because it is filled in by src/*/CMakeLists.txt
+  # and read from tests/, examples/ and python/, which are separate directory
+  # scopes; src/CMakeLists.txt empties it before the modules append to it, so
+  # that a reconfigure does not append to what the previous one left behind.
+  function(codac_publish_include_dirs)
+    set(CODAC_SOURCE_INCLUDE_DIRS ${CODAC_SOURCE_INCLUDE_DIRS} ${ARGN}
+        CACHE INTERNAL "Directories holding the public headers of the codac modules")
+  endfunction()
+
+
+  # The companion of the above, for the umbrella headers CMake generates rather
+  # than the ones kept in the source tree: codac-core.h, codac-graphics.h and
+  # the rest. Each module writes its own into its own binary directory, so
+  # ${CMAKE_BINARY_DIR}/src -- where the tests used to look, and the only place
+  # they looked -- holds none of them. Only the CAPD snippet of the manual
+  # includes them (every other test reaches for a codac2_*.h directly), which
+  # is why the omission surfaced as nothing but the CAPD jobs failing on
+  # "codac-core.h: No such file or directory".
+  #
+  # It is a cache entry, and emptied by src/CMakeLists.txt before the modules
+  # fill it, for the same reasons as CODAC_SOURCE_INCLUDE_DIRS above.
+  function(codac_publish_generated_include_dirs)
+    set(CODAC_GENERATED_INCLUDE_DIRS ${CODAC_GENERATED_INCLUDE_DIRS} ${ARGN}
+        CACHE INTERNAL "Directories holding the umbrella headers generated for the codac modules")
+  endfunction()
+
+
 ################################################################################
 # Looking for Eigen3
 ################################################################################
