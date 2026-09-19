@@ -503,6 +503,17 @@ foreach(SRC_TEST ${SRC_TESTS})
   endif()
 
 
+  # C++20
+  set_target_properties(
+    ${TEST_NAME}
+    PROPERTIES
+
+      CXX_STANDARD 20
+      CXX_STANDARD_REQUIRED ON
+      CXX_EXTENSIONS OFF
+  )
+
+
   add_dependencies(
     check
     ${TEST_NAME}

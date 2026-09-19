@@ -291,12 +291,13 @@
 # Create the target for libcodac-core
 ################################################################################
 
-  #if(NOT CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 20)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
-  #endif()
-
   add_library(${PROJECT_NAME}-core ${CODAC_CORE_SRC})
+
+  set_target_properties(${PROJECT_NAME}-core PROPERTIES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+  )
 
   # The directories holding the public core headers, in their canonical
   # location under src/core. Published as a cache variable so that the tests,
