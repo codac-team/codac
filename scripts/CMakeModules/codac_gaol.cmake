@@ -306,11 +306,12 @@ endfunction()
 # A project of its own, as in IBEX's build of GAOL with its autotools, rather
 # than the FetchContent that Eigen and Catch2 are brought in with, which would
 # build GAOL as a part of this project. Kept apart, GAOL is compiled with the
-# flags it chooses, and not with Codac's warnings and sanitizers, and it is
-# always built in Release, whatever the configuration of Codac, which is what
-# the MSVC runtime choice of the top-level CMakeLists.txt counts on.
-# CMAKE_CXX_FLAGS and CMAKE_C_FLAGS are handed over as they are when this is
-# called, before Codac adds its own flags to them.
+# flags it chooses, and not with Codac's warnings, sanitizers and coverage
+# instrumentation, and it is always built in Release, whatever the
+# configuration of Codac, which is what the MSVC runtime choice of the
+# top-level CMakeLists.txt counts on. CMAKE_CXX_FLAGS and CMAKE_C_FLAGS are
+# handed over as they are when this is called, before Codac adds its own flags
+# to them.
 #
 # GAOL comes from the head of the master branch of the fork (version 4.3.1 of
 # GAOL), so that the fixes pushed to the fork reach Codac without a change here.
