@@ -179,6 +179,7 @@ PYBIND11_MODULE(_core, m)
   m.doc() = string(FOR_MATLAB ? "Matlab" : "Python") + " binding of Codac (core)";
   m.attr("oo") = oo;
   m.attr("PI") = PI;
+  m.attr("FOR_MATLAB") = FOR_MATLAB;
   
   export_TimePropag(m);
 
