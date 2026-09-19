@@ -12,9 +12,9 @@
 # machine. This workflow closes that gap, and macdebug.yml does the same for
 # macOS.
 #
-# It also runs the examples, which no other workflow does beyond the two that
-# tests.yml builds by hand: -D TEST_EXAMPLES=ON now builds every example against
-# the in-tree library and runs it as an integration test (see
+# It also runs the examples, as every workflow of this directory that runs the
+# test suite now does: -D TEST_EXAMPLES=ON builds every example against the
+# in-tree library and runs it as an integration test (see
 # examples/CMakeLists.txt). Under a sanitizer they are worth as much as the unit
 # tests: they exercise long chains of the library the way a user writes them.
 #
