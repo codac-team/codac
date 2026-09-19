@@ -18,7 +18,7 @@ int main()
   {
     fig.clear();
     fig.draw_point({5.0*cos(theta), 5.0*sin(theta)}, Color::red());
-    theta += 2.0 * M_PI / (double) steps;
+    theta += 2.0 * PI / (double) steps;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
