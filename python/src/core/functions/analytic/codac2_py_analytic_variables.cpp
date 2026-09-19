@@ -161,6 +161,14 @@ void export_VectorVar(py::module& m)
     .def("__truediv__", [](const VectorVar& e1, const ScalarExpr& e2)  { return e1 / e2; }, py::is_operator())
     .def("__truediv__", [](const VectorVar& e1, const Interval& e2)    { return e1 / e2; }, py::is_operator())
   ;
+
+  if constexpr(!FOR_MATLAB)
+  {
+    exported
+      .def("__rmatmul__", [](const VectorVar& e1, const IntervalMatrix& e2) { return e2 * e1; }, py::is_operator())
+      .def("__rmatmul__", [](const VectorVar& e1, const MatrixExpr& e2)     { return e2 * e1; }, py::is_operator())
+    ;
+  }
   
   py::implicitly_convertible<VectorVar,VectorExpr>();
 }
@@ -227,6 +235,20 @@ void export_MatrixVar(py::module& m)
     .def("__truediv__", [](const MatrixVar& e1, const ScalarExpr& e2)  { return e1 / e2; }, py::is_operator())
     .def("__truediv__", [](const MatrixVar& e1, const Interval& e2)    { return e1 / e2; }, py::is_operator())
   ;
+
+  if constexpr(!FOR_MATLAB)
+  {
+    exported
+      .def("__matmul__",  [](const MatrixVar& e1, const VectorVar& e2)      { return e1 * e2; }, py::is_operator())
+      .def("__matmul__",  [](const MatrixVar& e1, const VectorExpr& e2)     { return e1 * e2; }, py::is_operator())
+      .def("__matmul__",  [](const MatrixVar& e1, const IntervalVector& e2) { return e1 * e2; }, py::is_operator())
+      .def("__matmul__",  [](const MatrixVar& e1, const MatrixVar& e2)      { return e1 * e2; }, py::is_operator())
+      .def("__matmul__",  [](const MatrixVar& e1, const MatrixExpr& e2)     { return e1 * e2; }, py::is_operator())
+      .def("__matmul__",  [](const MatrixVar& e1, const IntervalMatrix& e2) { return e1 * e2; }, py::is_operator())
+      .def("__rmatmul__", [](const MatrixVar& e1, const IntervalMatrix& e2) { return e2 * e1; }, py::is_operator())
+      .def("__rmatmul__", [](const MatrixVar& e1, const MatrixExpr& e2)     { return e2 * e1; }, py::is_operator())
+    ;
+  }
   
   py::implicitly_convertible<MatrixVar,MatrixExpr>();
 }
