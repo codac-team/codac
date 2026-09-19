@@ -67,8 +67,12 @@ jobs:
       shell: bash
     #- run: brew install eigen
     #  if: runner.os=='macOS'
-    - run: brew install catch2 # Issues with binary packages when cross-compiling...
-      if: (runner.os=='macOS')&&(matrix.cfg.cross!=true)
+    # Catch2 is not taken from Homebrew: its package is built for the macOS of
+    # the runner, newer than the MACOSX_DEPLOYMENT_TARGET of these jobs, and the
+    # linker warned "was built for newer 'macOS' version (14.0) than being
+    # linked (10.16)" for each of its objects, in every test (some 76000 lines
+    # per run). tests/CMakeLists.txt then builds Catch2 with the deployment
+    # target and the architecture of the job.
     # Doxygen 1.18.0, the version Homebrew currently installs, segfaults on the
     # Intel runners while parsing this project's headers, and does so before
     # writing doc/api/xml/index.xml, so cmake cannot even configure --
