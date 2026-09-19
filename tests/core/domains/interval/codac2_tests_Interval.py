@@ -45,6 +45,21 @@ class TestInterval(unittest.TestCase):
     self.assertTrue(Interval([-oo,oo]) == Interval(-oo,oo));
     self.assertTrue(Interval([oo,-oo]) == Interval.empty());
 
+    # An interval is a point or a pair of bounds; any other list length is a
+    # caller error, reported by the C++ assertion layer as a
+    # std::invalid_argument, which pybind11 surfaces as a ValueError. A
+    # FAST_RELEASE build compiles that layer out and leaves the interval
+    # untouched instead; Python cannot see that switch, so both outcomes are
+    # accepted here and only the one that actually happened is checked.
+    for bad_list in ([1.,2.,3.], []):
+      x = Interval(0.,1.)
+      try:
+        x.init_from_list(bad_list)
+      except ValueError:
+        pass
+      else:
+        self.assertTrue(x == Interval(0.,1.))
+
     x = Interval() ; y = Interval() ; z = Interval()
 
     x = Interval(0,1); x.set_empty()
