@@ -61,7 +61,7 @@ namespace codac2
 
       std::shared_ptr<const PavingNode<P>> top() const
       {
-        return _top;
+        return _top.lock();
       }
 
       std::shared_ptr<PavingNode<P>> top()
@@ -102,7 +102,7 @@ namespace codac2
 
       void visit(std::function<bool(std::shared_ptr<const PavingNode<P>>)> visitor) const
       {
-        if(!_top && !_right && _left && left()->boxes() == _x)
+        if(_top.expired() && !_right && _left && left()->boxes() == _x)
           left()->visit(visitor);
 
         else if(visitor(this->shared_from_this()))
@@ -114,7 +114,7 @@ namespace codac2
 
       void visit(std::function<bool(std::shared_ptr<PavingNode<P>>)> visitor)
       {
-        if(!_top && !_right && _left && left()->boxes() == _x)
+        if(_top.expired() && !_right && _left && left()->boxes() == _x)
           _left->visit(visitor);
 
         else if(visitor(this->shared_from_this()))
@@ -157,7 +157,14 @@ namespace codac2
 
       const P& _paving;
       typename P::NodeTuple_ _x;
-      std::shared_ptr<PavingNode<P>> _top = nullptr;
+      // A node owns its children (_left, _right), but not its parent. When _top
+      // was a shared_ptr too, a parent and each of its children owned one another:
+      // once the Paving let go of the root, the reference counts of a bisected tree
+      // never fell to zero, and none of its nodes was destroyed (a memory leak at
+      // destruction, see the regression test in codac2_tests_CtcInverse.cpp). As a
+      // weak_ptr, _top breaks that cycle: top() locks it, and it is expired for the
+      // root, which has no parent.
+      std::weak_ptr<PavingNode<P>> _top;
       std::shared_ptr<PavingNode<P>> _left = nullptr, _right = nullptr;
   };
 }
