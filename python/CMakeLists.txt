@@ -16,6 +16,31 @@
   endif()
   # Adds pybind11::headers, pybind11::module, pybind11::embed
 
+  # The Python interpreter, which this directory, tests/ and examples/ run
+  # through PYTHON_EXECUTABLE: to generate the docstrings below, to build the
+  # wheel, and to run the Python tests and examples. pybind11 sets it where this
+  # directory sees it only with PYBIND11_FINDPYTHON=OFF, through
+  # FindPythonLibsNew.cmake. By default (COMPAT, or NEW) it uses FindPython,
+  # which sets Python_EXECUTABLE (or Python3_EXECUTABLE), and sets
+  # PYTHON_EXECUTABLE, in COMPAT, only within its own directory: here it stayed
+  # empty, execute_process() ran doxygen2docstring.py as a program, and the
+  # configuration stopped on "permission denied". It is initialized here with
+  # the interpreter pybind11 builds the modules for, unless it was given, and
+  # cached, so that tests/ and examples/, configured after this directory, get
+  # it too.
+  if(NOT PYTHON_EXECUTABLE)
+    if(Python_EXECUTABLE)
+      set(_codac_python_executable "${Python_EXECUTABLE}")
+    elseif(Python3_EXECUTABLE)
+      set(_codac_python_executable "${Python3_EXECUTABLE}")
+    else()
+      find_package(Python COMPONENTS Interpreter REQUIRED)
+      set(_codac_python_executable "${Python_EXECUTABLE}")
+    endif()
+    set(PYTHON_EXECUTABLE "${_codac_python_executable}" CACHE FILEPATH "Python interpreter" FORCE)
+  endif()
+  message(STATUS "Python interpreter: ${PYTHON_EXECUTABLE}")
+
   set(PYTHON_PACKAGE_NAME ${PROJECT_NAME})
   set(PYTHON_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_package"
     CACHE INTERNAL "Codac Python package build directory"
