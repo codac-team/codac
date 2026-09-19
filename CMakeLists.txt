@@ -512,7 +512,8 @@
   # The same preference the generated codac-config.cmake asks of consumers, so
   # that both sides of a link end up with the same answer: without it this
   # build could settle on -lpthread while a consumer, which does set it, got
-  # -pthread.
+  # -pthread, and codac.pc -- written from what is found here -- would then
+  # describe something other than what find_package(CODAC) hands out.
   set(THREADS_PREFER_PTHREAD_FLAG ON)
   find_package(Threads REQUIRED)
 

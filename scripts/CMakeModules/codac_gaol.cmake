@@ -489,7 +489,7 @@ endfunction()
 #   GAOL_VERSION
 #
 # An INTERFACE library rather than GAOL's own target, whatever provided GAOL:
-# CODAC_LIBRARIES names it, and codac-config.cmake defines it again
+# the exported Codac targets name it, and codac-config.cmake defines it again
 # (codac_gaol_config_snippet()), which it could not do under the name gaol::gaol
 # without clashing with a find_package(gaol) of the consumer.
 function(codac_gaol_find)
@@ -752,7 +752,7 @@ endfunction()
 ################################################################################
 #
 # Returns the lines of codac-config.cmake that define Codac::gaol for a consumer
-# of the installed Codac, which CODAC_LIBRARIES names -- the
+# of the installed Codac, which the exported Codac targets name -- the
 # counterpart of the ibex-config-gaol.cmake and ibex-config-ultim.cmake files
 # that create_target_import_and_export() writes for IBEX.
 #
@@ -788,8 +788,9 @@ function(codac_gaol_config_snippet outvar)
 
   set(${outvar} "
     # GAOL, the interval arithmetic library Codac is built upon, with mathlib
-    # (libultim) and the flags of interval arithmetic, as Codac::gaol, which
-    # CODAC_LIBRARIES names.
+    # (libultim) and the flags of interval arithmetic, as Codac::gaol. The
+    # exported Codac targets link it, so it has to be defined before they are
+    # included.
     ${_find}
     if(NOT TARGET Codac::gaol)
       add_library(Codac::gaol INTERFACE IMPORTED)
