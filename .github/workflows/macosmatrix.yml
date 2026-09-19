@@ -57,7 +57,10 @@ jobs:
     - uses: actions/setup-python@v7
       with:
         python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
-        architecture: x64
+        # arm64 on the Apple Silicon entries: the interpreter has to run
+        # natively to load the arm64-only extension, which "x64" only achieved
+        # as long as the build it installed happened to be universal2.
+        architecture: ${{ matrix.cfg.arch == 'arm64' && 'arm64' || 'x64' }}
       if: matrix.cfg.py_v_maj!=''
     - run: |
         python -c "import sys; print(sys.version)"
