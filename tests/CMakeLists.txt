@@ -160,7 +160,7 @@ foreach(SRC_TEST ${SRC_TESTS})
   add_executable(${TEST_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/${SRC_TEST}.cpp)
   set(CODAC_HEADERS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../include)
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${CODAC_HEADERS_DIR})
-  target_link_libraries(${TEST_NAME} PUBLIC Ibex::ibex ${CODAC_LIBRARIES} PRIVATE Catch2::Catch2WithMain)
+  target_link_libraries(${TEST_NAME} PUBLIC ${CODAC_LIBRARIES} PRIVATE Catch2::Catch2WithMain)
 
   if(WITH_PYTHON AND SRC_TEST MATCHES "extensions/sympy/")
     target_link_libraries(${TEST_NAME} PRIVATE ${PROJECT_NAME}-sympy pybind11::embed)
