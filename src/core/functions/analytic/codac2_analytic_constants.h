@@ -65,13 +65,16 @@ namespace codac2
         if constexpr(std::is_same_v<T,ScalarType>)
           return {1,1};
 
-        if constexpr(std::is_same_v<T,VectorType>)
+        else if constexpr(std::is_same_v<T,VectorType>)
           return {_x.size(),1};
 
-        if constexpr(std::is_same_v<T,MatrixType>)
+        else if constexpr(std::is_same_v<T,MatrixType>)
           return {_x.rows(),_x.cols()};
 
-        assert_release_constexpr(false && "unknow output shape for constant");
+        // In an else branch, discarded along with it for the types above:
+        // after their return, Visual C++ reported it as unreachable (C4702)
+        else
+          assert_release_constexpr(false && "unknow output shape for constant");
       }
 
       void replace_arg([[maybe_unused]] const ExprID& old_arg_id, [[maybe_unused]] const std::shared_ptr<ExprBase>& new_expr)
