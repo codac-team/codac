@@ -67,17 +67,28 @@
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/manual/conf.py.in ${CMAKE_CURRENT_BINARY_DIR}/manual/conf.py)
 
     set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/manual)
-    set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/manual)
+    # The HTML output (outdir) is kept distinct from, and nested under, the confdir
+    # (${CMAKE_CURRENT_BINARY_DIR}/manual, where conf.py/_static live): otherwise
+    # Sphinx warns that html_static_path sits inside outdir.
+    set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/manual/html)
 
     # Copying _static files of Sphinx to build directories
-    foreach(static_file ${CMAKE_CURRENT_SOURCE_DIR}/manual/_static/)
-      file(COPY ${static_file} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/manual/_static/)
-    endforeach()
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/manual/_static")
+      execute_process(
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+          "${CMAKE_CURRENT_SOURCE_DIR}/manual/_static"
+          "${CMAKE_CURRENT_BINARY_DIR}/manual/_static"
+      )
+    endif()
 
     # Copying tmp files
-    foreach(static_file ${CMAKE_CURRENT_SOURCE_DIR}/manual/tmp/)
-      file(COPY ${static_file} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/manual/tmp/)
-    endforeach()
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/manual/tmp")
+      execute_process(
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+          "${CMAKE_CURRENT_SOURCE_DIR}/manual/tmp"
+          "${CMAKE_CURRENT_BINARY_DIR}/manual/tmp"
+      )
+    endif()
 
     # todo: the SPHINX_EXECUTABLE is already set by FindSphinx.cmake:
     # check that it works without the following overload for Win and Linux:
@@ -100,15 +111,17 @@
       TARGET manual POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_directory
               ${CMAKE_BINARY_DIR}/doc/api/html
-              ${SPHINX_EXTRA_API}
-      COMMENT "Copying generated Doxygen HTML to Sphinx extra_html/api"
+              ${SPHINX_BUILD}/api
+      COMMENT "Copying generated Doxygen HTML into the manual output (outdir)/api"
     )
-    
+
+    # The Doxygen API HTML is already part of ${SPHINX_BUILD}/api (copied there
+    # by the POST_BUILD step above), so installing ${SPHINX_BUILD}/ below is
+    # sufficient -- a separate install of ${CMAKE_CURRENT_BINARY_DIR}/api would
+    # duplicate it under a different, unreferenced layout (api/html/*.html
+    # alongside the Doxyfile, instead of api/*.html).
     install(DIRECTORY ${SPHINX_BUILD}/
             DESTINATION share/codac_website
             OPTIONAL)
-    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/api
-            DESTINATION share/codac_website
-        OPTIONAL)
 
   endif()
