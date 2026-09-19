@@ -45,7 +45,7 @@ jobs:
         sudo sh -c 'echo "deb [trusted=yes] https://webperso.ensta.fr/packages/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
         sudo apt update
 
-        sudo apt-get -y install flex bison catch2 pybind11-dev # libeigen3-dev
+        sudo apt-get -y install catch2 pybind11-dev # libeigen3-dev
   
         # For documentation
         pip install sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sympy
@@ -71,16 +71,12 @@ jobs:
         ls
         cd $ORIGIN_DIR
 
-        # IBEX
-        bash scripts/dependencies/install_ibex.sh
-
         # CAPD
         # cancelled on 2023/05/09: bash scripts/dependencies/install_capd.sh
         if [ "${{ matrix.cfg.with_capd }}" = "ON" ]; then git clone -b master https://github.com/CAPDGroup/CAPD.git ; cd CAPD ; git checkout 380b117 ; mkdir build ; cd build ; cmake .. ; cmake -E env CXXFLAGS="-fPIC" CFLAGS="-fPIC" sudo cmake --build . -j 4 --config Release --target install ; cd ../.. ; fi
 
         # Environment variables
         export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/codac/build_install
-        export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
         #py_version=$(python -c "import sys; print(sys.version[:3])") # default python version
@@ -94,7 +90,7 @@ jobs:
         cd build
   
         # Building lib + tests
-        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DWITH_CAPD=${{ matrix.cfg.with_capd }} -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON ..
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DWITH_CAPD=${{ matrix.cfg.with_capd }} -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON ..
         make -j 4
         #make doc # todo
         make install
@@ -121,7 +117,7 @@ jobs:
         cd ../examples
 
         cd 01_batman/
-        mkdir build ; cd build ; cmake -DCMAKE_PREFIX_PATH="$HOME/ibex-lib/build_install;$HOME/codac/build_install" -DCMAKE_BUILD_TYPE=Debug .. ; make ; ./codac_example
+        mkdir build ; cd build ; cmake -DCMAKE_PREFIX_PATH="$HOME/codac/build_install" -DCMAKE_BUILD_TYPE=Debug .. ; make ; ./codac_example
 
         cd ../../02_centered_form/
-        mkdir build ; cd build ; cmake -DCMAKE_PREFIX_PATH="$HOME/ibex-lib/build_install;$HOME/codac/build_install" -DCMAKE_BUILD_TYPE=Debug .. ; make ; ./codac_example
+        mkdir build ; cd build ; cmake -DCMAKE_PREFIX_PATH="$HOME/codac/build_install" -DCMAKE_BUILD_TYPE=Debug .. ; make ; ./codac_example

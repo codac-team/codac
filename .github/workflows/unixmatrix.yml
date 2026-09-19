@@ -1,4 +1,4 @@
-# This file generates .deb (Unix) and .nupkg (Windows) packages (and zip for having Codac and IBEX binaries for several Visual Studio versions)
+# This file generates .deb (Unix) and .nupkg (Windows) packages (and zip for having Codac binaries for several Visual Studio versions)
 on:
     push:
         branches: ['**']
@@ -165,34 +165,17 @@ jobs:
     #    choco install -y -r --no-progress cmake --force
     #    echo export BASHCMAKEPATH="/c/Program Files/CMake/bin">>%USERPROFILE%\.bashrc
     #  if: (matrix.cfg.runtime=='vc18')&&(matrix.cfg.os!='windows-11-arm')
-    - run: |
-        rem choco install -y -r --no-progress eigen --version=3.4.0.20240224 ${{ matrix.cfg.choco_flags }}
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex.2.8.9.20260819.nupkg --no-check-certificate -nv
-        choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20260819 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
-        del /f /q ibex.2.8.9.20260819.nupkg
-      if: runner.os=='Windows'
+    #- run: choco install -y -r --no-progress eigen --version=3.4.0.20240224 ${{ matrix.cfg.choco_flags }}
+    #  if: runner.os=='Windows'
     - run: |
         sudo sh -c 'echo "deb [trusted=yes] https://webperso.ensta.fr/packages/$(if [ -z "$(. /etc/os-release && echo $UBUNTU_CODENAME)" ]; then echo debian/$(. /etc/os-release && echo $VERSION_CODENAME); else echo ubuntu/$(. /etc/os-release && echo $UBUNTU_CODENAME); fi) ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
-        # Replace this line by the next ones to test a specific binary package of IBEX.
-        #sudo apt-get -q update ; sudo apt-get -y install libibex-dev catch2 dpkg-dev || true # libeigen3-dev
         sudo apt-get -q update ; sudo apt-get -y install catch2 dpkg-dev || true # libeigen3-dev
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/libibex-dev-2.8.9.20260819-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb --no-check-certificate -nv
-        sudo dpkg -i libibex-dev-2.8.9.20260819-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb
-        rm -Rf libibex-dev-2.8.9.20260819-0${{ matrix.cfg.runtime }}0_$(dpkg --print-architecture).deb
       shell: bash
       if: matrix.cfg.deb==true
     #- run: brew install eigen
     #  if: runner.os=='macOS'
     - run: brew install catch2 # Issues with binary packages when cross-compiling...
       if: (runner.os=='macOS')&&(matrix.cfg.cross!=true)
-    - run: |
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
-        unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
-        rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
-        sudo cp -Rf ibex/* /usr/local/
-      if: runner.os=='macOS'
-#    - run: git clone --depth 1 -b master https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../../ibex" .. ; cmake --build . --config Release --target install ; cd ../..
-#      shell: bash
     - run: |
         if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$BASHCMAKEPATH:$PATH ; fi
         mkdir build ; cd build
@@ -207,10 +190,6 @@ jobs:
         if [ ${{ runner.os }} = Windows ]; then source ~/refreshenv.bashrc ; refreshenv ; export PATH=$BASHMINGWPATH:$BASHCMAKEPATH:$PATH ; fi
         mkdir -p codac_standalone/example ; cd codac_standalone
         #wget https://community.chocolatey.org/api/v2/package/eigen/3.4.0.20240224 --no-check-certificate -nv ; unzip -q 3.4.0.20240224 -d eigen ; rm -Rf 3.4.0.20240224 eigen/*.xml eigen/*.nuspec eigen/_* eigen/package eigen/tools
-        if [ ${{ runner.os }} = Windows ]; then cp -Rf /C/ProgramData/chocolatey/lib/ibex . ; rm -Rf ibex/tools ibex/ibex.*
-        elif [ ${{ matrix.cfg.deb }} = true ]; then mkdir -p ibex/include ; mkdir -p ibex/lib ; mkdir -p ibex/share ; mkdir -p ibex/bin ; cp -Rf /usr/include/ibex* ibex/include/ ; cp -Rf /usr/lib/*ibex* ibex/lib/ ; cp -Rf /usr/share/*ibex* ibex/share/ ; cp -Rf /usr/share/pkgconfig ibex/share/ ; cp -Rf /usr/bin/ibex* ibex/bin/
-        else cp -Rf ../ibex .
-        fi       
         cp -Rf ../codac . ; cp -Rf ../tests/test_codac/* ./example/ ; cd .. ; zip -q -r codac_standalone_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_standalone
       shell: bash
     - run: |

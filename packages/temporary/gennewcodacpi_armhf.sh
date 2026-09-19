@@ -30,12 +30,6 @@ if [ \"\$(lsb_release -cs)\" = \"buster\" ] || [ \"\$(lsb_release -cs)\" = \"bul
  python3 -m pip install \$PIP_OPTIONS --upgrade patchelf --prefer-binary --extra-index-url https://www.piwheels.org/simple || true ; \
 fi && \
 python3 -m pip install \$PIP_OPTIONS --upgrade auditwheel --prefer-binary --extra-index-url https://www.piwheels.org/simple && \
-# wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_armhf_\$(lsb_release -cs).zip --no-check-certificate -nv is causing illegal instruction on a Mac M1... \\
-curl -L -O https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_armhf_\$(lsb_release -cs).zip --insecure && \
-unzip -q ibex_armhf_\$(lsb_release -cs).zip && \
-rm -Rf ibex_armhf_\$(lsb_release -cs).zip && \
-sudo cp -Rf ibex/* /usr/local/ && \
-\
 git config --global --add safe.directory /io && \
 git config --global --add safe.directory /io/.git || true && \
 cd /io && \
