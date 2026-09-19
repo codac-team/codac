@@ -15,6 +15,12 @@ else()
   FetchContent_Declare(Catch2 URL https://github.com/catchorg/Catch2/archive/refs/tags/v3.6.0.zip)
   #FetchContent_Declare(Catch2 URL ${CMAKE_CURRENT_SOURCE_DIR}/../3rd/Catch2-3.6.0.zip) # If needed to be self-contained...
   FetchContent_MakeAvailable(Catch2)
+  # See codac_mark_target_system() in the top-level CMakeLists.txt: without
+  # this, Catch2's headers inherit this project's warning level. Only the
+  # FetchContent path needs it -- a find_package() target is IMPORTED, and
+  # CMake already treats those as system.
+  codac_mark_target_system(Catch2)
+  codac_mark_target_system(Catch2::Catch2WithMain)
 endif()
 # Adds Catch2::Catch2WithMain
 
