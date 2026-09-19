@@ -74,9 +74,14 @@ Steps
 
       sudo apt-get install -y build-essential cmake git
 
+   .. admonition:: The Eigen dependency
+
+     | Codac is built on `Eigen <https://eigen.tuxfamily.org>`_ (version 3.4 or newer), but you do not have to install it: by default the CMake configuration downloads and builds the version Codac is tested against, so nothing has to be added to the command above.
+     | To build against an Eigen already installed on your system instead, configure Codac with ``-DENABLE_FIND_PACKAGE_EIGEN3=ON``; CMake then looks for it with ``find_package(Eigen3 3.4.0)``, and ``Eigen3_DIR`` or ``CMAKE_PREFIX_PATH`` can point at a custom installation path. This is what the ``choco install eigen`` of the Windows instructions below provides. Note that the Eigen headers are part of Codac's public interface, so a program using Codac compiles them too: this is why they are installed next to Codac's own headers, and why :ref:`the configuration of a user project <sec-start-cpp-project>` lists them among its include directories.
+
    .. admonition:: The GAOL dependency
 
-     | The intervals of Codac are built upon `GAOL <https://github.com/goualard-f/GAOL>`_, the interval arithmetic library written by `Frédéric Goualard <https://frederic.goualard.net>`_, which computes its elementary functions with the IBM Accurate Portable Mathematical Library (mathlib). You do not have to install them: CMake first looks for a GAOL installed on your system and, when it finds none, downloads GAOL from the master branch of `the fork of Jordan Ninin <https://github.com/Jordan08/GAOL>`_ while Codac is configured (brought up to date at each configuration when Git is installed), builds it with its CMake build, which downloads mathlib from `Frédéric Goualard's site <https://frederic.goualard.net>`_, and installs both with its CMake installer, in the build directory and along with Codac. The fork adds to GAOL a CMake build, taken from the one of `IBEX <https://github.com/ibex-team/ibex-lib>`_ (which Codac used to depend on, and no longer does), the changes Codac depends on or which Visual Studio, MinGW and ARM processors need, and tests of the bounds it computes. Its README lists and explains them.
+     | The intervals of Codac are built upon `GAOL <https://github.com/goualard-f/GAOL>`_, the interval arithmetic library written by `Frédéric Goualard <https://frederic.goualard.net>`_, which computes its elementary functions with the IBM Accurate Portable Mathematical Library (mathlib). You do not have to install them either: CMake first looks for a GAOL installed on your system and, when it finds none, downloads GAOL from the master branch of `the fork of Jordan Ninin <https://github.com/Jordan08/GAOL>`_ while Codac is configured (brought up to date at each configuration when Git is installed), builds it with its CMake build, which downloads mathlib from `Frédéric Goualard's site <https://frederic.goualard.net>`_, and installs both with its CMake installer, in the build directory and along with Codac. The fork adds to GAOL a CMake build, taken from the one of `IBEX <https://github.com/ibex-team/ibex-lib>`_ (which Codac used to depend on, and no longer does), the changes Codac depends on or which Visual Studio, MinGW and ARM processors need, and tests of the bounds it computes. Its README lists and explains them.
      | If you install GAOL yourself, we recommend installing the version of `the fork of Jordan Ninin <https://github.com/Jordan08/GAOL>`_ rather than the original sources. The fork comes with the CMake installer, which builds and installs GAOL and mathlib together (``cmake -S . -B build -DCMAKE_INSTALL_PREFIX=<prefix>``, ``cmake --build build --config Release``, then ``cmake --install build --config Release``), with the CMake package from which Codac takes the compilation flags and the libraries GAOL needs, while the original sources only have autotools and meson builds. Bugs of GAOL are also fixed there: bounds that did not enclose the exact results (numbers such as ``interval("0.1")`` read with the C runtime of Windows or with musl on 64-bit ARM processors; hyperbolic functions with the libm of glibc 2.31, musl or MinGW-w64; square roots with Visual C++ for 32-bit x86), and powers with a real exponent (``pow([4], 0.5)`` returned ``[1]``, ``pow([-4,-1], [0.5])`` returned ``[-1, 2]``).
      | CMake looks for an installed GAOL in three ways, in this order: its CMake package (``gaolConfig.cmake``, which the CMake build of the fork installs), its ``gaol.pc`` through ``pkg-config`` (which the autotools and meson builds of the fork install), then its files (``gaol/gaol.h``, ``MathLib.h`` and the ``gaol`` and ``ultim`` libraries). Codac is compiled with the flags and linked with the libraries the package or ``gaol.pc`` of GAOL gives; only for a GAOL found by its files does Codac determine the flags itself. A ``gaol.pc`` whose flags lack ``-frounding-math``, as the one of the meson build of the original sources, is not used. To use a GAOL installed in a custom location, add its installation prefix to ``CMAKE_PREFIX_PATH``, which the three searches read, or give ``-Dgaol_DIR=<prefix>/lib/cmake/gaol`` for its CMake package, ``PKG_CONFIG_PATH`` for its ``gaol.pc``, or ``-DGAOL_DIR=<prefix>`` (and ``-DMATHLIB_DIR=<prefix>`` for mathlib, if it is installed elsewhere) for its files. To build the GAOL Codac is tested against even where another one is installed, configure Codac with ``-DENABLE_FIND_PACKAGE_GAOL=OFF``.
      | On a 32-bit x86 processor, Codac, GAOL and mathlib are compiled with ``-msse2 -mfpmath=sse``, except by Visual Studio, which computes in SSE2 already: computed on the x87 FPU, GAOL's bounds and mathlib's results are only right while its precision stays set to 53 bits, which nothing guarantees. A processor with SSE2 is therefore required there. GAOL is not built with the compilers that do not compute its intervals right, or much too slowly, and its build stops with a message naming the ones to use instead: Clang for 32-bit ARM processors (use GCC), the compilers that say they do not honour the rounding direction, such as Clang 14 for 64-bit ARM processors, and the mingw-w64 runtimes older than version 13 (those of the MinGW-w64 GCC 11 to 14 of Chocolatey, for instance): before version 12, their math library is not accurate enough, and the ``fesetround()`` of version 12 makes the elementary functions of GAOL some 20 times slower.
@@ -134,6 +139,13 @@ Steps
       ./codac_example
 
    You should obtain a graphical output corresponding to a curious set inversion.
+
+6. **Start your own project**:
+
+   ``examples/01_batman/CMakeLists.txt`` is also the shortest possible template
+   for a project of your own. :ref:`sec-start-cpp-project` goes through it line
+   by line, says which paths CMake needs and where it looks for them, and covers
+   the ``pkg-config`` alternative.
 
 
 Windows Installation
@@ -237,7 +249,7 @@ Optionally, for Python binding and documentation:
   wget https://github.com/Homebrew/homebrew-core/raw/d2267b9f2ad247bc9c8273eb755b39566a474a70/Formula/doxygen.rb ; brew reinstall ./doxygen.rb ; brew pin doxygen
   brew install graphviz
   python -m pip install --upgrade pip
-  pip install --upgrade wheel setuptools sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs sphinx_togglebutton
+  pip install --upgrade wheel setuptools sphinx sphinx_rtd_theme furo sphinx-math-dollar sphinx_tabs breathe sphinx_togglebutton
 
 
 Troubleshooting
