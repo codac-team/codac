@@ -92,12 +92,12 @@ If you simply want to use the latest Codac release in Python, you can download t
       cd $HOME/codac
 
 
-   You will need to compile Codac using the ``-fPIC`` options (a GAOL built by CMake along with Codac is compiled that way on its own; a GAOL installed on your system has to have been as well), and to configure ``WITH_PYTHON=ON`` and ``PYBIND11_FINDPYTHON=OFF``. Note that CMake will automatically get the `pybind11 <https://pybind11.readthedocs.io>`_ files required for the binding. Also, you will have to configure ``BUILD_TESTS=ON`` if you want to run the unit tests.
+   You will need to configure ``WITH_PYTHON=ON`` and ``PYBIND11_FINDPYTHON=OFF``. Codac is then compiled as position independent code (``-fPIC``) on its own, as is a GAOL built by CMake along with Codac; a GAOL installed on your system has to have been compiled that way as well. Note that CMake will automatically get the `pybind11 <https://pybind11.readthedocs.io>`_ files required for the binding. Also, you will have to configure ``BUILD_TESTS=ON`` if you want to run the unit tests.
    
    .. code-block:: bash
       
       mkdir build ; cd build
-      cmake -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF -DBUILD_TESTS=ON -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH="$HOME/doxygen/build_install" -DCMAKE_BUILD_TYPE=Release ..
+      cmake -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF -DBUILD_TESTS=ON -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH="$HOME/doxygen/build_install" -DCMAKE_BUILD_TYPE=Release ..
       make ; make install
 
 3. **Configure your Python environment**:

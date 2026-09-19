@@ -80,7 +80,7 @@ for PYBIN in /opt/python/cp3*/bin; do
   "${PYBIN}/python" -m pip install --upgrade pip
   "${PYBIN}/python" -m pip install --upgrade wheel setuptools build
   mkdir -p build_dir && cd build_dir
-  cmake -E env CXXFLAGS="-fPIC" CFLAGS="-fPIC" cmake -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON -DWITH_CAPD=OFF -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF ..
+  cmake -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON -DWITH_CAPD=OFF -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF ..
   make -j4
 
   make pip_package

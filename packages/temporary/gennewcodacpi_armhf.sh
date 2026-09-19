@@ -37,7 +37,7 @@ python3 -m pip install \$PIP_OPTIONS --upgrade wheel --prefer-binary --extra-ind
 # With setuptools upgrade from pip, building the .whl might fail for bullseye... \\
 #python3 -m pip install \$PIP_OPTIONS --upgrade setuptools --prefer-binary --extra-index-url https://www.piwheels.org/simple && \\
 mkdir -p build_dir_\$(lsb_release -cs) && cd build_dir_\$(lsb_release -cs) && \
-cmake -E env CXXFLAGS=\"-fPIC\" CFLAGS=\"-fPIC\" cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_CAPD=OFF -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF .. && \
+cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_CAPD=OFF -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF .. && \
 make -j4 && \
 \
 make pip_package && \
