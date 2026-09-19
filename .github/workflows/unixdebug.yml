@@ -128,8 +128,6 @@ jobs:
         cmake \
           -D WITH_COVERAGE=${{ matrix.cfg.coverage && 'ON' || 'OFF' }} \
           -D CMAKE_BUILD_TYPE=${{ matrix.cfg.build_type }} \
-          -D CMAKE_CXX_FLAGS="-fPIC" \
-          -D CMAKE_C_FLAGS="-fPIC" \
           -D CMAKE_INSTALL_PREFIX="../codac" \
           -D BUILD_TESTS=ON \
           -D TEST_EXAMPLES=ON \
