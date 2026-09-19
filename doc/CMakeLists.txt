@@ -4,33 +4,39 @@
 
 # Technical API documentation (Doxygen)
 
-  if(WITH_PYTHON)
-    
-    find_package(Doxygen)# 1.16.1 QUIET)
+  # Doxygen is looked for whatever WITH_PYTHON is: besides the docstrings of the
+  # binding, its XML output provides the API references of the manual (breathe)
+  # and its HTML output the api/ pages of the manual website.
+  find_package(Doxygen)# 1.16.1 QUIET)
 
-    if(NOT DOXYGEN_FOUND)
+  if(NOT DOXYGEN_FOUND)
 
-      message(STATUS "The required version of Doxygen has not been found, the API documentation will not be generated.")
+    message(STATUS "The required version of Doxygen has not been found, the API documentation will not be generated.")
 
+  else()
+
+    if(NOT DOXYGEN_DIR)
+      message(STATUS "Doxygen ${DOXYGEN_VERSION} found.")
     else()
+      message(STATUS "Doxygen ${DOXYGEN_VERSION} found in ${DOXYGEN_DIR}.")
+    endif()
 
-      if(NOT DOXYGEN_DIR)
-        message(STATUS "Doxygen ${DOXYGEN_VERSION} found.")
-      else()
-        message(STATUS "Doxygen ${DOXYGEN_VERSION} found in ${DOXYGEN_DIR}.")
-      endif()
+    # Includes CMake commands in config file:
+    configure_file(api/Doxyfile.in api/Doxyfile)
 
-      # Includes CMake commands in config file:
-      configure_file(api/Doxyfile.in api/Doxyfile)
+    set(DOXYGEN_INPUT ${CMAKE_CURRENT_BINARY_DIR}/api/Doxyfile)
+    set(DOXYGEN_OUTPUT ${APIDOC_DIR}/html/index.html)
 
-      set(DOXYGEN_INPUT ${CMAKE_CURRENT_BINARY_DIR}/api/Doxyfile)
-      set(DOXYGEN_OUTPUT ${APIDOC_DIR}/html/index.html)
+    if(WIN32)
+      set(NULL_DEST NUL 2>&1)
+    else()
+      set(NULL_DEST "/dev/null")
+    endif()
 
-      if(WIN32)
-        set(NULL_DEST NUL 2>&1)
-      else()
-        set(NULL_DEST "/dev/null")
-      endif()
+    # Only the binding needs the XML output at configure time, python/ turning
+    # it into docstring headers while it is configured. The manual needs it when
+    # it is built, and gets it from the api target, which it depends on.
+    if(WITH_PYTHON)
 
       message(STATUS "Building API Documentation (mandatory for Python binding or for building the manual)")
 
@@ -47,9 +53,10 @@
           message(FATAL_ERROR "Doxygen failed to generate the API documentation (exit code ${DOXYGEN_RESULT}), which is required for the Python docstrings. Doxygen errors: ${DOXYGEN_ERROR}")
         endif()
       endif()
-      add_custom_target(api COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} OUTPUT_QUIET)
 
     endif()
+
+    add_custom_target(api COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} OUTPUT_QUIET)
 
   endif()
 
@@ -107,13 +114,26 @@
                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                       COMMENT "Generating the manual website using Sphinx")
 
-    add_custom_command(
-      TARGET manual POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_directory
-              ${CMAKE_BINARY_DIR}/doc/api/html
-              ${SPHINX_BUILD}/api
-      COMMENT "Copying generated Doxygen HTML into the manual output (outdir)/api"
-    )
+    if(TARGET api)
+
+      # Without this dependency, Sphinx would read whatever Doxygen output the
+      # build tree happens to hold: none at all when WITH_PYTHON is off, and the
+      # one of the last configuration otherwise.
+      add_dependencies(manual api)
+
+      add_custom_command(
+        TARGET manual POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_BINARY_DIR}/doc/api/html
+                ${SPHINX_BUILD}/api
+        COMMENT "Copying generated Doxygen HTML into the manual output (outdir)/api"
+      )
+
+    else()
+
+      message(STATUS "Doxygen not found, the manual will be generated without its API references.")
+
+    endif()
 
     # The Doxygen API HTML is already part of ${SPHINX_BUILD}/api (copied there
     # by the POST_BUILD step above), so installing ${SPHINX_BUILD}/ below is
