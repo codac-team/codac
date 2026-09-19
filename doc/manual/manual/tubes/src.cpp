@@ -187,9 +187,9 @@ TEST_CASE("SlicedTube class - manual")
     Interval y(0,0.2);
     x.invert(y, v_t);
 
-    for(const auto& t : v_t)
+    for(const auto& ti : v_t)
     {
-      IntervalVector z = cart_prod(t,y);
+      IntervalVector z = cart_prod(ti,y);
       DefaultFigure::draw_box(z, Color::red());
     }
     // [slicedtube-class-5-end]

@@ -638,9 +638,9 @@ TEST_CASE("IntervalVector")
 
   {
     IntervalVector a{Interval::empty(),{-1,1}};
-    IntervalVector b{{-1,1},Interval::empty()};
-    IntervalVector c = a | b;
-    CHECK(c.is_empty());
+    IntervalVector b2{{-1,1},Interval::empty()};
+    IntervalVector c2 = a | b2;
+    CHECK(c2.is_empty());
   }
 }
 
