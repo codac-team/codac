@@ -22,7 +22,7 @@
 using namespace std;
 using namespace codac2;
 
-const double MAX_DOUBLE = std::numeric_limits<double>::max();
+//const double MAX_DOUBLE = std::numeric_limits<double>::max();
 
 void CHECK_bwd_trigo(const Interval& y, const Interval& x, const Interval& expected_x)
 {

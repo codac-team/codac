@@ -505,8 +505,8 @@ TEST_CASE("IntervalMatrix - mixing type")
 {
   {
     Matrix m1 {
-      { {1},{2} },
-      { {3},{4} }
+      { 1,2 },
+      { 3,4 }
     };
 
     // Interval - Matrix
@@ -611,13 +611,13 @@ TEST_CASE("IntervalMatrix - mixing type")
 
   {
     Matrix m1 {
-      { {1},{2} },
-      { {3},{4} }
+      { 1,2 },
+      { 3,4 }
     };
 
     Matrix m2 {
-      { {2},{3} },
-      { {4},{5} }
+      { 2,3 },
+      { 4,5 }
     };
 
     IntervalMatrix im(m1,m2);
