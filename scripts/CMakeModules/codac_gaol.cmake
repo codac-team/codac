@@ -312,7 +312,7 @@ endfunction()
 # CMAKE_C_FLAGS are handed over as they are when this is called, before Codac
 # adds its own flags to them.
 #
-# GAOL comes from the head of the master branch of the fork (version 4.3.1 of
+# GAOL comes from the head of the master branch of the fork (version 4.3.2 of
 # GAOL), so that the fixes pushed to the fork reach Codac without a change here.
 # Cloned with Git, the sources are brought up to date with the branch at each
 # configuration of Codac, which needs network access (without it, the sources
