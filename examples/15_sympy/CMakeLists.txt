@@ -17,10 +17,6 @@
   find_package(CODAC REQUIRED)
   message(STATUS "Found Codac version ${CODAC_VERSION}")
 
-# Initializating Ibex
-  
-  ibex_init_common()
-
 # Compilation
 
   if(FAST_RELEASE)
@@ -37,5 +33,4 @@
     ${CODAC_LIBRARIES}
     ${CODAC_SYMPY_LIBRARY} # linking to the codac-sympy extension
     pybind11::embed # linking to pybind11
-    Ibex::ibex
   )

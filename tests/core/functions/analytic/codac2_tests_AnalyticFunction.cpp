@@ -377,9 +377,19 @@ TEST_CASE("AnalyticFunction")
     {
       AnalyticFunction f({x1}, 2*sign(x1+1));
       CHECK(f.eval(0.) == 2.);
+#if CODAC_GAOL_GUARDS
+      // Codac's sign, kept with GAOL 4 (WITH_IBEX): a sign of 0 is any of [-1,1]
       CHECK(sign(Interval::zero()) == Interval(-1,1));
       CHECK(sign(Interval(-0,0)) == Interval(-1,1));
       CHECK(f.eval(-1.) == Interval(-2,2));
+#else
+      // The sign of IEEE 1788, which Codac takes from GAOL v5: sign(0) = 0
+      CHECK(sign(Interval::zero()) == 0.);
+      CHECK(sign(Interval(-0,0)) == 0.);
+      CHECK(sign(Interval(0,5)) == Interval(0,1));
+      CHECK(sign(Interval(-5,5)) == Interval(-1,1));
+      CHECK(f.eval(-1.) == 0.);
+#endif
       CHECK(f.eval(-2.) == -2.);
     }
 

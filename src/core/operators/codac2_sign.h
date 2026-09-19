@@ -74,6 +74,7 @@ namespace codac2
 
   inline void SignOp::bwd(const Interval& y, Interval& x1)
   {
+#if CODAC_GAOL_GUARDS
     if(y.is_empty())
       x1.set_empty();
 
@@ -82,5 +83,20 @@ namespace codac2
 
     else if(y.ub() < 0)
       x1 &= Interval(-oo,0);
+#else
+    // sign_rel() of GAOL v5, the reverse of the sign of GAOL v5 that
+    // sign(const Interval&) is (see codac2_Interval_operations_impl.h): the hull
+    // of the negative x of x1 where y holds -1, of 0 where y and x1 hold it,
+    // and of the positive x of x1 where y holds 1, and the empty set where y
+    // holds none of -1, 0 and 1: sign_rel([0.5],x1) is empty, and
+    // sign_rel([0],[-2,3]) is [0]. The negative numbers go up to 0 and the
+    // positive ones down from 0 in their closed hull: sign_rel([-1],[-2,3]) is
+    // [-2,0]. The code above, written for Codac's former sign, a sign of 0
+    // being any of [-1,1], only contracted x1 to [0,+oo] when y was positive and
+    // to [-oo,0] when y was negative: it kept the whole of x1 for y = [0] and
+    // for y = [0,+oo] ([-2,3] for x1 = [-2,3]), and the part of x1 in [0,+oo]
+    // for y = [0.5].
+    x1 = gaol::sign_rel(y, x1);
+#endif
   }
 }
