@@ -485,10 +485,11 @@
 
   # WITH_COVERAGE instruments the build and adds two targets: `coverage`, which
   # runs the whole ctest suite and turns the counters gcov leaves behind into a
-  # report, and `coverage-report`, which only does the second half, so that a
-  # developer measuring coverage by hand and a continuous integration job
-  # reporting it use the same flags, the same gcov and the same filters, and
-  # cannot drift apart. Deciding all of that here
+  # report, and `coverage-report`, which only does the second half. That is what
+  # the "Ubuntu 26.04 GCC x86_64 Release coverage" job of
+  # .github/workflows/unixdebug.yml now calls, so that a developer measuring
+  # coverage by hand and the job reporting it use the same flags, the same gcov
+  # and the same filters, and cannot drift apart. Deciding all of that here
   # rather than leaving it to the caller is also what spares everyone the traps
   # below.
   #
