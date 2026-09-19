@@ -33,9 +33,11 @@ py::class_<Slice<T>> export_Slice(py::module& m, const std::string& name)
   // Methods from class SliceBase
   
     .def("t0_tf", &Slice<T>::t0_tf,
+      py::return_value_policy::reference_internal,
       CONST_INTERVAL_REF_SLICEBASE_T0_TF_CONST)
   
     .def("tslice", &Slice<T>::tslice,
+      py::return_value_policy::reference_internal,
       CONST_TSLICE_REF_SLICEBASE_TSLICE_CONST)
 
   // Methods from class Slice<T>

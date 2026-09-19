@@ -26,7 +26,7 @@ void export_CtcLazy(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInter
   exported
 
     .def(py::init(
-        [](const pyCtcIntervalVector& c)
+        [](const CtcBase<IntervalVector>& c)
         {
           return std::make_unique<CtcLazy>(c.copy());
         }),

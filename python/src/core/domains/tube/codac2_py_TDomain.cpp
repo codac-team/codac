@@ -40,19 +40,21 @@ void export_TDomain(py::module& m)
     .def("tslices_vector", &TDomain::tslices_vector,
       VECTOR_TSLICE_TDOMAIN_TSLICES_VECTOR_CONST)
 
-    .def("tslice", [](TDomain& tdomain, double t) -> std::shared_ptr<TSlice>
+    .def("tslice", [](TDomain& tdomain, double t) -> TSlice&
         {
           auto it = tdomain.tslice(t);
-          return std::shared_ptr<TSlice>(&(*it), [](TSlice*){});
+          return *it;
         },
-      LIST_TSLICE_ITERATOR_TDOMAIN_TSLICE_DOUBLE
+      py::return_value_policy::reference_internal,
+      LIST_TSLICE_ITERATOR_TDOMAIN_TSLICE_DOUBLE,
       "t"_a)
 
-    .def("sample", [](TDomain& tdomain, double t, bool with_gate) -> std::shared_ptr<TSlice>
+    .def("sample", [](TDomain& tdomain, double t, bool with_gate) -> TSlice&
         {
           auto it = tdomain.sample(t, with_gate);
-          return std::shared_ptr<TSlice>(&(*it), [](TSlice*){});
+          return *it;
         },
+      py::return_value_policy::reference_internal,
       LIST_TSLICE_ITERATOR_TDOMAIN_SAMPLE_DOUBLE_BOOL,
       "t"_a, "with_gate"_a=false)
 

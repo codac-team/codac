@@ -26,7 +26,7 @@ void export_CtcFixpoint(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcI
   exported
 
     .def(py::init(
-        [](const pyCtcIntervalVector& c, double ratio)
+        [](const CtcBase<IntervalVector>& c, double ratio)
         {
           return std::make_unique<CtcFixpoint>(c.copy(),ratio);
         }),

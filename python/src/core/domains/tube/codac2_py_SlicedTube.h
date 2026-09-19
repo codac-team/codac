@@ -84,9 +84,11 @@ py::class_<SlicedTube<T>,TubeBase> export_SlicedTube(py::module& m, const std::s
       py::return_value_policy::reference,
       SHARED_PTR_SLICE_T_SLICEDTUBE_T_LAST_SLICE)
     
-    .def("slice", [](SlicedTube<T>& x, std::shared_ptr<TSlice> it) -> Slice<T>&
+    .def("slice", [](SlicedTube<T>& x, TSlice& it) -> Slice<T>&
         {
-          return *x.slice(it);
+          return *x.slice(
+            std::shared_ptr<TSlice>(&it, [](TSlice*) {})
+          );
         },
       py::return_value_policy::reference,
       SHARED_PTR_SLICE_T_SLICEDTUBE_T_SLICE_SHARED_PTR_TSLICE,
