@@ -54,7 +54,6 @@ In C++ however, you need to link the extension to your project, for instance by 
     ${CODAC_LIBRARIES}
     ${CODAC_SYMPY_LIBRARY} # linking to the codac-sympy extension
     pybind11::embed # linking to pybind11
-    Ibex::ibex
   )
 
 Finally, in order to include the features of the extension:
