@@ -92,7 +92,7 @@ jobs:
         WITH_PYTHON=${WITH_PYTHON:-ON}
         echo "Configuring with WITH_PYTHON=$WITH_PYTHON"
         mkdir build ; cd build
-        cmake -E env CXXFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D WITH_CAPD=OFF -D WITH_PYTHON=$WITH_PYTHON -D PYBIND11_FINDPYTHON=OFF ..
+        cmake -E env CXXFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D TEST_EXAMPLES=ON -D WITH_CAPD=OFF -D WITH_PYTHON=$WITH_PYTHON -D PYBIND11_FINDPYTHON=OFF ..
         cmake --build . -j 4 --config Release --target install
         if [ "$WITH_PYTHON" = "ON" ]; then
           cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
@@ -125,6 +125,11 @@ jobs:
         # they are still executed in Release on the very same systems by
         # unixmatrix.yml -- Visual Studio 2022 on x86/x64/arm64, macOS Sonoma
         # arm64 and Sequoia x86_64.
+        # The same "_py" filter picks up the Python examples, which
+        # -D TEST_EXAMPLES=ON registers as codac2_examples_*_py. Unlike the C++
+        # ones they do run on the interpreter of each entry, so they belong
+        # here; the C++ examples are only compiled, and run by unixmatrix.yml
+        # along with the C++ tests.
         cd build && ctest -C Release -R "_py" -V --output-on-failure
         cd ..
       shell: bash
