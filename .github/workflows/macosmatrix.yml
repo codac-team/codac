@@ -57,12 +57,6 @@ jobs:
     - run: brew install graphviz ; brew install --formula doxygen ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
       if: runner.os=='macOS'
     - run: |
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
-        unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
-        rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
-        sudo cp -Rf ibex/* /usr/local/
-      shell: bash
-    - run: |
         mkdir build ; cd build
         cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=${{ matrix.cfg.arch }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D WITH_CAPD=OFF -D WITH_PYTHON=ON -D PYBIND11_FINDPYTHON=OFF ..
         cmake --build . -j 4 --config Release --target install
