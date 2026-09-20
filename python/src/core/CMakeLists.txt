@@ -157,7 +157,7 @@
   )
 
   target_link_libraries(_core
-    PRIVATE ${PROJECT_NAME}-core ${PROJECT_NAME}-sympy ${LIBS} Ibex::ibex
+    PRIVATE ${PROJECT_NAME}-core ${PROJECT_NAME}-sympy ${LIBS} Codac::gaol
   )
 
   # Copy the generated library in the package folder

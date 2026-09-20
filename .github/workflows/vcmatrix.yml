@@ -60,17 +60,45 @@ jobs:
       if: runner.os=='Windows'
     #- run: choco install -y -r --no-progress eigen --version=3.4.0.20240224 ${{ matrix.cfg.choco_flags }}
     #  if: runner.os=='Windows'
-    - run: choco install -y -r --no-progress graphviz doxygen.install & python -m pip install --upgrade pip & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
+    - run: choco install -y -r --no-progress graphviz
+      if: runner.os=='Windows'
+    - name: Install Doxygen (up to 5 attempts, non fatal)
+      shell: bash
+      run: |
+        export PATH="/c/ProgramData/chocolatey/bin:$PATH"
+        ok=0
+        for i in 1 2 3 4 5; do
+          echo "=== Doxygen install attempt $i/5 ==="
+          choco install -y -r --no-progress doxygen.install
+          rc=$?
+          if [ $rc -eq 0 ] || [ $rc -eq 3010 ]; then
+            if doxygen --version; then ok=1; break; fi
+            echo "choco reported success but doxygen is not callable."
+          fi
+          echo "Attempt $i failed (exit code $rc), retrying in 20 s..."
+          sleep 20
+        done
+        if [ $ok -eq 1 ]; then
+          echo "WITH_PYTHON=ON" >> $GITHUB_ENV
+        else
+          echo "::warning::Doxygen could not be installed after 5 attempts - building without documentation and without Python bindings."
+          echo "WITH_PYTHON=OFF" >> $GITHUB_ENV
+        fi
+      if: runner.os=='Windows'
+    - run: python -m pip install --upgrade pip && pip install --upgrade wheel setuptools build sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
+      shell: bash
       if: runner.os=='Windows'
     - run: |
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex.2.8.9.20260819.nupkg --no-check-certificate -nv
-        choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20260819 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
-        del /f /q ibex.2.8.9.20260819.nupkg
-    - run: |
+        WITH_PYTHON=${WITH_PYTHON:-ON}
+        echo "Configuring with WITH_PYTHON=$WITH_PYTHON"
         mkdir build ; cd build
-        cmake -E env CXXFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D WITH_CAPD=OFF -D WITH_PYTHON=ON -D PYBIND11_FINDPYTHON=OFF ..
+        cmake -E env CXXFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D WITH_CAPD=OFF -D WITH_PYTHON=$WITH_PYTHON -D PYBIND11_FINDPYTHON=OFF ..
         cmake --build . -j 4 --config Release --target install
-        cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
+        if [ "$WITH_PYTHON" = "ON" ]; then
+          cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
+        else
+          echo "Skipping pip_package target (no Doxygen docstrings available)."
+        fi
         cd ..
       shell: bash
     - uses: xresloader/upload-to-github-release@v1
@@ -80,13 +108,17 @@ jobs:
         file: "*.whl"
         overwrite: true
         tag_name: autotagname-${{ github.sha }}
-      if: (github.event_name!='pull_request')&&((github.ref_name=='codac1')||(github.ref_name=='codac2')||(github.ref_name=='codac2_codac4matlab'))
+      if: (env.WITH_PYTHON!='OFF')&&(github.event_name!='pull_request')&&((github.ref_name=='codac1')||(github.ref_name=='codac2')||(github.ref_name=='codac2_codac4matlab'))
     - run: |
         pip install --no-deps --no-index *.whl
         python -c "import sys; print(sys.version)" ; python examples/02_centered_form/main.py
         pip install numpy sympy --prefer-binary
         python -m unittest discover codac.tests
+      shell: bash
+      if: (env.WITH_PYTHON!='OFF')&&(github.ref_name!='codac2_codac4matlab')&&(github.event.pull_request.base.ref!='codac2_codac4matlab')
+    - run: |
         cd build && ctest -C Release -V --output-on-failure
         cd ..
       shell: bash
       if: (github.ref_name!='codac2_codac4matlab')&&(github.event.pull_request.base.ref!='codac2_codac4matlab')
+

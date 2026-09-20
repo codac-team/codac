@@ -12,7 +12,26 @@
   #set(CMAKE_C_COMPILER "gcc-7")
   #set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
 
-  project(codac VERSION ${VERSION} LANGUAGES CXX)
+  # CMP0091 (CMake >=3.15) makes the CMAKE_MSVC_RUNTIME_LIBRARY variable set
+  # below actually control MSVC's runtime library selection, instead of
+  # CMake's older behavior of baking a hardcoded /MD.../MDd into
+  # CMAKE_<LANG>_FLAGS_<CONFIG>. It must be set to NEW before project() --
+  # afterwards is too late -- for that variable to have any effect at all.
+  if(POLICY CMP0091)
+    cmake_policy(SET CMP0091 NEW)
+  endif()
+
+  # C as well as C++: the codac sources are all C++, but mathlib, which GAOL
+  # depends on, is C, and codac_gaol_build() builds it when no GAOL is installed
+  # (see scripts/CMakeModules/codac_gaol.cmake). Enabled here, the C compiler
+  # and its flags are settled -- and cached -- by the first configuration, so
+  # that what is handed to that build is the same at every later one. Enabled
+  # further down by a dependency instead, as happened when only CXX was listed,
+  # the compiler went from the name it was given to its full path between the
+  # first configuration and the second, the build of GAOL took that for a
+  # change and was configured again, and everything in codac that includes an
+  # interval was recompiled.
+  project(codac VERSION ${VERSION} LANGUAGES C CXX)
 
   if(NOT VERSION_ID)
     set(PROJECT_VERSION_FULL ${PROJECT_VERSION})
@@ -84,6 +103,30 @@
     add_compile_options(-Wall -Wextra -Wpedantic)
   endif()
 
+  if(MSVC)
+    # The gaol interval library is only ever linked as a Release binary:
+    # codac_gaol_build() (scripts/CMakeModules/codac_gaol.cmake) builds it in
+    # Release whatever the configuration of codac, and a gaol found on the
+    # system comes prebuilt that way too. gaol.lib is thus compiled with the
+    # Release CRT (/MD). MSVC's linker refuses
+    # to mix object files built against different CRT variants in the same
+    # binary -- linking that Release-CRT gaol.lib together with codac's own
+    # object files, which without this override would default to the Debug
+    # CRT (/MDd) in a Debug build, fails with error LNK2038 ("mismatch
+    # detected for 'RuntimeLibrary'/'_ITERATOR_DEBUG_LEVEL'") followed by
+    # fatal error LNK1319.
+    #
+    # Forcing every configuration onto the Release CRT keeps codac's own
+    # Debug build link-compatible with that Release gaol.lib without
+    # having to build gaol in Debug as well. Release
+    # itself already defaulted to /MD, so in practice this only changes
+    # what the Debug configuration uses. Debug builds still get no
+    # optimization (/Od) and full debug symbols (/Zi) -- what is traded away
+    # is only the *separate* debug-CRT extras that /MDd would otherwise add
+    # on top of that (its own heap debugging and iterator-debug-level checks).
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+  endif()
+
   # Temporary attempts to fix errors similar to: 
   # _ number of sections exceeded object file format limit.
   # _ out of memory allocating XXX bytes.
@@ -118,12 +161,47 @@
 
 
 ################################################################################
-# Looking for IBEX
+# Looking for GAOL
 ################################################################################
 
-  find_package(IBEX REQUIRED)
-  ibex_init_common() # IBEX should have installed this function
-  message(STATUS "Found IBEX version ${IBEX_VERSION}")
+  # GAOL is the interval arithmetic library codac2::Interval is built upon, and
+  # mathlib (libultim) the library GAOL computes its elementary functions with.
+  # Both used to come from IBEX, which bundles them, and they were all Codac
+  # needed IBEX for: they are now found, or built, by Codac itself. What comes
+  # from IBEX in doing so, and who wrote it, is said at the top of
+  # scripts/CMakeModules/codac_gaol.cmake and of FindGAOL.cmake next to it.
+  include(codac_gaol)
+
+  # GAOL, found or built, as the imported target Codac::gaol: its include
+  # directories, its libraries, and the flags floating-point rounding depends
+  # on, which ibex_init_common() used to put on the command line -- without
+  # -frounding-math and its companions, the compiler is free to constant-fold in
+  # the wrong rounding mode, and an interval is no longer a bound. They are
+  # GAOL's to say: codac_gaol_find() takes them from the CMake package of GAOL
+  # or from its gaol.pc, and determines them itself only for a GAOL found by its
+  # files alone. The Codac libraries link Codac::gaol PUBLIC, so that every
+  # target linking them is compiled with those flags -- the tests, the examples
+  # and the Python bindings included. This comes before Codac's own flags are
+  # added to CMAKE_CXX_FLAGS below: a GAOL built by codac_gaol_build() is handed
+  # CMAKE_CXX_FLAGS as it is given to this build, and chooses its flags itself.
+  option(ENABLE_FIND_PACKAGE_GAOL "ENABLE_FIND_PACKAGE_GAOL" ON)
+  codac_gaol_find()
+
+  # Consumers need those flags as much as this build does. What Codac::gaol
+  # gives is kept as lists, handed over through CODAC_CXX_FLAGS in
+  # codac-config.cmake, and through the Cflags and Libs lines of codac.pc, which
+  # cannot link a target (see src/CMakeLists.txt).
+  codac_gaol_usage(CODAC_GAOL_INCLUDE_DIRS CODAC_INTERVAL_CXX_FLAGS CODAC_GAOL_LINK_ITEMS)
+  message(STATUS "Interval arithmetic flags: ${CODAC_INTERVAL_CXX_FLAGS}")
+  message(STATUS "GAOL include directories: ${CODAC_GAOL_INCLUDE_DIRS}")
+  message(STATUS "GAOL libraries: ${CODAC_GAOL_LINK_ITEMS}")
+
+  # The flags of ibex_init_common() that are not those of interval arithmetic,
+  # where ibex_init_common() put them, in CMAKE_CXX_FLAGS, so that every target
+  # is compiled with them; handed over to consumers with the others.
+  codac_gaol_portability_flags(CODAC_PORTABILITY_CXX_FLAGS)
+  string(REPLACE ";" " " _codac_portability_cxx_flags "${CODAC_PORTABILITY_CXX_FLAGS}")
+  string(APPEND CMAKE_CXX_FLAGS " ${_codac_portability_cxx_flags}")
 
 
 ################################################################################
