@@ -32,10 +32,32 @@ py::class_<Slice<T>> export_Slice(py::module& m, const std::string& name)
 
   // Methods from class SliceBase
   
+    // t0_tf() and tslice() both return a reference to the TSlice of this slice, an
+    // element of the TDomain (t0_tf() as an Interval, TSlice deriving from Interval).
+    // Without a return value policy, pybind11 returned a copy of it, which was wrong in
+    // both cases:
+    // - tslice(): copying a TSlice copies its map of std::shared_ptr to the slices of
+    //   every tube defined on the TDomain. The copy shared the ownership of those
+    //   slices, and kept them alive after their tube was destroyed, as long as the
+    //   Python object lived. Not being the element of the TDomain, it could not either
+    //   be given back to SlicedTube.slice(), which finds a TSlice by its address.
+    // - t0_tf(): pybind11 finds that the Interval is in fact a TSlice (its most derived
+    //   type, which is registered) and makes the Python object a TSlice, but copies it
+    //   with the copy constructor of the declared type, Interval. The result was a mere
+    //   Interval passed off as a TSlice: a TSlice method using the members of TSlice
+    //   (slices(), for instance) read past the object, and its std::shared_ptr<TSlice>
+    //   holder deleted it as a TSlice, running the destructor of members it did not
+    //   have.
+    // reference_internal returns the TSlice itself, without any copy. Like the Slice
+    // (whose py::nodelete holder never destroys it), it remains owned by the C++ side:
+    // by the TDomain, which the tubes defined on it keep alive.
     .def("t0_tf", &Slice<T>::t0_tf,
+      py::return_value_policy::reference_internal,
       CONST_INTERVAL_REF_SLICEBASE_T0_TF_CONST)
   
+    // Returned by reference, not copied: see t0_tf() above.
     .def("tslice", &Slice<T>::tslice,
+      py::return_value_policy::reference_internal,
       CONST_TSLICE_REF_SLICEBASE_TSLICE_CONST)
 
   // Methods from class Slice<T>
