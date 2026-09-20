@@ -4,43 +4,59 @@
 
 # Technical API documentation (Doxygen)
 
-  if(WITH_PYTHON)
-    
-    find_package(Doxygen)# 1.16.1 QUIET)
+  # Doxygen is looked for whatever WITH_PYTHON is: besides the docstrings of the
+  # binding, its XML output provides the API references of the manual (breathe)
+  # and its HTML output the api/ pages of the manual website.
+  find_package(Doxygen)# 1.16.1 QUIET)
 
-    if(NOT DOXYGEN_FOUND)
+  if(NOT DOXYGEN_FOUND)
 
-      message(STATUS "The required version of Doxygen has not been found, the API documentation will not be generated.")
+    message(STATUS "The required version of Doxygen has not been found, the API documentation will not be generated.")
 
+  else()
+
+    if(NOT DOXYGEN_DIR)
+      message(STATUS "Doxygen ${DOXYGEN_VERSION} found.")
     else()
+      message(STATUS "Doxygen ${DOXYGEN_VERSION} found in ${DOXYGEN_DIR}.")
+    endif()
 
-      if(NOT DOXYGEN_DIR)
-        message(STATUS "Doxygen ${DOXYGEN_VERSION} found.")
-      else()
-        message(STATUS "Doxygen ${DOXYGEN_VERSION} found in ${DOXYGEN_DIR}.")
-      endif()
+    # Includes CMake commands in config file:
+    configure_file(api/Doxyfile.in api/Doxyfile)
 
-      # Includes CMake commands in config file:
-      configure_file(api/Doxyfile.in api/Doxyfile)
+    set(DOXYGEN_INPUT ${CMAKE_CURRENT_BINARY_DIR}/api/Doxyfile)
+    set(DOXYGEN_OUTPUT ${APIDOC_DIR}/html/index.html)
 
-      set(DOXYGEN_INPUT ${CMAKE_CURRENT_BINARY_DIR}/api/Doxyfile)
-      set(DOXYGEN_OUTPUT ${APIDOC_DIR}/html/index.html)
+    if(WIN32)
+      set(NULL_DEST NUL 2>&1)
+    else()
+      set(NULL_DEST "/dev/null")
+    endif()
 
-      if(WIN32)
-        set(NULL_DEST NUL 2>&1)
-      else()
-        set(NULL_DEST "/dev/null")
-      endif()
+    # Only the binding needs the XML output at configure time, python/ turning
+    # it into docstring headers while it is configured. The manual needs it when
+    # it is built, and gets it from the api target, which it depends on.
+    if(WITH_PYTHON)
 
       message(STATUS "Building API Documentation (mandatory for Python binding or for building the manual)")
 
-      set(SPHINX_EXTRA_API ${CMAKE_CURRENT_BINARY_DIR}/manual/extra_html/api)
-      file(MAKE_DIRECTORY ${SPHINX_EXTRA_API})
-
-      execute_process(COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} OUTPUT_QUIET)
-      add_custom_target(api COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} OUTPUT_QUIET)
+      execute_process(
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT}
+        OUTPUT_QUIET
+        ERROR_VARIABLE DOXYGEN_ERROR
+        RESULT_VARIABLE DOXYGEN_RESULT
+      )
+      if(NOT DOXYGEN_RESULT EQUAL 0)
+        if(DOXYGEN_RESULT STREQUAL "Segmentation fault" AND EXISTS "${CMAKE_BINARY_DIR}/doc/api/xml/index.xml")
+          message(WARNING "Doxygen exited with '${DOXYGEN_RESULT}' but generated XML output. Continuing so Python docstrings can still be generated.")
+        else()
+          message(FATAL_ERROR "Doxygen failed to generate the API documentation (exit code ${DOXYGEN_RESULT}), which is required for the Python docstrings. Doxygen errors: ${DOXYGEN_ERROR}")
+        endif()
+      endif()
 
     endif()
+
+    add_custom_target(api COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} OUTPUT_QUIET)
 
   endif()
 
@@ -58,17 +74,28 @@
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/manual/conf.py.in ${CMAKE_CURRENT_BINARY_DIR}/manual/conf.py)
 
     set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/manual)
-    set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/manual)
+    # The HTML output (outdir) is kept distinct from, and nested under, the confdir
+    # (${CMAKE_CURRENT_BINARY_DIR}/manual, where conf.py/_static live): otherwise
+    # Sphinx warns that html_static_path sits inside outdir.
+    set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/manual/html)
 
     # Copying _static files of Sphinx to build directories
-    foreach(static_file ${CMAKE_CURRENT_SOURCE_DIR}/manual/_static/)
-      file(COPY ${static_file} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/manual/_static/)
-    endforeach()
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/manual/_static")
+      execute_process(
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+          "${CMAKE_CURRENT_SOURCE_DIR}/manual/_static"
+          "${CMAKE_CURRENT_BINARY_DIR}/manual/_static"
+      )
+    endif()
 
     # Copying tmp files
-    foreach(static_file ${CMAKE_CURRENT_SOURCE_DIR}/manual/tmp/)
-      file(COPY ${static_file} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/manual/tmp/)
-    endforeach()
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/manual/tmp")
+      execute_process(
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+          "${CMAKE_CURRENT_SOURCE_DIR}/manual/tmp"
+          "${CMAKE_CURRENT_BINARY_DIR}/manual/tmp"
+      )
+    endif()
 
     # todo: the SPHINX_EXECUTABLE is already set by FindSphinx.cmake:
     # check that it works without the following overload for Win and Linux:
@@ -87,19 +114,34 @@
                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                       COMMENT "Generating the manual website using Sphinx")
 
-    add_custom_command(
-      TARGET manual POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_directory
-              ${CMAKE_BINARY_DIR}/doc/api/html
-              ${SPHINX_EXTRA_API}
-      COMMENT "Copying generated Doxygen HTML to Sphinx extra_html/api"
-    )
-    
+    if(TARGET api)
+
+      # Without this dependency, Sphinx would read whatever Doxygen output the
+      # build tree happens to hold: none at all when WITH_PYTHON is off, and the
+      # one of the last configuration otherwise.
+      add_dependencies(manual api)
+
+      add_custom_command(
+        TARGET manual POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_BINARY_DIR}/doc/api/html
+                ${SPHINX_BUILD}/api
+        COMMENT "Copying generated Doxygen HTML into the manual output (outdir)/api"
+      )
+
+    else()
+
+      message(STATUS "Doxygen not found, the manual will be generated without its API references.")
+
+    endif()
+
+    # The Doxygen API HTML is already part of ${SPHINX_BUILD}/api (copied there
+    # by the POST_BUILD step above), so installing ${SPHINX_BUILD}/ below is
+    # sufficient -- a separate install of ${CMAKE_CURRENT_BINARY_DIR}/api would
+    # duplicate it under a different, unreferenced layout (api/html/*.html
+    # alongside the Doxyfile, instead of api/*.html).
     install(DIRECTORY ${SPHINX_BUILD}/
             DESTINATION share/codac_website
             OPTIONAL)
-    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/api
-            DESTINATION share/codac_website
-        OPTIONAL)
 
   endif()

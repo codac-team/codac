@@ -1,3 +1,5 @@
+:orphan:
+
 .. _sec-functions-analytic:
 
 Analytic inclusion functions
@@ -7,5 +9,6 @@ Analytic inclusion functions
 
    analytic_functions.rst
    analytic_operators.rst
-   Extension to custom expressions
-   Temporal functions
+
+..   Extension to custom expressions
+..   Temporal functions
