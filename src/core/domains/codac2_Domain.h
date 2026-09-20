@@ -62,7 +62,7 @@ namespace codac2
   };
 
   template<typename... X>
-  static double total_volume(const X&... x)
+  inline double total_volume(const X&... x)
   {
     double v = 0;
     ((v += x.volume()), ...);

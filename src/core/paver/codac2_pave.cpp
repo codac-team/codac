@@ -75,7 +75,7 @@ namespace codac2
     time = (double)(clock()-t_start)/CLOCKS_PER_SEC;
 
     if(verbose)
-      printf("Computation time: %.4fs, %ld boxes\n", time, n_boundary);
+      printf("Computation time: %.4fs, %td boxes\n", time, n_boundary);
     return p;
   }
   
