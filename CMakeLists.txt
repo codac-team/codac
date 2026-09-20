@@ -12,7 +12,26 @@
   #set(CMAKE_C_COMPILER "gcc-7")
   #set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
 
-  project(codac VERSION ${VERSION} LANGUAGES CXX)
+  # CMP0091 (CMake >=3.15) makes the CMAKE_MSVC_RUNTIME_LIBRARY variable set
+  # below actually control MSVC's runtime library selection, instead of
+  # CMake's older behavior of baking a hardcoded /MD.../MDd into
+  # CMAKE_<LANG>_FLAGS_<CONFIG>. It must be set to NEW before project() --
+  # afterwards is too late -- for that variable to have any effect at all.
+  if(POLICY CMP0091)
+    cmake_policy(SET CMP0091 NEW)
+  endif()
+
+  # C as well as C++: the codac sources are all C++, but mathlib, which GAOL
+  # depends on, is C, and codac_gaol_build() builds it when no GAOL is installed
+  # (see scripts/CMakeModules/codac_gaol.cmake). Enabled here, the C compiler
+  # and its flags are settled -- and cached -- by the first configuration, so
+  # that what is handed to that build is the same at every later one. Enabled
+  # further down by a dependency instead, as happened when only CXX was listed,
+  # the compiler went from the name it was given to its full path between the
+  # first configuration and the second, the build of GAOL took that for a
+  # change and was configured again, and everything in codac that includes an
+  # interval was recompiled.
+  project(codac VERSION ${VERSION} LANGUAGES C CXX)
 
   if(NOT VERSION_ID)
     set(PROJECT_VERSION_FULL ${PROJECT_VERSION})
@@ -84,6 +103,230 @@
     add_compile_options(-Wall -Wextra -Wpedantic)
   endif()
 
+  if(MSVC)
+    # The gaol interval library is only ever linked as a Release binary:
+    # codac_gaol_build() (scripts/CMakeModules/codac_gaol.cmake) builds it in
+    # Release whatever the configuration of codac, and a gaol found on the
+    # system comes prebuilt that way too. gaol.lib is thus compiled with the
+    # Release CRT (/MD). MSVC's linker refuses
+    # to mix object files built against different CRT variants in the same
+    # binary -- linking that Release-CRT gaol.lib together with codac's own
+    # object files, which without this override would default to the Debug
+    # CRT (/MDd) in a Debug build, fails with error LNK2038 ("mismatch
+    # detected for 'RuntimeLibrary'/'_ITERATOR_DEBUG_LEVEL'") followed by
+    # fatal error LNK1319.
+    #
+    # Forcing every configuration onto the Release CRT keeps codac's own
+    # Debug build link-compatible with that Release gaol.lib without
+    # having to build gaol in Debug as well. Release
+    # itself already defaulted to /MD, so in practice this only changes
+    # what the Debug configuration uses. Debug builds still get no
+    # optimization (/Od), full debug symbols (/Zi) and AddressSanitizer
+    # (see CODAC_MSVC_ASAN_RUNTIME_DLL below) -- what is traded away is
+    # only the *separate* debug-CRT extras that /MDd would otherwise add on
+    # top of that (its own heap debugging and iterator-debug-level checks).
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+  endif()
+
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_CONFIGURATION_TYPES)
+    # CMAKE_BUILD_TYPE only has meaning for single-configuration generators
+    # (Makefiles, Ninja): multi-configuration generators (Visual Studio,
+    # Xcode, Ninja Multi-Config -- notably what this project's own CI
+    # drives MSVC through, via `-G "Visual Studio 17/18"` in
+    # .github/workflows/*matrix.yml) instead select the actual
+    # configuration later, at build time (cmake --build . --config
+    # Debug), not at configure time; CMAKE_BUILD_TYPE stays whatever it
+    # was defaulted to above ("Release") regardless of what configuration
+    # is later built. So this outer if() only decides whether it is worth
+    # *probing* for Debug-only capabilities at all -- true either when a
+    # single-config build was explicitly configured as Debug, or when a
+    # multi-config generator defers that choice (CMAKE_CONFIGURATION_TYPES
+    # is then non-empty) and so might still end up building a Debug
+    # configuration later. The actual compile/link options below are
+    # separately wrapped in a $<CONFIG:Debug> generator expression, which
+    # -- unlike CMAKE_BUILD_TYPE -- CMake evaluates correctly against
+    # whichever configuration is ultimately built, for both single- and
+    # multi-config generators alike.
+    if(MSVC)
+      # cl.exe silently ignores GCC/Clang-style "-f..."/"-g"/"-O0" flags
+      # with a D9002 warning rather than failing the build, so without this
+      # branch a Debug build under MSVC would quietly end up *unsanitized*
+      # instead of erroring -- a behavior gap invisible until someone
+      # actually diffs test coverage between platforms.
+      #
+      # MSVC's AddressSanitizer (/fsanitize=address) has shipped since
+      # Visual Studio 16.9; there is no UndefinedBehaviorSanitizer on this
+      # toolchain, so Debug builds here get ASan coverage only, not the
+      # ASan+UBSan combination GCC/Clang get below. Its runtime is a DLL
+      # shipped next to cl.exe, rather than a LD_PRELOAD-style shared
+      # object that the dynamic loader pulls in transparently: *every*
+      # executable and DLL built with /fsanitize=address needs that
+      # runtime DLL to be discoverable at load time (next to the binary,
+      # or on PATH) -- per Microsoft's own documentation, this holds even
+      # for /MT static-CRT builds, unlike every other CRT component.
+      # See tests/CMakeLists.txt and python/src/core/CMakeLists.txt for
+      # how CODAC_MSVC_ASAN_RUNTIME_DLL, set below, is used to make that
+      # DLL discoverable for the test suite and for the Python bindings.
+      #
+      # Source: https://learn.microsoft.com/en-us/cpp/sanitizers/asan-runtime
+      #
+      # Rather than enable /fsanitize=address unconditionally, this whole
+      # feature is opt-in on whether the matching runtime DLL can actually
+      # be located next to this cl.exe: if it can't (toolset too old,
+      # target architecture unsupported by MSVC ASan, or a packaging
+      # layout this check doesn't recognize), Debug builds simply stay
+      # unsanitized rather than either failing configuration or compiling
+      # binaries that are guaranteed to fail to load at run time with a
+      # missing-DLL error.
+      #
+      # MSVC ASan runtime binaries are named using Clang's architecture
+      # conventions (i386/x86_64/aarch64), not MSVC's own (X86/x64/ARM64) --
+      # this is documented by Microsoft itself, not a codac convention.
+      # CMAKE_CXX_COMPILER_ARCHITECTURE_ID (a builtin CMake variable, MSVC
+      # only) reports the *target* architecture regardless of host, which
+      # is what a flag like /fsanitize=address needs to match; MSVC
+      # AddressSanitizer only supports x86, x64 and ARM64 (ARM64 as of
+      # VS 2022 17.9, as a preview) -- any other value (32-bit ARM, IA64,
+      # ARM64EC...) is simply left unmapped below, so the search for a
+      # runtime DLL naturally comes up empty and the feature is skipped,
+      # exactly as intended.
+      set(_msvc_asan_dll_arch "")
+      if(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "x64")
+        set(_msvc_asan_dll_arch "x86_64")
+      elseif(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "X86")
+        set(_msvc_asan_dll_arch "i386")
+      elseif(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "ARM64")
+        set(_msvc_asan_dll_arch "aarch64")
+      endif()
+
+      set(CODAC_MSVC_ASAN_RUNTIME_DLL "")
+      if(_msvc_asan_dll_arch)
+        get_filename_component(_msvc_bin_dir "${CMAKE_CXX_COMPILER}" DIRECTORY)
+        # Visual Studio 2022 17.7 Preview 3 unified every CRT configuration
+        # (/MT, /MTd, /MD, /MDd) onto a single clang_rt.asan_dynamic-{arch}.dll.
+        # Older toolsets instead shipped a separate debug-CRT DLL
+        # (clang_rt.asan_dbg_dynamic-{arch}.dll) for /MDd specifically.
+        # CMAKE_MSVC_RUNTIME_LIBRARY is forced to the Release CRT (/MD) for
+        # every configuration above (Debug included), so in practice only
+        # the plain, non-debug DLL is ever needed here now; the /MDd-only
+        # name is kept as a fallback purely in case that override above is
+        # ever relaxed back to the CMake default. Rather than pin an exact
+        # MSVC_VERSION cutoff for the 17.7-era switch -- a compiler-rt
+        # packaging detail, not something reported by any compiler flag --
+        # just look for whichever of the two names actually exists next to
+        # this cl.exe, newest first.
+        foreach(_dll_name
+          "clang_rt.asan_dynamic-${_msvc_asan_dll_arch}.dll"
+          "clang_rt.asan_dbg_dynamic-${_msvc_asan_dll_arch}.dll"
+        )
+          if(EXISTS "${_msvc_bin_dir}/${_dll_name}")
+            set(CODAC_MSVC_ASAN_RUNTIME_DLL "${_msvc_bin_dir}/${_dll_name}")
+            break()
+          endif()
+        endforeach()
+      endif()
+
+      if(CODAC_MSVC_ASAN_RUNTIME_DLL)
+        add_compile_options($<$<CONFIG:Debug>:/fsanitize=address>)
+        # Incremental linking cannot be combined with ASan: the linker drops
+        # /INCREMENTAL as soon as an input module carries ASan metadata, and
+        # says so once per link (warning LNK4300, 870 times across the five
+        # MSVC Debug jobs of .github/workflows/windebugmatrix.yml, VS 2022 and
+        # VS 2026 alike). Asking for it off removes the cause rather than the
+        # message, and leaves LNK4300 free to report any other option ASan
+        # would silently disable. One item per generator expression, for the
+        # DIRECTORY-scope reason explained below.
+        add_link_options($<$<CONFIG:Debug>:/INCREMENTAL:NO>)
+        # Enabling ASan on MSVC also switches on the MSVC STL's own
+        # "container annotation" instrumentation for std::string,
+        # std::vector and (recent toolsets) std::optional: it poisons
+        # their reserved-but-unused capacity so ASan can catch
+        # out-of-bounds access within it, and every translation unit
+        # linked together records, via #pragma detect_mismatch, whether it
+        # was compiled with that instrumentation on or off. gaol.lib
+        # (a Release build without ASan -- see the
+        # CMAKE_MSVC_RUNTIME_LIBRARY comment above for why it is not
+        # built in Debug here) was compiled without ASan, so its
+        # object files carry the instrumentation-off value; without this,
+        # codac's own ASan-instrumented Debug object files would carry the
+        # opposite value, and MSVC's linker would reject the mix with a
+        # second error LNK2038 ("mismatch detected for 'annotate_string' /
+        # 'annotate_vector' / 'annotate_optional'"), on top of the CRT one
+        # already addressed above. _DISABLE_STRING_ANNOTATION and
+        # _DISABLE_VECTOR_ANNOTATION are Microsoft's own documented way to
+        # turn this instrumentation back off so codac's object files match
+        # gaol.lib's; _DISABLE_OPTIONAL_ANNOTATION is added defensively for
+        # the same std::optional check (undocumented as of this writing,
+        # but following Microsoft's existing naming convention for the
+        # other two) -- worst case it is simply an unused macro if that
+        # name turns out to be wrong. Kept as three separate
+        # add_compile_definitions() calls, one flag per $<CONFIG:Debug>
+        # generator expression, for the same reason as the single-flag
+        # add_compile_options() calls further below: this is a
+        # DIRECTORY-scope property, which does not evaluate correctly when
+        # one such expression packs more than one ';'-separated item.
+        add_compile_definitions($<$<CONFIG:Debug>:_DISABLE_STRING_ANNOTATION>)
+        add_compile_definitions($<$<CONFIG:Debug>:_DISABLE_VECTOR_ANNOTATION>)
+        add_compile_definitions($<$<CONFIG:Debug>:_DISABLE_OPTIONAL_ANNOTATION>)
+        message(STATUS "${COLOR_BLUE}MSVC AddressSanitizer will be enabled for Debug-configuration builds (runtime: ${CODAC_MSVC_ASAN_RUNTIME_DLL}).${COLOR_RESET}")
+      else()
+        message(STATUS "${COLOR_RED}No MSVC AddressSanitizer runtime found next to ${CMAKE_CXX_COMPILER} for architecture '${CMAKE_CXX_COMPILER_ARCHITECTURE_ID}': Debug-configuration builds will not be sanitized.${COLOR_RESET}")
+      endif()
+
+      # Cached so python/src/core/CMakeLists.txt and tests/CMakeLists.txt
+      # can reuse this result (empty string if not found) without
+      # repeating the detection above.
+      set(CODAC_MSVC_ASAN_RUNTIME_DLL ${CODAC_MSVC_ASAN_RUNTIME_DLL} CACHE INTERNAL "Path to the MSVC ASan runtime DLL, empty if unavailable")
+    else()
+      # add_compile_options() (a DIRECTORY-scope property, unlike
+      # target_compile_options()) does not evaluate correctly when a single
+      # $<CONFIG:Debug> generator expression's content packs more than one
+      # flag separated by ';' -- reproduced locally with both Ninja and
+      # Unix Makefiles (CMake 3.16 and 4.4.3 alike): the embedded ';' gets
+      # split before the genexpr is fully evaluated, corrupting it into
+      # literal, unrecognized compiler arguments (e.g. the literal text
+      # "$<1:-Wreturn-type" as one broken token). target_compile_options()
+      # is not affected, but this is DIRECTORY-scope by design (it must
+      # apply project-wide, not to one target), so instead each flag gets
+      # its own single-flag generator expression below.
+      add_compile_options($<$<CONFIG:Debug>:-Wreturn-type>)
+      add_compile_options($<$<CONFIG:Debug>:-fno-omit-frame-pointer>)
+      add_compile_options($<$<CONFIG:Debug>:-g>)
+      add_compile_options($<$<CONFIG:Debug>:-O0>)
+
+      # -fsanitize=address,undefined is only added once we have actually
+      # confirmed that this compiler can *link* a sanitized binary, rather
+      # than unconditionally, the way this project used to. On Linux/macOS
+      # GCC/Clang, libasan/libubsan are essentially always installed
+      # alongside the compiler and this check is a formality; the case it
+      # actually guards against is MinGW-w64: the choco `mingw` package used
+      # by .github/workflows/windebugmatrix.yml does not ship libasan.a/
+      # libubsan.a at all for some GCC versions/architectures, and neither
+      # x86 (i686-w64-mingw32) nor x86_64 (x86_64-w64-mingw32) is reliably
+      # covered across the versions that package offers -- there is no
+      # version/architecture combination worth hardcoding an exception list
+      # for. Probing capability directly, exactly like the MSVC ASan
+      # runtime-DLL search above, means
+      # a Debug configuration simply comes out unsanitized on a toolchain
+      # that lacks the runtime, instead of configuring successfully and then
+      # failing later at link time with "cannot find -lasan"/"-lubsan" on
+      # every single target.
+      include(CheckCXXSourceCompiles)
+      set(CMAKE_REQUIRED_FLAGS "-fsanitize=address,undefined")
+      check_cxx_source_compiles("int main() { return 0; }" CODAC_COMPILER_SUPPORTS_ASAN_UBSAN)
+      unset(CMAKE_REQUIRED_FLAGS)
+
+      if(CODAC_COMPILER_SUPPORTS_ASAN_UBSAN)
+        add_compile_options($<$<CONFIG:Debug>:-fsanitize=address>)
+        add_compile_options($<$<CONFIG:Debug>:-fsanitize=undefined>)
+        add_link_options($<$<CONFIG:Debug>:-fsanitize=address,undefined>)
+        message(STATUS "${COLOR_BLUE}ASan/UBSan will be enabled for Debug-configuration builds.${COLOR_RESET}")
+      else()
+        message(STATUS "${COLOR_RED}No ASan/UBSan runtime found for ${CMAKE_CXX_COMPILER}: Debug-configuration builds will not be sanitized.${COLOR_RESET}")
+      endif()
+    endif()
+  endif()
+
   # Temporary attempts to fix errors similar to: 
   # _ number of sections exceeded object file format limit.
   # _ out of memory allocating XXX bytes.
@@ -118,12 +361,47 @@
 
 
 ################################################################################
-# Looking for IBEX
+# Looking for GAOL
 ################################################################################
 
-  find_package(IBEX REQUIRED)
-  ibex_init_common() # IBEX should have installed this function
-  message(STATUS "Found IBEX version ${IBEX_VERSION}")
+  # GAOL is the interval arithmetic library codac2::Interval is built upon, and
+  # mathlib (libultim) the library GAOL computes its elementary functions with.
+  # Both used to come from IBEX, which bundles them, and they were all Codac
+  # needed IBEX for: they are now found, or built, by Codac itself. What comes
+  # from IBEX in doing so, and who wrote it, is said at the top of
+  # scripts/CMakeModules/codac_gaol.cmake and of FindGAOL.cmake next to it.
+  include(codac_gaol)
+
+  # GAOL, found or built, as the imported target Codac::gaol: its include
+  # directories, its libraries, and the flags floating-point rounding depends
+  # on, which ibex_init_common() used to put on the command line -- without
+  # -frounding-math and its companions, the compiler is free to constant-fold in
+  # the wrong rounding mode, and an interval is no longer a bound. They are
+  # GAOL's to say: codac_gaol_find() takes them from the CMake package of GAOL
+  # or from its gaol.pc, and determines them itself only for a GAOL found by its
+  # files alone. The Codac libraries link Codac::gaol PUBLIC, so that every
+  # target linking them is compiled with those flags -- the tests, the examples
+  # and the Python bindings included. This comes before Codac's own flags are
+  # added to CMAKE_CXX_FLAGS below: a GAOL built by codac_gaol_build() is handed
+  # CMAKE_CXX_FLAGS as it is given to this build, and chooses its flags itself.
+  option(ENABLE_FIND_PACKAGE_GAOL "ENABLE_FIND_PACKAGE_GAOL" ON)
+  codac_gaol_find()
+
+  # Consumers need those flags as much as this build does. What Codac::gaol
+  # gives is kept as lists, handed over through CODAC_CXX_FLAGS in
+  # codac-config.cmake, and through the Cflags and Libs lines of codac.pc, which
+  # cannot link a target (see src/CMakeLists.txt).
+  codac_gaol_usage(CODAC_GAOL_INCLUDE_DIRS CODAC_INTERVAL_CXX_FLAGS CODAC_GAOL_LINK_ITEMS)
+  message(STATUS "Interval arithmetic flags: ${CODAC_INTERVAL_CXX_FLAGS}")
+  message(STATUS "GAOL include directories: ${CODAC_GAOL_INCLUDE_DIRS}")
+  message(STATUS "GAOL libraries: ${CODAC_GAOL_LINK_ITEMS}")
+
+  # The flags of ibex_init_common() that are not those of interval arithmetic,
+  # where ibex_init_common() put them, in CMAKE_CXX_FLAGS, so that every target
+  # is compiled with them; handed over to consumers with the others.
+  codac_gaol_portability_flags(CODAC_PORTABILITY_CXX_FLAGS)
+  string(REPLACE ";" " " _codac_portability_cxx_flags "${CODAC_PORTABILITY_CXX_FLAGS}")
+  string(APPEND CMAKE_CXX_FLAGS " ${_codac_portability_cxx_flags}")
 
 
 ################################################################################
@@ -148,6 +426,11 @@
 # Looking for Threads
 ################################################################################
 
+  # The same preference the generated codac-config.cmake asks of consumers, so
+  # that both sides of a link end up with the same answer: without it this
+  # build could settle on -lpthread while a consumer, which does set it, got
+  # -pthread.
+  set(THREADS_PREFER_PTHREAD_FLAG ON)
   find_package(Threads REQUIRED)
 
 ################################################################################
