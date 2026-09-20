@@ -304,7 +304,7 @@ TEST_CASE("IntervalMatrix")
     IntervalVector r2({{-1,0},{-2,0}});
     m1.row(0) = r1.transpose().eval();
     m1.row(1) = r2.transpose().eval();
-    m1.resize_save_values(2,3);
+    m1.conservativeResize(2,3);
     m1(0,2) = Interval(0,3);
     m1(1,2) = Interval(-3,0);
 
@@ -315,7 +315,7 @@ TEST_CASE("IntervalMatrix")
     IntervalMatrix m1(1,3);
     IntervalVector r1({{0,1},{0,2},{0,3}});
     m1.row(0) = r1.transpose().eval();
-    m1.resize_save_values(2,3);
+    m1.conservativeResize(2,3);
     m1(1,0) = Interval(-1,0);
     m1(1,1) = Interval(-2,0);
     m1(1,2) = Interval(-3,0);
@@ -325,7 +325,7 @@ TEST_CASE("IntervalMatrix")
 
   {
     IntervalMatrix e(IntervalMatrix::empty(1,1));
-    e.resize_save_values(2,3);
+    e.conservativeResize(2,3);
     CHECK(e.is_empty());
   }
 

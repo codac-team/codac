@@ -262,7 +262,7 @@ class TestIntervalMatrix(unittest.TestCase):
     r2 = IntervalVector([[-1,0],[-2,0]])
     m1.set_row(0,r1.transpose())
     m1.set_row(1,r2.transpose())
-    m1.resize_save_values(2,3)
+    m1.conservativeResize(2,3)
     m1[0,2] = Interval(0,3)
     m1[1,2] = Interval(-3,0)
 
@@ -271,7 +271,7 @@ class TestIntervalMatrix(unittest.TestCase):
     m1 = IntervalMatrix(1,3)
     r1 = IntervalVector([[0,1],[0,2],[0,3]])
     m1.set_row(0,r1.transpose())
-    m1.resize_save_values(2,3)
+    m1.conservativeResize(2,3)
     m1[1,0] = Interval(-1,0)
     m1[1,1] = Interval(-2,0)
     m1[1,2] = Interval(-3,0)
@@ -279,7 +279,7 @@ class TestIntervalMatrix(unittest.TestCase):
     self.assertTrue(m1 == self.M1())
 
     e = IntervalMatrix.empty(1,1)
-    e.resize_save_values(2,3)
+    e.conservativeResize(2,3)
     self.assertTrue(e.is_empty())
 
     m1 = IntervalMatrix(self.M1())
