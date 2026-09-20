@@ -107,7 +107,9 @@ list(APPEND SRC_TESTS # listing files without extension
   core/tools/codac2_tests_serialization
   core/tools/codac2_tests_transformations
   core/tools/codac2_tests_trunc
-  core/tools/ibex/codac2_tests_ibex
+  # core/tools/ibex/codac2_tests_ibex is not built: it includes the headers of
+  # IBEX, which Codac no longer depends on (the conversions it tests are only
+  # compiled when a program includes IBEX before them)
   ../doc/manual/manual/tools/src
   
   core/trajectory/codac2_tests_AnalyticTraj
@@ -167,7 +169,7 @@ foreach(SRC_TEST ${SRC_TESTS})
   add_executable(${TEST_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/${SRC_TEST}.cpp)
   set(CODAC_HEADERS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../include)
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${CODAC_HEADERS_DIR})
-  target_link_libraries(${TEST_NAME} PUBLIC Ibex::ibex ${CODAC_LIBRARIES} PRIVATE Catch2::Catch2WithMain)
+  target_link_libraries(${TEST_NAME} PUBLIC ${CODAC_LIBRARIES} PRIVATE Catch2::Catch2WithMain)
 
   if(WITH_PYTHON AND SRC_TEST MATCHES "extensions/sympy/")
     target_link_libraries(${TEST_NAME} PRIVATE ${PROJECT_NAME}-sympy pybind11::embed)
