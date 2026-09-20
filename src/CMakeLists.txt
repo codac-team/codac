@@ -24,8 +24,44 @@
 
   set(CODAC_PKG_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc)
 
-  set(CODAC_PKG_CONFIG_CFLAGS "-I\${includedir}/ibex")
+  set(CODAC_PKG_CONFIG_CFLAGS "")
   set(CODAC_PKG_CONFIG_LIBS "-L\${libdir}")
+
+  # Codac's own flags, which this build puts in CMAKE_CXX_FLAGS
+  # (codac_gaol_portability_flags() in scripts/CMakeModules/codac_gaol.cmake),
+  # and the interval arithmetic flags GAOL gives through Codac::gaol,
+  # CODAC_INTERVAL_CXX_FLAGS, set in the top-level CMakeLists.txt. A CMake
+  # consumer gets them through CODAC_CXX_FLAGS; a pkg-config consumer has no
+  # equivalent, and compiling Codac's headers without -frounding-math silently
+  # gives up the guarantee the whole library rests on.
+  foreach(_codac_flags CODAC_PORTABILITY_CXX_FLAGS CODAC_INTERVAL_CXX_FLAGS)
+    if(${_codac_flags})
+      string(REPLACE ";" " " _codac_pkg_config_flags "${${_codac_flags}}")
+      string(APPEND CODAC_PKG_CONFIG_CFLAGS " ${_codac_pkg_config_flags}")
+    endif()
+  endforeach()
+
+  # GAOL's include directories and libraries, as Codac::gaol gives them
+  # (codac_gaol_usage(), in the top-level CMakeLists.txt): where the GAOL found
+  # on this machine is, or, for the GAOL codac_gaol_build() built, where it is
+  # installed with Codac, under ${prefix}. They take the place of the
+  # "Requires: ibex" and -I\${includedir}/ibex of the time Codac reached GAOL
+  # through IBEX. GAOL itself is not named in "Requires:": a GAOL built with
+  # Codac installs its gaol.pc under lib/codac-3rd, where pkg-config does not
+  # look, and a GAOL found by its files has none. The directories the compiler
+  # searches of its own accord are left out, as CMake leaves them out of its
+  # command lines; the libraries are named by their full path, gaol before
+  # ultim, which it depends on.
+  foreach(dir ${CODAC_GAOL_INCLUDE_DIRS})
+    if(NOT dir IN_LIST CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES)
+      codac_gaol_pkg_config_path(dir)
+      string(APPEND CODAC_PKG_CONFIG_CFLAGS " -I${dir}")
+    endif()
+  endforeach()
+  foreach(item ${CODAC_GAOL_LINK_ITEMS})
+    codac_gaol_pkg_config_path(item)
+    string(APPEND CODAC_PKG_CONFIG_LIBS " ${item}")
+  endforeach()
 
   file(GENERATE OUTPUT ${CODAC_PKG_CONFIG_FILE}
                 CONTENT "  prefix=${CMAKE_INSTALL_PREFIX}
@@ -36,7 +72,7 @@
     Description: ${PROJECT_DESCRIPTION}
     Url: ${PROJECT_HOMEPAGE_URL}
     Version: ${PROJECT_VERSION}
-    Requires: ibex
+    Requires:
     Cflags: ${CODAC_PKG_CONFIG_CFLAGS}
     Libs: ${CODAC_PKG_CONFIG_LIBS}
   ")
@@ -48,6 +84,18 @@
 # ==================================
 
   set(CODAC_CMAKE_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake)
+
+  # The definition of Codac::gaol, written by
+  # scripts/CMakeModules/codac_gaol.cmake, which knows where GAOL came from.
+  codac_gaol_config_snippet(CODAC_GAOL_CONFIG_SNIPPET)
+
+  # Codac's own flags (codac_gaol_portability_flags()) and the interval
+  # arithmetic flags GAOL gives (-frounding-math, etc.), for external projects.
+  # In that order, which is the order this build hands them to the compiler in
+  # -- the first through CMAKE_CXX_FLAGS, the second through Codac::gaol, whose
+  # options come after a target's own -- and decides which of two conflicting
+  # flags wins.
+  set(CODAC_CXX_FLAGS ${CODAC_PORTABILITY_CXX_FLAGS} ${CODAC_INTERVAL_CXX_FLAGS})
 
   file(WRITE ${CODAC_CMAKE_CONFIG_FILE}
              "# Try to find Codac
@@ -67,14 +115,24 @@
     find_library(CODAC_UNSUPPORTED_LIBRARY NAMES ${PROJECT_NAME}-unsupported
                  PATH_SUFFIXES lib)
 
-    find_package(IBEX REQUIRED)
+${CODAC_GAOL_CONFIG_SNIPPET}
+    # Projects written for a Codac that depended on IBEX call ibex_init_common()
+    # after find_package(CODAC), as the manual used to tell them to, for the
+    # interval arithmetic flags. Those flags now come with CODAC_CXX_FLAGS, and
+    # this ibex_init_common() does nothing: it is only there so that such
+    # projects still configure. A project that finds IBEX itself, before or
+    # after Codac, gets IBEX's own function instead.
+    if(NOT COMMAND ibex_init_common)
+      function(ibex_init_common)
+      endfunction()
+    endif()
 
     set(CODAC_VERSION ${PROJECT_VERSION})
-    set(CODAC_LIBRARIES \${CODAC_CORE_LIBRARY} \${CODAC_GRAPHICS_LIBRARY} \${CODAC_UNSUPPORTED_LIBRARY} Ibex::ibex)
+    set(CODAC_LIBRARIES \${CODAC_CORE_LIBRARY} \${CODAC_GRAPHICS_LIBRARY} \${CODAC_UNSUPPORTED_LIBRARY} Codac::gaol)
     set(CODAC_INCLUDE_DIRS \${CODAC_CORE_INCLUDE_DIR}/../ \${CODAC_CORE_INCLUDE_DIR}/../eigen3/ \${CODAC_CORE_INCLUDE_DIR} \${CODAC_GRAPHICS_INCLUDE_DIR} \${CODAC_UNSUPPORTED_INCLUDE_DIR})
 
     set(CODAC_C_FLAGS \"\")
-    set(CODAC_CXX_FLAGS \"\")
+    set(CODAC_CXX_FLAGS \"${CODAC_CXX_FLAGS}\")
   ")
 
   if(WITH_PYTHON)
@@ -111,7 +169,7 @@
   endif()
 
   file(APPEND ${CODAC_CMAKE_CONFIG_FILE} "
-    set(CODAC_LIBRARIES \${CODAC_LIBRARIES} \${CODAC_GRAPHICS_LIBRARY} \${CODAC_CORE_LIBRARY})
+    set(CODAC_LIBRARIES \${CODAC_LIBRARIES} \${CODAC_GRAPHICS_LIBRARY} \${CODAC_CORE_LIBRARY} Codac::gaol)
     ")
 
 
