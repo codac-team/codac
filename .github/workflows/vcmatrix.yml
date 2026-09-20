@@ -63,10 +63,6 @@ jobs:
     - run: choco install -y -r --no-progress graphviz doxygen.install & python -m pip install --upgrade pip & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
       if: runner.os=='Windows'
     - run: |
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex.2.8.9.20260819.nupkg --no-check-certificate -nv
-        choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20260819 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
-        del /f /q ibex.2.8.9.20260819.nupkg
-    - run: |
         mkdir build ; cd build
         cmake -E env CXXFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D WITH_CAPD=OFF -D WITH_PYTHON=ON -D PYBIND11_FINDPYTHON=OFF ..
         cmake --build . -j 4 --config Release --target install
