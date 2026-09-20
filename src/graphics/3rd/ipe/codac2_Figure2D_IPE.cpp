@@ -108,7 +108,13 @@ const std::string format_number(double num, double step)
       result += ".";
       double remainder = num - ((double) int_part);  // remainder to add
       int remainder_to_int = std::round(remainder * std::pow(10, -precision));
-      int length_of_remainder =  std::floor(std::log10(remainder_to_int)) + 1; // for example 12 has a length of 2
+      // log10(0) is -inf, which cannot be converted to int: remainder_to_int
+      // is 0 whenever num is (numerically) an exact integer, e.g. num == 2.
+      // and step forces a negative precision anyway. Treating that case as
+      // a length of 0 matches what the "approximation of 0" guard below
+      // already expects, instead of formatting spurious digits for it.
+      int length_of_remainder = (remainder_to_int == 0)
+        ? 0 : std::floor(std::log10(remainder_to_int)) + 1; // for example 12 has a length of 2
 
       // this part is need for the specific case where a number like 1. is represented as 0.999... (int part gives 0 instead of 1)
       if (length_of_remainder > -precision)
