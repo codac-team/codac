@@ -128,6 +128,8 @@ namespace codac2
         }
 
         // Turning the previously identified connected subsets as inner (displayed green)
+        // This code comes from the example coloration.py, 
+        // TODO : factorize it by allowing to pass a list of ConnectedSubset as argument
         auto visitor = [&](std::shared_ptr<PavingNode<PavingInOut>> n)
           {
             std::list<IntervalVector> boxes_to_color;
@@ -159,6 +161,8 @@ namespace codac2
                 }
 
                 IntervalVector prev_x_in = IntervalVector::empty(dim);
+
+                // there used to be a copy x_in = h there, but didn't behave as exepected
 
                 while (h != prev_x_in)
                 {
