@@ -237,6 +237,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCtcPair.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepEllipse.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepEllipse.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepImage.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepImage.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInverse.h

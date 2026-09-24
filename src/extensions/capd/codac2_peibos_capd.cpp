@@ -80,10 +80,10 @@ namespace codac2
         capd::C1Rect2Set s(c);
         timeMap(finalTime, s, solution);
 
-        auto xc = X.mid();
-        auto yc = (sigma(psi_0.eval(xc)) + offset).mid();
+        Vector xc = X.mid();
+        IntervalVector yc = (sigma(psi_0.eval(xc)) + offset);
         capd::ITimeMap::SolutionCurve solution_punct(initialTime);
-        capd::IVector c_punct = to_capd(IntervalVector(yc));
+        capd::IVector c_punct = to_capd(yc);
         capd::C1Rect2Set s_punct(c_punct);
         timeMap_punct(finalTime, s_punct, solution_punct);
 

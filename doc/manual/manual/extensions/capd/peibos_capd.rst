@@ -15,7 +15,7 @@ Considering a dynamical system :math:`\dot{\mathbf{x}}=\gamma(\mathbf{x})`, the 
 Gnomonic atlas
 --------------
 
-To handle the boundary of the initial set :math:`\mathbb{X}_0`, the PEIBOS tool relies on a gnomonic atlas. See :ref:`subsec-functions-peibos-gnomonic-atals`.
+To handle the boundary of the initial set :math:`\mathbb{X}_0`, the PEIBOS tool relies on a gnomonic atlas. See :ref:`subsec-functions-peibos-gnomonic-atlas`.
 
 Use
 ---

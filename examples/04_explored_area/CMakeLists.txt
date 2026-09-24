@@ -32,3 +32,8 @@
   target_compile_options(${PROJECT_NAME} PUBLIC ${CODAC_CXX_FLAGS})
   target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES})
+
+  add_executable(main_peibos main_peibos.cpp)
+  target_compile_options(main_peibos PUBLIC ${CODAC_CXX_FLAGS})
+  target_include_directories(main_peibos SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS})
+  target_link_libraries(main_peibos PUBLIC ${CODAC_LIBRARIES})

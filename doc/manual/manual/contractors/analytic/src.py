@@ -106,5 +106,38 @@ class TestCtcAnalyticManual(unittest.TestCase):
     assert c.fnc().output_size() == 1
     # [ctcinv-7-end]
 
+def tests_SepImage_manual(test):
+
+    # [sepimage-1-beg]
+    y = VectorVar(2)
+    f = AnalyticFunction([y], [3.*(y[0]+1),y[1]+0.5*sin(3.*y[0])])
+    # [sepimage-1-end]
+
+    # [sepimage-2-beg]
+    # {psi0,Sigma} is a gnomonic atlas of the box [-1,1]^2
+    X = VectorVar(1)
+    psi0 = AnalyticFunction([X],[cos(X[0]*PI/2.),sin(X[0]*PI/2.)])
+
+    id = OctaSym([1,2])
+    s = OctaSym([-1,-2])
+
+    Sigma = [id,s]
+    # [sepimage-2-end]
+
+    # [sepimage-3-beg]
+    h = AnalyticFunction([y],sqrt(sqr(y[0])+sqr(y[1])))
+    ctc_in = CtcInverse(h,Interval(0,1))
+    # [sepimage-3-end]
+
+    # [sepimage-4-beg]
+    sep = SepImage(f,psi0,Sigma,0.125,ctc_in)
+    DefaultFigure.pave([[-0.5,6.5],[-1.5,1.5]],sep,0.05)
+    # [sepimage-4-end]
+
+    # [sepimage-5-beg]
+    sep = SepImage(f,psi0,Sigma,0.0625,ctc_in)
+    DefaultFigure.pave([[-0.5,6.5],[-1.5,1.5]],sep,0.05)
+    # [sepimage-5-end]
+
 if __name__ ==  '__main__':
   unittest.main()

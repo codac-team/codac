@@ -107,6 +107,7 @@
     separators/codac2_py_SepCross.cpp
     separators/codac2_py_SepCtcBoundary.cpp
     separators/codac2_py_SepCtcPair.cpp
+    separators/codac2_py_SepImage.cpp
     separators/codac2_py_SepInter.cpp
     separators/codac2_py_SepInverse.cpp
     separators/codac2_py_SepNot.cpp
