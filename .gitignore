@@ -74,6 +74,8 @@ examples/**/*.png
 examples/**/*.jpg
 examples/**/*.svg
 *.ipe
+*.rrd
+*.obj
 
 # Matlab files
 *.asv

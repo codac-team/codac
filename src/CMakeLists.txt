@@ -110,6 +110,21 @@
 
   endif()
 
+  if(WITH_RERUN)
+
+    file(APPEND ${CODAC_CMAKE_CONFIG_FILE} "
+
+  # Optional 3rd party: Rerun
+    find_library(RERUN_SDK_LIBRARY NAMES rerun_sdk PATH_SUFFIXES lib)
+    find_library(RERUN_C_LIBRARY NAMES rerun_c librerun_c PATH_SUFFIXES lib)
+    find_library(ARROW_STATIC_LIBRARY NAMES arrow libarrow PATH_SUFFIXES lib)
+    find_library(ARROW_BUNDLED_LIBRARY NAMES arrow_bundled_dependencies libarrow_bundled_dependencies PATH_SUFFIXES lib)
+
+    set(CODAC_LIBRARIES \${CODAC_LIBRARIES} \${RERUN_SDK_LIBRARY} \${RERUN_C_LIBRARY} \${ARROW_STATIC_LIBRARY} \${ARROW_BUNDLED_LIBRARY} -lws2_32 -luserenv -lntdll -lbcrypt -lcrypt32 -liphlpapi -lncrypt -lnetapi32 -lpdh -lpowrprof -lpsapi -lsecur32)
+    ")
+
+  endif()
+
   file(APPEND ${CODAC_CMAKE_CONFIG_FILE} "
     set(CODAC_LIBRARIES \${CODAC_LIBRARIES} \${CODAC_GRAPHICS_LIBRARY} \${CODAC_CORE_LIBRARY})
     ")

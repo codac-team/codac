@@ -161,6 +161,24 @@
   endif()
 
 ################################################################################
+# Looking for Rerun (if needed)
+################################################################################
+
+  option(WITH_RERUN "Build with Rerun graphics support" ON)
+
+  if(WITH_RERUN)
+    find_package(rerun_sdk QUIET)
+    if(NOT rerun_sdk_FOUND)
+      FetchContent_Declare(
+        rerun_sdk
+        URL https://github.com/rerun-io/rerun/releases/download/0.38.1/rerun_cpp_sdk.zip
+      )
+      FetchContent_MakeAvailable(rerun_sdk)
+    endif()
+    add_compile_definitions(CODAC_WITH_RERUN)
+  endif()
+
+################################################################################
 # Compile sources
 ################################################################################
   
@@ -189,7 +207,7 @@
   if(BUILD_TESTS)
     include(CTest)
     add_custom_target(check
-                      COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure $(ARGS)
+                      COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure 
                       DEPENDS ${PROJECT_NAME} COMMENT "Running the tests")
 
     add_subdirectory(tests)

@@ -2,7 +2,7 @@
  *  Codac binding (graphics)
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou, Maël Godard
+ *  \author     Simon Rohou, Maël Godard, Quentin Brateau
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -30,6 +30,8 @@ void export_Figure2D(py::module& m)
       .def(py::init<>())
       .def_static("VIBES", [](){ return GraphicOutput::VIBES; })
       .def_static("IPE", [](){ return GraphicOutput::IPE; })
+      .def_static("RERUN", [](){ return GraphicOutput::RERUN; })
+      .def_static("OBJ", [](){ return GraphicOutput::OBJ; })
       .def("union", [](GraphicOutput a, GraphicOutput b){ return a | b; },
         GRAPHICOUTPUT_OPERATORUNION_GRAPHICOUTPUT_GRAPHICOUTPUT,
         "x"_a)
@@ -41,6 +43,8 @@ void export_Figure2D(py::module& m)
     py::enum_<GraphicOutput>(m, "GraphicOutput")
       .value("VIBES", GraphicOutput::VIBES)
       .value("IPE", GraphicOutput::IPE)
+      .value("RERUN", GraphicOutput::RERUN)
+      .value("OBJ", GraphicOutput::OBJ)
       .export_values()
       .def(py::self | py::self, GRAPHICOUTPUT_OPERATORUNION_GRAPHICOUTPUT_GRAPHICOUTPUT)
     ;
