@@ -3,7 +3,7 @@
 The 2D Figure classes
 =====================
 
-  Main author: `Maël Godard <https://godardma.github.io>`_
+  Main author: `Maël Godard <https://godardma.github.io>`_, `Quentin Brateau <https://teusner.github.io>`_
 
 This page describes the classes used in Codac for 2D visualization.
 
@@ -14,6 +14,8 @@ Graphical outputs
 
 Two graphical outputs are currently supported in Codac: :ref:`VIBes <sec-graphics-vibes>` and :ref:`IPE <sec-graphics-ipe>`. VIBes is used for real-time 
 visualization while IPE creates a file that can be edited by the IPE editor. These outputs are referenced by the enumeration GraphicOutput:
+Three graphical outputs are currently supported in Codac: :ref:`VIBes <sec-graphics-vibes>`, :ref:`IPE <sec-graphics-ipe>`, and :ref:`Rerun <sec-graphics-rerun>`. VIBes is used for real-time 
+visualization, IPE creates a file that can be edited by the IPE editor, and Rerun generates an interactive recording (`.rrd`). These outputs are referenced by the enumeration GraphicOutput:
 
 .. tabs::
 
@@ -22,18 +24,24 @@ visualization while IPE creates a file that can be edited by the IPE editor. The
     GraphicOutput.VIBES # for VIBes
     GraphicOutput.IPE # for IPE
     GraphicOutput.VIBES | GraphicOutput.IPE # for both
+    GraphicOutput.RERUN # for Rerun
+    GraphicOutput.VIBES | GraphicOutput.IPE | GraphicOutput.RERUN # for all
 
   .. code-tab:: c++
 
     GraphicOutput::VIBES  // for VIBes
     GraphicOutput::IPE  // for IPE
     GraphicOutput::VIBES | GraphicOutput::IPE // for both
+    GraphicOutput::RERUN  // for Rerun
+    GraphicOutput::VIBES | GraphicOutput::IPE | GraphicOutput::RERUN // for all
 
   .. code-tab:: matlab
 
     GraphicOutput().VIBES  % for VIBes
     GraphicOutput().IPE  % for IPE
     GraphicOutput().VIBES.union(GraphicOutput().IPE) % for both
+    GraphicOutput().RERUN  % for Rerun
+    GraphicOutput().VIBES.union(GraphicOutput().IPE).union(GraphicOutput().RERUN) % for all
 
 Note that for the VIBes output to work, the VIBes viewer must be launched before the program is run.
 
@@ -43,6 +51,7 @@ Figure2D
 --------
 
 The basic class for 2D visualization is Figure2D. It is used to create a figure that can be displayed in VIBes or saved in an xml file for IPE.
+The basic class for 2D visualization is Figure2D. It is used to create a figure that can be displayed in VIBes, saved in an xml file for IPE, or exported to Rerun (.rrd).
 The constructor takes two arguments: the name of the figure and the graphical output. A boolean can be added to specify if the figure is to be used
 DefaultFigure (see :ref:`subsec-graphics-2d-figures-defaultfigure`).
 
@@ -51,14 +60,17 @@ DefaultFigure (see :ref:`subsec-graphics-2d-figures-defaultfigure`).
   .. code-tab:: py
 
     fig = Figure2D("My figure", GraphicOutput.VIBES | GraphicOutput.IPE)
+    fig = Figure2D("My figure", GraphicOutput.VIBES | GraphicOutput.IPE | GraphicOutput.RERUN)
 
   .. code-tab:: c++
 
     Figure2D fig ("My Figure",GraphicOutput::VIBES|GraphicOutput::IPE);
+    Figure2D fig ("My Figure", GraphicOutput::VIBES | GraphicOutput::IPE | GraphicOutput::RERUN);
 
   .. code-tab:: matlab
 
     fig = Figure2D("My figure 1", GraphicOutput().VIBES.union(GraphicOutput().IPE));
+    fig = Figure2D("My figure 1", GraphicOutput().VIBES.union(GraphicOutput().IPE).union(GraphicOutput().RERUN));
 
 .. _subsec-graphics-2d-figures-defaultfigure:
 
@@ -72,21 +84,21 @@ Any Figure2D object can be used as DefaultFigure with the set method:
 
   .. code-tab:: py
 
-    fig = Figure2D("My figure", GraphicOutput.VIBES | GraphicOutput.IPE)
+    fig = Figure2D("My figure", GraphicOutput.VIBES | GraphicOutput.IPE | GraphicOutput.RERUN)
     fig.is_default() # is False
     DefaultFigure.set(fig)
     fig.is_default() # is True
 
   .. code-tab:: c++
 
-    std::shared_ptr<codac2::Figure2D> fig = std::make_shared<Figure2D>("My Figure",GraphicOutput::VIBES|GraphicOutput::IPE);
+    std::shared_ptr<codac2::Figure2D> fig = std::make_shared<Figure2D>("My Figure",GraphicOutput::VIBES|GraphicOutput::IPE|GraphicOutput::RERUN);
     fig->is_default(); // is false
     DefaultFigure::set(fig);
     fig->is_default(); // is true
 
   .. code-tab:: matlab
 
-    fig = Figure2D("My figure", GraphicOutput().VIBES.union(GraphicOutput().IPE));
+    fig = Figure2D("My figure", GraphicOutput().VIBES.union(GraphicOutput().IPE.union(GraphicOutput().RERUN)));
     fig.is_default() % is False
     DefaultFigure().set(fig);
     fig.is_default() % is True

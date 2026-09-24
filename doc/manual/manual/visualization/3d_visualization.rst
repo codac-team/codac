@@ -3,7 +3,7 @@
 The 3D Figure class
 ===================
 
-  Main author: `Maël Godard <https://godardma.github.io>`_, `Damien Massé <https://labsticc.fr/fr/annuaire/masse-damien>`_
+  Main author: `Maël Godard <https://godardma.github.io>`_, `Damien Massé <https://labsticc.fr/fr/annuaire/masse-damien>`_, `Quentin Brateau <https://teusner.github.io>`_
 
 This page describes the class used in Codac for 3D visualization.
 
@@ -11,33 +11,44 @@ Figure3D
 --------
 
 The basic class for 3D visualization is Figure3D. It is used to generate a ``.obj`` file that can be imported in any 3D visualization software.
+The basic class for 3D visualization is Figure3D. It can be used to generate a ``.obj`` file that can be imported in any 3D visualization software, or streamed live to the :ref:`Rerun visualizer <sec-graphics-rerun>` (``.rrd``).
 
 For online visualization, the free website `3dviewer <https://3dviewer.net/>`_ can be used.
+For online OBJ visualization, the free website `3dviewer <https://3dviewer.net/>`_ can be used.
 
 The constructor takes one arguments: the name of the object file.
+The constructor takes the name of the figure and optionnaly the graphic output backend (defaulting to ``GraphicOutput::OBJ | GraphicOutput::RERUN``).
 
 .. tabs::
 
   .. code-tab:: py
 
     fig = Figure3D("my_object") # for the object file my_object.obj
+    fig = Figure3D("my_object", GraphicOutput.OBJ | GraphicOutput.RERUN)
 
   .. code-tab:: c++
 
     Figure3D fig ("my_object"); // for the object file my_object.obj
+    Figure3D fig("my_object", GraphicOutput::OBJ | GraphicOutput::RERUN);
 
   .. code-tab:: matlab
 
     fig = Figure3D("my_object") % for the object file my_object.obj
+    fig = Figure3D("my_object", GraphicOutput().OBJ.union(GraphicOutput().RERUN));
 
 Drawing functions
 -----------------
 
 Below are the detailled available drawing functions. The shapes that can be drawn are:
+Below are the detailed available drawing functions. The shapes that can be drawn are:
 
 Geometric shapes
+  - Point
+  - Line
+  - Polyline
   - Box
   - Sphere
+  - Ellipsoid
   - Arrow
   - Zonotope
   - Parallelepiped
@@ -49,19 +60,26 @@ Geometric shapes
 Vehicles
   - Car
   - Plane
+  - AUV
 
 Paving
   - PavingOut (Paving with contractors)
   - PavingInOut (Paving with separators)
   - Subpaving
 
+Trajectories & Tubes
+  - Sampled and Analytic Trajectories
+  - Sliced Tubes
 
+Note that stroke and fill colors can be specified via :ref:`StyleProperties <subsec-graphics-colors-style-properties>`.
 
 Note that only the stroke color is used in all of the supported drawing functions.
+In addition, a function ``draw_axes`` is available to draw the three axes of the 3D space. It can take two arguments:
 
 In addition, a function ``draw_axes`` is available to draw the three axes of the 3D space. It can take two arguments :
 
 - float : the size of the axes
+- double : the size of the axes
 - Vector : the origin of the axes
 
 
@@ -69,23 +87,47 @@ Geometric shapes
 ----------------
 
 All the drawable geometric objects can take a last optionnal argument to set up their stroke color. 
+All the drawable geometric objects can take a last optional argument to set up their style properties (color, line width, layer). 
 For further details, refer to :ref:`subsec-graphics-colors-style-properties`. 
 
 The geometric shapes that can be drawn and their arguments are listed below :
+The geometric shapes that can be drawn and their arguments are listed below:
+
+- draw_point
+
+  - Vector : coordinates of the 3D point
+
+- draw_line
+
+  - Vector : start of the line
+  - Vector : end of the line
+
+- draw_polyline
+
+  - vector<Vector> : sequence of 3D points forming the polyline
 
 - draw_box
 
   - IntervalVector : the box to draw
+  - IntervalVector : the 3D box to draw
 
 - draw_sphere
   
+
   - Vector : the center of the sphere
   - Matrix : the scaling matrix
+  - Matrix : the scaling and rotation matrix
+
+- draw_ellipsoid
+
+  - Ellipsoid : the ellipsoid object to draw
 
 - draw_arrow
 
   - Vector : start of the arrow
   - Matrix : orientation of the arrow (first column)
+  - Vector : start origin of the arrow
+  - Matrix : orientation matrix (first column is the direction)
 
 - draw_zonotope
 
@@ -118,6 +160,7 @@ The geometric shapes that can be drawn and their arguments are listed below :
   - Vector : third point
 
 The ``draw_polygon`` can be used to draw a `star-shaped polygon <https://en.wikipedia.org/wiki/Star-shaped_polygon>`_ when the vectors are coplanar, and more
+The ``draw_polygon`` function can be used to draw a `star-shaped polygon <https://en.wikipedia.org/wiki/Star-shaped_polygon>`_ when the vectors are coplanar, and more
 generally a sequence of adjacent triangles sharing a same vertex.
 
 - draw_polygon
@@ -135,35 +178,51 @@ generally a sequence of adjacent triangles sharing a same vertex.
   - Interval : bounds of p2
   - double : incrementation for p2
   - function<double, double> -\> Vector : the function of the surface, linking each (p1,p2) to a 3D point
+  - function<Vector(double, double)> : the parametric surface function linking (p1, p2) to a 3D point
 
 Vehicles
 --------
 
 All the drawable vehicles can take a last optionnal argument to set up their stroke color. 
+All the drawable vehicles can take a last optional argument to set up their style properties. 
 For further details, refer to :ref:`subsec-graphics-colors-style-properties`. 
 
 The vehicles that can be drawn and their arguments are listed below :
+The vehicles that can be drawn and their arguments are listed below:
 
 - draw_car
 
   - Vector : center of the car
   - Matrix : orientation of the car
+  - Vector : center position of the car
+  - Matrix : orientation matrix of the car
 
 - draw_plane
 
   - Vector : center of the plane
   - Matrix : orientation of the plane
   - bool : (optionnal) defines if the yaw axis is up, default to true
+  - Vector : center position of the plane
+  - Matrix : orientation matrix of the plane
+  - bool : (optional) defines if the yaw axis is pointing upwards, default to true
+
+- draw_AUV
+
+  - Vector : center position of the AUV
+  - Matrix : orientation matrix of the AUV
 
 Paving
 ------
 
 When a paving is drawn, only the inside and boundary boxes are drawn. This is done to avoid outside boxes masking them.
+When a paving is drawn, only the inside and boundary boxes are drawn to avoid outside boxes masking them.
 
 If only one type of paving is drawn (for example a paving with contractors), only one :ref:`subsec-graphics-colors-style-properties` can be defined to choose its edge color.
+If only one type of paving is drawn (for example a paving with contractors), only one :ref:`subsec-graphics-colors-style-properties` can be defined to choose its color.
 If two types are drawn (boundary and inside), two :ref:`subsec-graphics-colors-style-properties` can be passed to select both colors.
 
 The paving that can be drawn and their arguments are listed below :
+The paving that can be drawn and their arguments are listed below:
 
 - draw_paving
 
@@ -172,3 +231,16 @@ The paving that can be drawn and their arguments are listed below :
 - draw_subpaving
 
   - Subpaving : the subpaving to draw
+
+Trajectories & Tubes
+--------------------
+
+3D trajectories and tubes can also be drawn on 3D figures:
+
+- draw_trajectory
+
+  - SampledTraj<Vector> | AnalyticTraj<VectorType> : the 3D trajectory to draw
+
+- draw_tube
+
+  - SlicedTube<IntervalVector> : the 3D tube of interval vectors to draw
