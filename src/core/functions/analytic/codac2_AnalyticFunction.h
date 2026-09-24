@@ -215,7 +215,7 @@ namespace codac2
       {
         this->check_valid_inputs(x...);
         assert_release(this->input_size() <= this->output_size() &&
-                      "Parallelepiped evaluation requires more outputs than inputs.");
+                      "Parallelepiped evaluation can not take more input than output.");
         assert_release(this->input_size() > 0 &&
                     "Parallelepiped evaluation requires at least one input.");
 
