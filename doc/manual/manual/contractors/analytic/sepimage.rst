@@ -8,28 +8,31 @@ The SepImage separator
 Definition
 ----------
 
-Consider a function :math:`\mathbf{f}:\mathbb{R}^n\to \mathbb{R}^p`. 
-The ``SepImage`` separator allows one to handle constraints of the form :math:`\mathbf{y}\in\mathbf{f}(\mathbb{X})` 
-by separating input boxes :math:`[\mathbf{y}]\in\mathbb{IR}^p`.
+Consider a set :math:`\mathbb{X}\subset\mathbb{R}^n` and a function :math:`\mathbf{f}:\mathbb{R}^n\to\mathbb{R}^p`.
+The initial set :math:`\mathbb{X}` is provided through a contractor, while its boundary is described by a gnomonic atlas.
+The function :math:`\mathbf{f}` is provided as an :class:`~codac2.AnalyticFunction`, allowing interval evaluations of its image.
+
+The ``SepImage`` separator handles the image set :math:`\mathbf{f}(\mathbb{X})` by separating boxes
+:math:`[\mathbf{y}]\in\mathbb{IR}^p` with respect to the constraint :math:`\mathbf{y}\in\mathbf{f}(\mathbb{X})`.
 
 Construction and basic usage
 ----------------------------
 
 The ``SepImage`` relies on a boundary approach to compute the image set. The boundary of the initial set needs to be 
 covered by a :ref:`gnomonic atlas <subsec-functions-peibos-gnomonic-atlas>`. To compute the image of the boundary,
-the initial box :math:`\left[-1,1\right]^m` can be subdivided up to a size :math:`\epsilon` and the image of each resulting box 
+the parameter box :math:`\left[-1,1\right]^m` can be subdivided up to a size :math:`\epsilon` and the image of each resulting box 
 is computed. Note that if one chooses to take :math:`\epsilon=2`, only one computation will be done per chart of the atlas. 
 
-Once this image of the boundary has been computed, the ``SepImage`` needs to a way to characterize if a point is inside or 
-outside of the image set. To do so, it looks for an antecedent of the point in the initial set. An additionnal contractor on 
+Once this image of the boundary has been computed, the ``SepImage`` needs a way to characterize if a point is inside or 
+outside of the image set. To do so, it looks for an antecedent of the point in the initial set. An additional contractor on 
 the initial set is then required.
 
 The typical workflow is:
 
 1. Define analytic variables (scalar, vector, matrix) associated with the domain of the function.
 2. Build an :class:`~codac2.AnalyticFunction`.
-3. Define a gnomonic atlas on the boundary of the initial set
-4. Define a contractor on this same initial set
+3. Define a gnomonic atlas on the boundary of the initial set.
+4. Define a contractor for this same initial set.
 5. Instantiate ``SepImage`` with the atlas, the function, the resolution :math:`\epsilon` and the contractor.
 6. Contract an input box :math:`[\mathbf{y}]` or pave the separator in the image space.
 
@@ -79,8 +82,8 @@ For the atlas, the image of :math:`\left[-1,1\right]` by the function
   \end{array}
   \right)
 
-is half of the unit cicle. The other half can be obtained with a rotation of :math:`\pi` rad. Such atlas 
-is constucted in codac as  
+is half of the unit circle. The other half can be obtained with a rotation of :math:`\pi` rad. Such atlas 
+is constructed in Codac as follows:  
 
 .. tabs::
 
@@ -121,7 +124,7 @@ In this example, the constraint on the initial set can be seen as a distance con
       :dedent: 4
 
 The separator can then be constructed and used, for example with a paver to get both an inner and an outer approximation of the image set.
-The resulting paving is showed in the next figure.
+The resulting paving is shown in the next figure.
 
 .. tabs::
 
@@ -145,7 +148,7 @@ The resulting paving is showed in the next figure.
   :width: 400px
   :align: center
 
-With a lower resolution, the performances of the separator improve as shown in the following figure.
+With a finer resolution (i.e., a smaller :math:`\epsilon`), the approximation provided by the separator improves, as shown in the following figure.
 
 .. tabs::
 
@@ -169,7 +172,7 @@ With a lower resolution, the performances of the separator improve as shown in t
   :width: 400px
   :align: center
 
-A more complex example is available on the public github repository. It treats the topic of the explored area, 
+A more complex example is available on the public GitHub repository. It treats the topic of the explored area, 
 which is a classical problem in robotics.
 
 * `Python version <https://github.com/codac-team/codac/blob/codac2/examples/04_explored_area/main_peibos.py>`_
