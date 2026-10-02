@@ -16,6 +16,7 @@
 #include "codac2_AnalyticExprWrapper.h"
 #include "codac2_arith_sub.h"
 #include "codac2_arith_mul.h"
+#include "codac2_inversion.h"
 
 namespace codac2
 {
@@ -102,7 +103,7 @@ namespace codac2
   inline Interval DetOp::fwd(const IntervalMatrix& x)
   {
     assert_release(x.is_squared() && "can only compute determinants for a square matrix");
-    assert_release((x.rows() == 1 || x.rows() == 2) && "determinant not yet computable for n×n matrices, n>2");
+//    assert_release((x.rows() == 1 || x.rows() == 2) && "determinant not yet computable for n×n matrices, n>2");
 
     if(x.rows() == 1) // 1×1 matrix
       return x(0,0);
@@ -110,8 +111,10 @@ namespace codac2
     else if(x.rows() == 2) // 2×2 matrix
       return x(0,0)*x(1,1)-x(0,1)*x(1,0);
 
-    else
-      return Interval::empty(); // unhandled case
+    else {
+      auto ret = cofactor_matrix_enclosure(x);
+      return ret.second;
+    }
   }
 
   inline ScalarType DetOp::fwd_natural(const MatrixType& x)
@@ -138,25 +141,35 @@ namespace codac2
     
     IntervalMatrix d(1, x.da.cols());
     if (x.a.rows()==2) { /* otherwise, will fail afterwards */
-       for (Index i=0; i < d.cols() ; i++) {
-          d(0,i) = x.da(0,i)*x.a(1,1) + x.da(3,i)*x.a(0,0)
-		 - x.da(1,i)*x.a(0,1) - x.da(2,i)*x.a(1,0);
+         for (Index i=0; i < d.cols() ; i++) {
+            d(0,i) = x.da(0,i)*x.a(1,1) + x.da(3,i)*x.a(0,0)
+  		 - x.da(1,i)*x.a(0,1) - x.da(2,i)*x.a(1,0);
 		/* note:  ColMajor is assumed here */
-       }      
+         }      
+         return {
+           fwd(x.m),
+           fwd(x.a),
+           d, 
+           x.def_domain
+         };
+    } else {
+       auto ret1 = cofactor_matrix_enclosure(x.a);
+       for (Index i=0; i < d.cols() ; i++) 
+         d(0,i)  = ret1.first.reshaped<Eigen::ColMajor>().dot(x.da.col(i));
+       return {
+         fwd(x.m),
+         ret1.second,
+         d, 
+         x.def_domain
+       };
     }
- 
-    return {
-      fwd(x.m),
-      fwd(x.a),
-      d, 
-      x.def_domain
-    };
+    
   }
 
   inline void DetOp::bwd(const Interval& y, IntervalMatrix& x)
   {
     assert_release(x.is_squared() && "can only compute determinants for a square matrix");
-    assert_release((x.rows() == 1 || x.rows() == 2) && "determinant not yet computable for n×n matrices, n>2");
+//    assert_release((x.rows() == 1 || x.rows() == 2) && "determinant not yet computable for n×n matrices, n>2");
 
     if(x.rows() == 1) // 1×1 matrix
       x(0,0) &= y;
@@ -169,9 +182,11 @@ namespace codac2
       MulOp::bwd(z2, x(1,0), x(0,1));
     }
 
-    else
+    else /* we only check that the determinant intersects y */
     {
-      // unhandled case
+      auto ret = cofactor_matrix_enclosure(x);
+      if (ret.second.is_disjoint(y)) x.set_empty();
+      // otherwise, do nothing 
     }
   }
 
@@ -258,10 +273,19 @@ namespace codac2
     IntervalMatrix a(3,3);
     a.col(0) = x1.a; a.col(1) = x2.a; a.col(2) = x3.a;
 
+    assert(x1.da.cols() == x2.da.cols());
+    assert(x1.da.cols() == x3.da.cols());
+    IntervalMatrix d(1, x1.da.cols());
+    auto ret1 = cofactor_matrix_enclosure(a);
+    for (Index i=0; i < d.cols() ; i++) {
+       d(0,i)  = ret1.first.col(0).dot(x1.da.col(i));
+       d(0,i)  += ret1.first.col(1).dot(x2.da.col(i));
+       d(0,i)  += ret1.first.col(2).dot(x3.da.col(i));
+    }
     return {
       fwd(m),
-      fwd(a),
-      IntervalMatrix(0,0), // not supported yet for auto diff
+      ret1.second,
+      d, 
       x1.def_domain && x2.def_domain && x3.def_domain
     };
   }
