@@ -51,4 +51,11 @@ TEST_CASE("Matrix")
 
   y = inverse_enclosure(w);
   CHECK((w.template cast<Interval>()*y).contains(Matrix::Identity(3,3)));
+
+  auto cm = cofactor_matrix_enclosure(w);
+  CHECK(Approx(cm.second)==Interval(-1.0));
+  CHECK(((1.0/cm.second)*
+                cm.first.transpose()*IntervalMatrix(w)).contains(Matrix::Identity(3,3)));
+
+
 }

@@ -48,5 +48,13 @@ void export_inversion(py::module& m)
       INTERVALMATRIX_INFINITE_SUM_ENCLOSURE_CONST_INTERVALMATRIX_REF_DOUBLE_REF,
       "A"_a)
 
+    .def("cofactor_matrix_enclosure", [](const Matrix& A) { return cofactor_matrix_enclosure(A); },
+      INTERVALMATRIX_INFINITE_SUM_ENCLOSURE_CONST_INTERVALMATRIX_REF_DOUBLE_REF,
+      "A"_a)
+
+    .def("cofactor_matrix_enclosure", [](const IntervalMatrix& A) { return cofactor_matrix_enclosure(A); },
+      PAIR_INTERVALMATRIXINTERVAL_COFACTOR_MATRIX_ENCLOSURE_CONST_EIGEN_MATRIXBASE_OTHERDERIVED_REF,
+      "A"_a)
+
    ;
 }
