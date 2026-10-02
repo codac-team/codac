@@ -68,7 +68,7 @@ Related content
 ---------------
 
 .. |polar-pdf| replace:: **Download the paper**
-.. _polar-pdf: https://www.ensta-bretagne.fr/jaulin/paper_polar.pdf
+.. _polar-pdf: https://webperso.ensta.fr/jaulin/paper_polar.pdf
 
 .. admonition:: Related publication
   

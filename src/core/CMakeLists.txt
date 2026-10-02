@@ -237,6 +237,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepCtcPair.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepEllipse.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepEllipse.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepImage.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepImage.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepInverse.h
@@ -249,6 +251,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepProj.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepQInter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepQInter.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepTest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepTest.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepTransform.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepTransform.h
     ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac2_SepUnion.cpp

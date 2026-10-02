@@ -12,6 +12,7 @@
 #include <codac2_CtcFixpoint.h>
 #include <codac2_SepInverse.h>
 #include <codac2_CtcInverseNotIn.h>
+#include <codac2_SepImage.h>
 #include <codac2_Approx.h>
 #include <codac2_Figure2D.h>
 
@@ -85,5 +86,41 @@ TEST_CASE("CtcInverse - manual")
 
     CHECK(c.fnc().input_size() == 2);
     CHECK(c.fnc().output_size() == 1);
+  }
+}
+
+TEST_CASE("SepImage - manual")
+{
+  {
+    // [sepimage-1-beg]
+    VectorVar y (2);
+    AnalyticFunction f ({y},{3.*(y[0]+1),y[1]+0.5*sin(3.*y[0])});
+    // [sepimage-1-end]
+
+    // [sepimage-2-beg]
+    // {psi0,Sigma} is a gnomonic atlas of the unit circle
+    VectorVar X(1);
+    AnalyticFunction psi0 ({X},{cos(X[0]*PI/2.),sin(X[0]*PI/2.)});
+
+    OctaSym id ({1, 2});
+    OctaSym s ({-1, -2});
+
+    vector<OctaSym> Sigma ({id,s});
+    // [sepimage-2-end]
+
+    // [sepimage-3-beg]
+    AnalyticFunction h ({y},sqrt(sqr(y[0])+sqr(y[1])));
+    CtcInverse ctc_in (h,Interval(0,1));    
+    // [sepimage-3-end]
+
+    // [sepimage-4-beg]
+    SepImage sep1 (f,psi0,Sigma,0.125,ctc_in);
+    DefaultFigure::pave({{-0.5,6.5},{-1.5,1.5}},sep1,0.05);
+    // [sepimage-4-end]
+
+    // [sepimage-5-beg]
+    SepImage sep2 (f,psi0,Sigma,0.0625,ctc_in);
+    DefaultFigure::pave({{-0.5,6.5},{-1.5,1.5}},sep2,0.05);
+    // [sepimage-5-end]
   }
 }

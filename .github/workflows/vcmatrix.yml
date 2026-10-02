@@ -19,28 +19,32 @@ jobs:
         matrix:
             cfg:
             # Should be Visual Studio 2015 for Python 3.5-3.7, Visual Studio 2019 for Python 3.8-3.10, but need at least Visual Studio 2022 for C++20 compatibility...?
-            - { os: windows-2022    , shell: cmd , arch: x86    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 14, desc: 'Windows Visual Studio 2022 x86 Python 3.14' }
-            - { os: windows-2022    , shell: cmd , arch: x86    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 13, desc: 'Windows Visual Studio 2022 x86 Python 3.13' }
-            - { os: windows-2022    , shell: cmd , arch: x86    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 12, desc: 'Windows Visual Studio 2022 x86 Python 3.12' }
-            - { os: windows-2022    , shell: cmd , arch: x86    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 11, desc: 'Windows Visual Studio 2022 x86 Python 3.11' }
-            - { os: windows-2022    , shell: cmd , arch: x86    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 10, desc: 'Windows Visual Studio 2022 x86 Python 3.10' }
-            - { os: windows-2022    , shell: cmd , arch: x86    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 9 , desc: 'Windows Visual Studio 2022 x86 Python 3.9' }
-            - { os: windows-2022    , shell: cmd , arch: x86    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 8 , desc: 'Windows Visual Studio 2022 x86 Python 3.8' }
-            - { os: windows-2022    , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 14, desc: 'Windows Visual Studio 2022 x64 Python 3.14' }
-            - { os: windows-2022    , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 13, desc: 'Windows Visual Studio 2022 x64 Python 3.13' }
-            - { os: windows-2022    , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 12, desc: 'Windows Visual Studio 2022 x64 Python 3.12' }
-            - { os: windows-2022    , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 11, desc: 'Windows Visual Studio 2022 x64 Python 3.11' }
-            - { os: windows-2022    , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 10, desc: 'Windows Visual Studio 2022 x64 Python 3.10' }
-            - { os: windows-2022    , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 9 , desc: 'Windows Visual Studio 2022 x64 Python 3.9' }
-            - { os: windows-2022    , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 8 , desc: 'Windows Visual Studio 2022 x64 Python 3.8' }
+            - { os: windows-2022         , shell: cmd , arch: x86    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 14, desc: 'Windows Visual Studio 2022 x86 Python 3.14' }
+            - { os: windows-2022         , shell: cmd , arch: x86    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 13, desc: 'Windows Visual Studio 2022 x86 Python 3.13' }
+            - { os: windows-2022         , shell: cmd , arch: x86    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 12, desc: 'Windows Visual Studio 2022 x86 Python 3.12' }
+            - { os: windows-2022         , shell: cmd , arch: x86    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 11, desc: 'Windows Visual Studio 2022 x86 Python 3.11' }
+            - { os: windows-2022         , shell: cmd , arch: x86    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 10, desc: 'Windows Visual Studio 2022 x86 Python 3.10' }
+            - { os: windows-2022         , shell: cmd , arch: x86    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 9 , desc: 'Windows Visual Studio 2022 x86 Python 3.9' }
+            - { os: windows-2022         , shell: cmd , arch: x86    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 8 , desc: 'Windows Visual Studio 2022 x86 Python 3.8' }
+            - { os: windows-11-arm       , shell: cmd , arch: arm64  , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A arm64', cpcfg: '-win_arm64', py_v_maj: 3, py_v_min: 14, desc: 'Windows Visual Studio 2022 arm64 Python 3.14' }
+            - { os: windows-11-arm       , shell: cmd , arch: arm64  , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A arm64', cpcfg: '-win_arm64', py_v_maj: 3, py_v_min: 13, desc: 'Windows Visual Studio 2022 arm64 Python 3.13' }
+            - { os: windows-11-arm       , shell: cmd , arch: arm64  , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A arm64', cpcfg: '-win_arm64', py_v_maj: 3, py_v_min: 12, desc: 'Windows Visual Studio 2022 arm64 Python 3.12' }
+            - { os: windows-11-arm       , shell: cmd , arch: arm64  , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A arm64', cpcfg: '-win_arm64', py_v_maj: 3, py_v_min: 11, desc: 'Windows Visual Studio 2022 arm64 Python 3.11' }
+            - { os: windows-2022         , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 14, desc: 'Windows Visual Studio 2022 x64 Python 3.14' }
+            - { os: windows-2022         , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 13, desc: 'Windows Visual Studio 2022 x64 Python 3.13' }
+            - { os: windows-2022         , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 12, desc: 'Windows Visual Studio 2022 x64 Python 3.12' }
+            - { os: windows-2022         , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 11, desc: 'Windows Visual Studio 2022 x64 Python 3.11' }
+            - { os: windows-2022         , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 10, desc: 'Windows Visual Studio 2022 x64 Python 3.10' }
+            - { os: windows-2022         , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 9 , desc: 'Windows Visual Studio 2022 x64 Python 3.9' }
+            - { os: windows-2022         , shell: cmd , arch: x64    , runtime: vc17          , cmake_params: '-G "Visual Studio 17" -T v143 -A x64'  , cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 8 , desc: 'Windows Visual Studio 2022 x64 Python 3.8' }
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         submodules: true
         fetch-depth: 0
         clean: false
-    - uses: actions/setup-python@v6
+    - uses: actions/setup-python@v7
       with:
         python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
         architecture: ${{ matrix.cfg.arch }}
@@ -59,9 +63,9 @@ jobs:
     - run: choco install -y -r --no-progress graphviz doxygen.install & python -m pip install --upgrade pip & pip install --upgrade wheel setuptools sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
       if: runner.os=='Windows'
     - run: |
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20250626/ibex.2.8.9.20250626.nupkg --no-check-certificate -nv
-        choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20250626 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20250626/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
-        del /f /q ibex.2.8.9.20250626.nupkg
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex.2.8.9.20260819.nupkg --no-check-certificate -nv
+        choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20260819 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
+        del /f /q ibex.2.8.9.20260819.nupkg
     - run: |
         mkdir build ; cd build
         cmake -E env CXXFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /MP4 /wd4267 /wd4244 /wd4305 /wd4996" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D WITH_CAPD=OFF -D WITH_PYTHON=ON -D PYBIND11_FINDPYTHON=OFF ..
