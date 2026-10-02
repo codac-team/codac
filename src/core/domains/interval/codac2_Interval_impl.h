@@ -152,7 +152,7 @@ namespace codac2
 
   inline double Interval::smag() const
   {
-    return (abs(lb()) > abs(ub())) ? lb() : ub();
+    return (std::abs(lb()) > std::abs(ub())) ? lb() : ub();
   }
 
   inline double Interval::smig() const
