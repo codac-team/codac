@@ -55,7 +55,7 @@ namespace codac2
       }
 
       else
-        assert_release(false && "FlatInputLayout: unsupported variable type in function argument list");
+        assert_release_unreachable("FlatInputLayout: unsupported variable type in function argument list");
     }
 
     _size = flat;
