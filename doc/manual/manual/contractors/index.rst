@@ -5,6 +5,7 @@ Contractors, separators
 .. toctree::
 
   CtcInter <set/ctcinter>
+  SepImage <analytic/sepimage>
   CtcInverse <analytic/ctcinverse>
   CtcLohner <dynamic/ctclohner>
   CtcDist <geometric/ctcdist>
@@ -76,6 +77,9 @@ Overview of contractors and separators
 
    * - ``CtcAction``
      - ``SepAction``
+
+   * - —
+     - :ref:`SepImage <sec-ctc-analytic-sepimage>`
 
    * - :ref:`CtcInverse <sec-ctc-analytic-ctcinverse>`
      - ``SepInverse``

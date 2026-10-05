@@ -283,6 +283,7 @@ User manual
       * SepNot
       * SepAction
    * Analytic separators
+      * :ref:`sec-ctc-analytic-sepimage`
       * SepInverse
       * SepTransform
    * Geometrical separators

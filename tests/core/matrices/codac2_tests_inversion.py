@@ -52,6 +52,20 @@ class TestInversion(unittest.TestCase):
     v = inverse_enclosure(u)
     self.assertTrue((u*v).contains(Matrix.eye(3,3)))
 
+  def test_Inversion_4(self):
+     
+    w = Matrix([
+      [ 1,2,0 ],
+      [ 3,4,1 ],
+      [ 0,1,0 ]
+    ])
+
+    y = inverse_enclosure(w);
+    self.assertTrue((w*y).contains(Matrix.eye(3,3)))
+     
+    cm = cofactor_matrix_enclosure(w)
+    self.assertTrue(Approx(cm[1])==-1.0)
+    self.assertTrue(((1.0/cm[1])*cm[0].transpose()*w).contains(Matrix.eye(3,3)))
 
 if __name__ ==  '__main__':
   unittest.main()

@@ -9,7 +9,7 @@ Parallelepiped inclusion function
 Use case
 --------
 
-Consider a function :math:`\mathbf{f}:\mathbb{R}^n\to\mathbb{R}^m`. In the case where :math:`0<n<m`,
+Consider a function :math:`\mathbf{f}:\mathbb{R}^n\to\mathbb{R}^m`. In the case where :math:`0<n\leq m`,
 a parallelepiped inclusion function is available in the library.
 
 A parallelepiped inclusion function of :math:`\mathbf{f}` is noted :math:`\langle\mathbf{f}\rangle`.
