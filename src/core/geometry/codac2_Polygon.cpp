@@ -239,8 +239,7 @@ namespace codac2
             return { {p[0],prev_float(oo)}, p };
           default:
           {
-            assert_release(false &&
-              "failed to test if the point is contained in polygon");
+            assert_release_unreachable("failed to test if the point is contained in polygon");
             return Segment(IntervalVector(2),IntervalVector(2));
           }
         }

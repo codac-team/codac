@@ -149,6 +149,7 @@ This list is in alphabetical order by surname.
   * `Morgan Louédec <https://morgan-louedec.fr>`_
   * `Damien Massé <https://lab-sticc.univ-brest.fr/~dmasse>`_
   * `Bertrand Neveu <http://imagine.enpc.fr/~neveub>`_
+  * `Jordan Ninin <https://sites.google.com/site/jordanninin>`_
   * Verlein Radwan
   * `Andreas Rauh <https://www.interval-methods.de>`_
   * `Simon Rohou <http://simon-rohou.fr/research>`_

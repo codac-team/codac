@@ -35,11 +35,11 @@ Available Files
      - :download:`logo_codac_transparent.png </_static/logos/logo_codac_transparent.png>`
 
    * - .. image:: /_static/logos/logo_codac_transparent.svg
-          :alt: Codac Logo Transparent PDF
+          :alt: Codac Logo Transparent SVG
           :class: reveal-bg
           :width: 120px
      - Logo with transparent background (SVG).
-     - :download:`logo_codac_transparent.pdf </_static/logos/logo_codac_transparent.svg>`
+     - :download:`logo_codac_transparent.svg </_static/logos/logo_codac_transparent.svg>`
 
    * - .. image:: /_static/logos/qr_code_codac.png
           :alt: Codac QR Code

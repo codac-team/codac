@@ -86,6 +86,7 @@ This list is in alphabetical order by surname.
 - [Morgan Louédec](https://morgan-louedec.fr)
 - [Damien Massé](https://lab-sticc.univ-brest.fr/~dmasse)
 - [Bertrand Neveu](http://imagine.enpc.fr/~neveub)
+- [Jordan Ninin](https://sites.google.com/site/jordanninin)
 - Verlein Radwan
 - [Andreas Rauh](https://www.interval-methods.de)
 - [Simon Rohou](http://simon-rohou.fr/research)

@@ -52,7 +52,7 @@ py::class_<SampledTraj<T>> _export_SampledTraj(py::module& m, const string& clas
     exported_class
 
       .def(py::init(
-          [](const py::array_t<double>& l_t, const py::array_t<double>& l_x)
+          [](const py::array_t<double>& l_t, const py::array_t<double, py::array::c_style | py::array::forcecast>& l_x)
             {
               if constexpr(std::is_same_v<T,Vector>)
               {

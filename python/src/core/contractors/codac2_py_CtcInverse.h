@@ -81,7 +81,7 @@ void export_CtcInverse(py::module& m,
     };
 
     if(xs.size() == 0)
-      assert_release(false && "contract() expects at least one argument");
+      assert_release_unreachable("contract() expects at least one argument");
 
     // Fast paths already consistent with the typed overloads
 
@@ -114,7 +114,7 @@ void export_CtcInverse(py::module& m,
         has_tube_args = true;
       else
       {
-        assert_release(false && "contract(): variadic mode only supports "
+        assert_release_unreachable("contract(): variadic mode only supports "
           "Interval / IntervalVector / SlicedTube<Interval> / SlicedTube<IntervalVector>");
       }
     }
