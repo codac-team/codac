@@ -119,11 +119,9 @@ namespace codac2
 
 
   /**
-   * \brief compute the interval cofactor matrix, as well as the 
-   * determinant, of a square matrix 
+   * \brief Compute the interval cofactor matrix, as well as the determinant, of a square matrix 
    * \param A A matrix expression, possibly interval.
-   * \return The enclosure of the cofactor matrix (first) 
-   * and determinant (second)
+   * \return The enclosure of the cofactor matrix (first) and determinant (second)
    */
   template<typename OtherDerived>
   inline std::pair<IntervalMatrix,Interval>
