@@ -13,29 +13,52 @@ ctc = CtcInverse(f, [0,0])
 p_ctc = pave([[0,2],[2,4],[0,10]], ctc, 0.02)
 fig_ctc=Figure3D("Paving contractor")
 fig_ctc.draw_paving(p_ctc)
+fig_ctc = Figure3D("Paving contractor", GraphicOutput.OBJ | GraphicOutput.RERUN)
+fig_ctc.draw_paving(p_ctc, StyleProperties(Color.yellow(0.5), "paving"))
 
 sep_ellipsoid1=SepInverse (AnalyticFunction([x], 0.5*sqr(x[0])+x[0]*x[1]+x[0]*x[2]+2*sqr(x[1])+2*sqr(x[2])),Interval(0.4,1))
 sep_ellipsoid2=SepInverse (AnalyticFunction([x], 3*sqr(x[0])+x[0]*x[1]+x[0]*x[2]+sqr(x[1])+sqr(x[2])),Interval(0.,1))
 p_sep = pave([[-1.5,1.5],[-1.5,1.5],[-1.5,1.5]], sep_ellipsoid1&sep_ellipsoid2, 0.1)
 fig_sep = Figure3D("Paving separator")
+sep_ellipsoid1 = SepInverse(AnalyticFunction([x], 0.5*sqr(x[0])+x[0]*x[1]+x[0]*x[2]+2*sqr(x[1])+2*sqr(x[2])), Interval(0.4, 1))
+sep_ellipsoid2 = SepInverse(AnalyticFunction([x], 3*sqr(x[0])+x[0]*x[1]+x[0]*x[2]+sqr(x[1])+sqr(x[2])), Interval(0.0, 1))
+p_sep = pave([[-1.5, 1.5], [-1.5, 1.5], [-1.5, 1.5]], sep_ellipsoid1 & sep_ellipsoid2, 0.1)
+fig_sep = Figure3D("Paving separator", GraphicOutput.OBJ | GraphicOutput.RERUN)
 fig_sep.draw_axes(0.4)
 fig_sep.draw_paving(p_sep)
+fig_sep.draw_paving(p_sep, StyleProperties(Color.yellow(0.3), "boundary"), StyleProperties(Color.green(0.5), "inside"))
 
 fig_examples = Figure3D("3D examples")
+fig_examples = Figure3D("3D examples", GraphicOutput.OBJ | GraphicOutput.RERUN)
 fig_examples.draw_axes()
 fig_examples.draw_axes(0.5)
 fig_examples.draw_axes(2.0,[0.5,0.5,0.5])
 fig_examples.draw_triangle([1,0,0],[0,1,0],[0,0,1],StyleProperties(Color.dark_green(0.5),"triangle"))
+fig_examples.draw_triangle([1,0,0],[0,1,0],[0,0,1],StyleProperties(Color.dark_green(0.5),"triangle1"))
 fig_examples.draw_triangle([2,0,0],
                         Matrix([[-1,0,0],[0,1,1],[0,0,-1]]),
                             [1,0,0],[0,1,0],[0,0,1],Color.purple(0.5))
+                            [1,0,0],[0,1,0],[0,0,1],StyleProperties(Color.purple(0.5),"triangle2"))
 fig_examples.draw_sphere([0,0,2],Matrix([[-1,0,0],[0,1,1],[0,0,-1]]),
                             StyleProperties(Color.yellow(0.6),"sphere"))
 fig_examples.draw_arrow([0,2,0],Matrix([[-1,0,0],[0,1,1],[0,0,-1]]),Color.red(1.0))
+fig_examples.draw_arrow([0,2,0],Matrix([[-1,0,0],[0,1,1],[0,0,-1]]),StyleProperties(Color.red(1.0),"arrow"))
 fig_examples.draw_car([-1,0,0],0.3*Matrix.eye(3,3),
                         StyleProperties(Color.green(0.8),"car"))
 fig_examples.draw_plane([3,0,0],0.5*Matrix.eye(3,3),True,
                         StyleProperties(Color.dark_gray(0.8),"plane"))
+fig_examples.draw_axes(2.0, [0.5, 0.5, 0.5])
+fig_examples.draw_triangle([1, 0, 0], [0, 1, 0], [0, 0, 1], StyleProperties(Color.dark_green(0.5), "triangle1"))
+fig_examples.draw_triangle([2, 0, 0], Matrix([[-1, 0, 0], [0, 1, 1], [0, 0, -1]]),
+                           [1, 0, 0], [0, 1, 0], [0, 0, 1], StyleProperties(Color.purple(0.5), "triangle2"))
+fig_examples.draw_sphere([0, 0, 2], Matrix([[-1, 0, 0], [0, 1, 1], [0, 0, -1]]),
+                         StyleProperties(Color.yellow(0.6), "sphere"))
+fig_examples.draw_arrow([0, 2, 0], Matrix([[-1, 0, 0], [0, 1, 1], [0, 0, -1]]),
+                        StyleProperties(Color.red(1.0), "arrow"))
+fig_examples.draw_car([-1, 0, 0], 0.3 * Matrix.eye(3, 3),
+                      StyleProperties(Color.green(0.8), "car"))
+fig_examples.draw_plane([3, 0, 0], 0.5 * Matrix.eye(3, 3), True,
+                        StyleProperties(Color.dark_gray(0.8), "plane"))
 
 fig_examples.draw_zonotope(Zonotope([1.5,1.5,1.5],
             Matrix([[0.3,-0.2,-0.2,0.3,-0.1,0.0],[0.2,0.1,-0.1,0.0,0.05,0.2],[0.4,0.3,0.0,-0.1,0.2,0.1]])),StyleProperties(Color.dark_green(1.0),"zonotope"))
@@ -44,20 +67,42 @@ fig_examples.draw_zonotope(Zonotope([-1.5,-1.5,-1.5],
                 [0.2,0.1,-0.1,0.0,0.0,0.05,0.2,0.0],
                 [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.1]])),
                 StyleProperties(Color.dark_green(1.0),"zonotope2"))
+fig_examples.draw_zonotope(Zonotope([1.5, 1.5, 1.5],
+            Matrix([[0.3, -0.2, -0.2, 0.3, -0.1, 0.0],
+                    [0.2,  0.1, -0.1, 0.0,  0.05, 0.2],
+                    [0.4,  0.3,  0.0, -0.1, 0.2,  0.1]])), StyleProperties(Color.dark_green(1.0), "zonotope"))
+fig_examples.draw_zonotope(Zonotope([-1.5, -1.5, -1.5],
+            Matrix([[0.3, -0.2, -0.2, 0.3, -0.2, -0.1, 0.0, 0.0],
+                    [0.2,  0.1, -0.1, 0.0,  0.0,  0.05, 0.2, 0.0],
+                    [0.0,  0.0,  0.0, 0.0,  0.0,  0.0,  0.0, 0.1]])),
+            StyleProperties(Color.dark_green(1.0), "zonotope2"))
 
 fig_examples.draw_parallelepiped(Parallelepiped([1,-1.5,1.5],
             Matrix([[1,0,0],[0,0.5,0],[0,0.2,0.1]])),StyleProperties(Color.blue(0.5),"parallelepiped"))
+fig_examples.draw_parallelepiped(Parallelepiped([1, -1.5, 1.5],
+            Matrix([[1, 0, 0], [0, 0.5, 0], [0, 0.2, 0.1]])), StyleProperties(Color.blue(0.5), "parallelepiped"))
 
 def f(phi,psi):
     return Vector([(1-math.cos(phi))*math.sin(phi),
                    (1-math.cos(2*phi))*math.cos(phi)*math.cos(psi),
                    (1-math.cos(phi))*math.cos(phi)*math.sin(psi)])
+def f(phi, psi):
+    return Vector([(1 - math.cos(phi)) * math.sin(phi),
+                   (1 - math.cos(2 * phi)) * math.cos(phi) * math.cos(psi),
+                   (1 - math.cos(phi)) * math.cos(phi) * math.sin(psi)])
 
 fig_examples.draw_surface([0,-2,0], 0.5*Matrix.eye(3,3),
                     [0,2*PI],0.05*PI,[0,2*PI],0.05*PI,
                     f,StyleProperties(Color.red(0.6),"example_surface"))
+fig_examples.draw_surface([0, -2, 0], 0.5 * Matrix.eye(3, 3),
+                          [0, 2 * PI], 0.05 * PI, [0, 2 * PI], 0.05 * PI,
+                          f, StyleProperties(Color.red(0.6), "example_surface"))
 
 # to flush the files
 del fig_ctc
 del fig_sep
 del fig_examples
+# Save Rerun figures to .rrd files
+fig_ctc.save("Paving_contractor.rrd")
+fig_sep.save("Paving_separator.rrd")
+fig_examples.save("3D_examples.rrd")

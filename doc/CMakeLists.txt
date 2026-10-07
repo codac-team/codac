@@ -70,13 +70,7 @@
       file(COPY ${static_file} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/manual/tmp/)
     endforeach()
 
-    # todo: the SPHINX_EXECUTABLE is already set by FindSphinx.cmake:
-    # check that it works without the following overload for Win and Linux:
-    if(WIN32)
-      set(SPHINX_EXECUTABLE "sphinx-build")
-    else()
-      set(SPHINX_EXECUTABLE "python3" "-msphinx")
-    endif()
+
 
     add_custom_target(manual
                       COMMAND

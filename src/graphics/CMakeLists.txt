@@ -10,13 +10,24 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/vibes/codac2_Figure2D_VIBes.h
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/vibes/vibes.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/vibes/vibes.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/rerun/codac2_Rerun_common.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/rerun/codac2_Figure2D_Rerun.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/rerun/codac2_Figure2D_Rerun.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/rerun/codac2_Figure3D_Rerun.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/rerun/codac2_Figure3D_Rerun.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/obj/codac2_Figure3D_OBJ.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/obj/codac2_Figure3D_OBJ.h
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_GraphicOutput.h
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_Figure2D.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_Figure2D.h
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_Figure2D_pave.h
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_Figure2DInterface.h
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_OutputFigure2D.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_OutputFigure2D.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_Figure3DInterface.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_OutputFigure3D.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_OutputFigure3D.h
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_Figure3D.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/figures/codac2_Figure3D.h
 
@@ -49,11 +60,19 @@
   target_include_directories(${PROJECT_NAME}-graphics PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/ipe
     ${CMAKE_CURRENT_SOURCE_DIR}/3rd/vibes
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/rerun
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rd/obj
     ${CMAKE_CURRENT_SOURCE_DIR}/figures
     ${CMAKE_CURRENT_SOURCE_DIR}/paver # deprecated, to be removed
     ${CMAKE_CURRENT_SOURCE_DIR}/styles
   )
   target_link_libraries(${PROJECT_NAME}-graphics PUBLIC ${PROJECT_NAME}-core Ibex::ibex Eigen3::Eigen ${PROJECT_NAME}-core)
+  if(WITH_RERUN)
+    target_compile_definitions(${PROJECT_NAME}-graphics PUBLIC CODAC_WITH_RERUN)
+    if(TARGET rerun_sdk)
+      target_link_libraries(${PROJECT_NAME}-graphics PUBLIC rerun_sdk)
+    endif()
+  endif()
   
 
 ################################################################################

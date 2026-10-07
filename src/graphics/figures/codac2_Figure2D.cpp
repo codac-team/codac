@@ -2,7 +2,7 @@
  *  codac2_Figure2D.cpp
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou, Maël Godard, Morgan Louédec
+ *  \author     Simon Rohou, Maël Godard, Morgan Louédec, Quentin Brateau
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -11,6 +11,7 @@
 #include "codac2_Figure2D.h"
 #include "codac2_Figure2D_VIBes.h"
 #include "codac2_Figure2D_IPE.h"
+#include "codac2_Figure2D_Rerun.h"
 #include "codac2_math.h"
 #include "codac2_pave.h"
 #include "codac2_matrices.h"
@@ -29,6 +30,8 @@ Figure2D::Figure2D(const string& name, GraphicOutput o)
     _output_figures.push_back(make_shared<Figure2D_VIBes>(*this));
   if(o & GraphicOutput::IPE)
     _output_figures.push_back(make_shared<Figure2D_IPE>(*this));
+  if(o & GraphicOutput::RERUN)
+    _output_figures.push_back(make_shared<Figure2D_Rerun>(*this));
 }
 
 vector<shared_ptr<OutputFigure2D>> Figure2D::output_figures()

@@ -23,11 +23,12 @@ int main(){
   // Predefined Color objects can be configured with a float parameter for opacity (1=opaque, 0=transparent)
 
   // Custom figures can also be created:
-  std::shared_ptr<codac2::Figure2D> fig1 = std::make_shared<Figure2D>("My Figure 1",GraphicOutput::VIBES|GraphicOutput::IPE);
+  std::shared_ptr<codac2::Figure2D> fig1 = std::make_shared<Figure2D>("My Figure 1",GraphicOutput::VIBES|GraphicOutput::IPE|GraphicOutput::RERUN);
 
-  // Here, graphics will be rendered by two tools: both VIBES and IPE
+  // Here, graphics will be rendered by three tools: VIBES, IPE and RERUN
   // For VIBES, it requires the VIBes viewer to be launched prior to the execution
   // For IPE, it generates a file named "My figure 1.xml" that can be edited with IPE, and converted to PDF
+  // For RERUN, it generates a file named "My Figure 1.rrd" that can be visualized with Rerun (e.g., `rerun "My Figure 1.rrd"`)
 
   fig1->set_window_properties({50,50},{500,500}); // position, window size
   fig1->set_axes(IntervalVector::constant(2,{-10,10})); // bounding box
@@ -35,7 +36,7 @@ int main(){
   fig1->draw_circle({1,1},0.5,Color({255,155,5})); // drawing a circle at (1,1) of radius 0.5 with a custom RGB color
   fig1->draw_ring({1,1},{4,6},Color::red()); // drawing a ring at (1,1) of radius {4,6} with a predefined red color
 
-  std::shared_ptr<codac2::Figure2D> fig2 = std::make_shared<Figure2D>("My Figure 2",GraphicOutput::VIBES|GraphicOutput::IPE);  
+  std::shared_ptr<codac2::Figure2D> fig2 = std::make_shared<Figure2D>("My Figure 2",GraphicOutput::VIBES|GraphicOutput::IPE|GraphicOutput::RERUN);
   fig2->set_axes(axis(0,{-1,5}), axis(1,{-1,5})); // (axis_id,{range_of_values_on_this_axis})
   fig2->set_window_properties({250,250},{500,500});
 
@@ -83,7 +84,7 @@ int main(){
   // HSV color without and with opacity
   fig2->draw_box({{2.6,3.1},{2.6,3.1}},{Color({108,90,78},Model::HSV),Color({108,90,78,20},Model::HSV)});
 
-  Figure2D fig3 ("ColorMap figure",GraphicOutput::VIBES|GraphicOutput::IPE);
+  Figure2D fig3 ("ColorMap figure",GraphicOutput::VIBES|GraphicOutput::IPE|GraphicOutput::RERUN);
   fig3.set_window_properties({800,250},{500,500});
 
   ColorMap cmap_haxby = ColorMap::haxby();

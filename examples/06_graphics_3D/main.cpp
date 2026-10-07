@@ -1,4 +1,5 @@
 // The generated .obj files can be visualized on https://3dviewer.net
+// The generated .rrd files can be visualized with: rerun <filename.rrd>
 
 #include <codac>
 
@@ -19,9 +20,8 @@ int main()
 
   CtcInverse ctc(f, IntervalVector::zero(2));
   auto p_ctc = pave({{0,2},{2,4},{0,10}}, ctc, 0.02);
-  Figure3D fig_ctc("Paving contractor");
-  fig_ctc.draw_paving(p_ctc);
-
+  Figure3D fig_ctc("Paving contractor", GraphicOutput::OBJ|GraphicOutput::RERUN);
+  fig_ctc.draw_paving(p_ctc, { Color::yellow(0.5), "paving" });
 
   SepInverse sep_ellipsoid1(
       AnalyticFunction({x},  0.5*sqr(x[0])+x[0]*x[1]+x[0]*x[2]+2*sqr(x[1])+2*sqr(x[2])),
@@ -32,22 +32,21 @@ int main()
 
   auto p_sep = pave({{-1.1,1.1},{-1.1,1.1},{-1.1,1.1}}, sep_ellipsoid1&sep_ellipsoid2, 0.1);
 
-  Figure3D fig_sep("Paving separator");
+  Figure3D fig_sep("Paving separator", GraphicOutput::OBJ|GraphicOutput::RERUN);
   fig_sep.draw_axes(0.4);
-  fig_sep.draw_paving(p_sep);
+  fig_sep.draw_paving(p_sep, { Color::yellow(0.3), "boundary" }, { Color::green(0.5), "inside" });
 
-
-  Figure3D fig_examples("3D examples");
+  Figure3D fig_examples("3D examples", GraphicOutput::OBJ|GraphicOutput::RERUN);
   fig_examples.draw_axes();
   fig_examples.draw_axes(0.5);
   fig_examples.draw_axes(2.0,{0.5,0.5,0.5});
   fig_examples.draw_triangle({1,0,0},{0,1,0},{0,0,1},{ Color::dark_green(0.5), "triangle1" });
   fig_examples.draw_triangle({2,0,0},{{-1,0,0},{0,1,1},{0,0,-1}},
-		{1,0,0},{0,1,0},{0,0,1},Color::purple(0.5));
+		{1,0,0},{0,1,0},{0,0,1},{ Color::purple(0.5), "triangle2" });
   fig_examples.draw_sphere({0,0,2},{{-1,0,0},{0,1,1},{0,0,-1}},
 		{ Color::yellow(0.6), "sphere" });
   fig_examples.draw_arrow({0,2,0},{{-1,0,0},{0,1,1},{0,0,-1}},
-		Color::red(1.0));
+		{ Color::red(1.0), "arrow" });
   fig_examples.draw_car({-1,0,0},0.3*Matrix::eye(3,3),
 		{ Color::green(0.8), "car" });
   fig_examples.draw_plane({3,0,0},0.5*Matrix::eye(3,3),true,
@@ -76,5 +75,10 @@ int main()
 			(1-cos(2*phi))*cos(phi)*cos(psi),
 			 (1-cos(phi))*cos(phi)*sin(psi) }; },
 		{ Color::red(0.6), "example_surface" });
+
+  // Save Rerun figures to .rrd files (viewable with: rerun <filename.rrd>)
+  fig_ctc.save("Paving_contractor.rrd");
+  fig_sep.save("Paving_separator.rrd");
+  fig_examples.save("3D_examples.rrd");
   
 }

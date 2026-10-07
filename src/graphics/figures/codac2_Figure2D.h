@@ -2,7 +2,7 @@
  *  \file codac2_Figure2D.h
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Simon Rohou, Maël Godard
+ *  \author     Simon Rohou, Maël Godard, Quentin Brateau
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -25,21 +25,11 @@
 #include "codac2_Ctc.h"
 #include "codac2_Sep.h"
 
+#include "codac2_GraphicOutput.h"
 #define DEFAULT_FIG_NAME "Codac - default figure"
 
 namespace codac2
 {
-  enum class GraphicOutput
-  {
-    VIBES = 0x01,
-    IPE = 0x02
-  };
-
-  constexpr int operator&(GraphicOutput a, GraphicOutput b)
-  { return static_cast<int>(static_cast<int>(a) & static_cast<int>(b)); }
-
-  constexpr GraphicOutput operator|(GraphicOutput a, GraphicOutput b)
-  { return static_cast<GraphicOutput>(static_cast<int>(a) | static_cast<int>(b)); }
 
   struct FigureAxis
   {

@@ -2,7 +2,7 @@
  *  Codac binding (graphics)
  * ----------------------------------------------------------------------------
  *  \date       2024
- *  \author     Maël Godard
+ *  \author     Maël Godard, Quentin Brateau
  *  \copyright  Copyright 2024 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
@@ -28,18 +28,37 @@ void export_Figure3D(py::module& m)
     exported(m, "Figure3D", FIGURE3D_MAIN);
   exported
   
+    .def(py::init<const std::string&, GraphicOutput>(),
+      "name"_a, "o"_a = GraphicOutput::OBJ)
+      "name"_a, "o"_a = GraphicOutput::OBJ | GraphicOutput::RERUN)
+
     .def(py::init<const std::string&>(),
+      [](const std::string& name) {
+        return std::make_unique<Figure3D>(name, GraphicOutput::OBJ | GraphicOutput::RERUN);
+      },
       FIGURE3D_FIGURE3D_CONST_STRING_REF,
       "name"_a)
   
     .def("name", &Figure3D::name,
       CONST_STRING_REF_FIGURE3D_NAME_CONST)
 
+    .def("clear", &Figure3D::clear)
+    .def("save", &Figure3D::save, "filename"_a)
+
     .def("draw_axes", &Figure3D::draw_axes,
       VOID_FIGURE3D_DRAW_AXES_DOUBLE_CONST_VECTOR_REF,
       "size"_a=1.0, "origin"_a=Vector::zero(3))
 
     // Geometric shapes
+    .def("draw_point", &Figure3D::draw_point,
+      "c"_a, "style"_a=StyleProperties())
+
+    .def("draw_line", &Figure3D::draw_line,
+      "p1"_a, "p2"_a, "style"_a=StyleProperties())
+
+    .def("draw_polyline", &Figure3D::draw_polyline,
+      "x"_a, "style"_a=StyleProperties())
+
     .def("draw_triangle", (void(Figure3D::*)(const Vector &c, const Matrix &A, const Vector &p1, const Vector &p2, const Vector &p3, const StyleProperties &s))&Figure3D::draw_triangle,
        VOID_FIGURE3D_DRAW_TRIANGLE_CONST_VECTOR_REF_CONST_MATRIX_REF_CONST_VECTOR_REF_CONST_VECTOR_REF_CONST_VECTOR_REF_CONST_STYLEPROPERTIES_REF,
       "c"_a, "A"_a, "p1"_a, "p2"_a, "p3"_a, "style"_a=StyleProperties())
@@ -91,17 +110,36 @@ void export_Figure3D(py::module& m)
     .def("draw_plane", &Figure3D::draw_plane,
       VOID_FIGURE3D_DRAW_PLANE_CONST_VECTOR_REF_CONST_MATRIX_REF_BOOL_CONST_STYLEPROPERTIES_REF,
       "c"_a, "A"_a, "yaw_is_up"_a=true, "style"_a=StyleProperties(Color::dark_gray(0.8)))
-    
+
+    .def("draw_AUV", &Figure3D::draw_AUV,
+      "c"_a, "A"_a, "style"_a=StyleProperties(Color::yellow(0.5)))
 
     // Pavings
 
     .def("draw_paving", (void(Figure3D::*)(const PavingOut&, const StyleProperties&))&Figure3D::draw_paving,
       VOID_FIGURE3D_DRAW_PAVING_CONST_PAVINGOUT_REF_CONST_STYLEPROPERTIES_REF,
       "p"_a, "boundary_style"_a=StyleProperties(Color::yellow(0.5)))
+      "p"_a, "boundary_style"_a=StyleProperties(Color::yellow(0.5), "paving_bound"))
+
+    .def("draw_paving", (void(Figure3D::*)(const PavingOut&, const PavingStyle&))&Figure3D::draw_paving,
+      "p"_a, "style"_a=PavingStyle::default_style())
 
     .def("draw_paving", (void(Figure3D::*)(const PavingInOut&,const StyleProperties&, const StyleProperties&))&Figure3D::draw_paving,
       VOID_FIGURE3D_DRAW_PAVING_CONST_PAVINGINOUT_REF_CONST_STYLEPROPERTIES_REF_CONST_STYLEPROPERTIES_REF,
       "p"_a, "boundary_style"_a=StyleProperties(Color::yellow(0.15), "boundary"), "inside_style"_a=StyleProperties(Color::green(0.5), "inside"))
+
+    .def("draw_paving", (void(Figure3D::*)(const PavingInOut&, const PavingStyle&))&Figure3D::draw_paving,
+      "p"_a, "style"_a=PavingStyle::default_style())
+
+    // Trajectories & Tubes
+    .def("draw_trajectory", (void(Figure3D::*)(const SampledTraj<Vector>&, const StyleProperties&))&Figure3D::draw_trajectory,
+      "x"_a, "style"_a=StyleProperties())
+
+    .def("draw_trajectory", (void(Figure3D::*)(const AnalyticTraj<VectorType>&, const StyleProperties&))&Figure3D::draw_trajectory,
+      "x"_a, "style"_a=StyleProperties())
+
+    .def("draw_tube", &Figure3D::draw_tube,
+      "x"_a, "style"_a=StyleProperties())
 
   ;
 }
