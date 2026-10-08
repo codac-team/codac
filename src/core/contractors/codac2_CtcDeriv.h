@@ -79,17 +79,22 @@ namespace codac2
       {
         assert_release(TDomain::are_same(x.tdomain(), v.tdomain()));
         Interval t = x.tdomain()->t0_tf() & _tdomain;
-        auto it_beg = x.tdomain()->sample(t.lb(),true);
-        auto it_end = x.tdomain()->sample(t.ub(),true);
+        if(t.is_empty() || t.is_degenerated())
+          return;
 
-        // Store gates locally during contraction to preserve boundary information
-        // and ensure efficient propagation between slices.
-        // Only explicitly defined gates are retained in the TDomain.
-        // Temporary gates are discarded after contraction.
+        // Refine only when the restricted domain cuts through a slice.
+        // No explicit gates are created.
+        if(t.lb() > x.tdomain()->t0_tf().lb())
+          x.tdomain()->sample(t.lb(), false);
+        if(t.ub() < x.tdomain()->t0_tf().ub())
+          x.tdomain()->sample(t.ub(), false);
+
+        // Keep boundary values locally to propagate contractions across slices.
+        // Only gates already present in the TDomain are updated afterwards.
         std::vector<std::shared_ptr<Slice<T>>> sx;
         std::vector<std::shared_ptr<const Slice<T>>> sv;
-        for(auto it = it_beg ; it != std::next(it_end) ; it++)
-          if(!it->is_gate())
+        for(auto it = x.tdomain()->begin(); it != x.tdomain()->end(); ++it)
+          if(!it->is_gate() && it->is_subset(t))
           {
             sx.push_back(x.slice(it));
             sv.push_back(v.slice(it));
@@ -136,9 +141,9 @@ namespace codac2
         if((_time_propag & TimePropag::BWD) == TimePropag::BWD)
           for(std::size_t i = sx.size() ; i-- > 0 ; )
             contract_slice(i);
-          
-        // Update only the gates explicitly defined in the TDomain.
-        // Temporary gates are discarded after contraction.
+
+        // Update only gates explicitly present in the TDomain.
+        // Temporary boundary values are discarded after contraction.
         for(std::size_t i = 0 ; i < sx.size() ; i++)
         {
           auto prev = sx[i]->prev_slice();
