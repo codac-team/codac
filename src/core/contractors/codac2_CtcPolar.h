@@ -42,6 +42,8 @@ namespace codac2
         : Ctc<CtcPolar,IntervalVector>(4)
       { }
 
+      using CtcBase<IntervalVector>::contract;
+      
       /**
        * \brief Applies \f$\mathcal{C}_{\textrm{polar}}\big([\mathbf{x}]\big)\f$.
        * 
