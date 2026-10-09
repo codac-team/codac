@@ -75,6 +75,12 @@ namespace codac2
 
       using Interval::operator==;
 
+      bool operator==(const TSlice& x) const {
+        return Interval::operator==(x);
+      }
+
+      ~TSlice() override;
+
     protected:
 
       /**
