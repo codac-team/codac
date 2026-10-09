@@ -206,7 +206,7 @@ namespace codac2
        * \param style Style (color)
        */
       void draw_plane(const Vector &c, const Matrix &A, bool yaw_is_up=true,
-        const StyleProperties& style = { Color::dark_gray(0.8) });
+        const StyleProperties& style = { Color::dark_gray(0.8f) });
      
 
       // Pavings
@@ -228,7 +228,7 @@ namespace codac2
        * \param in_style Style of the inside of the paving
        */
       void draw_paving(const PavingInOut& p,
-        const StyleProperties& bound_style = { Color::yellow(0.3), "paving_bound" },
+        const StyleProperties& bound_style = { Color::yellow(0.3f), "paving_bound" },
         const StyleProperties& in_style = { Color::green(0.5) , "paving_in" });
         
       /**
