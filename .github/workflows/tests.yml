@@ -8,6 +8,21 @@ on:
         branches-ignore:
         - codac2_codac4matlab
 
+concurrency:
+    # Keep only the newest run of this workflow for a given branch or pull
+    # request: a push that supersedes another leaves the older run computing a
+    # result nobody will read, while its jobs hold runners the newest run is
+    # waiting for.
+    #
+    # The three release branches are excluded. They are where the jobs upload
+    # their packages to a GitHub release (see the "github.ref_name==" conditions
+    # further down), and cancelling such a run halfway would leave the release
+    # with only part of its assets. The same expression is used in every
+    # workflow of this directory, including the ones that publish nothing, so
+    # that the rule stays a single thing to know.
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: ${{ github.ref_name != 'codac1' && github.ref_name != 'codac2' && github.ref_name != 'codac2_codac4matlab' }}
+
 jobs:
  tests:
     runs-on: ${{ matrix.cfg.os }}
