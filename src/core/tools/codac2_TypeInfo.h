@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <type_traits> 
+
 namespace codac2
 {
   template<typename T>

@@ -39,7 +39,8 @@ namespace codac2
         assert_release(size_of(c) >= (Index)_xi.size() && "cannot compute a projection of a set into a superset");
         assert_release(default_eps > 0.);
       }
-      
+
+      using CtcBase<IntervalVector>::contract;
       void contract(IntervalVector& x) const;
       void contract(IntervalVector& x, double eps) const;
 
