@@ -105,12 +105,12 @@ void export_VectorBase([[maybe_unused]] py::module& m, py::class_<S>& pyclass)
       DOC_TO_BE_DEFINED,
       "n"_a)
 
-    .def("conservativeResize", [](S& x, Index_type n)
+    .def("conservative_resize", [](S& x, Index_type n)
         {
           matlab::test_integer(n);
-          x.conservativeResize(n);
+          x.conservative_resize(n);
         },
-        "Resize the vector while preserving the existing coefficients.",
+      MATRIX_ADDONS_VECTORBASE_VOID_CONSERVATIVE_RESIZE_INDEX,
       "n"_a)
 
     .def("put", [](S& x, Index_type start_id, const S& x1)
