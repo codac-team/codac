@@ -134,6 +134,8 @@ Common predicates include:
       :end-before: [intervalvector-class-4-end]
       :dedent: 4
 
+.. _sec-manual-intervals-operations:
+
 Other operations
 ----------------
 
