@@ -2,10 +2,11 @@
 
 set -e -x
 
-wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_$(uname -m)_manylinux_2_28.zip --no-check-certificate -nv
-unzip -q ibex_$(uname -m)_manylinux_2_28.zip
-rm -Rf ibex_$(uname -m)_manylinux_2_28.zip
-sudo cp -Rf ibex/* /usr/local/
+# Codac no longer depends on IBEX: its installation is kept below for reference only.
+#wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_$(uname -m)_manylinux_2_28.zip --no-check-certificate -nv
+#unzip -q ibex_$(uname -m)_manylinux_2_28.zip
+#rm -Rf ibex_$(uname -m)_manylinux_2_28.zip
+#sudo cp -Rf ibex/* /usr/local/
 
 git config --global --add safe.directory /io
 cd /io
@@ -83,9 +84,9 @@ for PYBIN in /opt/python/cp3*/bin; do
   fi
 
   "${PYBIN}/python" -m pip install --upgrade pip
-  "${PYBIN}/python" -m pip install --upgrade wheel setuptools
+  "${PYBIN}/python" -m pip install --upgrade wheel setuptools build
   mkdir -p build_dir && cd build_dir
-  cmake -E env CXXFLAGS="-fPIC" CFLAGS="-fPIC" cmake -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_CAPD=OFF -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF ..
+  cmake -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_CAPD=OFF -DWITH_PYTHON=ON -DPYBIND11_FINDPYTHON=OFF ..
   make -j4
 
   make pip_package
