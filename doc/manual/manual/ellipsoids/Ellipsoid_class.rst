@@ -369,7 +369,42 @@ The function stability_analysis can compute a bassin of attraction for discrete 
 
     .. code-tab:: py
 
-        # TODO in the code
+        # pendulum example
+        h4 = AnalyticFunction([x], vec(x[0] + 0.5 * x[1], x[1] + 0.5 * (-x[1]-sin(x[0]))))
+        e13 = Ellipsoid(Vector.zero(2), Matrix.zero(2, 2))
+        e13_out = Ellipsoid(Vector.zero(2), Matrix.zero(2, 2))
+        alpha_max = 1
+
+        if stability_analysis(h4, alpha_max, e13, e13_out) == BoolInterval.TRUE:
+            print('\nStability analysis: the system is stable')
+            print('Ellipsoidal domain of attraction e13 (red):')
+            print(e13)
+            print('Outter enclosure e13_out of the Image of e13 by h4 (green):')
+            print(e13_out)
+        else:
+            print('\nStability analysis: the method is not able to conclude')
+
+        fig6 = Figure2D('Stability analysis - pendulum example', GraphicOutput.VIBES)
+        fig6.set_axes(axis(0, [-0.1, 0.1]), axis(1, [-0.1, 0.1]))
+        fig6.set_window_properties([1200, 600], [500, 500])
+        fig6.draw_ellipsoid(e13, [Color.red(), Color.red(0.3)])
+        fig6.draw_ellipsoid(e13_out, [Color.green(), Color.green(0.3)])
+
+        """
+        Stability analysis: the system is stable
+        Ellipsoidal domain of attraction e13 (red):
+        Ellipsoid 2d:
+          mu=[ 0 ; 0 ]
+           G=
+        [[  0.0530036 , -0.0162022 ]
+         [ -0.0162022 ,  0.0599475 ]]
+        Outter enclosure e13_out of the Image of e13 by h4 (green):
+        Ellipsoid 2d:
+          mu=[ 0 ; 2.4895e-17 ]
+           G=
+        [[  0.0449538 ,  0.0137872 ]
+         [ -0.0346424 ,  0.0381184 ]]
+        """
 
 
     .. code-tab:: c++
