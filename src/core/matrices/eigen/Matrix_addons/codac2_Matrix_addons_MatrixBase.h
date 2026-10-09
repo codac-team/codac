@@ -154,25 +154,25 @@ inline static Matrix<Scalar,R,C> random(Index r, Index c)
   return DenseBase<Matrix<Scalar,R,C>>::Random(r,c);
 }
 
-/**
- * \brief Resizes the matrix to (``r``,``c``), preserving existing values where possible.
- * 
- * \param r New number of rows.
- * \param c New number of columns.
- * 
- * \details
- * This function resizes the matrix while preserving the data in the overlapping region
- * of the old and new sizes. Unlike Eigen's ``resize()``, which discards old data, this
- * function copies existing values into the resized matrix.
- */
-template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
-  requires (!IsVectorOrRow<R,C>)
-inline void resize_save_values(Index r, Index c)
-{
-  // With resize() of Eigen, the data is reallocated and all previous values are lost.
-  auto copy = *this;
-  this->resize(r,c);
-  for(Index i = 0 ; i < std::min((Index)copy.rows(),r) ; i++)
-    for(Index j = 0 ; j < std::min((Index)copy.cols(),c) ; j++)
-      (*this)(i,j) = copy(i,j);
-}
+// /**
+//  * \brief Resizes the matrix to (``r``,``c``), preserving existing values where possible.
+//  * 
+//  * \param r New number of rows.
+//  * \param c New number of columns.
+//  * 
+//  * \details
+//  * This function resizes the matrix while preserving the data in the overlapping region
+//  * of the old and new sizes. Unlike Eigen's ``resize()``, which discards old data, this
+//  * function copies existing values into the resized matrix.
+//  */
+// template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
+//   requires (!IsVectorOrRow<R,C>)
+// inline void resize_save_values(Index r, Index c)
+// {
+//   // With resize() of Eigen, the data is reallocated and all previous values are lost.
+//   auto copy = *this;
+//   this->resize(r,c);
+//   for(Index i = 0 ; i < std::min((Index)copy.rows(),r) ; i++)
+//     for(Index j = 0 ; j < std::min((Index)copy.cols(),c) ; j++)
+//       (*this)(i,j) = copy(i,j);
+// }
