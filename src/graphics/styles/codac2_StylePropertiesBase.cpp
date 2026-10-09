@@ -23,31 +23,31 @@ StylePropertiesBase::StylePropertiesBase(const std::string& param1, const std::s
 
 void StylePropertiesBase::parse_parameter(const std::string& param)
 {
-  if (param != "")
+  if(param != "")
   {
-    if (StylePropertiesBase::available_line_styles().contains(param))
+    if(StylePropertiesBase::available_line_styles().contains(param))
       line_style = param;
 
-    else if (param.rfind("w:", 0) == 0)
+    else if(param.rfind("w:", 0) == 0)
     {
       try
       {
         line_width = std::stod(param.substr(2));
       }
-      catch (const std::invalid_argument& e)
+      catch(const std::invalid_argument& e)
       {
         std::cerr << "codac2: invalid line width value \"" << param.substr(2) << "\": " << e.what() << std::endl;
         assert_release_constexpr(false && "Invalid line width value");
       }
     }
 
-    else if (param.rfind("z:", 0) == 0)
+    else if(param.rfind("z:", 0) == 0)
     {
       try
       {
         z_value = std::stod(param.substr(2));
       }
-      catch (const std::invalid_argument& e)
+      catch(const std::invalid_argument& e)
       {
         std::cerr << "codac2: invalid z-value \"" << param.substr(2) << "\": " << e.what() << std::endl;
         assert_release_constexpr(false && "Invalid z-value");

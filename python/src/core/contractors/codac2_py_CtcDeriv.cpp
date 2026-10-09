@@ -27,11 +27,6 @@ void export_contract(py::class_<CtcDeriv>& exported)
   exported
 
     .def("contract",
-        // ctc_indices is read only by the if constexpr branch taken for
-        // IntervalVector; in the Interval instantiation that branch is
-        // discarded and the parameter goes unread, which MSVC /W4 reports as
-        // C4100. It cannot be dropped -- pybind11 takes the Python signature
-        // from this lambda, and the argument is exposed just below.
         [](const CtcDeriv& ctc, Slice<T>& x, const Slice<T>& v, [[maybe_unused]] const std::vector<Index_type>& ctc_indices)
         -> py::tuple
         {
@@ -49,8 +44,6 @@ void export_contract(py::class_<CtcDeriv>& exported)
       "x"_a, "v"_a, "ctc_indices"_a = std::vector<Index>())
 
     .def("contract",
-        // Same as above: unread in the Interval instantiation, kept for the
-        // Python signature.
         [](const CtcDeriv& ctc, SlicedTube<T>& x, const SlicedTube<T>& v, [[maybe_unused]] const std::vector<Index_type>& ctc_indices)
         -> py::tuple
         {
