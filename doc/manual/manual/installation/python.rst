@@ -41,6 +41,8 @@ You can also update and test your Codac Python package:
      pip install numpy sympy
      python -m unittest discover codac.tests
 
+Once this works, :ref:`sec-start-py-project` shows what a script of your own looks like, and how to point Python at a locally built Codac rather than at the release from PyPI.
+
 
 Troubleshooting
 ---------------
