@@ -517,7 +517,7 @@ void Figure2D::draw_tube(const SlicedTube<IntervalVector>& x, const StyleGradien
 {
   draw_tube_common(*this, x, max_nb_slices_to_display,
     [&style](const Interval& tube_t0tf, std::list<TSlice>::reverse_iterator it) {
-      auto c = style.cmap.color((it->mid()-tube_t0tf.lb())/tube_t0tf.diam());
+      auto c = style.cmap.color(static_cast<float>((it->mid()-tube_t0tf.lb())/tube_t0tf.diam()));
       return StyleProperties({c,c}, style.layer, style.line_style, "w:"+to_string(style.line_width), "z:"+to_string(style.z_value));
     });
 }

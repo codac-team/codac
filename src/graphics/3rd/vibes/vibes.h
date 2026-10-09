@@ -391,10 +391,10 @@ namespace vibes {
   /// The color used for transparency is throw the pen color
   VIBES_FUNC_COLOR_PARAM_5(drawRaster, const std::string&, rasterFilename,
                                        const double &,ulb, const double &, yub,
-                                       const double &,width, const double &, height);
+                                       const double &,width, const double &, height)
   VIBES_FUNC_COLOR_PARAM_6(drawRaster, const std::string&, rasterFilename,
                                        const double &,ulb, const double &, yub,
-                                       const double &,width, const double &, height, const double &, rot);
+                                       const double &,width, const double &, height, const double &, rot)
 
   /// Draw a Cake at position (cx,cy)
   VIBES_FUNC_COLOR_PARAM_4(drawCake,const double &,cx, const double &,cy, const double &,rot, const double &,length)
