@@ -17,7 +17,9 @@
   # Adds pybind11::headers, pybind11::module, pybind11::embed
 
   set(PYTHON_PACKAGE_NAME ${PROJECT_NAME})
-  set(PYTHON_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_package")
+  set(PYTHON_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_package"
+    CACHE INTERNAL "Codac Python package build directory"
+  )
 
   file(MAKE_DIRECTORY ${PYTHON_PACKAGE_DIR})
   execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/${PYTHON_PACKAGE_NAME}/" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}")
