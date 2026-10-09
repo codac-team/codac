@@ -72,25 +72,14 @@ jobs:
         if [ \"${{ matrix.cfg.deb }}\" = \"true\" ]; then \
         sudo sh -c 'echo \"deb [trusted=yes] https://webperso.ensta.fr/packages/\$(if [ -z \"\$(. /etc/os-release && echo \$UBUNTU_CODENAME)\" ]; then echo debian/\$(. /etc/os-release && echo \$VERSION_CODENAME); else echo ubuntu/\$(. /etc/os-release && echo \$UBUNTU_CODENAME); fi) ./\" > /etc/apt/sources.list.d/ensta-bretagne.list' && \
         #sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev catch2 dpkg-dev || true && \\
-        sudo apt-get -q update ; sudo apt-get -y install catch2 dpkg-dev || true && \
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/libibex-dev-2.8.9.20260819-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb --no-check-certificate -nv && \
-        sudo dpkg -i libibex-dev-2.8.9.20260819-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb && \
-        rm -Rf libibex-dev-2.8.9.20260819-0${{ matrix.cfg.runtime }}0_\$(dpkg --print-architecture).deb ; \
-        else \
-        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv && \
-        unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip && \
-        rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip && \
-        sudo cp -Rf ibex/* /usr/ ; \
+        sudo apt-get -q update ; sudo apt-get -y install catch2 dpkg-dev || true ; \
         fi && \
         mkdir build ; cd build && \
-        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D BUILD_TESTS=ON -D CMAKE_INSTALL_PREFIX="../codac" .. && \
+        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D BUILD_TESTS=ON -D TEST_EXAMPLES=ON -D CMAKE_INSTALL_PREFIX="../codac" .. && \
         cmake --build . -j 4 --config Release --target install && \
         cd .. && \
         zip -q -r codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac && \
         mkdir -p codac_standalone/example ; cd codac_standalone && \
-        if [ \"${{ matrix.cfg.deb }}\" = \"true\" ]; then mkdir -p ibex/include ; mkdir -p ibex/lib ; mkdir -p ibex/share ; mkdir -p ibex/bin ; cp -Rf /usr/include/ibex* ibex/include/ ; cp -Rf /usr/lib/*ibex* ibex/lib/ ; cp -Rf /usr/share/*ibex* ibex/share/ ; cp -Rf /usr/share/pkgconfig ibex/share/ ; cp -Rf /usr/bin/ibex* ibex/bin/ ; \
-        else cp -Rf ../ibex . ; \
-        fi && \
         cp -Rf ../codac . ; cp -Rf ../tests/test_codac/* ./example/ ; cd .. ; zip -q -r codac_standalone_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_standalone && \
         cd codac_standalone/example && \
         cmake ${{ matrix.cfg.cmake_params }} . && \
