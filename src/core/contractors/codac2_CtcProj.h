@@ -41,6 +41,7 @@ namespace codac2
       }
 
       using CtcBase<IntervalVector>::contract;
+      
       void contract(IntervalVector& x) const;
       void contract(IntervalVector& x, double eps) const;
 

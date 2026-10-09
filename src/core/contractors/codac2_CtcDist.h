@@ -38,6 +38,7 @@ namespace codac2
       CtcDist();
 
       using CtcBase<IntervalVector>::contract;
+      
       /**
        * \brief Applies \f$\mathcal{C}_{\textrm{dist}}\big([\mathbf{x}]\big)\f$.
        * 
