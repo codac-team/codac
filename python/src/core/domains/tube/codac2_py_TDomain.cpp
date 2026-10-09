@@ -40,18 +40,6 @@ void export_TDomain(py::module& m)
     .def("tslices_vector", &TDomain::tslices_vector,
       VECTOR_TSLICE_TDOMAIN_TSLICES_VECTOR_CONST)
 
-    // tslice() and sample() give access to one of the TSlice objects of the TDomain,
-    // which is a std::list<TSlice> and owns them: they are elements of that list, not
-    // objects created for the caller. They used to be returned to Python as a
-    // std::shared_ptr<TSlice> built around the element, with a deleter doing nothing.
-    // That shared_ptr owned nothing and kept nothing alive: the Python object made from
-    // it did not hold the TDomain, so that once the TDomain was destroyed (its Python
-    // variable and the tubes using it gone), the TSlice object left in Python pointed
-    // to freed memory, and any use of it read or wrote there. The empty deleter only
-    // hid that the element belongs to the list, not to Python.
-    // They are now returned by reference, with reference_internal: Python does not own
-    // the TSlice, and the returned object keeps alive the Python TDomain it comes from,
-    // hence (through its std::shared_ptr holder) the TDomain and its list of TSlice.
     .def("tslice", [](TDomain& tdomain, double t) -> TSlice&
         {
           auto it = tdomain.tslice(t);
@@ -61,7 +49,7 @@ void export_TDomain(py::module& m)
       LIST_TSLICE_ITERATOR_TDOMAIN_TSLICE_DOUBLE,
       "t"_a)
 
-    // Returned by reference, with reference_internal, as tslice() above: the TSlice
+    // Returned by reference, with reference_internal: the TSlice
     // created or found by sample() is an element of the TDomain.
     .def("sample", [](TDomain& tdomain, double t, bool with_gate) -> TSlice&
         {
