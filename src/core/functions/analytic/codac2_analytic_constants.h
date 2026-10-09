@@ -70,9 +70,7 @@ namespace codac2
 
         else if constexpr(std::is_same_v<T,MatrixType>)
           return {_x.rows(),_x.cols()};
-
-        // In an else branch, discarded along with it for the types above:
-        // after their return, Visual C++ reported it as unreachable (C4702)
+        
         else
           assert_release_constexpr(false && "unknow output shape for constant");
       }
