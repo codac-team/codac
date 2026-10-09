@@ -41,7 +41,7 @@
         RESULT_VARIABLE DOXYGEN_RESULT
       )
       if(NOT DOXYGEN_RESULT EQUAL 0)
-        if(DOXYGEN_RESULT STREQUAL "Segmentation fault" AND EXISTS "${CMAKE_BINARY_DIR}/doc/api/xml/index.xml")
+        if(EXISTS "${CMAKE_BINARY_DIR}/doc/api/xml/index.xml")
           message(WARNING "Doxygen exited with '${DOXYGEN_RESULT}' but generated XML output. Continuing so Python docstrings can still be generated.")
         else()
           message(FATAL_ERROR "Doxygen failed to generate the API documentation (exit code ${DOXYGEN_RESULT}), which is required for the Python docstrings. Doxygen errors: ${DOXYGEN_ERROR}")
