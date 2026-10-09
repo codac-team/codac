@@ -236,8 +236,12 @@ void add_traj_operators(py::class_<SampledTraj<T>>& pyclass)
     .def("__rmul__", [](const SampledTraj<T>& x2, double x1) { return x1*x2; },
       SAMPLEDTRAJ_T_OPERATORMUL_DOUBLE_CONST_SAMPLEDTRAJ_T_REF,
       py::is_operator())
+      
+    .def("__mul__", [](const SampledTraj<T>& x1, const T& x2) { return x1*x2; },
+        SAMPLEDTRAJ_T_OPERATORMUL_CONST_SAMPLEDTRAJ_T_REF_CONST_Q_REF,
+        py::is_operator())
 
-    .def("__mul__", [](const T& x1, const SampledTraj<T>& x2) { return x1*x2; },
+    .def("__rmul__", [](const SampledTraj<T>& x2, const T& x1) { return x1*x2; },
       SAMPLEDTRAJ_T_OPERATORMUL_CONST_Q_REF_CONST_SAMPLEDTRAJ_T_REF,
       py::is_operator())
 
@@ -287,6 +291,25 @@ void export_SampledTraj(py::module& m)
       py::is_operator())
 
   ;
+
+  if constexpr(!FOR_MATLAB)
+  {
+    py_SampledTraj_Matrix
+
+      .def("__matmul__", [](const SampledTraj<Matrix>& x1, const SampledTraj<Vector>& x2) { return x1*x2; },
+        SAMPLEDTRAJ_VECTOR_OPERATORMUL_CONST_SAMPLEDTRAJ_MATRIX_REF_CONST_SAMPLEDTRAJ_VECTOR_REF,
+        py::is_operator())
+
+      .def("__matmul__", [](const SampledTraj<Matrix>& x1, const SampledTraj<Matrix>& x2) { return x1*x2; },
+        SAMPLEDTRAJ_T_OPERATORMUL_CONST_SAMPLEDTRAJ_T_REF_CONST_SAMPLEDTRAJ_T_REF,
+        py::is_operator())
+
+      .def("__rmatmul__", [](const SampledTraj<Matrix>& x2, const Matrix& x1) { return x1*x2; },
+        SAMPLEDTRAJ_T_OPERATORMUL_CONST_Q_REF_CONST_SAMPLEDTRAJ_T_REF,
+        py::is_operator())
+
+    ;
+  }
 
   m
 
