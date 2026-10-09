@@ -33,23 +33,12 @@ namespace codac2
       using ConnectedSubset_ = Subpaving<P>;
 
     protected:
-      // Paving(Index n)
-      //   : Paving(IntervalVector(n))
-      // {
-      //   assert_release(n > 0);
-      // }
-      // Paving(const IntervalVector& x)
-      //   : _tree(std::make_shared<PavingNode<P>>(*static_cast<P*>(this), x))
-      // { }
 
-      // The tree is not built here but by the constructors of P (PavingOut,
-      // PavingInOut), with init_tree(): each node keeps a reference to the paving
-      // as a P, and while this constructor runs, the P object is not constructed
-      // yet, so that *static_cast<P*>(this) would be undefined behaviour (UBSan's
-      // vptr check reports such a downcast, Domain being polymorphic).
-      Paving () { }
+      Paving()
+      { }
       
     public:
+
       inline Index size() const
       {
         return std::get<0>(_tree->boxes()).size();
@@ -140,7 +129,6 @@ namespace codac2
       {
         _tree = std::make_shared<PavingNode<P>>(*static_cast<P*>(this), x);
       }
-
 
       inline static NodeTuple_ init_tuple(const IntervalVector& x)
       {
