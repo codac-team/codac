@@ -34,10 +34,19 @@
 
       message(STATUS "Building API Documentation (mandatory for Python binding or for building the manual)")
 
-      set(SPHINX_EXTRA_API ${CMAKE_CURRENT_BINARY_DIR}/manual/extra_html/api)
-      file(MAKE_DIRECTORY ${SPHINX_EXTRA_API})
-
-      execute_process(COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} OUTPUT_QUIET)
+      execute_process(
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT}
+        OUTPUT_QUIET
+        ERROR_VARIABLE DOXYGEN_ERROR
+        RESULT_VARIABLE DOXYGEN_RESULT
+      )
+      if(NOT DOXYGEN_RESULT EQUAL 0)
+        if(DOXYGEN_RESULT STREQUAL "Segmentation fault" AND EXISTS "${CMAKE_BINARY_DIR}/doc/api/xml/index.xml")
+          message(WARNING "Doxygen exited with '${DOXYGEN_RESULT}' but generated XML output. Continuing so Python docstrings can still be generated.")
+        else()
+          message(FATAL_ERROR "Doxygen failed to generate the API documentation (exit code ${DOXYGEN_RESULT}), which is required for the Python docstrings. Doxygen errors: ${DOXYGEN_ERROR}")
+        endif()
+      endif()
       add_custom_target(api COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} OUTPUT_QUIET)
 
     endif()
