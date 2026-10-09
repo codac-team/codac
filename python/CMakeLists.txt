@@ -64,7 +64,11 @@
     execute_process(COMMAND ${PYTHON_EXECUTABLE}
       ${PROJECT_SOURCE_DIR}/scripts/doxygen/doxygen2docstring.py
       ${CMAKE_CURRENT_BINARY_DIR}/../doc/api/xml/
-      ${CMAKE_CURRENT_BINARY_DIR}/docstring)
+      ${CMAKE_CURRENT_BINARY_DIR}/docstring
+      RESULT_VARIABLE DOCSTRING_RESULT)
+    if(NOT DOCSTRING_RESULT EQUAL 0)
+      message(FATAL_ERROR "doxygen2docstring.py failed (exit code ${DOCSTRING_RESULT}) while generating the Python docstring headers.")
+    endif()
 
   endif()
 
