@@ -108,4 +108,9 @@ breathe_projects = {
 togglebutton_hint = "Reveal the solution."
 togglebutton_hint_hide = "Hide the solution."
 
-html_extra_path = ['extra_html']
+# The generated Doxygen API HTML is copied directly into outdir/api by a
+# POST_BUILD step in doc/CMakeLists.txt (after sphinx-build runs), rather
+# than staged through html_extra_path: since outdir is a distinct directory
+# from confdir, there is no ordering constraint forcing it to exist beforehand,
+# so a direct copy avoids maintaining (and duplicating on disk) an
+# intermediate staging copy that only html_extra_path would ever read.

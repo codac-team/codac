@@ -354,7 +354,7 @@ User manual
    * Related papers
    * Contributors
    * How to cite Codac
-   :ref:`sec-ref-codac-logos`
+   * :ref:`sec-ref-codac-logos`
 
 
 How-to guides
