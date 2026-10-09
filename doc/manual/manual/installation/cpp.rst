@@ -39,7 +39,7 @@ Linux Installation
 
 ..   .. code-block:: bash
 
-..     sudo apt remove libcodac-dev libibex-dev
+..     sudo apt remove libcodac-dev
 ..     sudo rm -f /etc/apt/sources.list.d/ensta-bretagne.list
 ..     sudo apt update
 
@@ -74,63 +74,41 @@ Steps
 
       sudo apt-get install -y build-essential cmake git
 
-2. **Install the IBEX dependency**:
-   
-   Codac still uses some features of the `IBEX library <https://ibex-team.github.io/ibex-lib/install-cmake.html>`_ that you have to install first (currently, the only thing Codac uses from IBEX is a wrapper of the `GAOL library <https://github.com/goualard-f/GAOL>`_). The last version of IBEX is maintained on `this unofficial development repository <https://github.com/lebarsfa/ibex-lib/tree/master>`_:
+   .. admonition:: The GAOL dependency
+
+     | The intervals of Codac are built upon `GAOL <https://github.com/goualard-f/GAOL>`_, the interval arithmetic library written by `Frédéric Goualard <https://frederic.goualard.net>`_, which computes its elementary functions with the IBM Accurate Portable Mathematical Library (mathlib). You do not have to install them: CMake first looks for a GAOL installed on your system and, when it finds none, downloads GAOL from the master branch of `the fork of Jordan Ninin <https://github.com/Jordan08/GAOL>`_ while Codac is configured (brought up to date at each configuration when Git is installed), builds it with its CMake build, which downloads mathlib from `Frédéric Goualard's site <https://frederic.goualard.net>`_, and installs both with its CMake installer, in the build directory and along with Codac. The fork adds to GAOL a CMake build, taken from the one of `IBEX <https://github.com/ibex-team/ibex-lib>`_ (which Codac used to depend on, and no longer does), the changes Codac depends on or which Visual Studio, MinGW and ARM processors need, and tests of the bounds it computes. Its README lists and explains them.
+     | If you install GAOL yourself, install the version of `the fork of Jordan Ninin <https://github.com/Jordan08/GAOL>`_, 4.3.2 or later: Codac does not use the original sources, of an older version, which lack the fixes it relies on. The fork comes with the CMake installer, which builds and installs GAOL and mathlib together (``cmake -S . -B build -DCMAKE_INSTALL_PREFIX=<prefix>``, ``cmake --build build --config Release``, then ``cmake --install build --config Release``), with the CMake package from which Codac takes the compilation flags and the libraries GAOL needs, while the original sources only have autotools and meson builds. Bugs of GAOL are also fixed there: bounds that did not enclose the exact results (numbers such as ``interval("0.1")`` read with the C runtime of Windows or with musl on 64-bit ARM processors; hyperbolic functions with the libm of glibc 2.31, musl or MinGW-w64; square roots with Visual C++ for 32-bit x86), and powers with a real exponent (``pow([4], 0.5)`` returned ``[1]``, ``pow([-4,-1], [0.5])`` returned ``[-1, 2]``).
+     | CMake looks for an installed GAOL in three ways, in this order: its CMake package (``gaolConfig.cmake``, which the CMake build of the fork installs), its ``gaol.pc`` through ``pkg-config`` (which the autotools and meson builds of the fork install), then its files (``gaol/gaol.h``, ``MathLib.h`` and the ``gaol`` and ``ultim`` libraries). Codac is compiled with the flags and linked with the libraries the package or ``gaol.pc`` of GAOL gives; only for a GAOL found by its files does Codac determine the flags itself. A ``gaol.pc`` whose flags lack ``-frounding-math``, as the one of the meson build of the original sources, is not used. Nor is a GAOL older than version 4.3.2, the first version of the fork with all the fixes Codac relies on (the last one: the intersection of disjoint intervals is the empty set), or whose version cannot be told: CMake says so, and builds the fork instead. The projects using the installed Codac need GAOL 4.3.2 or later too, since they compile the interval operations of Codac, inline in its headers, against their GAOL. To use a GAOL installed in a custom location, add its installation prefix to ``CMAKE_PREFIX_PATH``, which the three searches read, or give ``-Dgaol_DIR=<prefix>/lib/cmake/gaol`` for its CMake package, ``PKG_CONFIG_PATH`` for its ``gaol.pc``, or ``-DGAOL_DIR=<prefix>`` (and ``-DMATHLIB_DIR=<prefix>`` for mathlib, if it is installed elsewhere) for its files. To build the GAOL Codac is tested against even where another one is installed, configure Codac with ``-DENABLE_FIND_PACKAGE_GAOL=OFF``.
+     | On a 32-bit x86 processor, Codac, GAOL and mathlib are compiled with ``-msse2 -mfpmath=sse``, except by Visual Studio, which computes in SSE2 already: computed on the x87 FPU, GAOL's bounds and mathlib's results are only right while its precision stays set to 53 bits, which nothing guarantees. A processor with SSE2 is therefore required there. GAOL is not built with the compilers that do not compute its intervals right, or much too slowly, and its build stops with a message naming the ones to use instead: Clang for 32-bit ARM processors (use GCC), the compilers that say they do not honour the rounding direction, such as Clang 14 for 64-bit ARM processors, and the mingw-w64 runtimes older than version 13 (those of the MinGW-w64 GCC 11 to 14 of Chocolatey, for instance): before version 12, their math library is not accurate enough, and the ``fesetround()`` of version 12 makes the elementary functions of GAOL some 20 times slower.
+
+2. **Install the Codac library**:
 
    .. code-block:: bash
 
-      # Requirements to compile IBEX
-      sudo apt-get install -y flex bison
-
-      # Download IBEX sources from GitHub
-      git clone -b master https://github.com/lebarsfa/ibex-lib.git $HOME/ibex-lib
-
-      # Configure IBEX before installation
-      cd $HOME/ibex-lib
-      mkdir build ; cd build
-      cmake -DCMAKE_INSTALL_PREFIX=$HOME/ibex-lib/build_install -DCMAKE_BUILD_TYPE=Release ..
-
-      # Building + installing
-      make
-      make install
-      cd ../..
-
-   For further CMake options, please refer to the IBEX documentation.
-
-   .. warning::
-
-     **GAOL prerequisite:** On some platforms, you might need to install manually `MathLib <https://github.com/lebarsfa/mathlib>`_ and `GAOL <https://github.com/lebarsfa/GAOL>`_ with CMake and `specify where they are <https://ibex-team.github.io/ibex-lib/install-cmake.html#configuration-options>`_ in order to build IBEX successfully and have accurate computations.
-
-3. **Install the Codac library**:
-
-   .. code-block:: bash
-
-      # The codac directory can be placed in your home, same level as IBEX
+      # The codac directory can be placed in your home
       git clone https://github.com/codac-team/codac $HOME/codac
 
       # Configure Codac before installation
       cd $HOME/codac
       mkdir build ; cd build
-      cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DCMAKE_BUILD_TYPE=Release ..
+      cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_BUILD_TYPE=Release ..
 
       # Building + installing
       make
       make install
       cd ../..
 
-4. **Configure your system to find Codac**:
+3. **Configure your system to find Codac**:
 
    In case Codac and its dependencies have been installed locally on your system, you will have to configure your environment variables. This can be done temporarily with:
 
    .. code-block:: bash
 
-      export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
       export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/codac/build_install
 
    ... or permanently by updating your ``.bashrc`` file by appending the above commands.
 
-5. **Verify the installation** (optional):
+4. **Verify the installation** (optional):
 
    To ensure that the installation has worked properly, the unit tests of the library can be run. For this, you have to configure CMake using the ``-DBUILD_TESTS=ON`` option, before compilation. Then, from the ``$HOME/codac/build`` directory:
 
@@ -138,7 +116,7 @@ Steps
 
       make test
 
-6. **Try an example** (optional):
+5. **Try an example** (optional):
 
    You may want to try Codac by running one of the proposed examples. After the installation, you can run the following commands:
 
@@ -169,7 +147,7 @@ Using MinGW
 
 .. Check https://community.chocolatey.org/packages/codac.
 
-Install `Chocolatey package manager <https://chocolatey.org/install>`_, run `choco install -y ibex cmake make qtcreator` in PowerShell and then download and extract *e.g.* ``codac_standalone_x64_mingw13.zip`` (for MinGW 13) from https://github.com/codac-team/codac/releases/latest, launch Qt Creator and choose Open Project, open ``example\CMakelists.txt``, ensure Desktop is selected and click Configure Project (might be hidden behind notifications at the bottom-right), wait 10 s then click on the big bottom-left green Run button, and finally check that the graphical output appears.
+Install `Chocolatey package manager <https://chocolatey.org/install>`_, run `choco install -y cmake make qtcreator` in PowerShell and then download and extract *e.g.* ``codac_standalone_x64_mingw15.zip`` (for MinGW 15) from https://github.com/codac-team/codac/releases/latest, launch Qt Creator and choose Open Project, open ``example\CMakelists.txt``, ensure Desktop is selected and click Configure Project (might be hidden behind notifications at the bottom-right), wait 10 s then click on the big bottom-left green Run button, and finally check that the graphical output appears.
 
 Note that in order to obtain graphical outputs, you will have to download and run https://github.com/ENSTABretagneRobotics/VIBES/releases/latest/download/VIBes-viewer_x86.exe before running the project.
 
@@ -189,10 +167,10 @@ You will probably need to install these prerequisites (assuming you already inst
 
 .. code-block:: bash
 
-  choco install cmake git make patch winflexbison
+  choco install cmake git make
   choco install eigen
   
-Then, install the desired compiler (*e.g.* ``choco install mingw --version=11.2.0.07112021``). 
+Then, install the desired compiler (*e.g.* ``choco install mingw --version=15.2.0``; MinGW-w64 older than version 13, which the MinGW-w64 GCC 11 to 14 packages come with, is not supported). 
 
 Optionally, for Python binding (*e.g.* ``choco install python --version=3.10.4``) and documentation:
 
