@@ -284,6 +284,6 @@ void export_CtcInverse(py::module& m,
   if constexpr(std::is_same_v<C,CtcInverse<Interval>> || std::is_same_v<C,CtcInverse<IntervalVector>>)
   {
     exported_ctc.def("fnc", &C::fnc,
-      CONST_ANALYTICFUNCTION_TYPENAME_EXPRTYPE_Y_TYPE_CTCINVERSE_Y_X0X__F);
+      CONST_ANALYTICFUNCTION_OUTPUTTYPE_REF_CTCINVERSE_Y_X0X_FNC_CONST);
   }
 }
