@@ -79,27 +79,80 @@ namespace codac2
       {
         assert_release(TDomain::are_same(x.tdomain(), v.tdomain()));
         Interval t = x.tdomain()->t0_tf() & _tdomain;
-        auto it_beg = x.tdomain()->sample(t.lb(),true);
-        auto it_end = x.tdomain()->sample(t.ub(),true);
+        if(t.is_empty() || t.is_degenerated())
+          return;
+
+        // Refine only when the restricted domain cuts through a slice.
+        // No explicit gates are created.
+        if(t.lb() > x.tdomain()->t0_tf().lb())
+          x.tdomain()->sample(t.lb(), false);
+        if(t.ub() < x.tdomain()->t0_tf().ub())
+          x.tdomain()->sample(t.ub(), false);
+
+        // Keep boundary values locally to propagate contractions across slices.
+        // Only gates already present in the TDomain are updated afterwards.
+        std::vector<std::shared_ptr<Slice<T>>> sx;
+        std::vector<std::shared_ptr<const Slice<T>>> sv;
+        for(auto it = x.tdomain()->begin(); it != x.tdomain()->end(); ++it)
+          if(!it->is_gate() && it->is_subset(t))
+          {
+            sx.push_back(x.slice(it));
+            sv.push_back(v.slice(it));
+          }
+
+        if(sx.empty())
+          return;
+
+        std::vector<T> gates;
+        gates.reserve(sx.size()+1);
+        gates.push_back(sx.front()->input_gate());
+        for(const auto& s : sx)
+          gates.push_back(s->output_gate());
+
+        auto contract_slice = [&](std::size_t i)
+        {
+          T envelope = sx[i]->codomain();
+
+          if constexpr(std::is_same_v<T,Interval>)
+            contract(sx[i]->t0_tf(), envelope, gates[i], gates[i+1],
+              sv[i]->codomain(), _time_propag, _fast_mode);
+
+          else if constexpr(std::is_same_v<T,IntervalVector>)
+          {
+            std::vector<Index> ctc_indices_(ctc_indices);
+            if(ctc_indices_.empty())
+            {
+              ctc_indices_.resize(sx[i]->size());
+              std::iota(ctc_indices_.begin(), ctc_indices_.end(), 0);
+            }
+
+            for(auto j : ctc_indices_)
+              contract(sx[i]->t0_tf(), envelope[j], gates[i][j], gates[i+1][j],
+                sv[i]->codomain()[j], _time_propag, _fast_mode);
+          }
+
+          sx[i]->set(envelope, false);
+        };
 
         if((_time_propag & TimePropag::FWD) == TimePropag::FWD)
-        {
-          for(auto it = it_beg ; it != std::next(it_end) ; it++)
-          {
-            auto sx = x.slice(it);
-            if(!sx->is_gate())
-              this->contract(*sx, *v.slice(it), ctc_indices);
-          }
-        }
+          for(std::size_t i = 0 ; i < sx.size() ; i++)
+            contract_slice(i);
 
         if((_time_propag & TimePropag::BWD) == TimePropag::BWD)
+          for(std::size_t i = sx.size() ; i-- > 0 ; )
+            contract_slice(i);
+
+        // Update only gates explicitly present in the TDomain.
+        // Temporary boundary values are discarded after contraction.
+        for(std::size_t i = 0 ; i < sx.size() ; i++)
         {
-          for(auto it = it_end ; it != std::prev(it_beg) ; it--)
-          {
-            auto sx = x.slice(it);
-            if(!sx->is_gate())
-              this->contract(*sx, *v.slice(it), ctc_indices);
-          }
+          auto prev = sx[i]->prev_slice();
+          if(prev && prev->is_gate())
+            prev->set(gates[i], false);
+
+          auto next = sx[i]->next_slice();
+          if(next && next->is_gate())
+            next->set(gates[i+1], false);
         }
       }
 
