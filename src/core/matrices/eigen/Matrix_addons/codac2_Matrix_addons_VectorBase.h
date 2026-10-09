@@ -202,17 +202,14 @@ inline void put(Index start_id, const MatrixBase<OtherDerived>& x)
  * 
  * \param n The new size.
  * 
- * \details
  * Eigen's ``resize()`` discards existing data, so this function copies existing
- * values before resizing and restores them afterward.
+ * values before resizing and restores them afterward. Same as ``conservativeResize()``
+ * of Eigen.
  */
 template<int R=RowsAtCompileTime,int C=ColsAtCompileTime>
   requires IsVectorOrRow<R,C>
-inline void resize_save_values(Index n)
+inline void conservative_resize(Index n)
 {
   // With resize() of Eigen, the data is reallocated and all previous values are lost.
-  auto copy = *this;
-  this->resize(n);
-  for(Index i = 0 ; i < std::min((Index)copy.size(),n) ; i++)
-    (*this)[i] = copy[i];
+  return this->conservativeResize(n);
 }

@@ -105,12 +105,12 @@ void export_VectorBase([[maybe_unused]] py::module& m, py::class_<S>& pyclass)
       DOC_TO_BE_DEFINED,
       "n"_a)
 
-    .def("resize_save_values", [](S& x, Index_type n)
+    .def("conservative_resize", [](S& x, Index_type n)
         {
           matlab::test_integer(n);
-          x.resize_save_values(n);
+          x.conservative_resize(n);
         },
-      MATRIX_ADDONS_VECTORBASE_VOID_RESIZE_SAVE_VALUES_INDEX,
+      MATRIX_ADDONS_VECTORBASE_VOID_CONSERVATIVE_RESIZE_INDEX,
       "n"_a)
 
     .def("put", [](S& x, Index_type start_id, const S& x1)
