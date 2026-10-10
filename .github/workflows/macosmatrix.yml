@@ -53,7 +53,42 @@ jobs:
     #  if: runner.os=='macOS'
     - run: brew install catch2 # Issues with binary packages when cross-compiling...
       if: (runner.os=='macOS')&&(matrix.cfg.cross!=true)
-    - run: brew install graphviz ; brew install --formula doxygen ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
+    # The Doxygen 1.18.0 Homebrew bottle crashes in commentscanYYlex on macOS.
+    # Use the official release archive instead (with a verified SHA-256).
+    - name: Install official Doxygen 1.18.0
+      if: runner.os=='macOS'
+      shell: bash
+      run: |
+        set -euo pipefail
+        case "${{ matrix.cfg.arch }}" in
+          x86_64)
+            doxygen_arch="intel"
+            expected_sha="8045d72f6f900fd430042339c1493d6eefcc85a7f990361fb57685682f16a2f9"
+            ;;
+          arm64)
+            doxygen_arch="arm"
+            expected_sha="31d1c74467a9f6f456b4e6a4eff0c03e93d1ffa92da5fdf2d53a2f14ebaabbd7"
+            ;;
+          *) echo "Unsupported architecture: ${{ matrix.cfg.arch }}" >&2; exit 1 ;;
+        esac
+        archive="doxygen-1.18.0-mac-${doxygen_arch}.zip"
+        tmpdir="$(mktemp -d)"
+        trap 'rm -rf "$tmpdir"' EXIT
+        curl --fail --location --silent --show-error --retry 3 \
+          "https://github.com/doxygen/doxygen/releases/download/Release_1_18_0/${archive}" \
+          --output "$tmpdir/$archive"
+        echo "${expected_sha}  ${tmpdir}/${archive}" | shasum -a 256 --check
+        unzip -q "$tmpdir/$archive" -d "$tmpdir/unpacked"
+        doxygen_bin="$(find "$tmpdir/unpacked" -type f -name doxygen -print -quit)"
+        if [[ -z "$doxygen_bin" ]]; then
+          echo "Doxygen executable not found in ${archive}" >&2
+          exit 1
+        fi
+        mkdir -p "$RUNNER_TEMP/codac-doxygen-bin"
+        install -m 755 "$doxygen_bin" "$RUNNER_TEMP/codac-doxygen-bin/doxygen"
+        echo "$RUNNER_TEMP/codac-doxygen-bin" >> "$GITHUB_PATH"
+        "$RUNNER_TEMP/codac-doxygen-bin/doxygen" --version
+    - run: brew install graphviz ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
       if: runner.os=='macOS'
     - run: |
         wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
