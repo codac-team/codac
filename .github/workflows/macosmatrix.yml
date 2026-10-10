@@ -53,29 +53,35 @@ jobs:
     #  if: runner.os=='macOS'
     - run: brew install catch2 # Issues with binary packages when cross-compiling...
       if: (runner.os=='macOS')&&(matrix.cfg.cross!=true)
-    # The Doxygen 1.18.0 Homebrew bottle crashes in commentscanYYlex on macOS.
-    # Use the official release archive instead (with a verified SHA-256).
-    - name: Install official Doxygen 1.18.0
+    # Doxygen 1.18.0 crashes in commentscanYYlex on macOS Intel,
+    # including with the official binary. Test the pinned 1.16.1 release.
+    - name: Install official Doxygen 1.16.1
       if: runner.os=='macOS'
       shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
         set -euo pipefail
         case "${{ matrix.cfg.arch }}" in
-          x86_64)
-            doxygen_arch="intel"
-            expected_sha="8045d72f6f900fd430042339c1493d6eefcc85a7f990361fb57685682f16a2f9"
-            ;;
-          arm64)
-            doxygen_arch="arm"
-            expected_sha="31d1c74467a9f6f456b4e6a4eff0c03e93d1ffa92da5fdf2d53a2f14ebaabbd7"
-            ;;
+          x86_64) doxygen_arch="intel" ;;
+          arm64)  doxygen_arch="arm" ;;
           *) echo "Unsupported architecture: ${{ matrix.cfg.arch }}" >&2; exit 1 ;;
         esac
-        archive="doxygen-1.18.0-mac-${doxygen_arch}.zip"
+        archive="doxygen-1.16.1-mac-${doxygen_arch}.zip"
         tmpdir="$(mktemp -d)"
         trap 'rm -rf "$tmpdir"' EXIT
+
+        # Verify the downloaded release asset against its SHA-256
+        # recorded in the official GitHub release metadata.
+        expected_sha="$(
+          curl --fail --location --silent --show-error --retry 3 \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            --header "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/doxygen/doxygen/releases/tags/Release_1_16_1" \
+          | python3 -c 'import json, re, sys; a = next((x for x in json.load(sys.stdin).get("assets", []) if x.get("name") == sys.argv[1]), None); d = (a.get("digest") or "") if a else ""; sys.exit("Official SHA-256 digest unavailable for " + sys.argv[1]) if not re.fullmatch(r"sha256:[0-9a-fA-F]{64}", d) else print(d.split(":", 1)[1])' "$archive"
+        )"
         curl --fail --location --silent --show-error --retry 3 \
-          "https://github.com/doxygen/doxygen/releases/download/Release_1_18_0/${archive}" \
+          "https://github.com/doxygen/doxygen/releases/download/Release_1_16_1/${archive}" \
           --output "$tmpdir/$archive"
         echo "${expected_sha}  ${tmpdir}/${archive}" | shasum -a 256 --check
         unzip -q "$tmpdir/$archive" -d "$tmpdir/unpacked"
