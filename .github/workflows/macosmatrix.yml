@@ -7,9 +7,8 @@ on:
         - codac2_codac4matlab
         tags-ignore: ['**']  # Ignore all tag pushes
     pull_request:
-
 jobs:
- macosmatrix:
+  macosmatrix:
     runs-on: ${{ matrix.cfg.os }}
     env:
         MACOSX_DEPLOYMENT_TARGET: ${{ matrix.cfg.trgt }}
@@ -33,7 +32,7 @@ jobs:
             - { os: macos-15-intel       , shell: bash, arch: x86_64 , runtime: sequoia , cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 9 , desc: 'macOS Sequoia Python 3.9 x86_64' }
             - { os: macos-15-intel       , shell: bash, arch: x86_64 , runtime: sequoia , cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 8 , desc: 'macOS Sequoia Python 3.8 x86_64' }
     name: ${{ matrix.cfg.desc }}
-    steps: 
+    steps:
     - uses: actions/checkout@v7
       with:
         submodules: true
@@ -69,6 +68,41 @@ jobs:
         cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
         cd ..
       shell: bash
+    - name: Diagnose Doxygen crash
+      if: failure()
+      shell: bash
+      run: |
+        # Keep this diagnostic step from hiding the original CMake failure.
+        set +e
+        echo "=== Doxygen executable and version ==="
+        command -v doxygen
+        doxygen --version
+
+        if [[ ! -f build/doc/api/Doxyfile ]]; then
+          echo "No generated Doxyfile: CMake failed before Doxygen configuration."
+          exit 0
+        fi
+
+        echo "=== Check Doxyfile parsing ==="
+        doxygen -x build/doc/api/Doxyfile > /tmp/codac-doxygen-config.log 2>&1
+        echo "Exit code: $?"
+        tail -n 50 /tmp/codac-doxygen-config.log
+
+        echo "=== Reproduce Doxygen failure ==="
+        doxygen build/doc/api/Doxyfile > /tmp/codac-doxygen-run.log 2>&1
+        echo "Exit code: $?"
+        tail -n 50 /tmp/codac-doxygen-run.log
+
+        echo "=== LLDB crash backtrace (if permitted by the runner) ==="
+        /usr/bin/lldb --batch -o "run" -k "thread backtrace all" -- "$(command -v doxygen)" "${GITHUB_WORKSPACE}/build/doc/api/Doxyfile"
+        echo "LLDB exit code: $?"
+
+        echo "=== macOS crash reports (fallback) ==="
+        sleep 2
+        if [[ -d "$HOME/Library/Logs/DiagnosticReports" ]]; then
+          find "$HOME/Library/Logs/DiagnosticReports" -maxdepth 1 -type f \( -iname 'doxygen*.ips' -o -iname 'doxygen*.crash' \) -mmin -15 -print -exec head -n 110 {} \;
+        fi
+        exit 0
     - uses: xresloader/upload-to-github-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

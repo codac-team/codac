@@ -48,9 +48,8 @@
         )
         if(DOXYGEN_RETRY_RESULT EQUAL 0)
           message(STATUS "Doxygen succeeded on the second attempt.")
-        elseif(EXISTS "${CMAKE_BINARY_DIR}/doc/api/xml/index.xml")
-          message(WARNING "Doxygen retry exited with '${DOXYGEN_RETRY_RESULT}' but generated XML output. Continuing so Python docstrings can still be generated.")
         else()
+          # Do not accept partial XML output produced by a crashed Doxygen process.
           message(FATAL_ERROR "Doxygen failed to generate the API documentation (first exit code ${DOXYGEN_RESULT}, retry exit code ${DOXYGEN_RETRY_RESULT}), which is required for the Python docstrings. Retry output is shown above. Initial Doxygen errors: ${DOXYGEN_ERROR}")
         endif()
       endif()
