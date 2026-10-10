@@ -41,10 +41,16 @@
         RESULT_VARIABLE DOXYGEN_RESULT
       )
       if(NOT DOXYGEN_RESULT EQUAL 0)
-        if(EXISTS "${CMAKE_BINARY_DIR}/doc/api/xml/index.xml")
-          message(WARNING "Doxygen exited with '${DOXYGEN_RESULT}' but generated XML output. Continuing so Python docstrings can still be generated.")
+        message(WARNING "Doxygen failed (exit code ${DOXYGEN_RESULT}). Retrying with full output:")
+        execute_process(
+          COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT}
+          RESULT_VARIABLE DOXYGEN_RETRY_RESULT
+        )
+        if(DOXYGEN_RETRY_RESULT EQUAL 0)
+          message(STATUS "Doxygen succeeded on the second attempt.")
         else()
-          message(FATAL_ERROR "Doxygen failed to generate the API documentation (exit code ${DOXYGEN_RESULT}), which is required for the Python docstrings. Doxygen errors: ${DOXYGEN_ERROR}")
+          # Do not accept partial XML output produced by a crashed Doxygen process.
+          message(FATAL_ERROR "Doxygen failed to generate the API documentation (first exit code ${DOXYGEN_RESULT}, retry exit code ${DOXYGEN_RETRY_RESULT}), which is required for the Python docstrings. Retry output is shown above. Initial Doxygen errors: ${DOXYGEN_ERROR}")
         endif()
       endif()
       add_custom_target(api COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} OUTPUT_QUIET)
