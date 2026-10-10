@@ -1,6 +1,12 @@
-# [Codac: constraint-programming for robotics](http://codac.io) [![Build Status](https://github.com/codac-team/codac/workflows/.github/workflows/tests.yml/badge.svg)](https://github.com/codac-team/codac/actions)
+# [Codac: constraint-programming for robotics](https://www.codac.io/)
 
-See the official website: http://codac.io
+[![Tests](https://github.com/codac-team/codac/actions/workflows/tests.yml/badge.svg?branch=codac2&event=push)](https://github.com/codac-team/codac/actions/workflows/tests.yml?query=branch%3Acodac2+event%3Apush)
+[![PyPI](https://img.shields.io/pypi/v/codac)](https://pypi.org/project/codac/)
+[![Documentation](https://img.shields.io/badge/docs-codac.io-blue)](https://www.codac.io/)
+[![License](https://img.shields.io/pypi/l/codac)](https://pypi.org/project/codac/)
+
+See the official website: https://www.codac.io
+[View all CI workflows on the codac2 branch](https://github.com/codac-team/codac/actions?query=branch%3Acodac2+event%3Apush)
 
 Codac (Catalog Of Domains And Contractors) is a C++/Python/Matlab library providing tools for interval computations and constraint programming over real numbers, trajectories and sets.
 It has numerous applications in parameter estimation, guaranteed integration, robot localization, and provides reliable outputs.
