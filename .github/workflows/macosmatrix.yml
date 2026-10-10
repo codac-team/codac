@@ -7,8 +7,9 @@ on:
         - codac2_codac4matlab
         tags-ignore: ['**']  # Ignore all tag pushes
     pull_request:
+
 jobs:
-  macosmatrix:
+ macosmatrix:
     runs-on: ${{ matrix.cfg.os }}
     env:
         MACOSX_DEPLOYMENT_TARGET: ${{ matrix.cfg.trgt }}
@@ -32,7 +33,7 @@ jobs:
             - { os: macos-15-intel       , shell: bash, arch: x86_64 , runtime: sequoia , cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 9 , desc: 'macOS Sequoia Python 3.9 x86_64' }
             - { os: macos-15-intel       , shell: bash, arch: x86_64 , runtime: sequoia , cmake_flags: '-fPIC', trgt: '10.16', cpcfg: '-macosx_10_16_x86_64', py_v_maj: 3, py_v_min: 8 , desc: 'macOS Sequoia Python 3.8 x86_64' }
     name: ${{ matrix.cfg.desc }}
-    steps:
+    steps: 
     - uses: actions/checkout@v7
       with:
         submodules: true
@@ -53,97 +54,54 @@ jobs:
     #  if: runner.os=='macOS'
     - run: brew install catch2 # Issues with binary packages when cross-compiling...
       if: (runner.os=='macOS')&&(matrix.cfg.cross!=true)
-    # The official Doxygen 1.16.1 ARM binary requires macOS 15.
-    # Build the same version from source on macOS 14 (Sonoma) instead.
-    - name: Restore Doxygen 1.16.1 cache (Sonoma ARM64)
-      if: matrix.cfg.os=='macos-14' && matrix.cfg.arch=='arm64'
-      id: doxygen-cache
-      uses: actions/cache/restore@v4
-      with:
-        path: ${{ runner.temp }}/codac-doxygen-bin/doxygen
-        key: doxygen-1.16.1-macos14-arm64-v1
-
+    # Doxygen 1.18.0 crashes when parsing Codac headers on macOS.
+    # Doxygen 1.16.1 ARM64 binaries require macOS 15: build from source on macOS 14.
     - name: Install Doxygen 1.16.1
-      if: runner.os=='macOS'
       shell: bash
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
         set -euo pipefail
-        bin_dir="$RUNNER_TEMP/codac-doxygen-bin"
-        mkdir -p "$bin_dir"
-        if [[ "${{ matrix.cfg.os }}" == "macos-14" && "${{ matrix.cfg.arch }}" == "arm64" ]]; then
-          if [[ ! -x "$bin_dir/doxygen" ]]; then
-            echo "Building Doxygen 1.16.1 for macOS 14 ARM64"
-            brew install ninja flex bison
-            archive="doxygen-1.16.1.src.tar.gz"
-            tmpdir="$(mktemp -d)"
-            trap 'rm -rf "$tmpdir"' EXIT
+        case "${{ matrix.cfg.arch }}" in
+          arm64)  archive="doxygen-1.16.1.src.tar.gz" ;;
+          x86_64) archive="doxygen-1.16.1-mac-intel.zip" ;;
+          *) echo "Unsupported architecture" >&2; exit 1 ;;
+        esac
+        tmpdir="$(mktemp -d)"
+        trap 'rm -rf "$tmpdir"' EXIT
 
-            # Verify the official source archive against its GitHub release digest.
-            expected_sha="$(
-              curl --fail --location --silent --show-error --retry 3 \
-                --header "Authorization: Bearer ${GH_TOKEN}" \
-                --header "Accept: application/vnd.github+json" \
-                "https://api.github.com/repos/doxygen/doxygen/releases/tags/Release_1_16_1" \
-              | python3 -c 'import json, re, sys; a = next((x for x in json.load(sys.stdin).get("assets", []) if x.get("name") == sys.argv[1]), None); d = (a.get("digest") or "") if a else ""; sys.exit("Official SHA-256 digest unavailable for " + sys.argv[1]) if not re.fullmatch(r"sha256:[0-9a-fA-F]{64}", d) else print(d.split(":", 1)[1])' "$archive"
-            )"
-            curl --fail --location --silent --show-error --retry 3 \
-              "https://github.com/doxygen/doxygen/releases/download/Release_1_16_1/${archive}" \
-              --output "$tmpdir/$archive"
-            echo "${expected_sha}  ${tmpdir}/${archive}" | shasum -a 256 --check
-            mkdir -p "$tmpdir/src"
-            tar -xzf "$tmpdir/$archive" -C "$tmpdir/src"
-            export PATH="$(brew --prefix flex)/bin:$(brew --prefix bison)/bin:$PATH"
-            cmake -G Ninja \
-              -S "$tmpdir/src/doxygen-1.16.1" -B "$tmpdir/build" \
-              -DCMAKE_BUILD_TYPE=Release \
-              -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
-              -Dbuild_wizard=OFF -Dbuild_doc=OFF -Duse_libclang=OFF
-            cmake --build "$tmpdir/build" --target doxygen --parallel 4
-            install -m 755 "$tmpdir/build/bin/doxygen" "$bin_dir/doxygen"
-          else
-            echo "Using cached Doxygen 1.16.1 for macOS 14 ARM64"
-          fi
+        # Verify the archive using its official GitHub release SHA-256 digest.
+        expected_sha="$(
+          curl -fsSL --retry 3 \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/doxygen/doxygen/releases/tags/Release_1_16_1 \
+          | python3 -c 'import json,sys; a=next(x for x in json.load(sys.stdin)["assets"] if x["name"]==sys.argv[1]); d=a["digest"]; assert d and d.startswith("sha256:") and len(d)==71; print(d[7:])' "$archive"
+        )"
+        curl -fsSL --retry 3 \
+          "https://github.com/doxygen/doxygen/releases/download/Release_1_16_1/${archive}" \
+          -o "$tmpdir/$archive"
+        echo "${expected_sha}  ${tmpdir}/${archive}" | shasum -a 256 -c
+
+        if [[ "${{ matrix.cfg.arch }}" == arm64 ]]; then
+          brew install ninja flex bison
+          mkdir "$tmpdir/src"
+          tar -xzf "$tmpdir/$archive" -C "$tmpdir/src"
+          export PATH="$(brew --prefix flex)/bin:$(brew --prefix bison)/bin:$PATH"
+          cmake -G Ninja -S "$tmpdir/src/doxygen-1.16.1" -B "$tmpdir/build" \
+            -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
+            -Dbuild_wizard=OFF -Dbuild_doc=OFF -Duse_libclang=OFF
+          cmake --build "$tmpdir/build" --target doxygen --parallel 4
+          doxygen_bin="$tmpdir/build/bin/doxygen"
         else
-          case "${{ matrix.cfg.arch }}" in
-            x86_64) doxygen_arch="intel" ;;
-            arm64)  doxygen_arch="arm" ;;
-            *) echo "Unsupported architecture: ${{ matrix.cfg.arch }}" >&2; exit 1 ;;
-          esac
-          archive="doxygen-1.16.1-mac-${doxygen_arch}.zip"
-          tmpdir="$(mktemp -d)"
-          trap 'rm -rf "$tmpdir"' EXIT
-
-          expected_sha="$(
-            curl --fail --location --silent --show-error --retry 3 \
-              --header "Authorization: Bearer ${GH_TOKEN}" \
-              --header "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/doxygen/doxygen/releases/tags/Release_1_16_1" \
-            | python3 -c 'import json, re, sys; a = next((x for x in json.load(sys.stdin).get("assets", []) if x.get("name") == sys.argv[1]), None); d = (a.get("digest") or "") if a else ""; sys.exit("Official SHA-256 digest unavailable for " + sys.argv[1]) if not re.fullmatch(r"sha256:[0-9a-fA-F]{64}", d) else print(d.split(":", 1)[1])' "$archive"
-          )"
-          curl --fail --location --silent --show-error --retry 3 \
-            "https://github.com/doxygen/doxygen/releases/download/Release_1_16_1/${archive}" \
-            --output "$tmpdir/$archive"
-          echo "${expected_sha}  ${tmpdir}/${archive}" | shasum -a 256 --check
           unzip -q "$tmpdir/$archive" -d "$tmpdir/unpacked"
           doxygen_bin="$(find "$tmpdir/unpacked" -type f -name doxygen -print -quit)"
-          if [[ -z "$doxygen_bin" ]]; then
-            echo "Doxygen executable not found in ${archive}" >&2
-            exit 1
-          fi
-          install -m 755 "$doxygen_bin" "$bin_dir/doxygen"
         fi
-        echo "$bin_dir" >> "$GITHUB_PATH"
-        "$bin_dir/doxygen" --version
 
-    - name: Save Doxygen 1.16.1 cache (Sonoma ARM64)
-      if: matrix.cfg.os=='macos-14' && matrix.cfg.arch=='arm64' && steps.doxygen-cache.outputs.cache-hit != 'true'
-      uses: actions/cache/save@v4
-      with:
-        path: ${{ runner.temp }}/codac-doxygen-bin/doxygen
-        key: doxygen-1.16.1-macos14-arm64-v1
-
+        mkdir -p "$RUNNER_TEMP/codac-doxygen-bin"
+        install -m 755 "$doxygen_bin" "$RUNNER_TEMP/codac-doxygen-bin/doxygen"
+        echo "$RUNNER_TEMP/codac-doxygen-bin" >> "$GITHUB_PATH"
+        "$RUNNER_TEMP/codac-doxygen-bin/doxygen" --version
     - run: brew install graphviz ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
       if: runner.os=='macOS'
     - run: |
@@ -159,41 +117,6 @@ jobs:
         cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
         cd ..
       shell: bash
-    - name: Diagnose Doxygen crash
-      if: failure()
-      shell: bash
-      run: |
-        # Keep this diagnostic step from hiding the original CMake failure.
-        set +e
-        echo "=== Doxygen executable and version ==="
-        command -v doxygen
-        doxygen --version
-
-        if [[ ! -f build/doc/api/Doxyfile ]]; then
-          echo "No generated Doxyfile: CMake failed before Doxygen configuration."
-          exit 0
-        fi
-
-        echo "=== Check Doxyfile parsing ==="
-        doxygen -x build/doc/api/Doxyfile > /tmp/codac-doxygen-config.log 2>&1
-        echo "Exit code: $?"
-        tail -n 50 /tmp/codac-doxygen-config.log
-
-        echo "=== Reproduce Doxygen failure ==="
-        doxygen build/doc/api/Doxyfile > /tmp/codac-doxygen-run.log 2>&1
-        echo "Exit code: $?"
-        tail -n 50 /tmp/codac-doxygen-run.log
-
-        echo "=== LLDB crash backtrace (if permitted by the runner) ==="
-        /usr/bin/lldb --batch -o "run" -k "thread backtrace all" -- "$(command -v doxygen)" "${GITHUB_WORKSPACE}/build/doc/api/Doxyfile"
-        echo "LLDB exit code: $?"
-
-        echo "=== macOS crash reports (fallback) ==="
-        sleep 2
-        if [[ -d "$HOME/Library/Logs/DiagnosticReports" ]]; then
-          find "$HOME/Library/Logs/DiagnosticReports" -maxdepth 1 -type f \( -iname 'doxygen*.ips' -o -iname 'doxygen*.crash' \) -mmin -15 -print -exec head -n 110 {} \;
-        fi
-        exit 0
     - uses: xresloader/upload-to-github-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
