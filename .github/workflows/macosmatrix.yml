@@ -53,47 +53,97 @@ jobs:
     #  if: runner.os=='macOS'
     - run: brew install catch2 # Issues with binary packages when cross-compiling...
       if: (runner.os=='macOS')&&(matrix.cfg.cross!=true)
-    # Doxygen 1.18.0 crashes in commentscanYYlex on macOS Intel,
-    # including with the official binary. Test the pinned 1.16.1 release.
-    - name: Install official Doxygen 1.16.1
+    # The official Doxygen 1.16.1 ARM binary requires macOS 15.
+    # Build the same version from source on macOS 14 (Sonoma) instead.
+    - name: Restore Doxygen 1.16.1 cache (Sonoma ARM64)
+      if: matrix.cfg.os=='macos-14' && matrix.cfg.arch=='arm64'
+      id: doxygen-cache
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ runner.temp }}/codac-doxygen-bin/doxygen
+        key: doxygen-1.16.1-macos14-arm64-v1
+
+    - name: Install Doxygen 1.16.1
       if: runner.os=='macOS'
       shell: bash
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
         set -euo pipefail
-        case "${{ matrix.cfg.arch }}" in
-          x86_64) doxygen_arch="intel" ;;
-          arm64)  doxygen_arch="arm" ;;
-          *) echo "Unsupported architecture: ${{ matrix.cfg.arch }}" >&2; exit 1 ;;
-        esac
-        archive="doxygen-1.16.1-mac-${doxygen_arch}.zip"
-        tmpdir="$(mktemp -d)"
-        trap 'rm -rf "$tmpdir"' EXIT
+        bin_dir="$RUNNER_TEMP/codac-doxygen-bin"
+        mkdir -p "$bin_dir"
+        if [[ "${{ matrix.cfg.os }}" == "macos-14" && "${{ matrix.cfg.arch }}" == "arm64" ]]; then
+          if [[ ! -x "$bin_dir/doxygen" ]]; then
+            echo "Building Doxygen 1.16.1 for macOS 14 ARM64"
+            brew install ninja flex bison
+            archive="doxygen-1.16.1.src.tar.gz"
+            tmpdir="$(mktemp -d)"
+            trap 'rm -rf "$tmpdir"' EXIT
 
-        # Verify the downloaded release asset against its SHA-256
-        # recorded in the official GitHub release metadata.
-        expected_sha="$(
+            # Verify the official source archive against its GitHub release digest.
+            expected_sha="$(
+              curl --fail --location --silent --show-error --retry 3 \
+                --header "Authorization: Bearer ${GH_TOKEN}" \
+                --header "Accept: application/vnd.github+json" \
+                "https://api.github.com/repos/doxygen/doxygen/releases/tags/Release_1_16_1" \
+              | python3 -c 'import json, re, sys; a = next((x for x in json.load(sys.stdin).get("assets", []) if x.get("name") == sys.argv[1]), None); d = (a.get("digest") or "") if a else ""; sys.exit("Official SHA-256 digest unavailable for " + sys.argv[1]) if not re.fullmatch(r"sha256:[0-9a-fA-F]{64}", d) else print(d.split(":", 1)[1])' "$archive"
+            )"
+            curl --fail --location --silent --show-error --retry 3 \
+              "https://github.com/doxygen/doxygen/releases/download/Release_1_16_1/${archive}" \
+              --output "$tmpdir/$archive"
+            echo "${expected_sha}  ${tmpdir}/${archive}" | shasum -a 256 --check
+            mkdir -p "$tmpdir/src"
+            tar -xzf "$tmpdir/$archive" -C "$tmpdir/src"
+            export PATH="$(brew --prefix flex)/bin:$(brew --prefix bison)/bin:$PATH"
+            cmake -G Ninja \
+              -S "$tmpdir/src/doxygen-1.16.1" -B "$tmpdir/build" \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
+              -Dbuild_wizard=OFF -Dbuild_doc=OFF -Duse_libclang=OFF
+            cmake --build "$tmpdir/build" --target doxygen --parallel 4
+            install -m 755 "$tmpdir/build/bin/doxygen" "$bin_dir/doxygen"
+          else
+            echo "Using cached Doxygen 1.16.1 for macOS 14 ARM64"
+          fi
+        else
+          case "${{ matrix.cfg.arch }}" in
+            x86_64) doxygen_arch="intel" ;;
+            arm64)  doxygen_arch="arm" ;;
+            *) echo "Unsupported architecture: ${{ matrix.cfg.arch }}" >&2; exit 1 ;;
+          esac
+          archive="doxygen-1.16.1-mac-${doxygen_arch}.zip"
+          tmpdir="$(mktemp -d)"
+          trap 'rm -rf "$tmpdir"' EXIT
+
+          expected_sha="$(
+            curl --fail --location --silent --show-error --retry 3 \
+              --header "Authorization: Bearer ${GH_TOKEN}" \
+              --header "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/doxygen/doxygen/releases/tags/Release_1_16_1" \
+            | python3 -c 'import json, re, sys; a = next((x for x in json.load(sys.stdin).get("assets", []) if x.get("name") == sys.argv[1]), None); d = (a.get("digest") or "") if a else ""; sys.exit("Official SHA-256 digest unavailable for " + sys.argv[1]) if not re.fullmatch(r"sha256:[0-9a-fA-F]{64}", d) else print(d.split(":", 1)[1])' "$archive"
+          )"
           curl --fail --location --silent --show-error --retry 3 \
-            --header "Authorization: Bearer ${GH_TOKEN}" \
-            --header "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/doxygen/doxygen/releases/tags/Release_1_16_1" \
-          | python3 -c 'import json, re, sys; a = next((x for x in json.load(sys.stdin).get("assets", []) if x.get("name") == sys.argv[1]), None); d = (a.get("digest") or "") if a else ""; sys.exit("Official SHA-256 digest unavailable for " + sys.argv[1]) if not re.fullmatch(r"sha256:[0-9a-fA-F]{64}", d) else print(d.split(":", 1)[1])' "$archive"
-        )"
-        curl --fail --location --silent --show-error --retry 3 \
-          "https://github.com/doxygen/doxygen/releases/download/Release_1_16_1/${archive}" \
-          --output "$tmpdir/$archive"
-        echo "${expected_sha}  ${tmpdir}/${archive}" | shasum -a 256 --check
-        unzip -q "$tmpdir/$archive" -d "$tmpdir/unpacked"
-        doxygen_bin="$(find "$tmpdir/unpacked" -type f -name doxygen -print -quit)"
-        if [[ -z "$doxygen_bin" ]]; then
-          echo "Doxygen executable not found in ${archive}" >&2
-          exit 1
+            "https://github.com/doxygen/doxygen/releases/download/Release_1_16_1/${archive}" \
+            --output "$tmpdir/$archive"
+          echo "${expected_sha}  ${tmpdir}/${archive}" | shasum -a 256 --check
+          unzip -q "$tmpdir/$archive" -d "$tmpdir/unpacked"
+          doxygen_bin="$(find "$tmpdir/unpacked" -type f -name doxygen -print -quit)"
+          if [[ -z "$doxygen_bin" ]]; then
+            echo "Doxygen executable not found in ${archive}" >&2
+            exit 1
+          fi
+          install -m 755 "$doxygen_bin" "$bin_dir/doxygen"
         fi
-        mkdir -p "$RUNNER_TEMP/codac-doxygen-bin"
-        install -m 755 "$doxygen_bin" "$RUNNER_TEMP/codac-doxygen-bin/doxygen"
-        echo "$RUNNER_TEMP/codac-doxygen-bin" >> "$GITHUB_PATH"
-        "$RUNNER_TEMP/codac-doxygen-bin/doxygen" --version
+        echo "$bin_dir" >> "$GITHUB_PATH"
+        "$bin_dir/doxygen" --version
+
+    - name: Save Doxygen 1.16.1 cache (Sonoma ARM64)
+      if: matrix.cfg.os=='macos-14' && matrix.cfg.arch=='arm64' && steps.doxygen-cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ runner.temp }}/codac-doxygen-bin/doxygen
+        key: doxygen-1.16.1-macos14-arm64-v1
+
     - run: brew install graphviz ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects furo sphinx-math-dollar sphinx_togglebutton sympy
       if: runner.os=='macOS'
     - run: |
