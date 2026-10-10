@@ -67,9 +67,9 @@ Color Color::rgb() const
     float r = 0., g = 0., b = 0.;
 
     // Normalisation des valeurs
-    float h = (*this)[0] / 360.; // Hue normalisée (0 à 1)
-    float s = (*this)[1] / 100.; // Saturation normalisée (0 à 1)
-    float v = (*this)[2] / 100.; // Value normalisée (0 à 1)
+    float h = (*this)[0] / 360.f; // Hue normalisée (0 à 1)
+    float s = (*this)[1] / 100.f; // Saturation normalisée (0 à 1)
+    float v = (*this)[2] / 100.f; // Value normalisée (0 à 1)
 
     int i = static_cast<int>(h * 6);
     float f = (h * 6) - i;
@@ -93,7 +93,7 @@ Color Color::rgb() const
     g *= 255.;
     b *= 255.;
 
-    return Color({r, g, b,std::min<float>(255.,((*this)[3]*2.55))},Model::RGB);
+    return Color({r, g, b,std::min<float>(255.f,((*this)[3]*2.55f))},Model::RGB);
   }
 }
 
@@ -103,9 +103,9 @@ Color Color::hsv() const
     return *this;
   else
   {
-    float r = (*this)[0]/255.;
-    float g = (*this)[1]/255.;
-    float b = (*this)[2]/255.;
+    float r = (*this)[0]/255.f;
+    float g = (*this)[1]/255.f;
+    float b = (*this)[2]/255.f;
     float c_max = std::max({r, g, b});
     float c_min = std::min({r, g, b});
     float delta = c_max - c_min;
@@ -113,11 +113,11 @@ Color Color::hsv() const
     float h = 0.0;
     if (delta != 0) {
         if (c_max == r) {
-            h = fmod((g - b) / delta, 6.0);
+            h = std::fmod((g - b) / delta, 6.0f);
         } else if (c_max == g) {
-            h = (b - r) / delta + 2.0;
+            h = (b - r) / delta + 2.0f;
         } else if (c_max == b) {
-            h = (r - g) / delta + 4.0;
+            h = (r - g) / delta + 4.0f;
         }
         h /= 6.0;
         if (h < 0) {
@@ -133,7 +133,7 @@ Color Color::hsv() const
     s*=100.;
     v*=100.;
 
-    return Color({h, s, v,std::min<float>(100.,((*this)[3]/2.55))},Model::HSV);
+    return Color({h, s, v,std::min<float>(100.f,((*this)[3]/2.55f))},Model::HSV);
   }
 }
 

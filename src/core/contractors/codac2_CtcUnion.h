@@ -48,6 +48,7 @@ namespace codac2
       {
         for(const auto& ci : _ctcs)
         {
+          (void)ci;
           assert_release(ci->size() == this->size());
         }
       }
@@ -65,7 +66,9 @@ namespace codac2
 
       void contract(X&... x) const
       {
-        auto result = std::tuple<X...>(x...);
+        const auto input = std::tuple<X...>(x...);
+
+        auto result = input;
         std::apply([](auto&... xi)
         {
           (xi.set_empty(), ...);
@@ -78,7 +81,7 @@ namespace codac2
 
         for(const auto& ci : _ctcs)
         {
-          auto saved = std::tuple<X...>(x...);
+          auto saved = input;
 
           std::apply([&](auto&... xi)
           {
@@ -86,6 +89,12 @@ namespace codac2
           }, saved);
 
           accumulate_union(saved, std::index_sequence_for<X...>{});
+
+          // Each contractor is contractant, hence every remaining branch
+          // can only return a subset of input. Once the accumulated union
+          // has reached input, the final result is already known.
+          if(result == input)
+            return;
         }
 
         std::tie(x...) = result;

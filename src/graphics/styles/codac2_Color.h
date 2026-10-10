@@ -162,7 +162,7 @@ namespace codac2
        */
       static Color random(float alpha = 1.)
       {
-        return Color({(float)Interval(0,360).rand(),100,100, (float)(alpha * 255.)}, Model::HSV);
+        return Color({(float)Interval(0,360).rand(),100,100, (float)(alpha * 100.)}, Model::HSV);
       };
 
       #define DEFINE_COLOR(NAME, R, G, B) \

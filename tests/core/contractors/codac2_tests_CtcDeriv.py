@@ -213,6 +213,66 @@ class TestCtcDeriv(unittest.TestCase):
     self.assertTrue(sx.codomain() == Interval(-5,4))
     self.assertTrue(sv.codomain() == Interval(-1,oo))
 
+    # Propagation without internal gates
+
+    for direction in (TimePropag.FWD, TimePropag.BWD, TimePropag.FWD_BWD):
+      tdomain = create_tdomain([0,3], 1., False)
+      x = SlicedTube(tdomain, Interval())
+      v = SlicedTube(tdomain, Interval(1))
+      sx = [s for s in x if not s.is_gate()]
+
+      # Constrain whole slices, without creating pointwise gates.
+      if direction != TimePropag.BWD:
+        sx[0].set(Interval(0,1))
+      if direction != TimePropag.FWD:
+        sx[-1].set(Interval(2,3))
+
+      self.assertEqual(len(sx), 3)
+      self.assertFalse(tdomain.all_gates_defined())
+
+      CtcDeriv(direction, False).contract(x, v)
+
+      if direction == TimePropag.FWD:
+        self.assertEqual(sx[0].codomain(), Interval(0,1))
+        self.assertTrue(sx[1].codomain().is_subset(Interval(0,2)))
+        self.assertTrue(sx[2].codomain().is_subset(Interval(1,3)))
+      elif direction == TimePropag.BWD:
+        self.assertTrue(sx[0].codomain().is_subset(Interval(-1,2)))
+        self.assertTrue(sx[1].codomain().is_subset(Interval(0,3)))
+        self.assertEqual(sx[2].codomain(), Interval(2,3))
+      else:
+        self.assertEqual(sx[0].codomain(), Interval(0,1))
+        self.assertTrue(sx[1].codomain().is_subset(Interval(0,3)))
+        self.assertEqual(sx[2].codomain(), Interval(2,3))
+
+      # Contracting a tube must not create any explicit gate.
+      slices = list(x)
+      self.assertEqual(len(slices), 3)
+      self.assertFalse(tdomain.all_gates_defined())
+      self.assertTrue(all(not s.is_gate() for s in slices))
+
+    # Existing gates must be preserved without creating new ones.
+    tdomain = create_tdomain([0,3], 1., False)
+    x = SlicedTube(tdomain, Interval())
+    v = SlicedTube(tdomain, Interval(1))
+    x.set(Interval(0), 0.)
+    self.assertEqual(len(list(x)), 4)
+    CtcDeriv(TimePropag.FWD_BWD, False).contract(x, v)
+    self.assertEqual(len(list(x)), 4)
+    self.assertEqual(x(0.), Interval(0))
+    self.assertEqual(len([s for s in x if s.is_gate()]), 1)
+
+    # Restricted contraction at existing slice boundaries must not create gates.
+    tdomain = create_tdomain([0,4], 1., False)
+    x = SlicedTube(tdomain, Interval())
+    v = SlicedTube(tdomain, Interval(1))
+    ctc = CtcDeriv(TimePropag.FWD_BWD, False)
+    ctc.restrict_tdomain(Interval(1,3))
+    self.assertEqual(len(list(x)), 4)
+    ctc.contract(x, v)
+    self.assertEqual(len(list(x)), 4)
+    self.assertTrue(all(not s.is_gate() for s in x))
+
     # Test fwd
 
     tdomain = create_tdomain([0,6],1.)

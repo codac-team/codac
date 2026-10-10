@@ -20,7 +20,7 @@ s3 = create_sep(Vector([-1,-1]), Interval(3,4))
 
 DefaultFigure.set_axes(axis(0, Interval(-6,6)), axis(1, Interval(-6,6)))
 
-q = 2
+q = 1
 DefaultFigure.pave(
   [[-6,6],[-6,6]],
   SepQInter(q, s1,s2,s3),

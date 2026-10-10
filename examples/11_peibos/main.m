@@ -26,7 +26,7 @@ v_par_2d = PEIBOS(f_2d,psi0_2d,{id_2d,s,s*s,s.invert()},0.2,Vector([-0.2,0.]),tr
 
 figure_2d = Figure2D("Henon Map",GraphicOutput().VIBES);
 figure_2d.set_window_properties(Vector([25,50]),Vector([500,500]));
-figure_2d.set_axes(axis(1,Interval([-1.4,2.2])), axis(2,Interval([-0.4,0.3])));
+figure_2d.set_axes([[-1.4,2.2],[-0.4,0.3]]);
 
 for i = 1:length(v_par_2d)
     p = v_par_2d{i};
@@ -59,7 +59,7 @@ figure_3d.draw_axes();
 
 figure_3d_proj = Figure2D("Conformd projected",GraphicOutput().VIBES);
 figure_3d_proj.set_window_properties(Vector([25,600]),Vector([500,500]));
-figure_3d_proj.set_axes(axis(1,Interval([-1.5,2.5])), axis(2,Interval([-2.0,2.0])));
+figure_3d_proj.set_axes([[-1.5,2.5],[-2,2]]);
 
 for i = 1:length(v_par_3d)
     p = v_par_3d{i};
@@ -88,11 +88,11 @@ figure_3d_nd.draw_axes(0.5);
 
 figure_2d_nd_xy = Figure2D("XY Plane",GraphicOutput().VIBES);
 figure_2d_nd_xy.set_window_properties(Vector([575,50]),Vector([500,500]));
-figure_2d_nd_xy.set_axes(axis(1,Interval([-1.,1.])), axis(2,Interval([-1.,1.])));
+figure_2d_nd_xy.set_axes([[-1,1],[-1,1]]);
 
 figure_2d_nd_zy = Figure2D("ZY Plane",GraphicOutput().VIBES);
 figure_2d_nd_zy.set_window_properties(Vector([1125,50]),Vector([500,500]));
-figure_2d_nd_zy.set_axes(axis(1,Interval([-1.,1.])), axis(2,Interval([-1.,1.])));
+figure_2d_nd_zy.set_axes([[-1,1],[-1,1]]);
 
 v_par_nd = PEIBOS(f_nd,psi0_nd,{id_nd,s1_nd,s1_nd*s1_nd,s1_nd.invert(), s2_nd,s2_nd*s1_nd,s2_nd*s1_nd*s1_nd,s2_nd*s1_nd.invert(),s2_nd*s2_nd,s2_nd*s2_nd*s1_nd,s2_nd*s2_nd*s1_nd*s1_nd,s2_nd*s2_nd*s1_nd.invert()},0.1,true);
 

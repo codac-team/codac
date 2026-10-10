@@ -138,7 +138,11 @@
     message(STATUS "Found Eigen3 version ${Eigen3_VERSION} in ${Eigen3_DIR}")
   else()
     message(STATUS "Attempt to install custom Eigen3 automatically...")
-    FetchContent_Declare(Eigen3 URL http://github.com/codac-team/eigen/archive/refs/heads/eigen-5.0.zip)
+    # Over HTTPS, not plain HTTP: the connections to port 80 of github.com timed
+    # out now and then on the GitHub Actions runners, failing the whole job at
+    # configuration time ("Failed to connect to github.com port 80"), and HTTPS
+    # also guarantees that the archive comes from GitHub unaltered.
+    FetchContent_Declare(Eigen3 URL https://github.com/codac-team/eigen/archive/refs/heads/eigen-5.0.zip)
     #FetchContent_Declare(Eigen3 URL ${CMAKE_CURRENT_SOURCE_DIR}/3rd/eigen-a0dc3994bd5d4e804dab58decb78c56a5af516ba.zip) # If needed to be self-contained...
     FetchContent_MakeAvailable(Eigen3)
   endif()
@@ -164,13 +168,23 @@
 # Compile sources
 ################################################################################
   
-  add_subdirectory(src) # C++ sources
-  add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
-
   # Python binding:
   option(WITH_PYTHON "Build Python binding" OFF)
   if(WITH_PYTHON)
-    set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
+    # The Python modules are shared libraries that the static libraries of src/
+    # are linked into, so these have to be position independent code as well.
+    # CMAKE_POSITION_INDEPENDENT_CODE only initializes the
+    # POSITION_INDEPENDENT_CODE property of the targets created after it is set:
+    # it has to be set before add_subdirectory(src). Set after it, as it used to
+    # be, it reached the Python modules only, which are position independent
+    # anyway, and -fPIC had to be given by hand in CMAKE_CXX_FLAGS.
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+  endif()
+
+  add_subdirectory(src) # C++ sources
+  add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
+
+  if(WITH_PYTHON)
     add_subdirectory(python)
   endif()
 
@@ -203,7 +217,15 @@
 # Archives and packages
 ################################################################################
 
-  set(CPACK_GENERATOR "TGZ" "ZIP" "DEB")
+  set(CPACK_GENERATOR "TGZ" "ZIP")
+  # The DEB generator shells out to dpkg-deb, which only exists on
+  # Debian-based systems -- adding it unconditionally would make `cpack`/
+  # `make package` fail on Windows, macOS, and non-Debian Linux, even
+  # though nothing else in the build depends on it.
+  find_program(DPKG_DEB_EXECUTABLE dpkg-deb)
+  if(DPKG_DEB_EXECUTABLE)
+    list(APPEND CPACK_GENERATOR "DEB")
+  endif()
   string(TOLOWER "${CMAKE_PROJECT_NAME}" CPACK_PACKAGE_NAME)
   set(CPACK_PACKAGE_VENDOR "Codac Team")
   set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${CODAC_DESCRIPTION})

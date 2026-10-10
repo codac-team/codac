@@ -24,6 +24,7 @@
 .cproject
 .settings
 .project
+.pydevproject
 
 # waf generated stuff
 .waf*
@@ -56,6 +57,7 @@ doc/doxygen/xml/*
 build/
 build_*/
 build-*/
+CMakePresets.json
 
 # Latex files
 *.aux

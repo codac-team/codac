@@ -14,9 +14,9 @@
 
 namespace codac2
 {
-  // Approximate Q-intersection, using Luc Jaulin's algorithm
+  // Approximate q-relaxed intersection, using Luc Jaulin's algorithm
   // Author: Clement Carbonnel, Benoit Desrochers, Simon Rohou
-  // The q-intersection of n boxes corresponds to the set of all elements
-  // which belong to at least q of these boxes.
+  // The q-relaxed intersection of n boxes corresponds to the set of all elements
+  // which belong to at least n-q of these boxes, i.e. which violate at most q boxes.
   IntervalVector qinter(unsigned int q, const std::list<IntervalVector>& l);
 }

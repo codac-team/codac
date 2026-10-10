@@ -26,6 +26,10 @@ namespace codac2
         : Ctc<CtcWrapper<Y>,X>(y.size()), _y(y)
       { }
 
+      CtcWrapper(Y&& y)
+        : Ctc<CtcWrapper<Y>,X>(y.size()), _y(std::move(y))
+      { }
+
       void contract(X& x) const
       {
         assert_release(x.size() == this->size());

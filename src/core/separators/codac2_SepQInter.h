@@ -20,11 +20,13 @@ namespace codac2
   {
     public:
 
+      // q is the maximum number of constraints that may be violated.
       SepQInter(unsigned int q, const Collection<SepBase>& c)
         : Sep<SepQInter>([&c]() {
             assert_release(!c.empty());
             Index n = size_of(c.front());
             for(const auto& s : c) {
+              (void)s;
               assert_release(size_of(s) == n && "all separators must be of same size");
             }
             return n;
@@ -33,6 +35,7 @@ namespace codac2
         assert_release(q <= c.size());
       }
 
+      // q is the maximum number of constraints that may be violated.
       explicit SepQInter(unsigned int q, Index n, const Collection<SepBase>& sep = {})
         : Sep<SepQInter>(n), _q(q), _seps(sep)
       {

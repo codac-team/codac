@@ -20,9 +20,6 @@ namespace codac2
   {
     assert(!l.empty());
     Index n = l.begin()->size();
-    
-    if(q > l.size())
-      return IntervalVector::empty(n);
 
     assert(([&l,n](){
       for(const auto& xi : l) {
@@ -33,18 +30,33 @@ namespace codac2
       return true;
     }()));
 
+    if(q > l.size())
+      return IntervalVector::empty(n);
+
+    // q is the maximum number of boxes that may be violated.
+    // Hence, at least l.size()-q boxes must contain the point.
+    const size_t min_satisfied = l.size()-q;
+
+    if(min_satisfied == 0)
+      return IntervalVector(n);
+
     unsigned int p = 0;
     for(const auto& li : l)
       if(!li.is_empty())
         p++;
 
+    // Empty boxes cannot be satisfied.
+    if(min_satisfied > p)
+      return IntervalVector::empty(n);
+
     IntervalVector res(n);
     std::vector<std::pair<double,ProjBound>> b(2*p);
 
-    // Main loop: solve the q-inter independently on each dimension, and return the Cartesian product
+    // Main loop: solve the q-relaxed intersection independently on each dimension,
+    // and return the Cartesian product
     for(Index i = 0 ; i < n ; i++)
     {
-      // Solve the q-inter for dimension i
+      // Solve the q-relaxed intersection for dimension i
       
       int j = 0;
       for(const auto& xj : l)
@@ -64,7 +76,7 @@ namespace codac2
       for(unsigned int k = 0 ; k < 2*p ; k++)
       {
         (b[k].second == ProjBound::LEFT) ? c++ : c--;
-        if(c == (int)q)
+        if(c == static_cast<int>(min_satisfied))
         {
           lb0 = b[k].first;
           break;
@@ -82,7 +94,7 @@ namespace codac2
       for(int k = 2*p-1 ; k >= 0 ; k--)
       {
         (b[k].second == ProjBound::RIGHT) ? c++ : c--;
-        if(c == (int)q)
+        if(c == static_cast<int>(min_satisfied))
         {
           rb0 = b[k].first;
           break;

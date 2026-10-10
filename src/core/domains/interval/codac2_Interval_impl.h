@@ -75,7 +75,7 @@ namespace codac2
 
     else
     {
-      assert_release("'Interval' can only be defined by one or two 'double' values.");
+      assert_release_unreachable("'Interval' can only be defined by one or two 'double' values.");
     }
 
     return *this;
@@ -152,7 +152,7 @@ namespace codac2
 
   inline double Interval::smag() const
   {
-    return (abs(lb()) > abs(ub())) ? lb() : ub();
+    return (std::abs(lb()) > std::abs(ub())) ? lb() : ub();
   }
 
   inline double Interval::smig() const
@@ -624,7 +624,7 @@ namespace codac2
 
   inline Interval operator""_i(long double x)
   {
-    return Interval(x);
+    return Interval(static_cast<double>(x));
   }
 
   inline double prev_float(double x)

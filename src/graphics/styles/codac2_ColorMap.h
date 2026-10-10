@@ -160,7 +160,7 @@ namespace codac2
         int i = 0;
         for(int h = 300 ; h > 0 ; h-=10)
         {
-          cmap[i]=Color({(float)h,100.,100.,100.f*alpha},Model::HSV);
+          cmap[(float)i]=Color({(float)h,100.,100.,100.f*alpha},Model::HSV);
           i++;
         }
         return cmap;

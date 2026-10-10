@@ -20,6 +20,7 @@ namespace codac2
 
     #define assert_release(ignore_test) ((void)0)
     #define assert_release_constexpr(ignore_test) ((void)0)
+    #define assert_release_unreachable(ignore_msg) ((void)0)
 
   #else
 
@@ -52,6 +53,13 @@ namespace codac2
           }                        \
         } while (0)
 
+      // For a branch that must never be reached.
+      // To be used instead of assert_release(false && "...")
+      #define assert_release_unreachable(msg) \
+        do {                                  \
+          CODAC_ASSERT_MESSAGE(msg, __FILE__, __LINE__, __PRETTY_FUNCTION__); \
+        } while (0)
+
     #else
 
       #define assert_release(test) \
@@ -66,6 +74,11 @@ namespace codac2
           if constexpr(!(test)) {            \
             CODAC_ASSERT_MESSAGE(#test, __FILE__, __LINE__, __func__); \
           }                        \
+        } while (0)
+
+      #define assert_release_unreachable(msg) \
+        do {                                  \
+          CODAC_ASSERT_MESSAGE(msg, __FILE__, __LINE__, __func__); \
         } while (0)
 
     #endif

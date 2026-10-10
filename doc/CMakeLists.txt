@@ -34,10 +34,25 @@
 
       message(STATUS "Building API Documentation (mandatory for Python binding or for building the manual)")
 
-      set(SPHINX_EXTRA_API ${CMAKE_CURRENT_BINARY_DIR}/manual/extra_html/api)
-      file(MAKE_DIRECTORY ${SPHINX_EXTRA_API})
-
-      execute_process(COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} OUTPUT_QUIET)
+      execute_process(
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT}
+        OUTPUT_QUIET
+        ERROR_VARIABLE DOXYGEN_ERROR
+        RESULT_VARIABLE DOXYGEN_RESULT
+      )
+      if(NOT DOXYGEN_RESULT EQUAL 0)
+        message(WARNING "Doxygen failed (exit code ${DOXYGEN_RESULT}). Retrying with full output:")
+        execute_process(
+          COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT}
+          RESULT_VARIABLE DOXYGEN_RETRY_RESULT
+        )
+        if(DOXYGEN_RETRY_RESULT EQUAL 0)
+          message(STATUS "Doxygen succeeded on the second attempt.")
+        else()
+          # Do not accept partial XML output produced by a crashed Doxygen process.
+          message(FATAL_ERROR "Doxygen failed to generate the API documentation (first exit code ${DOXYGEN_RESULT}, retry exit code ${DOXYGEN_RETRY_RESULT}), which is required for the Python docstrings. Retry output is shown above. Initial Doxygen errors: ${DOXYGEN_ERROR}")
+        endif()
+      endif()
       add_custom_target(api COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT} OUTPUT_QUIET)
 
     endif()

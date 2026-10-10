@@ -23,7 +23,7 @@ int main()
 
   DefaultFigure::set_axes(axis(0,{-6,6}), axis(1,{-6,6}));
 
-  int q = 2;
+  int q = 1;
   DefaultFigure::pave(
     {{-6,6},{-6,6}},
     SepQInter(q, s1,s2,s3),

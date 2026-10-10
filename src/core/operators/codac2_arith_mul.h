@@ -274,9 +274,13 @@ namespace codac2
     };
   }
 
-  inline void MulOp::bwd([[maybe_unused]] const IntervalMatrix& y, [[maybe_unused]] Interval& x1, [[maybe_unused]] IntervalMatrix& x2)
+  inline void MulOp::bwd(const IntervalMatrix& y, Interval& x1, IntervalMatrix& x2)
   {
-    // todo
+    assert(y.cols() == x2.cols());
+    assert(y.rows() == x2.rows());
+    for(Index j = 0 ; j < x2.cols() ; j++)
+      for(Index i = 0 ; i < x2.rows() ; i++)
+        MulOp::bwd(y(i,j), x1, x2(i,j));
   }
 
   inline IntervalVector MulOp::fwd(const IntervalMatrix& x1, const IntervalVector& x2)

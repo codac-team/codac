@@ -81,7 +81,7 @@ void export_CtcInverse(py::module& m,
     };
 
     if(xs.size() == 0)
-      assert_release(false && "contract() expects at least one argument");
+      assert_release_unreachable("contract() expects at least one argument");
 
     // Fast paths already consistent with the typed overloads
 
@@ -114,7 +114,7 @@ void export_CtcInverse(py::module& m,
         has_tube_args = true;
       else
       {
-        assert_release(false && "contract(): variadic mode only supports "
+        assert_release_unreachable("contract(): variadic mode only supports "
           "Interval / IntervalVector / SlicedTube<Interval> / SlicedTube<IntervalVector>");
       }
     }
@@ -284,6 +284,6 @@ void export_CtcInverse(py::module& m,
   if constexpr(std::is_same_v<C,CtcInverse<Interval>> || std::is_same_v<C,CtcInverse<IntervalVector>>)
   {
     exported_ctc.def("fnc", &C::fnc,
-      CONST_ANALYTICFUNCTION_TYPENAME_EXPRTYPE_Y_TYPE_CTCINVERSE_Y_X0X__F);
+      CONST_ANALYTICFUNCTION_OUTPUTTYPE_REF_CTCINVERSE_Y_X0X_FNC_CONST);
   }
 }
