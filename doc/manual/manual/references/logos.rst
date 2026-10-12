@@ -1,3 +1,5 @@
+:orphan:
+
 .. _sec-ref-codac-logos:
 
 Codac Logos

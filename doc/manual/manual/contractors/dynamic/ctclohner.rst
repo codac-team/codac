@@ -144,5 +144,5 @@ Related content
 
 .. admonition:: Technical documentation
 
-  See the `C++ API documentation of this class <../../../extra_html/api/classcodac2_1_1_ctc_lohner.html>`_.
+  See the `C++ API documentation of this class <../../../api/classcodac2_1_1_ctc_lohner.html>`_.
 
