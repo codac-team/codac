@@ -129,6 +129,13 @@ inline void export_VectorExpr(py::module& m)
 
   ;
 
+  if constexpr(!FOR_MATLAB)
+  {
+    exported
+      .def("__rmatmul__", [](const VectorExpr& e1, const MatrixExpr& e2) { return e2*e1; }, py::is_operator())
+    ;
+  }
+
   py::implicitly_convertible<Vector,VectorExpr>();
   py::implicitly_convertible<IntervalVector,VectorExpr>();
   py::implicitly_convertible<VectorVar,VectorExpr>();
@@ -180,6 +187,20 @@ inline void export_MatrixExpr(py::module& m)
     .def("__truediv__", [](const MatrixExpr& e1, const ScalarVar& e2)   { return e1/e2; }, py::is_operator())
 
   ;
+
+  if constexpr(!FOR_MATLAB)
+  {
+    exported
+      .def("__matmul__",  [](const MatrixExpr& e1, const MatrixExpr& e2)     { return e1*e2; }, py::is_operator())
+      .def("__matmul__",  [](const MatrixExpr& e1, const IntervalMatrix& e2) { return e1*e2; }, py::is_operator())
+      .def("__matmul__",  [](const MatrixExpr& e1, const MatrixVar& e2)      { return e1*e2; }, py::is_operator())
+      .def("__rmatmul__", [](const MatrixExpr& e1, const IntervalMatrix& e2) { return e2*e1; }, py::is_operator())
+      .def("__rmatmul__", [](const MatrixExpr& e1, const MatrixVar& e2)      { return e2*e1; }, py::is_operator())
+      .def("__matmul__",  [](const MatrixExpr& e1, const VectorVar& e2)      { return e1*e2; }, py::is_operator())
+      .def("__matmul__",  [](const MatrixExpr& e1, const IntervalVector& e2) { return e1*e2; }, py::is_operator())
+      .def("__matmul__",  [](const MatrixExpr& e1, const VectorExpr& e2)     { return e1*e2; }, py::is_operator())
+    ;
+  }
 
   py::implicitly_convertible<Matrix,MatrixExpr>();
   py::implicitly_convertible<IntervalMatrix,MatrixExpr>();

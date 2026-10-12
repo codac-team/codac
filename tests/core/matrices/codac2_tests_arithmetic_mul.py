@@ -110,5 +110,56 @@ class TestArithmeticMul(unittest.TestCase):
     self.assertTrue(IntervalMatrix([[[5,6],[6,7]],[[7,8],[8,9]]])*IntervalMatrix([[[1,2],[2,3]],[[3,4],[4,5]]]).block(0,0,2,2) == IntervalMatrix([[[23,40],[34,53]],[[31,52],[46,69]]]))
     self.assertTrue(IntervalMatrix([[[5,6],[6,7]],[[7,8],[8,9]]]).block(0,0,2,2)*IntervalMatrix([[[1,2],[2,3]],[[3,4],[4,5]]]).block(0,0,2,2) == IntervalMatrix([[[23,40],[34,53]],[[31,52],[46,69]]]))
 
+  @unittest.skipIf(FOR_MATLAB, "the @ operator is not available in Matlab")
+  def test_ArithmeticMul_matmul_operator(self):
+
+    # Vector operator*(const M& x1, const Vector& x2)
+    self.assertTrue(Matrix([[1,2],[3,4]])@Vector([5,6]) == Vector([17,39]))
+    self.assertTrue(Matrix([[1,2],[3,4]]).block(0,0,2,2)@Vector([5,6]) == Vector([17,39]))
+
+    # Matrix operator*(const M& x1, const M_& x2)
+    self.assertTrue(Matrix([[1,2],[3,4]])@Matrix([[5,6],[7,8]]) == Matrix([[19,22],[43,50]]))
+    self.assertTrue(Matrix([[1,2],[3,4]]).block(0,0,2,2)@Matrix([[5,6],[7,8]]) == Matrix([[19,22],[43,50]]))
+    self.assertTrue(Matrix([[1,2],[3,4]])@Matrix([[5,6],[7,8]]).block(0,0,2,2) == Matrix([[19,22],[43,50]]))
+    self.assertTrue(Matrix([[1,2],[3,4]]).block(0,0,2,2)@Matrix([[5,6],[7,8]]).block(0,0,2,2) == Matrix([[19,22],[43,50]]))
+
+    # IntervalVector operator*(const M& x1, const IntervalVector& x2)
+    self.assertTrue(Matrix([[1,2],[3,4]])@IntervalVector([5,6]) == IntervalVector([17,39]))
+    self.assertTrue(Matrix([[1,2],[3,4]]).block(0,0,2,2)@IntervalVector([5,6]) == IntervalVector([17,39]))
+
+    # IntervalMatrix operator*(const M& x1, const IM& x2)
+    self.assertTrue(Matrix([[1,2],[3,4]])@IntervalMatrix([[[5,6],[6,7]],[[7,8],[8,9]]]) == IntervalMatrix([[[19,22],[22,25]],[[43,50],[50,57]]]))
+    self.assertTrue(Matrix([[1,2],[3,4]]).block(0,0,2,2)@IntervalMatrix([[[5,6],[6,7]],[[7,8],[8,9]]]) == IntervalMatrix([[[19,22],[22,25]],[[43,50],[50,57]]]))
+    self.assertTrue(Matrix([[1,2],[3,4]])@IntervalMatrix([[[5,6],[6,7]],[[7,8],[8,9]]]).block(0,0,2,2) == IntervalMatrix([[[19,22],[22,25]],[[43,50],[50,57]]]))
+    self.assertTrue(Matrix([[1,2],[3,4]]).block(0,0,2,2)@IntervalMatrix([[[5,6],[6,7]],[[7,8],[8,9]]]).block(0,0,2,2) == IntervalMatrix([[[19,22],[22,25]],[[43,50],[50,57]]]))
+
+    # IntervalVector operator*(const IM& x1, const Vector& x2)
+    self.assertTrue(IntervalMatrix([[[1,2],[2,3]],[[3,4],[4,5]]])@Vector([5,6]) == IntervalVector([[17,28],[39,50]]))
+    self.assertTrue(IntervalMatrix([[[1,2],[2,3]],[[3,4],[4,5]]]).block(0,0,2,2)@Vector([5,6]) == IntervalVector([[17,28],[39,50]]))
+
+    # IntervalMatrix operator*(const IM& x1, const M& x2)
+    self.assertTrue(IntervalMatrix([[[5,6],[6,7]],[[7,8],[8,9]]])@Matrix([[1,2],[3,4]]) == IntervalMatrix([[[23,27],[34,40]],[[31,35],[46,52]]]))
+    self.assertTrue(IntervalMatrix([[[5,6],[6,7]],[[7,8],[8,9]]]).block(0,0,2,2)@Matrix([[1,2],[3,4]]) == IntervalMatrix([[[23,27],[34,40]],[[31,35],[46,52]]]))
+    self.assertTrue(IntervalMatrix([[[5,6],[6,7]],[[7,8],[8,9]]])@Matrix([[1,2],[3,4]]).block(0,0,2,2) == IntervalMatrix([[[23,27],[34,40]],[[31,35],[46,52]]]))
+    self.assertTrue(IntervalMatrix([[[5,6],[6,7]],[[7,8],[8,9]]]).block(0,0,2,2)@Matrix([[1,2],[3,4]]).block(0,0,2,2) == IntervalMatrix([[[23,27],[34,40]],[[31,35],[46,52]]]))
+
+    # IntervalVector operator*(const IM& x1, const IntervalVector& x2)
+    self.assertTrue(IntervalMatrix([[[1,2],[2,3]],[[3,4],[4,5]]])@IntervalVector([[5,6],[7,8]]) == IntervalVector([[19,36],[43,64]]))
+    self.assertTrue(IntervalMatrix([[[1,2],[2,3]],[[3,4],[4,5]]]).block(0,0,2,2)@IntervalVector([[5,6],[7,8]]) == IntervalVector([[19,36],[43,64]]))
+
+    # IntervalMatrix operator*(const IM& x1, const IM_& x2)
+    self.assertTrue(IntervalMatrix([[[5,6],[6,7]],[[7,8],[8,9]]])@IntervalMatrix([[[1,2],[2,3]],[[3,4],[4,5]]]) == IntervalMatrix([[[23,40],[34,53]],[[31,52],[46,69]]]))
+    self.assertTrue(IntervalMatrix([[[5,6],[6,7]],[[7,8],[8,9]]]).block(0,0,2,2)@IntervalMatrix([[[1,2],[2,3]],[[3,4],[4,5]]]) == IntervalMatrix([[[23,40],[34,53]],[[31,52],[46,69]]]))
+    self.assertTrue(IntervalMatrix([[[5,6],[6,7]],[[7,8],[8,9]]])@IntervalMatrix([[[1,2],[2,3]],[[3,4],[4,5]]]).block(0,0,2,2) == IntervalMatrix([[[23,40],[34,53]],[[31,52],[46,69]]]))
+    self.assertTrue(IntervalMatrix([[[5,6],[6,7]],[[7,8],[8,9]]]).block(0,0,2,2)@IntervalMatrix([[[1,2],[2,3]],[[3,4],[4,5]]]).block(0,0,2,2) == IntervalMatrix([[[23,40],[34,53]],[[31,52],[46,69]]]))
+
+    # The @ operator is only defined for matrix products, not for scalar ones
+    with self.assertRaises(TypeError):
+      Matrix([[1,2],[3,4]])@2.
+    with self.assertRaises(TypeError):
+      IntervalMatrix([[[1,2],[2,3]],[[3,4],[4,5]]])@Interval(-1,1)
+    with self.assertRaises(TypeError):
+      2.@Vector([1,2])
+
 if __name__ ==  '__main__':
   unittest.main()

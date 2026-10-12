@@ -47,6 +47,8 @@ class TestTransformations(unittest.TestCase):
     dst_estim = SampledTraj_Vector()
     for ti,src_i in src:
       dst_estim.set(tr*src_i, ti)
+      if not FOR_MATLAB: # the @ operator is not available in Matlab
+        self.assertTrue(tr@src_i == tr*src_i)
 
     scale = tr.linear().col(0).norm()
     rotation_matrix = tr.linear() / scale

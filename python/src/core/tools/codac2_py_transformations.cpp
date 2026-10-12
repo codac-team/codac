@@ -15,6 +15,7 @@
 #include <codac2_transformations.h>
 #include "codac2_py_transformations_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_doc.h"
+#include "codac2_py_matlab.h"
 
 using namespace std;
 using namespace codac2;
@@ -41,6 +42,21 @@ void export_transformations(py::module& m)
       py::is_operator())
 
   ;
+
+  if constexpr(!FOR_MATLAB)
+  {
+    exported_affine2d
+
+      .def("__matmul__", [](const Eigen::Affine2d& x1, const Vector& x2)
+        {
+          assert_release(x2.size() == 2);
+          return Vector(x1*Eigen::Vector2d(x2));
+        },
+        DOC_TO_BE_DEFINED,
+        py::is_operator())
+
+    ;
+  }
   
   m
 

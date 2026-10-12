@@ -437,6 +437,53 @@ class TestAnalyticFunction(unittest.TestCase):
     self.assertTrue(f.eval(Interval(0.0,4.0))==Interval(-4.0,4.0))
     self.assertTrue(f.eval(Interval(0.0))==Interval(0.0))
 
+  @unittest.skipIf(FOR_MATLAB, "the @ operator is not available in Matlab")
+  def test_AnalyticFunction_matmul_operator(self):
+
+    A,B = MatrixVar(2,2),MatrixVar(2,2)
+    x = VectorVar(2)
+    M,N = Matrix([[1,2],[3,4]]),Matrix([[0,1],[1,0]])
+    v = Vector([5,6])
+
+    # eval() takes arguments of a single type: the matrix argument is set by composition
+    eval_Mv = lambda e: AnalyticFunction([x], AnalyticFunction([A,x], e)(M,x)).eval(v)
+
+    # MatrixVar @ ...
+    self.assertTrue(AnalyticFunction([A,B], A@B).eval(M,N) == IntervalMatrix([[2,1],[4,3]]))
+    self.assertTrue(AnalyticFunction([A,B], A@(2*B)).eval(M,N) == IntervalMatrix([[4,2],[8,6]]))
+    self.assertTrue(AnalyticFunction([A], A@IntervalMatrix(N)).eval(M) == IntervalMatrix([[2,1],[4,3]]))
+    self.assertTrue(eval_Mv(A@x) == IntervalVector([17,39]))
+    self.assertTrue(eval_Mv(A@(2*x)) == IntervalVector([34,78]))
+    self.assertTrue(AnalyticFunction([A], A@IntervalVector(v)).eval(M) == IntervalVector([17,39]))
+    self.assertTrue(AnalyticFunction([B], IntervalMatrix(M)@B).eval(N) == IntervalMatrix([[2,1],[4,3]]))
+    self.assertTrue(AnalyticFunction([B], M@B).eval(N) == IntervalMatrix([[2,1],[4,3]]))
+
+    # MatrixExpr @ ...
+    self.assertTrue(AnalyticFunction([A,B], (2*A)@(2*B)).eval(M,N) == IntervalMatrix([[8,4],[16,12]]))
+    self.assertTrue(AnalyticFunction([A,B], (2*A)@B).eval(M,N) == IntervalMatrix([[4,2],[8,6]]))
+    self.assertTrue(AnalyticFunction([A], (2*A)@IntervalMatrix(N)).eval(M) == IntervalMatrix([[4,2],[8,6]]))
+    self.assertTrue(eval_Mv((2*A)@x) == IntervalVector([34,78]))
+    self.assertTrue(eval_Mv((2*A)@(2*x)) == IntervalVector([68,156]))
+    self.assertTrue(AnalyticFunction([A], (2*A)@IntervalVector(v)).eval(M) == IntervalVector([34,78]))
+    self.assertTrue(AnalyticFunction([B], IntervalMatrix(M)@(2*B)).eval(N) == IntervalMatrix([[4,2],[8,6]]))
+
+    # ... @ VectorVar, ... @ VectorExpr
+    self.assertTrue(AnalyticFunction([x], IntervalMatrix(M)@x).eval(v) == IntervalVector([17,39]))
+    self.assertTrue(AnalyticFunction([x], M@x).eval(v) == IntervalVector([17,39]))
+    self.assertTrue(AnalyticFunction([x], IntervalMatrix(M)@(2*x)).eval(v) == IntervalVector([34,78]))
+
+    # Same results as with the * operator
+    h = AnalyticFunction([A], A@A)
+    f = AnalyticFunction([x,A], h(A)@x)
+    g = AnalyticFunction([x], f(x,Matrix([[0,2],[-1,0]])))
+    self.assertTrue(g.eval(IntervalVector([[-1,1],[2,3]])) == IntervalVector([[-2,2],[-6,-4]]))
+
+    # Matrix product only: no @ with scalar expressions
+    with self.assertRaises(TypeError):
+      A@ScalarVar()
+    with self.assertRaises(TypeError):
+      x@x
+
     
 if __name__ ==  '__main__':
   unittest.main()
