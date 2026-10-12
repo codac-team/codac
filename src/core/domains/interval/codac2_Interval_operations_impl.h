@@ -139,67 +139,7 @@ namespace codac2
 
   inline Interval atan2(const Interval& y, const Interval& x)
   {
-    if(y.is_empty() || x.is_empty())
-      return Interval::empty();
-
-    // We handle the special case x=[0,0] separately
-    else if(x == Interval::zero())
-    {
-      if(y.lb() >= 0)
-      {
-        if(y.ub() == 0)
-          return Interval::empty(); // atan2(0,0) is undefined
-        else
-          return Interval::half_pi();
-      }
-
-      else if(y.ub() <= 0)
-        return -Interval::half_pi();
-
-      else
-        return Interval(-1,1)*Interval::half_pi();
-    }
-
-    else if(x.lb() >= 0)
-      return atan(y/x); // now, x.ub()>0 -> atan does not give an empty set
-
-    else if(x.ub() <= 0)
-    {
-      if(y.lb() >= 0)
-        return atan(y/x) + Interval::pi(); // x.lb()<0
-      else if(y.ub() < 0)
-        return atan(y/x) - Interval::pi();
-      else
-        return Interval(-1,1)*Interval::pi();
-    }
-
-    else
-    {
-      if(y.lb() >= 0)
-        return atan(y/x.ub()) | (atan(y/x.lb()) + Interval::pi());
-
-      else if(y.ub() <= 0)
-      {
-        if(x.lb() != -oo)
-        {
-          if(x.ub() != oo)
-            return (atan(y/x.lb())-Interval::pi()) | atan(y/x.ub());
-          else
-            return (atan(y/x.lb())-Interval::pi()) | Interval::zero();
-        }
-
-        else
-        {
-          if(x.ub() != oo)
-            return (-Interval::pi()) | atan(y/x.ub());
-          else
-            return -Interval::pi() | Interval::zero();
-        }
-      }
-
-      else
-        return Interval(-1,1)*Interval::pi();
-    }
+    return gaol::atan2(y,x);
   }
 
   inline Interval cosh(const Interval& x)
