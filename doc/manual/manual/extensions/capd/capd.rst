@@ -20,7 +20,7 @@ To install the ``codac-capd`` extension, you need to install the Codac library f
 
 .. code-block:: bash
 
-      cmake -DCMAKE_INSTALL_PREFIX=$HOME/ibex-lib/build_install -DCMAKE_BUILD_TYPE=Release -DWITH_CAPD=ON ..
+      cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_BUILD_TYPE=Release -DWITH_CAPD=ON ..
 
 We highly recommend to test the installation of the library with the provided tests. To do so, you can use the following command:
 
@@ -61,7 +61,6 @@ Furthermore, you need to link the extension to your project, for instance by upd
     ${CODAC_LIBRARIES}
     ${CODAC_CAPD_LIBRARY} # linking to the codac-capd extension
     capd::capd # linking to CAPD
-    Ibex::ibex
   )
 
 You can use the functions ``to_capd`` and ``to_codac`` to convert between CAPD and Codac objects as follows:
