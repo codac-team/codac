@@ -28,7 +28,7 @@
   )
 
   target_link_libraries(_graphics
-    PRIVATE ${PROJECT_NAME}-graphics ${LIBS} Ibex::ibex
+    PRIVATE ${PROJECT_NAME}-graphics Threads::Threads Codac::gaol
   )
 
   # Copy the generated library in the package folder
