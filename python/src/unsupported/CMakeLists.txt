@@ -16,7 +16,7 @@
   )
 
   target_link_libraries(_unsupported
-    PRIVATE ${PROJECT_NAME}-unsupported ${LIBS} Ibex::ibex
+    PRIVATE ${PROJECT_NAME}-unsupported ${LIBS} Codac::gaol
   )
 
   # Copy the generated library in the package folder
