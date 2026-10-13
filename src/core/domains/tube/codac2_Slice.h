@@ -295,7 +295,7 @@ namespace codac2
        *
        * No propagation is performed on adjacent slices.
        */
-      inline void init() override
+      inline void init()
       {
         this->T::init();
         // Nothing to propagate to adjacent codomains
@@ -306,7 +306,7 @@ namespace codac2
        *
        * Adjacent gates are updated accordingly.
        */
-      inline void set_empty() override
+      inline void set_empty()
       {
         set_empty(true);
       }
@@ -445,15 +445,39 @@ namespace codac2
       inline T operator()(const Interval& t, const Slice<T>& v) const
         requires (std::is_same_v<T,Interval> || std::is_same_v<T,IntervalVector>)
       {
+        // Avoid polygon intersections with truncated infinities.
+        // Interval propagation gives a guaranteed (possibly less tight) enclosure.
+        auto eval_unbounded = [&](const Interval& codom, const Interval& input,
+          const Interval& output, const Interval& deriv) -> Interval
+        {
+          return codom
+            & (input + (t-Interval(t0_tf().lb()))*deriv)
+            & (output + (t-Interval(t0_tf().ub()))*deriv);
+        };
+
         if constexpr(std::is_same_v<T,Interval>)
+        {
+          Interval input = input_gate(), output = output_gate();
+          if(codomain().is_unbounded() || input.is_unbounded()
+            || output.is_unbounded() || v.codomain().is_unbounded())
+            return eval_unbounded(codomain(), input, output, v.codomain());
+
           return untrunc((polygon_slice(v) & ConvexPolygon(cart_prod(t,trunc(codomain())))).box()[1]);
+        }
 
         else if constexpr(std::is_same_v<T,IntervalVector>)
         {
           T y = all_reals_value();
           IntervalVector codom = codomain();
+          T input = input_gate(), output = output_gate();
           for(Index i = 0 ; i < size() ; i++)
-            y[i] &= untrunc((polygon_slice_i(v,i) & ConvexPolygon(cart_prod(t,trunc(codom[i])))).box()[1]);
+          {
+            if(codom[i].is_unbounded() || input[i].is_unbounded()
+              || output[i].is_unbounded() || v.codomain()[i].is_unbounded())
+              y[i] &= eval_unbounded(codom[i], input[i], output[i], v.codomain()[i]);
+            else
+              y[i] &= untrunc((polygon_slice_i(v,i) & ConvexPolygon(cart_prod(t,trunc(codom[i])))).box()[1]);
+          }
           return y;
         }
       }
