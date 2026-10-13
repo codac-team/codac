@@ -157,7 +157,7 @@ void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval
     INTERVAL_TAN_CONST_INTERVAL_REF,
     "x"_a)
 
-  .def("atan", &codac2::atan,
+  .def("acos", &codac2::acos,
     INTERVAL_ACOS_CONST_INTERVAL_REF,
     "x"_a)
 
@@ -177,7 +177,7 @@ void export_Interval_operations(py::module& m, py::class_<Interval>& py_Interval
     INTERVAL_COSH_CONST_INTERVAL_REF,
     "x"_a)
 
-  .def("asinh", &codac2::asinh,
+  .def("sinh", &codac2::sinh,
     INTERVAL_SINH_CONST_INTERVAL_REF,
     "x"_a)
 

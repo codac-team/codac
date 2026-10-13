@@ -8,6 +8,7 @@
  */
 
 #include "codac2_Ellipsoid.h"
+#include "codac2_math.h"
 #include <unsupported/Eigen/MatrixFunctions>
 
 using namespace std;
@@ -114,9 +115,9 @@ namespace codac2 {
         vector<double> vx, vy;
 
         double dr = 0.2;
-        for(double t = -M_PI ; t < M_PI+dr ; t+=dr)
+        for(double t = -PI ; t < PI+dr ; t+=dr)
         {
-          if(t > M_PI) t = M_PI;
+          if(t > PI) t = PI;
           Vector p = x.mu+V*Vector({std::cos(t),std::sin(t)}).cwiseProduct(D_);
           vx.push_back(p[0]); vy.push_back(p[1]);
 

@@ -40,3 +40,6 @@ Reliable inversions of matrices
 
 .. doxygenfunction:: codac2::infinite_sum_enclosure
   :project: codac
+
+.. doxygenfunction:: codac2::cofactor_matrix_enclosure
+  :project: codac

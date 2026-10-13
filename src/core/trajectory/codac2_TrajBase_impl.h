@@ -55,6 +55,7 @@ namespace codac2
     assert_release(!is_empty());
 
     T s = [this]() {
+      (void)this;
       if constexpr(std::is_same_v<T,double>)
         return 0.;
       else

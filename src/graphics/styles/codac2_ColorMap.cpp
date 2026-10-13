@@ -24,7 +24,7 @@ Color ColorMap::color(float r) const
     assert(Interval(0.,1.).contains(r));
 
     Interval map_domain = Interval(this->begin()->first,prev(this->end())->first);
-    float real_index = map_domain.lb() + r*map_domain.diam();
+    float real_index = static_cast<float>(map_domain.lb() + r*map_domain.diam());
 
     if(this->find(real_index) == this->end()) // color interpolation
     {

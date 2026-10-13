@@ -16,6 +16,15 @@
 
 #include "codac2_py_MatrixBase.h"
 
+// pybind11 binds the in-place operators as py::self |= py::self and the like,
+// which Clang reads as a variable assigned to itself (-Wself-assign-overloaded).
+// Popped at the end of this file, so that the files including it keep the
+// warning for their own code.
+#if defined(__clang__)
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wself-assign-overloaded"
+#endif
+
 using namespace std;
 using namespace codac2;
 namespace py = pybind11;
@@ -242,3 +251,7 @@ void export_IntervalMatrixBase(py::module& m, py::class_<S>& pyclass)
 
   py::implicitly_convertible<V,S>();
 }
+
+#if defined(__clang__)
+  #pragma clang diagnostic pop
+#endif

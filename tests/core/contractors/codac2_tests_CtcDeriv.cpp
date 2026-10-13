@@ -12,6 +12,7 @@
 #include <codac2_SlicedTube.h>
 #include <codac2_Approx.h>
 #include <iomanip>
+#include <iterator>
 
 using namespace std;
 using namespace codac2;
@@ -224,6 +225,87 @@ TEST_CASE("CtcDeriv")
     CHECK(sx->output_gate() == Interval(-2,0));
     CHECK(sx->codomain() == Interval(-5,4));
     CHECK(sv->codomain() == Interval(-1,oo));
+  }
+
+  SECTION("Propagation without internal gates")
+  {
+    for(auto direction : {TimePropag::FWD, TimePropag::BWD, TimePropag::FWD_BWD})
+    {
+      auto tdomain = create_tdomain({0,3}, 1., false);
+      SlicedTube<Interval> x(tdomain, Interval());
+      SlicedTube<Interval> v(tdomain, Interval(1));
+
+      auto it_first = tdomain->begin();
+      auto it_middle = std::next(it_first);
+      auto it_last = std::prev(tdomain->end());
+
+      // Constrain whole slices; setting a value at an instant would add a gate.
+      if(direction != TimePropag::BWD)
+        x.slice(it_first)->set(Interval(0,1));
+      if(direction != TimePropag::FWD)
+        x.slice(it_last)->set(Interval(2,3));
+
+      REQUIRE(tdomain->nb_tslices() == 3);
+      CHECK_FALSE(tdomain->all_gates_defined());
+
+      CtcDeriv(direction, false).contract(x, v);
+
+      if(direction == TimePropag::FWD)
+      {
+        CHECK(x.slice(it_first)->codomain() == Interval(0,1));
+        CHECK(x.slice(it_middle)->codomain().is_subset(Interval(0,2)));
+        CHECK(x.slice(it_last)->codomain().is_subset(Interval(1,3)));
+      }
+      else if(direction == TimePropag::BWD)
+      {
+        CHECK(x.slice(it_first)->codomain().is_subset(Interval(-1,2)));
+        CHECK(x.slice(it_middle)->codomain().is_subset(Interval(0,3)));
+        CHECK(x.slice(it_last)->codomain() == Interval(2,3));
+      }
+      else
+      {
+        CHECK(x.slice(it_first)->codomain() == Interval(0,1));
+        CHECK(x.slice(it_middle)->codomain().is_subset(Interval(0,3)));
+        CHECK(x.slice(it_last)->codomain() == Interval(2,3));
+      }
+
+      // Contracting a tube must not create any explicit gate.
+      CHECK(tdomain->nb_tslices() == 3);
+      CHECK_FALSE(tdomain->all_gates_defined());
+      for(const auto& ts : *tdomain)
+        CHECK_FALSE(ts.is_gate());
+    }
+  }
+
+  SECTION("No new gates in an existing partially gated TDomain")
+  {
+    auto tdomain = create_tdomain({0,3}, 1., false);
+    SlicedTube<Interval> x(tdomain, Interval());
+    SlicedTube<Interval> v(tdomain, Interval(1));
+    x.set(Interval(0), 0.); // Existing gate must be preserved.
+
+    REQUIRE(tdomain->nb_tslices() == 4);
+    CtcDeriv(TimePropag::FWD_BWD, false).contract(x, v);
+    CHECK(tdomain->nb_tslices() == 4);
+    CHECK(x(0.) == Interval(0));
+    for(const auto& ts : *tdomain)
+      if(ts.is_gate())
+        CHECK(ts.lb() == 0.);
+  }
+
+  SECTION("No new gates with a restricted temporal domain")
+  {
+    auto tdomain = create_tdomain({0,4}, 1., false);
+    SlicedTube<Interval> x(tdomain, Interval());
+    SlicedTube<Interval> v(tdomain, Interval(1));
+    CtcDeriv ctc(TimePropag::FWD_BWD, false);
+    ctc.restrict_tdomain(Interval(1,3));
+
+    REQUIRE(tdomain->nb_tslices() == 4);
+    ctc.contract(x, v);
+    CHECK(tdomain->nb_tslices() == 4);
+    for(const auto& ts : *tdomain)
+      CHECK_FALSE(ts.is_gate());
   }
 
   SECTION("Test fwd")

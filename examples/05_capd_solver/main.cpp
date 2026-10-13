@@ -30,7 +30,7 @@ int main()
 
   // initial set
   capd::IVector c(2);
-  c[0] = -M_PI/2.;
+  c[0] = -PI/2.;
   c[1] = 0.;
   // take some box around c
   c[0] += capd::interval(-1,1)*1e-2;

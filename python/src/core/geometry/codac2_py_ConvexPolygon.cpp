@@ -13,6 +13,12 @@
 #include <codac2_ConvexPolygon.h>
 #include "codac2_py_ConvexPolygon_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 
+// pybind11 binds the in-place operators as py::self |= py::self and the like,
+// which Clang reads as a variable assigned to itself (-Wself-assign-overloaded)
+#if defined(__clang__)
+  #pragma clang diagnostic ignored "-Wself-assign-overloaded"
+#endif
+
 using namespace std;
 using namespace codac2;
 namespace py = pybind11;

@@ -139,6 +139,6 @@ namespace codac2
   {
     assert_release(x2.is_degenerated() && "PowOp::bwd(y,x1,x2) (with x1 and x2 intervals) not implemented yet with Gaol");
     assert_release(x2 == (int)(x2.mid()) && "PowOp::bwd(y,x1,x2) (x2 not integer) not implemented yet with Gaol");
-    PowOp::bwd(y, x1, x2.mid());
+    PowOp::bwd(y, x1, (int)(x2.mid()));
   }
 }

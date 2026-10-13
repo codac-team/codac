@@ -26,7 +26,7 @@ void export_CtcNot(py::module& m, py::class_<CtcBase<IntervalVector>,pyCtcInterv
   exported
 
     .def(py::init(
-        [](const pyCtcIntervalVector& c)
+        [](const CtcBase<IntervalVector>& c)
         {
           return std::make_unique<CtcNot>(c.copy());
         }),

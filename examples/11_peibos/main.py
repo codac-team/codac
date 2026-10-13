@@ -20,7 +20,7 @@ if __name__=="__main__":
   
   figure_2d = Figure2D("Henon Map", GraphicOutput.VIBES)
   figure_2d.set_window_properties([25,50],[500,500])
-  figure_2d.set_axes(axis(0,[-1.4,2.2]), axis(1,[-0.4,0.3]))
+  figure_2d.set_axes([[-1.4,2.2],[-0.4,0.3]])
 
   for par in v_par_2d:
     figure_2d.draw_parallelepiped(par,[Color.green(),Color.green(0.5)])
@@ -45,7 +45,7 @@ if __name__=="__main__":
 
   figure_3d_proj = Figure2D("Conform projected", GraphicOutput.VIBES)
   figure_3d_proj.set_window_properties([25,600],[500,500])
-  figure_3d_proj.set_axes(axis(0,[-1.5,2.5]), axis(1,[-2,2]))
+  figure_3d_proj.set_axes([[-1.5,2.5],[-2,2]])
 
   v_par_3d = PEIBOS(f_3d,psi0_3d,[id_3d,s1,s1*s1,s1.invert(),s2,s2.invert()],0.05,True)
 
@@ -73,11 +73,11 @@ if __name__=="__main__":
 
   figure_2d_nd_xy = Figure2D("XY Plane", GraphicOutput.VIBES)
   figure_2d_nd_xy.set_window_properties([575,50],[500,500])
-  figure_2d_nd_xy.set_axes(axis(0,[-1., 1.]), axis(1,[-1., 1.]))
+  figure_2d_nd_xy.set_axes([[-1,1],[-1,1]])
 
   figure_2d_nd_zy = Figure2D("ZY Plane", GraphicOutput.VIBES)
   figure_2d_nd_zy.set_window_properties([1125,50],[500,500])
-  figure_2d_nd_zy.set_axes(axis(0,[-1., 1.]), axis(1,[-1., 1.]))
+  figure_2d_nd_zy.set_axes([[-1,1],[-1,1]])
 
   v_par_nd = PEIBOS(f_nd,psi0_nd,[id_nd,s1_nd,s1_nd*s1_nd,s1_nd.invert(),
                                   s2_nd,s2_nd*s1_nd,s2_nd*s1_nd*s1_nd,s2_nd*s1_nd.invert(),

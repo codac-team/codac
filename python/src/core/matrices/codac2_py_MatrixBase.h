@@ -253,21 +253,21 @@ void export_MatrixBase(py::module& m, py::class_<S>& pyclass)
           }, py::return_value_policy::reference_internal,
         MATRIX_ADDONS_BASE_SCALAR_REF_OPERATORCALL_INDEX_INDEX)
 
-      .def("resize", [](S& x, Index_type nb_rows, Index_type nb_cols)
+      .def("resize", [](S& x, Index_type r, Index_type c)
           {
-            matlab::test_integer(nb_rows, nb_cols);
-            x.resize(nb_rows, nb_cols);
+            matlab::test_integer(r, c);
+            x.resize(r, c);
           },
         DOC_TO_BE_DEFINED,
-        "nb_rows"_a, "nb_cols"_a)
+        "r"_a, "c"_a)
 
-      .def("resize_save_values", [](S& x, Index_type nb_rows, Index_type nb_cols)
+      .def("conservative_resize", [](S& x, Index_type r, Index_type c)
           {
-            matlab::test_integer(nb_rows, nb_cols);
-            x.resize_save_values(nb_rows, nb_cols);
+            matlab::test_integer(r, c);
+            x.conservative_resize(r, c);
           },
-        MATRIX_ADDONS_MATRIXBASE_VOID_RESIZE_SAVE_VALUES_INDEX_INDEX,
-        "nb_rows"_a, "nb_cols"_a)
+        MATRIX_ADDONS_MATRIXBASE_VOID_CONSERVATIVE_RESIZE_INDEX_INDEX,
+        "r"_a, "c"_a)
 
       .def_static("zero", [](Index_type r, Index_type c)
           {

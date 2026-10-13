@@ -56,6 +56,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/domains/interval/codac2_tests_IntervalMatrix
   core/domains/interval/codac2_tests_IntervalVector
   ../doc/manual/manual/intervals/src
+  core/domains/paving/codac2_tests_Paving
   core/domains/zonotope/codac2_tests_Parallelepiped_eval
   core/domains/zonotope/codac2_tests_Parallelepiped
   core/domains/zonotope/codac2_tests_Zonotope

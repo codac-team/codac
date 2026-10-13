@@ -78,7 +78,7 @@ int main()
   // initial set
   // [codac-capd-5-beg]
   capd::IVector c(2);
-  c[0] = -M_PI/2.;
+  c[0] = -PI/2.;
   c[1] = 0.;
   // take some box around c
   c[0] += capd::Interval(-1,1)*1e-2;
@@ -137,7 +137,7 @@ int main()
     OctaSym id_2d ({1,2});
     OctaSym s ({-2,1});
 
-    auto peibos_output_pend = PEIBOS(vectorField_pend, 20., 0.2, psi0_pend, {id_2d,s,s*s,s.invert()}, 0.02, {-M_PI/2.,0.});
+    auto peibos_output_pend = PEIBOS(vectorField_pend, 20., 0.2, psi0_pend, {id_2d,s,s*s,s.invert()}, 0.02, {-PI/2.,0.});
 
     auto m_v_par_2d_pend = reach_set(peibos_output_pend);
     // [peibos-capd-3-end]

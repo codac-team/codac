@@ -168,13 +168,23 @@
 # Compile sources
 ################################################################################
   
-  add_subdirectory(src) # C++ sources
-  add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
-
   # Python binding:
   option(WITH_PYTHON "Build Python binding" OFF)
   if(WITH_PYTHON)
-    set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
+    # The Python modules are shared libraries that the static libraries of src/
+    # are linked into, so these have to be position independent code as well.
+    # CMAKE_POSITION_INDEPENDENT_CODE only initializes the
+    # POSITION_INDEPENDENT_CODE property of the targets created after it is set:
+    # it has to be set before add_subdirectory(src). Set after it, as it used to
+    # be, it reached the Python modules only, which are position independent
+    # anyway, and -fPIC had to be given by hand in CMAKE_CXX_FLAGS.
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+  endif()
+
+  add_subdirectory(src) # C++ sources
+  add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
+
+  if(WITH_PYTHON)
     add_subdirectory(python)
   endif()
 
@@ -207,7 +217,15 @@
 # Archives and packages
 ################################################################################
 
-  set(CPACK_GENERATOR "TGZ" "ZIP" "DEB")
+  set(CPACK_GENERATOR "TGZ" "ZIP")
+  # The DEB generator shells out to dpkg-deb, which only exists on
+  # Debian-based systems -- adding it unconditionally would make `cpack`/
+  # `make package` fail on Windows, macOS, and non-Debian Linux, even
+  # though nothing else in the build depends on it.
+  find_program(DPKG_DEB_EXECUTABLE dpkg-deb)
+  if(DPKG_DEB_EXECUTABLE)
+    list(APPEND CPACK_GENERATOR "DEB")
+  endif()
   string(TOLOWER "${CMAKE_PROJECT_NAME}" CPACK_PACKAGE_NAME)
   set(CPACK_PACKAGE_VENDOR "Codac Team")
   set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${CODAC_DESCRIPTION})

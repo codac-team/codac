@@ -27,7 +27,7 @@ void export_contract(py::class_<CtcDeriv>& exported)
   exported
 
     .def("contract",
-        [](const CtcDeriv& ctc, Slice<T>& x, const Slice<T>& v, const std::vector<Index_type>& ctc_indices)
+        [](const CtcDeriv& ctc, Slice<T>& x, const Slice<T>& v, [[maybe_unused]] const std::vector<Index_type>& ctc_indices)
         -> py::tuple
         {
           if constexpr(std::is_same_v<T,IntervalVector>)
@@ -44,7 +44,7 @@ void export_contract(py::class_<CtcDeriv>& exported)
       "x"_a, "v"_a, "ctc_indices"_a = std::vector<Index>())
 
     .def("contract",
-        [](const CtcDeriv& ctc, SlicedTube<T>& x, const SlicedTube<T>& v, const std::vector<Index_type>& ctc_indices)
+        [](const CtcDeriv& ctc, SlicedTube<T>& x, const SlicedTube<T>& v, [[maybe_unused]] const std::vector<Index_type>& ctc_indices)
         -> py::tuple
         {
           if constexpr(std::is_same_v<T,IntervalVector>)
