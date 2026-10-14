@@ -166,6 +166,18 @@ TEST_CASE("Segment")
     CHECK((e1 & e2).is_empty());
   }
 
+  SECTION("colinear - empty segments")
+  {
+    Segment empty(
+      IntervalVector::empty(2),
+      IntervalVector::empty(2)
+    );
+    Segment e({0,0},{1,1});
+
+    CHECK(colinear(empty,e) == BoolInterval::EMPTY);
+    CHECK(colinear(e,empty) == BoolInterval::EMPTY);
+  }
+
   SECTION("intersection - near infinite cases")
   {
     Segment e1({-1,6},{-1,next_float(-oo)});

@@ -154,6 +154,16 @@ class TestSegment(unittest.TestCase):
     self.assertTrue(e1.intersects(e2) == BoolInterval.FALSE)
     self.assertTrue((e1 & e2).is_empty())
 
+    # Empty segments propagate EMPTY in colinearity tests
+    empty = Segment(
+      IntervalVector.empty(2),
+      IntervalVector.empty(2)
+    )
+    e = Segment([0,0],[1,1])
+
+    self.assertTrue(colinear(empty,e) == BoolInterval.EMPTY)
+    self.assertTrue(colinear(e,empty) == BoolInterval.EMPTY)
+
     # Near infinite cases
     e1 = Segment([-1,6],[-1,next_float(-oo)])
     e2 = Segment([-1,-1],[3,-6])

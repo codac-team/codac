@@ -200,7 +200,10 @@ namespace codac2
     Interval c = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
     auto a = aligned(e1[0],e1[1],e2[0]);
 
-    if(c == 0 && a == BoolInterval::TRUE)
+    if(c.is_empty() || a == BoolInterval::EMPTY)
+      return BoolInterval::EMPTY;
+
+    else if(c == 0 && a == BoolInterval::TRUE)
       return BoolInterval::TRUE;
 
     else if(c.contains(0.) // e1 and e2 may be parallel
