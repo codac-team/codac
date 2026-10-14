@@ -116,5 +116,12 @@ class TestPolygon(unittest.TestCase):
     self.assertTrue(i == ConvexPolygon(IntervalVector([4.5,4.25])))
     self.assertTrue(len(i.vertices()) == 1)
 
+    # All four axis-aligned transects cross a vertex.
+    p = Polygon([[0,1],[1,0],[0,-1],[-1,0]])
+    self.assertTrue(p.contains([0,0]) == BoolInterval.TRUE)
+
+    p_rev = Polygon([[-1,0],[0,-1],[1,0],[0,1]])
+    self.assertTrue(p_rev.contains([0,0]) == BoolInterval.TRUE)
+
 if __name__ ==  '__main__':
   unittest.main()

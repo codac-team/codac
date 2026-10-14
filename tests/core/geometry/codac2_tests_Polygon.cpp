@@ -132,4 +132,12 @@ TEST_CASE("Polygon contains - limit cases")
     CHECK(i == ConvexPolygon(IntervalVector({4.5,4.25})));
     CHECK(i.vertices().size() == 1);
   }
+
+  { // All four axis-aligned transects cross a vertex
+    Polygon p({{0,1},{1,0},{0,-1},{-1,0}});
+    CHECK(p.contains({0,0}) == BoolInterval::TRUE);
+
+    Polygon p_rev({{-1,0},{0,-1},{1,0},{0,1}});
+    CHECK(p_rev.contains({0,0}) == BoolInterval::TRUE);
+  }
 }
