@@ -16,31 +16,6 @@
   endif()
   # Adds pybind11::headers, pybind11::module, pybind11::embed
 
-  # The Python interpreter, which this directory, tests/ and examples/ run
-  # through PYTHON_EXECUTABLE: to generate the docstrings below, to build the
-  # wheel, and to run the Python tests and examples. pybind11 sets it where this
-  # directory sees it only with PYBIND11_FINDPYTHON=OFF, through
-  # FindPythonLibsNew.cmake. By default (COMPAT, or NEW) it uses FindPython,
-  # which sets Python_EXECUTABLE (or Python3_EXECUTABLE), and sets
-  # PYTHON_EXECUTABLE, in COMPAT, only within its own directory: here it stayed
-  # empty, execute_process() ran doxygen2docstring.py as a program, and the
-  # configuration stopped on "permission denied". It is initialized here with
-  # the interpreter pybind11 builds the modules for, unless it was given, and
-  # cached, so that tests/ and examples/, configured after this directory, get
-  # it too.
-  if(NOT PYTHON_EXECUTABLE)
-    if(Python_EXECUTABLE)
-      set(_codac_python_executable "${Python_EXECUTABLE}")
-    elseif(Python3_EXECUTABLE)
-      set(_codac_python_executable "${Python3_EXECUTABLE}")
-    else()
-      find_package(Python COMPONENTS Interpreter REQUIRED)
-      set(_codac_python_executable "${Python_EXECUTABLE}")
-    endif()
-    set(PYTHON_EXECUTABLE "${_codac_python_executable}" CACHE FILEPATH "Python interpreter" FORCE)
-  endif()
-  message(STATUS "Python interpreter: ${PYTHON_EXECUTABLE}")
-
   set(PYTHON_PACKAGE_NAME ${PROJECT_NAME})
   set(PYTHON_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_package")
 
@@ -83,17 +58,41 @@
 
     set(NO_DOCSTRING_UPDATE OFF CACHE BOOL "Disables the update of docstrings")
 
-    file(REMOVE_RECURSE ${CMAKE_CURRENT_BINARY_DIR}/docstring)
+    # Regenerate docstrings without changing unchanged files' timestamps.
+    set(_docstring_dir "${CMAKE_CURRENT_BINARY_DIR}/docstring")
+    set(_docstring_tmp "${CMAKE_CURRENT_BINARY_DIR}/docstring_tmp")
+    file(REMOVE_RECURSE "${_docstring_tmp}")
+    file(MAKE_DIRECTORY "${_docstring_dir}" "${_docstring_tmp}")
     message(STATUS "Generating docstrings from doxygen files...")
-    file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docstring)
     execute_process(COMMAND ${PYTHON_EXECUTABLE}
       ${PROJECT_SOURCE_DIR}/scripts/doxygen/doxygen2docstring.py
       ${CMAKE_CURRENT_BINARY_DIR}/../doc/api/xml/
-      ${CMAKE_CURRENT_BINARY_DIR}/docstring
-      RESULT_VARIABLE DOCSTRING_RESULT)
-    if(NOT DOCSTRING_RESULT EQUAL 0)
-      message(FATAL_ERROR "doxygen2docstring.py failed (exit code ${DOCSTRING_RESULT}) while generating the Python docstring headers.")
+      "${_docstring_tmp}"
+      RESULT_VARIABLE _docstring_status)
+    if(NOT _docstring_status EQUAL 0)
+      message(FATAL_ERROR "Failed to generate Python docstrings (exit code ${_docstring_status})")
     endif()
+
+    file(GLOB _new_docstrings "${_docstring_tmp}/*")
+    foreach(_file IN LISTS _new_docstrings)
+      get_filename_component(_filename "${_file}" NAME)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${_file}" "${_docstring_dir}/${_filename}"
+        RESULT_VARIABLE _copy_status)
+      if(NOT _copy_status EQUAL 0)
+        message(FATAL_ERROR "Failed to update Python docstring: ${_filename}")
+      endif()
+    endforeach()
+
+    # Remove headers that the generator no longer produces.
+    file(GLOB _old_docstrings "${_docstring_dir}/*")
+    foreach(_file IN LISTS _old_docstrings)
+      get_filename_component(_filename "${_file}" NAME)
+      if(NOT EXISTS "${_docstring_tmp}/${_filename}")
+        file(REMOVE "${_file}")
+      endif()
+    endforeach()
+    file(REMOVE_RECURSE "${_docstring_tmp}")
 
   endif()
 
@@ -124,14 +123,23 @@
       "${CMAKE_CURRENT_SOURCE_DIR}/../tests/codac2_tests_*.py"
       )
 
-    foreach(TEST_FILE ${TESTS_FILES})
-      string(REPLACE "codac2_tests_" "test_" TEST_FILE_UNITTEST ${TEST_FILE}) # unittest convention
-      get_filename_component(TEST_FILE_UNITTEST ${TEST_FILE_UNITTEST} NAME_WE)
-      configure_file(${TEST_FILE} ${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests/${TEST_FILE_UNITTEST}.py COPYONLY)
-      #get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
-      #set(TEST_NAME "python_${TEST_NAME}")
-      #add_test(NAME ${TEST_NAME} COMMAND ${PYTHON_EXECUTABLE} ${TEST_FILE})
-      #set_tests_properties(${TEST_NAME} PROPERTIES ENVIRONMENT "PYTHONPATH=${PYTHON_PACKAGE_DIR}")
+    # Copy Python tests at build time instead of reconfiguring CMake
+    # whenever an individual test file changes.
+    set(_python_test_outputs)
+    foreach(TEST_FILE IN LISTS TESTS_FILES)
+      string(REPLACE "codac2_tests_" "test_" TEST_FILE_UNITTEST "${TEST_FILE}") # unittest convention
+      get_filename_component(TEST_FILE_UNITTEST "${TEST_FILE_UNITTEST}" NAME_WE)
+      set(_test_output "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests/${TEST_FILE_UNITTEST}.py")
+      add_custom_command(
+        OUTPUT "${_test_output}"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests"
+        COMMAND ${CMAKE_COMMAND} -E copy "${TEST_FILE}" "${_test_output}"
+        DEPENDS "${TEST_FILE}"
+        VERBATIM
+      )
+      list(APPEND _python_test_outputs "${_test_output}")
     endforeach()
+    add_custom_target(codac_python_test_files ALL DEPENDS ${_python_test_outputs})
+    add_dependencies(pip_package codac_python_test_files)
 
   endif()
