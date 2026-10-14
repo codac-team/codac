@@ -171,12 +171,17 @@ namespace codac2
 
     if(!is_empty())
     {
-      size_t n = this->size();
+      size_t n = this->size(), ring_begin = 0;
 
       for(size_t i = 0 ; i < n ; i++)
+      {
         v.push_back((*this)[i][0]);
 
-      if((*this)[0][0] != (*this)[n-1][1])
+        if(i+1 < n && !(*this)[i][1].intersects((*this)[i+1][0]))
+          ring_begin = i+1;
+      }
+
+      if((*this)[ring_begin][0] != (*this)[n-1][1])
         v.push_back((*this)[n-1][1]);
     }
 

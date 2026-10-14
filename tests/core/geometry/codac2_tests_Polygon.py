@@ -40,6 +40,15 @@ class TestPolygon(unittest.TestCase):
 
     self.assertTrue(Polygon(edges1) == Polygon(edges2))
 
+    vertices = Polygon(edges1).vertices()
+    self.assertTrue(len(vertices) == 6)
+    self.assertTrue(vertices[0] == IntervalVector([0,0]))
+    self.assertTrue(vertices[1] == IntervalVector([1,0]))
+    self.assertTrue(vertices[2] == IntervalVector([0,1]))
+    self.assertTrue(vertices[3] == IntervalVector([3,0]))
+    self.assertTrue(vertices[4] == IntervalVector([4,0]))
+    self.assertTrue(vertices[5] == IntervalVector([3,1]))
+
     # Same number of edges, but a different polygon.
     edges1 = [
       Segment([0,0],[1,0]), Segment([1,0],[0,1]), Segment([0,1],[0,0])

@@ -42,6 +42,15 @@ TEST_CASE("Polygon base")
     };
 
     CHECK(Polygon(edges1) == Polygon(edges2));
+
+    auto vertices = Polygon(edges1).vertices();
+    REQUIRE(vertices.size() == 6);
+    CHECK(vertices[0] == IntervalVector({0,0}));
+    CHECK(vertices[1] == IntervalVector({1,0}));
+    CHECK(vertices[2] == IntervalVector({0,1}));
+    CHECK(vertices[3] == IntervalVector({3,0}));
+    CHECK(vertices[4] == IntervalVector({4,0}));
+    CHECK(vertices[5] == IntervalVector({3,1}));
   }
 
   { // Same number of edges, but a different polygon
