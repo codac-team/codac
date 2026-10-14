@@ -60,6 +60,15 @@ class TestPolygon(unittest.TestCase):
 
     self.assertFalse(Polygon(edges1) == Polygon(edges2))
 
+    # Fully collinear vertices reduce to one segment.
+    p = Polygon([[0,0],[1,0],[2,0],[3,0]])
+    expected = Polygon([[0,0],[3,0]])
+
+    self.assertTrue(p == expected)
+    self.assertTrue(len(p.edges()) == 1)
+    self.assertTrue(len(p.vertices()) == 2)
+    self.assertTrue(p.contains([1.5,0]) == BoolInterval.TRUE)
+
     # Consecutive duplicate vertices.
     p = Polygon([[0,0],[1,0],[1,0],[2,0],[2,1],[0,1]])
     self.assertTrue(p == Polygon([[0,0],[2,0],[2,1],[0,1]]))

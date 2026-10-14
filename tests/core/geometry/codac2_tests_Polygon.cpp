@@ -65,6 +65,16 @@ TEST_CASE("Polygon base")
     CHECK_FALSE(Polygon(edges1) == Polygon(edges2));
   }
 
+  { // Fully collinear vertices reduce to one segment
+    Polygon p({{0,0},{1,0},{2,0},{3,0}});
+    Polygon expected({{0,0},{3,0}});
+
+    CHECK(p == expected);
+    REQUIRE(p.edges().size() == 1);
+    CHECK(p.vertices().size() == 2);
+    CHECK(p.contains({1.5,0}) == BoolInterval::TRUE);
+  }
+
   { // Consecutive duplicate vertices
     Polygon p({{0,0},{1,0},{1,0},{2,0},{2,1},{0,1}});
     CHECK(p == Polygon({{0,0},{2,0},{2,1},{0,1}}));

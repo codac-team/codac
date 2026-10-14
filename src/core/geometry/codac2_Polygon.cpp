@@ -92,8 +92,15 @@ namespace codac2
               }
             }
 
-            for(size_t i = 0 ; i < v_noaligned.size() ; i++)
-              edges.push_back({ v_noaligned[i], v_noaligned[(i+1)%v_noaligned.size()] });
+            if(v_noaligned.size() == 1)
+              edges = { Segment(v_noaligned[0],v_noaligned[0]) };
+
+            else if(v_noaligned.size() == 2)
+              edges = { Segment(v_noaligned[0],v_noaligned[1]) };
+
+            else
+              for(size_t i = 0 ; i < v_noaligned.size() ; i++)
+                edges.push_back({ v_noaligned[i], v_noaligned[(i+1)%v_noaligned.size()] });
           }
         }
         
