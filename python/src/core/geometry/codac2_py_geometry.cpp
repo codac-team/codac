@@ -70,7 +70,16 @@ void export_geometry(py::module& m)
     T_ROTATE_CONST_T_REF_CONST_INTERVAL_REF_CONST_INTERVALVECTOR_REF,
     "x"_a, "a"_a, "c"_a = Vector::zero(2));
 
-  m.def("merge_adjacent_points", &merge_adjacent_points,
+  m.def("merge_adjacent_points",
+    [](py::list l)
+    {
+      auto points = l.cast<list<IntervalVector>>();
+      merge_adjacent_points(points);
+
+      l.attr("clear")();
+      for(const auto& p : points)
+        l.append(p);
+    },
     VOID_MERGE_ADJACENT_POINTS_LIST_INTERVALVECTOR_REF,
     "l"_a);
 }

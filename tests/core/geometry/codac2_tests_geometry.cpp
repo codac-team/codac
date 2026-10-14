@@ -164,3 +164,33 @@ TEST_CASE("convex_hull")
   //for(size_t i = 0 ; i < hull.size() ; i++)
   //  DefaultFigure::draw_line(hull[i].mid(), hull[(i+1)%hull.size()].mid(), Color::blue());
 }
+
+TEST_CASE("geometry - merge adjacent points")
+{
+  list<IntervalVector> pts {
+    {{0,1},{0,1}},
+    {{0.5,2},{0.5,1.5}},
+    {{3,4},{3,4}}
+  };
+
+  merge_adjacent_points(pts);
+
+  REQUIRE(pts.size() == 2);
+  auto it = pts.begin();
+  CHECK(*it == IntervalVector({{0,2},{0,1.5}}));
+  ++it;
+  CHECK(*it == IntervalVector({{3,4},{3,4}}));
+
+  // Merging can create a new intersection, so the process must be iterative.
+  pts = {
+    {{0,1},{0,1}},
+    {{1,2},{0,1}},
+    {{2,3},{0,1}}
+  };
+
+  merge_adjacent_points(pts);
+
+  REQUIRE(pts.size() == 1);
+  CHECK(pts.front() == IntervalVector({{0,3},{0,1}}));
+}
+

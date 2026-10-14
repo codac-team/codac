@@ -188,24 +188,20 @@ namespace codac2
     do
     {
       merged_something = false;
-      for(auto li = l.begin(); li != l.end();)
+
+      for(auto li = l.begin(); li != l.end() && !merged_something; ++li)
       {
-        for(auto lj = l.begin(); lj != l.end(); ++lj)
+        auto lj = std::next(li);
+        for(; lj != l.end(); ++lj)
         {
-          if(li != lj && li->intersects(*lj))
+          if(li->intersects(*lj))
           {
             *li |= *lj;
-            li = l.erase(li);
+            l.erase(lj);
             merged_something = true;
             break;
           }
-
-          else
-            ++li;
         }
-
-        if(merged_something)
-          break;
       }
     } while(merged_something);
   }

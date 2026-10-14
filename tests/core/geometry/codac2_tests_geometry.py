@@ -141,5 +141,30 @@ class TestGeometry(unittest.TestCase):
     self.assertTrue(hull[0] == IntervalVector([0,0]))
     self.assertTrue(hull[1] == IntervalVector([3,0]))
 
+
+    pts = [
+      IntervalVector([[0,1],[0,1]]),
+      IntervalVector([[0.5,2],[0.5,1.5]]),
+      IntervalVector([[3,4],[3,4]])
+    ]
+
+    merge_adjacent_points(pts)
+
+    self.assertTrue(len(pts) == 2)
+    self.assertTrue(pts[0] == IntervalVector([[0,2],[0,1.5]]))
+    self.assertTrue(pts[1] == IntervalVector([[3,4],[3,4]]))
+
+    # Merging can create a new intersection, so the process must be iterative.
+    pts = [
+      IntervalVector([[0,1],[0,1]]),
+      IntervalVector([[1,2],[0,1]]),
+      IntervalVector([[2,3],[0,1]])
+    ]
+
+    merge_adjacent_points(pts)
+
+    self.assertTrue(len(pts) == 1)
+    self.assertTrue(pts[0] == IntervalVector([[0,3],[0,1]]))
+
 if __name__ ==  '__main__':
   unittest.main()
