@@ -30,6 +30,32 @@ TEST_CASE("Polygon base")
   CHECK(p3 == Polygon({{5,1},{1,2},{3,4}}));
   CHECK(p3 == Polygon({{1,2},{3,4},{5,1}}));
 
+  { // Multiple contours can have independent orientations
+    vector<Segment> edges1 {
+      {{0,0},{1,0}}, {{1,0},{0,1}}, {{0,1},{0,0}},
+      {{3,0},{4,0}}, {{4,0},{3,1}}, {{3,1},{3,0}}
+    };
+
+    vector<Segment> edges2 {
+      {{0,0},{0,1}}, {{0,1},{1,0}}, {{1,0},{0,0}},
+      {{3,0},{4,0}}, {{4,0},{3,1}}, {{3,1},{3,0}}
+    };
+
+    CHECK(Polygon(edges1) == Polygon(edges2));
+  }
+
+  { // Same number of edges, but a different polygon
+    vector<Segment> edges1 {
+      {{0,0},{1,0}}, {{1,0},{0,1}}, {{0,1},{0,0}}
+    };
+
+    vector<Segment> edges2 {
+      {{0,0},{1,0}}, {{1,0},{0,2}}, {{0,2},{0,0}}
+    };
+
+    CHECK_FALSE(Polygon(edges1) == Polygon(edges2));
+  }
+
   { // Consecutive duplicate vertices
     Polygon p({{0,0},{1,0},{1,0},{2,0},{2,1},{0,1}});
     CHECK(p == Polygon({{0,0},{2,0},{2,1},{0,1}}));

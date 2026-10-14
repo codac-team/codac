@@ -318,25 +318,28 @@ namespace codac2
 
   bool Polygon::operator==(const Polygon& p) const
   {
-    if(is_empty() || p.is_empty())
-      return is_empty() && p.is_empty();
-
-    size_t n = this->size();
-    if(p.size() != n)
+    if(p.size() != this->size())
       return false;
 
-    size_t i; // looking for same reference of first value
-    for(i = 0 ; i < n ; i++)
-      if((*this)[0] == p[i])
-        break;
+    vector<bool> matched(p.size(),false);
 
-    int way = 1;
-    if(n > 1)
-      way = ((*this)[1] == p[(i+1)%n]) ? 1 : -1;
+    for(const auto& e : *this)
+    {
+      bool found = false;
 
-    for(size_t j = 0 ; j < n ; j++)
-      if((*this)[j] != p[(i+way*j+2*n)%n])
+      for(size_t i = 0 ; i < p.size() ; i++)
+      {
+        if(!matched[i] && e == p[i])
+        {
+          matched[i] = true;
+          found = true;
+          break;
+        }
+      }
+
+      if(!found)
         return false;
+    }
 
     return true;
   }

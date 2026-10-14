@@ -27,6 +27,30 @@ class TestPolygon(unittest.TestCase):
     self.assertTrue(p3 == Polygon([[5,1],[1,2],[3,4]]))
     self.assertTrue(p3 == Polygon([[1,2],[3,4],[5,1]]))
 
+    # Multiple contours can have independent orientations.
+    edges1 = [
+      Segment([0,0],[1,0]), Segment([1,0],[0,1]), Segment([0,1],[0,0]),
+      Segment([3,0],[4,0]), Segment([4,0],[3,1]), Segment([3,1],[3,0])
+    ]
+
+    edges2 = [
+      Segment([0,0],[0,1]), Segment([0,1],[1,0]), Segment([1,0],[0,0]),
+      Segment([3,0],[4,0]), Segment([4,0],[3,1]), Segment([3,1],[3,0])
+    ]
+
+    self.assertTrue(Polygon(edges1) == Polygon(edges2))
+
+    # Same number of edges, but a different polygon.
+    edges1 = [
+      Segment([0,0],[1,0]), Segment([1,0],[0,1]), Segment([0,1],[0,0])
+    ]
+
+    edges2 = [
+      Segment([0,0],[1,0]), Segment([1,0],[0,2]), Segment([0,2],[0,0])
+    ]
+
+    self.assertFalse(Polygon(edges1) == Polygon(edges2))
+
     # Consecutive duplicate vertices.
     p = Polygon([[0,0],[1,0],[1,0],[2,0],[2,1],[0,1]])
     self.assertTrue(p == Polygon([[0,0],[2,0],[2,1],[0,1]]))
