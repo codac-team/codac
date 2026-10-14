@@ -81,6 +81,7 @@ TEST_CASE("Empty polygon")
   Polygon p1 = Polygon::empty();
   CHECK(p1.contains(IntervalVector({1,1})) == BoolInterval::FALSE);
   CHECK(p1.contains(IntervalVector(2)) == BoolInterval::FALSE);
+  CHECK(p1.contains(IntervalVector::empty(2)) == BoolInterval::EMPTY);
   CHECK(p1.is_empty());
   CHECK(p1.edges().size() == 0);
   CHECK(p1.vertices().size() == 0);
@@ -89,6 +90,7 @@ TEST_CASE("Empty polygon")
 TEST_CASE("Polygon contains")
 {
   Polygon p1({{3,-1},{3,4},{5,6},{-1,1}});
+  CHECK(p1.contains(IntervalVector::empty(2)) == BoolInterval::EMPTY);
   CHECK(p1.contains({3.1,3}) == BoolInterval::FALSE);
   CHECK(p1.contains({2.9,3}) == BoolInterval::TRUE);
   CHECK(p1.contains({3,3}) == BoolInterval::TRUE);

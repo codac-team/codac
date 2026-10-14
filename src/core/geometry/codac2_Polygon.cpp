@@ -205,6 +205,9 @@ namespace codac2
   {
     assert_release(p.size() == 2);
 
+    if(p.is_empty())
+      return BoolInterval::EMPTY;
+
     IntervalVector box_hull = box();
     if(!p.intersects(box_hull))
       return BoolInterval::FALSE;

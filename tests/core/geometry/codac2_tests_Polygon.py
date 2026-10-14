@@ -73,6 +73,7 @@ class TestPolygon(unittest.TestCase):
     p1 = Polygon.empty()
     self.assertTrue(p1.contains(IntervalVector([1,1])) == BoolInterval.FALSE)
     self.assertTrue(p1.contains(IntervalVector(2)) == BoolInterval.FALSE)
+    self.assertTrue(p1.contains(IntervalVector.empty(2)) == BoolInterval.EMPTY)
     self.assertTrue(p1.is_empty())
     self.assertTrue(len(p1.edges()) == 0)
     self.assertTrue(len(p1.vertices()) == 0)
@@ -80,6 +81,7 @@ class TestPolygon(unittest.TestCase):
   def test_Polygon(self):
 
     p1 = Polygon([[3,-1],[3,4],[5,6],[-1,1]])
+    self.assertTrue(p1.contains(IntervalVector.empty(2)) == BoolInterval.EMPTY)
     self.assertTrue(p1.contains([3.1,3]) == BoolInterval.FALSE)
     self.assertTrue(p1.contains([2.9,3]) == BoolInterval.TRUE)
     self.assertTrue(p1.contains([3,3]) == BoolInterval.TRUE)
