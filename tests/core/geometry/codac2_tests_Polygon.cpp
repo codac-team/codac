@@ -29,6 +29,16 @@ TEST_CASE("Polygon base")
   CHECK(p3 == Polygon({{1,2},{5,1},{3,4}}));
   CHECK(p3 == Polygon({{5,1},{1,2},{3,4}}));
   CHECK(p3 == Polygon({{1,2},{3,4},{5,1}}));
+
+  { // Consecutive duplicate vertices
+    Polygon p({{0,0},{1,0},{1,0},{2,0},{2,1},{0,1}});
+    CHECK(p == Polygon({{0,0},{2,0},{2,1},{0,1}}));
+  }
+
+  { // Repeated duplicates and explicit closing vertex
+    Polygon p({{0,0},{2,0},{2,0},{2,0},{2,1},{0,1},{0,0}});
+    CHECK(p == Polygon({{0,0},{2,0},{2,1},{0,1}}));
+  }
 }
 
 TEST_CASE("Empty polygon")

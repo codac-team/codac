@@ -27,6 +27,14 @@ class TestPolygon(unittest.TestCase):
     self.assertTrue(p3 == Polygon([[5,1],[1,2],[3,4]]))
     self.assertTrue(p3 == Polygon([[1,2],[3,4],[5,1]]))
 
+    # Consecutive duplicate vertices.
+    p = Polygon([[0,0],[1,0],[1,0],[2,0],[2,1],[0,1]])
+    self.assertTrue(p == Polygon([[0,0],[2,0],[2,1],[0,1]]))
+
+    # Repeated duplicates and explicit closing vertex.
+    p = Polygon([[0,0],[2,0],[2,0],[2,0],[2,1],[0,1],[0,0]])
+    self.assertTrue(p == Polygon([[0,0],[2,0],[2,1],[0,1]]))
+
   def test_empty_polygon(self):
 
     p1 = Polygon.empty()

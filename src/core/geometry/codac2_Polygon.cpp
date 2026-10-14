@@ -7,6 +7,7 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
+#include <algorithm>
 #include <iostream>
 #include "codac2_Polygon.h"
 #include "codac2_geometry.h"
@@ -35,9 +36,15 @@ namespace codac2
 
   Polygon::Polygon(const std::vector<IntervalVector>& v)
     : std::vector<Segment>(
-      [v]
+      [v = std::vector<IntervalVector>(v)]() mutable
       {
         vector<Segment> edges;
+
+        // Remove redundant consecutive vertices before simplifying
+        // colinear points.
+        v.erase(unique(v.begin(),v.end()),v.end());
+        if(v.size() > 1 && v.front() == v.back())
+          v.pop_back();
 
         switch(v.size())
         {
@@ -244,16 +251,17 @@ namespace codac2
             const Index k = i-4;
             assert_release(k <= static_cast<Index>(polygon_vertices.size()) &&
               "failed to find a vertex-free transect for polygon containment");
+
             assert_release(
               !box_hull.is_unbounded() &&
               "failed to find a vertex-free transect for an unbounded polygon");
 
-            double span = std::max(1., box_hull.max_diam());
+            double span = std::max(1.,box_hull.max_diam());
             double x_out = prev_float(box_hull[0].lb()-span);
             double dx = p[0].mid()-x_out;
             double alpha =
-              -1. + 2.*static_cast<double>(k+1) /
-                    static_cast<double>(polygon_vertices.size()+2);
+              -1. + 2.*static_cast<double>(k+1)/
+                static_cast<double>(polygon_vertices.size()+2);
             double y_out = p[1].mid()+alpha*dx;
 
             return { {x_out,y_out}, p };
