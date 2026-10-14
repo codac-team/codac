@@ -61,6 +61,9 @@ TEST_CASE("Alignments")
   CHECK(aligned({0,0},{1,1},{10,10}) == BoolInterval::TRUE);
   CHECK(aligned({{-oo,0},{-oo,0}},{1,1},{10,10}) == BoolInterval::UNKNOWN);
   CHECK(aligned(IntervalVector(2),{1,1},{10,10}) == BoolInterval::UNKNOWN);
+  CHECK(aligned(IntervalVector::empty(2),{1,1},{10,10}) == BoolInterval::EMPTY);
+  CHECK(aligned({1,1},IntervalVector::empty(2),{10,10}) == BoolInterval::EMPTY);
+  CHECK(aligned({1,1},{10,10},IntervalVector::empty(2)) == BoolInterval::EMPTY);
 }
 
 TEST_CASE("convex_hull")

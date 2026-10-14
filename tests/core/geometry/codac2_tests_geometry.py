@@ -59,6 +59,9 @@ class TestGeometry(unittest.TestCase):
     self.assertTrue(aligned([0,0],[1,1],[10,10]) == BoolInterval.TRUE)
     self.assertTrue(aligned([[-oo,0],[-oo,0]],[1,1],[10,10]) == BoolInterval.UNKNOWN)
     self.assertTrue(aligned(IntervalVector(2),[1,1],[10,10]) == BoolInterval.UNKNOWN)
+    self.assertTrue(aligned(IntervalVector.empty(2),[1,1],[10,10]) == BoolInterval.EMPTY)
+    self.assertTrue(aligned([1,1],IntervalVector.empty(2),[10,10]) == BoolInterval.EMPTY)
+    self.assertTrue(aligned([1,1],[10,10],IntervalVector.empty(2)) == BoolInterval.EMPTY)
 
   def test_convex_hull(self):
 

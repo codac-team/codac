@@ -39,7 +39,10 @@ namespace codac2
 
     Interval cross_product = (p2[0]-p1[0])*(p3[1]-p1[1])-(p2[1]-p1[1])*(p3[0]-p1[0]);
 
-    if(cross_product == 0.)
+    if(cross_product.is_empty())
+      return BoolInterval::EMPTY;
+
+    else if(cross_product == 0.)
       return BoolInterval::TRUE;
 
     else if(!cross_product.contains(0.))
