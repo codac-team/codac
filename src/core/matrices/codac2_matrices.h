@@ -19,6 +19,25 @@
 
 #pragma once
 
+/* On MSVC arm64, Eigen does not enable NEON and its matrix product kernel
+ * fails for mixed scalar types (e.g., Matrix * IntervalMatrix).
+ * Use the pmadd path to support these products.
+ */
+#if defined(_MSC_VER) && defined(_M_ARM64)
+#ifndef EIGEN_HAS_SINGLE_INSTRUCTION_MADD
+#define EIGEN_HAS_SINGLE_INSTRUCTION_MADD
+#endif
+#endif
+
+/* Eigen 5.0.0 overstates byte alignment in std::assume_aligned, triggering
+ * UBSan on macOS/Clang. Disable this hint without changing SIMD loads/stores.
+ */
+#if defined(__APPLE__) && defined(__clang__)
+#ifndef EIGEN_ASSUME_ALIGNED
+#define EIGEN_ASSUME_ALIGNED(PTR, ALIGN_BYTES)
+#endif
+#endif
+
 #include <type_traits>
 #include "codac2_Interval.h"
 #include "codac2_Interval_operations.h"
