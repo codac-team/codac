@@ -24,22 +24,22 @@ TEST_CASE("orientation")
   CHECK(orientation({0.,0.},{0.,0.},{0.,0.}) == OrientationInterval::COLINEAR);
 
   // Clockwise points
-  CHECK(orientation({0.,0.},{0.,-5.},{-2.,-5.}) == OrientationInterval::COUNTERCLOCKWISE);
-  CHECK(orientation({-999.,0.1},{0.,0.},{-999.,-0.1}) == OrientationInterval::COUNTERCLOCKWISE);
+  CHECK(orientation({0.,0.},{0.,-5.},{-2.,-5.}) == OrientationInterval::CLOCKWISE);
+  CHECK(orientation({-999.,0.1},{0.,0.},{-999.,-0.1}) == OrientationInterval::CLOCKWISE);
 
-  // Anticlockwise points
-  CHECK(orientation({0.,0.},{0.,-5.},{2.,-5.}) == OrientationInterval::CLOCKWISE);
-  CHECK(orientation({999.,0.1},{0.,0.},{999.,-0.1}) == OrientationInterval::CLOCKWISE);
+  // Counterclockwise points
+  CHECK(orientation({0.,0.},{0.,-5.},{2.,-5.}) == OrientationInterval::COUNTERCLOCKWISE);
+  CHECK(orientation({999.,0.1},{0.,0.},{999.,-0.1}) == OrientationInterval::COUNTERCLOCKWISE);
 
   // Other tests
-  CHECK(orientation({0,0},{1,1},{0,2}) == OrientationInterval::CLOCKWISE);
+  CHECK(orientation({0,0},{1,1},{0,2}) == OrientationInterval::COUNTERCLOCKWISE);
   CHECK(orientation({0,0},{1,1},{2,2}) == OrientationInterval::COLINEAR);
-  CHECK(orientation({0,0},{1,1},{2.2,2}) == OrientationInterval::COUNTERCLOCKWISE);
+  CHECK(orientation({0,0},{1,1},{2.2,2}) == OrientationInterval::CLOCKWISE);
   CHECK(orientation({0,0},{2,2},{2,2}) == OrientationInterval::COLINEAR);
   CHECK(orientation({0,0},{2,2},{4,4}) == OrientationInterval::COLINEAR);
   CHECK(orientation({0,0},{8,8},{4,4}) == OrientationInterval::COLINEAR);
-  CHECK(orientation({0,0},{10,1},{4,4}) == OrientationInterval::CLOCKWISE);
-  CHECK(orientation({0,0},{2,2},{10,1}) == OrientationInterval::COUNTERCLOCKWISE);
+  CHECK(orientation({0,0},{10,1},{4,4}) == OrientationInterval::COUNTERCLOCKWISE);
+  CHECK(orientation({0,0},{2,2},{10,1}) == OrientationInterval::CLOCKWISE);
 }
 
 TEST_CASE("Alignments")

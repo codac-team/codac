@@ -19,7 +19,7 @@ namespace codac2
   {
     assert_release(p1.size() == 2 && p2.size() == 2 && p3.size() == 2);
 
-    Interval o = (p2[1]-p1[1])*(p3[0]-p2[0])-(p2[0]-p1[0])*(p3[1]-p2[1]); 
+    Interval o = (p2[0]-p1[0])*(p3[1]-p1[1])-(p2[1]-p1[1])*(p3[0]-p1[0]); 
 
     if(o.is_empty())
       return OrientationInterval::EMPTY;
@@ -69,7 +69,8 @@ namespace codac2
       });
     pts.erase(unique(pts.begin(), pts.end()), pts.end());
 
-    if(pts.size() < 3) return pts;
+    if(pts.size() < 3)
+      return pts;
 
     // Implementation of a Graham scan method.
     // Based on some sources from OpenGenus Foundation.
@@ -104,7 +105,7 @@ namespace codac2
         {
           auto o = orientation(p1, p0, p2);
 
-          if(o == OrientationInterval::COUNTERCLOCKWISE)
+          if(o == OrientationInterval::CLOCKWISE)
             return true;
 
           else if((o == OrientationInterval::UNKNOWN || o == OrientationInterval::COLINEAR)
@@ -143,7 +144,7 @@ namespace codac2
         // points next-to-top, top, and pts[i] makes
         // a non-left turn
         while(l.size() > 1 &&
-          orientation(*std::prev(std::prev(l.end())), l.back(), pts[i]) == OrientationInterval::COUNTERCLOCKWISE)
+          orientation(*std::prev(std::prev(l.end())), l.back(), pts[i]) == OrientationInterval::CLOCKWISE)
         {
           l.pop_back();
         }
