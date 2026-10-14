@@ -132,6 +132,12 @@ namespace codac2
         m++; // Update size of modified array
       }
 
+      if(m < 3)
+      {
+        pts.resize(m);
+        return pts;
+      }
+
     // Create an empty stack and push first three points to it.
 
       list<IntervalVector> l({ pts[0], pts[1], pts[2] });

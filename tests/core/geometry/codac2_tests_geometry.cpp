@@ -150,6 +150,15 @@ TEST_CASE("convex_hull")
   CHECK(hull[6] == v_save[8]);
   CHECK(hull.size() == 7);
 
+  // Fully collinear points reduce to the two endpoints.
+  hull = convex_hull({
+    {0,0},{1,0},{2,0},{3,0}
+  });
+
+  CHECK(hull.size() == 2);
+  CHECK(hull[0] == IntervalVector({0,0}));
+  CHECK(hull[1] == IntervalVector({3,0}));
+
   //for(const auto& vi : v)
   //  DefaultFigure::draw_point(vi.mid(), Color::blue());
   //for(size_t i = 0 ; i < hull.size() ; i++)

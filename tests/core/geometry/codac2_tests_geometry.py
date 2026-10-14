@@ -132,5 +132,14 @@ class TestGeometry(unittest.TestCase):
     self.assertTrue(hull[6] == v_save[8])
     self.assertTrue(len(hull) == 7)
 
+    # Fully collinear points reduce to the two endpoints.
+    hull = convex_hull([
+      [0,0],[1,0],[2,0],[3,0]
+    ])
+
+    self.assertTrue(len(hull) == 2)
+    self.assertTrue(hull[0] == IntervalVector([0,0]))
+    self.assertTrue(hull[1] == IntervalVector([3,0]))
+
 if __name__ ==  '__main__':
   unittest.main()
