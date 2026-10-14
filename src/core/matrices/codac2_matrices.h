@@ -19,6 +19,61 @@
 
 #pragma once
 
+/* Eigen's blocked product kernel accumulates in two different ways. When
+ * EIGEN_HAS_SINGLE_INSTRUCTION_MADD is defined it writes c = pmadd(a,b,c),
+ * which is exactly the fused multiply-add the accumulator expects. Otherwise
+ * it multiplies into a temporary declared with the type of the right-hand
+ * operand, tmp = pmul(a,tmp), then adds it with padd(c,tmp). That second path
+ * is a register-allocation workaround for compilers without a fused
+ * multiply-add, and it silently assumes that the product has the type of the
+ * right-hand operand. Codac breaks that assumption everywhere it multiplies
+ * matrices of two different scalar types -- a Matrix by an IntervalMatrix,
+ * for instance, whose product is an IntervalMatrix. The kernel then either
+ * fails to compile (no padd overload accepts the two types) or, worse,
+ * narrows the product down to the type of the right-hand operand.
+ *
+ * Every architecture Eigen vectorizes defines the macro in its packet-math
+ * header, so this path is normally unreachable. MSVC on arm64 is the exception:
+ * Eigen only enables NEON on __ARM_NEON, which that compiler does not define,
+ * so the whole library falls back on scalar packets and the arm64 builds fail
+ * to compile those mixed-type products. Defining the macro here selects the
+ * pmadd path unconditionally, which is the one all the other targets already
+ * take, and keeps the same results everywhere. It must be defined before Eigen
+ * is included, hence its position at the very top of this file.
+ */
+#ifndef EIGEN_HAS_SINGLE_INSTRUCTION_MADD
+#define EIGEN_HAS_SINGLE_INSTRUCTION_MADD
+#endif
+
+/* Eigen's own EIGEN_ASSUME_ALIGNED(PTR, ALIGN_BYTES), defined in
+ * Eigen/src/Core/util/Memory.h, hints the compiler that a packet load/store
+ * is aligned by calling std::assume_aligned<8 * (ALIGN_BYTES)>(PTR) when the
+ * standard library provides it (as libc++ does). ALIGN_BYTES is always
+ * called with an already-byte-valued Alignment enumerator (Aligned16 = 16,
+ * Aligned32 = 32...), so that extra "8 *" claims eight times the alignment
+ * Eigen itself computed -- e.g. a NEON Packet2d, whose unpacket_traits
+ * report Aligned16, ends up asserted as 128-byte aligned. libc++'s
+ * std::assume_aligned() is, among major standard libraries, the one that
+ * actually verifies such a claim at run time under -fsanitize=alignment
+ * (GCC/libstdc++'s __builtin_assume_aligned() treats it as a silent
+ * optimizer hint instead), which is why every heap-allocated Eigen::Matrix
+ * op trips it under UBSan on macOS/Clang -- e.g. in codac2::gauss_jordan()
+ * or any matrix product -- while the same code is silent on
+ * Linux/GCC. The buffers themselves are never actually misaligned for the
+ * SIMD width Eigen emits; only this hint's arithmetic is wrong. Memory.h
+ * guards its own definition with #ifndef EIGEN_ASSUME_ALIGNED, so defining
+ * it here first -- before Eigen is included, like EIGEN_HAS_SINGLE_
+ * INSTRUCTION_MADD above -- replaces the miscomputed hint with a no-op
+ * (Eigen's own fallback for compilers lacking std::assume_aligned/
+ * __builtin_assume_aligned) rather than trying to patch the multiplier,
+ * so this keeps working even if a future Eigen release changes it again.
+ * It does not change which aligned/unaligned load or store instruction
+ * Eigen selects for a given expression, only this compiler-hint call.
+ */
+#ifndef EIGEN_ASSUME_ALIGNED
+#define EIGEN_ASSUME_ALIGNED(PTR, ALIGN_BYTES)
+#endif
+
 #include <type_traits>
 #include "codac2_Interval.h"
 #include "codac2_Interval_operations.h"
