@@ -19,7 +19,7 @@ namespace codac2
   {
     assert_release(p1.size() == 2 && p2.size() == 2 && p3.size() == 2);
 
-    Interval o = (p2[1]-p1[1])*(p3[0]-p2[0])-(p2[0]-p1[0])*(p3[1]-p2[1]); 
+    Interval o = (p2[0]-p1[0])*(p3[1]-p1[1])-(p2[1]-p1[1])*(p3[0]-p1[0]); 
 
     if(o.is_empty())
       return OrientationInterval::EMPTY;
@@ -39,7 +39,10 @@ namespace codac2
 
     Interval cross_product = (p2[0]-p1[0])*(p3[1]-p1[1])-(p2[1]-p1[1])*(p3[0]-p1[0]);
 
-    if(cross_product == 0.)
+    if(cross_product.is_empty())
+      return BoolInterval::EMPTY;
+
+    else if(cross_product == 0.)
       return BoolInterval::TRUE;
 
     else if(!cross_product.contains(0.))
@@ -69,7 +72,8 @@ namespace codac2
       });
     pts.erase(unique(pts.begin(), pts.end()), pts.end());
 
-    if(pts.size() < 3) return pts;
+    if(pts.size() < 3)
+      return pts;
 
     // Implementation of a Graham scan method.
     // Based on some sources from OpenGenus Foundation.
@@ -104,7 +108,7 @@ namespace codac2
         {
           auto o = orientation(p1, p0, p2);
 
-          if(o == OrientationInterval::COUNTERCLOCKWISE)
+          if(o == OrientationInterval::CLOCKWISE)
             return true;
 
           else if((o == OrientationInterval::UNKNOWN || o == OrientationInterval::COLINEAR)
@@ -131,6 +135,12 @@ namespace codac2
         m++; // Update size of modified array
       }
 
+      if(m < 3)
+      {
+        pts.resize(m);
+        return pts;
+      }
+
     // Create an empty stack and push first three points to it.
 
       list<IntervalVector> l({ pts[0], pts[1], pts[2] });
@@ -143,7 +153,7 @@ namespace codac2
         // points next-to-top, top, and pts[i] makes
         // a non-left turn
         while(l.size() > 1 &&
-          orientation(*std::prev(std::prev(l.end())), l.back(), pts[i]) == OrientationInterval::COUNTERCLOCKWISE)
+          orientation(*std::prev(std::prev(l.end())), l.back(), pts[i]) == OrientationInterval::CLOCKWISE)
         {
           l.pop_back();
         }
@@ -181,24 +191,20 @@ namespace codac2
     do
     {
       merged_something = false;
-      for(auto li = l.begin(); li != l.end();)
+
+      for(auto li = l.begin(); li != l.end() && !merged_something; ++li)
       {
-        for(auto lj = l.begin(); lj != l.end(); ++lj)
+        auto lj = std::next(li);
+        for(; lj != l.end(); ++lj)
         {
-          if(li != lj && li->intersects(*lj))
+          if(li->intersects(*lj))
           {
             *li |= *lj;
-            li = l.erase(li);
+            l.erase(lj);
             merged_something = true;
             break;
           }
-
-          else
-            ++li;
         }
-
-        if(merged_something)
-          break;
       }
     } while(merged_something);
   }

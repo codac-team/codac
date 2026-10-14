@@ -25,7 +25,7 @@ This page provides an overview of the ``AnalyticFunction`` class, its key featur
   For defining a contractor based on an ``AnalyticFunction``, the ``CtcInverse`` class is available.
   It allows to solve constraints under the form :math:`\mathbf{f}(\mathbf{x})\in[\mathbf{y}]`.
 
-  See more.
+  :ref:`See more <sec-ctc-analytic-ctcinverse>`.
 
 
 Variables
@@ -225,6 +225,8 @@ Evaluations can be done by the ``.eval()`` method of ``AnalyticFunction``.
 
 
 For multivariate functions, it is possible to provide several inputs to the ``.eval()`` method, as in the above example with ``f2`` or ``f3``. In Codac C++, the arguments may be of different types (any mixed scalar, vector, or matrix types). In Python and Matlab however, the binding does not allow any combination of inputs, but several arguments of same structural types can be provided: a list of scalar values, or a list of vector values (``Vector``, ``IntervalVector``), or a list of matrix values (``Matrix``, ``IntervalMatrix``).
+
+Functions can also be evaluated on time-varying inputs represented by ``SlicedTube`` objects with ``f.tube_eval(x1, x2, ...)``. This produces a new tube by applying the interval evaluation to each temporal slice. For more information, see :ref:`sec-domains-tubes-slicedtube-function-eval`.
 
 
 Evaluation modes

@@ -187,6 +187,25 @@ class TestTubeManual(unittest.TestCase):
     y = A * b
     # [slicedtube-class-7-end]
 
+    # [slicedtube-class-function-eval-beg]
+    td = create_tdomain([0,5], 0.1, True)
+
+    t = ScalarVar()
+    heading = SlicedTube(td, AnalyticFunction([t], 0.2*sin(t)))
+    speed = SlicedTube(td, Interval(1,2))
+
+    h, v = ScalarVar(), ScalarVar()
+    f = AnalyticFunction([h,v], [v*cos(h), v*sin(h)])
+    velocity = f.tube_eval(heading,speed) # vector-valued tube
+
+    p = VectorVar(2)
+    g = AnalyticFunction([p], sqr(p[0])+sqr(p[1]))
+    velocity_norm_squared = g.tube_eval(velocity) # scalar tube: ||velocity||^2
+    # [slicedtube-class-function-eval-end]
+
+    test.assertTrue(velocity.size() == 2)
+    test.assertTrue(velocity_norm_squared.size() == 1)
+
     td = create_tdomain([0,2])
     x = SlicedTube(td, Interval())
 

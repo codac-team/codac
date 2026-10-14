@@ -274,6 +274,44 @@ For vector-valued codomains, pointwise arithmetic is also available. In particul
       :dedent: 4
 
 
+.. _sec-domains-tubes-slicedtube-function-eval:
+
+Evaluating analytic functions on tubes
+--------------------------------------
+
+An :class:`~codac.AnalyticFunction` can be evaluated on one or more sliced tubes using ``f.tube_eval(x1, x2, ...)``. The result is a new tube computed by applying the function to the codomains of each temporal slice:
+
+.. math::
+
+  [y]_k = [f]([x_1]_k, [x_2]_k, \ldots, [x_n]_k).
+
+The result encloses :math:`f(x_1(t),\ldots,x_n(t))` at every time :math:`t`.
+It shares the same ``TDomain`` as the input tubes, including its gates. All input tubes must share the same ``TDomain`` object, not merely have identical time bounds or discretizations. If the function is scalar-valued, ``tube_eval()`` returns a scalar tube.  If it is vector-valued, ``tube_eval()`` returns a vector tube. In Python, the number of input tubes supported by ``tube_eval()`` is currently limited. All input tubes must be of the same kind (scalar or vector), whereas C++ also supports mixed types.
+
+In the following example, a two-argument function maps heading and speed tubes to a 2D velocity tube :math:`(v_x,v_y)=(v\cos\theta,v\sin\theta)`. A second function computes its squared Euclidean norm :math:`v_x^2+v_y^2`, returning a scalar tube:
+
+.. tabs::
+
+  .. group-tab:: Python
+
+    .. literalinclude:: src.py
+      :language: py
+      :start-after: [slicedtube-class-function-eval-beg]
+      :end-before: [slicedtube-class-function-eval-end]
+      :dedent: 4
+
+  .. group-tab:: C++
+
+    .. literalinclude:: src.cpp
+      :language: c++
+      :start-after: [slicedtube-class-function-eval-beg]
+      :end-before: [slicedtube-class-function-eval-end]
+      :dedent: 4
+
+Unlike ``x(t)``, which evaluates a tube at a given time, ``f.tube_eval(x)`` evaluates an analytic function on an entire tube. It does not implicitly pass time to ``f``: if time is an argument, it must be supplied as an input tube.
+For functions of time alone, ``SlicedTube(tdomain, f)`` directly evaluates ``f(t)`` over the temporal slices (see `Creating sliced tubes`_).
+
+
 Integration and primitives
 --------------------------
 

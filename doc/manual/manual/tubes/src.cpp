@@ -223,6 +223,27 @@ TEST_CASE("SlicedTube class - manual")
   }
 
   {
+    // [slicedtube-class-function-eval-beg]
+    auto td = create_tdomain({0,5}, 0.1, true);
+
+    ScalarVar t;
+    SlicedTube heading(td, AnalyticFunction({t}, 0.2*sin(t)));
+    SlicedTube speed(td, Interval(1,2));
+
+    ScalarVar h, v;
+    AnalyticFunction f({h,v}, {v*cos(h), v*sin(h)});
+    auto velocity = f.tube_eval(heading,speed); // SlicedTube<IntervalVector>
+
+    VectorVar p(2);
+    AnalyticFunction g({p}, sqr(p[0])+sqr(p[1]));
+    auto velocity_norm_squared = g.tube_eval(velocity); // scalar tube: ||velocity||^2
+    // [slicedtube-class-function-eval-end]
+
+    CHECK(velocity.size() == 2);
+    CHECK(velocity_norm_squared.size() == 1);
+  }
+
+  {
     auto td = create_tdomain({0,2});
     SlicedTube x(td, Interval());
 

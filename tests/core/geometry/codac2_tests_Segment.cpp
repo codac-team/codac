@@ -137,6 +137,47 @@ TEST_CASE("Segment")
     CHECK(proj_intersection(Segment({2,0},{6,4}), Segment({6,5},{5,6})) == IntervalVector({6.5,4.5}));
   }
 
+  SECTION("intersection - uncertain parallelism")
+  {
+    Segment e1(
+      {0.,0.},
+      IntervalVector({1.,Interval(-1.,1.)})
+    );
+    Segment e2({0.,0.5},{1.,0.5});
+
+    CHECK(!proj_intersection(e1,e2).is_empty());
+    CHECK(e1.intersects(e2) == BoolInterval::UNKNOWN);
+
+    auto x = e1 & e2;
+    CHECK(!x.is_empty());
+    CHECK(x.is_superset(IntervalVector({0.5,0.5})));
+  }
+
+  SECTION("intersection - uncertain parallel but disjoint segments")
+  {
+    Segment e1(
+      {0.,0.},
+      IntervalVector({2.,Interval(2.-1e-10,2.+1e-10)})
+    );
+    Segment e2({0.,1.},{2.,3.});
+
+    CHECK(!proj_intersection(e1,e2).is_empty());
+    CHECK(e1.intersects(e2) == BoolInterval::FALSE);
+    CHECK((e1 & e2).is_empty());
+  }
+
+  SECTION("colinear - empty segments")
+  {
+    Segment empty(
+      IntervalVector::empty(2),
+      IntervalVector::empty(2)
+    );
+    Segment e({0,0},{1,1});
+
+    CHECK(colinear(empty,e) == BoolInterval::EMPTY);
+    CHECK(colinear(e,empty) == BoolInterval::EMPTY);
+  }
+
   SECTION("intersection - near infinite cases")
   {
     Segment e1({-1,6},{-1,next_float(-oo)});

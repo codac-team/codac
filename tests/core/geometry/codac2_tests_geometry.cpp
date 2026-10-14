@@ -24,22 +24,22 @@ TEST_CASE("orientation")
   CHECK(orientation({0.,0.},{0.,0.},{0.,0.}) == OrientationInterval::COLINEAR);
 
   // Clockwise points
-  CHECK(orientation({0.,0.},{0.,-5.},{-2.,-5.}) == OrientationInterval::COUNTERCLOCKWISE);
-  CHECK(orientation({-999.,0.1},{0.,0.},{-999.,-0.1}) == OrientationInterval::COUNTERCLOCKWISE);
+  CHECK(orientation({0.,0.},{0.,-5.},{-2.,-5.}) == OrientationInterval::CLOCKWISE);
+  CHECK(orientation({-999.,0.1},{0.,0.},{-999.,-0.1}) == OrientationInterval::CLOCKWISE);
 
-  // Anticlockwise points
-  CHECK(orientation({0.,0.},{0.,-5.},{2.,-5.}) == OrientationInterval::CLOCKWISE);
-  CHECK(orientation({999.,0.1},{0.,0.},{999.,-0.1}) == OrientationInterval::CLOCKWISE);
+  // Counterclockwise points
+  CHECK(orientation({0.,0.},{0.,-5.},{2.,-5.}) == OrientationInterval::COUNTERCLOCKWISE);
+  CHECK(orientation({999.,0.1},{0.,0.},{999.,-0.1}) == OrientationInterval::COUNTERCLOCKWISE);
 
   // Other tests
-  CHECK(orientation({0,0},{1,1},{0,2}) == OrientationInterval::CLOCKWISE);
+  CHECK(orientation({0,0},{1,1},{0,2}) == OrientationInterval::COUNTERCLOCKWISE);
   CHECK(orientation({0,0},{1,1},{2,2}) == OrientationInterval::COLINEAR);
-  CHECK(orientation({0,0},{1,1},{2.2,2}) == OrientationInterval::COUNTERCLOCKWISE);
+  CHECK(orientation({0,0},{1,1},{2.2,2}) == OrientationInterval::CLOCKWISE);
   CHECK(orientation({0,0},{2,2},{2,2}) == OrientationInterval::COLINEAR);
   CHECK(orientation({0,0},{2,2},{4,4}) == OrientationInterval::COLINEAR);
   CHECK(orientation({0,0},{8,8},{4,4}) == OrientationInterval::COLINEAR);
-  CHECK(orientation({0,0},{10,1},{4,4}) == OrientationInterval::CLOCKWISE);
-  CHECK(orientation({0,0},{2,2},{10,1}) == OrientationInterval::COUNTERCLOCKWISE);
+  CHECK(orientation({0,0},{10,1},{4,4}) == OrientationInterval::COUNTERCLOCKWISE);
+  CHECK(orientation({0,0},{2,2},{10,1}) == OrientationInterval::CLOCKWISE);
 }
 
 TEST_CASE("Alignments")
@@ -61,6 +61,9 @@ TEST_CASE("Alignments")
   CHECK(aligned({0,0},{1,1},{10,10}) == BoolInterval::TRUE);
   CHECK(aligned({{-oo,0},{-oo,0}},{1,1},{10,10}) == BoolInterval::UNKNOWN);
   CHECK(aligned(IntervalVector(2),{1,1},{10,10}) == BoolInterval::UNKNOWN);
+  CHECK(aligned(IntervalVector::empty(2),{1,1},{10,10}) == BoolInterval::EMPTY);
+  CHECK(aligned({1,1},IntervalVector::empty(2),{10,10}) == BoolInterval::EMPTY);
+  CHECK(aligned({1,1},{10,10},IntervalVector::empty(2)) == BoolInterval::EMPTY);
 }
 
 TEST_CASE("convex_hull")
@@ -150,8 +153,47 @@ TEST_CASE("convex_hull")
   CHECK(hull[6] == v_save[8]);
   CHECK(hull.size() == 7);
 
+  // Fully collinear points reduce to the two endpoints.
+  hull = convex_hull({
+    {0,0},{1,0},{2,0},{3,0}
+  });
+
+  CHECK(hull.size() == 2);
+  CHECK(hull[0] == IntervalVector({0,0}));
+  CHECK(hull[1] == IntervalVector({3,0}));
+
   //for(const auto& vi : v)
   //  DefaultFigure::draw_point(vi.mid(), Color::blue());
   //for(size_t i = 0 ; i < hull.size() ; i++)
   //  DefaultFigure::draw_line(hull[i].mid(), hull[(i+1)%hull.size()].mid(), Color::blue());
 }
+
+TEST_CASE("geometry - merge adjacent points")
+{
+  list<IntervalVector> pts {
+    {{0,1},{0,1}},
+    {{0.5,2},{0.5,1.5}},
+    {{3,4},{3,4}}
+  };
+
+  merge_adjacent_points(pts);
+
+  REQUIRE(pts.size() == 2);
+  auto it = pts.begin();
+  CHECK(*it == IntervalVector({{0,2},{0,1.5}}));
+  ++it;
+  CHECK(*it == IntervalVector({{3,4},{3,4}}));
+
+  // Merging can create a new intersection, so the process must be iterative.
+  pts = {
+    {{0,1},{0,1}},
+    {{1,2},{0,1}},
+    {{2,3},{0,1}}
+  };
+
+  merge_adjacent_points(pts);
+
+  REQUIRE(pts.size() == 1);
+  CHECK(pts.front() == IntervalVector({{0,3},{0,1}}));
+}
+
