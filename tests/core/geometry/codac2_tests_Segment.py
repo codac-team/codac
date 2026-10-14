@@ -129,6 +129,31 @@ class TestSegment(unittest.TestCase):
     self.assertTrue((Segment([2,0],[6,4]) & Segment([6,5],[5,6])) == IntervalVector.empty(2))
     self.assertTrue(proj_intersection(Segment([2,0],[6,4]), Segment([6,5],[5,6])) == IntervalVector([6.5,4.5]))
 
+    # Possible intersection under uncertain parallelism
+    e1 = Segment(
+      [0.,0.],
+      IntervalVector([1.,Interval(-1.,1.)])
+    )
+    e2 = Segment([0.,0.5],[1.,0.5])
+
+    self.assertFalse(proj_intersection(e1,e2).is_empty())
+    self.assertTrue(e1.intersects(e2) == BoolInterval.UNKNOWN)
+
+    x = e1 & e2
+    self.assertFalse(x.is_empty())
+    self.assertTrue(x.is_superset(IntervalVector([0.5,0.5])))
+
+    # Nearly parallel supporting lines, but certainly disjoint segments
+    e1 = Segment(
+      [0.,0.],
+      IntervalVector([2.,Interval(2.-1e-10,2.+1e-10)])
+    )
+    e2 = Segment([0.,1.],[2.,3.])
+
+    self.assertFalse(proj_intersection(e1,e2).is_empty())
+    self.assertTrue(e1.intersects(e2) == BoolInterval.FALSE)
+    self.assertTrue((e1 & e2).is_empty())
+
     # Near infinite cases
     e1 = Segment([-1,6],[-1,next_float(-oo)])
     e2 = Segment([-1,-1],[3,-6])

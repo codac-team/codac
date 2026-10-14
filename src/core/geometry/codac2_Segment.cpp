@@ -116,6 +116,9 @@ namespace codac2
   {
     IntervalVector b1 = e1.box(), b2 = e2.box();
 
+    if(e1.intersects(e2) == BoolInterval::FALSE)
+      return IntervalVector::empty(2);
+
     // Ill-conditioned cases
     // For tiny boxes, proj_intersection returns an overly pessimistic enclosure.
     {
@@ -169,15 +172,13 @@ namespace codac2
 
     if(c.contains(0.)) // e1 and e2 may be parallel
     {
-      // They are then either possibly colinear
-      //   => infinite intersection points
-      // Or not
-      //   => no intersection point => empty output
-
-      if((aligned(e1[0],e1[1],e2[0]) & BoolInterval::TRUE) == BoolInterval::TRUE)
-        return IntervalVector(2);
-      else
+      // If c is exactly zero, the supporting lines are certainly parallel.
+      // They are disjoint only when colinearity can be ruled out.
+      if(c == 0. && aligned(e1[0],e1[1],e2[0]) == BoolInterval::FALSE)
         return IntervalVector::empty(2);
+
+      // Otherwise, a non-parallel realization remains possible.
+      return IntervalVector(2);
     }
 
     Interval a = (x1*y2-y1*x2);
