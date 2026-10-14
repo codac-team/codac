@@ -21,7 +21,7 @@ def hull(x):
 
 class TestSegment(unittest.TestCase):
 
-  def test_contains(self):
+  def test_contains_horizontal_segment(self):
 
     p1 = Vector([0,-10])
     p2 = Vector([-10,-10])
@@ -43,7 +43,7 @@ class TestSegment(unittest.TestCase):
     self.assertTrue(Segment(IntervalVector([hull(-oo),2]),Vector([0,2])).intersects(Segment(Vector([0,0]),Vector([0,1]))) == BoolInterval.FALSE)
     self.assertTrue(Segment(IntervalVector([hull(-oo),2]),Vector([0,2])).intersects(Segment(Vector([0,0]),Vector([0,2]))) == BoolInterval.TRUE)
 
-  def test_contains(self):
+  def test_contains_oblique_segment(self):
 
     p1,p2,p3 = Vector([0.,0.]), Vector([1.5,3.]), Vector([0.,2.])
     e1 = Segment(Vector([-10.,-10.]), Vector([10.,10.]))
