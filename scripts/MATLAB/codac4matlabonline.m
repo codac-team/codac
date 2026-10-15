@@ -1,36 +1,33 @@
 %
+% Since pip and AppImage do not seem to work on MATLAB Online, this script downloads and extracts codac4matlab and VIBes in the "/MATLAB Drive" folder.
+%
 % Known issues:
 % It might not be possible to view the VIBes windows, possibly use the VIBes functions to save the desired pictures as a workaround...
 %
 % TODO:
-% Determine automatically the Python version used by MATLAB Online (e.g. by analyzing pyenv output) and download the latest codac and vibes versions from PyPi.
-% Replace "/MATLAB Drive" with the output of pwd (warning: might be different than $HOME...).
-% Add hint at the end to indicate how to uninstall (e.g. remove pythonlibs folder...)...
+% Replace "/MATLAB Drive" with the output of matlabdrive command (warning: might be different than $HOME...)? Might not work with shell commands prefixed by "!", but maybe with e.g. drive = matlabdrive; system('wget ... "' + drive + '/..."')...?
 %
 
 !lsb_release -a
 !uname -a
 pyenv
 
-disp('Downloading and installing prerequisites...');
+disp('Checking, downloading and installing codac4matlab prerequisites in "/MATLAB Drive/pythonlibs" and "/MATLAB Drive/vibes"...');
 
-% pip install --user codac4matlab
+% Equivalent of pip install --user codac4matlab
 !mkdir -p "/MATLAB Drive/pythonlibs"
 if ~isfolder("/MATLAB Drive/pythonlibs/codac4matlab")
-    % For another version, get the exact link and name from https://pypi.org/project/codac4matlab/#files
-    !cd "/MATLAB Drive/pythonlibs" ; rm -f codac4matlab-2.1.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
-    !cd "/MATLAB Drive/pythonlibs" ; wget -q --show-progress --progress=dot:giga https://files.pythonhosted.org/packages/cd/8f/260a85ecd832120922510f6952d264c3c0aaa279741bffa98bea67baf07b/codac4matlab-2.1.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
-    !cd "/MATLAB Drive/pythonlibs" ; unzip -q codac4matlab-2.1.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+    % If it does not work, please download the necessary .whl from https://pypi.org/project/codac4matlab/#files and unzip it in "/MATLAB Drive/pythonlibs"...
+    !PY_V_MAJ=`python3 -c "import sys; print(sys.version_info[0])"`; PY_V_MIN=`python3 -c "import sys; print(sys.version_info[1])"`; CP="cp${PY_V_MAJ}${PY_V_MIN}"; VER=$(wget -qO- https://pypi.org/pypi/codac4matlab/json | grep -o '"version":"[^"]*' | head -n 1 | cut -d'"' -f4); URL=$(wget -qO- https://pypi.org/pypi/codac4matlab/json | grep -o '"url":"[^"]*' | cut -d'"' -f4 | grep "/codac4matlab-${VER}-${CP}-${CP}.*manylinux.*x86_64\.whl$" | head -n 1); cd "/MATLAB Drive/pythonlibs" && wget -q -O "$(basename "$URL")" --show-progress --progress=dot:giga "$URL" && unzip -q "$(basename "$URL")"
 end
-if ~isfolder("/MATLAB Drive/pythonlibs/vibes-0.2.2")
-    % For another version, get the exact link and name from https://pypi.org/project/vibes/#files
-    !cd "/MATLAB Drive/pythonlibs" ; rm -f vibes-0.2.2.tar.gz
-    !cd "/MATLAB Drive/pythonlibs" ; wget -q --show-progress --progress=dot:giga https://files.pythonhosted.org/packages/20/3a/c19179d02310793aae928682a6435f97fe57e892f057048f1624b3675474/vibes-0.2.2.tar.gz
-    !cd "/MATLAB Drive/pythonlibs" ; tar xfz vibes-0.2.2.tar.gz
+d = dir("/MATLAB Drive/pythonlibs/vibes-*");
+if ~any([d.isdir])
+    % If it does not work, please download the necessary .tar.gz or .whl from https://pypi.org/project/vibes/#files and extract it in "/MATLAB Drive/pythonlibs"...
+    !VER=$(wget -qO- https://pypi.org/pypi/vibes/json | grep -o '"version":"[^"]*' | head -n 1 | cut -d'"' -f4); URL=$(wget -qO- https://pypi.org/pypi/vibes/json | grep -o '"url":"[^"]*' | cut -d'"' -f4 | grep "/vibes-${VER}\.tar\.gz$" | head -n 1); cd "/MATLAB Drive/pythonlibs" && wget -q -O "$(basename "$URL")" --show-progress --progress=dot:giga "$URL" && tar xfz "$(basename "$URL")"
 end
 
-% sudo apt-get install -y vibes
-if ~isfolder("/MATLAB Drive/vibes")
+% VIBes-viewer
+if ~isfolder("/MATLAB Drive/vibes/squashfs-root")
     !mkdir -p "/MATLAB Drive/vibes"
     !cd "/MATLAB Drive/vibes" ; rm -f VIBes-viewer_amd64.AppImage
     !cd "/MATLAB Drive/vibes" ; wget -q --show-progress --progress=dot:giga https://github.com/ENSTABretagneRobotics/VIBES/releases/latest/download/VIBes-viewer_amd64.AppImage
@@ -42,9 +39,13 @@ if ~isfolder("/MATLAB Drive/vibes")
     % Maybe capture it with [~,out] = system('xwininfo -root -tree | grep "Codac - default figure"'); wid = regexp(out,'0x[0-9A-Fa-f]+','match','once'); system(sprintf('xwd -id %s -silent -out vibes.xwd', wid));...
 end
 
-disp('End of prerequisites installation...');
+disp('End of codac4matlab prerequisites checks.');
 
 % This is probably necessary every time...
 if count(py.sys.path, "/MATLAB Drive/pythonlibs") == 0
     insert(py.sys.path, int32(0), "/MATLAB Drive/pythonlibs");
 end
+
+disp('Notes:');
+disp('_ This script needs to be run every time MATLAB Online is started.');
+disp('_ To uninstall, remove the "/MATLAB Drive/pythonlibs" and "/MATLAB Drive/vibes" folders, and remove related entries from py.sys.path.');
