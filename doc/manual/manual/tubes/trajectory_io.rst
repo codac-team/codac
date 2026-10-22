@@ -36,13 +36,40 @@ Read its time/value columns and insert the samples using ``set(value,time)``. Th
 NumPy archives
 --------------
 
-In Python, a ``.npz`` archive can supply arrays of timestamps and values. This format is distinct from binary serialization.
+In Python, load a ``.npz`` file with ``numpy.load`` and pass its time and value arrays to ``SampledTraj``. The trajectory type is inferred from the values.
 
-.. literalinclude:: src.py
-  :language: python
-  :start-after: [traj-sampled-npz-beg]
-  :end-before: [traj-sampled-npz-end]
-  :dedent: 4
+.. code-block:: python
+
+   import numpy as np
+   from codac import SampledTraj
+
+   data = np.load("traj_vec.npz")
+   traj = SampledTraj(data["t"], data["x"])
+
+In the above example, if ``x`` is a 2D array of shape ``(N,n)``, then ``traj`` is a ``SampledTraj_Vector``.
+
+Another example:
+
+.. tabs::
+
+  .. group-tab:: Python
+
+    .. code-block:: python
+
+      import numpy as np
+      from codac import *
+
+      t = np.array([0.0, 0.5, 1.0, 1.5])
+      x = np.array([
+          [0.0, 1.0],
+          [0.5, 1.5],
+          [1.0, 2.0],
+          [1.5, 2.5],
+      ])
+
+      traj = SampledTraj(t, x)
+      print(traj) # outputs: SampledTraj. [0, 1.5]↦[[0, 1.5][1, 2.5]], 4 pts
+
 
 Binary serialization
 --------------------

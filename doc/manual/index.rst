@@ -214,11 +214,15 @@ User manual
       * The class SetMembershipFunction
       * Extension to custom expressions
 
-* :ref:`sec-domains-tubes`
-   * :ref:`sec-domains-tubes-tdomain`
-   * :ref:`sec-domains-tubes-slicedtube`
-   * The Trajectory classes
-   * Increasing performances using views
+* :ref:`sec-tubes-trajectories`
+   * :ref:`sec-trajectories-sampledtraj`
+   * :ref:`sec-trajectories-analytictraj`
+   * :ref:`sec-trajectories-operations`
+   * :ref:`sec-trajectories-io`
+   * :ref:`sec-tubes-tdomain`
+   * :ref:`sec-tubes-slice`
+   * :ref:`sec-tubes-slicedtube`
+   * :ref:`sec-tubes-examples`
 
 * Contractors
    * What are contractors?
@@ -354,7 +358,7 @@ User manual
    * Related papers
    * Contributors
    * How to cite Codac
-   :ref:`sec-ref-codac-logos`
+   * :ref:`sec-ref-codac-logos`
 
 
 How-to guides
