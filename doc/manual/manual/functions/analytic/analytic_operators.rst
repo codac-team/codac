@@ -350,6 +350,8 @@ Temporal operations for involving trajectories or tubes in analytic expressions 
     );
 
 
+For a detailed example using ``SampledTraj.as_function()`` and information on pointwise ``AnalyticFunction.traj_eval(...)``, see :ref:`sec-trajectories-operations`.
+
 Direct use of operators
 ^^^^^^^^^^^^^^^^^^^^^^^
 

@@ -1,66 +1,62 @@
-.. _sec-domains-tubes:
+.. _sec-tubes-trajectories:
 
-Tubes
-=====
+Tubes & Trajectories
+====================
 
   Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
 
-Introduction
+Codac provides trajectories to represent time-dependent values and tubes to represent time-dependent sets.
+
+| A trajectory :math:`x(\cdot):[t_0,t_f]\rightarrow\mathbb{R}^n` associates a single value with each time.
+| A tube is a set-valued function defined as
+
+.. math::
+
+   [x](\cdot):[t_0,t_f]\rightarrow\mathcal{P}(\mathbb{R}^n),
+
+where :math:`\mathcal{P}(\mathbb{R}^n)` denotes the power set of :math:`\mathbb{R}^n`. In Codac, these sets are represented by a configurable domain type, such as a box or a polygon.
+
+
+.. _sec-trajectories:
+
+Trajectories
 ------------
 
-A tube is a set of trajectories. More precisely, if :math:`\mathcal{F}(\mathbb{R}\to\mathbb{R}^n)` denotes the set of trajectories with values in :math:`\mathbb{R}^n`, a tube :math:`\mathbb{X}(\cdot)` is a set-valued map
+Two representations are available. ``SampledTraj`` stores time/value samples and interpolates linearly between them, while ``AnalyticTraj`` evaluates expressions of time through an ``AnalyticFunction``. Both support scalar, vector and matrix trajectories.
 
-.. math::
-
-   \mathbb{X}(\cdot): \mathbb{R} \to \mathcal{P}(\mathbb{R}^n)
-
-such that
-
-.. math::
-
-   \mathbf{x}(\cdot)\in\mathbb{X}(\cdot)
-   \;\Longleftrightarrow\;
-   \forall t,\ \mathbf{x}(t)\in\mathbb{X}(t).
-
-In other words, a tube encloses trajectories pointwise in time: for every time :math:`t`, the value :math:`\mathbf{x}(t)` must belong to the set :math:`\mathbb{X}(t)`. This definition is intentionally general. It does not encode additional temporal information such as continuity, monotonicity, or derivative constraints. Such properties may be handled separately, for instance by contractors or by combining several tubes.
-
-This point of view naturally extends interval and box representations. In the most common cases, :math:`\mathbb{X}(t)` is an interval, a box, or a matrix of intervals, but in principle it may be any codomain type for which suitable set operations are available.
-
-In Codac C++, this generality is reflected by the template ``SlicedTube<T>``. In principle, ``T`` can be any codomain type compatible with the sliced-tube algorithms.
-The library naturally provides and primarily uses:
-
-* ``SlicedTube<Interval>``,
-* ``SlicedTube<IntervalVector>``,
-* ``SlicedTube<IntervalMatrix>``.
-
-These are the most common tube types in practice. In Python and Matlab, only these standard sliced-tube classes are currently exposed through the bindings.
-In C++, instantiations such as ``SlicedTube<ConvexPolygon>`` are allowed, provided the required tube operations are available for that domain.
-
-This chapter documents the *sliced tube* implementation currently available in Codac. In this implementation, a tube is represented over an explicit temporal partition stored in a :class:`~codac.TDomain`. Each temporal element is a :class:`~codac.TSlice`, and each application-level value over one temporal element is represented by a :class:`~codac.Slice`. The main user-facing object is therefore a :class:`~codac.SlicedTube`.
-
-.. figure:: ./tube_slices.png
-  :width: 70%
-  
-  An example of sliced tube :math:`[x](\cdot)`, as implemented in Codac. The tube is made as a list of interval or box slices. In practice, the sampling :math:`\delta` is not necessarily constant.
-
-Compared with the previous Codac v1 implementation, these tubes are not only functions of time: they also have shared data structures built on a common temporal partition. Refining the time partition of one tube may therefore update the internal slice structure of all tubes attached to the same :class:`~codac.TDomain`. This design is central to the current implementation. It simplifies the user experience: a temporal modification applied to one tube is implicitly propagated to the others, so multi-tube operations such as arithmetic combinations or contractions can still be performed easily on a consistent shared time basis.
-
-Conceptually, the data model is:
-
-.. code-block:: text
-
-   TDomain
-     ├── TSlice #0  ----> Slice<X> for tube x
-     │                └-> Slice<Y> for tube y
-     ├── TSlice #1  ----> Slice<X> for tube x
-     │                └-> Slice<Y> for tube y
-     └── ...
-     
-
-This chapter is organized as follows:
+Trajectories are intended to represent approximations of solutions or measured signals. Guaranteed computations involving time-dependent quantities rely on tubes to account for uncertainties.
 
 .. toctree::
-  :maxdepth: 1
+   :maxdepth: 1
 
-  tdomain
-  slicedtube
+   sampledtraj
+   analytictraj
+   trajectory_operations
+   trajectory_io
+
+
+.. _sec-tubes:
+
+Tubes
+-----
+
+A ``SlicedTube`` represents a tube over a temporal partition :class:`~codac.TDomain`. Each time element is a :class:`~codac.TSlice`, with an associated :class:`~codac.Slice` for each tube. Several tubes may share one temporal partition, so refining it also updates the structure of the other tubes.
+
+The principal codomains are ``Interval``, ``IntervalVector`` and ``IntervalMatrix``, which represent scalar, vector and matrix sliced tubes. For these sliced tubes, contractors can reduce the enclosures using observations and dynamical constraints without discarding feasible trajectories, making them particularly useful for guaranteed state estimation.
+
+.. figure:: ./tube_slices.png
+   :width: 70%
+
+   A sliced tube :math:`[x](\cdot)`, represented by interval enclosures over a temporal partition.
+
+C++ also supports compatible custom codomains, such as ``ConvexPolygon`` or ``Ellipsoid``.
+
+.. toctree::
+   :maxdepth: 1
+
+   tdomain
+   slice
+   slicedtube
+   tube_examples
+
+See also :ref:`sec-tools-serialization` and :doc:`../visualization/functions`.
