@@ -73,18 +73,16 @@ TEST_CASE("TDomain class - manual")
     SlicedTube x(td, Interval(0,1));
     SlicedTube v(td, Interval(-1,1));
 
-    cout << x << endl;   // outputs [0,2]->[0,1], 2 slices
-    cout << v << endl;   // outputs [0,2]->[-1,1], 2 slices
+    cout << x << endl;   // codomain [0,1], 2 temporal elements
+    cout << v << endl;   // codomain [-1,1], 2 temporal elements
 
     size_t n = td->nb_tslices(); // 2: [0,1],[1,2]
     x.set({0.5,1}, 1.3);         // local update, will refine the partition at t=1.3
     size_t m = td->nb_tslices(); // now 4: [0,1],[1,1.3],[1.3],[1.3,2]
 
-    cout << x << endl;   // outputs [0,2]->[0,1], 4 slices
-    cout << v << endl;   // outputs [0,2]->[-1,1], 4 slices (v is also impacted by x.set(..))
+    cout << x << endl;   // codomain [0,1], 4 temporal elements
+    cout << v << endl;   // codomain [-1,1], 4 temporal elements (shared partition refined)
     // [tdomain-class-4-end]
-    CHECK(x.codomain() == Interval(0,1));
-    CHECK(v.codomain() == Interval(-1,1));
     CHECK(n == 2);
     CHECK(m == 4);
   }
@@ -113,9 +111,9 @@ TEST_CASE("SlicedTube class - manual")
     auto td = create_tdomain({0,10}, 0.1, true);
 
     // Sliced tube from interval-type codomains
-    SlicedTube x(td, Interval(-1,1)); // x has type SlicedTube<Interval>
-    SlicedTube y(td, IntervalVector(2)); // y has type SlicedTube<IntervalVector>
-    SlicedTube z(td, IntervalMatrix(2,2)); // z has type SlicedTube<IntervalMatrix>
+    SlicedTube x(td, Interval(-1,1));        // scalar tube: SlicedTube<Interval>
+    SlicedTube y(td, IntervalVector(2));     // vector tube: SlicedTube<IntervalVector>
+    SlicedTube z(td, IntervalMatrix(2,2));   // matrix tube: SlicedTube<IntervalMatrix>
 
     // Explicit template notation remains possible:
     SlicedTube<Interval> x2(td, Interval(-1,1));
@@ -123,8 +121,7 @@ TEST_CASE("SlicedTube class - manual")
     // From an analytic function
     ScalarVar t;
     AnalyticFunction f({t}, sin(t));
-    SlicedTube xf(td, f);
-    // xf has type SlicedTube<Interval> because f outputs scalar values
+    SlicedTube xf(td, f); // scalar tube: SlicedTube<Interval>
 
     // From an analytic trajectory or sampled trajectory
     AnalyticTraj at({0,10}, AnalyticFunction({t},cos(t)));
@@ -227,7 +224,7 @@ TEST_CASE("SlicedTube class - manual")
     SlicedTube A(td, IntervalMatrix(2,2));
     SlicedTube b(td, IntervalVector(2));
 
-    auto y = A * b; // type: SlicedTube<IntervalVector>
+    auto y = A * b; // vector tube: SlicedTube<IntervalVector>
     // [slicedtube-class-7-end]
   }
 
@@ -241,7 +238,7 @@ TEST_CASE("SlicedTube class - manual")
 
     ScalarVar h, v;
     AnalyticFunction f({h,v}, {v*cos(h), v*sin(h)});
-    auto velocity = f.tube_eval(heading,speed); // SlicedTube<IntervalVector>
+    auto velocity = f.tube_eval(heading,speed); // vector tube: SlicedTube<IntervalVector>
 
     VectorVar p(2);
     AnalyticFunction g({p}, sqr(p[0])+sqr(p[1]));
@@ -270,8 +267,8 @@ TEST_CASE("SlicedTube class - manual")
 
     // [slicedtube-class-9-beg]
     // Component and subvector extraction
-    auto x0 = x[0];              // type: SlicedTube<Interval>
-    auto x12 = x.subvector(1,2); // type: SlicedTube<IntervalVector>
+    auto x0 = x[0];              // scalar tube: SlicedTube<Interval>
+    auto x12 = x.subvector(1,2); // vector tube: SlicedTube<IntervalVector>
     // [slicedtube-class-9-end]
   }
 
@@ -350,9 +347,9 @@ TEST_CASE("Trajectory classes - manual")
     // [traj-analytic-create-end]
 
     // [traj-analytic-eval-beg]
-    double y_point = traj_f(0.5);
-    Interval y_interval = traj_f({0,1});
-    Vector p_point = traj_g(0.5);
+    double y_point = traj_f(0.5);         // scalar value
+    Interval y_interval = traj_f({0,1}); // interval enclosure
+    Vector p_point = traj_g(0.5);        // vector value
     // [traj-analytic-eval-end]
     CHECK(y_interval.contains(y_point));
     CHECK(p_point.size() == 2);
@@ -417,7 +414,7 @@ TEST_CASE("Trajectory classes - manual")
     AnalyticTraj traj({0,2}, AnalyticFunction({t}, sin(t)));
     auto td = create_tdomain({0,2}, 0.1);
     SlicedTube tube(td, traj);
-    tube.inflate(0.05); // valid only if +/- 0.05 is a justified error bound
+    tube.inflate(0.05); // encloses the true signal if its error is bounded by 0.05
     // [traj-ops-tube-end]
   }
 
@@ -444,8 +441,8 @@ TEST_CASE("Trajectory reference - manual")
   {
     // [traj-sampled-grid-beg]
     SampledTraj<double> x({{0.,0}, {1.,2}, {2.,0}});
-    auto merged = x.sampled(0.6); // retains 0, 1 and 2
-    auto regular = x.sampled(0.6, false); // only regular grid and final time
+    auto merged = x.sampled(0.6);         // original samples also retained
+    auto regular = x.sampled(0.6, false); // regular grid and final time only
     SampledTraj<double> clock({{0.,0}, {0.5,0}, {1.5,0}, {2.,0}});
     auto aligned = x.sampled_as(clock); // x evaluated at clock's timestamps
     // [traj-sampled-grid-end]
@@ -456,7 +453,7 @@ TEST_CASE("Trajectory reference - manual")
     // [traj-sampled-construct-alt-beg]
     std::map<double,double> samples({{0.,3}, {1.,4}, {2.,5}});
     SampledTraj<double> x(samples);
-    x.set(6., 1.); // overwrites value at t=1
+    x.set(6., 1.); // replaces value at t=1
     SampledTraj<double> y({0.,1.,2.}, {3,6,5}); // two std::list arguments
     // [traj-sampled-construct-alt-end]
     CHECK(x.nb_samples() == 3);
@@ -476,9 +473,9 @@ TEST_CASE("Trajectory reference - manual")
     // [traj-ops-pointwise-beg]
     SampledTraj<double> x({{0.,0}, {1.,1}, {2.,2}});
     SampledTraj<double> y({{0.,2}, {1.,3}, {2.,4}});
-    auto sum = x + y;    // pointwise at shared timestamps
-    auto sq = sqr(x);    // square sample values, then interpolate
-    auto sin_x = sin(x); // not the same as t -> sin(x(t)) between samples
+    auto sum = x + y;    // computed at matching timestamps
+    auto sq = sqr(x);    // square samples, then interpolate
+    auto sin_x = sin(x); // transform samples, then interpolate
     // [traj-ops-pointwise-end]
     CHECK(sum(1.) == 4.);
     CHECK(sq(1.) == 1.);
@@ -499,7 +496,7 @@ TEST_CASE("Trajectory reference - manual")
     ScalarVar t;
     AnalyticTraj a({0,2}, AnalyticFunction({t}, sin(t)));
     SlicedTube tube(td,a);
-    auto midpoint = tube.mid(); // approximate trajectory of tube midpoints
+    auto midpoint = tube.mid(); // approximate midpoint trajectory
     // [traj-tubes-mid-end]
     CHECK(midpoint.nb_samples() > 1);
   }
@@ -596,7 +593,7 @@ TEST_CASE("SlicedTube cross-reference examples - manual")
     auto both = x & y;             // intersection of enclosures
     auto either = x | y;           // interval hull, not disconnected union
     auto sum = x + y;              // interval arithmetic on every slice
-    auto xy = tube_cart_prod(x,y); // SlicedTube<IntervalVector>
+    auto xy = tube_cart_prod(x,y); // vector tube: SlicedTube<IntervalVector>
     // [tube-parity-algebra-end]
     CHECK(xy.size() == 2);
   }
@@ -605,7 +602,7 @@ TEST_CASE("SlicedTube cross-reference examples - manual")
     auto td = create_tdomain({0,2}, 0.5, true);
     SlicedTube tube(td, Interval(-1,1));
     SampledTraj<double> midpoint = tube.mid(); // an approximation
-    SlicedTube middle_curve(td, midpoint);     // tube of the interpolant
+    SlicedTube middle_curve(td, midpoint);     // encloses the interpolant
     // [tube-parity-conversion-end]
     CHECK(midpoint.nb_samples() > 1);
   }

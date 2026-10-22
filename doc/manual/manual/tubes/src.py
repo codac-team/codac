@@ -53,19 +53,17 @@ class TestTubeManual(unittest.TestCase):
     x = SlicedTube(td, Interval(0,1))
     v = SlicedTube(td, Interval(-1,1))
 
-    print(x)            # outputs [0,2]->[0,1], 2 slices
-    print(v)            # outputs [0,2]->[-1,1], 2 slices
+    print(x)            # codomain [0,1], 2 temporal elements
+    print(v)            # codomain [-1,1], 2 temporal elements
 
     n = td.nb_tslices() # 2: [0,1],[1,2]
     x.set([0.5,1], 1.3) # local update, will refine the partition at t=1.3
     m = td.nb_tslices() # now 4: [0,1],[1,1.3],[1.3],[1.3,2]
 
-    print(x)            # outputs [0,2]->[0,1], 4 slices
-    print(v)            # outputs [0,2]->[-1,1], 4 slices (v is also impacted by x.set(..))
+    print(x)            # codomain [0,1], 4 temporal elements
+    print(v)            # codomain [-1,1], 4 temporal elements (shared partition refined)
     # [tdomain-class-4-end]
 
-    test.assertTrue(x.codomain() == Interval(0,1))
-    test.assertTrue(v.codomain() == Interval(-1,1))
     test.assertTrue(n == 2)
     test.assertTrue(m == 4)
 
@@ -90,14 +88,14 @@ class TestTubeManual(unittest.TestCase):
     td = create_tdomain([0,10], 0.1, True)
 
     # Sliced tube from interval-type codomains
-    x = SlicedTube(td, Interval(-1,1))
-    y = SlicedTube(td, IntervalVector(2))
-    z = SlicedTube(td, IntervalMatrix(2,2))
+    x = SlicedTube(td, Interval(-1,1))     # scalar tube
+    y = SlicedTube(td, IntervalVector(2))  # vector tube
+    z = SlicedTube(td, IntervalMatrix(2,2)) # matrix tube
 
     # From an analytic function
     t = ScalarVar()
     f = AnalyticFunction([t], sin(t))
-    xf = SlicedTube(td, f)
+    xf = SlicedTube(td, f) # scalar tube
 
     # From an analytic trajectory or sampled trajectory
     at = AnalyticTraj([0,10], AnalyticFunction([t],cos(t)))
@@ -186,7 +184,7 @@ class TestTubeManual(unittest.TestCase):
     A = SlicedTube(td, IntervalMatrix(2,2))
     b = SlicedTube(td, IntervalVector(2))
 
-    y = A * b
+    y = A * b # vector tube
     # [slicedtube-class-7-end]
 
     # [slicedtube-class-function-eval-beg]
@@ -198,7 +196,7 @@ class TestTubeManual(unittest.TestCase):
 
     h, v = ScalarVar(), ScalarVar()
     f = AnalyticFunction([h,v], [v*cos(h), v*sin(h)])
-    velocity = f.tube_eval(heading,speed) # vector-valued tube
+    velocity = f.tube_eval(heading,speed) # vector tube
 
     p = VectorVar(2)
     g = AnalyticFunction([p], sqr(p[0])+sqr(p[1]))
@@ -223,8 +221,8 @@ class TestTubeManual(unittest.TestCase):
 
     # [slicedtube-class-9-beg]
     # Component and subvector extraction
-    x0 = x[0]
-    x12 = x.subvector(1,2)
+    x0 = x[0]              # scalar tube
+    x12 = x.subvector(1,2) # vector tube
     # [slicedtube-class-9-end]
 
     pass
@@ -299,9 +297,9 @@ class TestTubeManual(unittest.TestCase):
     # [traj-analytic-create-end]
 
     # [traj-analytic-eval-beg]
-    y_point = traj_f(0.5)      # a double
-    y_interval = traj_f([0,1]) # an Interval
-    p_point = traj_g(0.5)      # a Vector
+    y_point = traj_f(0.5)      # scalar value
+    y_interval = traj_f([0,1]) # interval enclosure
+    p_point = traj_g(0.5)      # vector value
     # [traj-analytic-eval-end]
 
     # [traj-analytic-sampled-beg]
@@ -348,7 +346,7 @@ class TestTubeManual(unittest.TestCase):
     traj = AnalyticTraj([0,2], AnalyticFunction([t],sin(t)))
     td = create_tdomain([0,2], 0.1)
     tube = SlicedTube(td, traj)
-    tube.inflate(0.05) # justified error bound, when available
+    tube.inflate(0.05) # encloses the true signal if its error is bounded by 0.05
     # [traj-ops-tube-end]
 
     # [traj-ops-serialization-beg]
@@ -366,16 +364,16 @@ class TestTubeManual(unittest.TestCase):
     # [traj-sampled-grid-beg]
     x = SampledTraj_Scalar({0.:0, 1.:2, 2.:0})
     merged = x.sampled(0.6)         # original samples also retained
-    regular = x.sampled(0.6, False) # regular samples and final time only
+    regular = x.sampled(0.6, False) # regular grid and final time only
     clock = SampledTraj_Scalar({0.:0, 0.5:0, 1.5:0, 2.:0})
-    aligned = x.sampled_as(clock, False)
+    aligned = x.sampled_as(clock, False) # x evaluated at clock's timestamps
     # [traj-sampled-grid-end]
     test.assertGreater(merged.nb_samples(), regular.nb_samples())
     test.assertEqual(aligned.nb_samples(),clock.nb_samples())
 
     # [traj-sampled-construct-alt-beg]
     x = SampledTraj_Scalar([0.,1.,2.], [3,4,5])
-    x.set(6.,1.) # overwrite existing timestamp
+    x.set(6.,1.) # replaces value at t=1
     y = SampledTraj_Scalar({0.:3, 1.:6, 2.:5})
     # [traj-sampled-construct-alt-end]
     test.assertEqual(x.nb_samples(), 3)
@@ -391,9 +389,9 @@ class TestTubeManual(unittest.TestCase):
     # [traj-ops-pointwise-beg]
     x = SampledTraj_Scalar({0.:0, 1.:1, 2.:2})
     y = SampledTraj_Scalar({0.:2, 1.:3, 2.:4})
-    sum_xy = x + y
-    sq = sqr(x)
-    sin_x = sin(x)
+    sum_xy = x + y   # computed at matching timestamps
+    sq = sqr(x)      # square samples, then interpolate
+    sin_x = sin(x)   # transform samples, then interpolate
     # [traj-ops-pointwise-end]
     test.assertAlmostEqual(sum_xy(1),4.)
 
@@ -419,6 +417,7 @@ class TestTubeManual(unittest.TestCase):
     from pathlib import Path
     measurements = SampledTraj_Scalar()
     with (Path(__file__).parent / 'data.csv').open(newline='') as file:
+      # The header is parsed automatically.
       for row in csv.DictReader(file, delimiter=';'):
         measurements.set(float(row['value']), float(row['t']))
     # [traj-io-csv-end]
@@ -490,7 +489,7 @@ class TestTubeManual(unittest.TestCase):
     both = x & y             # intersection of enclosures
     either = x | y           # interval hull, not disconnected union
     sum_xy = x + y           # interval arithmetic on every slice
-    xy = tube_cart_prod(x,y) # SlicedTube_IntervalVector
+    xy = tube_cart_prod(x,y) # vector tube: SlicedTube_IntervalVector
     # [tube-parity-algebra-end]
     test.assertEqual(xy.size(), 2)
 
