@@ -26,7 +26,7 @@ namespace codac2
   {
     public:
 
-      virtual T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const = 0;
+      virtual T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval, bool mixed_diff) const = 0;
       virtual void bwd_eval(ValuesMap& v) const = 0;
       virtual std::pair<Index,Index> output_shape() const = 0;
 
@@ -86,18 +86,21 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<X>...>::replace_arg(old_arg_id, new_expr);
       }
 
-      Y fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
+      Y fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval, bool mixed_diff) const override
       {
         return std::apply(
-          [this,&v,total_input_size,natural_eval](auto &&... x)
+          [this,&v,total_input_size,natural_eval,mixed_diff](auto &&... x)
           {
             if(natural_eval)
               return AnalyticExpr<Y>::init_value(v,
-                C::fwd_natural(x->fwd_eval(v, total_input_size, natural_eval)...));
+                C::fwd_natural(x->fwd_eval(v, total_input_size, natural_eval,mixed_diff)...));
 
-            else
+            else if (!mixed_diff) 
               return AnalyticExpr<Y>::init_value(v,
-                C::fwd_centered(x->fwd_eval(v, total_input_size, natural_eval)...));
+                C::fwd_centered(false,x->fwd_eval(v, total_input_size, natural_eval,mixed_diff)...));
+            else 
+              return AnalyticExpr<Y>::init_value(v,
+                C::fwd_centered(true,x->fwd_eval(v, total_input_size, natural_eval,mixed_diff)...));
           },
         this->_x);
       }
@@ -108,7 +111,7 @@ namespace codac2
 
         std::apply([&v,y](auto &&... x)
         {
-          C::bwd(y.a, x->value(v).a...);
+          C::bwd(y.a.back(), x->value(v).a.back()...);
         }, this->_x);
 
         std::apply([&v](auto &&... x)

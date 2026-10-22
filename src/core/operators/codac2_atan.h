@@ -31,7 +31,7 @@ namespace codac2
 
     static Interval fwd(const Interval& x1);
     static ScalarType fwd_natural(const ScalarType& x1);
-    static ScalarType fwd_centered(const ScalarType& x1);
+    static ScalarType fwd_centered(bool mixed_diff,const ScalarType& x1);
     static void bwd(const Interval& y, Interval& x1);
   };
 
@@ -54,23 +54,25 @@ namespace codac2
   inline ScalarType AtanOp::fwd_natural(const ScalarType& x1)
   {
     return {
-      fwd(x1.a),
+      fwd(x1.get_a()),
       x1.def_domain
     };
   }
 
-  inline ScalarType AtanOp::fwd_centered(const ScalarType& x1)
+  inline ScalarType AtanOp::fwd_centered(bool mixed_diff,const ScalarType& x1)
   {
     if(centered_form_not_available_for_args(x1))
       return fwd_natural(x1);
 
     IntervalMatrix d(1,x1.da.size());
-    for(Index i = 0 ; i < d.size() ; i++)
-      d(0,i) = x1.da(0,i)/(1.+sqr(x1.a));
+    for(Index i = 0 ; i < d.size() ; i++) {
+      const Interval& x1a = x1.get_a(mixed_diff,i);
+      d(0,i) = x1.da(0,i)/(1.+sqr(x1a));
+    }
 
     return {
       fwd(x1.m),
-      fwd(x1.a),
+      vector_map<Interval,Interval>(x1.a,&fwd),
       d,
       x1.def_domain
     };

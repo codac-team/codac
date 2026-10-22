@@ -52,17 +52,17 @@ namespace codac2
 
     static Interval fwd(const Interval& x1, const Interval& x2);
     static ScalarType fwd_natural(const ScalarType& x1, const ScalarType& x2);
-    static ScalarType fwd_centered(const ScalarType& x1, const ScalarType& x2);
+    static ScalarType fwd_centered(bool mixed_diff,const ScalarType& x1, const ScalarType& x2);
     static void bwd(const Interval& y, Interval& x1, Interval& x2);
 
     static IntervalVector fwd(const Interval& x1, const IntervalVector& x2);
     static VectorType fwd_natural(const ScalarType& x1, const VectorType& x2);
-    static VectorType fwd_centered(const ScalarType& x1, const VectorType& x2);
+    static VectorType fwd_centered(bool mixed_diff,const ScalarType& x1, const VectorType& x2);
     static void bwd(const IntervalVector& y, Interval& x1, IntervalVector& x2);
 
     static IntervalVector fwd(const IntervalVector& x1, const Interval& x2);
     static VectorType fwd_natural(const VectorType& x1, const ScalarType& x2);
-    static VectorType fwd_centered(const VectorType& x1, const ScalarType& x2);
+    static VectorType fwd_centered(bool mixed_diff,const VectorType& x1, const ScalarType& x2);
     static void bwd(const IntervalVector& y, IntervalVector& x1, Interval& x2);
 
     static Interval fwd(const IntervalRow& x1, const IntervalVector& x2);
@@ -71,17 +71,17 @@ namespace codac2
 
     static IntervalMatrix fwd(const Interval& x1, const IntervalMatrix& x2);
     static MatrixType fwd_natural(const ScalarType& x1, const MatrixType& x2);
-    static MatrixType fwd_centered(const ScalarType& x1, const MatrixType& x2);
+    static MatrixType fwd_centered(bool mixed_diff,const ScalarType& x1, const MatrixType& x2);
     static void bwd(const IntervalMatrix& y, Interval& x1, IntervalMatrix& x2);
 
     static IntervalVector fwd(const IntervalMatrix& x1, const IntervalVector& x2);
     static VectorType fwd_natural(const MatrixType& x1, const VectorType& x2);
-    static VectorType fwd_centered(const MatrixType& x1, const VectorType& x2);
+    static VectorType fwd_centered(bool mixed_diff,const MatrixType& x1, const VectorType& x2);
     static void bwd(const IntervalVector& y, IntervalMatrix& x1, IntervalVector& x2);
 
     static IntervalMatrix fwd(const IntervalMatrix& x1, const IntervalMatrix& x2);
     static MatrixType fwd_natural(const MatrixType& x1, const MatrixType& x2);
-    static MatrixType fwd_centered(const MatrixType& x1, const MatrixType& x2);
+    static MatrixType fwd_centered(bool mixed_diff,const MatrixType& x1, const MatrixType& x2);
     static void bwd(const IntervalMatrix& y, IntervalMatrix& x1, IntervalMatrix& x2);
   };
 
@@ -134,12 +134,12 @@ namespace codac2
   inline ScalarType MulOp::fwd_natural(const ScalarType& x1, const ScalarType& x2)
   {
     return {
-      fwd(x1.a, x2.a),
+      fwd(x1.get_a(), x2.get_a()),
       x1.def_domain && x2.def_domain
     };
   }
 
-  inline ScalarType MulOp::fwd_centered(const ScalarType& x1, const ScalarType& x2)
+  inline ScalarType MulOp::fwd_centered(bool mixed_diff, const ScalarType& x1, const ScalarType& x2)
   {
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
@@ -149,11 +149,16 @@ namespace codac2
 
     IntervalMatrix d(1,x1.da.cols());
     for(Index i = 0 ; i < d.size() ; i++)
-      d(0,i) = x1.da(0,i)*x2.a + x1.a*x2.da(0,i);
+    {
+      const Interval &x1a = x1.get_a(mixed_diff,i);
+      const Interval &x2a = x2.get_a(mixed_diff,i);
+      d(0,i) = x1.da(0,i)*x2a + x1a*x2.da(0,i);
+    }
 
     return {
       fwd(x1.m, x2.m),
-      fwd(x1.a, x2.a),
+      vector_map<Interval,Interval,Interval>(x1.a,x2.a,
+         static_cast<Interval(*)(const Interval&,const Interval&)>(&fwd)),
       d,
       x1.def_domain && x2.def_domain
     };
@@ -173,28 +178,32 @@ namespace codac2
   inline VectorType MulOp::fwd_natural(const ScalarType& x1, const VectorType& x2)
   {
     return {
-      fwd(x1.a, x2.a),
+      fwd(x1.get_a(), x2.get_a()),
       x1.def_domain && x2.def_domain
     };
   }
 
-  inline VectorType MulOp::fwd_centered(const ScalarType& x1, const VectorType& x2)
+  inline VectorType MulOp::fwd_centered(bool mixed_diff,const ScalarType& x1, const VectorType& x2)
   {
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
 
     assert(x1.da.rows() == 1);
     assert(x1.da.cols() == x2.da.cols());
-    assert(x2.a.size() == x2.da.rows());
+    assert(x2.get_a().size() == x2.da.rows());
 
     IntervalMatrix d(x2.da.rows(),x2.da.cols());
     for(Index i = 0 ; i < d.rows() ; i++)
-      for(Index j = 0 ; j < d.cols() ; j++)
-        d(i,j) = x1.da(0,j)*x2.a[i]+x1.a*x2.da(i,j);
+      for(Index j = 0 ; j < d.cols() ; j++) {
+        const Interval& x1a = x1.get_a(mixed_diff,j);
+        const IntervalVector& x2a = x2.get_a(mixed_diff,j);
+        d(i,j) = x1.da(0,j)*x2a[i]+x1a*x2.da(i,j);
+      }
     
     return {
       fwd(x1.m, x2.m),
-      fwd(x1.a, x2.a),
+      vector_map<Interval,IntervalVector,IntervalVector>(x1.a,x2.a,
+         static_cast<IntervalVector(*)(const Interval&,const IntervalVector&)>(&fwd)),
       d,
       x1.def_domain && x2.def_domain
     };
@@ -217,9 +226,9 @@ namespace codac2
     return MulOp::fwd_natural(x2,x1);
   }
 
-  inline VectorType MulOp::fwd_centered(const VectorType& x1, const ScalarType& x2)
+  inline VectorType MulOp::fwd_centered(bool mixed_diff,const VectorType& x1, const ScalarType& x2)
   {
-    return MulOp::fwd_centered(x2,x1);
+    return MulOp::fwd_centered(mixed_diff,x2,x1);
   }
 
   inline void MulOp::bwd(const IntervalVector& y, IntervalVector& x1, Interval& x2)
@@ -249,26 +258,30 @@ namespace codac2
   inline MatrixType MulOp::fwd_natural(const ScalarType& x1, const MatrixType& x2)
   {
     return {
-      fwd(x1.a, x2.a),
+      fwd(x1.get_a(), x2.get_a()),
       x1.def_domain && x2.def_domain
     };
   }
 
-  inline MatrixType MulOp::fwd_centered(const ScalarType& x1, const MatrixType& x2)
+  inline MatrixType MulOp::fwd_centered(bool mixed_diff,const ScalarType& x1, const MatrixType& x2)
   {
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
 
     assert(x2.da.cols() == x1.da.cols());
     IntervalMatrix d(x2.da.rows(),x2.da.cols());
-    for (Index j=0; j<d.cols(); j++) 
+    for (Index j=0; j<d.cols(); j++) {
+      const Interval& x1a = x1.get_a(mixed_diff,j);
+      const IntervalMatrix& x2a = x2.get_a(mixed_diff,j);
       for (Index i=0; i<d.rows(); i++) {
-        d(i,j) = x1.da(0,j)*x2.a.reshaped<Eigen::ColMajor>()[i]+x1.a*x2.da(i,j);
+        d(i,j) = x1.da(0,j)*x2a.reshaped<Eigen::ColMajor>()[i]+x1a*x2.da(i,j);
+      }
     }
     
     return {
       fwd(x1.m, x2.m),
-      fwd(x1.a, x2.a),
+      vector_map<Interval,IntervalMatrix,IntervalMatrix>(x1.a,x2.a,
+         static_cast<IntervalMatrix(*)(const Interval&,const IntervalMatrix&)>(&fwd)),
       d, 
       x1.def_domain && x2.def_domain
     };
@@ -292,28 +305,32 @@ namespace codac2
   inline VectorType MulOp::fwd_natural(const MatrixType& x1, const VectorType& x2)
   {
     return {
-      fwd(x1.a, x2.a),
+      fwd(x1.get_a(), x2.get_a()),
       x1.def_domain && x2.def_domain
     };
   }
 
-  inline VectorType MulOp::fwd_centered(const MatrixType& x1, const VectorType& x2)
+  inline VectorType MulOp::fwd_centered(bool mixed_diff,const MatrixType& x1, const VectorType& x2)
   {
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
     
     assert(x2.da.cols() == x1.da.cols());
-    IntervalMatrix d = IntervalMatrix::zero(x1.a.rows(),x1.da.cols());
-    for (Index j=0; j<d.cols(); j++) 
+    IntervalMatrix d = IntervalMatrix::zero(x1.get_a().rows(),x1.da.cols());
+    for (Index j=0; j<d.cols(); j++) {
+      const IntervalMatrix& x1a = x1.get_a(mixed_diff,j);
+      const IntervalVector& x2a = x2.get_a(mixed_diff,j);
       for (Index i=0; i<d.rows(); i++) {
-        for (Index k=0; k<x2.a.size(); k++) {
-          d(i,j) += x1.da(i+k*x1.a.rows(),j)*x2.a[k]+x1.a(i,k)*x2.da(k,j);
+        for (Index k=0; k<x2a.size(); k++) {
+          d(i,j) += x1.da(i+k*x1a.rows(),j)*x2a[k]+x1a(i,k)*x2.da(k,j);
         }
+      }
     }
     
     return {
       fwd(x1.m, x2.m),
-      fwd(x1.a, x2.a),
+      vector_map<IntervalMatrix,IntervalVector,IntervalVector>(x1.a,x2.a,
+         static_cast<IntervalVector(*)(const IntervalMatrix&,const IntervalVector&)>(&fwd)),
       d, 
       x1.def_domain && x2.def_domain
     };
@@ -328,32 +345,36 @@ namespace codac2
   inline MatrixType MulOp::fwd_natural(const MatrixType& x1, const MatrixType& x2)
   {
     return {
-      fwd(x1.a, x2.a),
+      fwd(x1.get_a(), x2.get_a()),
       x1.def_domain && x2.def_domain
     };
   }
 
-  inline MatrixType MulOp::fwd_centered(const MatrixType& x1, const MatrixType& x2)
+  inline MatrixType MulOp::fwd_centered(bool mixed_diff,const MatrixType& x1, const MatrixType& x2)
   {
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
     
     assert(x2.da.cols() == x1.da.cols());
-    IntervalMatrix d = IntervalMatrix::zero(x1.a.rows()*x2.a.cols(),x1.da.cols());
-    for (Index j=0; j<d.cols(); j++) 
+    IntervalMatrix d = IntervalMatrix::zero(x1.get_a().rows()*x2.get_a().cols(),x1.da.cols());
+    for (Index j=0; j<d.cols(); j++) {
+      const IntervalMatrix& x1a = x1.get_a(mixed_diff,j);
+      const IntervalMatrix& x2a = x2.get_a(mixed_diff,j);
       for (Index i=0; i<d.rows(); i++)
       {
-        Index row_i = i%x1.a.rows();
-        Index col_i = i/x1.a.rows();
-        for (Index k=0; k<x2.a.rows(); k++) {
-          d(i,j) += x1.da(row_i+k*x1.a.rows(),j)*x2.a(k,col_i)
-                    +x1.a(row_i,k)*x2.da(k+col_i*x2.a.rows(),j);
+        Index row_i = i%x1a.rows();
+        Index col_i = i/x1a.rows();
+        for (Index k=0; k<x2a.rows(); k++) {
+          d(i,j) += x1.da(row_i+k*x1a.rows(),j)*x2a(k,col_i)
+                    +x1a(row_i,k)*x2.da(k+col_i*x2a.rows(),j);
         }
+      }
     }
     
     return {
       fwd(x1.m, x2.m),
-      fwd(x1.a, x2.a),
+      vector_map<IntervalMatrix,IntervalMatrix,IntervalMatrix>(x1.a,x2.a,
+         static_cast<IntervalMatrix(*)(const IntervalMatrix&,const IntervalMatrix&)>(&fwd)),
       d,
       x1.def_domain && x2.def_domain
     };

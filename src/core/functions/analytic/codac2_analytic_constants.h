@@ -33,7 +33,7 @@ namespace codac2
         return std::make_shared<ConstValueExpr<T>>(*this);
       }
 
-      T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
+      T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval,[[maybe_unused]] bool mixed_diff) const override
       {
         if(natural_eval)
           return AnalyticExpr<T>::init_value(v, T(
@@ -43,7 +43,7 @@ namespace codac2
               true
             ));
 
-        else
+        else 
           return AnalyticExpr<T>::init_value(v, T(
               // the mid is not considered for const values in centered form expression:
               _x,
@@ -57,7 +57,7 @@ namespace codac2
       
       void bwd_eval(ValuesMap& v) const override
       {
-        AnalyticExpr<T>::value(v).a &= _x;
+        AnalyticExpr<T>::value(v).get_a() &= _x;
       }
 
       std::pair<Index,Index> output_shape() const override

@@ -35,7 +35,7 @@ namespace codac2
 
     static IntervalVector fwd(const IntervalVector& x1, Index i, Index j);
     static VectorType fwd_natural(const VectorType& x1, Index i, Index j);
-    static VectorType fwd_centered(const VectorType& x1, Index i, Index j);
+    static VectorType fwd_centered(bool mixed_diff, const VectorType& x1, Index i, Index j);
     static void bwd(const IntervalVector& y, IntervalVector& x1, Index i, Index j);
   };
 
@@ -64,19 +64,19 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<VectorType>>::replace_arg(old_arg_id, new_expr);
       }
       
-      VectorType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
+      VectorType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval, bool mixed_diff) const
       {
         if(natural_eval)
           return AnalyticExpr<VectorType>::init_value(
-            v, SubvectorOp::fwd_natural(std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval), _i, _j));
+            v, SubvectorOp::fwd_natural(std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval,false), _i, _j));
         else
           return AnalyticExpr<VectorType>::init_value(
-            v, SubvectorOp::fwd_centered(std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval), _i, _j));
+            v, SubvectorOp::fwd_centered(mixed_diff,std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval,mixed_diff), _i, _j));
       }
       
       void bwd_eval(ValuesMap& v) const
       {
-        SubvectorOp::bwd(AnalyticExpr<VectorType>::value(v).a, std::get<0>(this->_x)->value(v).a, _i, _j);
+        SubvectorOp::bwd(AnalyticExpr<VectorType>::value(v).get_a(), std::get<0>(this->_x)->value(v).get_a(), _i, _j);
         std::get<0>(this->_x)->bwd_eval(v);
       }
 
@@ -118,20 +118,22 @@ namespace codac2
   {
     assert(i >= 0 && i < x1.a.rows() && j >= i && j < x1.a.rows());
     return {
-      fwd(x1.a,i,j),
+      fwd(x1.get_a(),i,j),
       x1.def_domain
     };
   }
 
-  inline VectorType SubvectorOp::fwd_centered(const VectorType& x1, Index i, Index j)
+  inline VectorType SubvectorOp::fwd_centered([[maybe_unused]] bool mixed_diff,const VectorType& x1, Index i, Index j)
   {
     if(centered_form_not_available_for_args(x1))
       return fwd_natural(x1,i,j);
 
-    assert(i >= 0 && i < x1.a.rows() && j >= i && j < x1.a.rows());
+    assert(i >= 0 && i < x1.get_a().rows() && 
+			j >= i && j < x1.get_a().rows());
     return {
       fwd(x1.m,i,j),
-      fwd(x1.a,i,j),
+      vector_map<IntervalVector,IntervalVector>(x1.a,
+         [=](const IntervalVector& v1)->IntervalVector {return fwd(v1,i,j);}),
       x1.da.block(i,0,j-i+1,x1.da.cols()),
       x1.def_domain
     };

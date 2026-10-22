@@ -33,7 +33,7 @@ namespace codac2
 
     static IntervalVector fwd(const IntervalMatrix& x1);
     static VectorType fwd_natural(const MatrixType& x1);
-    static VectorType fwd_centered(const MatrixType& x1);
+    static VectorType fwd_centered(bool mixed_diff, const MatrixType& x1);
     static void bwd(const IntervalVector& y, IntervalMatrix& x1);
   };
 
@@ -56,19 +56,19 @@ namespace codac2
     inline VectorType FlattenOp::fwd_natural(const MatrixType& x1)
     {
       return {
-        fwd(x1.a),
+        fwd(x1.get_a()),
         x1.def_domain
       };
     }
 
-    inline VectorType FlattenOp::fwd_centered(const MatrixType& x1)
+    inline VectorType FlattenOp::fwd_centered([[maybe_unused]] bool mixed_diff,const MatrixType& x1)
     {
       if(centered_form_not_available_for_args(x1))
         return fwd_natural(x1);
       
       return {
         fwd(x1.m),
-        fwd(x1.a),
+        vector_map<IntervalMatrix,IntervalVector>(x1.a,&fwd),
         x1.da,
         x1.def_domain
       };

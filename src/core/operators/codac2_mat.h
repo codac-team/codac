@@ -59,7 +59,7 @@ namespace codac2
     static inline MatrixType fwd_natural(const X&... x)
     {
       return {
-        MatrixOp::fwd(x.a...),
+        MatrixOp::fwd(x.get_a()...),
         (x.def_domain && ...)
       };
     }
@@ -74,21 +74,28 @@ namespace codac2
     template<typename X1, typename... X>
       requires (std::is_base_of_v<VectorType,X1> 
     && (std::is_base_of_v<VectorType,X> && ...))
-    static inline MatrixType fwd_centered(const X1& x1, const X&... x)
+    static inline MatrixType fwd_centered(bool mixed_diff, const X1& x1, const X&... x)
     {
       if (centered_form_not_available_for_args(x1,x...))
         return fwd_natural(x1,x...);
 
-      IntervalMatrix d(x1.a.size()*(1+sizeof...(X)),x1.da.cols());
+      IntervalMatrix d(x1.get_a().size()*(1+sizeof...(X)),x1.da.cols());
       Index l=0;
       d.topRows(x1.da.rows()) = x1.da;
       l += x1.da.rows();
       ( MatrixOp::fill_diff_matrix(d,x.da,l) , ...);
       assert (l==d.rows());
 
+      size_t mns = (mixed_diff ? std::max({ x1.a.size(), x.a.size()... }) : 1);
+      std::vector<IntervalMatrix> ret_a(mns);
+      for (size_t i=0;i<mns;i++) {
+          ret_a[i] = 
+		MatrixOp::fwd(x1.get_a(mixed_diff,i),x.get_a(mixed_diff,i)...);
+      }
+
       return {
         MatrixOp::fwd(x1.m,x.m...),
-        MatrixOp::fwd(x1.a,x.a...),
+        ret_a,
         d,
         (x1.def_domain && (x.def_domain && ...))
       };
@@ -156,7 +163,7 @@ namespace codac2
             replace_vector_child(x, old_arg_id, new_expr);
         }
 
-        MatrixType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
+        MatrixType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval, bool mixed_diff) const override
         {
           if(natural_eval)
             return this->init_value(v, natural_fwd(v, total_input_size));
@@ -166,7 +173,7 @@ namespace codac2
           bool centered_available = true;
           for(const auto& x : _xs)
           {
-            vals.push_back(x->fwd_eval(v, total_input_size, false));
+            vals.push_back(x->fwd_eval(v, total_input_size, false, mixed_diff));
             centered_available &= (vals.back().da.size() != 0);
           }
 
@@ -174,9 +181,12 @@ namespace codac2
             return this->init_value(v, natural_fwd(v, total_input_size));
 
           const Index cols = static_cast<Index>(_xs.size());
-          const Index rows = vals.empty() ? 0 : vals.front().a.size();
+          const Index rows = vals.empty() ? 0 : vals.front().get_a().size();
           const Index input_cols = vals.empty() ? total_input_size : vals.front().da.cols();
-          IntervalMatrix m(rows, cols), a(rows, cols), da(rows*cols, input_cols);
+          IntervalMatrix m(rows, cols), da(rows*cols, input_cols);
+          std::vector<IntervalMatrix> 
+		a(vals.empty() ? 0 : (mixed_diff ? input_cols : 1),
+			IntervalMatrix(rows,cols));
           bool def_domain = true;
           Index l = 0;
 
@@ -184,7 +194,9 @@ namespace codac2
           {
             const auto& xj = vals[static_cast<std::size_t>(j)];
             m.col(j) = xj.m;
-            a.col(j) = xj.a;
+            for (size_t i=0;i<a.size();i++) {
+               a[i].col(j) = xj.get_a(mixed_diff,i);
+            }
             da.middleRows(l, xj.da.rows()) = xj.da;
             l += xj.da.rows();
             def_domain &= xj.def_domain;
@@ -258,8 +270,8 @@ namespace codac2
 
           for(Index j = 0 ; j < cols ; ++j)
           {
-            auto xj = _xs[static_cast<std::size_t>(j)]->fwd_eval(v, total_input_size, true);
-            a.col(j) = xj.a;
+            auto xj = _xs[static_cast<std::size_t>(j)]->fwd_eval(v, total_input_size, true, false);
+            a.col(j) = xj.get_a();
             def_domain &= xj.def_domain;
           }
 
