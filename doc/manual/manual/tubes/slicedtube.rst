@@ -1,6 +1,4 @@
-.. _sec-domains-tubes-io:
-.. _sec-domains-tubes-reference:
-.. _sec-domains-tubes-slicedtube:
+.. _sec-tubes-slicedtube:
 
 Sliced tubes
 ============

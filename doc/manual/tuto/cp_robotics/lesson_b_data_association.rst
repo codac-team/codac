@@ -168,7 +168,7 @@ where :math:`\bigsqcup`, called *squared union*, returns the smallest box enclos
 
     \mathcal{C}_\mathbb{M}\left(\left[\mathbf{a}\right]\right)=\bigsqcup_{j=1}^{\ell}\big(\left[\mathbf{a}\right]\cap[\mathbf{m}_{j}]\big)
 
-  The user manual may help you to :ref:`compute operations on sets <sec-manual-intervals-operations>` such as unions or intersections, appearing in the formula. Note that you cannot change the definition of the ``.contract()`` method. 
+  The user manual may help you to :ref:`compute operations on sets <sec-intervals-class-un-bin-ary>` such as unions or intersections, appearing in the formula. Note that you cannot change the definition of the ``.contract()`` method. 
 
   .. container:: toggle, toggle-hidden
 

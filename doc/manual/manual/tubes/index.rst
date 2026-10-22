@@ -1,5 +1,4 @@
-.. _sec-domains-tubes:
-.. _sec-domains-tubes-trajectories:
+.. _sec-tubes-trajectories:
 
 Tubes & Trajectories
 ====================
@@ -35,6 +34,8 @@ Trajectories are intended to represent approximations of solutions or measured s
    trajectory_operations
    trajectory_io
 
+
+.. _sec-tubes:
 
 Tubes
 -----

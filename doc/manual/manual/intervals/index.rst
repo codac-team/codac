@@ -15,7 +15,6 @@ Codac provides data structures for handling basic interval sets. These structure
    :hidden:
 
    Interval_class.rst
-   .. Vector_class.rst
    IntervalVector_class.rst
    BoolInterval_class.rst
 

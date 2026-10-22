@@ -1,4 +1,4 @@
-.. _sec-domains-slice:
+.. _sec-tubes-slice:
 
 The Slice and TSlice classes
 ============================

@@ -74,15 +74,17 @@ TEST_CASE("TDomain class - manual")
     SlicedTube v(td, Interval(-1,1));
 
     cout << x << endl;   // outputs [0,2]->[0,1], 2 slices
-    cout << v << endl;   // outputs [0,2]->[0,1], 2 slices
+    cout << v << endl;   // outputs [0,2]->[-1,1], 2 slices
 
     size_t n = td->nb_tslices(); // 2: [0,1],[1,2]
     x.set({0.5,1}, 1.3);         // local update, will refine the partition at t=1.3
     size_t m = td->nb_tslices(); // now 4: [0,1],[1,1.3],[1.3],[1.3,2]
 
-    cout << x << endl;   // outputs [0,2]->[-1,1], 4 slices
+    cout << x << endl;   // outputs [0,2]->[0,1], 4 slices
     cout << v << endl;   // outputs [0,2]->[-1,1], 4 slices (v is also impacted by x.set(..))
     // [tdomain-class-4-end]
+    CHECK(x.codomain() == Interval(0,1));
+    CHECK(v.codomain() == Interval(-1,1));
     CHECK(n == 2);
     CHECK(m == 4);
   }

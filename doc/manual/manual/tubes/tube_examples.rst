@@ -1,4 +1,4 @@
-.. _sec-domains-tubes-examples:
+.. _sec-tubes-examples:
 
 Programming examples
 ====================

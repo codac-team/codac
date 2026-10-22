@@ -54,16 +54,18 @@ class TestTubeManual(unittest.TestCase):
     v = SlicedTube(td, Interval(-1,1))
 
     print(x)            # outputs [0,2]->[0,1], 2 slices
-    print(v)            # outputs [0,2]->[0,1], 2 slices
+    print(v)            # outputs [0,2]->[-1,1], 2 slices
 
     n = td.nb_tslices() # 2: [0,1],[1,2]
     x.set([0.5,1], 1.3) # local update, will refine the partition at t=1.3
     m = td.nb_tslices() # now 4: [0,1],[1,1.3],[1.3],[1.3,2]
 
-    print(x)            # outputs [0,2]->[-1,1], 4 slices
+    print(x)            # outputs [0,2]->[0,1], 4 slices
     print(v)            # outputs [0,2]->[-1,1], 4 slices (v is also impacted by x.set(..))
     # [tdomain-class-4-end]
 
+    test.assertTrue(x.codomain() == Interval(0,1))
+    test.assertTrue(v.codomain() == Interval(-1,1))
     test.assertTrue(n == 2)
     test.assertTrue(m == 4)
 

@@ -1,4 +1,3 @@
-.. _sec-trajectories-reference:
 .. _sec-trajectories-sampledtraj:
 
 Sampled trajectories

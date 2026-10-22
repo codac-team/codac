@@ -257,6 +257,8 @@ For instance, ``x < y`` returns:
 - ``BoolInterval.UNKNOWN`` otherwise.
 
 
+.. _sec-intervals-class-un-bin-ary:
+
 Unary and binary functions
 --------------------------
 

@@ -129,6 +129,7 @@ Additionnal methods are available for any useful purpose:
 
 
 .. _subsec-graphics-colors-style-properties:
+
 StyleProperties
 ---------------
 
@@ -208,7 +209,9 @@ For more information, see :ref:`subsec-graphics-colors-optional-arguments`.
     fig.draw_box(IntervalVector({{2,5},{2,5}}), StyleProperties(Color().red(), "..", "layer1", "w:0.1", "z:1.5"));
     % Red edge, dotted line, line width of 0.1, z-value of 1.5 and on layer1
 
+
 .. _subsec-graphics-colors-paving-style:
+
 Paving style
 ------------
 
@@ -341,7 +344,9 @@ You can also create your own color map :
 
 Note that you can add RGB and HSV colors to the same color map. The model of the color map will define the interpolation space.
 
+
 .. _subsec-graphics-colors-style-gradient-properties:
+
 StyleGradientProperties
 -----------------------
 

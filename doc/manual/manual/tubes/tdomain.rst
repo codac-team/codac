@@ -1,4 +1,4 @@
-.. _sec-domains-tubes-tdomain:
+.. _sec-tubes-tdomain:
 
 The TDomain class
 =================
