@@ -18,9 +18,12 @@ The serialization system currently supports:
 - Built-in types (*e.g.*, ``int``, ``double``, ``float``) that are *trivially copyable*. The raw memory of the variables is directly written to or read from the stream ;
 - ``Interval`` objects ;
 - Matrix structures such as ``[Interval]Matrix``, ``[Interval]Vector``, and ``[Interval]Row``, with either scalar or ``Interval`` elements ;
-- Any ``SampledTraj<T>`` objects, as long as ``serialize`` functions are defined for type ``T``.
+- Any ``SampledTraj<T>`` objects, as long as ``serialize`` functions are defined for type ``T`` (see :ref:`sec-trajectories-sampledtraj`).
 
 All functions assume that the given streams are open and valid for the requested operation.
+
+``AnalyticTraj`` is not listed among the supported serialized types: sample an analytic trajectory to a ``SampledTraj`` if you need to save discrete values (the defining analytic expression will not be preserved).
+For trajectory-specific examples (including ``.npz`` and CSV), see :ref:`sec-trajectories-io`.
 
 
 Example of use
