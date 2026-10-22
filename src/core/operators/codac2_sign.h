@@ -31,7 +31,7 @@ namespace codac2
 
     static Interval fwd(const Interval& x1);
     static ScalarType fwd_natural(const ScalarType& x1);
-    static ScalarType fwd_centered(const ScalarType& x1);
+    static ScalarType fwd_centered(bool mixed_diff,const ScalarType& x1);
     static void bwd(const Interval& y, Interval& x1);
   };
 
@@ -54,21 +54,21 @@ namespace codac2
   inline ScalarType SignOp::fwd_natural(const ScalarType& x1)
   {
     return {
-      fwd(x1.a),
-      x1.def_domain && !x1.a.contains(0.) // def domain of the derivative of sign
+      fwd(x1.get_a()),
+      x1.def_domain && !x1.get_a().contains(0.) // def domain of the derivative of sign
     };
   }
 
-  inline ScalarType SignOp::fwd_centered(const ScalarType& x1)
+  inline ScalarType SignOp::fwd_centered([[maybe_unused]] bool mixed_diff, const ScalarType& x1)
   {
     if(centered_form_not_available_for_args(x1))
       return fwd_natural(x1);
 
     return {
       fwd(x1.m),
-      fwd(x1.a),
+      vector_map<Interval,Interval>(x1.a,&fwd),
       IntervalMatrix::zero(1,x1.da.size()),
-      x1.def_domain && !x1.a.contains(0.) // def domain of the derivative of sign
+      x1.def_domain && !x1.get_a().contains(0.) // def domain of the derivative of sign
     };
   }
 

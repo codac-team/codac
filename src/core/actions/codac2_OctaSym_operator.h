@@ -37,22 +37,24 @@ namespace codac2
     {
       assert((Index)s.size() == x1.m.size());
       return {
-        fwd(s, x1.a),
+        fwd(s, x1.get_a()),
         x1.def_domain
       };
     }
 
-    static inline VectorType fwd_centered(const OctaSym& s, const VectorType& x1)
+    static inline VectorType fwd_centered([[maybe_unused]] bool mixed_diff, const OctaSym& s, const VectorType& x1)
     {
       assert((Index)s.size() == x1.m.size());
 
       auto da = x1.da;
-      for(size_t i = 0 ; i < s.size() ; i++)
+      for(size_t i = 0 ; i  < s.size() ; i++) {
         da.row(i) = sign(s[i])*x1.da.row(std::abs(s[i])-1);
+      }
 
       return {
         fwd(s, x1.m),
-        fwd(s, x1.a),
+        vector_map<IntervalVector,IntervalVector>(x1.a,
+                [=](const IntervalVector& v1)->IntervalVector {return fwd(s,v1);}),
         da,
         x1.def_domain
       };
@@ -86,19 +88,19 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<VectorType>>::replace_arg(old_arg_id, new_expr);
       }
       
-      VectorType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
+      VectorType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval,bool mixed_diff) const
       {
         if(natural_eval)
           return AnalyticExpr<VectorType>::init_value(
-            v, OctaSymOp::fwd_natural(_s, std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval)));
+            v, OctaSymOp::fwd_natural(_s, std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval, mixed_diff)));
         else
           return AnalyticExpr<VectorType>::init_value(
-            v, OctaSymOp::fwd_centered(_s, std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval)));
+            v, OctaSymOp::fwd_centered(mixed_diff, _s, std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval, mixed_diff)));
       }
       
       void bwd_eval(ValuesMap& v) const
       {
-        OctaSymOp::bwd(_s, AnalyticExpr<VectorType>::value(v).a, std::get<0>(this->_x)->value(v).a);
+        OctaSymOp::bwd(_s, AnalyticExpr<VectorType>::value(v).get_a(), std::get<0>(this->_x)->value(v).get_a());
         std::get<0>(this->_x)->bwd_eval(v);
       }
 

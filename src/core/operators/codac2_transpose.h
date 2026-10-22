@@ -33,7 +33,7 @@ namespace codac2
 
     static IntervalMatrix fwd(const IntervalMatrix& x1);
     static MatrixType fwd_natural(const MatrixType& x1);
-    static MatrixType fwd_centered(const MatrixType& x1);
+    static MatrixType fwd_centered(bool mixed_diff, const MatrixType& x1);
     static void bwd(const IntervalMatrix& y, IntervalMatrix& x1);
   };
 
@@ -56,26 +56,26 @@ namespace codac2
     inline MatrixType TransposeOp::fwd_natural(const MatrixType& x1)
     {
       return {
-        fwd(x1.a),
+        fwd(x1.get_a()),
         x1.def_domain
       };
     }
 
-    inline MatrixType TransposeOp::fwd_centered(const MatrixType& x1)
+    inline MatrixType TransposeOp::fwd_centered([[maybe_unused]] bool mixed_diff, const MatrixType& x1)
     {
       if(centered_form_not_available_for_args(x1))
         return fwd_natural(x1);
       
       IntervalMatrix d(x1.da.rows(),x1.da.cols());
-      for (Index i=0; i<x1.a.rows(); i++)
-        for (Index j=0;j<x1.a.cols(); j++) {
+      for (Index i=0; i<x1.get_a().rows(); i++)
+        for (Index j=0;j<x1.get_a().cols(); j++) {
             /* x2.a(j,i) = x1.a(i,j) */
-         d.row(j+i*x1.a.cols()) = x1.da.row(i+j*x1.a.rows());
+         d.row(j+i*x1.get_a().cols()) = x1.da.row(i+j*x1.get_a().rows());
       }
 
       return {
         fwd(x1.m),
-        fwd(x1.a),
+        vector_map<IntervalMatrix,IntervalMatrix>(x1.a,&fwd),
         d,
         x1.def_domain
       };

@@ -47,12 +47,12 @@ namespace codac2
 
     static Interval fwd(const IntervalVector& x1, Index i);
     static ScalarType fwd_natural(const VectorType& x1, Index i);
-    static ScalarType fwd_centered(const VectorType& x1, Index i);
+    static ScalarType fwd_centered(bool mixed_diff,const VectorType& x1, Index i);
     static void bwd(const Interval& y, IntervalVector& x1, Index i);
 
     static Interval fwd(const IntervalMatrix& x1, Index i, Index j);
     static ScalarType fwd_natural(const MatrixType& x1, Index i, Index j);
-    static ScalarType fwd_centered(const MatrixType& x1, Index i, Index j);
+    static ScalarType fwd_centered(bool mixed_diff,const MatrixType& x1, Index i, Index j);
     static void bwd(const Interval& y, IntervalMatrix& x1, Index i, Index j);
   };
 
@@ -81,19 +81,22 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<VectorType>>::replace_arg(old_arg_id, new_expr);
       }
 
-      ScalarType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
+      ScalarType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval, bool mixed_diff) const override
       {
         if(natural_eval)
           return AnalyticExpr<ScalarType>::init_value(
-            v, ComponentOp::fwd_natural(std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval), _i));
-        else
+            v, ComponentOp::fwd_natural(std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval,mixed_diff), _i));
+        else if (!mixed_diff)
           return AnalyticExpr<ScalarType>::init_value(
-            v, ComponentOp::fwd_centered(std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval), _i));
+            v, ComponentOp::fwd_centered(false,std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval,mixed_diff), _i));
+        else 
+          return AnalyticExpr<ScalarType>::init_value(
+            v, ComponentOp::fwd_centered(true,std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval,mixed_diff), _i));
       }
       
       void bwd_eval(ValuesMap& v) const override
       {
-        ComponentOp::bwd(AnalyticExpr<ScalarType>::value(v).a, std::get<0>(this->_x)->value(v).a, _i);
+        ComponentOp::bwd(AnalyticExpr<ScalarType>::value(v).get_a(), std::get<0>(this->_x)->value(v).get_a(), _i);
         std::get<0>(this->_x)->bwd_eval(v);
       }
 
@@ -156,19 +159,19 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<MatrixType>>::replace_arg(old_arg_id, new_expr);
       }
 
-      ScalarType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
+      ScalarType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval,bool mixed_diff) const override
       {
         if(natural_eval)
           return AnalyticExpr<ScalarType>::init_value(
-            v, ComponentOp::fwd_natural(std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval), _i, _j));
+            v, ComponentOp::fwd_natural(std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval,mixed_diff), _i, _j));
         else
           return AnalyticExpr<ScalarType>::init_value(
-            v, ComponentOp::fwd_centered(std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval), _i, _j));
+            v, ComponentOp::fwd_centered(mixed_diff,std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval,mixed_diff), _i, _j));
       }
       
       void bwd_eval(ValuesMap& v) const override
       {
-        ComponentOp::bwd(AnalyticExpr<ScalarType>::value(v).a, std::get<0>(this->_x)->value(v).a, _i, _j);
+        ComponentOp::bwd(AnalyticExpr<ScalarType>::value(v).get_a(), std::get<0>(this->_x)->value(v).get_a(), _i, _j);
         std::get<0>(this->_x)->bwd_eval(v);
       }
 
@@ -225,22 +228,21 @@ namespace codac2
 
     inline ScalarType ComponentOp::fwd_natural(const VectorType& x1, Index i)
     {
-      assert(i >= 0 && i < x1.a.rows());
       return {
-        fwd(x1.a,i),
+        fwd(x1.get_a(),i),
         x1.def_domain
       };
     }
 
-    inline ScalarType ComponentOp::fwd_centered(const VectorType& x1, Index i)
+    inline ScalarType ComponentOp::fwd_centered([[maybe_unused]] bool mixed_diff,const VectorType& x1, Index i)
     {
       if(centered_form_not_available_for_args(x1))
         return fwd_natural(x1,i);
 
-      assert(i >= 0 && i < x1.a.rows());
       return {
         fwd(x1.m,i),
-        fwd(x1.a,i),
+        vector_map<IntervalVector,Interval>(x1.a,
+		[=](const IntervalVector& v1)->Interval {return fwd(v1,i);}),
         x1.da.row(i),
         x1.def_domain
       };
@@ -263,25 +265,26 @@ namespace codac2
 
     inline ScalarType ComponentOp::fwd_natural(const MatrixType& x1, Index i, Index j)
     {
-      assert(i >= 0 && i < x1.a.rows());
-      assert(j >= 0 && j < x1.a.cols());
+      assert(i >= 0 && i < x1.get_a().rows());
+      assert(j >= 0 && j < x1.get_a().cols());
       return {
-        fwd(x1.a,i,j),
+        fwd(x1.get_a(),i,j),
         x1.def_domain
       };
     }
 
-    inline ScalarType ComponentOp::fwd_centered(const MatrixType& x1, Index i, Index j)
+    inline ScalarType ComponentOp::fwd_centered([[maybe_unused]] bool mixed_diff,const MatrixType& x1, Index i, Index j)
     {
       if(centered_form_not_available_for_args(x1))
         return fwd_natural(x1,i,j);
 
-      assert(i >= 0 && i < x1.a.rows());
-      assert(j >= 0 && j < x1.a.cols());
+      assert(i >= 0 && i < x1.get_a().rows());
+      assert(j >= 0 && j < x1.get_a().cols());
       return {
         fwd(x1.m,i,j),
-        fwd(x1.a,i,j),
-        x1.da.row(x1.a.rows()*i+j), // centered form, ColMajor
+        vector_map<IntervalMatrix,Interval>(x1.a,
+		[=](const IntervalMatrix& v1)->Interval {return fwd(v1,i,j);}),
+        x1.da.row(x1.get_a().rows()*i+j), // centered form, ColMajor
         x1.def_domain
       };
     }
