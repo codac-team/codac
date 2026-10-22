@@ -9,6 +9,9 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <filesystem>
 #include <codac2_ExprType.h>
 #include <codac2_Interval.h>
 #include <codac2_TDomain.h>
@@ -16,6 +19,10 @@
 #include <codac2_AnalyticTraj.h>
 #include <codac2_SampledTraj.h>
 #include <codac2_SlicedTube_operations.h>
+#include <codac2_traj_cart_prod.h>
+#include <codac2_tube_cart_prod.h>
+#include <codac2_SampledTraj_operations.h>
+#include <codac2_serialization.h>
 #include <codac2_Figure2D.h>
 
 using namespace std;
@@ -40,11 +47,11 @@ TEST_CASE("TDomain class - manual")
     size_t n = td->nb_tslices(); // 5
     size_t m = td->nb_tubes();   // 0 initially
 
-    auto it = td->tslice(0.0);   // [0]
-         it = td->tslice(0.1);   // [0,0.5]
-         it = td->tslice(0.5);   // [0.5]
-         it = td->tslice(0.6);   // [0.5,1]
-         it = td->tslice(1.0);   // [1]
+    auto it = td->tslice(0.);   // [0]
+         it = td->tslice(0.1);  // [0,0.5]
+         it = td->tslice(0.5);  // [0.5]
+         it = td->tslice(0.6);  // [0.5,1]
+         it = td->tslice(1.);   // [1]
     // [tdomain-class-2-end]
     CHECK(n == 5);
     CHECK(m == 0);
@@ -61,7 +68,7 @@ TEST_CASE("TDomain class - manual")
 
   {
     // [tdomain-class-4-beg]
-    auto td = create_tdomain({0,2}, 1.0, false); // false: without gates
+    auto td = create_tdomain({0,2}, 1., false); // false: without gates
 
     SlicedTube x(td, Interval(0,1));
     SlicedTube v(td, Interval(-1,1));
@@ -82,7 +89,7 @@ TEST_CASE("TDomain class - manual")
 
   {
     // [tdomain-class-5-beg]
-    auto td = create_tdomain({0,3}, 1.0, false);
+    auto td = create_tdomain({0,3}, 1., false);
     SlicedTube<Interval> x(td, Interval(0,1));
 
     cout << td->nb_tubes() << endl; // 1
@@ -145,7 +152,7 @@ TEST_CASE("SlicedTube class - manual")
 
   {
     // [slicedtube-class-4-beg]
-    auto td = create_tdomain({0,3}, 1.0, false);
+    auto td = create_tdomain({0,3}, 1., false);
     SlicedTube x(td, Interval());
 
     x.set({1,5}, {0,1});
@@ -155,12 +162,12 @@ TEST_CASE("SlicedTube class - manual")
     Interval y0 = x(0.5);   // [1,5]
     Interval y1 = x(1.5);   // [2,8]
     Interval y2 = x({0,3}); // [1,9]
-    Interval y3 = x(-1.0);  // [-oo,oo]
+    Interval y3 = x(-1.);   // [-oo,oo]
 
     // No explicit gates: boundary values come from adjacent-slice intersections
-    Interval y4 = x(1.0);   // [2,5]
-    Interval y5 = x(2.0);   // [6,8]
-    Interval y6 = x(3.0);   // [6,9]
+    Interval y4 = x(1.);   // [2,5]
+    Interval y5 = x(2.);   // [6,8]
+    Interval y6 = x(3.);   // [6,9]
     // [slicedtube-class-4-end]
   }
 
@@ -197,7 +204,7 @@ TEST_CASE("SlicedTube class - manual")
 
   {
     // [slicedtube-class-6-beg]
-    auto td = create_tdomain({0,2}, 1.0, false);
+    auto td = create_tdomain({0,2}, 1., false);
 
     SlicedTube x(td, Interval(1,2));
     SlicedTube y(td, Interval(-1,3));
@@ -250,7 +257,7 @@ TEST_CASE("SlicedTube class - manual")
     // [slicedtube-class-8-beg]
     x.inflate(0.2); // constant inflation
     
-    SampledTraj<double> rad({{0.0,0.11}, {1.0,0.3}, {2.0,0.2}});
+    SampledTraj<double> rad({{0.,0.11}, {1.,0.3}, {2.,0.2}});
     x.inflate(rad); // time-varying inflation radius
     // [slicedtube-class-8-end]
   }
@@ -266,4 +273,384 @@ TEST_CASE("SlicedTube class - manual")
     // [slicedtube-class-9-end]
   }
 
+}
+
+
+TEST_CASE("Trajectory classes - manual")
+{
+  {
+    // [traj-sampled-create-beg]
+    SampledTraj<double> depth;
+    depth.set(2., 0.);
+    depth.set(3., 1.);
+    depth.set(4., 2.);
+
+    SampledTraj<Vector> position;
+    position.set(Vector({0,1}), 0.);
+    position.set({1,2}, 1.); // equivalent shorter notation
+    position.set({2,3}, 2.);
+    // [traj-sampled-create-end]
+    CHECK(depth.nb_samples() == 3);
+    CHECK(position.size() == 2);
+  }
+
+  {
+    // [traj-sampled-eval-beg]
+    SampledTraj<double> x({{0.,2.}, {1.,4.}, {2.,3.}});
+    double value = x(0.5);              // 3.
+    Interval range = x({0.5,1.5});      // [3,4]
+    auto sample_count = x.nb_samples(); // 3
+    auto output_size = x.size();        // 1
+    // [traj-sampled-eval-end]
+    CHECK(value == 3);
+    CHECK(range == Interval(3,4));
+    CHECK(sample_count == 3);
+    CHECK(output_size == 1);
+
+    // [traj-sampled-iterate-beg]
+    for(const auto& [ti, xi] : x)
+      std::cout << ti << " -> " << xi << std::endl;
+    // [traj-sampled-iterate-end]
+    CHECK(value == 3.);
+    CHECK(sample_count == 3);
+    CHECK(output_size == 1);
+    CHECK(range.contains(3.));
+  }
+
+  {
+    // [traj-sampled-components-beg]
+    SampledTraj<Vector> p({{0.,{0,1,2}}, {1.,{1,2,3}}});
+    auto x = p[0];
+    auto yz = p.subvector(1,2);
+    // [traj-sampled-components-end]
+    CHECK(yz.size() == 2);
+
+  }
+
+  {
+    // [traj-sampled-time-beg]
+    SampledTraj<double> x({{0.,0.}, {1.,1.}, {2.,0.}});
+    x.truncate_tdomain({0.5,1.5}); // retains interpolated endpoints
+    x.shift_tdomain(10.);          // time domain now [10.5,11.5]
+    x.stretch_tdomain({0,1});      // rescale time, not values
+    // [traj-sampled-time-end]
+    CHECK(x.tdomain() == Interval(0,1));
+  }
+
+  {
+    // [traj-analytic-create-beg]
+    ScalarVar t;
+    AnalyticFunction f({t}, 2*sin(t));
+    AnalyticTraj traj_f({0,2}, f); // scalar trajectory
+
+    AnalyticFunction g({t}, {cos(t), sin(t)});
+    AnalyticTraj traj_g({0,2}, g); // vector trajectory
+    // [traj-analytic-create-end]
+
+    // [traj-analytic-eval-beg]
+    double y_point = traj_f(0.5);
+    Interval y_interval = traj_f({0,1});
+    Vector p_point = traj_g(0.5);
+    // [traj-analytic-eval-end]
+    CHECK(y_interval.contains(y_point));
+    CHECK(p_point.size() == 2);
+
+    // [traj-analytic-sampled-beg]
+    SampledTraj<double> f_samples = traj_f.sampled(0.1);
+    SampledTraj<Vector> g_samples = traj_g.sampled(0.1);
+    // [traj-analytic-sampled-end]
+    CHECK(f_samples.nb_samples() >= 20);
+    CHECK(g_samples.size() == 2);
+  }
+
+  {
+    // [traj-ops-calculus-beg]
+    SampledTraj<double> speed({{0.,0}, {1.,1}, {2.,2}});
+    auto acceleration = speed.derivative(); // numerical derivative
+    auto distance = speed.primitive();      // trapezoidal integral, p(0)=0
+    auto doubled_speed = 2. * speed;        // pointwise arithmetic
+    // [traj-ops-calculus-end]
+    CHECK(distance(2.) == 2.);
+  }
+
+  {
+    // [traj-ops-cartprod-beg]
+    SampledTraj<double> x1({0.,1}, {0.,1});
+    SampledTraj<double> x2({0.,1}, {2.,3});
+    auto x = traj_cart_prod(x1,x2);
+    // [traj-ops-cartprod-end]
+    CHECK(x.size() == 2);
+
+    // [traj-ops-continuous-beg]
+    SampledTraj<double> heading({{0.,6.1}, {1.,0.1}, {2.,0.2}});
+    auto continuous_heading = continuous_traj(heading);
+    // [traj-ops-continuous-end]
+    CHECK(continuous_heading.nb_samples() == 3);
+  }
+
+  {
+    // [traj-ops-eval-beg]
+    SampledTraj<double> theta({{0.,0}, {1.,0.1}, {2.,0.2}});
+    SampledTraj<double> v({{0.,1}, {1.,2}, {2.,3}});
+    ScalarVar theta_var, v_var;
+    AnalyticFunction f({theta_var,v_var}, {v_var*cos(theta_var), v_var*sin(theta_var)});
+    auto u = f.traj_eval(theta, v);
+    // [traj-ops-eval-end]
+    CHECK(u.size() == 2);
+  }
+
+  {
+    // [traj-ops-asfunction-beg]
+    SampledTraj<double> measurements({{0.,1}, {1.,2}, {2.,1.5}});
+    auto measurement_fn = measurements.as_function();
+    ScalarVar t;
+    AnalyticFunction energy({t}, sqr(measurement_fn(t)));
+    auto estimated_energy = energy.eval(0.5);
+    // [traj-ops-asfunction-end]
+  }
+
+  {
+    // [traj-ops-tube-beg]
+    ScalarVar t;
+    AnalyticTraj traj({0,2}, AnalyticFunction({t}, sin(t)));
+    auto td = create_tdomain({0,2}, 0.1);
+    SlicedTube tube(td, traj);
+    tube.inflate(0.05); // valid only if +/- 0.05 is a justified error bound
+    // [traj-ops-tube-end]
+  }
+
+  {
+    // [traj-ops-serialization-beg]
+    SampledTraj<double> input({{0.,1}, {1.,1.5}, {2.,2}});
+    {
+      std::ofstream out("trajectory.cdc", std::ios::binary);
+      serialize(out, input);
+    }
+    SampledTraj<double> restored;
+    {
+      std::ifstream in("trajectory.cdc", std::ios::binary);
+      deserialize(in, restored);
+    }
+    // [traj-ops-serialization-end]
+    CHECK(restored.nb_samples() == input.nb_samples());
+  }
+}
+
+
+TEST_CASE("Trajectory reference - manual")
+{
+  {
+    // [traj-sampled-grid-beg]
+    SampledTraj<double> x({{0.,0}, {1.,2}, {2.,0}});
+    auto merged = x.sampled(0.6); // retains 0, 1 and 2
+    auto regular = x.sampled(0.6, false); // only regular grid and final time
+    SampledTraj<double> clock({{0.,0}, {0.5,0}, {1.5,0}, {2.,0}});
+    auto aligned = x.sampled_as(clock); // x evaluated at clock's timestamps
+    // [traj-sampled-grid-end]
+    CHECK(merged.nb_samples() > regular.nb_samples());
+    CHECK(aligned.nb_samples() == clock.nb_samples());
+  }
+  {
+    // [traj-sampled-construct-alt-beg]
+    std::map<double,double> samples({{0.,3}, {1.,4}, {2.,5}});
+    SampledTraj<double> x(samples);
+    x.set(6., 1.); // overwrites value at t=1
+    SampledTraj<double> y({0.,1.,2.}, {3,6,5}); // two std::list arguments
+    // [traj-sampled-construct-alt-end]
+    CHECK(x.nb_samples() == 3);
+    CHECK(x(1.) == 6.);
+    CHECK(y(1.) == 6.);
+  }
+  {
+    // [traj-analytic-advanced-beg]
+    ScalarVar t;
+    AnalyticTraj a({0,2}, AnalyticFunction({t}, sqr(t)));
+    auto f = a.as_function();
+    AnalyticFunction g({t}, f(t)+1.);
+    // [traj-analytic-advanced-end]
+
+  }
+  {
+    // [traj-ops-pointwise-beg]
+    SampledTraj<double> x({{0.,0}, {1.,1}, {2.,2}});
+    SampledTraj<double> y({{0.,2}, {1.,3}, {2.,4}});
+    auto sum = x + y;    // pointwise at shared timestamps
+    auto sq = sqr(x);    // square sample values, then interpolate
+    auto sin_x = sin(x); // not the same as t -> sin(x(t)) between samples
+    // [traj-ops-pointwise-end]
+    CHECK(sum(1.) == 4.);
+    CHECK(sq(1.) == 1.);
+  }
+  {
+    // [traj-ops-fun-vector-beg]
+    SampledTraj<Vector> p({{0.,{3.,4}}, {1.,{0.,5}}});
+    VectorVar p_var(2);
+    AnalyticFunction f({p_var}, sqr(p_var[0]) + sqr(p_var[1]));
+    auto result = f.traj_eval(p);
+    // [traj-ops-fun-vector-end]
+    CHECK(result.size() == 1);
+    CHECK(result(0.) == 25.);
+  }
+  {
+    // [traj-tubes-mid-beg]
+    auto td = create_tdomain({0,2}, 0.5, true);
+    ScalarVar t;
+    AnalyticTraj a({0,2}, AnalyticFunction({t}, sin(t)));
+    SlicedTube tube(td,a);
+    auto midpoint = tube.mid(); // approximate trajectory of tube midpoints
+    // [traj-tubes-mid-end]
+    CHECK(midpoint.nb_samples() > 1);
+  }
+  {
+    // [traj-io-csv-beg]
+    SampledTraj<double> measurements;
+    std::ifstream csv(std::filesystem::path(__FILE__).parent_path() / "data.csv");
+    std::string line;
+    std::getline(csv, line); // skip header
+
+    while(std::getline(csv, line))
+    {
+      double t, value;
+      if(std::sscanf(line.c_str(), "%lf;%lf", &t, &value) == 2)
+        measurements.set(value, t);
+    }
+    // [traj-io-csv-end]
+    CHECK(measurements.nb_samples() == 3);
+  }
+}
+
+TEST_CASE("SlicedTube cross-reference examples - manual")
+{
+  {
+    // [tube-example-1-beg]
+    auto td = create_tdomain({0,3}, 1., false);
+    SlicedTube x(td, Interval()); // [-∞,∞] by default for any time
+    x.set({1,5}, {0,1});
+    x.set({2,8}, {1,2});
+    x.set({6,9}, {2,3});
+    auto y0 = x({0,3});
+    auto y1 = x(1.5);
+    auto y2 = x(1.);
+    // [tube-example-1-end]
+    CHECK(!y0.is_empty());
+  }
+  {
+    // [tube-example-2-beg]
+    auto td = create_tdomain({0,1}, 0.1, false);
+    SlicedTube x(td, IntervalVector(3));
+    auto before = td->nb_tslices();
+    x.set(IntervalVector::constant(3,{2,3}), -42.);
+    auto after = td->nb_tslices(); // the partition was extended and refined
+    // [tube-example-2-end]
+    CHECK(after > before);
+  }
+  {
+    // [tube-example-3-beg]
+    auto td = create_tdomain({0,5}, 0.1, true);
+    ScalarVar t;
+    AnalyticFunction f({t}, 10*cos(t)+t);
+    SlicedTube x(td, f); // encloses f(t) over each time slice
+    // [tube-example-3-end]
+    CHECK(!x.is_empty());
+  }
+  {
+    // [tube-example-4-beg]
+    auto td = create_tdomain({6.4,6.5});
+    SlicedTube x(td, Interval(0.759,1.205));
+    SlicedTube v(td, Interval(-0.216,-0.115));
+    x.set(Interval(0.781,1.205), 6.4);
+    x.set(Interval(0.759,1.194), 6.5);
+    CtcDeriv ctc;
+    ctc.contract(x,v);
+    auto sx = x.first_slice();
+    auto sv = v.first_slice();
+    auto polygon = sx->polygon_slice(*sv);
+    // [tube-example-4-end]
+  }
+  {
+    // [tube-example-5-beg]
+    auto td = create_tdomain({0,2}, 0.5, true);
+    SlicedTube x(td, Interval(1,2));
+    auto integral_at_one = x.integral(Interval(1));
+    auto integral_over_range = x.integral(Interval(0.5,1.5));
+    auto p = x.primitive(Interval(0));
+    // [tube-example-5-end]
+    CHECK(!integral_at_one.is_empty());
+  }
+  {
+    // [tube-example-6-beg]
+    auto td = create_tdomain({0,1}, 0.5, false);
+    SlicedTube x1(td, Interval(0,1));
+    SlicedTube x2(td, IntervalVector({{1,2},{-1,1}}));
+    auto x = tube_cart_prod(x1,x2); // vector tube of dimension 3
+    // [tube-example-6-end]
+    CHECK(x.size() == 3);
+  }
+  {
+    // [tube-parity-algebra-beg]
+    auto td = create_tdomain({0,2}, 0.5, true);
+    SlicedTube x(td, Interval(0,2));
+    SlicedTube y(td, Interval(1,3));
+    auto both = x & y;             // intersection of enclosures
+    auto either = x | y;           // interval hull, not disconnected union
+    auto sum = x + y;              // interval arithmetic on every slice
+    auto xy = tube_cart_prod(x,y); // SlicedTube<IntervalVector>
+    // [tube-parity-algebra-end]
+    CHECK(xy.size() == 2);
+  }
+  {
+    // [tube-parity-conversion-beg]
+    auto td = create_tdomain({0,2}, 0.5, true);
+    SlicedTube tube(td, Interval(-1,1));
+    SampledTraj<double> midpoint = tube.mid(); // an approximation
+    SlicedTube middle_curve(td, midpoint);     // tube of the interpolant
+    // [tube-parity-conversion-end]
+    CHECK(midpoint.nb_samples() > 1);
+  }
+  {
+    // [tube-parity-input-beg]
+    SampledTraj<double> measured({{0.,1}, {1.,1.5}, {2.,2}});
+    auto td = create_tdomain({0,2}, 0.5, true);
+    SlicedTube x(td, measured); // encloses the piecewise-linear interpolant
+    x.inflate(0.2);             // only guaranteed if the bound is justified
+    // [tube-parity-input-end]
+    CHECK(!x.is_empty());
+  }
+  {
+    // [tube-parity-export-beg]
+    auto td = create_tdomain({0,2}, 1., true);
+    SlicedTube x(td, Interval(-1,1));
+    std::ostringstream csv;
+    csv << "t0;t1;lb;ub;is_gate\n";
+    for(const auto& s : x)
+      csv << s.t0_tf().lb() << ';' << s.t0_tf().ub() << ';'
+          << s.codomain().lb() << ';' << s.codomain().ub() << ';'
+          << (s.is_gate() ? 1 : 0) << '\n';
+    // [tube-parity-export-end]
+    CHECK(csv.str().find("is_gate") != std::string::npos);
+  }
+}
+
+TEST_CASE("Slice reference - manual")
+{
+  {
+    // [slice-endpoint-example-beg]
+    auto td = create_tdomain({0,2}, 1., false);
+    SlicedTube x(td, Interval());
+    x.set({1,5}, {0,1});
+    x.set({2,8}, {1,2});
+    auto s = x.first_slice();
+    auto boundary = s->output_gate(); // [2,5]
+    // [slice-endpoint-example-end]
+  }
+  {
+    // [slice-invert-example-beg]
+    auto td = create_tdomain({0,1});
+    SlicedTube x(td, Interval(0,10));
+    x.set({2,3}, 0.);
+    x.set({5,6}, 1.);
+    auto s = x.first_slice();
+    auto possible_times = s->invert(Interval(2.5,6), Interval(0.2,0.5));
+    // [slice-invert-example-end]
+  }
 }

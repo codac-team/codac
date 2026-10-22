@@ -1,18 +1,19 @@
+.. _sec-domains-tubes-io:
+.. _sec-domains-tubes-reference:
 .. _sec-domains-tubes-slicedtube:
 
-The SlicedTube class
-====================
+Sliced tubes
+============
 
   Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
 
-A :class:`~codac.SlicedTube` is a tube defined over a shared :class:`~codac.TDomain`.
-For each temporal slice stored in the temporal partition, the tube owns one :class:`~codac.Slice` object storing its codomain over that temporal support. The codomain type is typically :class:`~codac.Interval` or :class:`~codac.IntervalVector`, or any domain type defined by the user. The same temporal domain can be shared by many tubes.
+A :class:`~codac.SlicedTube` is a tube defined over a shared :class:`~codac.TDomain`. For each temporal slice stored in the temporal partition, the tube owns one :class:`~codac.Slice` object storing its codomain over that temporal support. The codomain type is typically :class:`~codac.Interval` or :class:`~codac.IntervalVector`, or any domain type defined by the user. The same temporal domain can be shared by many tubes.
 
 
 Creating sliced tubes
 ---------------------
 
-In Codac C++, :class:`~codac.SlicedTube` is a generic class template ``SlicedTube<T>``. The codomain type ``T`` is not restricted to intervals or boxes: in principle, any domain type compatible with the sliced-tube API can be used.
+In C++, :class:`~codac.SlicedTube` is a generic class template ``SlicedTube<T>``. The codomain type ``T`` is not restricted to intervals or boxes: in principle, any domain type compatible with the sliced-tube API can be used.
 
 In practice, the most common sliced-tube types are:
 
@@ -23,6 +24,8 @@ In practice, the most common sliced-tube types are:
 These standard tube types are also the ones exposed in the Python and Matlab bindings.
 
 In C++, template argument deduction is available for the constructors based on the arguments. In the examples below, comments make the deduced type explicit when useful.
+
+For analytic and sampled trajectories, see :ref:`sec-trajectories`. For conversions and evaluations with analytic functions, see :ref:`sec-trajectories-operations`.
 
 A sliced tube can be created from:
 
@@ -50,6 +53,27 @@ A sliced tube can be created from:
       :dedent: 4
 
 
+A ``SlicedTube`` can also enclose a ``SampledTraj`` on a chosen temporal partition. To represent an uncertain physical signal, inflate it by a justified uncertainty bound.
+
+.. tabs::
+
+  .. group-tab:: Python
+
+    .. literalinclude:: src.py
+      :language: python
+      :start-after: [tube-parity-input-beg]
+      :end-before: [tube-parity-input-end]
+      :dedent: 4
+
+  .. group-tab:: C++
+
+    .. literalinclude:: src.cpp
+      :language: c++
+      :start-after: [tube-parity-input-beg]
+      :end-before: [tube-parity-input-end]
+      :dedent: 4
+
+
 .. figure:: interval_trajs.png
   :width: 70%
 
@@ -62,7 +86,6 @@ Basic properties
 A sliced tube exposes:
 
 * ``size()`` for the codomain dimension,
-* ``shape()`` for matrix-like codomain shapes,
 * ``tdomain()`` and ``t0_tf()`` from the base classes,
 * ``nb_slices()`` for the number of temporal elements,
 * ``codomain()`` for the global codomain hull,
@@ -77,8 +100,7 @@ You can access the first and last slices directly:
 * ``first_slice()``
 * ``last_slice()``
 
-and you can retrieve a slice from a temporal-domain iterator or from a ``TSlice`` pointer.
-The class also defines custom iterators so that iterating on a ``SlicedTube`` yields application-level :class:`~codac.Slice` objects rather than raw ``TSlice`` objects.
+and you can retrieve a slice from a temporal-domain iterator or from a ``TSlice`` pointer. The class also defines custom iterators so that iterating on a ``SlicedTube`` yields application-level :class:`~codac.Slice` objects rather than raw ``TSlice`` objects.
 
 .. tabs::
 
@@ -109,8 +131,7 @@ A sliced tube can be updated globally or locally:
 * ``set(codomain, [ta,tb])`` sets all temporal elements intersecting an interval,
 * ``set_ith_slice(codomain, i)`` sets one stored slice by index.
 
-The key point is that local assignments may refine the underlying :class:`~codac.TDomain`.
-For example, setting a value at one scalar time creates an explicit gate if necessary. Similarly, setting a value over an interval may create new temporal boundaries at the interval endpoints.
+The key point is that local assignments may refine the underlying :class:`~codac.TDomain`. For example, setting a value at one scalar time creates an explicit gate if necessary. Similarly, setting a value over an interval may create new temporal boundaries at the interval endpoints.
 
 .. note::
 
@@ -138,7 +159,7 @@ For example, setting a value at one scalar time creates an explicit gate if nece
 Evaluation
 ----------
 
-A sliced tube :math:`[x](\cdot)` can be evaluated over a temporal interval :math:`[t]` with ``x(t)``. The implementation walks through all relevant temporal slices, evaluates each local slice, and unions the results. If the query interval is not included in the temporal domain, the result is the unbounded value of the codomain type (for interval tubes: :math:`[-\infty,\infty]`).
+A sliced tube :math:`[x](\cdot)` can be evaluated over a temporal interval :math:`[t]` with ``x(t)``. The implementation walks through all relevant temporal slices, evaluates each local slice, and takes their interval hull. If the query interval is not included in the temporal domain, the result is the unbounded value of the codomain type (for interval tubes: :math:`[-\infty,\infty]`).
 
 When a derivative tube ``v`` is available, the overload ``x(t,v)`` uses per-slice derivative-aware evaluation and unions the resulting enclosures. This is available for ``Interval`` and ``IntervalVector`` codomain types.
 
@@ -220,16 +241,18 @@ The following example computes the different connected components of the inversi
   :project: codac
 
 
+.. _sec-domains-tubes-operations:
+
 Tube operations
 ---------------
 
 Standard pointwise operations are available on sliced tubes and are applied slice by slice.
 
-For two tubes, binary operators require both operands to share the same :class:`~codac.TDomain`. This makes tube expressions easy to combine once the tubes have been built on a common temporal support.
+Binary operators on tubes require the same :class:`~codac.TDomain` object. This lets all operands share refinements of the temporal partition.
 
 The following operators are available:
 
-* union and intersection: ``|`` and ``&``,
+* interval hull and intersection: ``|`` and ``&``,
 * arithmetic operations: ``+``, ``-``, ``*``, ``/``,
 * in-place variants: ``|=``, ``&=``, ``+=``, ``-=``, ``*=``, ``/=``.
 
@@ -274,6 +297,14 @@ For vector-valued codomains, pointwise arithmetic is also available. In particul
       :dedent: 4
 
 
+Cartesian products
+------------------
+
+``tube_cart_prod(x1,x2,...)`` combines scalar and vector tubes into a vector tube, provided they share the same ``TDomain``. The resulting dimension is the sum of the input dimensions.
+
+A short example combining scalar and vector tubes is given in :doc:`tube_examples`.
+
+
 .. _sec-domains-tubes-slicedtube-function-eval:
 
 Evaluating analytic functions on tubes
@@ -285,8 +316,7 @@ An :class:`~codac.AnalyticFunction` can be evaluated on one or more sliced tubes
 
   [y]_k = [f]([x_1]_k, [x_2]_k, \ldots, [x_n]_k).
 
-The result encloses :math:`f(x_1(t),\ldots,x_n(t))` at every time :math:`t`.
-It shares the same ``TDomain`` as the input tubes, including its gates. All input tubes must share the same ``TDomain`` object, not merely have identical time bounds or discretizations. If the function is scalar-valued, ``tube_eval()`` returns a scalar tube.  If it is vector-valued, ``tube_eval()`` returns a vector tube. In Python, the number of input tubes supported by ``tube_eval()`` is currently limited. All input tubes must be of the same kind (scalar or vector), whereas C++ also supports mixed types.
+The result encloses :math:`f(x_1(t),\ldots,x_n(t))` at every time :math:`t`. It shares the same ``TDomain`` as the input tubes, including its gates. All input tubes must share the same ``TDomain`` object, not merely have identical time bounds or discretizations. If the function is scalar-valued, ``tube_eval()`` returns a scalar tube.  If it is vector-valued, ``tube_eval()`` returns a vector tube. In Python, the number of input tubes supported by ``tube_eval()`` is currently limited. All input tubes must be of the same kind (scalar or vector), whereas C++ also supports mixed types.
 
 In the following example, a two-argument function maps heading and speed tubes to a 2D velocity tube :math:`(v_x,v_y)=(v\cos\theta,v\sin\theta)`. A second function computes its squared Euclidean norm :math:`v_x^2+v_y^2`, returning a scalar tube:
 
@@ -308,8 +338,7 @@ In the following example, a two-argument function maps heading and speed tubes t
       :end-before: [slicedtube-class-function-eval-end]
       :dedent: 4
 
-Unlike ``x(t)``, which evaluates a tube at a given time, ``f.tube_eval(x)`` evaluates an analytic function on an entire tube. It does not implicitly pass time to ``f``: if time is an argument, it must be supplied as an input tube.
-For functions of time alone, ``SlicedTube(tdomain, f)`` directly evaluates ``f(t)`` over the temporal slices (see `Creating sliced tubes`_).
+Unlike ``x(t)``, which evaluates a tube at a given time, ``f.tube_eval(x)`` evaluates an analytic function on an entire tube. It does not implicitly pass time to ``f``: if time is an argument, it must be supplied as an input tube. For functions of time alone, ``SlicedTube(tdomain, f)`` directly evaluates ``f(t)`` over the temporal slices (see `Creating sliced tubes`_).
 
 
 Integration and primitives
@@ -337,8 +366,7 @@ The computation is reliable even for tubes defined from analytic functions, beca
 Inflation, extraction, and algebraic helpers
 --------------------------------------------
 
-A sliced tube can be inflated either by a constant radius or by a time-varying
-sampled radius. Inflation is performed in place.
+A sliced tube can be inflated either by a constant radius or by a time-varying sampled radius. Inflation is performed in place.
 
 .. tabs::
 
@@ -390,3 +418,5 @@ Involving a tube in an analytic expression
 ------------------------------------------
 
 The method ``.as_function()`` wraps a sliced tube as an analytic operator so that it can be embedded inside analytic expressions. This is a convenient bridge between the tube API and the analytic-expression API, see :ref:`the section on temporal operators <sec-functions-temporal-operator>` for its use.
+
+For visualization, use ``Figure2D.plot_tube`` to display interval enclosures over time. See :doc:`../visualization/functions`.
