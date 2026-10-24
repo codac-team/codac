@@ -68,7 +68,7 @@ jobs:
     #  if: (matrix.cfg.arch!='amd64')&&(matrix.cfg.arch!='x86_64')&&(matrix.cfg.arch!='i386')
     - run: |
         docker run ${{ matrix.cfg.docker_flags }} -i -v "${PWD}/..:${PWD}/.." ${{ matrix.cfg.img }} /bin/bash -c "uname -a ; cat /etc/os-release ; lsb_release -a ; cd ${PWD} && pwd && \
-        git config --global --add safe.directory ${PWD} && \
+        git config --global --add safe.directory ${PWD} && git config --global --add safe.directory ${PWD}/.git || true && \
         if [ \"${{ matrix.cfg.deb }}\" = \"true\" ]; then \
         sudo sh -c 'echo \"deb [trusted=yes] https://webperso.ensta.fr/packages/\$(if [ -z \"\$(. /etc/os-release && echo \$UBUNTU_CODENAME)\" ]; then echo debian/\$(. /etc/os-release && echo \$VERSION_CODENAME); else echo ubuntu/\$(. /etc/os-release && echo \$UBUNTU_CODENAME); fi) ./\" > /etc/apt/sources.list.d/ensta-bretagne.list' && \
         #sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev catch2 dpkg-dev || true && \\

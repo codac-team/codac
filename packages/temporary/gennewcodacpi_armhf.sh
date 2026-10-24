@@ -34,6 +34,7 @@ rm -Rf ibex_armhf_\$(lsb_release -cs).zip && \
 sudo cp -Rf ibex/* /usr/local/ && \
 \
 git config --global --add safe.directory /io && \
+git config --global --add safe.directory /io/.git || true && \
 cd /io && \
 \
 # Issues when some packages are upgraded or not...? \\
