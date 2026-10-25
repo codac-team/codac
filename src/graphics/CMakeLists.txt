@@ -53,7 +53,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/paver # deprecated, to be removed
     ${CMAKE_CURRENT_SOURCE_DIR}/styles
   )
-  target_link_libraries(${PROJECT_NAME}-graphics PUBLIC ${PROJECT_NAME}-core Ibex::ibex Eigen3::Eigen ${PROJECT_NAME}-core)
+  target_link_libraries(${PROJECT_NAME}-graphics PUBLIC ${PROJECT_NAME}-core ${PROJECT_NAME}-eigen Ibex::ibex ${PROJECT_NAME}-core) # Eigen3::Eigen
   
 
 ################################################################################
