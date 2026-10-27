@@ -26,10 +26,7 @@ namespace codac2
 
   inline Interval::Interval(double a)
     : gaol::interval(a)
-  {
-    if(a == -oo || a == oo)
-      set_empty();
-  }
+  { }
 
   inline Interval::Interval(double a, double b)
     : gaol::interval(a,b)
@@ -83,11 +80,7 @@ namespace codac2
 
   inline Interval& Interval::operator=(double x)
   {
-    if(x == -oo || x == oo)
-      set_empty();
-    else
-      gaol::interval::operator=(x);
-
+    gaol::interval::operator=(x);
     return *this;
   }
 
@@ -135,9 +128,7 @@ namespace codac2
 
   inline double Interval::mid() const
   {
-    double m = gaol::interval::midpoint();
-    gaol::round_upward();
-    return m;
+    return gaol::interval::midpoint();
   }
 
   inline double Interval::mag() const
@@ -175,32 +166,18 @@ namespace codac2
 
   inline double Interval::rad() const
   {
-    if(is_empty())
-      return std::numeric_limits<double>::quiet_NaN();
-
-    else if(is_unbounded())
-      return oo;
-
-    else
-    {
-      double t = mid();
-      double t1 = (t-*this).ub();
-      double t2 = (*this-t).ub();
-      return (t1>t2) ? t1 : t2;
-    }
+    // GAOL's rad(), rad of IEEE 1788-2015 (12.12.8), in the fork of GAOL since its
+    // version 4.3.1: the smallest double r such that this interval is included in
+    // [m-r,m+r], m being mid(), computed as the greater of m-lb() and ub()-m rounded
+    // upward; NaN for the empty set, +oo for an unbounded interval. Codac used to
+    // compute the same bound itself, with two interval subtractions,
+    // (mid()-*this).ub() and (*this-mid()).ub(), and the same special cases.
+    return gaol::interval::rad();
   }
 
   inline double Interval::diam() const
   {
-    if(is_empty())
-      return std::numeric_limits<double>::quiet_NaN();
-
-    else
-    {
-      double d = gaol::interval::width();
-      gaol::round_upward();
-      return d;
-    }
+    return gaol::interval::width();
   }
 
   inline double Interval::volume() const
@@ -320,35 +297,26 @@ namespace codac2
     assert_release(is_bisectable());
     assert_release(Interval(0,1).interior_contains(ratio));
 
-    if(lb() == -oo)
+    // In halves, and an unbounded interval whatever the ratio: GAOL's split(), which
+    // cuts at midpoint() (mid()). For an unbounded interval, midpoint() is 0 for
+    // [-oo,+oo], -MAX for [-oo,b] and MAX for [a,+oo]: the cuts Codac used to make
+    // itself in these three cases, MAX being the largest double.
+    if(ratio == 0.5 || is_unbounded())
     {
-      if(ub() == oo)
-        return { Interval(-oo,0), Interval(0,oo) };
-      else
-        return { Interval(-oo,-std::numeric_limits<double>::max()), Interval(-std::numeric_limits<double>::max(),ub()) };
+      gaol::interval lower_half, upper_half;
+      gaol::interval::split(lower_half, upper_half);
+      return { lower_half, upper_half };
     }
 
-    else if(ub() == oo)
-      return { Interval(lb(),std::numeric_limits<double>::max()), Interval(std::numeric_limits<double>::max(),oo) };
+    // Any other ratio, which GAOL's split() does not offer. When lb()+ratio*diam()
+    // rounds to ub() or beyond (a very small interval, or a ratio close to 1), the
+    // cut falls back on the double next to lb(), so that both parts are non-empty.
+    double m = lb() + ratio*diam();
+    if(m >= ub())
+      m = next_float(lb());
 
-    else
-    {
-      double m;
-
-      if(ratio == 0.5)
-        m = mid();
-
-      else
-      {
-        m = lb() + ratio*diam();
-        if(m >= ub())
-          m = next_float(lb());
-
-        assert(m < ub());
-      }
-
-      return { Interval(lb(),m), Interval(m,ub()) };
-    }
+    assert(m < ub());
+    return { Interval(lb(),m), Interval(m,ub()) };
   }
 
   inline std::vector<Interval> Interval::complementary(bool compactness) const
@@ -390,11 +358,16 @@ namespace codac2
 
   inline Interval operator&(const Interval& x, const Interval& y)
   {
-    if(x.is_empty() || y.is_empty() || x.ub() < y.lb())
-      return Interval::empty();
-    
-    else
-      return gaol::operator&(x,y);
+    // GAOL is called without a guard. Codac used to return Interval::empty() itself
+    // when an operand was empty or when x.ub() < y.lb(), because GAOL did not give
+    // the canonical empty set for disjoint intervals: it kept the largest lower bound
+    // and the smallest upper bound, [3, 2] for [1, 2] & [3, 4]. is_empty() took such
+    // an interval for empty, but the operations computing on its bounds did not:
+    // [3, 2] + [0, 1] gave [3, 3]. That guard also missed disjoint intervals in the
+    // other order (y.ub() < x.lb()), and did not protect operator&= at all. Since its
+    // version 4.3.2, the fork of GAOL returns the empty set [NaN, NaN] for every empty
+    // intersection, empty operands included, in operator& and operator&= alike.
+    return gaol::operator&(x,y);
   }
 
   inline Interval operator|(const Interval& x, double y)
@@ -414,20 +387,12 @@ namespace codac2
 
   inline Interval operator+(const Interval& x, double y)
   {
-    if(y == -oo || y == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator+(x,y);
+    return gaol::operator+(x,y);
   }
 
   inline Interval operator+(double x, const Interval& y)
   {
-    if(x == -oo || x == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator+(x,y);
+    return gaol::operator+(x,y);
   }
 
   inline Interval operator+(const Interval& x, const Interval& y)
@@ -437,20 +402,12 @@ namespace codac2
 
   inline Interval operator-(const Interval& x, double y)
   {
-    if(y == -oo || y == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator-(x, y);
+    return gaol::operator-(x, y);
   }
 
   inline Interval operator-(double x, const Interval& y)
   {
-    if(x == -oo || x == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator-(x, y);
+    return gaol::operator-(x, y);
   }
 
   inline Interval operator-(const Interval& x, const Interval& y)
@@ -460,20 +417,12 @@ namespace codac2
 
   inline Interval operator*(const Interval& x, double y)
   {
-    if(y == -oo || y == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator*(x,y);
+    return gaol::operator*(x,y);
   }
 
   inline Interval operator*(double x, const Interval& y)
   {
-    if(x == -oo || x == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator*(x,y);
+    return gaol::operator*(x,y);
   }
 
   inline Interval operator*(const Interval& x, const Interval& y)
@@ -483,20 +432,12 @@ namespace codac2
 
   inline Interval operator/(const Interval& x, double y)
   {
-    if(y == -oo || y == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator/(x,y);
+    return gaol::operator/(x,y);
   }
 
   inline Interval operator/(double x, const Interval& y)
   {
-    if(x == -oo || x == oo)
-      return Interval::empty();
-
-    else
-      return gaol::operator/(x,y);
+    return gaol::operator/(x,y);
   }
 
   inline Interval operator/(const Interval& x, const Interval& y)
@@ -512,16 +453,15 @@ namespace codac2
 
   inline Interval& Interval::operator&=(const Interval& x)
   {
+    // The empty set [NaN, NaN] when the intersection is empty (GAOL 4.3.2 or later of
+    // the fork, see operator&(const Interval&, const Interval&))
     gaol::interval::operator&=(x);
     return *this;
   }
 
   inline Interval& Interval::operator+=(double x)
   {
-    if(x == -oo || x == oo)
-      set_empty();
-    else
-      gaol::interval::operator+=(x);
+    gaol::interval::operator+=(x);
     return *this;
   }
 
@@ -538,10 +478,7 @@ namespace codac2
 
   inline Interval& Interval::operator-=(double x)
   {
-    if(x == -oo || x == oo)
-      set_empty();
-    else
-      gaol::interval::operator-=(x);
+    gaol::interval::operator-=(x);
     return *this;
   }
 
@@ -553,10 +490,7 @@ namespace codac2
 
   inline Interval& Interval::operator*=(double x)
   {
-    if(x == -oo || x == oo)
-      set_empty();
-    else
-      gaol::interval::operator*=(x);
+    gaol::interval::operator*=(x);
     return *this;
   }
 
@@ -568,10 +502,7 @@ namespace codac2
 
   inline Interval& Interval::operator/=(double x)
   {
-    if(x == -oo || x == oo)
-      set_empty();
-    else
-      gaol::interval::operator/=(x);
+    gaol::interval::operator/=(x);
     return *this;
   }
 
