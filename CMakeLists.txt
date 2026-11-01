@@ -45,6 +45,7 @@
 # Compilation configuration
 ################################################################################
   
+  include(GNUInstallDirs)
   include(FetchContent)
 
   if(NOT CMAKE_BUILD_TYPE)
@@ -130,23 +131,46 @@
 # Looking for Eigen3
 ################################################################################
 
-  option(ENABLE_FIND_PACKAGE_EIGEN3 "ENABLE_FIND_PACKAGE_EIGEN3" OFF)
-  if(ENABLE_FIND_PACKAGE_EIGEN3)
-    find_package(Eigen3 3.4.0 QUIET) # Use Eigen3_DIR or CMAKE_PREFIX_PATH to specify a custom Eigen3 installation path...
-  endif()
-  if(Eigen3_FOUND)
-    message(STATUS "Found Eigen3 version ${Eigen3_VERSION} in ${Eigen3_DIR}")
-  else()
-    message(STATUS "Attempt to install custom Eigen3 automatically...")
+  #option(ENABLE_FIND_PACKAGE_EIGEN3 "ENABLE_FIND_PACKAGE_EIGEN3" OFF)
+  #if(ENABLE_FIND_PACKAGE_EIGEN3)
+  #  find_package(Eigen3 3.4.0 QUIET) # Use Eigen3_DIR or CMAKE_PREFIX_PATH to specify a custom Eigen3 installation path...
+  #endif()
+  #if(Eigen3_FOUND)
+  #  message(STATUS "Found Eigen3 version ${Eigen3_VERSION} in ${Eigen3_DIR}")
+  #else()
+    #message(STATUS "Attempt to get Eigen3 automatically...")
+    message(STATUS "Attempt to get custom Eigen3...")
     # Over HTTPS, not plain HTTP: the connections to port 80 of github.com timed
     # out now and then on the GitHub Actions runners, failing the whole job at
     # configuration time ("Failed to connect to github.com port 80"), and HTTPS
     # also guarantees that the archive comes from GitHub unaltered.
     FetchContent_Declare(Eigen3 URL https://github.com/codac-team/eigen/archive/refs/heads/eigen-5.0.zip)
     #FetchContent_Declare(Eigen3 URL ${CMAKE_CURRENT_SOURCE_DIR}/3rd/eigen-a0dc3994bd5d4e804dab58decb78c56a5af516ba.zip) # If needed to be self-contained...
-    FetchContent_MakeAvailable(Eigen3)
-  endif()
-  # Adds Eigen3::Eigen
+    #
+    #FetchContent_MakeAvailable(Eigen3)
+    #
+    # This avoids the install part of Eigen3 to override the system-wide Eigen3 installation if any...
+    cmake_policy(PUSH)
+    if (POLICY CMP0169)
+      cmake_policy(SET CMP0169 OLD)
+    endif()
+    FetchContent_Populate(Eigen3)
+    cmake_policy(POP)
+    add_library(${PROJECT_NAME}-eigen INTERFACE)
+    target_include_directories(${PROJECT_NAME}-eigen 
+	    INTERFACE
+		    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}-eigen>"
+		    "$<BUILD_INTERFACE:${eigen3_SOURCE_DIR}>"
+    )
+    #if (CODAC_INSTALL)
+      install(DIRECTORY ${eigen3_SOURCE_DIR}/unsupported/Eigen DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}-eigen/unsupported)
+      install(DIRECTORY ${eigen3_SOURCE_DIR}/Eigen DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}-eigen)
+    #endif()
+    add_library(${PROJECT_NAME}::${PROJECT_NAME}-eigen ALIAS ${PROJECT_NAME}-eigen)
+    #
+  #endif()
+  ## Adds Eigen3::Eigen
+  # Adds ${PROJECT_NAME}-eigen
 
 ################################################################################
 # Looking for Threads
