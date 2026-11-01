@@ -274,6 +274,14 @@ class TestTubeManual(unittest.TestCase):
     shifted.stretch_tdomain([0,1])      # rescale time, not values
     # [traj-sampled-time-end]
 
+    # [traj-ops-common-tdomain-beg]
+    x1 = SampledTraj({0.:0, 4.:4})
+    x2 = SampledTraj({2.:Vector([1,2]), 5.:Vector([5,6])})
+    truncate_to_common_tdomain(x1,x2) # common time domain: [2,4]
+    # [traj-ops-common-tdomain-end]
+    test.assertEqual(x1.tdomain(), Interval(2,4))
+    test.assertEqual(x2.tdomain(), Interval(2,4))
+
     # [traj-sampled-npz-beg]
     import numpy as np
     import io

@@ -45,4 +45,13 @@ namespace codac2
       SampledTraj<T> sampled_as(const SampledTraj<Q>& x) const;
       SampledTraj<T> primitive(double dt) const;
   };
+
+  template<typename... T>
+  void truncate_to_common_tdomain(T&... x)
+  {
+    static_assert(sizeof...(x) > 0);
+    Interval t = (x.tdomain() & ...);
+    assert_release(!t.is_empty() && "Trajectories have disjoint time domains");
+    (x.truncate_tdomain(t), ...);
+  }
 }

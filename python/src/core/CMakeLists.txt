@@ -132,6 +132,7 @@
     trajectory/codac2_py_SampledTraj.cpp
     trajectory/codac2_py_TrajBase.h
     trajectory/codac2_py_traj_cart_prod.cpp
+    trajectory/codac2_py_traj_truncate_common.cpp
   )
 
   target_include_directories(_core

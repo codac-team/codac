@@ -67,6 +67,29 @@ Cartesian products
       :end-before: [traj-ops-cartprod-end]
       :dedent: 4
 
+Common time domain
+------------------
+
+``truncate_to_common_tdomain(x1,x2,...)`` truncates all trajectories in place to the intersection of their time domains. An empty intersection raises an error.
+
+.. tabs::
+
+  .. group-tab:: Python
+
+    .. literalinclude:: src.py
+      :language: python
+      :start-after: [traj-ops-common-tdomain-beg]
+      :end-before: [traj-ops-common-tdomain-end]
+      :dedent: 4
+
+  .. group-tab:: C++
+
+    .. literalinclude:: src.cpp
+      :language: c++
+      :start-after: [traj-ops-common-tdomain-beg]
+      :end-before: [traj-ops-common-tdomain-end]
+      :dedent: 4
+
 Unwrapping periodic signals
 ---------------------------
 

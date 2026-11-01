@@ -160,6 +160,21 @@ This list is in alphabetical order by surname.
 
 We appreciate all contributions, whether code, documentation, bug reports, or suggestions. If you believe your name should be included here and it is not, please contact us so we can update the list.
 
+Codac is primarily developed and maintained by researchers at `Lab-STICC <https://labsticc.fr>`_ (`Robex team <https://webperso.ensta.fr/robex/>`_), particularly those based at `ENSTA <https://www.ensta.fr>`_.
+The project also benefits from contributions from researchers and developers at other institutions and welcomes new participants regardless of their affiliation.
+
+.. |labsticc-logo| image:: /_static/logos/logo_labsticc.jpeg
+   :width: 95px
+   :alt: Lab-STICC
+
+.. |ensta-logo| image:: /_static/logos/logo_ensta.jpeg
+   :width: 245px
+   :alt: ENSTA, Institut Polytechnique de Paris
+
+|labsticc-logo|  |ensta-logo|
+
+
+|
 
 Provisional Plan
 ^^^^^^^^^^^^^^^^
@@ -167,8 +182,6 @@ Provisional Plan
 Below is a provisional outline for the structure of this manual.
 Some pages are already available.
 Please note that sections may be revised or added as the content continues to evolve.
-
-|
 
 Overview of Codac
 -----------------
@@ -193,6 +206,7 @@ User manual
    * :ref:`sec-intervals-class`
    * :ref:`sec-intervals-intervalvector-class`
    * :ref:`sec-intervals-boolinterval-class`
+   * :ref:`sec-intervals-rounding`
 
 * :ref:`sec-linear`
    * :ref:`sec-linear-vecmat`
@@ -215,14 +229,16 @@ User manual
       * Extension to custom expressions
 
 * :ref:`sec-tubes-trajectories`
-   * :ref:`sec-trajectories-sampledtraj`
-   * :ref:`sec-trajectories-analytictraj`
-   * :ref:`sec-trajectories-operations`
-   * :ref:`sec-trajectories-io`
-   * :ref:`sec-tubes-tdomain`
-   * :ref:`sec-tubes-slice`
-   * :ref:`sec-tubes-slicedtube`
-   * :ref:`sec-tubes-examples`
+   * Trajectories
+      * :ref:`sec-trajectories-sampledtraj`
+      * :ref:`sec-trajectories-analytictraj`
+      * :ref:`sec-trajectories-operations`
+      * :ref:`sec-trajectories-io`
+   * Tubes
+      * :ref:`sec-tubes-tdomain`
+      * :ref:`sec-tubes-slice`
+      * :ref:`sec-tubes-slicedtube`
+      * :ref:`sec-tubes-examples`
 
 * Contractors
    * What are contractors?

@@ -8,6 +8,7 @@ rm -Rf ibex_$(uname -m)_manylinux_2_28.zip
 sudo cp -Rf ibex/* /usr/local/
 
 git config --global --add safe.directory /io
+git config --global --add safe.directory /io/.git || true
 cd /io
 
 # Read optional constraints from environment

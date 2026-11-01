@@ -337,6 +337,16 @@ TEST_CASE("Trajectory classes - manual")
   }
 
   {
+    // [traj-ops-common-tdomain-beg]
+    SampledTraj<double> x1({0.,4.}, {0,4});
+    SampledTraj<Vector> x2({2.,5}, {Vector({1,2}), Vector({5,6})});
+    truncate_to_common_tdomain(x1,x2); // common time domain: [2,4]
+    // [traj-ops-common-tdomain-end]
+    CHECK(x1.tdomain() == Interval(2,4));
+    CHECK(x2.tdomain() == Interval(2,4));
+  }
+
+  {
     // [traj-analytic-create-beg]
     ScalarVar t;
     AnalyticFunction f({t}, 2*sin(t));

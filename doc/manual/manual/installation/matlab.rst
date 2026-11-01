@@ -28,6 +28,50 @@ Once Codac is installed, you can use it in your MATLAB scripts using the followi
 .. py.importlib.import_module('codac')
 
 
+Known installation issues and possible workarounds
+--------------------------------------------------
+  
+* On some configurations, you might need to use ``pip3`` instead of ``pip``, and/or ``--break-system-packages`` parameter, *e.g.*
+
+  .. code-block:: bash
+  
+    pip3 install --break-system-packages codac4matlab
+
+  or
+
+  .. code-block:: bash
+  
+    python3 -m pip install --break-system-packages codac4matlab
+
+* In some cases, you might have multiple Python installations at different locations on your system (possibly the same Python version can be installed separately at different locations, also some versions of Python might be installed but incompatible with your version of MATLAB). In MATLAB, try to examine the output of the ``pyenv`` command to try to determine where is the Python installation that it uses and possibly run the pip install command from inside MATLAB command window with the ``!`` prefix *e.g.* ``!pip install codac4matlab``, or from a Windows Administrator command prompt with the full path to the python executable *e.g* ``"C:\Python312\python.exe" -m pip install codac4matlab``.
+
+* Python virtual environments compatibility has not been tested.
+
+* MATLAB Online: you will need to run `codac4matlabonline.m <https://github.com/lebarsfa/codac/raw/refs/heads/codac2/scripts/MATLAB/codac4matlabonline.m>`_. Tweak it if it does not work for you. It might not be possible to view the `VIBes viewer <../visualization/vibes.html>`_ windows, possibly use the VIBes functions to save the desired pictures as a workaround.
+
+
+MATLAB specificities
+--------------------
+
+* You might need to add as prefix ``py.codac4matlab.`` to class or function names, e.g. ``py.codac4matlab.Interval`` for ``Interval`` to avoid potential name conflicts with other libraries, and/or do explicitely *e.g.* ``import py.codac4matlab.Interval; import py.codac4matlab.cos;`` instead of just ``import py.codac4matlab.*`` depending on your needs.
+  
+* When we click on a Codac variable e.g. ``IntervalVector`` (``py.codac4matlab._core.IntervalVector``), we do not get help. Please check `codac.io <../..>`_ for the documentation. Also, you can try typing *e.g.* ``X0.`` followed by the TAB key (assuming ``X0`` is a ``py.codac4matlab._core.IntervalVector``) to get a list of suggestions of properties and methods.
+
+.. admonition:: Note
+   
+  Check `codac4matlab_usage.m <https://github.com/lebarsfa/codac/raw/refs/heads/codac2/scripts/MATLAB/codac4matlab_usage.m>`_ example for some MATLAB specificities. 
+
+  See also `Codac v1 documentation <https://codac.io/v1/install/04-start-matlab-project.html>`_ for some remaining issues and potential workarounds.
+
+
+Python to MATLAB conversions
+----------------------------
+
+* Be sure that Python multiline strings are correctly converted to multiline MATLAB strings between ``'``. Remember that multiline statements in MATLAB need ``...`` before next line.
+
+* Please also convert Python `for` loops to typical MATLAB `for` loops, same for `if-else`, `+=` statements. 
+
+
 Potential problem with VIBes
 ----------------------------
 
@@ -41,3 +85,4 @@ A solution is to avoid using ``sudo``. If required, run MATLAB with the correct 
 .. code::
 
   sudo HOME=/home/your_username matlab
+

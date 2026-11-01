@@ -171,6 +171,7 @@ void export_trunc(py::module& m);
 void export_AnalyticTraj(py::module& m);
 void export_SampledTraj(py::module& m);
 void export_traj_cart_prod(py::module& m);
+void export_traj_truncate_common(py::module& m);
 
 // Extension > sympy
 void export_sympy(py::module& m);
@@ -357,6 +358,7 @@ PYBIND11_MODULE(_core, m)
   export_AnalyticTraj(m);
   export_SampledTraj(m);
   export_traj_cart_prod(m);
+  export_traj_truncate_common(m);
 
   m.def("srand", []()
     {
