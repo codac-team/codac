@@ -23,7 +23,7 @@ namespace codac2
       using Y = typename Wrapper<Y_>::Domain; // Y_ is a possible Eigen expr. type
       using OutputType = typename ExprType<Y>::Type;
 
-      CtcInverseNotIn(const AnalyticFunction<OutputType>& f, const Y& y, bool with_centered_form = true)
+      CtcInverseNotIn(const AnalyticFunction<OutputType>& f, const Y& y, bool with_centered_form = true, bool with_mixed_diff = false)
         : CtcUnion<X0,X...>(f.input_size())
       {
         const bool is_not_in = true;
@@ -32,17 +32,17 @@ namespace codac2
         {
           Y w = complem_y & f_codomain;
           if(!w.is_empty() && !w.is_subset(y))
-            *this |= CtcInverse<Y,X0,X...>(f, complem_y, with_centered_form, is_not_in);
+            *this |= CtcInverse<Y,X0,X...>(f, complem_y, with_centered_form, with_mixed_diff, is_not_in);
         }
       }
 
       template<typename C>
         requires IsCtcBaseOrPtr<C,Y>
-      CtcInverseNotIn(const AnalyticFunction<OutputType>& f, const C& ctc_compl, bool with_centered_form = true)
+      CtcInverseNotIn(const AnalyticFunction<OutputType>& f, const C& ctc_compl, bool with_centered_form = true, bool with_mixed_diff = false)
         : CtcUnion<X0,X...>(f.input_size())
       {
         const bool is_not_in = true;
-        *this |= CtcInverse<Y,X0,X...>(f, ctc_compl, with_centered_form, is_not_in);
+        *this |= CtcInverse<Y,X0,X...>(f, ctc_compl, with_centered_form, with_mixed_diff, is_not_in);
       }
 
       void contract(X0& x0, X&... x) const
@@ -52,7 +52,7 @@ namespace codac2
   };
 
   // Template deduction guides
-  // Same as CtcInverse
+  // Same as CtcInverse (  but without one boolean? how did this work? [DM] )
 
   // ScalarType
 

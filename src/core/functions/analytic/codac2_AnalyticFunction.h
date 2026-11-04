@@ -29,7 +29,9 @@ namespace codac2
   {
     NATURAL = 0x01,
     CENTERED = 0x02,
-    DEFAULT = 0x03 // corresponds to (NATURAL|CENTERED)
+    DEFAULT = 0x03, // corresponds to (NATURAL|CENTERED)
+    MIXED = 0x04,  // note: not compatible with CENTERED
+    MIXED_FULL = 0x05 // corresponds to (NATURAL|MIXED)
   };
 
   inline EvalMode operator&(EvalMode a, EvalMode b)
@@ -37,6 +39,36 @@ namespace codac2
 
   inline EvalMode operator|(EvalMode a, EvalMode b)
   { return static_cast<EvalMode>(static_cast<int>(a) | static_cast<int>(b)); }
+
+  /* partial mid to build the a field */
+  inline Interval partial_mid(const Interval &a,[[maybe_unused]] Index i) {
+      return a;
+  }
+  inline IntervalVector partial_mid(const IntervalVector &a,Index i) {
+      IntervalVector m(a);
+      Index sz = m.size();
+      for (Index j=i+1;j<sz;j++) m[j]=m[j].mid();
+      return m;
+  }
+  inline IntervalMatrix partial_mid(const IntervalMatrix &a,Index i) {
+      IntervalMatrix m(a);
+      Index sz = m.reshaped().size();
+      for (Index j=i+1;j<sz;j++) m.reshaped()[j]=m.reshaped()[j].mid();
+      return m;
+  }
+  inline Interval partial_mid(const double &a,[[maybe_unused]] Index i) {
+      return Interval(a);
+  }
+  inline Interval partial_mid(const int &a,[[maybe_unused]] Index i) {
+      return Interval(a);
+  }
+  inline IntervalVector partial_mid(const Vector &a,[[maybe_unused]] Index i) {
+      return IntervalVector(a);
+  }
+  inline IntervalMatrix partial_mid(const Matrix &a,[[maybe_unused]] Index i) {
+      return IntervalMatrix(a);
+  }
+
 
   struct ScalarExprList : public AnalyticExprWrapper<VectorType>
   {
@@ -102,12 +134,12 @@ namespace codac2
         {
           case EvalMode::NATURAL:
           {
-            return eval_<true>(x...).a;
+            return eval_<true,false>(x...).get_a();
           }
 
           case EvalMode::CENTERED:
           {
-            auto x_ = eval_<false>(x...);
+            auto x_ = eval_<false,false>(x...);
             auto flatten_x = IntervalVector(cart_prod(x...));
             assert(x_.da.rows() == x_.a.size() && x_.da.cols() == flatten_x.size());
             
@@ -125,34 +157,65 @@ namespace codac2
             }
           }
 
+	  case EvalMode::MIXED:
+          case EvalMode::MIXED_FULL:
+          {
+            auto x_ = eval_<false, true>(x...);
+            // If the centered form is not available for this expression...
+            if(m==EvalMode::MIXED_FULL && (x_.da.size() == 0 // .. because some parts have not yet been implemented,
+              || !x_.def_domain)) // .. or due to restrictions in the derivative definition domain
+              return x_.get_a(); // natural evaluation
+
+            else {
+              auto flatten_x = IntervalVector(cart_prod(x...));
+              assert(x_.da.rows() == x_.a.size() && x_.da.cols() == flatten_x.size());
+            
+              if constexpr(std::is_same_v<T,ScalarType>) {
+                Interval ret = x_.m + (x_.da*(flatten_x-flatten_x.mid()))[0];
+                return (m==EvalMode::MIXED_FULL ? x_.get_a() & ret : ret);
+              }
+              else if constexpr(std::is_same_v<T,VectorType>) {
+                IntervalVector ret = x_.m + (x_.da*(flatten_x-flatten_x.mid())).col(0);
+                return (m==EvalMode::MIXED_FULL ? x_.get_a() & ret : ret);
+              }
+              else
+              {
+                static_assert(std::is_same_v<T,MatrixType>);
+                IntervalMatrix ret =  x_.m + (x_.da*(flatten_x-flatten_x.mid()))
+                  .reshaped(x_.m.rows(), x_.m.cols());
+                return (m==EvalMode::MIXED_FULL ? x_.get_a() & ret : ret);
+              }
+            }
+          }
+
           case EvalMode::DEFAULT:
           default:
           {
-            auto x_ = eval_<false>(x...);
+            auto x_ = eval_<false,false>(x...);
 
             // If the centered form is not available for this expression...
             if(x_.da.size() == 0 // .. because some parts have not yet been implemented,
               || !x_.def_domain) // .. or due to restrictions in the derivative definition domain
-              return x_.a; // natural evaluation
+              return x_.get_a(); // natural evaluation
 
             else
             {
               auto flatten_x = IntervalVector(cart_prod(x...));
 
               if constexpr(std::is_same_v<T,ScalarType>)
-                return x_.a & (x_.m + (x_.da*(flatten_x-flatten_x.mid()))[0]);
+                return x_.get_a() & (x_.m + (x_.da*(flatten_x-flatten_x.mid()))[0]);
 
               else if constexpr(std::is_same_v<T,VectorType>)
               {
                 assert(x_.da.rows() == x_.a.size() && x_.da.cols() == flatten_x.size());
-                return x_.a & (x_.m + (x_.da*(flatten_x-flatten_x.mid())).col(0));
+                return x_.get_a() & (x_.m + (x_.da*(flatten_x-flatten_x.mid())).col(0));
               }
 
               else
               {
                 static_assert(std::is_same_v<T,MatrixType>);
                 assert(x_.da.rows() == x_.a.size() && x_.da.cols() == flatten_x.size());
-                return x_.a & (x_.m +(x_.da*(flatten_x-flatten_x.mid()))
+                return x_.get_a() & (x_.m +(x_.da*(flatten_x-flatten_x.mid()))
                   .reshaped(x_.m.rows(),x_.m.cols()));
               }
             }
@@ -172,11 +235,11 @@ namespace codac2
         );
       }
 
-      template<typename... Args>
+      template<bool MIXED_EVAL=false,typename... Args>
       auto diff(const Args&... x) const
       {
         check_valid_inputs(x...);
-        return eval_<false>(x...).da;
+        return eval_<false,MIXED_EVAL>(x...).da;
       }
 
       template<typename... Args>
@@ -209,7 +272,7 @@ namespace codac2
         return y;
       }
 
-      template<typename... Args>
+      template<bool MIXED_EVAL=false,typename... Args>
         requires std::is_same_v<VectorType,T> && ((!std::is_same_v<MatrixType,typename ExprType<Args>::Type>) && ...)
       Parallelepiped parallelepiped_eval(const Args&... x) const
       {
@@ -222,10 +285,11 @@ namespace codac2
         IntervalVector Y = this->eval(((typename Wrapper<Args>::Domain)(x)).mid()...);
         Vector c = Y.mid();
 
-        Matrix A = this->diff(((typename Wrapper<Args>::Domain)(x)).mid()...).mid();
+        Matrix A = this->diff<MIXED_EVAL>(((typename Wrapper<Args>::Domain)(x)).mid()...).mid();
 
         // Maximum error computation
-        double rho = error_peibos(Y, c, this->diff(x...), A, cart_prod(x...));
+        double rho = error_peibos(Y, c, this->diff<MIXED_EVAL>(x...), A, cart_prod(x...));
+	// TODO : check the correction of this
 
         // Inflation of the parallelepiped
         Matrix A_inf = inflate_flat_parallelepiped(A, (cart_prod(x...).template cast<Interval>()).rad(), rho);
@@ -300,30 +364,47 @@ namespace codac2
 
         for(Index k = p ; k < p+size_of(x) ; k++)
           d(k-p,k) = 1.;
+ 
+        std::vector<typename D_TYPE::Domain> vecx;
+        vecx.reserve(this->args().total_size());
+			
+        typename D_TYPE::Domain midx = typename D_TYPE::Domain(x).mid();
+        Index l;
+        for(l=0;l<p;l++) {
+             vecx.push_back(midx);
+        }
+        for(;l<p+size_of(x)-1;l++) {
+             vecx.push_back(
+		(static_cast<typename D_TYPE::Domain(*)(const D&,Index)>(partial_mid))(x,l-p));
+        }
+        for(;l<this->args().total_size();l++) {
+             vecx.push_back(x);
+        }
 
         v[this->args()[i]->unique_id()] = 
-          std::make_shared<D_TYPE>(typename D_TYPE::Domain(x).mid(), x, d, true);
+          std::make_shared<D_TYPE>(midx,
+			vecx, d, true);
       }
 
       template<typename D>
       void intersect_value_from_arg_map(const ValuesMap& v, D& x, Index i) const
       {
         assert(v.find(this->args()[i]->unique_id()) != v.end() && "argument cannot be found");
-        x &= std::dynamic_pointer_cast<typename ExprType<D>::Type>(v.at(this->args()[i]->unique_id()))->a;
+        x &= std::dynamic_pointer_cast<typename ExprType<D>::Type>(v.at(this->args()[i]->unique_id()))->get_a();
       }
 
-      template<bool NATURAL_EVAL,typename... Args>
+      template<bool NATURAL_EVAL,bool MIXED_DIFF,typename... Args>
       auto eval_(const Args&... x) const
       {
         ValuesMap v;
 
         if constexpr(sizeof...(Args) == 0)
-          return this->expr()->fwd_eval(v, 0, NATURAL_EVAL);
+          return this->expr()->fwd_eval(v, 0, NATURAL_EVAL, MIXED_DIFF);
 
         else
         {
           fill_from_args(v, x...);
-          return this->expr()->fwd_eval(v, this->input_size(), NATURAL_EVAL);
+          return this->expr()->fwd_eval(v, this->input_size(), NATURAL_EVAL, MIXED_DIFF);
         }
       }
 

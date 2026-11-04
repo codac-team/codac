@@ -16,6 +16,6 @@ int main()
     }
   };
 
-  CtcInverse ctc(f, {0,0});
+  CtcInverse ctc(f, {0,0},true,true,false);
   DefaultFigure::pave({{0,2},{2,4},{0,10}}, ctc, 0.004);
 }

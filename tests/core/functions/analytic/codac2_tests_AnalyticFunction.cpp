@@ -23,10 +23,12 @@ auto create_f()
 
 TEST_CASE("AnalyticFunction")
 {
-  std::array<EvalMode,3> modes {
+  std::array<EvalMode,5> modes {
     EvalMode::NATURAL,
     EvalMode::CENTERED,
-    EvalMode::NATURAL | EvalMode::NATURAL
+    EvalMode::NATURAL | EvalMode::CENTERED,
+    EvalMode::MIXED,
+    EvalMode::MIXED | EvalMode::NATURAL
   };
 
   for(const auto& m : modes) // try all available evaluation modes
@@ -86,6 +88,7 @@ TEST_CASE("AnalyticFunction")
       {
         AnalyticFunction f({x}, vec(x,x));
 	CHECK(f.output_shape()==std::pair<Index,Index>(2,1));
+	std::cout << (long int)m << " " << f.eval(m,1) << "\n";
         CHECK(Approx(f.eval(m, 1)) == IntervalVector({1,1}));
       }
     }
@@ -211,19 +214,19 @@ TEST_CASE("AnalyticFunction")
 
       //.def("__pos__",  {}(const VectorExpr& e1);
       CHECK(Approx(AnalyticFunction({v1}, +(v1+v1)).eval(m, IntervalVector({{0.},{-oo,5}}))) == 
-        (m == EvalMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,10}})));
+        (m == EvalMode::CENTERED || m == EvalMode::MIXED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,10}})));
       //.def(py::self + py::self);
       CHECK(Approx(AnalyticFunction({v1}, v1+v1).eval(m, IntervalVector({{0.},{-oo,5}}))) == 
-        (m == EvalMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,10}})));
+        (m == EvalMode::CENTERED || m == EvalMode::MIXED  ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,10}})));
       //.def("__radd__", {}(const VectorExpr& e1, const VectorVar& e2);
       CHECK(Approx(AnalyticFunction({v1}, (v1+v1)+v1).eval(m, IntervalVector({{0.},{-oo,5}}))) == 
-        (m == EvalMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,15}})));
+        (m == EvalMode::CENTERED || m == EvalMode::MIXED  ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,15}})));
       //.def("__radd__", {}(const VectorExpr& e1, const IntervalVector& e2);
       CHECK(Approx(AnalyticFunction({v1}, v1+(v1+v1)).eval(m, IntervalVector({{0.},{-oo,5}}))) == 
-        (m == EvalMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,15}})));
+        (m == EvalMode::CENTERED || m == EvalMode::MIXED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-oo,15}})));
       //.def(- py::self);
       CHECK(Approx(AnalyticFunction({v1}, -(v1+v1)).eval(m, IntervalVector({{0.},{-oo,5}}))) == 
-        (m == EvalMode::CENTERED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-10,oo}})));
+        (m == EvalMode::CENTERED || m == EvalMode::MIXED ? IntervalVector({{0.},{-oo,oo}}) : IntervalVector({{0.},{-10,oo}})));
       //.def(py::self - py::self);
       CHECK(Approx(AnalyticFunction({v1,v2}, (v1-v2)).eval(m, IntervalVector({2,3}),Vector({1,5}))) == IntervalVector({1,-2}));
       //.def("__sub__",  {}(const VectorExpr& e1, const VectorVar& e2);
@@ -236,9 +239,25 @@ TEST_CASE("AnalyticFunction")
       CHECK(Approx(AnalyticFunction({v1,v2}, Vector({1,5})-(v1-v2)).eval(m, IntervalVector({2,3}),Vector({1,5}))) == IntervalVector({0,7}));
       //.def("__rmul__", {}(const VectorExpr& e1, const ScalarExpr& e2);
       CHECK(Approx(AnalyticFunction({v1,v2}, cos(v1[0])*(v2+v2)).eval(m, Vector({PI,-1}),Vector({2,3})),1e-9) == IntervalVector({-4,-6}));
-      //.def("__rmul__", {}(const VectorExpr& e1, const ScalarVar& e2);
+      //.def("__rmul__", {}(const VectorExpr& e1, const DomainVar& e2);
       CHECK(Approx(AnalyticFunction({x1}, x1*vec(3*x1,2*x1)).eval(m, 3),1e-9) == IntervalVector({27,18}));
     }
+  }
+
+  { VectorVar x(2);
+   ScalarVar a,b;
+    AnalyticFunction f0({x}, x[1]);
+    std::cout << "Natural : " << f0.eval(EvalMode::NATURAL,IntervalVector({{0,1},{0,1}})) << "\n";
+    std::cout << "Centered : " << f0.eval(EvalMode::CENTERED,IntervalVector({{0,1},{0,1}})) << "\n";
+    std::cout << "Mixed : " << f0.eval(EvalMode::MIXED,IntervalVector({{0,1},{0,1}})) << "\n";
+    AnalyticFunction f0p({a,b}, (a+b)*(a-b));
+    std::cout << "Natural : " << f0p.eval(EvalMode::NATURAL,Interval({0,1}),Interval({0,1})) << "\n";
+    std::cout << "Centered: " << f0p.eval(EvalMode::CENTERED,Interval({0,1}),Interval({0,1})) << "\n";
+    std::cout << "Mixed : " << f0p.eval(EvalMode::MIXED,Interval({0,1}),Interval({0,1})) << "\n";
+    AnalyticFunction f({x}, (x[0]+x[1])*(x[0]-x[1]));
+    std::cout << "Natural : " << f.eval(EvalMode::NATURAL,IntervalVector({{0,1},{0,1}})) << "\n";
+    std::cout << "Centered : " << f.eval(EvalMode::CENTERED,IntervalVector({{0,1},{0,1}})) << "\n";
+    std::cout << "Mixed : " << f.eval(EvalMode::MIXED,IntervalVector({{0,1},{0,1}})) << "\n";
   }
 
   {
@@ -274,6 +293,7 @@ TEST_CASE("AnalyticFunction")
     AnalyticFunction f({x}, x-x);
     CHECK(f.eval(EvalMode::NATURAL,Interval(-1,1)) == Interval(-2,2));
     CHECK(f.eval(EvalMode::CENTERED,Interval(-1,1)) == Interval(0));
+    CHECK(f.eval(EvalMode::MIXED,Interval(-1,1)) == Interval(0));
     CHECK(f.eval(Interval(-1,1)) == Interval(0));
   }
 

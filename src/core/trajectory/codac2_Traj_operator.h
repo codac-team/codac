@@ -45,7 +45,7 @@ namespace codac2
       };
     }
 
-    static typename TR::Type fwd_centered(const TR& x1, [[maybe_unused]] const SampledTraj<T>& x1_deriv, const ScalarType& x2)
+    static typename TR::Type fwd_centered([[maybe_unused]] bool mixed_diff, const TR& x1, [[maybe_unused]] const SampledTraj<T>& x1_deriv, const ScalarType& x2)
     {
       IntervalMatrix d(x1.size(),x2.da.cols());
 
@@ -66,9 +66,11 @@ namespace codac2
       //       d(i,j) = dx1[i];
       // }
 
+      // Note: I don't even try to understand there [-- Damien]
+
       return {
         fwd(x1,x2.m),
-        fwd(x1,x2.a),
+        fwd(x1,x2.get_a()),
         d,
         x2.def_domain && x1.tdomain().is_superset(x2.m)
       };
@@ -111,19 +113,19 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<ScalarType>>::replace_arg(old_arg_id, new_expr);
       }
       
-      T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
+      T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval, bool mixed_diff) const
       {
         if(natural_eval)
           return AnalyticExpr<T>::init_value(
-            v, TrajectoryOp<TR>::fwd_natural(_x1, std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval)));
+            v, TrajectoryOp<TR>::fwd_natural(_x1, std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval, mixed_diff)));
         else
           return AnalyticExpr<T>::init_value(
-            v, TrajectoryOp<TR>::fwd_centered(_x1, _x1_deriv, std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval)));
+            v, TrajectoryOp<TR>::fwd_centered(mixed_diff, _x1, _x1_deriv, std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval, mixed_diff)));
       }
       
       void bwd_eval(ValuesMap& v) const
       {
-        TrajectoryOp<TR>::bwd(_x1, AnalyticExpr<T>::value(v).a, std::get<0>(this->_x)->value(v).a);
+        TrajectoryOp<TR>::bwd(_x1, AnalyticExpr<T>::value(v).get_a(), std::get<0>(this->_x)->value(v).get_a());
         std::get<0>(this->_x)->bwd_eval(v);
       }
 

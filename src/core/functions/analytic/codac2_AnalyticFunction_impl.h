@@ -45,12 +45,12 @@ namespace codac2
       {
         case EvalMode::NATURAL:
         {
-          return eval_<true>(x...).a;
+          return eval_<true,false>(x...).get_a();
         }
 
         case EvalMode::CENTERED:
         {
-          auto x_ = eval_<false>(x...);
+          auto x_ = eval_<false,false>(x...);
           auto flatten_x = cart_prod(x...);
           assert(x_.da.rows() == x_.a.size() && x_.da.cols() == flatten_x.size());
           
@@ -58,6 +58,38 @@ namespace codac2
             return x_.m + (x_.da*(flatten_x-flatten_x.mid()))[0];
           else
             return x_.m + (x_.da*(flatten_x-flatten_x.mid())).col(0);
+        }
+
+        case EvalMode::MIXED:
+        {
+          auto x_ = eval_<false,true>(x...);
+          auto flatten_x = cart_prod(x...);
+          assert(x_.da.rows() == x_.a.size() && x_.da.cols() == flatten_x.size());
+          
+          if constexpr(std::is_same_v<T,ScalarType>)
+            return x_.m + (x_.da*(flatten_x-flatten_x.mid()))[0];
+          else
+            return x_.m + (x_.da*(flatten_x-flatten_x.mid())).col(0);
+        }
+
+        case EvalMode::FULL_MIXED:
+        {
+          auto x_ = eval_<false,true>(x...);
+
+          if(x_.da.size() == 0) // if the centered form is not available for this expression
+            return eval(EvalMode::NATURAL, x...);
+
+          else
+          {
+            auto flatten_x = cart_prod(x...);
+            if constexpr(std::is_same_v<T,ScalarType>)
+              return x_.get_a() & (x_.m + (x_.da*(flatten_x-flatten_x.mid()))[0]);
+            else
+            {
+              assert(x_.da.rows() == x_.a.size() && x_.da.cols() == flatten_x.size());
+              return x_.get_a() & (x_.m + (x_.da*(flatten_x-flatten_x.mid())).col(0));
+            }
+          }
         }
 
         case EvalMode::DEFAULT:
@@ -93,11 +125,11 @@ namespace codac2
 
     template<typename T>
       requires std::is_base_of_v<AnalyticTypeBase,T>
-    template<typename... Args>
+    template<bool MIXED_EVAL=false,typename... Args>
     inline auto AnalyticFunction<T>::diff(const Args&... x) const
     {
       check_valid_inputs(x...);
-      return eval_<false>(x...).da;
+      return eval_<false,MIXED_EVAL>(x...).da;
     }
 
     template<typename T>
@@ -178,7 +210,7 @@ namespace codac2
     inline void AnalyticFunction<T>::intersect_value_from_arg_map(const ValuesMap& v, D& x, Index i) const
     {
       assert(v.find(this->args()[i]->unique_id()) != v.end() && "argument cannot be found");
-      x &= std::dynamic_pointer_cast<typename ExprType<D>::Type>(v.at(this->args()[i]->unique_id()))->a;
+      x &= std::dynamic_pointer_cast<typename ExprType<D>::Type>(v.at(this->args()[i]->unique_id()))->get_a();
     }
 
     template<typename T>
@@ -192,18 +224,18 @@ namespace codac2
 
     template<typename T>
       requires std::is_base_of_v<AnalyticTypeBase,T>
-    template<bool NATURAL_EVAL,typename... Args>
+    template<bool NATURAL_EVAL,bool MIXED_DIFF,typename... Args>
     inline auto AnalyticFunction<T>::eval_(const Args&... x) const
     {
       ValuesMap v;
 
       if constexpr(sizeof...(Args) == 0)
-        return this->expr()->fwd_eval(v, 0, NATURAL_EVAL);
+        return this->expr()->fwd_eval(v, 0, NATURAL_EVAL, false);
 
       else
       {
         fill_from_args(v, x...);
-        return this->expr()->fwd_eval(v, cart_prod(x...).size(), NATURAL_EVAL); // todo: improve size computation
+        return this->expr()->fwd_eval(v, cart_prod(x...).size(), NATURAL_EVAL, MIXED_DIFF); // todo: improve size computation
       }
     }
 

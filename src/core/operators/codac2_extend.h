@@ -44,17 +44,19 @@ namespace codac2
     static inline T fwd_natural(const T& x1, const T& x2)
     {
       return {
-        (x1.def_domain ? x1.a : fwd(x1.a,x2.a)),
+        (x1.def_domain ? x1.get_a() : fwd(x1.get_a(),x2.get_a())),
         x1.def_domain || x2.def_domain
       };
     }
 
     template<typename T>
-    static inline T fwd_centered(const T& x1, const T& x2)
+    static inline T fwd_centered([[maybe_unused]] bool mixed_diff, const T& x1, const T& x2)
     {
       return {
         (x1.def_domain ? x1.m : fwd(x1.m,x2.m)),
-        (x1.def_domain ? x1.a : fwd(x1.a,x2.a)),
+        (x1.def_domain ? x1.a : 
+	    vector_map<typename T::Domain,typename T::Domain,typename T::Domain>(x1.a,x2.a,
+	    static_cast<typename T::Domain(*)(const typename T::Domain&,const typename T::Domain&)>(&fwd))),
         (x1.def_domain ? x1.da : (x1.da | x2.da)),
         x1.def_domain || x2.def_domain
       };

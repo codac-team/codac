@@ -34,17 +34,17 @@ namespace codac2
 
     static Interval fwd(const Interval& x1);
     static ScalarType fwd_natural(const ScalarType& x1);
-    static ScalarType fwd_centered(const ScalarType& x1);
+    static ScalarType fwd_centered(bool mixed_diff, const ScalarType& x1);
     static void bwd(const Interval& y, Interval& x1);
 
     static IntervalVector fwd(const IntervalVector& x1);
     static VectorType fwd_natural(const VectorType& x1);
-    static VectorType fwd_centered(const VectorType& x1);
+    static VectorType fwd_centered(bool mixed_diff, const VectorType& x1);
     static void bwd(const IntervalVector& y, IntervalVector& x1);
 
     static IntervalMatrix fwd(const IntervalMatrix& x1);
     static MatrixType fwd_natural(const MatrixType& x1);
-    static MatrixType fwd_centered(const MatrixType& x1);
+    static MatrixType fwd_centered(bool mixed_diff, const MatrixType& x1);
     static void bwd(const IntervalMatrix& y, IntervalMatrix& x1);
 
     static std::pair<Index,Index> output_shape(const std::pair<Index,Index> &s1);
@@ -67,17 +67,17 @@ namespace codac2
 
     static Interval fwd(const Interval& x1, const Interval& x2);
     static ScalarType fwd_natural(const ScalarType& x1, const ScalarType& x2);
-    static ScalarType fwd_centered(const ScalarType& x1, const ScalarType& x2);
+    static ScalarType fwd_centered(bool mixed_diff, const ScalarType& x1, const ScalarType& x2);
     static void bwd(const Interval& y, Interval& x1, Interval& x2);
 
     static IntervalVector fwd(const IntervalVector& x1, const IntervalVector& x2);
     static VectorType fwd_natural(const VectorType& x1, const VectorType& x2);
-    static VectorType fwd_centered(const VectorType& x1, const VectorType& x2);
+    static VectorType fwd_centered(bool mixed_diff, const VectorType& x1, const VectorType& x2);
     static void bwd(const IntervalVector& y, IntervalVector& x1, IntervalVector& x2);
 
     static IntervalMatrix fwd(const IntervalMatrix& x1, const IntervalMatrix& x2);
     static MatrixType fwd_natural(const MatrixType& x1, const MatrixType& x2);
-    static MatrixType fwd_centered(const MatrixType& x1, const MatrixType& x2);
+    static MatrixType fwd_centered(bool mixed_diff, const MatrixType& x1, const MatrixType& x2);
     static void bwd(const IntervalMatrix& y, IntervalMatrix& x1, IntervalMatrix& x2);
   };
 
@@ -134,16 +134,17 @@ namespace codac2
   inline ScalarType AddOp::fwd_natural(const ScalarType& x1)
   {
     return {
-      fwd(x1.a),
+      fwd(x1.get_a()),
       x1.def_domain
     };
   }
 
-  inline ScalarType AddOp::fwd_centered(const ScalarType& x1)
+  inline ScalarType AddOp::fwd_centered([[maybe_unused]] bool mixed_diff, const ScalarType& x1)
   {
     return {
       fwd(x1.m),
-      fwd(x1.a),
+      vector_map<Interval,Interval>(x1.a,
+		static_cast<Interval(*)(const Interval&)>(&fwd)),
       x1.da,
       x1.def_domain
     };
@@ -165,16 +166,17 @@ namespace codac2
   inline VectorType AddOp::fwd_natural(const VectorType& x1)
   {
     return {
-      fwd(x1.a),
+      fwd(x1.get_a()),
       x1.def_domain
     };
   }
 
-  inline VectorType AddOp::fwd_centered(const VectorType& x1)
+  inline VectorType AddOp::fwd_centered([[maybe_unused]] bool mixed_diff, const VectorType& x1)
   {
     return {
       fwd(x1.m),
-      fwd(x1.a),
+      vector_map<IntervalVector,IntervalVector>(x1.a,
+	static_cast<IntervalVector(*)(const IntervalVector&)>(&fwd)),
       x1.da,
       x1.def_domain
     };
@@ -193,19 +195,20 @@ namespace codac2
   inline MatrixType AddOp::fwd_natural(const MatrixType& x1)
   {
     return {
-      fwd(x1.a),
+      fwd(x1.get_a()),
       x1.def_domain
     };
   }
 
-  inline MatrixType AddOp::fwd_centered(const MatrixType& x1)
+  inline MatrixType AddOp::fwd_centered([[maybe_unused]] bool mixed_diff, const MatrixType& x1)
   {
     if(centered_form_not_available_for_args(x1))
       return fwd_natural(x1);
 
     return {
       fwd(x1.m),
-      fwd(x1.a),
+      vector_map<IntervalMatrix,IntervalMatrix>(x1.a,
+	static_cast<IntervalMatrix(*)(const IntervalMatrix&)>(&fwd)),
       x1.da, // unary plus
       x1.def_domain
     };
@@ -224,12 +227,12 @@ namespace codac2
   inline ScalarType AddOp::fwd_natural(const ScalarType& x1, const ScalarType& x2)
   {
     return {
-      fwd(x1.a, x2.a),
+      fwd(x1.get_a(), x2.get_a()),
       x1.def_domain && x2.def_domain
     };
   }
 
-  inline ScalarType AddOp::fwd_centered(const ScalarType& x1, const ScalarType& x2)
+  inline ScalarType AddOp::fwd_centered([[maybe_unused]] bool mixed_diff,const ScalarType& x1, const ScalarType& x2)
   {
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
@@ -237,7 +240,8 @@ namespace codac2
     assert(x1.da.size() == x2.da.size());
     return {
       fwd(x1.m, x2.m),
-      fwd(x1.a, x2.a),
+      vector_map<Interval,Interval,Interval>(x1.a,x2.a,
+	static_cast<Interval(*)(const Interval&,const Interval&)>(&fwd)),
       x1.da + x2.da,
       x1.def_domain && x2.def_domain
     };
@@ -261,12 +265,12 @@ namespace codac2
   inline VectorType AddOp::fwd_natural(const VectorType& x1, const VectorType& x2)
   {
     return {
-      fwd(x1.a, x2.a),
+      fwd(x1.get_a(), x2.get_a()),
       x1.def_domain && x2.def_domain
     };
   }
 
-  inline VectorType AddOp::fwd_centered(const VectorType& x1, const VectorType& x2)
+  inline VectorType AddOp::fwd_centered([[maybe_unused]] bool mixed_diff,const VectorType& x1, const VectorType& x2)
   {
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
@@ -274,7 +278,8 @@ namespace codac2
     assert(x1.da.rows() == x2.da.rows() && x1.da.cols() == x2.da.cols());
     return {
       fwd(x1.m, x2.m),
-      fwd(x1.a, x2.a),
+      vector_map<IntervalVector,IntervalVector,IntervalVector>(x1.a,x2.a,
+	static_cast<IntervalVector(*)(const IntervalVector&,const IntervalVector&)>(&fwd)),
       x1.da + x2.da,
       x1.def_domain && x2.def_domain
     };
@@ -296,19 +301,20 @@ namespace codac2
   inline MatrixType AddOp::fwd_natural(const MatrixType& x1, const MatrixType& x2)
   {
     return {
-      fwd(x1.a, x2.a),
+      fwd(x1.get_a(), x2.get_a()),
       x1.def_domain && x2.def_domain
     };
   }
 
-  inline MatrixType AddOp::fwd_centered(const MatrixType& x1, const MatrixType& x2)
+  inline MatrixType AddOp::fwd_centered([[maybe_unused]] bool mixed_diff,const MatrixType& x1, const MatrixType& x2)
   {
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
 
     return {
       fwd(x1.m, x2.m),
-      fwd(x1.a, x2.a),
+      vector_map<IntervalMatrix,IntervalMatrix,IntervalMatrix>(x1.a,x2.a,
+	static_cast<IntervalMatrix(*)(const IntervalMatrix&,const IntervalMatrix&)>(&fwd)),
       x1.da + x2.da,
       x1.def_domain && x2.def_domain
     };

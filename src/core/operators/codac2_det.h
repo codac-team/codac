@@ -17,6 +17,7 @@
 #include "codac2_arith_sub.h"
 #include "codac2_arith_mul.h"
 #include "codac2_inversion.h"
+#include <vector>
 
 namespace codac2
 {
@@ -49,7 +50,7 @@ namespace codac2
 
     static Interval fwd(const IntervalMatrix& x);
     static ScalarType fwd_natural(const MatrixType& x);
-    static ScalarType fwd_centered(const MatrixType& x);
+    static ScalarType fwd_centered(bool mixed_diff,const MatrixType& x);
     static void bwd(const Interval& y, IntervalMatrix& x);
 
     // For two vectors (merged into a 2×2 matrix)
@@ -61,7 +62,7 @@ namespace codac2
 
     static Interval fwd(const IntervalVector& x1, const IntervalVector& x2);
     static ScalarType fwd_natural(const VectorType& x1, const VectorType& x2);
-    static ScalarType fwd_centered(const VectorType& x1, const VectorType& x2);
+    static ScalarType fwd_centered(bool mixed_diff,const VectorType& x1, const VectorType& x2);
     static void bwd(const Interval& y, IntervalVector& x1, IntervalVector& x2);
 
     // For three vectors (merged into a 3×3 matrix)
@@ -73,7 +74,7 @@ namespace codac2
     
     static Interval fwd(const IntervalVector& x1, const IntervalVector& x2, const IntervalVector& x3);
     static ScalarType fwd_natural(const VectorType& x1, const VectorType& x2, const VectorType& x3);
-    static ScalarType fwd_centered(const VectorType& x1, const VectorType& x2, const VectorType& x3);
+    static ScalarType fwd_centered(bool mixed_diff, const VectorType& x1, const VectorType& x2, const VectorType& x3);
     static void bwd(const Interval& y, IntervalVector& x1, IntervalVector& x2, IntervalVector& x3);
   };
 
@@ -120,45 +121,54 @@ namespace codac2
   inline ScalarType DetOp::fwd_natural(const MatrixType& x)
   {
     return {
-      fwd(x.a),
+      fwd(x.get_a()),
       x.def_domain
     };
   }
 
-  inline ScalarType DetOp::fwd_centered(const MatrixType& x)
+  inline ScalarType DetOp::fwd_centered(bool mixed_diff, const MatrixType& x)
   {
     if(centered_form_not_available_for_args(x)) 
       return fwd_natural(x);
 
-    if(x.a.rows()==1) {
+    if(x.get_a().rows()==1) {
       return {
         fwd(x.m),
-        fwd(x.a),
+        vector_map<IntervalMatrix,Interval>(x.a,
+		static_cast<Interval(*)(const IntervalMatrix&)>(&fwd)),
         x.da, // keep matrix type for diff 
         x.def_domain
       };
     }
     
     IntervalMatrix d(1, x.da.cols());
-    if (x.a.rows()==2) { /* otherwise, will fail afterwards */
+    if (x.get_a().rows()==2) { /* otherwise, will fail afterwards */
          for (Index i=0; i < d.cols() ; i++) {
-            d(0,i) = x.da(0,i)*x.a(1,1) + x.da(3,i)*x.a(0,0)
-  		 - x.da(1,i)*x.a(0,1) - x.da(2,i)*x.a(1,0);
+            const IntervalMatrix& xa = x.get_a(mixed_diff,i);
+            d(0,i) = x.da(0,i)*xa(1,1) + x.da(3,i)*xa(0,0)
+  		 - x.da(1,i)*xa(0,1) - x.da(2,i)*xa(1,0);
 		/* note:  ColMajor is assumed here */
          }      
          return {
            fwd(x.m),
-           fwd(x.a),
+           vector_map<IntervalMatrix,Interval>(x.a,
+		static_cast<Interval(*)(const IntervalMatrix&)>(&fwd)),
            d, 
            x.def_domain
          };
     } else {
-       auto ret1 = cofactor_matrix_enclosure(x.a);
-       for (Index i=0; i < d.cols() ; i++) 
-         d(0,i)  = ret1.first.reshaped<Eigen::ColMajor>().dot(x.da.col(i));
+       std::vector<IntervalMatrix> cofact(x.a.size());
+       std::vector<Interval> detval(x.a.size());
+       for (size_t i=0;i<x.a.size();i++) {
+ 	  std::tie(cofact[i],detval[i])=cofactor_matrix_enclosure(x.a[i]);
+       }
+       for (Index i=0; i < d.cols() ; i++)  {
+         const IntervalMatrix& cof = mixed_diff ? cofact[i] : cofact.back();
+         d(0,i)  = cof.reshaped<Eigen::ColMajor>().dot(x.da.col(i));
+       }
        return {
          fwd(x.m),
-         ret1.second,
+         detval,
          d, 
          x.def_domain
        };
@@ -201,7 +211,7 @@ namespace codac2
   inline ScalarType DetOp::fwd_natural(const VectorType& x1, const VectorType& x2)
   {
     IntervalMatrix a(2,2);
-    a.col(0) = x1.a; a.col(1) = x2.a;
+    a.col(0) = x1.get_a(); a.col(1) = x2.get_a();
 
     return {
       fwd(a),
@@ -209,26 +219,25 @@ namespace codac2
     };
   }
 
-  inline ScalarType DetOp::fwd_centered(const VectorType& x1, const VectorType& x2)
+  inline ScalarType DetOp::fwd_centered(bool mixed_diff, const VectorType& x1, const VectorType& x2)
   {
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
 
-    IntervalMatrix m(2,2);
-    m.col(0) = x1.m; m.col(1) = x2.m;
-    IntervalMatrix a(2,2);
-    a.col(0) = x1.a; a.col(1) = x2.a;
-
     assert(x1.da.cols() == x2.da.cols());
     IntervalMatrix d(1, x1.da.cols());
     for (Index i=0; i < d.cols() ; i++) {
-          d(0,i) = x1.da(0,i)*x2.a[1] + x1.a[0]*x2.da(1,i)
-		 - x1.da(1,i)*x2.a[0] - x1.a[1]*x2.da(0,i);
+          const IntervalVector& x1a = mixed_diff ? x1.a[i] : x1.get_a();
+          const IntervalVector& x2a = mixed_diff ? x2.a[i] : x2.get_a();
+          d(0,i) = x1.da(0,i)*x2a[1] + x1a[0]*x2.da(1,i)
+		 - x1.da(1,i)*x2a[0] - x1a[1]*x2.da(0,i);
     }
  
     return {
-      fwd(m),
-      fwd(a),
+      fwd(x1.m,x2.m),
+      vector_map<IntervalVector,IntervalVector,Interval>(x1.a,x2.a,
+          static_cast<Interval(*)(const IntervalVector&,const IntervalVector&)>
+		(&fwd)),
       d, 
       x1.def_domain && x2.def_domain
     };
@@ -255,7 +264,7 @@ namespace codac2
   inline ScalarType DetOp::fwd_natural(const VectorType& x1, const VectorType& x2, const VectorType& x3)
   {
     IntervalMatrix a(3,3);
-    a.col(0) = x1.a; a.col(1) = x2.a; a.col(2) = x3.a;
+    a.col(0) = x1.get_a(); a.col(1) = x2.get_a(); a.col(2) = x3.get_a();
 
     return {
       fwd(a),
@@ -263,28 +272,36 @@ namespace codac2
     };
   }
 
-  inline ScalarType DetOp::fwd_centered(const VectorType& x1, const VectorType& x2, const VectorType& x3)
+  inline ScalarType DetOp::fwd_centered(bool mixed_diff, const VectorType& x1, const VectorType& x2, const VectorType& x3)
   {
     if(centered_form_not_available_for_args(x1,x2,x3))
       return fwd_natural(x1,x2,x3);
 
     IntervalMatrix m(3,3);
     m.col(0) = x1.m; m.col(1) = x2.m; m.col(2) = x3.m;
-    IntervalMatrix a(3,3);
-    a.col(0) = x1.a; a.col(1) = x2.a; a.col(2) = x3.a;
 
     assert(x1.da.cols() == x2.da.cols());
     assert(x1.da.cols() == x3.da.cols());
     IntervalMatrix d(1, x1.da.cols());
-    auto ret1 = cofactor_matrix_enclosure(a);
+    Index size_a = (mixed_diff ? d.cols() : 1);
+    std::vector<IntervalMatrix> cofact(size_a);
+    std::vector<Interval> detval(size_a);
+    for (size_t i=0;i<(size_t) size_a;i++) {
+          IntervalMatrix a(3,3);
+          a.col(0) = x1.get_a(mixed_diff,i); 
+	  a.col(1) = x2.get_a(mixed_diff,i);
+	  a.col(2) = x3.get_a(mixed_diff,i);
+ 	  std::tie(cofact[i],detval[i])=cofactor_matrix_enclosure(a);
+    }
     for (Index i=0; i < d.cols() ; i++) {
-       d(0,i)  = ret1.first.col(0).dot(x1.da.col(i));
-       d(0,i)  += ret1.first.col(1).dot(x2.da.col(i));
-       d(0,i)  += ret1.first.col(2).dot(x3.da.col(i));
+       const IntervalMatrix& cof = mixed_diff ? cofact[i] : cofact.back();
+       d(0,i)  = cof.col(0).dot(x1.da.col(i));
+       d(0,i)  += cof.col(1).dot(x2.da.col(i));
+       d(0,i)  += cof.col(2).dot(x3.da.col(i));
     }
     return {
-      fwd(m),
-      ret1.second,
+      fwd(x1.m,x2.m,x3.m),
+      detval,
       d, 
       x1.def_domain && x2.def_domain && x3.def_domain
     };

@@ -31,7 +31,7 @@ namespace codac2
 
     static Interval fwd(const Interval& x1);
     static ScalarType fwd_natural(const ScalarType& x1);
-    static ScalarType fwd_centered(const ScalarType& x1);
+    static ScalarType fwd_centered(bool mixed_type,const ScalarType& x1);
     static void bwd(const Interval& y, Interval& x1);
   };
 
@@ -54,19 +54,19 @@ namespace codac2
   inline ScalarType FloorOp::fwd_natural(const ScalarType& x1)
   {
     return {
-      fwd(x1.a),
+      fwd(x1.get_a()),
       x1.def_domain
     };
   }
 
-  inline ScalarType FloorOp::fwd_centered(const ScalarType& x1)
+  inline ScalarType FloorOp::fwd_centered([[maybe_unused]] bool mixed_diff, const ScalarType& x1)
   {
     if(centered_form_not_available_for_args(x1))
       return fwd_natural(x1);
 
     return {
       fwd(x1.m),
-      fwd(x1.a),
+      vector_map<Interval,Interval>(x1.a,&fwd),
       IntervalMatrix(0,0), // not supported yet for auto diff
       x1.def_domain
     };

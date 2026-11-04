@@ -31,7 +31,7 @@ namespace codac2
 
     static Interval fwd(const Interval& x1, const Interval& x2);
     static ScalarType fwd_natural(const ScalarType& x1, const ScalarType& x2);
-    static ScalarType fwd_centered(const ScalarType& x1, const ScalarType& x2);
+    static ScalarType fwd_centered(bool mixed_diff, const ScalarType& x1, const ScalarType& x2);
     static void bwd(const Interval& y, Interval& x1, Interval& x2);
   };
 
@@ -47,12 +47,12 @@ namespace codac2
   inline ScalarType MaxOp::fwd_natural(const ScalarType& x1, const ScalarType& x2)
   {
     return {
-      fwd(x1.a, x2.a),
+      fwd(x1.get_a(), x2.get_a()),
       x1.def_domain && x2.def_domain
     };
   }
 
-  inline ScalarType MaxOp::fwd_centered(const ScalarType& x1, const ScalarType& x2)
+  inline ScalarType MaxOp::fwd_centered(bool mixed_diff, const ScalarType& x1, const ScalarType& x2)
   {
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
@@ -61,15 +61,19 @@ namespace codac2
     assert(x1.da.rows() == x2.da.rows() && x1.da.cols() == x2.da.cols());
 
     IntervalMatrix d(1,x1.da.cols());
-    for(Index i = 0 ; i < d.size() ; i++)
-      d(0,i) = chi(x1.a-x2.a, x2.da(0,i), x1.da(0,i));
+    for(Index i = 0 ; i < d.size() ; i++) {
+      const Interval& x1a = x1.get_a(mixed_diff,i);
+      const Interval& x2a = x2.get_a(mixed_diff,i); 
+      d(0,i) = chi(x1a-x2a, x2.da(0,i), x1.da(0,i));
+    }
 
     return {
       fwd(x1.m, x2.m),
-      fwd(x1.a, x2.a),
+      vector_map<Interval,Interval,Interval>(x1.a,x2.a,&fwd),
       d,
       x1.def_domain && x2.def_domain
-        && !x1.a.intersects(x2.a) // def domain of the derivative of max
+        && !x1.get_a().intersects(x2.get_a())
+			 // def domain of the derivative of max
     };
   }
 

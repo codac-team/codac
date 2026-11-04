@@ -50,28 +50,37 @@ namespace codac2
     static inline T fwd_natural(const ScalarType& x1, const T& x2, const T& x3)
     {
       return {
-        fwd(x1.a,x2.a,x3.a),
+        fwd(x1.get_a(),x2.get_a(),x3.get_a()),
         x1.def_domain
-          && ((x1.a.lb()>0.0)  ? x2.def_domain : true)
-          && ((x1.a.ub()<=0.0) ? x3.def_domain : true)
+          && ((x1.get_a().lb()>0.0)  ? x2.def_domain : true)
+          && ((x1.get_a().ub()<=0.0) ? x3.def_domain : true)
       };
     }
 
     template<typename T>
-    static inline T fwd_centered(const ScalarType& x1, const T& x2, const T& x3)
+    static inline T fwd_centered(bool mixed_diff,const ScalarType& x1, const T& x2, const T& x3)
     {
       if(centered_form_not_available_for_args(x1,x2,x3))
         return fwd_natural(x1,x2,x3);
       
       assert(x2.da.rows() == x3.da.rows());
+      assert(x2.da.cols() == x3.da.cols());
+
+      IntervalMatrix d(x3.da.rows(),x3.da.cols());
+      for(Index j = 0 ; j < d.cols() ; j++) {
+        const Interval& x1a = x1.get_a(mixed_diff,j);
+        if (x1a.lb()>0) d.col(j) = x3.da.col(j);
+        else if (x1a.ub()<=0) d.col(j) = x2.da.col(j);
+        else d.col(j) = (IntervalVector(x2.da.col(j)) | IntervalVector(x3.da.col(j)));
+      }
  
       return {
         fwd(x1.m,x2.m,x3.m),
-        fwd(x1.a,x2.a,x3.a),
-        (x1.a.lb()>0 ? x3.da : ((x1.a.ub()<=0) ? x2.da : (x2.da | x3.da))),
+        vector_map<Interval,typename T::Domain,typename T::Domain,typename T::Domain>(x1.a,x2.a,x3.a,&fwd<typename T::Domain>),
+        d,
         x1.def_domain
-          && ((x1.a.lb()>0.0)  ? x2.def_domain : true)
-          && ((x1.a.ub()<=0.0) ? x3.def_domain : true)
+          && ((x1.get_a().lb()>0.0)  ? x2.def_domain : true)
+          && ((x1.get_a().ub()<=0.0) ? x3.def_domain : true)
       };
     }
 

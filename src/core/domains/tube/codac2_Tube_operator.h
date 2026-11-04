@@ -31,7 +31,7 @@ namespace codac2
 
       return {
         fwd(x1,x2.m),
-        fwd(x1,x2.a),
+        fwd(x1,x2.get_a()),
         d,
         x2.def_domain && x1.tdomain()->t0_tf().is_superset(x2.m)
       };
@@ -67,15 +67,15 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<ScalarType>>::replace_arg(old_arg_id, new_expr);
       }
       
-      T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
+      T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval, bool mixed_diff) const
       {
         return AnalyticExpr<T>::init_value(
-          v, TubeOp<TU>::fwd(_x1, std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval)));
+          v, TubeOp<TU>::fwd(_x1, std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval,mixed_diff)));
       }
       
       void bwd_eval(ValuesMap& v) const
       {
-        TubeOp<TU>::bwd(_x1, AnalyticExpr<T>::value(v).a, std::get<0>(this->_x)->value(v).a);
+        TubeOp<TU>::bwd(_x1, AnalyticExpr<T>::value(v).get_a(), std::get<0>(this->_x)->value(v).get_a());
         std::get<0>(this->_x)->bwd_eval(v);
       }
 

@@ -41,26 +41,26 @@ void export_CtcInverse(py::module& m,
   exported_ctc
 
     .def(py::init(
-        [](const AnalyticFunction<T>& f, const D& y, bool with_centered_form)
+        [](const AnalyticFunction<T>& f, const D& y, bool with_centered_form, bool with_mixed_diff)
         {
-          return std::make_unique<C>(unaryize_function(f), y, with_centered_form);
+          return std::make_unique<C>(unaryize_function(f), y, with_centered_form, with_mixed_diff);
         }
       ),
-      CTCINVERSE_Y_X0X_CTCINVERSE_CONST_ANALYTICFUNCTION_OUTPUTTYPE_REF_CONST_Y_REF_BOOL_BOOL,
-      "f"_a, "y"_a, "with_centered_form"_a = true)
+      CTCINVERSE_Y_X0X_CTCINVERSE_CONST_ANALYTICFUNCTION_OUTPUTTYPE_REF_CONST_Y_REF_BOOL_BOOL_BOOL,
+      "f"_a, "y"_a, "with_centered_form"_a = true, "with_mixed_diff"_a=false)
   ;
 
   if constexpr(std::is_same_v<T,VectorType>) // contractors are only associated with interval vectors
   {
     exported_ctc
     .def(py::init(
-        [](const AnalyticFunction<T>& f, const CtcBase<IntervalVector>& c, bool with_centered_form)
+        [](const AnalyticFunction<T>& f, const CtcBase<IntervalVector>& c, bool with_centered_form, bool with_mixed_diff)
         {
-          return std::make_unique<C>(unaryize_function(f), c.copy(), with_centered_form);
+          return std::make_unique<C>(unaryize_function(f), c.copy(), with_centered_form, with_mixed_diff);
         }
       ),
-      CTCINVERSE_Y_X0X_CTCINVERSE_CONST_ANALYTICFUNCTION_OUTPUTTYPE_REF_CONST_C_REF_BOOL_BOOL,
-      "f"_a, "c"_a, "with_centered_form"_a = true);
+      CTCINVERSE_Y_X0X_CTCINVERSE_CONST_ANALYTICFUNCTION_OUTPUTTYPE_REF_CONST_C_REF_BOOL_BOOL_BOOL,
+      "f"_a, "c"_a, "with_centered_form"_a = true, "with_mixed_diff"_a=false);
   }
 
   CONTRACT_METHODS(exported_ctc, C,

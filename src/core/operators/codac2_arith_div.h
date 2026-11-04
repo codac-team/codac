@@ -36,17 +36,17 @@ namespace codac2
 
     static Interval fwd(const Interval& x1, const Interval& x2);
     static ScalarType fwd_natural(const ScalarType& x1, const ScalarType& x2);
-    static ScalarType fwd_centered(const ScalarType& x1, const ScalarType& x2);
+    static ScalarType fwd_centered(bool mixed_diff, const ScalarType& x1, const ScalarType& x2);
     static void bwd(const Interval& y, Interval& x1, Interval& x2);
 
     static IntervalVector fwd(const IntervalVector& x1, const Interval& x2);
     static VectorType fwd_natural(const VectorType& x1, const ScalarType& x2);
-    static VectorType fwd_centered(const VectorType& x1, const ScalarType& x2);
+    static VectorType fwd_centered(bool mixed_diff, const VectorType& x1, const ScalarType& x2);
     static void bwd(const IntervalVector& y, IntervalVector& x1, Interval& x2);
 
     static IntervalMatrix fwd(const IntervalMatrix& x1, const Interval& x2);
     static MatrixType fwd_natural(const MatrixType& x1, const ScalarType& x2);
-    static MatrixType fwd_centered(const MatrixType& x1, const ScalarType& x2);
+    static MatrixType fwd_centered(bool mixed_diff, const MatrixType& x1, const ScalarType& x2);
     static void bwd(const IntervalMatrix& y, IntervalMatrix& x1, Interval& x2);
   };
 
@@ -81,12 +81,12 @@ namespace codac2
   inline ScalarType DivOp::fwd_natural(const ScalarType& x1, const ScalarType& x2)
   {
     return {
-      fwd(x1.a, x2.a),
-      x1.def_domain && x2.def_domain && !x2.a.contains(0.) // def domain of the derivative of div
+      fwd(x1.get_a(), x2.get_a()),
+      x1.def_domain && x2.def_domain && !x2.get_a().contains(0.) // def domain of the derivative of div
     };
   }
 
-  inline ScalarType DivOp::fwd_centered(const ScalarType& x1, const ScalarType& x2)
+  inline ScalarType DivOp::fwd_centered(bool mixed_diff, const ScalarType& x1, const ScalarType& x2)
   {
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
@@ -94,14 +94,18 @@ namespace codac2
     assert(x1.da.size() == x2.da.size());
 
     IntervalMatrix d(1,x1.da.size());
-    for(Index i = 0 ; i < d.size() ; i++)
-      d(0,i) = (x1.da(0,i)*x2.a-x1.a*x2.da(0,i))/sqr(x2.a);
+    for(Index i = 0 ; i < d.size() ; i++) {
+      const Interval &x1a = x1.get_a(mixed_diff,i);
+      const Interval &x2a = x2.get_a(mixed_diff,i);
+      d(0,i) = (x1.da(0,i)*x2a-x1a*x2.da(0,i))/sqr(x2a);
+    }
 
     return {
       fwd(x1.m, x2.m),
-      fwd(x1.a, x2.a),
+      vector_map<Interval,Interval,Interval>(x1.a,x2.a,
+	static_cast<Interval(*)(const Interval&, const Interval&)>(&DivOp::fwd)),
       d,
-      x1.def_domain && x2.def_domain && !x2.a.contains(0.) // def domain of the derivative of div
+      x1.def_domain && x2.def_domain && !x2.get_a().contains(0.) // def domain of the derivative of div
     };
   }
 
@@ -127,12 +131,12 @@ namespace codac2
   inline VectorType DivOp::fwd_natural(const VectorType& x1, const ScalarType& x2)
   {
     return {
-      fwd(x1.a, x2.a),
-      x1.def_domain && x2.def_domain && !x2.a.contains(0.) // def domain of the derivative of div
+      fwd(x1.get_a(), x2.get_a()),
+      x1.def_domain && x2.def_domain && !x2.get_a().contains(0.) // def domain of the derivative of div
     };
   }
 
-  inline VectorType DivOp::fwd_centered(const VectorType& x1, const ScalarType& x2)
+  inline VectorType DivOp::fwd_centered(bool mixed_diff,const VectorType& x1, const ScalarType& x2)
   {
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
@@ -141,15 +145,20 @@ namespace codac2
     assert(x1.da.cols() == x2.da.cols());
 
     IntervalMatrix d(x1.da.rows(),x1.da.cols());
-    for(Index j = 0 ; j < d.cols() ; j++)
-      for(Index i = 0 ; i < d.rows() ; i++)
-        d(i,j) = x1.da(i,j)/x2.a - x1.a[i]*x2.da(0,j)/sqr(x2.a);
+    for(Index j = 0 ; j < d.cols() ; j++) {
+      const IntervalVector& x1a = x1.get_a(mixed_diff,j);
+      const Interval& x2a = x2.get_a(mixed_diff,j);
+      for(Index i = 0 ; i < d.rows() ; i++) 
+        d(i,j) = x1.da(i,j)/x2a - x1a[i]*x2.da(0,j)/sqr(x2a);
+    }
+    
 
     return {
       fwd(x1.m, x2.m),
-      fwd(x1.a, x2.a),
+      vector_map<IntervalVector,Interval,IntervalVector>(x1.a,x2.a,
+	static_cast<IntervalVector(*)(const IntervalVector&, const Interval&)>(&DivOp::fwd)),
       d,
-      x1.def_domain && x2.def_domain && !x2.a.contains(0.) // def domain of the derivative of div
+      x1.def_domain && x2.def_domain && !x2.get_a().contains(0.) // def domain of the derivative of div
     };
   }
 
@@ -168,12 +177,12 @@ namespace codac2
   inline MatrixType DivOp::fwd_natural(const MatrixType& x1, const ScalarType& x2)
   {
     return {
-      fwd(x1.a, x2.a),
-      x1.def_domain && x2.def_domain && !x2.a.contains(0.) // def domain of the derivative of div
+      fwd(x1.get_a(), x2.get_a()),
+      x1.def_domain && x2.def_domain && !x2.get_a().contains(0.) // def domain of the derivative of div
     };
   }
 
-  inline MatrixType DivOp::fwd_centered(const MatrixType& x1, const ScalarType& x2)
+  inline MatrixType DivOp::fwd_centered(bool mixed_diff, const MatrixType& x1, const ScalarType& x2)
   {
     if(centered_form_not_available_for_args(x1,x2))
       return fwd_natural(x1,x2);
@@ -182,16 +191,20 @@ namespace codac2
     assert(x1.da.cols() == x2.da.cols());
 
     IntervalMatrix d(x1.da.rows(),x1.da.cols());
-    for(Index j = 0 ; j < d.cols() ; j++)
+    for(Index j = 0 ; j < d.cols() ; j++) {
+      const IntervalMatrix& x1a = x1.get_a(mixed_diff,j);
+      const Interval& x2a = x2.get_a(mixed_diff,j);
       for(Index i = 0 ; i < d.rows() ; i++)
-        d(i,j) = x1.da(i,j)/x2.a - 
-		              x1.a.reshaped<Eigen::ColMajor>()[i]*x2.da(0,j)/sqr(x2.a);
+        d(i,j) = x1.da(i,j)/x2a - 
+		        x1a.reshaped<Eigen::ColMajor>()[i]*x2.da(0,j)/sqr(x2a);
+    }
 
     return {
       fwd(x1.m, x2.m),
-      fwd(x1.a, x2.a),
+      vector_map<IntervalMatrix,Interval,IntervalMatrix>(x1.a,x2.a,
+	static_cast<IntervalMatrix(*)(const IntervalMatrix&, const Interval&)>(&DivOp::fwd)),
       d, 
-      x1.def_domain && x2.def_domain && !x2.a.contains(0.) // def domain of the derivative of div
+      x1.def_domain && x2.def_domain && !x2.get_a().contains(0.) // def domain of the derivative of div
     };
   }
 
