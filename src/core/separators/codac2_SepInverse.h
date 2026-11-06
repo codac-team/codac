@@ -26,18 +26,18 @@ namespace codac2
     public:
 
       template<typename T>
-      SepInverse(const AnalyticFunction<T>& f, const typename T::Domain& y, bool with_centered_form = true)
+      SepInverse(const AnalyticFunction<T>& f, const typename T::Domain& y, bool with_centered_form = true, bool with_mixed_form=false)
         : SepCtcPair(
-            CtcInverseNotIn<typename T::Domain,X>(f,y,with_centered_form),
-            CtcInverse<typename T::Domain,X>(f,y,with_centered_form))
+            CtcInverseNotIn<typename T::Domain,X>(f,y,with_centered_form,with_mixed_form),
+            CtcInverse<typename T::Domain,X>(f,y,with_centered_form,with_mixed_form))
       { }
 
       template<typename T,typename S>
         requires (std::is_same_v<T,VectorType> && IsSepBaseOrPtr<S>)
-      SepInverse(const AnalyticFunction<T>& f, const S& sep_y, bool with_centered_form = true)
+      SepInverse(const AnalyticFunction<T>& f, const S& sep_y, bool with_centered_form = true, bool with_mixed_form = false)
         : SepCtcPair(
-            CtcInverseNotIn<typename T::Domain,X>(f,CtcInner(sep_y),with_centered_form),
-            CtcInverse<typename T::Domain,X>(f,CtcOuter(sep_y),with_centered_form))
+            CtcInverseNotIn<typename T::Domain,X>(f,CtcInner(sep_y),with_centered_form,with_mixed_form),
+            CtcInverse<typename T::Domain,X>(f,CtcOuter(sep_y),with_centered_form,with_mixed_form))
       { }
   };
 }

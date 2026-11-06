@@ -30,13 +30,13 @@ namespace codac2
 
   PavingInOut regular_pave(const IntervalVector& x0, const std::function<BoolInterval(const IntervalVector&)>& test, double eps, bool verbose = false);
 
-  template<typename Y>
-  PavingInOut sivia(const IntervalVector& x0, const AnalyticFunction<Y>& f, const typename Y::Domain& y, double eps, bool verbose = false)
+  template <typename Y>
+  PavingInOut sivia(const IntervalVector& x0, const AnalyticFunction<Y>& f, const typename Y::Domain& y, double eps, bool verbose = false, EvalMode evalmode = EvalMode::DEFAULT)
   {
     return regular_pave(x0,
-      [&y,&f](const IntervalVector& x)
+      [&y,&f,&evalmode](const IntervalVector& x)
       {
-        auto eval = f.eval(x);
+        auto eval = f.eval(evalmode,x);
 
         if(eval.is_subset(y))
           return BoolInterval::TRUE;

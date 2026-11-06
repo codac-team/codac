@@ -28,7 +28,7 @@ int main()
     sqr(w[0]-g(w[2])[0])+sqr(w[1]-g(w[2])[1])
   };
 
-  SepInverse s_h(h, {0,0.1});
+  SepInverse s_h(h, {0,0.1},true,true);
   SepProj s_projh(s_h, {0,1}, {sampled_f.tdomain()});
 
   DefaultFigure::pave({{-3,3},{-2,2}}, s_projh, 5e-2);

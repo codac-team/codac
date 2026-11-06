@@ -18,8 +18,9 @@ namespace codac2
   {
     Matrix R = R_;
     Index n = A.rows(), m = A.cols();
-    Index p = m-n;
 
+#if 0   /* Tree matrix */
+    Index p = m-n;
     for(Index i = n-1 ; i > 0 ; i--)
     {
       auto U =R*A;
@@ -27,6 +28,15 @@ namespace codac2
       K.block(0,i,i,1) = -U.block(0,i+p,i,1);
       R = K*R;
     }
+#else /* diagonal on the left part */
+    for(Index i = n-1 ; i > 0 ; i--)
+    {
+      auto U =R*A;
+      Matrix K = U(i,i)*Matrix::Identity(n,n);
+      K.block(0,i,i,1) = -U.block(0,i,i,1);
+      R = K*R;
+    }
+#endif
     return R;
   }
 
@@ -34,7 +44,7 @@ namespace codac2
   {
     // Matrix A = P_inv*L*U;
     // Matrix R = (P_inv*L).inverse();
-    return rising((P*L).inverse(),A);
+    return rising(L.inverse()*P,A);
   }
 
   Matrix gauss_jordan(const Matrix& A)
@@ -71,7 +81,7 @@ namespace codac2
       L.triangularView<Eigen::StrictlyLower>()
   		 = lu.matrixLU().block(0,0,n,std::min(m,n));
       Matrix U = lu.matrixLU().triangularView<Eigen::Upper>();
-      return precond(lu.permutationP().transpose(),L,A);
+      return precond(lu.permutationP(),L,A);
 
     #endif
   }

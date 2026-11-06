@@ -119,6 +119,7 @@ namespace codac2
             IntervalRow R = A_tilde.row(i);
             MulOp::bwd(b_tilde[i], R, x2);
             if(x2.is_empty()) { x1.set_empty(); x2.set_empty(); return; }
+            A_tilde.row(i)=R;
           }
 
           for(Index i=0 ; i<b_tilde.size() ; i++)
