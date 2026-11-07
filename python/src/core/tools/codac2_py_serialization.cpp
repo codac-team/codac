@@ -196,8 +196,12 @@ void export_serialization(py::module& m)
       VOID_SERIALIZE_OSTREAM_REF_CONST_LIST_INTERVALVECTOR_REF,
       "f"_a, "x"_a);
 
-    m.def("deserialize", [](py::object py_file, std::list<IntervalVector>& x) {
+    m.def("deserialize", [](py::object py_file, py::list py_list) {
+        std::list<IntervalVector> x;
         _deserialization()
+        py_list.attr("clear")();
+        for(const auto& b : x)
+          py_list.append(b);
       },
       VOID_DESERIALIZE_ISTREAM_REF_LIST_INTERVALVECTOR_REF,
       "f"_a, "x"_a);
