@@ -198,4 +198,46 @@ namespace codac2
         x.set(xi,ti);
       }
     }
+
+  // PavingOut
+
+    /**
+     * \brief Writes the binary representation of a list
+     * of boxes to the given output stream.
+     *
+     * List binary structure: <br>
+     *   [nb_boxes][x0][x1]...[xn]
+     *
+     * \param f output stream
+     * \param x ``list<IntervalVector>`` object to be serialized
+     */
+    inline void serialize(std::ostream& f, const std::list<IntervalVector>& x)
+    {
+      serialize(f, (Index)x.size());
+      for(const auto& bi : x)
+        serialize(f, bi);
+    }
+
+    /**
+     * \brief Reads the binary representation of a list
+     * of boxes from the given input stream.
+     *
+     * List binary structure: <br>
+     *   [nb_boxes][x0][x1]...[xn]
+     *
+     * \param f input stream
+     * \param x ``list<IntervalVector>`` object to be deserialized
+     */
+    inline void deserialize(std::istream& f, std::list<IntervalVector>& x)
+    {
+      Index size;
+      x.clear();
+      deserialize(f,size);
+
+      for(Index i = 0 ; i < size ; i++)
+      {
+        IntervalVector xi(1); deserialize(f,xi);
+        x.push_back(xi);
+      }
+    }
 }

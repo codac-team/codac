@@ -67,6 +67,7 @@ class py_istreambuf : public std::streambuf
   py_istreambuf buf(py_file); \
   std::istream stream(&buf); \
   deserialize(stream, x); \
+  if(buf.in_avail() > 0) py_file.attr("seek")(-buf.in_avail(), 1); \
 
 
 void export_serialization(py::module& m)
@@ -185,5 +186,19 @@ void export_serialization(py::module& m)
         _deserialization()
       },
       VOID_DESERIALIZE_ISTREAM_REF_SAMPLEDTRAJ_T_REF,
+      "f"_a, "x"_a);
+
+  // List of boxes
+
+    m.def("serialize", [](py::object py_file, const std::list<IntervalVector>& x) {
+        _serialization()
+      },
+      VOID_SERIALIZE_OSTREAM_REF_CONST_LIST_INTERVALVECTOR_REF,
+      "f"_a, "x"_a);
+
+    m.def("deserialize", [](py::object py_file, std::list<IntervalVector>& x) {
+        _deserialization()
+      },
+      VOID_DESERIALIZE_ISTREAM_REF_LIST_INTERVALVECTOR_REF,
       "f"_a, "x"_a);
 }
