@@ -9,6 +9,7 @@
 
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
+#include <pybind11/functional.h>
 #include <pybind11/stl.h>
 #include <codac2_Paving.h>
 #include <codac2_Subpaving.h>
@@ -128,6 +129,10 @@ void export_Figure2D(py::module& m)
   
     .def("set_tdomain", &Figure2D::set_tdomain,
       VOID_FIGURE2D_SET_TDOMAIN_CONST_INTERVAL_REF)
+
+    .def("set_projection", &Figure2D::set_projection,
+      FIGURE2D_REF_FIGURE2D_SET_PROJECTION_FUNCTION_VECTOR_CONST_VECTOR_REF__FUNCTION_INTERVALVECTOR_CONST_INTERVALVECTOR_REF_,
+      "projection"_a, "interval_projection"_a=nullptr)
 
     // Geometric shapes
 
@@ -338,12 +343,18 @@ void export_Figure2D(py::module& m)
       STATIC_FIGURE2D_REF_DEFAULTFIGURE_SET_AXES_CONST_INTERVALVECTOR_REF,
       "bbox"_a)
   
-  
+    .def_static("set_projection", &DefaultFigure::set_projection, py::return_value_policy::reference,
+      STATIC_FIGURE2D_REF_DEFAULTFIGURE_SET_PROJECTION_FUNCTION_VECTOR_CONST_VECTOR_REF__FUNCTION_INTERVALVECTOR_CONST_INTERVALVECTOR_REF_,
+      "projection"_a, "interval_projection"_a=nullptr)
+
     .def_static("set_window_properties", &DefaultFigure::set_window_properties,
       STATIC_VOID_DEFAULTFIGURE_SET_WINDOW_PROPERTIES_CONST_VECTOR_REF_CONST_VECTOR_REF)
 
     .def_static("clear", &DefaultFigure::clear,
       STATIC_VOID_DEFAULTFIGURE_CLEAR)
+
+    .def_static("auto_scale", &DefaultFigure::auto_scale,
+      STATIC_VOID_DEFAULTFIGURE_AUTO_SCALE)
 
     // Geometric shapes
 

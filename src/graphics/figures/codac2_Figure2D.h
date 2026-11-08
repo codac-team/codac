@@ -12,6 +12,8 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <functional>
+#include <utility>
 #include "codac2_Index.h"
 #include "codac2_Figure2DInterface.h"
 #include "codac2_OutputFigure2D.h"
@@ -121,15 +123,15 @@ namespace codac2
       /**
        * \brief Setter for the axes of the figure
        * 
-       * \param axis1 First axis (horizontal)
-       * \param axis2 Second axis (vertical)
+       * \param axis1 First axis (horizontal), with limits in source coordinates
+       * \param axis2 Second axis (vertical), with limits in source coordinates
        */
       Figure2D& set_axes(const FigureAxis& axis1, const FigureAxis& axis2);
 
       /**
        * \brief Setter for the axes of the figure
        * 
-       * \param bbox Bounding box
+       * \param bbox Bounding box in source coordinates
        */
       Figure2D& set_axes(const IntervalVector& bbox);
 
@@ -171,9 +173,12 @@ namespace codac2
 
       /**
        * \brief VIBes only: center the viewbox on a given point with a given radius
-       * 
-       * \param c Center of the viewbox
-       * \param r Radius of the viewbox
+       *
+       * The optional projection applies to the center only. The radii remain in
+       * display coordinates (e.g., meters for a projected geographic view).
+       *
+       * \param c Center of the viewbox in source coordinates
+       * \param r Radii in display coordinates (not projected)
        */
       void center_viewbox(const Vector& c, const Vector& r);
 
@@ -220,6 +225,25 @@ namespace codac2
        */
       void set_tdomain(const Interval& tdomain);
 
+      /**
+       * \brief Sets an optional coordinate projection for drawing.
+       *
+       * \param projection A 2D point projection applied to the figure's selected coordinates.
+       * \param interval_projection Optional interval extension for projecting boxes.
+       *
+       * Only positions are projected. Sizes, radii, angles and headings remain unchanged.
+       * Without an interval extension, boxes are approximated by their projected corners.
+       * The projection also applies to set_axes() and center_viewbox(), but not draw_raster().
+       * Pass an empty function to disable the projection.
+       *
+       * \param projection 2D point projection.
+       * \param interval_projection Optional interval extension for boxes.
+       * \return Reference to the current figure.
+       */
+      Figure2D& set_projection(
+        std::function<Vector(const Vector&)> projection,
+        std::function<IntervalVector(const IntervalVector&)> interval_projection = {});
+
       // Geometric shapes
 
       /**
@@ -241,8 +265,8 @@ namespace codac2
       /**
        * \brief Draws a circle on the figure
        * 
-       * \param c Center of the circle
-       * \param r Radius of the circle
+       * \param c Center of the circle (projected, if configured)
+       * \param r Radius in display coordinates (not projected)
        * \param style Style of the circle (edge color and fill color)
        */
       void draw_circle(const Vector& c, double r, const StyleProperties& style = StyleProperties());
@@ -250,8 +274,8 @@ namespace codac2
       /**
        * \brief Draws a ring on the figure
        * 
-       * \param c Center of the ring
-       * \param r Inner and outer radius of the ring
+       * \param c Center of the ring (projected, if configured)
+       * \param r Inner and outer radii in display coordinates (not projected)
        * \param style Style of the ring (edge color and fill color)
        */
       void draw_ring(const Vector& c, const Interval& r, const StyleProperties& style = StyleProperties());
@@ -327,9 +351,9 @@ namespace codac2
       /**
        * \brief Draws a pie on the figure
        * 
-       * \param c Center of the pie
-       * \param r Inner and outer radius of the pie
-       * \param theta Start and end angle of the pie (in radians)
+       * \param c Center of the pie (projected, if configured)
+       * \param r Inner and outer radii in display coordinates (not projected)
+       * \param theta Start and end angles in radians (not projected)
        * \param style Style of the pie (edge color and fill color)
        */
       void draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& style = StyleProperties());
@@ -337,9 +361,9 @@ namespace codac2
       /**
        * \brief Draws an ellipse on the figure
        * 
-       * \param c Center of the ellipse
-       * \param ab Half-lengths of the ellipse
-       * \param theta Rotation angle of the ellipse (in radians)
+       * \param c Center of the ellipse (projected, if configured)
+       * \param ab Semi-axis lengths in display coordinates (not projected)
+       * \param theta Rotation angle in radians (not projected)
        * \param style Style of the ellipse (edge color and fill color)
        */
       void draw_ellipse(const Vector& c, const Vector& ab, double theta, const StyleProperties& style = StyleProperties());
@@ -347,7 +371,7 @@ namespace codac2
       /**
        * \brief Draws an ellipsoid on the figure
        * 
-       * \param e Ellipsoid to draw
+       * \param e Ellipsoid to draw (only its center is projected; axes and orientation are unchanged)
        * \param style Style of the ellipsoid (edge color and fill color)
        */
       void draw_ellipsoid(const Ellipsoid& e, const StyleProperties& style = StyleProperties());
@@ -468,8 +492,8 @@ namespace codac2
       /**
        * \brief Draws a tank on the figure
        * 
-       * \param x Coordinates of the tank
-       * \param size Size of the tank
+       * \param x Tank state (only the position is projected; the heading is unchanged)
+       * \param size Symbol size in display coordinates (not projected)
        * \param style Style of the tank (edge color and fill color)
        */
       void draw_tank(const Vector& x, float size, const StyleProperties& style = StyleProperties());
@@ -477,8 +501,8 @@ namespace codac2
       /**
        * \brief Draws an AUV on the figure
        * 
-       * \param x Coordinates of the AUV
-       * \param size Size of the AUV
+       * \param x AUV state (only the position is projected; the heading is unchanged)
+       * \param size Symbol size in display coordinates (not projected)
        * \param style Style of the AUV (edge color and fill color)
        */
       void draw_AUV(const Vector& x, float size, const StyleProperties& style = StyleProperties());
@@ -486,8 +510,8 @@ namespace codac2
       /**
        * \brief Draws a motor boat on the figure
        * 
-       * \param x Coordinates of the motor boat
-       * \param size Size of the motor boat
+       * \param x Motor boat state (only the position is projected; the heading is unchanged)
+       * \param size Symbol size in display coordinates (not projected)
        * \param style Style of the motor boat (edge color and fill color)
        */
       void draw_motor_boat(const Vector& x, float size, const StyleProperties& style = StyleProperties());
@@ -498,8 +522,8 @@ namespace codac2
        * \brief Draws text on the figure
        * 
        * \param text Text to display
-       * \param ul Position of the top-left corner of the text
-       * \param scale Scaling of the text (VIBes only)
+       * \param ul Position of the top-left corner (projected, if configured)
+       * \param scale Text scale factor (VIBes only; not projected)
        * \param style Style of the text (color, layer)
        */
       void draw_text(const std::string& text, const Vector& ul, double scale, const StyleProperties& style = StyleProperties());
@@ -508,7 +532,7 @@ namespace codac2
        * \brief Draws a raster on the figure in VIBes only, only the bounding box is drawn in IPE
        * 
        * \param filename The name of the file, the path is relative to the VIBes' server folder
-       * \param bbox The bounding box of the raster
+       * \param bbox The bounding box of the raster (already in display coordinates; not projected)
        * \param style Style of the raster (only the layer is used)
        */
       void draw_raster(const std::string& filename, const IntervalVector& bbox, const StyleProperties& style = StyleProperties());
@@ -629,7 +653,12 @@ namespace codac2
       const std::string _name;
       Vector _pos {50,50}, _window_size {700,700};
       std::vector<FigureAxis> _axes { axis(0,{0,1}), axis(1,{0,1}) };
+      std::vector<FigureAxis> _source_axes { axis(0,{0,1}), axis(1,{0,1}) };
+      void update_projected_axes();
+      Vector project_position(const Vector& x) const;
       std::vector<std::shared_ptr<OutputFigure2D>> _output_figures;
+      std::function<Vector(const Vector&)> _projection;
+      std::function<IntervalVector(const IntervalVector&)> _interval_projection;
       Interval _tdomain;
 
       friend DefaultFigure;
@@ -672,8 +701,8 @@ namespace codac2
       /**
        * \brief Setter for the axes of the figure
        * 
-       * \param axis1 First axis (horizontal)
-       * \param axis2 Second axis (vertical)
+       * \param axis1 First axis (horizontal), with limits in source coordinates
+       * \param axis2 Second axis (vertical), with limits in source coordinates
        */
       static Figure2D& set_axes(const FigureAxis& axis1, const FigureAxis& axis2)
       {
@@ -684,7 +713,7 @@ namespace codac2
       /**
        * \brief Setter for the axes of the figure
        * 
-       * \param bbox Bounding box
+       * \param bbox Bounding box in source coordinates
        */
       static Figure2D& set_axes(const IntervalVector& bbox)
       {
@@ -733,6 +762,20 @@ namespace codac2
         selected_fig()->save(filename);
       }
 
+      /**
+       * \brief Sets an optional coordinate projection on the selected figure.
+       *
+       * For geometric symbols, only the center is projected: radii, dimensions,
+       * angles, headings, and sizes already refer to display coordinates.
+       */
+      static Figure2D& set_projection(
+        std::function<Vector(const Vector&)> projection,
+        std::function<IntervalVector(const IntervalVector&)> interval_projection = {})
+      {
+        auto_init();
+        return selected_fig()->set_projection(std::move(projection),std::move(interval_projection));
+      }
+
       // Geometric shapes
 
       /**
@@ -762,8 +805,8 @@ namespace codac2
       /**
        * \brief Draws a circle on the figure
        * 
-       * \param c Center of the circle
-       * \param r Radius of the circle
+       * \param c Center of the circle (projected, if configured)
+       * \param r Radius in display coordinates (not projected)
        * \param style Style of the circle (edge color and fill color)
        */
       static void draw_circle(const Vector& c, double r, const StyleProperties& style = StyleProperties())
@@ -775,8 +818,8 @@ namespace codac2
       /**
        * \brief Draws a ring on the figure
        * 
-       * \param c Center of the ring
-       * \param r Inner and outer radius of the ring
+       * \param c Center of the ring (projected, if configured)
+       * \param r Inner and outer radii in display coordinates (not projected)
        * \param style Style of the ring (edge color and fill color)
        */
       static void draw_ring(const Vector& c, const Interval& r, const StyleProperties& style = StyleProperties())
@@ -888,9 +931,9 @@ namespace codac2
       /**
        * \brief Draws a pie on the figure
        * 
-       * \param c Center of the pie
-       * \param r Inner and outer radius of the pie
-       * \param theta Start and end angle of the pie (in radians)
+       * \param c Center of the pie (projected, if configured)
+       * \param r Inner and outer radii in display coordinates (not projected)
+       * \param theta Start and end angles in radians (not projected)
        * \param style Style of the pie (edge color and fill color)
        */
       static void draw_pie(const Vector& c, const Interval& r, const Interval& theta, const StyleProperties& style = StyleProperties())
@@ -902,9 +945,9 @@ namespace codac2
       /**
        * \brief Draws an ellipse on the figure
        * 
-       * \param c Center of the ellipse
-       * \param ab Half-lengths of the ellipse
-       * \param theta Rotation angle of the ellipse (in radians)
+       * \param c Center of the ellipse (projected, if configured)
+       * \param ab Semi-axis lengths in display coordinates (not projected)
+       * \param theta Rotation angle in radians (not projected)
        * \param style Style of the ellipse (edge color and fill color)
        */
       static void draw_ellipse(const Vector& c, const Vector& ab, double theta, const StyleProperties& style = StyleProperties())
@@ -1064,8 +1107,8 @@ namespace codac2
       /**
        * \brief Draws a tank on the figure
        * 
-       * \param x Coordinates of the tank
-       * \param size Size of the tank
+       * \param x Tank state (only the position is projected; the heading is unchanged)
+       * \param size Symbol size in display coordinates (not projected)
        * \param style Style of the tank (edge color and fill color)
        */
       static void draw_tank(const Vector& x, float size, const StyleProperties& style = StyleProperties())
@@ -1077,8 +1120,8 @@ namespace codac2
       /**
        * \brief Draws an AUV on the figure
        * 
-       * \param x Coordinates of the AUV
-       * \param size Size of the AUV
+       * \param x AUV state (only the position is projected; the heading is unchanged)
+       * \param size Symbol size in display coordinates (not projected)
        * \param style Style of the AUV (edge color and fill color)
        */
       static void draw_AUV(const Vector& x, float size, const StyleProperties& style = StyleProperties())
@@ -1090,8 +1133,8 @@ namespace codac2
       /**
        * \brief Draws a motor boat on the figure
        * 
-       * \param x Coordinates of the motor boat
-       * \param size Size of the motor boat
+       * \param x Motor boat state (only the position is projected; the heading is unchanged)
+       * \param size Symbol size in display coordinates (not projected)
        * \param style Style of the motor boat (edge color and fill color)
        */
       static void draw_motor_boat(const Vector& x, float size, const StyleProperties& style = StyleProperties())
@@ -1106,8 +1149,8 @@ namespace codac2
        * \brief Draws text on the figure
        * 
        * \param text Text to display
-       * \param ul Position of the top-left corner of the text
-       * \param scale Scaling of the text (VIBes only)
+       * \param ul Position of the top-left corner (projected, if configured)
+       * \param scale Text scale factor (VIBes only; not projected)
        * \param style Style of the text (edge color, layer)
        */
       static void draw_text(const std::string& text, const Vector& ul, double scale, const StyleProperties& style = StyleProperties())
