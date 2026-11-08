@@ -353,6 +353,9 @@ void export_Figure2D(py::module& m)
     .def_static("clear", &DefaultFigure::clear,
       STATIC_VOID_DEFAULTFIGURE_CLEAR)
 
+    .def_static("auto_scale", &DefaultFigure::auto_scale,
+      STATIC_VOID_DEFAULTFIGURE_AUTO_SCALE)
+
     // Geometric shapes
 
     .def_static("draw_point", &DefaultFigure::draw_point,
