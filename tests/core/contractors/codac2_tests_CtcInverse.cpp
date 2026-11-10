@@ -40,6 +40,79 @@ TEST_CASE("CtcInverse")
   }
 
   {
+    ScalarVar x;
+    AnalyticFunction f { {x}, x+x-42 };
+    CtcInverse<Interval,Interval> c(f, Interval(0.));
+    Interval a;
+    c.contract(a);
+    CHECK(a == 21);
+  }
+
+  {
+    ScalarVar x;
+    AnalyticFunction f { {x}, x+x-42 };
+    CtcInverse<Interval,Interval> c(f, Interval(0.),false); /* without centered form */
+    Interval a;
+    c.contract(a);
+    CHECK(a == Interval());
+  }
+
+  {
+    ScalarVar x,y,z;
+    AnalyticFunction f { {x,y,z}, {2*x-y,2*y-z,2*z-x} };
+    CtcInverse<IntervalVector,Interval,Interval,Interval> ctc(f, {0.5,0.5,0.5});
+    Interval a(-1,1),b(-1,1),c(-1,1);
+    ctc.contract(a,b,c);
+    CHECK(a == 0.5);
+    CHECK(b == 0.5);
+    CHECK(c == 0.5);
+  }
+
+  {
+    VectorVar x(2);
+    VectorVar y(2);
+    AnalyticFunction f { {x,y}, {x[0]*x[1]+y[0]*y[1],x[0]*y[1]-y[0]*x[1]} };
+    CtcInverse<IntervalVector,IntervalVector,IntervalVector> ctc(f, {1.0,0.5});
+    IntervalVector a { { 0.0, 1.0 }, 1.0 };
+    IntervalVector b { { 0.0, 1.0 }, 1.0 };
+    ctc.contract(a,b);
+    CHECK(a == IntervalVector({0.75,1.0}));
+    CHECK(b == IntervalVector({0.25,1.0}));
+  }
+
+  {
+    MatrixVar x(2,2);
+    VectorVar y(2);
+    AnalyticFunction f { {x,y}, x*y+y };
+    CtcInverse<IntervalVector,IntervalMatrix,IntervalVector> ctc(f, {2.0,2.0});
+    IntervalMatrix a { { 1.0 , -1.0 } , 
+                       { 2.0 , 1.0 } };
+    IntervalVector b = IntervalVector::Constant(2,Interval(-25,15));
+	/* in this specific case, b not centered on 0 works better because
+	   of some drawback with MulOp::bwd */
+    ctc.contract(a,b);
+    CHECK(b == IntervalVector({1.0,0.0}));
+  }
+
+  {
+    MatrixVar x(2,2);
+    ScalarVar y;
+    AnalyticFunction f { {x,y}, x+y*x };
+    CtcInverse<IntervalMatrix,IntervalMatrix,Interval> ctc(f, 
+			{{1.0,2.0},{3.0,4.0}});
+    IntervalMatrix a = IntervalMatrix::Constant(2,2,Interval(-12,10));
+    a(0,0)= Interval(0.5,1.0); /* y \in [0,1] */
+    a(0,1)= Interval(0.5,1.0); /* y \in [1,3] */ 
+    Interval b(-5.0,5.0);
+    ctc.contract(a,b); /* contract b */
+    ctc.contract(a,b); /* contract a */
+    CHECK(a == IntervalMatrix({{0.5,1.0},{1.5,2.0}}));
+    CHECK(b == 1.0);
+  }
+
+
+
+  {
     ScalarVar x,y;
     AnalyticFunction f { {x,y}, x-y };
     CtcInverse<Interval,Interval,Interval> c(f, Interval(0.));
