@@ -41,7 +41,7 @@ namespace codac2
     {
       return {
         fwd(x1,x2.a),
-        x2.def_domain && x1.tdomain().is_superset(x2.m)
+        x2.def_domain && x1.tdomain().is_superset(x2.a)
       };
     }
 
@@ -70,7 +70,7 @@ namespace codac2
         fwd(x1,x2.m),
         fwd(x1,x2.a),
         d,
-        x2.def_domain && x1.tdomain().is_superset(x2.m)
+        x2.def_domain && x1.tdomain().is_superset(x2.a)
       };
     }
 
