@@ -126,6 +126,8 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_SetFunction.h
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_constants.h
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/diffinclusions/codac2_DiffInclusion.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_ConvexPolygon.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_ConvexPolygon.h
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_geometry.cpp
