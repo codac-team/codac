@@ -54,16 +54,21 @@ int main()
 		{ Color::dark_gray(0.8), "plane" });
 
 
-  fig_examples.draw_zonotope({{1.5,1.5,1.5},
-	{{0.3,-0.2,-0.2,0.3,-0.1,0.0},
+  Zonotope Z1 {{1.5,1.5,1.5}, {{0.3,-0.2,-0.2,0.3,-0.1,0.0},
     {0.2,0.1,-0.1,0.0,0.05,0.2},
-    {0.4,0.3,0.0,-0.1,0.2,0.1}}},
-  { Color::dark_green(1.0), "zonotope" });
-  fig_examples.draw_zonotope({{-1.5,-1.5,-1.5},
-	{{0.3,-0.2,-0.2,0.3,-0.2,-0.1,0.0,0.0},
+    {0.4,0.3,0.0,-0.1,0.2,0.1}}};
+  fig_examples.draw_zonotope(Z1, { Color::dark_green(1.0), "zonotope" });
+  Zonotope Z2 = Z1.reduction(1.5);
+  fig_examples.draw_zonotope(Z2, { Color::blue(0.5), "enclosing zonotope" });
+
+  Zonotope Z3 {{-1.5,-1.5,-1.5},
+        {{0.3,-0.2,-0.2,0.3,-0.2,-0.1,0.0,0.0},
     {0.2,0.1,-0.1,0.0,0.0,0.05,0.2,0.0},
-    {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.1}}},
+    {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.1}}};
+  fig_examples.draw_zonotope(Z3,
   { Color::dark_green(1.0), "zonotope2" });
+  Parallelepiped P4 = Parallelepiped::reduction(Z3);
+  fig_examples.draw_parallelepiped(P4, { Color::blue(0.5), "enclosing parallelepiped" });
 
   fig_examples.draw_parallelepiped({{1,-1.5,1.5},
     {{1,0,0},{0,0.5,0},{0,0.2,0.1}}},
