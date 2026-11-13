@@ -27,6 +27,10 @@ namespace codac2
     return p;
   }
 
+  Parallelepiped Parallelepiped::reduction(const Zonotope& Z) {
+    return Parallelepiped(Z.reduction(1.0,true));
+  }
+
   void generate_vertices(Index i, Index n, const Vector& c, const Matrix& A, std::vector<Vector>& L_v)
   {
     if (i == n)

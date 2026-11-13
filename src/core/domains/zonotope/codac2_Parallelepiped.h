@@ -1,9 +1,9 @@
 /** 
  *  \file codac2_Parallelepiped.h
  * ----------------------------------------------------------------------------
- *  \date       2025
- *  \author     Maël Godard
- *  \copyright  Copyright 2024 Codac Team
+ *  \date       2026
+ *  \author     Maël Godard, Damien Massé
+ *  \copyright  Copyright 2026 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
@@ -38,6 +38,14 @@ namespace codac2
        * \param A Shape matrix of the parallelepiped (\f$n\times m\f$ matrix with \f$m \leqslant n\f$)
        */
       Parallelepiped(const Vector& c, const Matrix& A);
+
+      /**
+       * \brief Constructs a new n-parallelepiped as the reduction
+       * (simplification) of an existing zonotope.
+       * 
+       * \param Z the zonotope
+       */
+      static Parallelepiped reduction(const Zonotope& Z);
 
       /**
        * \brief Constructs an empty n-parallelepiped
@@ -80,6 +88,12 @@ namespace codac2
        * \return A new Parallelepiped representing the intersection of the original parallelepiped with the box.
        */
       Parallelepiped operator&(const IntervalVector& x) const;
+
+      private:
+        explicit Parallelepiped(Zonotope &&Z) : Zonotope(Z) {
+          assert_release(A.cols()==A.rows());
+      }
+
   };
 
   /**

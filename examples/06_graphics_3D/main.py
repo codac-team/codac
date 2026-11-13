@@ -37,13 +37,22 @@ fig_examples.draw_car([-1,0,0],0.3*Matrix.eye(3,3),
 fig_examples.draw_plane([3,0,0],0.5*Matrix.eye(3,3),True,
                         StyleProperties(Color.dark_gray(0.8),"plane"))
 
-fig_examples.draw_zonotope(Zonotope([1.5,1.5,1.5],
-            Matrix([[0.3,-0.2,-0.2,0.3,-0.1,0.0],[0.2,0.1,-0.1,0.0,0.05,0.2],[0.4,0.3,0.0,-0.1,0.2,0.1]])),StyleProperties(Color.dark_green(1.0),"zonotope"))
-fig_examples.draw_zonotope(Zonotope([-1.5,-1.5,-1.5],
+Z1 = Zonotope([1.5,1.5,1.5],
+        Matrix([[0.3,-0.2,-0.2,0.3,-0.1,0.0],
+                [0.2,0.1,-0.1,0.0,0.05,0.2],
+                [0.4,0.3,0.0,-0.1,0.2,0.1]]))
+fig_examples.draw_zonotope(Z1,StyleProperties(Color.dark_green(1.0),"zonotope"))
+Z2 = Z1.reduction(1.5)
+fig_examples.draw_zonotope(Z2,StyleProperties(Color.blue(0.5),"reduced zonotope"))
+Z3 = Zonotope([-1.5,-1.5,-1.5],
         Matrix([[0.3,-0.2,-0.2,0.3,-0.2,-0.1,0.0,0.0],
                 [0.2,0.1,-0.1,0.0,0.0,0.05,0.2,0.0],
-                [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.1]])),
+                [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.1]]))
+fig_examples.draw_zonotope(Z3,
                 StyleProperties(Color.dark_green(1.0),"zonotope2"))
+P4 = Parallelepiped.reduction(Z3)
+fig_examples.draw_parallelepiped(P4,
+           StyleProperties(Color.blue(0.5),"enclosing parallelepiped"))
 
 fig_examples.draw_parallelepiped(Parallelepiped([1,-1.5,1.5],
             Matrix([[1,0,0],[0,0.5,0],[0,0.2,0.1]])),StyleProperties(Color.blue(0.5),"parallelepiped"))

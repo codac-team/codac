@@ -49,8 +49,12 @@ void export_Zonotope(py::module& m)
       ZONOTOPE_ZONOTOPE_PROJ_CONST_VECTOR_INDEX_REF_CONST,
       "indices"_a)
 
+    .def("reduction",&Zonotope::reduction,
+      ZONOTOPE_ZONOTOPE_REDUCTION_DOUBLE_BOOL_CONST,
+      "o"_a, "invert"_a=false)
+
     .def("__add__", &Zonotope::operator+,
-      ZONOTOPE_ZONOTOPE_OPERATORPLUS_CONST_ZONOTOPE_REF,
+      ZONOTOPE_ZONOTOPE_OPERATORPLUS_CONST_ZONOTOPE_REF_CONST,
       py::is_operator())
 
     .def("__repr__", [](const Zonotope& z) {
