@@ -127,6 +127,10 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/functions/set/codac2_set_constants.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/diffinclusions/codac2_DiffInclusion.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/diffinclusions/codac2_DiffInclusion.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/diffinclusions/codac2_ReachabilityStep.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/diffinclusions/codac2_ReachabilityStep0.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/diffinclusions/codac2_ReachabilityStep1.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_ConvexPolygon.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_ConvexPolygon.h

@@ -1,9 +1,9 @@
 /** 
  *  \file codac2_Zonotope.h
  * ----------------------------------------------------------------------------
- *  \date       2025
- *  \author     Maël Godard
- *  \copyright  Copyright 2024 Codac Team
+ *  \date       2026
+ *  \author     Maël Godard, Damien Massé
+ *  \copyright  Copyright 2026 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
@@ -13,6 +13,7 @@
 #include "codac2_Vector.h"
 #include "codac2_Matrix.h"
 #include "codac2_IntervalVector.h"
+#include "codac2_IntervalMatrix.h"
 
 namespace codac2
 {
@@ -27,6 +28,17 @@ namespace codac2
   class Zonotope
   {
     public:
+
+      /**
+       * \brief Constructs an invalid zonotope, for future assignment
+       */
+      Zonotope() { };
+
+      /**
+       * \brief Constructs a zonotope from a box
+       * \param box The box
+       */
+      Zonotope(const IntervalVector &box);
 
       /**
        * \brief Constructs a n-zonotope object with a given center and shape matrix
@@ -88,7 +100,28 @@ namespace codac2
        * 
        * \return A new Zonotope object representing the Minkowski sum of the two Zonotopes
        */
-      Zonotope operator+(const Zonotope& zonotope);
+      Zonotope operator+(const Zonotope& zonotope) const;
+
+      /**
+       * \brief Add an IntervalVector to the current zonotope. Create
+       * a new generator only if needed.
+       * 
+       * \param box The other Zonotope to add to this one
+       * 
+       * \return *(this)
+       */
+      Zonotope& operator+=(const IntervalVector& box);
+
+      /**
+       * \brief apply a transformation on A (keeping c) with an IntervalMatrix
+       * i.e. enclose { c, MA }.
+       * 
+       * \param mat The matrix of interval vectors
+       *
+       * \return a new Zonotope
+       */
+      Zonotope transform(const IntervalMatrix &mat) const;
+
 
       /**
        * \brief Center of the zonotope

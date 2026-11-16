@@ -93,6 +93,13 @@ namespace codac2
         return eval(x...).mid();
       }
 
+      
+      template<typename... Args>
+      T eval_and_diff(const Args&... x) const
+      { 
+        return eval_<false>(x...);
+      }
+
       template<typename... Args>
       typename T::Domain eval(const EvalMode& m, const Args&... x) const
       {

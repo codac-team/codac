@@ -1,0 +1,85 @@
+/** 
+ *  \file codac2_DiffInclusion.cpp
+ * ----------------------------------------------------------------------------
+ *  \date       2026
+ *  \author     Damien Massé
+ *  \copyright  Copyright 2026 Codac Team
+ *  \license    GNU Lesser General Public License (LGPL)
+ */
+
+#include <iostream>
+#include <functional>
+#include "codac2_Matrix.h"
+#include "codac2_Interval.h"
+#include "codac2_IntervalMatrix.h"
+#include "codac2_IntervalVector.h"
+#include "codac2_DiffInclusion.h"
+#include "codac2_ReachabilityStep.h"
+
+namespace codac2 {
+
+   IntervalVector 
+	DiffInclusionBase::approx_RK4_base(const Interval &time_step,
+                  const IntervalVector& init, const IntervalVector& u,
+		  bool forward, bool end_gate) const {
+       double start_time = (forward ? time_step.lb() : time_step.ub());
+       double step_size = (forward ? time_step.diam() : -time_step.diam());
+       IntervalVector k1 = f_eval(EvalMode::NATURAL,start_time,init,u);
+       IntervalVector k2 = f_eval(EvalMode::NATURAL,start_time+0.5*step_size,
+                           init+0.5*step_size*k1, u);
+       IntervalVector k3 = f_eval(EvalMode::NATURAL,start_time+0.5*step_size,
+                           init+0.5*step_size*k2, u);
+       IntervalVector k4 = f_eval(EvalMode::NATURAL,start_time+step_size,
+                           init+k3, u);
+       IntervalVector ret = init + (step_size/6.0)*(k1 + 2.0*k2 + 2.0*k3 + k4);
+       if (end_gate) return ret;
+       IntervalVector inter = init + Interval(0,0.25)*step_size*(k1+k2);
+       return (inter | ret);
+     }
+
+     bool DiffInclusionBase::basic_contract_base(const Interval &time_step,
+                const IntervalVector& init,
+                IntervalVector& in_domain, IntervalVector& out_gate,
+                const IntervalVector& u, double inflation_ratio,
+                double inflation_base, int attempts, bool forward) const {
+       ReachabilityStep0 rs(this,inflation_ratio,inflation_base);
+       rs.update_time(time_step, forward ? ReachabilityStep0::FWD :
+				ReachabilityStep0::BWD);
+       rs.update_init(init);
+       rs.update_u(u);
+       IntervalVector v1 = this->approx_RK4_base(time_step,
+                   init, u, forward, false);
+       bool result;
+       IntervalVector out_gate2;
+       std::tie(result,out_gate2) = 
+		this->general_integration_step<IntervalVector,IntervalVector>
+			(v1,in_domain,rs, attempts, attempts);
+       if (result)
+	  out_gate &= out_gate2;
+       return result;
+    }
+
+     bool DiffInclusionBase::contract_order1_base(const Interval &time_step,
+                const Zonotope& init,
+                IntervalVector& in_domain, Zonotope& out_gate,
+                const IntervalVector& u, double inflation_ratio,
+                double inflation_base, int attempts, bool forward) const {
+       ReachabilityStep1 rs(this,inflation_ratio,inflation_base);
+       rs.update_time(time_step, forward ? ReachabilityStep1::FWD :
+				ReachabilityStep1::BWD);
+       rs.update_init(init);
+       rs.update_u(u);
+       IntervalVector v1 = this->approx_RK4_base(time_step,
+             init.box(), u, forward, false); /* FIXME : approx on zonotope */
+       bool result;
+       Zonotope z1(v1);
+       Zonotope out_gate2;
+       std::tie(result,out_gate2) = 
+		this->general_integration_step<Zonotope,IntervalVector>
+			(z1,in_domain,rs, attempts, attempts);
+       if (result)
+	  out_gate = out_gate2; /* FIXME : no intersection ? */
+       return result;
+    }
+
+}
