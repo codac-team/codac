@@ -35,6 +35,10 @@ void export_Figure3D(py::module& m)
     .def("name", &Figure3D::name,
       CONST_STRING_REF_FIGURE3D_NAME_CONST)
 
+    .def("set_projection", &Figure3D::set_projection,
+      FIGURE3D_REF_FIGURE3D_SET_PROJECTION_FUNCTION_VECTOR_CONST_VECTOR_REF_,
+      "projection"_a)
+
     .def("draw_axes", &Figure3D::draw_axes,
       VOID_FIGURE3D_DRAW_AXES_DOUBLE_CONST_VECTOR_REF,
       "size"_a=1.0, "origin"_a=Vector::zero(3))
