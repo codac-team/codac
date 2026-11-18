@@ -41,7 +41,6 @@ namespace codac2
 	   };
         }
         
-        std::cout << retWhole.da << "\n";
         auto splitmat = _diffinclusion->split_diff_matrix(retWhole.da);
         IntervalVector lincorr_u = std::get<2>(splitmat)*(_u-_u.mid());
         IntervalVector quadcorr_x 

@@ -10,6 +10,7 @@
 #pragma once
 
 #include "codac2_AnalyticFunction.h"
+#include "codac2_SlicedTube.h"
 
 namespace codac2
 {
@@ -58,19 +59,6 @@ namespace codac2
 		const IntervalVector& init, const IntervalVector& u,
 		bool forward, bool end_gate) const;
 
-          bool basic_contract_base(const Interval &time_step, 
-		const IntervalVector& init, 
-		IntervalVector& in_domain, IntervalVector& out_gate,
-		const IntervalVector& u, double inflation_ratio, 
-		double inflation_base, int attempts, bool forward) const;
-
-          bool contract_order1_base(const Interval &time_step, 
-		const Zonotope& init, 
-		IntervalVector& in_domain, Zonotope& out_gate,
-		const IntervalVector& u, double inflation_ratio, 
-		double inflation_base, int attempts, bool forward) const;
-
-
           const bool _time_dependant = false;
           std::pair<Index,Index> _x_shape;
           std::pair<Index,Index> _u_shape;
@@ -95,43 +83,7 @@ namespace codac2
           * 4) returns true if 2 succeeded or one step of 4 succeeded,
 	  * otherwise false
           */
-         template<typename DomA, typename DomB>
-           std::pair<bool,DomA> general_integration_step(DomA& approx,
-	     DomB& in_domain, const ReachabilityStep<DomA,DomB> &reach,
-             int widen_attempts, int narrow_attempts) const {
-             int nb_tries=0;
-             DomB inside_in;
-             bool success=false;
-             while (nb_tries<widen_attempts) { /* inflation steps */
-                reach.inflate(approx);
-                DomB inside = reach.intersect(in_domain,approx);
-                std::tie(approx,std::ignore) = reach.enclose(inside); 
-                DomB new_inside = reach.intersect(in_domain,approx);
-                if (new_inside.is_subset(inside)) {
-                    in_domain = new_inside;
-                    success=true;
-                    break;
-                }
-                nb_tries++;
-             }
-             /* success = true : approx and in_domain are guaranteed; gate
-              *                  is not computed.
-              * success = false : approx is not sufficient, 
-                                  in_domain has not changed */
-             if (in_domain.is_unbounded()) return { false,approx };
-             nb_tries=0;
-             DomA gate;
-             while (nb_tries<narrow_attempts) { /* reduction steps */
-                DomB inside = in_domain;
-                std::tie(approx,gate)= reach.enclose(inside);
-                in_domain = reach.intersect(inside,approx);
-                if (inside.is_subset(in_domain)) break;
-                success=true;
-                nb_tries++;
-             }
-             return { success, gate };
-         }
-
+	  /* moved to codac2_DI_Integration */
     };
 
 	
@@ -200,33 +152,7 @@ namespace codac2
          *  \param inflation_base  inflation base  (default 1e-2)
          *  \param attempts max number of attempts      (default 3)
          *  \return false if no improvement was found */
-        template<bool forward=true>
-        bool basic_contract(const Interval &time_step, 
-		const X& init, X& in_domain, X& out_gate,
-		const U& u, double inflation_ratio=1.1, 
-		double inflation_base=1e-2, int attempts=3) {
-            IntervalVector in_domain_base = from_X(in_domain);
-            IntervalVector out_gate_base = from_X(out_gate);
-            bool ret =  basic_contract_base(time_step,
-	 	from_X(init), in_domain_base, out_gate_base,
-		from_U(u), inflation_ratio, inflation_base,attempts,forward);
-            in_domain = to_X(in_domain_base);
-            out_gate = to_X(out_gate_base);
-            return ret;
-        }
-
-        template<bool forward=true>
-        bool contract_order1(const Interval &time_step, 
-		const Zonotope& init, X& in_domain, Zonotope& out_gate,
-		const U& u, double inflation_ratio=1.1, 
-		double inflation_base=1e-2, int attempts=3) {
-            IntervalVector in_domain_base = from_X(in_domain);
-            bool ret =  contract_order1_base(time_step,
-	 	init, in_domain_base, out_gate,
-		from_U(u), inflation_ratio, inflation_base,attempts,forward);
-            in_domain = to_X(in_domain_base);
-            return ret;
-        }
+	/* moved to codac2_DI_Integration.h */
 
         inline IntervalVector f_eval(const EvalMode& m, const Interval &t,
 			  	     const IntervalVector& x, 
@@ -272,9 +198,6 @@ namespace codac2
              }
         }
 
-      protected:
-        const AnalyticFunction<XType> _f;
-
         inline IntervalVector from_X(const X& x) const {
              if constexpr(std::is_same_v<X,Interval>) {
                 return { x };
@@ -313,6 +236,10 @@ namespace codac2
 			(_u_shape.first,_u_shape.second);
              }
         }
+
+      protected:
+        const AnalyticFunction<XType> _f;
+
         
     };
 }

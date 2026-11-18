@@ -27,8 +27,28 @@ namespace codac2
   template <typename DomA, typename DomB> 
   class ReachabilityStep {
       public:
+         using DomainA = DomA;
+         using DomainB = DomB;
          enum StepDirection { FWD, BWD };         
 
+         /* approximation step on interval vectors , to be used
+          * as approx if needed */
+         IntervalVector approx_base(const IntervalVector &init) const {
+            IntervalVector k1 = _diffinclusion->f_eval(EvalMode::NATURAL,
+			_start_time,init,_u);
+            IntervalVector k2 = _diffinclusion->f_eval(EvalMode::NATURAL,
+		_start_time+0.5*_time_bound, init+0.5*_time_bound*k1, _u);
+            IntervalVector k3 = _diffinclusion->f_eval(EvalMode::NATURAL,
+		_start_time+0.5*_time_bound, init+0.5*_time_bound*k2, _u);
+            IntervalVector k4 = _diffinclusion->f_eval(EvalMode::NATURAL,
+		_start_time+_time_bound, init+k3, _u);
+            IntervalVector ret = init + 
+			(_time_bound/6.0)*(k1 + 2.0*k2 + 2.0*k3 + k4);
+            IntervalVector inter = init + Interval(0,0.25)*_time_bound*(k1+k2);
+            return (inter | ret);
+         }
+
+         virtual DomA approx() const = 0;
 	 virtual void inflate(DomA &a) const =0;
          virtual std::pair<DomA,DomA> enclose(const DomB &b) const =0;
          virtual DomB intersect(const DomB &b, const DomA &a) const = 0;
@@ -71,12 +91,13 @@ namespace codac2
   {
       public:
         ReachabilityStep0(const DiffInclusionBase *diffinclusion,
-		double inflation_ratio, double inflation_base) :
+		double inflation_ratio=1.1, double inflation_base=1e-2) :
 		ReachabilityStep(diffinclusion), 
 	        _inflation_ratio(inflation_ratio),
 	        _inflation_base(inflation_base) {
         }
 
+        IntervalVector approx() const { return approx_base(_init); }
         void inflate(IntervalVector &a) const override;
         std::pair<IntervalVector,IntervalVector> enclose
 			(const IntervalVector &b) const override;
@@ -84,7 +105,11 @@ namespace codac2
 					const IntervalVector &a)
 			 const {
 	    return (b & a);
-         }
+        }
+        static const IntervalVector &
+			intVect_from_DomainA(const IntervalVector &a) {
+            return a;
+        }
 
 
       private:
@@ -98,18 +123,23 @@ namespace codac2
   {
       public:
         ReachabilityStep1(const DiffInclusionBase *diffinclusion,
-		double inflation_ratio, double inflation_base) :
+		double inflation_ratio=1.1, double inflation_base=1e-2) :
 		ReachabilityStep(diffinclusion), 
 	        _inflation_ratio(inflation_ratio),
 	        _inflation_base(inflation_base) {
         }
 
+        static const IntervalVector 
+			intVect_from_DomainA(const Zonotope &a) {
+            return a.box();
+        }
+
+        Zonotope approx() const { return Zonotope(approx_base(_init.box())); }
         void inflate(Zonotope &a) const override;
         std::pair<Zonotope,Zonotope> enclose
 			(const IntervalVector &b) const override;
         IntervalVector intersect(const IntervalVector &b, const Zonotope &a)
 			 const override;
-
 
       private:
         double _inflation_ratio;

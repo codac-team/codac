@@ -37,49 +37,4 @@ namespace codac2 {
        return (inter | ret);
      }
 
-     bool DiffInclusionBase::basic_contract_base(const Interval &time_step,
-                const IntervalVector& init,
-                IntervalVector& in_domain, IntervalVector& out_gate,
-                const IntervalVector& u, double inflation_ratio,
-                double inflation_base, int attempts, bool forward) const {
-       ReachabilityStep0 rs(this,inflation_ratio,inflation_base);
-       rs.update_time(time_step, forward ? ReachabilityStep0::FWD :
-				ReachabilityStep0::BWD);
-       rs.update_init(init);
-       rs.update_u(u);
-       IntervalVector v1 = this->approx_RK4_base(time_step,
-                   init, u, forward, false);
-       bool result;
-       IntervalVector out_gate2;
-       std::tie(result,out_gate2) = 
-		this->general_integration_step<IntervalVector,IntervalVector>
-			(v1,in_domain,rs, attempts, attempts);
-       if (result)
-	  out_gate &= out_gate2;
-       return result;
-    }
-
-     bool DiffInclusionBase::contract_order1_base(const Interval &time_step,
-                const Zonotope& init,
-                IntervalVector& in_domain, Zonotope& out_gate,
-                const IntervalVector& u, double inflation_ratio,
-                double inflation_base, int attempts, bool forward) const {
-       ReachabilityStep1 rs(this,inflation_ratio,inflation_base);
-       rs.update_time(time_step, forward ? ReachabilityStep1::FWD :
-				ReachabilityStep1::BWD);
-       rs.update_init(init);
-       rs.update_u(u);
-       IntervalVector v1 = this->approx_RK4_base(time_step,
-             init.box(), u, forward, false); /* FIXME : approx on zonotope */
-       bool result;
-       Zonotope z1(v1);
-       Zonotope out_gate2;
-       std::tie(result,out_gate2) = 
-		this->general_integration_step<Zonotope,IntervalVector>
-			(z1,in_domain,rs, attempts, attempts);
-       if (result)
-	  out_gate = out_gate2; /* FIXME : no intersection ? */
-       return result;
-    }
-
 }

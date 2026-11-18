@@ -131,6 +131,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/diffinclusions/codac2_ReachabilityStep.h
     ${CMAKE_CURRENT_SOURCE_DIR}/diffinclusions/codac2_ReachabilityStep0.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/diffinclusions/codac2_ReachabilityStep1.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/diffinclusions/codac2_DI_Integration.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_ConvexPolygon.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac2_ConvexPolygon.h
