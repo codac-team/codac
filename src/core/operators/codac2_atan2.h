@@ -12,7 +12,6 @@
 #include "codac2_Interval.h"
 #include "codac2_AnalyticType.h"
 #include "codac2_AnalyticExprWrapper.h"
-#include "codac2_atan2.h"
 #include "codac2_arith_div.h"
 
 namespace codac2

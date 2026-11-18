@@ -14,17 +14,21 @@
 #include <fstream>
 #include <functional>
 #include <utility>
+#include <vector>
 #include "codac2_StyleProperties.h"
 #include "codac2_IntervalVector.h"
-#include "codac2_Paving.h"
 #include "codac2_Vector.h"
 #include "codac2_Matrix.h"
 #include "codac2_IntervalMatrix.h"
-#include "codac2_Ellipsoid.h"
-#include "codac2_Parallelepiped.h"
 
 namespace codac2
 {
+  class Ellipsoid;
+  class Parallelepiped;
+  class Zonotope;
+  class PavingOut;
+  class PavingInOut;
+  template<typename P> class Subpaving;
 
   /**
    * \class Figure3D

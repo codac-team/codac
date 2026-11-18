@@ -10,6 +10,10 @@
 #include "codac2_Index.h"
 #include "codac2_IntervalMatrix.h"
 #include "codac2_Figure3D.h"
+#include "codac2_Ellipsoid.h"
+#include "codac2_Parallelepiped.h"
+#include "codac2_Zonotope.h"
+#include "codac2_Paving.h"
 #include "codac2_math.h"
 
 

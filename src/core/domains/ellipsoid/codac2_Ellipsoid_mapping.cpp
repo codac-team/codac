@@ -8,6 +8,7 @@
  */
 
 #include "codac2_Ellipsoid.h"
+#include "codac2_AnalyticFunction.h"
 #include "codac2_inversion.h"
 
 using namespace std;

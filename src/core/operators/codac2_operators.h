@@ -34,7 +34,6 @@
 #include "codac2_max.h"
 #include "codac2_min.h"
 #include "codac2_mod.h"
-#include "codac2_operators.h"
 #include "codac2_pow.h"
 #include "codac2_sign.h"
 #include "codac2_sin.h"

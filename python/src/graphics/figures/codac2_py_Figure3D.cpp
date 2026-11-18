@@ -14,6 +14,9 @@
 #include <codac2_Paving.h>
 #include <codac2_Vector.h>
 #include <codac2_Figure3D.h>
+#include <codac2_Ellipsoid.h>
+#include <codac2_Parallelepiped.h>
+#include <codac2_Zonotope.h>
 #include "codac2_py_Figure3D_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_matlab.h"
 
