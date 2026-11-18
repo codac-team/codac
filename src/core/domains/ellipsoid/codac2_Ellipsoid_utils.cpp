@@ -8,6 +8,7 @@
  */
 
 #include "codac2_Ellipsoid_utils.h"
+#include "codac2_AnalyticFunction.h"
 #include <unsupported/Eigen/MatrixFunctions>
 #include <unsupported/Eigen/KroneckerProduct>
 
