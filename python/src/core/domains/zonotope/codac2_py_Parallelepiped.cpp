@@ -35,6 +35,10 @@ void export_Parallelepiped(py::module& m)
       STATIC_PARALLELEPIPED_PARALLELEPIPED_EMPTY_INDEX,
       "n"_a)
 
+    .def_static("reduction", &Parallelepiped::reduction,
+      STATIC_PARALLELEPIPED_PARALLELEPIPED_REDUCTION_CONST_ZONOTOPE_REF,
+      "Z"_a)
+
     .def("vertices", &Parallelepiped::vertices,
       VECTOR_VECTOR_PARALLELEPIPED_VERTICES_CONST)
 

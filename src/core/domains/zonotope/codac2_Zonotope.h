@@ -88,7 +88,24 @@ namespace codac2
        * 
        * \return A new Zonotope object representing the Minkowski sum of the two Zonotopes
        */
-      Zonotope operator+(const Zonotope& zonotope);
+      Zonotope operator+(const Zonotope& zonotope) const;
+
+      /** 
+       * \brief Create a new zonotope englobing (*this) with at most
+       * \f$n\times o\f$ columns (with \f$n\f$ the dimension of the zonotope.
+       * Return a copy if the number of columns is already
+       * less than or equal to \f$n\times o\f$. Note that \f$o\f$ must be 
+       * at least 1 (returns a parallelotope if \f$o=1\f$).
+       * The method is rather coarse and use a full pivot
+       * LU decomposition to determine the columns which are kept rather than
+       * more complex computations).
+       *
+       * \param o the new maximum order (i.e. \f$m/n\f$) of the zonotope.
+       * \param invert if true, the zonotope created is at least
+       * a parallelotope (i.e. the matrix is full rank).
+       * \return a new zonotope.
+       */ 
+      Zonotope reduction(double o, bool invert=false) const;
 
       /**
        * \brief Center of the zonotope
