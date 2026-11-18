@@ -26,7 +26,6 @@ namespace codac2
   {
     public:
 
-      //using Ctc<CtcInverse<Y,X0,X...>,X0,X...>::contract;
       using Y = typename Wrapper<Y_>::Domain; // Y_ is a possible Eigen expr. type
       using OutputType = typename ExprType<Y>::Type;
 
@@ -41,7 +40,14 @@ namespace codac2
 
       CtcInverse(const AnalyticFunction<OutputType>& f, const Y& y, bool with_centered_form = true, bool is_not_in = false)
         : CtcInverse(f, CtcWrapper<Y,Y>(y), with_centered_form, is_not_in)
-      { }
+      {
+        if constexpr(std::is_same_v<Y,IntervalMatrix>)
+        {
+          const auto [rows,cols] = f.output_shape();
+          assert_release(y.rows() == rows && y.cols() == cols
+            && "CtcInverse: invalid output matrix dimensions");
+        }
+      }
 
       void contract(X0& x0, X&... x) const
       {
@@ -55,6 +61,9 @@ namespace codac2
 
       void contract_(const CtcBase<Y>& ctc_y, X0& x0, X&... x) const
       {
+        assert_release(_f.nb_args() == 1 + sizeof...(X)
+          && "CtcInverse: invalid number of input arguments");
+
         ValuesMap v;
         // Setting user values into a map before the tree evaluation
         _f.fill_from_args(v, x0, x...);
@@ -89,7 +98,7 @@ namespace codac2
             IntervalVector x_mid = cart_prod(x0.mid(), x.mid()...);
             IntervalVector p = x_box - x_mid;
             Y diffval = val_expr.a - val_expr.m;
-	    IntervalVector fm = cart_prod(diffval);
+            IntervalVector fm = cart_prod(diffval);
             MulOp::bwd(fm, val_expr.da, p);
             intersect_from_flat_vector((p + x_mid).eval(), x0, x...); // updating input values
           }
