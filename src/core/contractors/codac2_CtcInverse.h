@@ -91,7 +91,7 @@ namespace codac2
             Y diffval = val_expr.a - val_expr.m;
 	    IntervalVector fm = cart_prod(diffval);
             MulOp::bwd(fm, val_expr.da, p);
-            intersect_to_cart_prod((p + x_mid).eval(), x0, x...); // updating input values
+            intersect_from_flat_vector((p + x_mid).eval(), x0, x...); // updating input values
           }
           
         // [4/4] Backward evaluation
@@ -102,6 +102,33 @@ namespace codac2
       const AnalyticFunction<OutputType>& fnc() const
       {
         return _f;
+      }
+
+    private:
+
+      static void intersect_from_flat_vector(Interval& x, const IntervalVector& v, Index& i)
+      {
+        x &= v[i];
+        i++;
+      }
+
+      static void intersect_from_flat_vector(IntervalVector& x, const IntervalVector& v, Index& i)
+      {
+        x &= v.segment(i,x.size());
+        i+=x.size();
+      }
+
+      static void intersect_from_flat_vector(IntervalMatrix& x, const IntervalVector& v, Index& i)
+      {
+        x &= v.segment(i,x.size()).reshaped<Eigen::ColMajor>(x.rows(),x.cols());
+        i+=x.size();
+      }
+
+      template<typename... T>
+      static void intersect_from_flat_vector(const IntervalVector& v, T&... x)
+      {
+        Index i=0;
+        ((intersect_from_flat_vector(x,v,i)), ...);
       }
 
     protected:
