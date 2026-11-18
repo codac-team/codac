@@ -96,22 +96,15 @@ namespace codac2
   struct is_sep<C> : std::false_type {};
   
   template<typename C>
-    requires IsCtcBaseOrPtr<C,IntervalVector>
-  const CtcBase<IntervalVector>& ctc(const C& c)
+    requires (IsCtcBaseOrPtr<C,IntervalVector> || IsCtcBaseOrPtr<C,IntervalMatrix>)
+  const auto& ctc(const C& c)
   {
-    if constexpr(std::is_base_of_v<CtcBase<IntervalVector>,C>)
-      return c;
-    else
-      return *c;
-  }
+    using X = std::conditional_t<IsCtcBaseOrPtr<C,IntervalVector>,IntervalVector,IntervalMatrix>;
+    using Base = CtcBase<X>;
 
-  template<typename C>
-    requires IsCtcBaseOrPtr<C,IntervalMatrix>
-  const CtcBase<IntervalMatrix>& ctc(const C& c)
-  {
-    if constexpr(std::is_base_of_v<CtcBase<IntervalMatrix>,C>)
-      return c;
+    if constexpr(std::is_base_of_v<Base,C>)
+      return static_cast<const Base&>(c);
     else
-      return *c;
+      return static_cast<const Base&>(*c);
   }
 }
