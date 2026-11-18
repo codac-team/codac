@@ -44,10 +44,10 @@ namespace codac2
       
       virtual void contract(X&... x) const = 0;
 
-      virtual void contract(SlicedTube<X>&... x) const;
+      void contract(SlicedTube<X>&... x) const;
       // -> is defined in codac2_SlicedTube.h
 
-      virtual void contract_tube(SlicedTube<X>&... x) const;
+      void contract_tube(SlicedTube<X>&... x) const;
       // -> is defined in codac2_SlicedTube.h
 
       virtual std::shared_ptr<CtcBase<X...>> copy() const = 0;
