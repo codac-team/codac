@@ -3,7 +3,7 @@
 The CtcInter contractor
 =======================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 
 .. doxygenclass:: codac2::CtcInter

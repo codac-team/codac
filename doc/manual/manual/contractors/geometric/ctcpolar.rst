@@ -3,7 +3,7 @@
 The CtcPolar contractor
 =======================
 
-  Main authors: Benoît Desrochers, `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main authors: Benoît Desrochers, `Simon Rohou <https://www.simon-rohou.fr>`_
 
 .. image:: ctcpolar_scheme.png
    :alt: Illustration of the polar constraint

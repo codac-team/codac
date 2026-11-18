@@ -3,7 +3,7 @@
 The CtcInverse contractor
 =========================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 Definition
 ----------

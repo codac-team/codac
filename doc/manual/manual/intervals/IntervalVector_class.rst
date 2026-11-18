@@ -3,7 +3,7 @@
 The IntervalVector class
 ========================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 An :class:`~codac.IntervalVector` represents an axis-aligned *box* (Cartesian product of intervals) in :math:`\mathbb{R}^n`:
 

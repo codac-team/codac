@@ -3,7 +3,7 @@
 The CtcDist contractor
 ======================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 .. image:: ctcdist_scheme.png
    :alt: Illustration of the distance constraint

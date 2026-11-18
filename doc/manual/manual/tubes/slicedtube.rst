@@ -3,7 +3,7 @@
 Sliced tubes
 ============
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 A :class:`~codac.SlicedTube` is a tube defined over a shared :class:`~codac.TDomain`. For each temporal slice stored in the temporal partition, the tube owns one :class:`~codac.Slice` object storing its codomain over that temporal support. The codomain type is typically :class:`~codac.Interval` or :class:`~codac.IntervalVector`, or any domain type defined by the user. The same temporal domain can be shared by many tubes.
 

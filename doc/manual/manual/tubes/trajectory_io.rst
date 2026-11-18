@@ -3,7 +3,7 @@
 Trajectories serialization
 ==========================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 Importing CSV data
 ------------------

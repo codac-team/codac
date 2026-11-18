@@ -3,7 +3,7 @@
 The TDomain class
 =================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 A :class:`~codac.TDomain` is the temporal partition shared by one or more sliced tubes. It stores an ordered list of :class:`~codac.TSlice` objects. Each stored element is either
 
