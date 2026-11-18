@@ -281,9 +281,49 @@ void export_CtcInverse(py::module& m,
     VOID_CTCINVERSE_Y_X0X_CONTRACT_X0_REF_X_REF_VARIADIC_CONST);
 
   // Disabled for CtcInverseNotInt
-  if constexpr(std::is_same_v<C,CtcInverse<Interval>> || std::is_same_v<C,CtcInverse<IntervalVector>>)
+  if constexpr(std::is_same_v<C,CtcInverse<Interval>> || std::is_same_v<C,CtcInverse<IntervalVector>>
+    || std::is_same_v<C,CtcInverse<IntervalMatrix>>)
   {
     exported_ctc.def("fnc", &C::fnc,
       CONST_ANALYTICFUNCTION_OUTPUTTYPE_REF_CTCINVERSE_Y_X0X_FNC_CONST);
   }
+}
+
+// A single matrix input is bound directly, without flattening the function's
+// arguments. This deliberately does not support mixed input signatures.
+template<typename Y>
+void export_CtcInverse_MatrixInput(py::module& m, const std::string& export_name)
+{
+  using C = CtcInverse<Y,IntervalMatrix>;
+  using T = typename C::OutputType;
+
+  py::class_<C> exported_ctc(m, export_name.c_str(), CTCINVERSE_MAIN);
+  exported_ctc
+
+    .def(py::init(
+        [](const AnalyticFunction<T>& f, const Y& y, bool with_centered_form)
+        {
+          if(f.nb_args() != 1 || !std::dynamic_pointer_cast<MatrixVar>(f.args()[0]))
+            throw py::value_error("CtcInverse: expected a single MatrixVar input");
+
+          return std::make_unique<C>(f, y, with_centered_form);
+        }
+      ),
+      CTCINVERSE_Y_X0X_CTCINVERSE_CONST_ANALYTICFUNCTION_OUTPUTTYPE_REF_CONST_Y_REF_BOOL_BOOL,
+      "f"_a, "y"_a, "with_centered_form"_a = true)
+
+    .def("contract", [](const C& c, IntervalMatrix& x) -> IntervalMatrix&
+      {
+        c.contract(x);
+        return x;
+      },
+      VOID_CTCINVERSE_Y_X0X_CONTRACT_X0_REF_X_REF_VARIADIC_CONST,
+      py::return_value_policy::reference, "x"_a)
+
+    .def("size", [](const C& c) { return c.size(); },
+      INDEX_CTCBASE_X_SIZE_CONST)
+    .def("fnc", &C::fnc,
+      CONST_ANALYTICFUNCTION_OUTPUTTYPE_REF_CTCINVERSE_Y_X0X_FNC_CONST,
+      py::return_value_policy::reference_internal)
+  ;
 }

@@ -8,6 +8,7 @@
  */
 
 #include <catch2/catch_test_macros.hpp>
+#include <stdexcept>
 #include <codac2_AnalyticFunction.h>
 #include <codac2_Approx.h>
 #include <codac2_math.h>
@@ -528,4 +529,14 @@ TEST_CASE("AnalyticFunction")
     AnalyticFunction f1 { {x}, vec(x+x, 1.) };
     AnalyticFunction f2 { {x}, { x+x, 1. } };
   }
+}
+
+TEST_CASE("AnalyticFunction - invalid matrix input shape")
+{
+  MatrixVar m(2,3);
+  AnalyticFunction f({m}, m(0,0));
+  IntervalMatrix x = IntervalMatrix::Constant(3,2,Interval(-10,10));
+
+  // Same number of coefficients, different matrix shape.
+  CHECK_THROWS_AS(f.eval(EvalMode::NATURAL,x), std::invalid_argument);
 }

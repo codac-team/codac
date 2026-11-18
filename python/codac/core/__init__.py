@@ -134,14 +134,22 @@ class Sep(SepBase):
 
 def CtcInverse(f, y, with_centered_form=True):
   f = AnalyticFunction(f)
+  args = f.args()
+  has_matrix_input = any(isinstance(arg, MatrixVar) for arg in args)
+
+  if has_matrix_input and (len(args) != 1 or not isinstance(args[0], MatrixVar)):
+    codac_error("CtcInverse: matrix inputs currently require a single MatrixVar argument")
 
   if isinstance(f, AnalyticFunction_Scalar):
-    return CtcInverse_Interval(f, y, with_centered_form)
+    cls = CtcInverse_Interval_MatrixInput if has_matrix_input else CtcInverse_Interval
+  elif isinstance(f, AnalyticFunction_Vector):
+    cls = CtcInverse_IntervalVector_MatrixInput if has_matrix_input else CtcInverse_IntervalVector
+  elif isinstance(f, AnalyticFunction_Matrix):
+    cls = CtcInverse_IntervalMatrix_MatrixInput if has_matrix_input else CtcInverse_IntervalMatrix
+  else:
+    codac_error("CtcInverse: invalid analytic function")
 
-  if isinstance(f, AnalyticFunction_Vector):
-    return CtcInverse_IntervalVector(f, y, with_centered_form)
-
-  codac_error("CtcInverse: can only build CtcInverse from scalar or vector functions")
+  return cls(f, y, with_centered_form)
 
 
 def CtcInverseNotIn(f, y, with_centered_form=True):

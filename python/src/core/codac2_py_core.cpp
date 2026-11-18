@@ -208,6 +208,10 @@ PYBIND11_MODULE(_core, m)
 
   export_CtcInverse<CtcInverse<Interval>>(m,"CtcInverse_Interval",py_ctc_iv);
   export_CtcInverse<CtcInverse<IntervalVector>>(m,"CtcInverse_IntervalVector",py_ctc_iv);
+  export_CtcInverse<CtcInverse<IntervalMatrix>>(m,"CtcInverse_IntervalMatrix",py_ctc_iv);
+  export_CtcInverse_MatrixInput<Interval>(m,"CtcInverse_Interval_MatrixInput");
+  export_CtcInverse_MatrixInput<IntervalVector>(m,"CtcInverse_IntervalVector_MatrixInput");
+  export_CtcInverse_MatrixInput<IntervalMatrix>(m,"CtcInverse_IntervalMatrix_MatrixInput");
   export_CtcInverse<CtcInverseNotIn<Interval>>(m,"CtcInverseNotIn_Interval",py_ctc_iv);
   export_CtcInverse<CtcInverseNotIn<IntervalVector>>(m,"CtcInverseNotIn_IntervalVector",py_ctc_iv);
 
