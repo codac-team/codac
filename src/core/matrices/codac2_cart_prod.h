@@ -10,6 +10,7 @@
 #pragma once
 
 #include "codac2_IntervalVector.h"
+#include "codac2_IntervalMatrix.h"
 #include "codac2_Matrix.h"
 #include "codac2_matrices.h"
 
@@ -39,7 +40,25 @@ namespace codac2
     requires (!Eigen::IsVectorOrRow<R,C>)
   inline IntervalVector to_IntervalVector(const Eigen::Matrix<T,R,C>& x)
   {
-    return x.reshaped();
+    return x.template reshaped<Eigen::ColMajor>();
+  }
+
+  inline void intersect_from_IntervalVector(Interval& x, const IntervalVector &v, Index &i)
+  {
+    x &= v[i];
+    i++;
+  }
+
+  inline void intersect_from_IntervalVector(IntervalVector& x, const IntervalVector &v, Index &i)
+  {
+    x &= v.segment(i,x.size());
+    i+=x.size();
+  }
+
+  inline void intersect_from_IntervalVector(IntervalMatrix& x, const IntervalVector &v, Index &i)
+  {
+    x &= v.segment(i,x.size()).reshaped<Eigen::ColMajor>(x.rows(),x.cols());
+    i+=x.size();
   }
 
   inline IntervalVector cart_prod()
@@ -67,6 +86,15 @@ namespace codac2
       i += xi.size();
     }
     return x_;
+  }
+
+  template<typename... X>
+    requires ((is_interval_based_v<X>) || ...)
+      && ((!is_ctc_v<X>) && ...) && ((!is_sep_v<X>) && ...)
+  inline void intersect_to_cart_prod(const IntervalVector &v, X&... x)
+  {
+    Index i=0;
+    ((intersect_from_IntervalVector(x,v,i)), ...);
   }
 
   template<typename... X>

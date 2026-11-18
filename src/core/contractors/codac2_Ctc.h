@@ -15,6 +15,7 @@
 #include "codac2_assert.h"
 #include "codac2_TypeInfo.h"
 #include "codac2_IntervalVector.h"
+#include "codac2_IntervalMatrix.h"
 
 namespace codac2
 {
@@ -80,15 +81,18 @@ namespace codac2
   
 
   template<typename C>
-    requires (IsCtcBase<C,Interval>) || (IsCtcBase<C,IntervalVector>)
+    requires (IsCtcBase<C,Interval>) || (IsCtcBase<C,IntervalVector>) 
+	|| (IsCtcBase<C,IntervalMatrix>)
   struct is_interval_based<C> : std::false_type {};
 
   template<typename C>
     requires (IsCtcBase<C,Interval>) || (IsCtcBase<C,IntervalVector>)
+	|| (IsCtcBase<C,IntervalMatrix>)
   struct is_ctc<C> : std::true_type {};
 
   template<typename C>
     requires (IsCtcBase<C,Interval>) || (IsCtcBase<C,IntervalVector>)
+	|| (IsCtcBase<C,IntervalMatrix>)
   struct is_sep<C> : std::false_type {};
   
   template<typename C>
@@ -96,6 +100,16 @@ namespace codac2
   const CtcBase<IntervalVector>& ctc(const C& c)
   {
     if constexpr(std::is_base_of_v<CtcBase<IntervalVector>,C>)
+      return c;
+    else
+      return *c;
+  }
+
+  template<typename C>
+    requires IsCtcBaseOrPtr<C,IntervalMatrix>
+  const CtcBase<IntervalMatrix>& ctc(const C& c)
+  {
+    if constexpr(std::is_base_of_v<CtcBase<IntervalMatrix>,C>)
       return c;
     else
       return *c;

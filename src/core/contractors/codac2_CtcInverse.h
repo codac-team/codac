@@ -85,30 +85,13 @@ namespace codac2
             // todo: the above condition !val_expr.da.is_unbounded() should not be necesary,
             // possible bug in MulOp in case of unbounded domain?
 
-            if constexpr(sizeof...(X) == 0 && std::is_same_v<X0,IntervalVector>)
-            {
-              X0 x_mid = X0(x0.mid());
-
-              assert(val_expr.a.size() == val_expr.m.size());
-              IntervalVector fm { val_expr.a - val_expr.m };
-
-              if constexpr(std::is_same_v<Y,IntervalMatrix>)
-              {
-                std::cout << "CtcInverse: matrices expressions not (yet) supported with centered form" << std::endl;
-              }
-
-              else
-              {
-                IntervalVector p = x0 - x_mid;
-                MulOp::bwd(fm, val_expr.da, p);
-                x0 &= p + x_mid;
-              }
-            }
-
-            else
-            {
-              // Centered form not (yet) implemented for multi-nonvector-arguments
-            }
+            IntervalVector x_box = cart_prod(x0,x...);
+            IntervalVector x_mid = cart_prod(x0.mid(), x.mid()...);
+            IntervalVector p = x_box - x_mid;
+            Y diffval = val_expr.a - val_expr.m;
+	    IntervalVector fm = cart_prod(diffval);
+            MulOp::bwd(fm, val_expr.da, p);
+            intersect_to_cart_prod((p + x_mid).eval(), x0, x...); // updating input values
           }
           
         // [4/4] Backward evaluation

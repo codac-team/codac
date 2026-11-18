@@ -17,7 +17,9 @@ namespace codac2
    typename X = std::conditional_t<
       std::is_same_v<Y, Interval>,
       Interval,
-      IntervalVector>>
+      std::conditional_t<std::is_same_v<Y, IntervalMatrix>,
+      IntervalMatrix,
+      IntervalVector>>>
   class CtcWrapper : public Ctc<CtcWrapper<Y>,X>
   {
     public:
