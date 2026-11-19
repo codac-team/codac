@@ -15,6 +15,7 @@
 #include <codac2_AnalyticFunction.h>
 #include <codac2_DiffInclusion.h>
 #include <codac2_ReachabilityStep.h>
+#include <codac2_RS_box.h>
 #include <codac2_DI_Integration.h>
 #include <codac2_Approx.h>
 #include <codac2_math.h>
@@ -33,7 +34,7 @@ TEST_CASE("AnalyticFunction")
                    x \in u_m(1-e^-t) + e^-t  + [-1,1] eps | e^t - 1 | */
       
       DI_Integration<DiffInclusion<ScalarVar,ScalarVar>,
-                     ReachabilityStep0> integration(di);
+                     RS_box> integration(di);
       {
         IntervalVector i1({{-5.0,5.0}}), i2({{-5.0,5.0}});
 
@@ -67,7 +68,7 @@ TEST_CASE("AnalyticFunction")
 		/* with x(0)=(1,0) and u=[0], 
                    x = (cos(t),sin(t)) */
       DI_Integration<DiffInclusion<VectorVar,ScalarVar>,
-                     ReachabilityStep0> integration(di);
+                     RS_box> integration(di);
       
       {
         IntervalVector i1 {{-5.0,5.0},{-5.0,5.0}};

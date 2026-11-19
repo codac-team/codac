@@ -10,3 +10,4 @@ Inclusion functions
   analytic/analytic_operators.rst
   parallelepiped/parallelepiped_eval.rst
   peibos/peibos.rst
+  differentialinclusions/differentialinclusions.rst

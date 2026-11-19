@@ -97,6 +97,14 @@ namespace codac2
 	        _inflation_base(inflation_base) {
         }
 
+        std::pair<double,double> get_inflation_options() const {
+	   return { _inflation_ratio, _inflation_base };
+        }
+        void set_inflation_options(std::pair<double,double> options) {
+	   std::tie(_inflation_ratio,_inflation_base) = 
+			options;
+        }
+
         IntervalVector approx() const { return approx_base(_init); }
         void inflate(IntervalVector &a) const override;
         std::pair<IntervalVector,IntervalVector> enclose
@@ -109,6 +117,10 @@ namespace codac2
         static const IntervalVector &
 			intVect_from_DomainA(const IntervalVector &a) {
             return a;
+        }
+        static const IntervalVector &
+			intVect_from_DomainB(const IntervalVector &b) {
+            return b;
         }
 
 
@@ -123,15 +135,36 @@ namespace codac2
   {
       public:
         ReachabilityStep1(const DiffInclusionBase *diffinclusion,
-		double inflation_ratio=1.1, double inflation_base=1e-2) :
+		double max_zonotope_order=50.0,
+		std::pair<double,double> inflation_options={1.1,1e-2}) :
 		ReachabilityStep(diffinclusion), 
-	        _inflation_ratio(inflation_ratio),
-	        _inflation_base(inflation_base) {
+	        _inflation_ratio(inflation_options.first),
+	        _inflation_base(inflation_options.second),
+		_max_zonotope_order(max_zonotope_order) {
+        }
+
+        std::pair<double,double> get_inflation_options() const {
+	   return { _inflation_ratio, _inflation_base };
+        }
+        void set_inflation_options(std::pair<double,double> options) {
+	   std::tie(_inflation_ratio,_inflation_base) = 
+			options;
+        }
+
+        double get_max_zonotope_order() const {
+           return _max_zonotope_order;
+        }
+        void set_max_zonotope_order(double value) {
+           _max_zonotope_order=value;
         }
 
         static const IntervalVector 
 			intVect_from_DomainA(const Zonotope &a) {
             return a.box();
+        }
+        static const IntervalVector &
+			intVect_from_DomainB(const IntervalVector &b) {
+            return b;
         }
 
         Zonotope approx() const { return Zonotope(approx_base(_init.box())); }
@@ -144,6 +177,7 @@ namespace codac2
       private:
         double _inflation_ratio;
         double _inflation_base;
+        double _max_zonotope_order;
   };
 
 }

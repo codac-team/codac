@@ -13,6 +13,8 @@
 #include "codac2_AnalyticFunction.h"
 #include "codac2_DiffInclusion.h"
 #include "codac2_ReachabilityStep.h"
+#include "codac2_SlicedTube.h"
+#include "codac2_TimePropag.h"
 #include <memory>
 
 namespace codac2
@@ -34,6 +36,14 @@ namespace codac2
 		_is(std::make_unique<IS>(&(*_di))), 
 		_widen_attempts(widen_attempts),
 		_narrow_attempts(narrow_attempts) { }
+
+       
+       std::unique_ptr<DI> &get_differentialinclusion() {
+ 	   return _is;
+       }
+       std::unique_ptr<IS> &get_reachabilitystep() {
+ 	   return _is;
+       }
   
        std::pair<bool,DomA> integration_step(DomA& approx,
                DomB& in_domain) const {
@@ -118,12 +128,100 @@ namespace codac2
       std::pair<bool,X> integrate_to_time(const Interval &time_step,
                   const X& init, const X& in_domain, 
                   const U& u, double t_steps) {
-           DomA ninit = DomA(_di->from_X(init));
-           DomB indomain = DomB(_di->from_X(in_domain));
+           DomA ninit(_di->from_X(init));
+           DomB indomain(_di->from_X(in_domain));
            auto res = this->integrate_to_time_indom(time_step,
   			ninit, indomain, u, t_steps);
            return { res.first, _di->to_X(IS::intVect_from_DomainA(res.second)) };
       }
+
+      SlicedTube<X> create_sliced_tube
+		(const std::shared_ptr<TDomain>& tdomain,
+			const X&init, const X& in_domain, 
+			const U& u, bool forward=true) {
+            DomB indomain(_di->from_X(in_domain));
+            SlicedTube<X> built(tdomain, in_domain);
+            DomA current(_di->from_X(init));
+	    bool empty = init.is_empty();
+            auto sl = (forward ? built.first_slice() : built.last_slice());
+            while (sl!=nullptr) {
+	       if (empty) {
+                   sl->codomain().set_empty();
+               } else 
+	       if (sl->is_gate()) {
+                   sl->codomain() &=
+			_di->to_X(IS::intVect_from_DomainA(current));
+               } else {
+                   DomB indomain2(indomain);
+                   DomA out_gate2;
+                   bool result = this->contract_one_step(
+  			sl->t0_tf(),
+  		        current, indomain2, out_gate2, u, forward);
+                   if (result) {
+		      sl->codomain() &= 
+			_di->to_X(IS::intVect_from_DomainB(indomain2));
+		      current = out_gate2;
+		      if (sl->codomain().is_empty() ||
+				current.is_empty()) empty=true;
+                   } else {
+		      current = DomA(_di->from_X(in_domain));
+		   }
+               }
+	       sl = (forward ? sl->next_slice() : sl->prev_slice());
+            }
+	    return built;
+      }
+			
+      void contract_sliced_tube
+		(SlicedTube<X>& tube,
+			const U& u, bool forward=true) {
+            Interval global_time=tube.t0_tf();
+            auto sl = (forward ? tube.first_slice() : tube.last_slice());
+            DomA current(_di->from_X(sl->codomain()));
+	    bool empty = sl->codomain().is_empty();
+            while (sl!=nullptr) {
+	       if (empty) {
+                   sl->codomain().set_empty();
+               } else 
+	       if (sl->is_gate()) {
+                   sl->codomain() &=
+			_di->to_X(IS::intVect_from_DomainA(current));
+		   if (sl->codomain().is_empty()) empty=true;
+               } else {
+                   DomB indomain2(_di->from_X(sl->codomain()));
+                   DomA out_gate2;
+                   bool result = this->contract_one_step(
+  			sl->t0_tf(),
+  		        current, indomain2, out_gate2, u, forward);
+                   if (result) {
+		      sl->codomain() &= 
+			_di->to_X(IS::intVect_from_DomainB(indomain2));
+		      current = out_gate2;
+		      if (sl->codomain().is_empty() ||
+				current.is_empty()) empty=true;
+                   } else {
+		      current = DomA(_di->from_X(sl->codomain()));
+		   }
+               }
+	       sl = (forward ? sl->next_slice() : sl->prev_slice());
+            }
+      }
+
+      void contract_sliced_tube
+		(SlicedTube<X>& tube,
+			const U& u, TimePropag dir) {
+	    if (dir == TimePropag::FWD) {
+	       this->contract_sliced_tube(tube,u,true);
+	    } else if (dir == TimePropag::BWD) {
+	       this->contract_sliced_tube(tube,u,false);
+            } else {
+	       for (int i=0;i<2;i++) {
+	         this->contract_sliced_tube(tube,u,true);
+	         this->contract_sliced_tube(tube,u,false);
+	       }   /* TODO : check the changes ? */
+            }
+      }
+
     private:
       std::unique_ptr<DI> _di;  
       std::unique_ptr<IS> _is;

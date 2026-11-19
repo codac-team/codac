@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_ReachabilityStep1.cpp
+ *  \file codac2_RS_zonotope.cpp
  * ----------------------------------------------------------------------------
  *  \date       2026
  *  \author     Damien Massé
@@ -11,10 +11,11 @@
 #include "codac2_AnalyticFunction.h"
 #include "codac2_DiffInclusion.h"
 #include "codac2_ReachabilityStep.h"
+#include "codac2_RS_zonotope.h"
 
 namespace codac2
 {
-   void ReachabilityStep1::inflate(Zonotope &a) const {
+   void RS_zonotope::inflate(Zonotope &a) const {
        a.A *= (1.0+_inflation_ratio);
        IntervalVector bx = IntervalVector::Constant
 		(a.c.size(),Interval(-_inflation_base,_inflation_base));
@@ -22,7 +23,7 @@ namespace codac2
    }
 
    std::pair<Zonotope,Zonotope> 
-		ReachabilityStep1::enclose(const IntervalVector &b) const {
+		RS_zonotope::enclose(const IntervalVector &b) const {
         /* evaluation on whole set */
         VectorType retWhole =
 	   _diffinclusion->f_eval_diff(_time_step,_init.box(),_u);
@@ -67,10 +68,14 @@ namespace codac2
 	Zonotope zgate = _init.transform(m1);
         zgate += (_time_bound*(retInit.m+lincorr_u)
 			 + 0.5*sqr(_time_bound)*quadcorr_x);
+        if (this->_max_zonotope_order>=2.0 &&
+		zgate.A.rows()*this->_max_zonotope_order<zgate.A.cols()) {
+           zgate = zgate.reduction(0.75*_max_zonotope_order);
+        }
         return { zinside, zgate };
    }
 
-   IntervalVector ReachabilityStep1::intersect(const IntervalVector &b, 
+   IntervalVector RS_zonotope::intersect(const IntervalVector &b, 
 					const Zonotope &a) const {
        return b & a.box();
    }

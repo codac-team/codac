@@ -1,5 +1,5 @@
 /** 
- *  \file codac2_ReachabilityStep0.cpp
+ *  \file codac2_RS_box.cpp
  * ----------------------------------------------------------------------------
  *  \date       2026
  *  \author     Damien Massé
@@ -10,17 +10,18 @@
 #include "codac2_AnalyticFunction.h"
 #include "codac2_DiffInclusion.h"
 #include "codac2_ReachabilityStep.h"
+#include "codac2_RS_box.h"
 
 namespace codac2
 {
-   void ReachabilityStep0::inflate(IntervalVector &a) const {
+   void RS_box::inflate(IntervalVector &a) const {
        IntervalVector a_ins = a - a.mid();
        a += _inflation_ratio*a_ins;
        a.inflate(_inflation_base);
    }
 
    std::pair<IntervalVector,IntervalVector> 
-		ReachabilityStep0::enclose(const IntervalVector &b) const {
+		RS_box::enclose(const IntervalVector &b) const {
         IntervalVector evolution =
            _diffinclusion->f_eval(EvalMode::DEFAULT,_time_step,b,_u);
         return { _init+_time_interval*evolution,

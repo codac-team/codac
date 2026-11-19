@@ -32,3 +32,8 @@
   target_compile_options(${PROJECT_NAME} PUBLIC ${CODAC_CXX_FLAGS})
   target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES})
+
+  add_executable(diff_inclusion_tube main_tube.cpp)
+  target_compile_options(diff_inclusion_tube PUBLIC ${CODAC_CXX_FLAGS})
+  target_include_directories(diff_inclusion_tube SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS})
+  target_link_libraries(diff_inclusion_tube PUBLIC ${CODAC_LIBRARIES})
