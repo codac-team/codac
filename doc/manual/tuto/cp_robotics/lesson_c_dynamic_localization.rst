@@ -3,7 +3,7 @@
 Lesson C: Dynamic localization
 ==============================
 
-  Main authors: `Simon Rohou <https://www.simon-rohou.fr/research/>`_, `Maël Godard <https://godardma.github.io>`_ (Matlab binding)
+  Main authors: `Simon Rohou <https://www.simon-rohou.fr>`_, `Maël Godard <https://godardma.github.io>`_ (Matlab binding)
 
 We now propose to extend the previous lesson to the dynamic case, *i.e.* with a mobile robot evolving in the middle of a field of indistinguishable landmarks.
 

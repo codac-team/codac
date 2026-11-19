@@ -3,7 +3,7 @@
 Sampled trajectories
 ====================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 ``SampledTraj<T>`` stores time/value pairs :math:`(t_i,x_i)` with distinct, ordered timestamps. Between samples, the trajectory is linearly interpolated:
 

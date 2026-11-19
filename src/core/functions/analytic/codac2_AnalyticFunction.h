@@ -298,6 +298,12 @@ namespace codac2
         assert_release(size_of(x) == this->args()[i]->size() && "provided arguments do not match function inputs");
 
         using D_TYPE = typename ExprType<D>::Type;
+        if constexpr(std::is_same_v<D_TYPE,MatrixType>)
+        {
+          const auto var = std::dynamic_pointer_cast<MatrixVar>(this->args()[i]);
+          assert_release(var && x.rows() == var->rows() && x.cols() == var->cols()
+            && "invalid input matrix dimensions");
+        }
 
         IntervalMatrix d = IntervalMatrix::zero(size_of(x), this->args().total_size());
         

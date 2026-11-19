@@ -3,7 +3,7 @@
 Analytic trajectories
 =====================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 ``AnalyticTraj`` represents a trajectory defined by a function of time rather than by stored samples. It combines a temporal domain and an ``AnalyticFunction`` with one scalar input.
 

@@ -3,7 +3,7 @@
 The Slice and TSlice classes
 ============================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 At the implementation level, sliced tubes are built from two complementary classes:
 

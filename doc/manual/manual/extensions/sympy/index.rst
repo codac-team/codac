@@ -3,7 +3,7 @@
 SymPy (for symbolic mathematics)
 ================================
 
-  Main authors: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main authors: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 The ``AnalyticFunction`` class already provides interval automatic differentiation through its ``.diff()`` method.
 This built-in differentiation computes enclosures of Jacobian values over interval inputs and is the natural tool for guaranteed interval analysis.

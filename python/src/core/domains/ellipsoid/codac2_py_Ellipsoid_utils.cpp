@@ -12,6 +12,7 @@
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <codac2_Ellipsoid_utils.h>
+#include <codac2_AnalyticFunction.h>
 #include "codac2_py_Ellipsoid_utils_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 
 using namespace std;

@@ -3,7 +3,7 @@
 The Interval class
 ==================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 The ``Interval`` class represents closed and connected subsets of :math:`\mathbb{R}`.
 It is based on the ``gaol::interval`` structure and extends it with many utility methods.

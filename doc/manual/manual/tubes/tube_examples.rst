@@ -3,7 +3,7 @@
 Programming examples
 ====================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 The following examples illustrate basic operations on sliced tubes.
 

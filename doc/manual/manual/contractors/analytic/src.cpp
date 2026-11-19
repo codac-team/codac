@@ -39,7 +39,7 @@ TEST_CASE("CtcInverse - manual")
 
     // Combining CtcInverse with a CtcFixpoint:
     CtcFixpoint cfix(c);
-    c.contract(z);
+    cfix.contract(z);
     DefaultFigure::draw_box(z, Color::red()); // after a fixed point contraction
     // z == [ [1.84, 2.483] ; [0, 1] ]
     // [ctcinv-2-end]

@@ -4,7 +4,7 @@
 Union: CtcUnion and SepUnion
 ============================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 
 ``CtcUnion`` and ``SepUnion`` implement the logical union/disjunction counterpart of

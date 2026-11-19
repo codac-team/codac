@@ -25,7 +25,7 @@ DefaultFigure().draw_box(z, StyleProperties({Color().blue(),Color().white()})); 
 
 % Combining CtcInverse with a CtcFixpoint:
 cfix = CtcFixpoint(c);
-z = c.contract(z);
+z = cfix.contract(z);
 DefaultFigure().draw_box(z, Color().red()); % after a fixed point contraction
 % z == [ [1.84, 2.483] ; [0, 1] ]
 % [ctcinv-2-end]

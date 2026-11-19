@@ -3,7 +3,7 @@
 The BoolInterval enumeration
 ============================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 A :class:`~codac2.BoolInterval` (Boolean interval) is a compact representation of an
 uncertain truth value. It is primarily used as a **reliable return type** for predicates

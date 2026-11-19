@@ -15,6 +15,7 @@
 #include "codac2_pave.h"
 #include "codac2_matrices.h"
 #include "codac2_Matrix.h"
+#include <optional>
 
 using namespace std;
 using namespace codac2;
@@ -53,11 +54,70 @@ const vector<FigureAxis>& Figure2D::axes() const
 
 Figure2D& Figure2D::set_axes(const FigureAxis& axis1, const FigureAxis& axis2)
 {
-  _axes = { axis1, axis2 };
   assert_release(axis1.dim_id != axis2.dim_id);
+  _source_axes = {axis1,axis2};
+  update_projected_axes();
+  return *this;
+}
+
+// A display projection always maps the two selected figure coordinates to 2D.
+// All other components (including a robot's heading) are preserved.
+Vector Figure2D::project_position(const Vector& x) const
+{
+  assert_release(_projection && x.size() > std::max(i(),j()));
+  const Vector p = _projection({x[i()],x[j()]});
+  assert_release(p.size() == 2);
+  Vector projected(x);
+  projected[i()] = p[0];
+  projected[j()] = p[1];
+  return projected;
+}
+
+void Figure2D::update_projected_axes()
+{
+  _axes = _source_axes;
+
+  if(_projection)
+  {
+    IntervalVector domain {_source_axes[0].limits,_source_axes[1].limits};
+
+    if(!domain.is_empty())
+    {
+      IntervalVector image = IntervalVector::empty(2);
+      if(_interval_projection)
+        image = _interval_projection(domain);
+      else
+      {
+        // Four-corner approximation (not a guaranteed enclosure for nonlinear projections).
+        IntervalVector bounded = domain & IntervalVector::constant(2,{-9e10,9e10});
+        if(!bounded.is_empty())
+        {
+          vector<Vector> corners(4,bounded.mid());
+          corners[0][0] = corners[3][0] = bounded[0].lb();
+          corners[1][0] = corners[2][0] = bounded[0].ub();
+          corners[0][1] = corners[1][1] = bounded[1].lb();
+          corners[2][1] = corners[3][1] = bounded[1].ub();
+
+          for(const auto& corner : corners)
+          {
+            const Vector projected = _projection(corner);
+            assert_release(projected.size() == 2);
+            image |= projected;
+          }
+        }
+      }
+
+      assert_release(image.size() == 2);
+      if(!image.is_empty())
+        image &= IntervalVector::constant(2,{-9e10,9e10});
+
+      _axes[0].limits = image[0];
+      _axes[1].limits = image[1];
+    }
+  }
+
   for(const auto& output_fig : _output_figures)
     output_fig->update_axes();
-  return *this;
 }
 
 Figure2D& Figure2D::set_axes(const IntervalVector& bbox)
@@ -101,8 +161,14 @@ void Figure2D::center_viewbox(const Vector& c, const Vector& r)
   assert_release(this->size() <= c.size() && this->size() <= r.size());
   assert_release(r.min_coeff() > 0.);
 
+  // The radius is expressed directly in display coordinates.
+  std::optional<Vector> projected;
+  if(_projection)
+    projected.emplace(project_position(c));
+  const Vector& center = projected ? *projected : c;
+
   for(const auto& output_fig : _output_figures)
-    output_fig->center_viewbox(c,r);
+    output_fig->center_viewbox(center,r);
 }
 
 void Figure2D::clear()
@@ -148,18 +214,37 @@ void Figure2D::set_tdomain(const Interval& tdomain)
   _tdomain = tdomain;
 }
 
+Figure2D& Figure2D::set_projection(
+  function<Vector(const Vector&)> projection,
+  function<IntervalVector(const IntervalVector&)> interval_projection)
+{
+  _projection = std::move(projection);
+  _interval_projection = _projection ? std::move(interval_projection) : std::function<IntervalVector(const IntervalVector&)>{};
+  update_projected_axes();
+  return *this;
+}
+
 void Figure2D::draw_point(const Vector& c, const StyleProperties& style)
 {
   assert_release(this->size() <= c.size());
 
+  std::optional<Vector> projected;
+  if(_projection)
+    projected.emplace(project_position(c));
+  const Vector& point = projected ? *projected : c;
+
   for(const auto& output_fig : _output_figures)
-    output_fig->draw_point(c,style);
+    output_fig->draw_point(point,style);
 }
 
 void Figure2D::draw_box(const IntervalVector& x, const StyleProperties& style)
 {
   assert_release(this->size() <= x.size());
-  if(!x.is_empty())
+  if(x.is_empty())
+    return;
+
+  if(!_projection)
+  {
     for(const auto& output_fig : _output_figures)
     {
       if(x.max_diam() == 0.)
@@ -167,6 +252,41 @@ void Figure2D::draw_box(const IntervalVector& x, const StyleProperties& style)
       else
         output_fig->draw_box(x & IntervalVector::constant(x.size(),{-9e10,9e10}),style);
     }
+    return;
+  }
+
+  if(x.max_diam() == 0.)
+  {
+    draw_point(x.mid(),style);
+    return;
+  }
+
+  if(_interval_projection)
+  {
+    const IntervalVector p = _interval_projection({x[i()],x[j()]});
+    assert_release(p.size() == 2);
+    if(!p.is_empty())
+    {
+      IntervalVector projected(x);
+      projected[i()] = p[0];
+      projected[j()] = p[1];
+      for(const auto& output_fig : _output_figures)
+        output_fig->draw_box(projected & IntervalVector::constant(projected.size(),{-9e10,9e10}),style);
+    }
+  }
+  else // Visual approximation from the four corners, not a guaranteed enclosure.
+  {
+    IntervalVector bounded = x & IntervalVector::constant(x.size(),{-9e10,9e10});
+    vector<Vector> corners(4,bounded.mid());
+    corners[0][i()] = corners[3][i()] = bounded[i()].lb();
+    corners[1][i()] = corners[2][i()] = bounded[i()].ub();
+    corners[0][j()] = corners[1][j()] = bounded[j()].lb();
+    corners[2][j()] = corners[3][j()] = bounded[j()].ub();
+    for(auto& p : corners)
+      p = project_position(p);
+    for(const auto& output_fig : _output_figures)
+      output_fig->draw_polygon(corners,style);
+  }
 }
 
 void Figure2D::draw_circle(const Vector& c, double r, const StyleProperties& style)
@@ -174,8 +294,14 @@ void Figure2D::draw_circle(const Vector& c, double r, const StyleProperties& sty
   assert_release(this->size() <= c.size());
   assert_release(r > 0.);
 
+  // The radius is already expressed in display coordinates.
+  std::optional<Vector> projected;
+  if(_projection)
+    projected.emplace(project_position(c));
+  const Vector& center = projected ? *projected : c;
+
   for(const auto& output_fig : _output_figures)
-    output_fig->draw_circle(c,r,style);
+    output_fig->draw_circle(center,r,style);
 }
 
 void Figure2D::draw_ring(const Vector& c, const Interval& r, const StyleProperties& style)
@@ -183,9 +309,17 @@ void Figure2D::draw_ring(const Vector& c, const Interval& r, const StyleProperti
   assert_release(this->size() <= c.size());
   assert_release(!r.is_empty() && r.lb() >= 0.);
 
-  if(!r.is_empty())
-    for(const auto& output_fig : _output_figures)
-      output_fig->draw_ring(c,r,style);
+  if(r.is_empty())
+    return;
+
+  // The inner and outer radii remain in display coordinates.
+  std::optional<Vector> projected;
+  if(_projection)
+    projected.emplace(project_position(c));
+  const Vector& center = projected ? *projected : c;
+
+  for(const auto& output_fig : _output_figures)
+    output_fig->draw_ring(center,r,style);
 }
 
 void Figure2D::draw_line(const Vector& p1, const Vector& p2, const StyleProperties& style)
@@ -225,8 +359,18 @@ void Figure2D::draw_polyline(const vector<Vector>& x, float tip_length, const St
     assert_release(this->size() <= xi.size());
   }
 
+  std::optional<vector<Vector>> projected;
+  if(_projection)
+  {
+    projected.emplace();
+    projected->reserve(x.size());
+    for(const auto& xi : x)
+      projected->push_back(project_position(xi));
+  }
+  const auto& points = projected ? *projected : x;
+
   for(const auto& output_fig : _output_figures)
-    output_fig->draw_polyline(x,tip_length,style);
+    output_fig->draw_polyline(points,tip_length,style);
 }
 
 void Figure2D::draw_polygon(const Polygon& x, const StyleProperties& style)
@@ -239,6 +383,10 @@ void Figure2D::draw_polygon(const Polygon& x, const StyleProperties& style)
       draw_point(xi.mid(),style); // revealing thick points
     w.push_back(xi.mid());
   }
+
+  if(_projection)
+    for(auto& p : w)
+      p = project_position(p);
 
   for(const auto& output_fig : _output_figures)
     output_fig->draw_polygon(w,style);
@@ -278,6 +426,9 @@ void Figure2D::draw_zonotope(const Zonotope& z, const StyleProperties& style)
         vertices.push_back(point);
         point+=2*a.second;
     }
+    if(_projection)
+      for(auto& v : vertices)
+        v = project_position(v);
     for(const auto& output_fig : _output_figures)
       output_fig->draw_polygon(vertices,style);
   }
@@ -319,8 +470,14 @@ void Figure2D::draw_pie(const Vector& c, const Interval& r, const Interval& thet
   if(r.is_unbounded())
     r_ &= Interval(0,prev_float(oo));
 
+  // Radii and angles are already expressed in display coordinates.
+  std::optional<Vector> projected;
+  if(_projection)
+    projected.emplace(project_position(c));
+  const Vector& center = projected ? *projected : c;
+
   for(const auto& output_fig : _output_figures)
-    output_fig->draw_pie(c,r_,theta_,style);
+    output_fig->draw_pie(center,r_,theta_,style);
 }
 
 void Figure2D::draw_ellipse(const Vector& c, const Vector& ab, double theta, const StyleProperties& style)
@@ -328,8 +485,14 @@ void Figure2D::draw_ellipse(const Vector& c, const Vector& ab, double theta, con
   assert_release(c.size() == 2);
   assert_release(ab.size() == 2);
 
+  // Semi-axis lengths and orientation are already in display coordinates.
+  std::optional<Vector> projected;
+  if(_projection)
+    projected.emplace(project_position(c));
+  const Vector& center = projected ? *projected : c;
+
   for(const auto& output_fig : _output_figures)
-    output_fig->draw_ellipse(c,ab,theta,style);
+    output_fig->draw_ellipse(center,ab,theta,style);
 }
 
 void Figure2D::draw_ellipsoid(const Ellipsoid& e, const StyleProperties& style)
@@ -360,8 +523,8 @@ void Figure2D::draw_ellipsoid(const Ellipsoid& e, const StyleProperties& style)
 
   double theta = std::atan2(U(1, 0), U(0, 0));
 
-  for(const auto& output_fig : _output_figures)
-    output_fig->draw_ellipse(proj_e.mu, ab, theta, style);
+  // The ellipsoid center is projected, but its semi-axes and orientation are not.
+  draw_ellipse(proj_e.mu,ab,theta,style);
 }
 
 void Figure2D::draw_trajectory(const SampledTraj<Vector>& x, const StyleProperties& style)
@@ -419,12 +582,11 @@ void Figure2D::draw_trajectory(const AnalyticTraj<VectorType>& x, const StyleGra
 
 void Figure2D::plot_trajectory(const SampledTraj<double>& x, const StyleProperties& style)
 {
-  _axes[0].limits = x.tdomain();
-  if(_axes[1].limits == Interval(0,1))
-    _axes[1].limits.set_empty();
-  _axes[1].limits |= x.codomain();
-  for(const auto& output_fig : _output_figures)
-    output_fig->update_axes();
+  _source_axes[0].limits = x.tdomain();
+  if(_source_axes[1].limits == Interval(0,1))
+    _source_axes[1].limits.set_empty();
+  _source_axes[1].limits |= x.codomain();
+  update_projected_axes();
 
   vector<Vector> values;
 
@@ -454,7 +616,7 @@ void Figure2D::plot_trajectory(const SampledTraj<double>& x, const StyleProperti
 
 void Figure2D::plot_trajectory(const AnalyticTraj<ScalarType>& x, const StyleProperties& style)
 {
-  plot_trajectory(x.sampled(_axes[0].limits.diam()/1e4), style);
+  plot_trajectory(x.sampled(x.tdomain().diam()/1e4), style);
 }
 
 void Figure2D::plot_trajectories(const SampledTraj<Vector>& x)
@@ -571,10 +733,16 @@ void Figure2D::draw_tank(const Vector& x, float size, const StyleProperties& sty
   assert_release(this->size() <= x.size()+1);
   assert_release(size >= 0.);
 
+  // Transform the planar position only. Heading and symbol size are unchanged.
+  std::optional<Vector> projected;
+  if(_projection)
+    projected.emplace(project_position(x));
+  const Vector& state = projected ? *projected : x;
+
   for(const auto& output_fig : _output_figures)
   {
     assert_release(output_fig->j()+1 < x.size());
-    output_fig->draw_tank(x,size,style);
+    output_fig->draw_tank(state,size,style);
   }
 }
 
@@ -583,10 +751,16 @@ void Figure2D::draw_AUV(const Vector& x, float size, const StyleProperties& styl
   assert_release(this->size() <= x.size()+1);
   assert_release(size >= 0.);
 
+  // Transform the planar position only. Heading and symbol size are unchanged.
+  std::optional<Vector> projected;
+  if(_projection)
+    projected.emplace(project_position(x));
+  const Vector& state = projected ? *projected : x;
+
   for(const auto& output_fig : _output_figures)
   {
     assert_release(output_fig->j()+1 < x.size());
-    output_fig->draw_AUV(x,size,style);
+    output_fig->draw_AUV(state,size,style);
   }
 }
 
@@ -595,10 +769,16 @@ void Figure2D::draw_motor_boat(const Vector& x, float size, const StylePropertie
   assert_release(this->size() <= x.size()+1);
   assert_release(size >= 0.);
 
+  // Transform the planar position only. Heading and symbol size are unchanged.
+  std::optional<Vector> projected;
+  if(_projection)
+    projected.emplace(project_position(x));
+  const Vector& state = projected ? *projected : x;
+
   for(const auto& output_fig : _output_figures)
   {
     assert_release(output_fig->j()+1 < x.size());
-    output_fig->draw_motor_boat(x,size,style);
+    output_fig->draw_motor_boat(state,size,style);
   }
 }
 
@@ -606,8 +786,13 @@ void Figure2D::draw_text(const std::string& text, const Vector& p, double scale,
 {
   assert_release(p.size() == 2);
 
+  std::optional<Vector> projected;
+  if(_projection)
+    projected.emplace(project_position(p));
+  const Vector& position = projected ? *projected : p;
+
   for(const auto& output_fig : _output_figures)
-    output_fig->draw_text(text,p,scale,style);
+    output_fig->draw_text(text,position,scale,style);
 }
 
 void Figure2D::draw_raster(const std::string& filename, const IntervalVector& bbox, const StyleProperties& style)

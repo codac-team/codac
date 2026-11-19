@@ -152,7 +152,7 @@ This list is in alphabetical order by surname.
   * `Jordan Ninin <https://sites.google.com/site/jordanninin>`_
   * Verlein Radwan
   * `Andreas Rauh <https://www.interval-methods.de>`_
-  * `Simon Rohou <http://simon-rohou.fr/research>`_
+  * `Simon Rohou <https://www.simon-rohou.fr>`_
   * `Joris Tillet <https://perso.ensta-paris.fr/~tillet/>`_
   * `Gilles Trombettoni <https://www.lirmm.fr/~trombetton>`_
   * `Christophe Viel <https://webperso.ensta.fr/viel/>`_
@@ -487,7 +487,7 @@ Development
 How to cite Codac
 ^^^^^^^^^^^^^^^^^
 
-The main reference to the Codac library is `the following paper <https://www.simon-rohou.fr/research/codac/codac_paper.pdf>`_:
+The main reference to the Codac library is `the following paper <https://www.simon-rohou.fr/doc/papers/codac_paper.pdf>`_:
 
 .. code-block:: none
 

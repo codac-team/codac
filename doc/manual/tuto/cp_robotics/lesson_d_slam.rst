@@ -3,7 +3,7 @@
 Lesson D: SLAM
 ==============
 
-  Main authors: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main authors: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 We propose to apply interval tools to solve a classical state estimation problem of Simultaneous Localization And Mapping (SLAM).
 

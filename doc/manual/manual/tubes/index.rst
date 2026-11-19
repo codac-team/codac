@@ -3,7 +3,7 @@
 Tubes & Trajectories
 ====================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 Codac provides trajectories to represent time-dependent values and tubes to represent time-dependent sets.
 

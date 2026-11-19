@@ -3,7 +3,7 @@
 Analytic operators
 ==================
 
-  Main authors: `Simon Rohou <https://www.simon-rohou.fr/research/>`_, `Damien Massé <https://lab-sticc.univ-brest.fr/~dmasse/>`_
+  Main authors: `Simon Rohou <https://www.simon-rohou.fr>`_, `Damien Massé <https://lab-sticc.univ-brest.fr/~dmasse/>`_
   
 .. raw:: html
 
