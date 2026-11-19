@@ -21,7 +21,7 @@ def hull(x):
 
 class TestSegment(unittest.TestCase):
 
-  def test_contains(self):
+  def test_contains_horizontal_segment(self):
 
     p1 = Vector([0,-10])
     p2 = Vector([-10,-10])
@@ -43,7 +43,7 @@ class TestSegment(unittest.TestCase):
     self.assertTrue(Segment(IntervalVector([hull(-oo),2]),Vector([0,2])).intersects(Segment(Vector([0,0]),Vector([0,1]))) == BoolInterval.FALSE)
     self.assertTrue(Segment(IntervalVector([hull(-oo),2]),Vector([0,2])).intersects(Segment(Vector([0,0]),Vector([0,2]))) == BoolInterval.TRUE)
 
-  def test_contains(self):
+  def test_contains_oblique_segment(self):
 
     p1,p2,p3 = Vector([0.,0.]), Vector([1.5,3.]), Vector([0.,2.])
     e1 = Segment(Vector([-10.,-10.]), Vector([10.,10.]))
@@ -128,6 +128,41 @@ class TestSegment(unittest.TestCase):
 
     self.assertTrue((Segment([2,0],[6,4]) & Segment([6,5],[5,6])) == IntervalVector.empty(2))
     self.assertTrue(proj_intersection(Segment([2,0],[6,4]), Segment([6,5],[5,6])) == IntervalVector([6.5,4.5]))
+
+    # Possible intersection under uncertain parallelism
+    e1 = Segment(
+      [0.,0.],
+      IntervalVector([1.,Interval(-1.,1.)])
+    )
+    e2 = Segment([0.,0.5],[1.,0.5])
+
+    self.assertFalse(proj_intersection(e1,e2).is_empty())
+    self.assertTrue(e1.intersects(e2) == BoolInterval.UNKNOWN)
+
+    x = e1 & e2
+    self.assertFalse(x.is_empty())
+    self.assertTrue(x.is_superset(IntervalVector([0.5,0.5])))
+
+    # Nearly parallel supporting lines, but certainly disjoint segments
+    e1 = Segment(
+      [0.,0.],
+      IntervalVector([2.,Interval(2.-1e-10,2.+1e-10)])
+    )
+    e2 = Segment([0.,1.],[2.,3.])
+
+    self.assertFalse(proj_intersection(e1,e2).is_empty())
+    self.assertTrue(e1.intersects(e2) == BoolInterval.FALSE)
+    self.assertTrue((e1 & e2).is_empty())
+
+    # Empty segments propagate EMPTY in colinearity tests
+    empty = Segment(
+      IntervalVector.empty(2),
+      IntervalVector.empty(2)
+    )
+    e = Segment([0,0],[1,1])
+
+    self.assertTrue(colinear(empty,e) == BoolInterval.EMPTY)
+    self.assertTrue(colinear(e,empty) == BoolInterval.EMPTY)
 
     # Near infinite cases
     e1 = Segment([-1,6],[-1,next_float(-oo)])

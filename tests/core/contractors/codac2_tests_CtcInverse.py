@@ -132,6 +132,106 @@ class TestCtcInverse(unittest.TestCase):
     b = c.contract(b)
     self.assertTrue(b == IntervalVector.empty(2))
   
+  def test_centered_form_scalar(self):
+
+    x = ScalarVar()
+    f = AnalyticFunction([x], x+x-42)
+
+    c = CtcInverse(f, Interval(0.))
+    a = Interval()
+    c.contract(a)
+    self.assertTrue(a == Interval(21))
+
+    c = CtcInverse(f, Interval(0.), False)
+    a = Interval()
+    c.contract(a)
+    self.assertTrue(a == Interval())
+
+  def test_centered_form_multiple_scalars(self):
+
+    x, y, z = ScalarVar(), ScalarVar(), ScalarVar()
+    f = AnalyticFunction([x,y,z], vec(2*x-y, 2*y-z, 2*z-x))
+    c = CtcInverse(f, IntervalVector([0.5,0.5,0.5]))
+    a, b, d = Interval(-1,1), Interval(-1,1), Interval(-1,1)
+    c.contract(a,b,d)
+    self.assertTrue(a == Interval(0.5))
+    self.assertTrue(b == Interval(0.5))
+    self.assertTrue(d == Interval(0.5))
+
+  def test_centered_form_multiple_vectors(self):
+
+    x, y = VectorVar(2), VectorVar(2)
+    f = AnalyticFunction([x,y], vec(x[0]*x[1]+y[0]*y[1], x[0]*y[1]-y[0]*x[1]))
+    c = CtcInverse(f, IntervalVector([1.,0.5]))
+    a = IntervalVector([[0,1],[1,1]])
+    b = IntervalVector([[0,1],[1,1]])
+    c.contract(a,b)
+    self.assertTrue(a == IntervalVector([0.75,1.]))
+    self.assertTrue(b == IntervalVector([0.25,1.]))
+
+  def test_matrix_input_scalar_output(self):
+
+    m = MatrixVar(2,3)
+    f = AnalyticFunction([m], m(0,1))
+    c = CtcInverse(f, Interval(2))
+    x = IntervalMatrix([IntervalVector([[-10,10]]*3) for _ in range(2)])
+    c.contract(x)
+    self.assertTrue(x[0,1] == Interval(2))
+    self.assertTrue(x[1,2] == Interval(-10,10))
+
+  def test_matrix_input_vector_output(self):
+
+    m = MatrixVar(2,3)
+    f = AnalyticFunction([m], vec(m(0,0),m(1,2)))
+    c = CtcInverse(f, IntervalVector([1,2]))
+    x = IntervalMatrix([IntervalVector([[-10,10]]*3) for _ in range(2)])
+    c.contract(x)
+    self.assertTrue(x[0,0] == Interval(1))
+    self.assertTrue(x[1,2] == Interval(2))
+
+  def test_matrix_input_matrix_output(self):
+
+    m = MatrixVar(2,3)
+    f = AnalyticFunction([m], m)
+    y = IntervalMatrix([IntervalVector([1,2,3]),IntervalVector([4,5,6])])
+    c = CtcInverse(f, y)
+    x = IntervalMatrix([IntervalVector([[-10,10]]*3) for _ in range(2)])
+    c.contract(x)
+    self.assertTrue(x == y)
+
+  def test_vector_input_matrix_output(self):
+
+    v = VectorVar(2)
+    f = AnalyticFunction([v], mat(vec(v[0],v[1]),vec(v[1],v[0])))
+    y = IntervalMatrix([IntervalVector([1,2]),IntervalVector([2,1])])
+    c = CtcInverse(f, y)
+    x = IntervalVector([[-10,10],[-10,10]])
+    c.contract(x)
+    self.assertTrue(x == IntervalVector([1,2]))
+
+  def test_matrix_input_shape_mismatch(self):
+
+    m = MatrixVar(2,3)
+    c = CtcInverse(AnalyticFunction([m], m(0,0)), Interval(1))
+    wrong_shape = IntervalMatrix([IntervalVector([[-10,10]]*2) for _ in range(3)])
+    with self.assertRaises(ValueError):
+      c.contract(wrong_shape)
+
+  def test_matrix_mixed_inputs_not_supported(self):
+
+    m = MatrixVar(2,3)
+    s = ScalarVar()
+    f = AnalyticFunction([m,s], m(0,0)+s)
+    with self.assertRaises(ValueError):
+      CtcInverse(f, Interval(1))
+
+  def test_matrix_output_shape_mismatch(self):
+
+    m = MatrixVar(2,3)
+    wrong_shape = IntervalMatrix([IntervalVector([[-10,10]]*2) for _ in range(3)])
+    with self.assertRaises(ValueError):
+      CtcInverse(AnalyticFunction([m], m), wrong_shape)
+
   def test_ParabolasExample(self):
 
     u = ScalarVar()

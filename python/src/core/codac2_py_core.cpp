@@ -171,6 +171,7 @@ void export_trunc(py::module& m);
 void export_AnalyticTraj(py::module& m);
 void export_SampledTraj(py::module& m);
 void export_traj_cart_prod(py::module& m);
+void export_traj_truncate_common(py::module& m);
 
 // Extension > sympy
 void export_sympy(py::module& m);
@@ -207,6 +208,10 @@ PYBIND11_MODULE(_core, m)
 
   export_CtcInverse<CtcInverse<Interval>>(m,"CtcInverse_Interval",py_ctc_iv);
   export_CtcInverse<CtcInverse<IntervalVector>>(m,"CtcInverse_IntervalVector",py_ctc_iv);
+  export_CtcInverse<CtcInverse<IntervalMatrix>>(m,"CtcInverse_IntervalMatrix",py_ctc_iv);
+  export_CtcInverse_MatrixInput<Interval>(m,"CtcInverse_Interval_MatrixInput");
+  export_CtcInverse_MatrixInput<IntervalVector>(m,"CtcInverse_IntervalVector_MatrixInput");
+  export_CtcInverse_MatrixInput<IntervalMatrix>(m,"CtcInverse_IntervalMatrix_MatrixInput");
   export_CtcInverse<CtcInverseNotIn<Interval>>(m,"CtcInverseNotIn_Interval",py_ctc_iv);
   export_CtcInverse<CtcInverseNotIn<IntervalVector>>(m,"CtcInverseNotIn_IntervalVector",py_ctc_iv);
 
@@ -357,6 +362,7 @@ PYBIND11_MODULE(_core, m)
   export_AnalyticTraj(m);
   export_SampledTraj(m);
   export_traj_cart_prod(m);
+  export_traj_truncate_common(m);
 
   m.def("srand", []()
     {

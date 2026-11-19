@@ -3,7 +3,7 @@
 Analytic operators
 ==================
 
-  Main authors: `Simon Rohou <https://www.simon-rohou.fr/research/>`_, `Damien Massé <https://lab-sticc.univ-brest.fr/~dmasse/>`_
+  Main authors: `Simon Rohou <https://www.simon-rohou.fr>`_, `Damien Massé <https://lab-sticc.univ-brest.fr/~dmasse/>`_
   
 .. raw:: html
 
@@ -349,6 +349,8 @@ Temporal operations for involving trajectories or tubes in analytic expressions 
       {t}, g(t)
     );
 
+
+For a detailed example using ``SampledTraj.as_function()`` and information on pointwise ``AnalyticFunction.traj_eval(...)``, see :ref:`sec-trajectories-operations`.
 
 Direct use of operators
 ^^^^^^^^^^^^^^^^^^^^^^^

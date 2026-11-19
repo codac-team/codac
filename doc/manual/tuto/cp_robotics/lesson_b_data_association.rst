@@ -3,7 +3,7 @@
 Lesson B: Data association
 ==========================
 
-  Main authors: `Simon Rohou <https://www.simon-rohou.fr/research/>`_, `Maël Godard <https://godardma.github.io>`_ (Matlab binding)
+  Main authors: `Simon Rohou <https://www.simon-rohou.fr>`_, `Maël Godard <https://godardma.github.io>`_ (Matlab binding)
 
 This lesson will extend the previous exercise by dealing with a **data association** problem together with localization: the landmarks perceived by the robot are now **indistinguishable**: they all look alike. The goal of this exercise is to develop our own contractor in order to solve the problem.
 
@@ -168,7 +168,7 @@ where :math:`\bigsqcup`, called *squared union*, returns the smallest box enclos
 
     \mathcal{C}_\mathbb{M}\left(\left[\mathbf{a}\right]\right)=\bigsqcup_{j=1}^{\ell}\big(\left[\mathbf{a}\right]\cap[\mathbf{m}_{j}]\big)
 
-  The user manual may help you to :ref:`compute operations on sets <sec-manual-intervals-operations>` such as unions or intersections, appearing in the formula. Note that you cannot change the definition of the ``.contract()`` method. 
+  The user manual may help you to :ref:`compute operations on sets <sec-intervals-class-un-bin-ary>` such as unions or intersections, appearing in the formula. Note that you cannot change the definition of the ``.contract()`` method. 
 
   .. container:: toggle, toggle-hidden
 
@@ -624,7 +624,7 @@ This will introduce differential constraints, and a new domain for handling unce
 
 .. | **Set-membership state estimation by solving data association**
 .. | Simon Rohou, Benoît Desrochers, Luc Jaulin, *ICRA 2020*
-.. | `Download the paper <http://simon-rohou.fr/research/datasso/datasso_paper.pdf?PHPSESSID=88a679b3n54fh04kt3l5lnmvv6>`_
+.. | `Download the paper <https://www.simon-rohou.fr/doc/papers/datasso_paper.pdf>`_
 
 .. Here is a video providing an overview of the problem and how to solve it. This is mainly the object of this Lesson B and the next one, that will deal with the dynamics of the robot.
 
@@ -638,7 +638,7 @@ Related content
 ---------------
 
 .. |datasso-pdf| replace:: **Download the paper**
-.. _datasso-pdf: https://www.simon-rohou.fr/research/datasso/datasso_paper.pdf
+.. _datasso-pdf: https://www.simon-rohou.fr/doc/papers/datasso_paper.pdf
 
 .. admonition:: Related publication
   

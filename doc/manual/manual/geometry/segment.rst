@@ -3,7 +3,7 @@
 Segment
 =======
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 The following class provides a reliable representation of a segment.
 

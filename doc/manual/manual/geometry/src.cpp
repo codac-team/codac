@@ -27,15 +27,15 @@ TEST_CASE("geometry - manual")
 
     IntervalVector p1({0,0}), p2({1,1}), p3({-1,2});
     OrientationInterval c = orientation(p1,p2,p3);
-    // c == OrientationInterval::CLOCKWISE
+    // c == OrientationInterval::COUNTERCLOCKWISE
     OrientationInterval d = orientation(p3,p2,p1);
-    // d == OrientationInterval::COUNTERCLOCKWISE
+    // d == OrientationInterval::CLOCKWISE
     // [geometry-1-end]
     
     CHECK(a == OrientationInterval::COLINEAR);
     CHECK(b == OrientationInterval::UNKNOWN);
-    CHECK(c == OrientationInterval::CLOCKWISE);
-    CHECK(d == OrientationInterval::COUNTERCLOCKWISE);
+    CHECK(c == OrientationInterval::COUNTERCLOCKWISE);
+    CHECK(d == OrientationInterval::CLOCKWISE);
   }
 
   {

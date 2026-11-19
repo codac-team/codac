@@ -130,6 +130,25 @@ class TestSampledTraj(unittest.TestCase):
 
     for i in np.arange(0, 10, 1e-1):
       self.assertTrue(Approx(p(i),1e-2) == x(i))
+    
+
+    # truncate_to_common_tdomain
+
+    x = SampledTraj_Scalar({0.:0., 4.:4.})
+    y = SampledTraj_Vector({1.:[1.,2.], 5.:[5.,6.]})
+
+    t = ScalarVar()
+    z = AnalyticTraj([2,6], AnalyticFunction([t],t))
+
+    truncate_to_common_tdomain(x,y,z)
+
+    self.assertTrue(x.tdomain() == Interval(2,4))
+    self.assertTrue(y.tdomain() == Interval(2,4))
+    self.assertTrue(z.tdomain() == Interval(2,4))
+
+    self.assertTrue(x(2.) == 2.)
+    self.assertTrue(y(4.) == Vector([4.,5.]))
+
 
 if __name__ ==  '__main__':
   unittest.main()

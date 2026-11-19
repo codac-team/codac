@@ -22,7 +22,7 @@ list(APPEND CODAC_CAPD_SRC
   #endif()
 
   add_library(${PROJECT_NAME}-capd ${CODAC_CAPD_SRC})
-  target_link_libraries(${PROJECT_NAME}-capd PUBLIC ${PROJECT_NAME}-core Ibex::ibex Eigen3::Eigen capd::capd)
+  target_link_libraries(${PROJECT_NAME}-capd PUBLIC ${PROJECT_NAME}-core ${PROJECT_NAME}-eigen Ibex::ibex capd::capd) # Eigen3::Eigen
 
 
   ################################################################################

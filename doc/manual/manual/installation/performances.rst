@@ -3,7 +3,7 @@
 Performance considerations
 ==========================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 When using this library, the performance can vary significantly depending on how you configure your build using CMake (for more information, see the related page :ref:`sec-install-cpp`). The library supports three main configuration modes: ``Release``, ``Debug``, and ``FastRelease``. Each mode has its advantages and is suited to different use cases.
 

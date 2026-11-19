@@ -12,11 +12,11 @@ cd codac
 git submodule init
 git submodule update
 
-for DIST in bookworm bullseye; do
+for DIST in trixie bookworm bullseye; do
 
 docker pull lebarsfa/pi:$DIST-for-codac
 docker run --rm -v `pwd`:/io lebarsfa/pi:$DIST-for-codac /bin/bash -c "uname -a ; cat /etc/os-release ; lsb_release -a ; \
-if [ \"\$(lsb_release -cs)\" = \"bookworm\" ]; then \
+if [ \"\$(lsb_release -cs)\" = \"bookworm\" ] || [ \"\$(lsb_release -cs)\" = \"trixie\" ]; then \
  PIP_OPTIONS=--break-system-packages ; \
  #python3 -m pip install \$PIP_OPTIONS --upgrade \"auditwheel\" ; \\
 else \
@@ -25,7 +25,10 @@ else \
 fi && \
 #sudo apt-get -q update --allow-releaseinfo-change ; sudo apt-get -y install libeigen3-dev python3-dev patchelf python3-pip python3-wheel python3-setuptools || true && \\
 sudo apt-get -q update --allow-releaseinfo-change ; sudo apt-get -y install python3-dev patchelf python3-pip python3-wheel python3-setuptools || true && \
-python3 -m pip install \$PIP_OPTIONS --upgrade patchelf --prefer-binary --extra-index-url https://www.piwheels.org/simple || true && \
+# On bookworm (and possibly earlier), auditwheel repair asks for a recent version of patchelf... \\
+if [ \"\$(lsb_release -cs)\" = \"buster\" ] || [ \"\$(lsb_release -cs)\" = \"bullseye\" ] || [ \"\$(lsb_release -cs)\" = \"bookworm\" ]; then \
+ python3 -m pip install \$PIP_OPTIONS --upgrade patchelf --prefer-binary --extra-index-url https://www.piwheels.org/simple || true ; \
+fi && \
 python3 -m pip install \$PIP_OPTIONS --upgrade auditwheel --prefer-binary --extra-index-url https://www.piwheels.org/simple && \
 # wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_armhf_\$(lsb_release -cs).zip --no-check-certificate -nv is causing illegal instruction on a Mac M1... \\
 curl -L -O https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20260819/ibex_armhf_\$(lsb_release -cs).zip --insecure && \
@@ -34,12 +37,17 @@ rm -Rf ibex_armhf_\$(lsb_release -cs).zip && \
 sudo cp -Rf ibex/* /usr/local/ && \
 \
 git config --global --add safe.directory /io && \
+git config --global --add safe.directory /io/.git || true && \
 cd /io && \
 \
 # Issues when some packages are upgraded or not...? \\
-python3 -m pip install \$PIP_OPTIONS --upgrade pip --prefer-binary --extra-index-url https://www.piwheels.org/simple && \
+if [ \"\$(lsb_release -cs)\" = \"buster\" ] || [ \"\$(lsb_release -cs)\" = \"bullseye\" ]; then \
+ python3 -m pip install \$PIP_OPTIONS --upgrade pip --prefer-binary --extra-index-url https://www.piwheels.org/simple || true ; \
+fi && \
 # Without wheel upgrade from pip, the architecture might be wrong for bookworm (and possibly earlier) when building the .whl... \\
-python3 -m pip install \$PIP_OPTIONS --upgrade wheel --prefer-binary --extra-index-url https://www.piwheels.org/simple && \
+if [ \"\$(lsb_release -cs)\" = \"buster\" ] || [ \"\$(lsb_release -cs)\" = \"bullseye\" ] || [ \"\$(lsb_release -cs)\" = \"bookworm\" ]; then \
+ python3 -m pip install \$PIP_OPTIONS --upgrade wheel --prefer-binary --extra-index-url https://www.piwheels.org/simple || true ; \
+fi && \
 # With setuptools upgrade from pip, building the .whl might fail for bullseye... \\
 #python3 -m pip install \$PIP_OPTIONS --upgrade setuptools --prefer-binary --extra-index-url https://www.piwheels.org/simple && \\
 mkdir -p build_dir_\$(lsb_release -cs) && cd build_dir_\$(lsb_release -cs) && \
@@ -68,6 +76,7 @@ sudo apt-get -y install libopenblas0-pthread || true && \
 sudo apt-get -y install libgfortran5 || true && \
 python3 -m pip install \$PIP_OPTIONS numpy --prefer-binary --extra-index-url https://www.piwheels.org/simple && \
 #sudo apt-get -y install python3-numpy || true && \\
+python3 -m pip install \$PIP_OPTIONS sympy --prefer-binary --extra-index-url https://www.piwheels.org/simple && \
 python3 -m unittest discover codac.tests && \
 \
 if [ \"\$(lsb_release -cs)\" = \"buster\" ]; then \

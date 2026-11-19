@@ -3,7 +3,7 @@
 The CtcInverse contractor
 =========================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 Definition
 ----------
@@ -22,10 +22,8 @@ In Codac, :math:`\mathbb{Y}` can be represented in two main ways:
 
   **(ii) Contractor representation**
 
-  More generally, :math:`\mathbb{Y}` may be any output set representable by a contractor
-  :math:`\mathcal{C}_{\mathbb{Y}}`: :math:`\mathbf{f}(\mathbf{x}) \in \mathcal{C}_{\mathbb{Y}}`.
-
-  In this case, :math:`\mathcal{C}_{\mathbb{Y}}` is any contractor acting on boxes in :math:`\mathbb{R}^p`.
+  More generally, :math:`\mathbb{Y}` may be represented by a contractor :math:`\mathcal{C}_{\mathbb{Y}}` acting on boxes in the codomain.
+  The constraint remains :math:`\mathbf{f}(\mathbf{x}) \in \mathbb{Y}`, and :math:`\mathcal{C}_{\mathbb{Y}}` is used to contract the output enclosure.
 
 In the current version of Codac (v2), ``CtcInverse`` is the successor of the v1 ``CtcFunction`` contractor (renamed for clarity). It is also closely related to the ``CtcFwdBwd`` of the `IBEX library <https://ibex-team.github.io/ibex-lib/contractor.html#forward-backward>`_.
 
@@ -35,7 +33,7 @@ Construction and basic usage
 
 The typical workflow is:
 
-1. Define analytic variables (scalar, vector, matrix) associated with the domain of the function.
+1. Define analytic variables (scalar, vector, matrix, depending on language support) associated with the domain of the function.
 2. Build an :class:`~codac2.AnalyticFunction`.
 3. Instantiate ``CtcInverse`` with a codomain constraint (a box :math:`[\mathbf{y}]` or a contractor :math:`\mathcal{C}_{\mathbb{Y}}`).
 4. Contract an input box :math:`[\mathbf{x}]` or pave the contractor in the domain space.
@@ -199,7 +197,7 @@ Finally, it is easy to consider disjunction of constraints by making a union of 
 .. math::
   :label: himmelblau_union
 
-  \mathbb{X}=\left\{\mathbf{x}, \left(f(\mathbf{x}) = 50\right) \lor \left(f(\mathbf{x}) = 150\right) \lor \left(f(\mathbf{x}) = 250\right)\right\}
+  \mathbb{X}=\left\{\mathbf{x}\mid \left(f(\mathbf{x}) = 50\right) \lor \left(f(\mathbf{x}) = 150\right) \lor \left(f(\mathbf{x}) = 250\right)\right\}
 
 can be easily approximated by the following union of contractors:
 
@@ -258,10 +256,10 @@ Possible usages of ``CtcInverse`` with respect to domain and codomain types
 
 - :math:`X` denotes the domain of :math:`\mathbf{f}` with the following cases:
 
-  * :math:`X=\mathbb{R}`: one scalar input ;
-  * :math:`X=\mathbb{R}^n`: one :math:`n`-d vector input ;
-  * :math:`X=\mathbb{R}^{n\times m}`: one :math:`n\times m` matrix input ;
-  * :math:`X=\mathbb{R}\times\mathbb{R}^{n}\times\mathbb{R}`: several types of mixed inputs, with no restrictions on order or number.
+  * :math:`X=\mathbb{R}`: one scalar input.
+  * :math:`X=\mathbb{R}^n`: one :math:`n`-d vector input.
+  * :math:`X=\mathbb{R}^{n\times m}`: one :math:`n\times m` matrix input.
+  * :math:`X=\mathbb{R}\times\mathbb{R}^{n}\times\mathbb{R}`: several mixed inputs, with no restrictions on order or number in C++.
 
 - :math:`Y` denotes the codomain of :math:`\mathbf{f}`, that can be either :math:`\mathbb{R}`, :math:`\mathbb{R}^p` or :math:`\mathbb{R}^{p\times q}`.
 
@@ -277,13 +275,13 @@ Possible usages of ``CtcInverse`` with respect to domain and codomain types
 
 .. |okk| replace:: :bg-ok:`✓`
 .. |bok| replace:: :bg-bok:`✓`
-.. |noa| replace:: :bg-noa:`✗ (C++ only)`
+.. |noa| replace:: :bg-noa:`✗`
 .. |ms| replace:: :medskip:`-`
 
 
-The following table lists the combinations implemented in Codac.
-The :bg-ok:`✓` cases correspond to efficient contractions involving centered form expressions, while :bg-bok:`✓` refer to classical forward/backward propagations.
-Note that since Codac's design is based on C++ template programming, the most generic use-cases of the ``CtcInverse`` are not available in Python or Matlab. 
+The following tables list the combinations supported by ``CtcInverse`` in each language.
+The :bg-ok:`✓` symbol indicates a supported combination for which centered-form contraction can be used when its applicability conditions are met. The light-green :bg-bok:`✓` symbol indicates partial support, while :bg-noa:`✗` indicates an unsupported combination.
+The Python and Matlab interfaces do not expose all combinations supported by the templated C++ implementation.
 
 .. tabs::
 
@@ -297,16 +295,19 @@ Note that since Codac's design is based on C++ template programming, the most ge
       |                                                     +-------------------------+---------------------------+-------------------------------------+
       |                                                     | :math:`\mathbb{R}` |ms| | :math:`\mathbb{R}^n` |ms| | :math:`\mathbb{R}^{r\times c}` |ms| |
       +--------------------+--------------------------------+-------------------------+---------------------------+-------------------------------------+
-      | Input(s) :math:`X` | :math:`\mathbb{R}`             | |okk|                   | |okk|                     | |noa|                               |
+      | Input(s) :math:`X` | :math:`\mathbb{R}`             | |okk|                   | |okk|                     | |okk|                               |
       |                    +--------------------------------+-------------------------+---------------------------+-------------------------------------+
-      |                    | :math:`\mathbb{R}^n`           | |okk|                   | |okk|                     | |noa|                               |
+      |                    | :math:`\mathbb{R}^n`           | |okk|                   | |okk|                     | |okk|                               |
       |                    +--------------------------------+-------------------------+---------------------------+-------------------------------------+
-      |                    | :math:`\mathbb{R}^{r\times c}` | |okk|                   | |okk|                     | |noa|                               |
+      |                    | :math:`\mathbb{R}^{r\times c}` | |okk|                   | |okk|                     | |okk|                               |
       |                    +--------------------------------+-------------------------+---------------------------+-------------------------------------+
-      |                    | any mixed types                | |okk|                   | |okk|                     | |noa|                               |
+      |                    | any mixed types                | |bok|                   | |bok|                     | |bok|                               |
       +--------------------+--------------------------------+-------------------------+---------------------------+-------------------------------------+
 
-    NB: *any mixed types* does not include matrix types yet.
+    In Python, matrix inputs are supported for a single ``MatrixVar`` argument, with scalar, vector or matrix outputs.
+    *Any mixed types* refers to combinations of scalar and vector inputs only, and does not include matrix arguments.
+    Matrix-input contractors provide direct ``contract(IntervalMatrix)`` support, but are not exposed as vector-domain contractors and cannot be used with vector-domain pavers or the usual contractor compositions.
+    In Python, the constructor overload accepting an output contractor (instead of an interval box) is currently available for vector-valued functions only.
 
   .. group-tab:: C++
 
@@ -318,14 +319,16 @@ Note that since Codac's design is based on C++ template programming, the most ge
       |                                                     +-------------------------+---------------------------+-------------------------------------+
       |                                                     | :math:`\mathbb{R}` |ms| | :math:`\mathbb{R}^n` |ms| | :math:`\mathbb{R}^{r\times c}` |ms| |
       +--------------------+--------------------------------+-------------------------+---------------------------+-------------------------------------+
-      | Input(s) :math:`X` | :math:`\mathbb{R}`             | |bok|                   | |bok|                     | |bok|                               |
+      | Input(s) :math:`X` | :math:`\mathbb{R}`             | |okk|                   | |okk|                     | |okk|                               |
       |                    +--------------------------------+-------------------------+---------------------------+-------------------------------------+
-      |                    | :math:`\mathbb{R}^n`           | |okk|                   | |okk|                     | |bok|                               |
+      |                    | :math:`\mathbb{R}^n`           | |okk|                   | |okk|                     | |okk|                               |
       |                    +--------------------------------+-------------------------+---------------------------+-------------------------------------+
-      |                    | :math:`\mathbb{R}^{r\times c}` | |bok|                   | |bok|                     | |bok|                               |
+      |                    | :math:`\mathbb{R}^{r\times c}` | |okk|                   | |okk|                     | |okk|                               |
       |                    +--------------------------------+-------------------------+---------------------------+-------------------------------------+
-      |                    | any mixed types                | |bok|                   | |bok|                     | |bok|                               |
+      |                    | any mixed types                | |okk|                   | |okk|                     | |okk|                               |
       +--------------------+--------------------------------+-------------------------+---------------------------+-------------------------------------+
+
+    In C++, the input type defaults to ``IntervalVector``. For scalar, matrix or mixed inputs, the input types must be explicitly specified as template arguments of ``CtcInverse``.
 
   .. group-tab:: Matlab
 
@@ -337,22 +340,27 @@ Note that since Codac's design is based on C++ template programming, the most ge
       |                                                     +-------------------------+---------------------------+-------------------------------------+
       |                                                     | :math:`\mathbb{R}` |ms| | :math:`\mathbb{R}^n` |ms| | :math:`\mathbb{R}^{r\times c}` |ms| |
       +--------------------+--------------------------------+-------------------------+---------------------------+-------------------------------------+
-      | Input(s) :math:`X` | :math:`\mathbb{R}`             | |okk|                   | |okk|                     | |noa|                               |
+      | Input(s) :math:`X` | :math:`\mathbb{R}`             | |okk|                   | |okk|                     | |okk|                               |
       |                    +--------------------------------+-------------------------+---------------------------+-------------------------------------+
-      |                    | :math:`\mathbb{R}^n`           | |okk|                   | |okk|                     | |noa|                               |
+      |                    | :math:`\mathbb{R}^n`           | |okk|                   | |okk|                     | |okk|                               |
       |                    +--------------------------------+-------------------------+---------------------------+-------------------------------------+
-      |                    | :math:`\mathbb{R}^{r\times c}` | |okk|                   | |okk|                     | |noa|                               |
+      |                    | :math:`\mathbb{R}^{r\times c}` | |okk|                   | |okk|                     | |okk|                               |
       |                    +--------------------------------+-------------------------+---------------------------+-------------------------------------+
-      |                    | any mixed types                | |okk|                   | |okk|                     | |noa|                               |
+      |                    | any mixed types                | |bok|                   | |bok|                     | |bok|                               |
       +--------------------+--------------------------------+-------------------------+---------------------------+-------------------------------------+
 
-    NB: *any mixed types* does not include matrix types yet.
+    In Matlab, matrix inputs are supported for a single ``MatrixVar`` argument, with scalar, vector or matrix outputs.
+    *Any mixed types* refers to combinations of scalar and vector inputs only, and does not include matrix arguments.
+    Matrix-input contractors provide direct ``contract(IntervalMatrix)`` support, but are not exposed as vector-domain contractors and cannot be used with vector-domain pavers or the usual contractor compositions.
+    In Matlab, the constructor overload accepting an output contractor (instead of an interval box) is currently available for vector-valued functions only.
 
 
 Not-in constraints: ``CtcInverseNotIn``
 ---------------------------------------
 
 When the constraint is a complement constraint :math:`\mathbf{f}(\mathbf{x})\notin\mathbb{Y}`, Codac provides ``CtcInverseNotIn`` which internally builds a union of inverse contractors over the complementary parts of :math:`\mathbb{Y}`.
+
+In Python and Matlab, the matrix support described above applies to ``CtcInverse`` only, not to ``CtcInverseNotIn``.
 
 .. tabs::
 
@@ -418,14 +426,13 @@ The underlying analytic function can be accessed through ``.fnc()`` (useful for 
 Centered form option
 ^^^^^^^^^^^^^^^^^^^^
 
-For some signatures (see :bg-ok:`✓` in the table), ``CtcInverse`` can leverage centered-form
-expressions to improve contraction.
+When enabled, ``CtcInverse`` can complement forward/backward propagation with a centered-form contraction for the supported input and output types listed above.
+This step is performed only when the expression is defined on the input box and a nonempty, bounded derivative enclosure is available.
 The constructor exposes:
 
-- ``with_centered_form`` (default: ``true``): enable/disable centered-form based steps.
+- ``with_centered_form`` (default: ``true``): enable or disable centered-form contraction.
 
-Disabling it can be useful to reduce computation cost when forward/backward propagation is
-sufficient for your application, or for comparisons with the centered form.
+Disabling this option can reduce computation cost when forward/backward propagation is sufficient, or facilitate comparisons with centered-form contraction.
 
 
 .. admonition:: Technical documentation

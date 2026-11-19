@@ -3,7 +3,7 @@
 Python installation
 ===================
 
-  Main authors: `Fabrice Le Bars <https://webperso.ensta.fr/lebars/>`_, `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main authors: `Fabrice Le Bars <https://webperso.ensta.fr/lebars/>`_, `Simon Rohou <https://www.simon-rohou.fr>`_
 
 In case you want to use Codac only with Python, then the installation procedure is simply:
 

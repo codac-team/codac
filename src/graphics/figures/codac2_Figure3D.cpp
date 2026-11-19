@@ -10,6 +10,10 @@
 #include "codac2_Index.h"
 #include "codac2_IntervalMatrix.h"
 #include "codac2_Figure3D.h"
+#include "codac2_Ellipsoid.h"
+#include "codac2_Parallelepiped.h"
+#include "codac2_Zonotope.h"
+#include "codac2_Paving.h"
 #include "codac2_math.h"
 
 
@@ -33,6 +37,12 @@ const std::string& Figure3D::name() const
   return _name;
 }
 
+Figure3D& Figure3D::set_projection(std::function<Vector(const Vector&)> projection)
+{
+  _projection = std::move(projection);
+  return *this;
+}
+
 void Figure3D::set_color_internal(const Color &c) {
   _file << "newmtl " << c.hex_str().substr(1,6) << "\n";
   _file << "Kd " << c.rgb()[0]/255. << " " << c.rgb()[1]/255. << " " << c.rgb()[2]/255. << "\n";
@@ -52,7 +62,9 @@ void Figure3D::set_style_internal(const StyleProperties& style) {
 
 size_t Figure3D::move_write_v(const Vector &c, const Matrix &A, const Vector &p) {
    Vector pos = c+A*p;
-   
+   if(_projection)
+     pos = _projection(pos);
+
    _file << "v " << pos[0] << " " << pos[1] << " " << pos[2] << "\n";
    return (++this->vertex_count);
 }

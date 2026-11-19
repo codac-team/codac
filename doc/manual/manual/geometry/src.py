@@ -24,14 +24,14 @@ class TestGeometryManual(unittest.TestCase):
 
     p1, p2, p3 = IntervalVector([0,0]), IntervalVector([1,1]), IntervalVector([-1,2])
     c = orientation(p1,p2,p3)
-    # c == OrientationInterval.CLOCKWISE
+    # c == OrientationInterval.COUNTERCLOCKWISE
     d = orientation(p3,p2,p1)
-    # d == OrientationInterval.COUNTERCLOCKWISE
+    # d == OrientationInterval.CLOCKWISE
     # [geometry-1-end]
     test.assertTrue(a == OrientationInterval.COLINEAR)
     test.assertTrue(b == OrientationInterval.UNKNOWN)
-    test.assertTrue(c == OrientationInterval.CLOCKWISE)
-    test.assertTrue(d == OrientationInterval.COUNTERCLOCKWISE)
+    test.assertTrue(c == OrientationInterval.COUNTERCLOCKWISE)
+    test.assertTrue(d == OrientationInterval.CLOCKWISE)
 
     # [geometry-2-beg]
     a = aligned([0,0],[1,1],[10,10])

@@ -22,22 +22,22 @@ class TestGeometry(unittest.TestCase):
     self.assertTrue(orientation([0.,0.],[0.,0.],[0.,0.]) == OrientationInterval.COLINEAR)
 
     # Clockwise points
-    self.assertTrue(orientation([0.,0.],[0.,-5.],[-2.,-5.]) == OrientationInterval.COUNTERCLOCKWISE)
-    self.assertTrue(orientation([-999.,0.1],[0.,0.],[-999.,-0.1]) == OrientationInterval.COUNTERCLOCKWISE)
+    self.assertTrue(orientation([0.,0.],[0.,-5.],[-2.,-5.]) == OrientationInterval.CLOCKWISE)
+    self.assertTrue(orientation([-999.,0.1],[0.,0.],[-999.,-0.1]) == OrientationInterval.CLOCKWISE)
 
-    # Anticlockwise points
-    self.assertTrue(orientation([0.,0.],[0.,-5.],[2.,-5.]) == OrientationInterval.CLOCKWISE)
-    self.assertTrue(orientation([999.,0.1],[0.,0.],[999.,-0.1]) == OrientationInterval.CLOCKWISE)
+    # Counterclockwise points
+    self.assertTrue(orientation([0.,0.],[0.,-5.],[2.,-5.]) == OrientationInterval.COUNTERCLOCKWISE)
+    self.assertTrue(orientation([999.,0.1],[0.,0.],[999.,-0.1]) == OrientationInterval.COUNTERCLOCKWISE)
 
     # Other tests
-    self.assertTrue(orientation([0,0],[1,1],[0,2]) == OrientationInterval.CLOCKWISE)
+    self.assertTrue(orientation([0,0],[1,1],[0,2]) == OrientationInterval.COUNTERCLOCKWISE)
     self.assertTrue(orientation([0,0],[1,1],[2,2]) == OrientationInterval.COLINEAR)
-    self.assertTrue(orientation([0,0],[1,1],[2.2,2]) == OrientationInterval.COUNTERCLOCKWISE)
+    self.assertTrue(orientation([0,0],[1,1],[2.2,2]) == OrientationInterval.CLOCKWISE)
     self.assertTrue(orientation([0,0],[2,2],[2,2]) == OrientationInterval.COLINEAR)
     self.assertTrue(orientation([0,0],[2,2],[4,4]) == OrientationInterval.COLINEAR)
     self.assertTrue(orientation([0,0],[8,8],[4,4]) == OrientationInterval.COLINEAR)
-    self.assertTrue(orientation([0,0],[10,1],[4,4]) == OrientationInterval.CLOCKWISE)
-    self.assertTrue(orientation([0,0],[2,2],[10,1]) == OrientationInterval.COUNTERCLOCKWISE)
+    self.assertTrue(orientation([0,0],[10,1],[4,4]) == OrientationInterval.COUNTERCLOCKWISE)
+    self.assertTrue(orientation([0,0],[2,2],[10,1]) == OrientationInterval.CLOCKWISE)
 
   def test_alignments(self):
     
@@ -59,6 +59,9 @@ class TestGeometry(unittest.TestCase):
     self.assertTrue(aligned([0,0],[1,1],[10,10]) == BoolInterval.TRUE)
     self.assertTrue(aligned([[-oo,0],[-oo,0]],[1,1],[10,10]) == BoolInterval.UNKNOWN)
     self.assertTrue(aligned(IntervalVector(2),[1,1],[10,10]) == BoolInterval.UNKNOWN)
+    self.assertTrue(aligned(IntervalVector.empty(2),[1,1],[10,10]) == BoolInterval.EMPTY)
+    self.assertTrue(aligned([1,1],IntervalVector.empty(2),[10,10]) == BoolInterval.EMPTY)
+    self.assertTrue(aligned([1,1],[10,10],IntervalVector.empty(2)) == BoolInterval.EMPTY)
 
   def test_convex_hull(self):
 
@@ -131,6 +134,40 @@ class TestGeometry(unittest.TestCase):
     self.assertTrue(hull[5] == v_save[7])
     self.assertTrue(hull[6] == v_save[8])
     self.assertTrue(len(hull) == 7)
+
+    # Fully collinear points reduce to the two endpoints.
+    hull = convex_hull([
+      [0,0],[1,0],[2,0],[3,0]
+    ])
+
+    self.assertTrue(len(hull) == 2)
+    self.assertTrue(hull[0] == IntervalVector([0,0]))
+    self.assertTrue(hull[1] == IntervalVector([3,0]))
+
+
+    pts = [
+      IntervalVector([[0,1],[0,1]]),
+      IntervalVector([[0.5,2],[0.5,1.5]]),
+      IntervalVector([[3,4],[3,4]])
+    ]
+
+    merge_adjacent_points(pts)
+
+    self.assertTrue(len(pts) == 2)
+    self.assertTrue(pts[0] == IntervalVector([[0,2],[0,1.5]]))
+    self.assertTrue(pts[1] == IntervalVector([[3,4],[3,4]]))
+
+    # Merging can create a new intersection, so the process must be iterative.
+    pts = [
+      IntervalVector([[0,1],[0,1]]),
+      IntervalVector([[1,2],[0,1]]),
+      IntervalVector([[2,3],[0,1]])
+    ]
+
+    merge_adjacent_points(pts)
+
+    self.assertTrue(len(pts) == 1)
+    self.assertTrue(pts[0] == IntervalVector([[0,3],[0,1]]))
 
 if __name__ ==  '__main__':
   unittest.main()

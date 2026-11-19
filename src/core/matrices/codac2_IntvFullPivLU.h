@@ -268,10 +268,13 @@ namespace codac2
     private:
 
         Eigen::FullPivLU<Matrix> _LU;
-        Row transform; ///< column-wise transformation done on ``M.mid()`` to homogeneise the diameters
+        Row transform; ///< column-wise transformation done on ``M.mid()`` to homogeneise the diameters (unused)
         IntervalMatrix matrixLU_; ///< LU matrix
+        IntervalMatrix ImLU_; // pseudo-inversion of _LU.LU matrix (with this->nonzero replacing diagonal 0 values), for preconditioning
+        IntervalMatrix prec_matrixLU_; /// preconditioned interval LU matrix, used e.g. for solve
+        double nonzero = 0;  // threshold for 0 in double LU matrix
      
-        void compute_matrix_LU(const IntervalMatrix& M, double nonzero);
+        void compute_matrix_LU(const IntervalMatrix& M);
         static IntervalMatrix build_LU_bounds(const IntervalMatrix& E);
   };
 

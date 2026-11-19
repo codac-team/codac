@@ -372,7 +372,7 @@ TEST_CASE("bwd mul operations")
 	             { {0,1}, {0,1} },
 		     { {0,1}, {0,1} } };
   MulOp::bwd(R,Q,P);
-  CHECK(Approx(P,1e-5) == IntervalMatrix({{{0.99,1},{0,0.1}},{{0,1},{0,1}},{{0,0.1},{0.9,1}}}));
+  CHECK(Approx(P,1e-5) == IntervalMatrix({{{1},{0,0.1}},{{0,1},{0,1}},{{0,0.1},{0.9,1}}}));
 }
 
 TEST_CASE("test chi op")

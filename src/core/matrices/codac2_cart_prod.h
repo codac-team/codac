@@ -10,6 +10,7 @@
 #pragma once
 
 #include "codac2_IntervalVector.h"
+#include "codac2_IntervalMatrix.h"
 #include "codac2_Matrix.h"
 #include "codac2_matrices.h"
 
@@ -39,7 +40,7 @@ namespace codac2
     requires (!Eigen::IsVectorOrRow<R,C>)
   inline IntervalVector to_IntervalVector(const Eigen::Matrix<T,R,C>& x)
   {
-    return x.reshaped();
+    return x.template reshaped<Eigen::ColMajor>();
   }
 
   inline IntervalVector cart_prod()

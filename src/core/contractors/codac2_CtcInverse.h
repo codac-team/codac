@@ -26,7 +26,6 @@ namespace codac2
   {
     public:
 
-      //using Ctc<CtcInverse<Y,X0,X...>,X0,X...>::contract;
       using Y = typename Wrapper<Y_>::Domain; // Y_ is a possible Eigen expr. type
       using OutputType = typename ExprType<Y>::Type;
 
@@ -41,7 +40,14 @@ namespace codac2
 
       CtcInverse(const AnalyticFunction<OutputType>& f, const Y& y, bool with_centered_form = true, bool is_not_in = false)
         : CtcInverse(f, CtcWrapper<Y,Y>(y), with_centered_form, is_not_in)
-      { }
+      {
+        if constexpr(std::is_same_v<Y,IntervalMatrix>)
+        {
+          const auto [rows,cols] = f.output_shape();
+          assert_release(y.rows() == rows && y.cols() == cols
+            && "CtcInverse: invalid output matrix dimensions");
+        }
+      }
 
       void contract(X0& x0, X&... x) const
       {
@@ -55,6 +61,9 @@ namespace codac2
 
       void contract_(const CtcBase<Y>& ctc_y, X0& x0, X&... x) const
       {
+        assert_release(_f.nb_args() == 1 + sizeof...(X)
+          && "CtcInverse: invalid number of input arguments");
+
         ValuesMap v;
         // Setting user values into a map before the tree evaluation
         _f.fill_from_args(v, x0, x...);
@@ -85,30 +94,13 @@ namespace codac2
             // todo: the above condition !val_expr.da.is_unbounded() should not be necesary,
             // possible bug in MulOp in case of unbounded domain?
 
-            if constexpr(sizeof...(X) == 0 && std::is_same_v<X0,IntervalVector>)
-            {
-              X0 x_mid = X0(x0.mid());
-
-              assert(val_expr.a.size() == val_expr.m.size());
-              IntervalVector fm { val_expr.a - val_expr.m };
-
-              if constexpr(std::is_same_v<Y,IntervalMatrix>)
-              {
-                std::cout << "CtcInverse: matrices expressions not (yet) supported with centered form" << std::endl;
-              }
-
-              else
-              {
-                IntervalVector p = x0 - x_mid;
-                MulOp::bwd(fm, val_expr.da, p);
-                x0 &= p + x_mid;
-              }
-            }
-
-            else
-            {
-              // Centered form not (yet) implemented for multi-nonvector-arguments
-            }
+            IntervalVector x_box = cart_prod(x0,x...);
+            IntervalVector x_mid = cart_prod(x0.mid(), x.mid()...);
+            IntervalVector p = x_box - x_mid;
+            Y diffval = val_expr.a - val_expr.m;
+            IntervalVector fm = cart_prod(diffval);
+            MulOp::bwd(fm, val_expr.da, p);
+            intersect_from_flat_vector((p + x_mid).eval(), x0, x...); // updating input values
           }
           
         // [4/4] Backward evaluation
@@ -119,6 +111,33 @@ namespace codac2
       const AnalyticFunction<OutputType>& fnc() const
       {
         return _f;
+      }
+
+    private:
+
+      static void intersect_from_flat_vector(Interval& x, const IntervalVector& v, Index& i)
+      {
+        x &= v[i];
+        i++;
+      }
+
+      static void intersect_from_flat_vector(IntervalVector& x, const IntervalVector& v, Index& i)
+      {
+        x &= v.segment(i,x.size());
+        i+=x.size();
+      }
+
+      static void intersect_from_flat_vector(IntervalMatrix& x, const IntervalVector& v, Index& i)
+      {
+        x &= v.segment(i,x.size()).reshaped<Eigen::ColMajor>(x.rows(),x.cols());
+        i+=x.size();
+      }
+
+      template<typename... T>
+      static void intersect_from_flat_vector(const IntervalVector& v, T&... x)
+      {
+        Index i=0;
+        ((intersect_from_flat_vector(x,v,i)), ...);
       }
 
     protected:

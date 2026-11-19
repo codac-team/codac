@@ -150,3 +150,22 @@ TEST_CASE("SampledTraj: derivative")
   for(double i = 0 ; i < 10 ; i+=1e-1)
     CHECK(Approx(p(i),1e-2) == x(i));
 }
+
+TEST_CASE("truncate_to_common_tdomain")
+{
+  SampledTraj<double> x({0.,4.}, {0,4});
+  SampledTraj<Vector> y({{1.,{1,2}}, {5.,{5,6}}});
+
+  ScalarVar t;
+  AnalyticFunction f({t},t);
+  AnalyticTraj z({2,6},f);
+
+  truncate_to_common_tdomain(x,y,z);
+
+  CHECK(x.tdomain() == Interval(2,4));
+  CHECK(y.tdomain() == Interval(2,4));
+  CHECK(z.tdomain() == Interval(2,4));
+
+  CHECK(x(2.) == 2.); // interpolated boundary
+  CHECK(y(4.) == Vector({4.,5.}));
+}

@@ -3,7 +3,7 @@
 Lesson E: Tile-based localization
 =================================
 
-  Main authors: `Simon Rohou <https://www.simon-rohou.fr/research/>`_, `Maël Godard <https://godardma.github.io>`_
+  Main authors: `Simon Rohou <https://www.simon-rohou.fr>`_, `Maël Godard <https://godardma.github.io>`_
 
 This lesson addresses a state-estimation problem arising in indoor mobile robotics. A differential-drive robot evolves on a floor covered with square tiles of known width :math:`L`. Unlike range-based localization, we do not rely on external landmarks. Instead, the floor itself provides sparse exteroceptive information: each time the passive support caster crosses a grout line between two tiles, a shock appears in the gyroscope data and can be detected after a simple filtering stage.
 

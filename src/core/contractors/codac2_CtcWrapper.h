@@ -17,7 +17,9 @@ namespace codac2
    typename X = std::conditional_t<
       std::is_same_v<Y, Interval>,
       Interval,
-      IntervalVector>>
+      std::conditional_t<std::is_same_v<Y, IntervalMatrix>,
+      IntervalMatrix,
+      IntervalVector>>>
   class CtcWrapper : public Ctc<CtcWrapper<Y>,X>
   {
     public:
@@ -32,7 +34,10 @@ namespace codac2
 
       void contract(X& x) const
       {
-        assert_release(x.size() == this->size());
+        if constexpr(std::is_same_v<X,IntervalMatrix>)
+          assert_release(x.rows() == _y.rows() && x.cols() == _y.cols());
+        else
+          assert_release(x.size() == this->size());
         x = x & _y;
       }
 

@@ -1,9 +1,9 @@
 /** 
  *  \file codac2_IntvFullPivLU.cpp
  * ----------------------------------------------------------------------------
- *  \date       2024
+ *  \date       2026
  *  \author     Damien Massé
- *  \copyright  Copyright 2024 Codac Team
+ *  \copyright  Copyright 2026 Codac Team
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
@@ -20,15 +20,158 @@
 
 namespace codac2 {
 
+/* local utility functions */
+/* compute in place A = L * A where L is lower, with 1 at the diagonal */
+/* assume A.rows = L.rows. L is completed if needed by Id to be square */
+static void product_low(const IntervalMatrix &L, IntervalMatrix &A) {
+    assert_release(A.rows()==L.rows());
+    Index nCols=A.cols();
+    Index nRows=L.rows();
+    for (Index c=0;c<nCols;c++) {
+      for (Index r=nRows-1;r>=0;r--) {
+         Index u=std::min(r,L.cols());
+         for (Index k=0;k<u;k++) {
+            A(r,c) += L(r,k)*A(k,c);
+         }
+      }
+    }
+}
+/* compute in place A = A * U where U is upper */
+/* assume A.cols = U.cols. U is completed if needed by Id to be square */
+static void product_up(IntervalMatrix &A, const IntervalMatrix &U) {
+    assert_release(A.cols()==U.cols());
+    Index nCols=U.cols();
+    Index nRows=A.rows();
+    for (Index c=nCols-1;c>=0;c--) {
+      Index u=std::min(c,U.rows());
+      for (Index r=0;r<nRows;r++) {
+         if (c<U.rows()) {
+	    A(r,c) *= U(c,c);
+         }
+         for (Index k=0;k<u;k++) {
+            A(r,c) += A(r,k)*U(k,c);
+         }
+      }
+    }
+}
+
+/* compute in place A = U * A where U is upper */
+/* U is completed if needed by Id to be square */
+static void product_up_right(const IntervalMatrix &U, IntervalMatrix &A) {
+    assert_release(U.cols()==A.rows());
+    Index nCols=A.cols();
+    Index nRows=A.rows();
+    Index u=std::min(U.cols(),U.rows());
+    for (Index c=0;c<nCols;c++) {
+      for (Index r=0;r<u;r++) {
+         Interval v(0.0);
+         for (Index r2=nRows-1;r2>r;r2--) {
+             v += U(r,r2)*A(r2,c);
+         }
+         A(r,c) = v + U(r,r)*A(r,c);
+      }
+//      for (Index r=u;r<nRows;r++) {
+//         A(r,c)=0.0;
+//      }
+    }
+}
+/* compute in place L^-1 * A where L is lower, with 1 at the diagonal */
+/* assume A.rows=L.rows. If L.rows > L.cols, L is completed by Id ; */
+/* if L.rows < L.cols, remaining 0 are not used */
+static void inverse_low(const IntervalMatrix &L, IntervalMatrix &A) {
+    assert_release(A.rows()==L.rows());
+    Index nCols=A.cols();
+    Index nRows=L.rows();
+    for (Index c=0;c<nCols;c++) {
+      for (Index r=0;r<nRows;r++) {
+         Index u=std::min(r,L.cols());
+         for (Index k=0;k<u;k++) {
+            A(r,c) -= L(r,k)*A(k,c);
+         }
+      }
+    }
+}
+/* bwd operator for U X = Y where U is upper. Either contract (solve=false)
+ * or construction of "the" solution (solve=true).
+ * if U.rows < Y.rows, U is completed with Id 
+ * if Y.rows > U.cols, check if the last rows of Y contains 0 
+ * if U.cols > U.rows, two options 
+ *      solve=true => assume the last rows of X are be 0
+ *      solve=false => contract */
+static void bwd_product_up(const IntervalMatrix &U, 
+	IntervalMatrix &X, const IntervalMatrix &Y, bool solve=true) {
+//    assert_release(U.rows()<=Y.rows());
+//      if (U.rows>Y.rows , last rows of U are ignored)
+    assert_release(X.cols()==Y.cols());
+    assert_release(U.cols()==X.rows());
+    for (Index r=U.cols();r<Y.rows();r++) { /* check potential 0 lines */
+       for (Index c=0;c<Y.cols();c++) {
+          if (!Y(r,c).contains(0.0)){
+            X.set_empty(); 
+            return;
+          }
+       }
+    }
+    if (!solve) {
+       Index u=std::min(Y.rows(),U.cols());
+       for (Index r=u-1;r>=0;r--) {
+            if (r>=U.rows()) {
+               X.row(r) = IntervalRow(X.row(r)) & Y.row(r);
+               continue;
+            }
+            IntervalRow rw=U.row(r).tail(U.cols()-r);
+            for (Index c = 0;c<Y.cols();c++) {
+               IntervalVector xvect=X.col(c).tail(X.rows()-r);
+               MulOp::bwd(Y(r,c),rw,xvect);
+               if (xvect.is_empty()) { X.set_empty(); return; }
+               X.col(c).tail(X.rows()-r)=xvect;
+            }
+       }
+       for (Index r=0;r<=u-1;r++) {
+            if (r>=U.rows()) {
+               X.row(r) = IntervalRow(X.row(r)) & Y.row(r);
+               continue;
+            }
+            IntervalRow rw=U.row(r).tail(U.cols()-r);
+	    for (Index c = Y.cols()-1;c>=0;c--) {
+               IntervalVector xvect=X.col(c).tail(X.rows()-r);
+               MulOp::bwd(Y(r,c),rw,xvect);
+               if (xvect.is_empty()) { X.set_empty(); return; }
+               X.col(c).tail(X.rows()-r)=xvect;
+            }
+       }
+    } else { 
+       for (Index r=Y.rows();r<U.cols();r++) {
+           X.row(r).setZero();
+       }
+       Index u=std::min(Y.rows(),U.cols());
+       for (Index r=u-1;r>=0;r--) {
+            if (r>=U.rows()) {
+               X.row(r) = Y.row(r);
+               continue;
+            }
+          IntervalRow ry = Y.row(r);
+          for (Index c=r+1;c<u;c++) {
+             ry -= U(r,c)*X.row(c);
+          }
+          ry /= U(r,r);
+          if (ry.is_empty()) { X.set_empty(); return; }
+          X.row(r) = ry;          
+        }
+    }
+}
+
 /* utility function : compute the bound using Gauss-Jordan successive
    algorithm */
 IntervalMatrix IntvFullPivLU::build_LU_bounds(const IntervalMatrix &E) {
     const Index nCols = E.cols();
     const Index nRows = E.rows();
-    const Index nC = std::min(nCols,nRows-1);
+//    const Index nC = std::min(nCols,nRows-1);
+    const Index nC = std::min(nCols-1,nRows-1);
   
     IntervalMatrix res = E;
     for (Index k=0;k<nC;k++) {
+#if 0
        if (k>0) {
          res.block(k,k,1,nCols-k)
             += res.block(k,0,1,k) * res.topRightCorner(k,nCols-k);
@@ -37,12 +180,19 @@ IntervalMatrix IntvFullPivLU::build_LU_bounds(const IntervalMatrix &E) {
        }
        Interval pivot = 1.0/(1.0-res(k,k));
        res.block(k+1,k,nRows-k-1,1) *= pivot;
+#endif
+       Interval pivot = 1.0/(1.0-res(k,k));
+       res.block(k+1,k,nRows-k-1,1) *= pivot;
+       res.bottomRightCorner(nRows-k-1,nCols-k-1)
+		+= res.block(k+1,k,nRows-k-1,1)*res.block(k,k+1,1,nCols-k-1);
     }
+#if 0
     if (nCols>=nRows) { /* one row left */
          res.block(nRows-1,nRows-1,1,nCols-nRows+1)
             += res.block(nRows-1,0,1,nRows-1) * 
 	       res.topRightCorner(nRows-1,nCols-nRows+1);
     } 
+#endif
     return res;
 }
 
@@ -54,16 +204,20 @@ IntervalMatrix IntvFullPivLU::build_LU_bounds(const IntervalMatrix &E) {
  */
 IntvFullPivLU::IntvFullPivLU(const Matrix &M) :
    _LU(M), transform(Row::Constant(M.cols(),1.0)), 
-   matrixLU_(M.rows(), M.cols())
+   matrixLU_(M.rows(), M.cols()),
+   ImLU_(M.rows(), M.cols()),
+   prec_matrixLU_(M.rows(), M.cols())
 {
-   this->compute_matrix_LU(IntervalMatrix(M),
-		 _LU.maxPivot()*_LU.threshold());
+   this->nonzero=_LU.maxPivot()*_LU.threshold();
+   this->compute_matrix_LU(IntervalMatrix(M));
 }
   
 /** constructor from Matrix of Intervals
  */
 IntvFullPivLU::IntvFullPivLU(const IntervalMatrix &M) :
-   matrixLU_(M.rows(), M.cols())
+   matrixLU_(M.rows(), M.cols()),
+   ImLU_(M.rows(), M.cols()),
+   prec_matrixLU_(M.rows(), M.cols())
 {
    Matrix middle = M.mid();
 #if 0
@@ -91,13 +245,14 @@ IntvFullPivLU::IntvFullPivLU(const IntervalMatrix &M) :
 #endif
    _LU = Eigen::FullPivLU<Matrix>(middle);
    /* compute the colmax of diam */
-   this->compute_matrix_LU(M,_LU.maxPivot()*_LU.threshold());
+   this->nonzero = _LU.maxPivot()*_LU.threshold();
+   this->compute_matrix_LU(M);
 }
 
-void IntvFullPivLU::compute_matrix_LU(const IntervalMatrix &M, double nonzero) {
+void IntvFullPivLU::compute_matrix_LU(const IntervalMatrix &M) {
    /* specific case if _LU.max_pivot() is 0 (the matrix itself is 0) */
     if (_LU.maxPivot()==0.0) {
-       nonzero=1.0; 
+       this->nonzero=1.0; 
 	/* strong threshold. The most probable result is oo anyway */
     }
    /* 1) calculer la matrice d'erreurs
@@ -122,13 +277,15 @@ void IntvFullPivLU::compute_matrix_LU(const IntervalMatrix &M, double nonzero) {
 #endif
     /* modification of mLU if not full rank (check this) */
     for (int i=0;i<dim;i++) {
-        if (std::fabs(mLU(i,i))<nonzero) {
-           mLU(i,i)=(mLU(i,i)<0.0 ? -nonzero : nonzero); 
+        if (std::fabs(mLU(i,i))<this->nonzero) {
+           mLU(i,i)=(mLU(i,i)<0.0 ? -this->nonzero : this->nonzero); 
         }
     }
     /* "Inversion" of mLU (i.e. (pseudo)inversion of L and U) */
-    IntervalMatrix ImLU 
-		= IntervalMatrix::Zero(nRows,nCols);
+    /* since mLU is quasi-punctual, it is preferable to "inverse" L and U
+       and then use the result than to solve directly L E U = M */
+    /* ImLU_ is stored to be reused in solve() and other function */
+    ImLU_ = IntervalMatrix::Zero(nRows,nCols);
     /* first L */
     for (int c=0;c<nCols;c++) {
       if (c>=nRows-1) break;
@@ -136,16 +293,16 @@ void IntvFullPivLU::compute_matrix_LU(const IntervalMatrix &M, double nonzero) {
          Interval s(mLU(r,c));
          for (int k=c+1;k<r;k++) {
             if (k>=nCols) break;
-            s += mLU(r,k)*ImLU(k,c);
+            s += mLU(r,k)*ImLU_(k,c);
          }
-         ImLU(r,c)=-s;
+         ImLU_(r,c)=-s;
       }
     }
     /* then U */
     for (int c=0;c<nCols;c++) {
       int r;
       if (c<nRows) {
-         ImLU(c,c)=Interval(1.0)/mLU(c,c);
+         ImLU_(c,c)=Interval(1.0)/mLU(c,c);
          r=c-1;
       } else {
          r=nRows-1;
@@ -155,13 +312,19 @@ void IntvFullPivLU::compute_matrix_LU(const IntervalMatrix &M, double nonzero) {
          if (c<nRows) s/=mLU(c,c);
          for (int k=r+1;k<c;k++) {
              if (k>=nRows) break;
-             s += mLU(r,k)*ImLU(k,c);
+             s += mLU(r,k)*ImLU_(k,c);
          }
-         ImLU(r,c)=-s/mLU(r,r);
+         ImLU_(r,c)=-s/mLU(r,r);
       }
     }
     
     /* compute the error matrix */
+    IntervalMatrix pMq = _LU.permutationP() * M * _LU.permutationQ();
+    product_low(ImLU_,pMq);
+    product_up(pMq,ImLU_);
+    IntervalMatrix error = IntervalMatrix::Identity(nRows,nCols) - pMq;
+
+#if 0
     IntervalMatrix InvL = 
 		IntervalMatrix::Identity(nRows,nRows);
     if (nRows>nCols) 
@@ -176,10 +339,11 @@ void IntvFullPivLU::compute_matrix_LU(const IntervalMatrix &M, double nonzero) {
       InvU.triangularView<Eigen::Upper>() = ImLU.topRows(nCols);
     IntervalMatrix error = IntervalMatrix::Identity(nRows,nCols) - 
        InvL * (_LU.permutationP() * M * 
-       _LU.permutationQ()) * InvU;
+      _LU.permutationQ()) * InvU;
+#endif
 
 //    std::cout << "error matrix : " << error << "\n";
-    IntervalMatrix eps = IntvFullPivLU::build_LU_bounds(error);
+    prec_matrixLU_ = IntvFullPivLU::build_LU_bounds(error);
 //    std::cout << "eps matrix : " << eps << "\n";
     
     /* product */
@@ -187,20 +351,21 @@ void IntvFullPivLU::compute_matrix_LU(const IntervalMatrix &M, double nonzero) {
     for (Index r=0;r<nRows;r++) {
        matrixLU_(r,c)=mLU(r,c); /* for Id */
        if (r>c) { /* low part */
-          matrixLU_(r,c)-=eps(r,c); /* Id for L part */
+          matrixLU_(r,c)-=prec_matrixLU_(r,c); /* Id for L part */
           for (Index k=c+1;k<r;k++) {
              if (k>=nCols) break;
-             matrixLU_(r,c)-=mLU(r,k)*eps(k,c);
+             matrixLU_(r,c)-=mLU(r,k)*prec_matrixLU_(k,c);
           }
        } else { /* high part */
           for (Index k=r;k<=c;k++) {
              if (k>=nRows) break;
-             matrixLU_(r,c)-=eps(r,k)*mLU(k,c);
+             matrixLU_(r,c)-=prec_matrixLU_(r,k)*mLU(k,c);
           }
-          if (c>=nRows) matrixLU_(r,c)-=eps(r,c); 
+          if (c>=nRows) matrixLU_(r,c)-=prec_matrixLU_(r,c); 
 			/* Id for U part outside mLU */
        }
     }
+    prec_matrixLU_ = IntervalMatrix::Identity(nRows,nCols) - prec_matrixLU_;
 }
 
 /* computing the possible rank for a square matrix is easy as
@@ -282,6 +447,7 @@ IntervalMatrix IntvFullPivLU::kernel() const {
        one by one and make the matrix afterwards */
     std::vector<IntervalVector> kernel;
     std::vector<bool> generating(matrixLU_.cols(),true);
+    IntervalVector zero=IntervalVector::Zero(matrixLU_.rows());
     for (Index c=0;c<matrixLU_.cols();c++) {
       /* a potential kernel vector is built as follows :
          we consider each column c and states that the vector must be 0
@@ -297,6 +463,17 @@ IntervalMatrix IntvFullPivLU::kernel() const {
           generating[c]=false;
           continue;
       }
+#if 0
+      IntervalMatrix vect = IntervalMatrix::Zero(matrixLU_.cols(),1);
+      vect(c,0)=1.0;
+      for (Index c1=c-1;c1>=0;c1--) {
+         if (!generating[c1]) vect(c1,0)=Interval();
+      }
+      bwd_product_up(matrixLU_,vect,zero,false);
+      if (vect.is_empty()) { generating[c]=false; continue; }
+      kernel.push_back(_LU.permutationQ()*vect.reshaped());
+#else /* a bit faster, same precision 
+	 although we would have to check the last statement (?) */
       IntervalVector vect = IntervalVector::Zero(matrixLU_.cols());
       vect[c]=1.0;
       for (Index c1=c-1;c1>=0;c1--) {
@@ -340,6 +517,7 @@ IntervalMatrix IntvFullPivLU::kernel() const {
       }
       if (!generating[c]) continue;
       kernel.push_back(_LU.permutationQ()*vect);
+#endif
     }
     /* build the matrix */
     IntervalMatrix res(matrixLU_.cols(),kernel.size());
@@ -407,48 +585,88 @@ IntervalMatrix IntvFullPivLU::cokernel() const {
     return res;
 }
 
+/* Low part of the solve algorithm */
+static void lowSolve (IntervalMatrix &prhs,
+	const IntervalMatrix &ImLU_, const IntervalMatrix &prec_matrixLU_,
+        const IntervalMatrix &matrixLU_) {
+    if (matrixLU_.rows()>matrixLU_.cols()) {
+       /* the last rows of the (LL0)_sq^-1 prhs must be 0.
+          We contract the first rows
+          of (LL0)_sq^-1 prhs accordingly. If (LL0)_sq is 
+          described as ( Lh 0  )
+                       ( Ll Id )
+          we must have Ll (Lh^-1) phrs_up = phrs_low */
+       IntervalMatrix prhs_low =
+			prhs.bottomRows(matrixLU_.rows()-matrixLU_.cols());
+       product_low(ImLU_,prhs);
+       inverse_low(prec_matrixLU_,prhs);
+       /* contraction */
+       for (Index r=matrixLU_.cols();r<matrixLU_.rows();r++) {
+           IntervalRow rw = matrixLU_.row(r);
+           for (Index c=0;c<prhs.cols();c++) {
+              IntervalVector rhsvect=prhs.col(c).head(matrixLU_.cols());
+              MulOp::bwd(prhs_low(r-matrixLU_.cols(),c),rw,
+			rhsvect);
+              if (rhsvect.is_empty()) { prhs.set_empty(); return; }
+              prhs.col(c).head(matrixLU_.cols())=rhsvect;
+           }
+       }
+    } else {
+       product_low(ImLU_,prhs);
+       inverse_low(prec_matrixLU_,prhs);
+   }
+}
+
 IntervalMatrix IntvFullPivLU::solve(const IntervalMatrix &rhs) const {
     assert_release(rhs.rows()==matrixLU_.rows());
+    /* P-1 L L0 U0 U Q-1 X = rhs */
     IntervalMatrix prhs = _LU.permutationP()*rhs;
-    Index dim = std::min(matrixLU_.rows(),matrixLU_.cols());
-    /* inverse L */
-    for (Index r = 0; r<dim; r++) {
-       for (Index r1=r+1;r1<matrixLU_.rows();r1++) {
-          prhs.row(r1) -= matrixLU_(r1,r)*prhs.row(r);
-       }
-    }
-    /* first check, if rows>cols, the 0 lines */
-    for (Index r=matrixLU_.cols(); r<matrixLU_.rows();r++) {
-        for (Index a=0;a<prhs.cols();a++) {
-            if (!prhs(r,a).contains(0.0)) {
-               Interval emp; emp.set_empty();
-               return 
-		IntervalMatrix::Constant(matrixLU_.cols(),rhs.cols(),emp);
-            }
-        }
-    }
-    /* then use the diagonal elements */
-    IntervalMatrix res = IntervalMatrix::Zero(matrixLU_.cols(),rhs.cols());
-    for (Index r = dim-1;r>=0;r--) {
-        for (Index r1=r+1;r1<dim;r1++) {
-           prhs.row(r) -= matrixLU_(r,r1)*res.row(r1);
-        }
-        if (matrixLU_(r,r).contains(0.0)) {
-            for (Index a=0;a<prhs.cols();a++) {
-              if (!prhs(r,a).contains(0.0)) {
-                 for (auto coef : res.reshaped()) coef.set_empty();
-                 return res;
-              }
-            } 
-        } else {
-            res.row(r) = (1.0/matrixLU_(r,r))*prhs.row(r);
-        }
-    }
+    lowSolve (prhs, ImLU_, prec_matrixLU_, matrixLU_);
+    /* U0 U Q-1 X = prhs */
+    IntervalMatrix res(matrixLU_.cols(),rhs.cols());
+    if (prhs.is_empty()) { res.set_empty(); return res; }
+    bwd_product_up(prec_matrixLU_, res, prhs, true);
+    if (res.is_empty()) return res;
+    /* U Q-1 X = res */
+    product_up_right(ImLU_,res);
     return _LU.permutationQ()*res;
-}
+}    
 
 void IntvFullPivLU::solve(const IntervalMatrix &rhs, IntervalMatrix &B) const {
     assert_release(rhs.rows()==matrixLU_.rows() && B.rows()==matrixLU_.cols());
+    /* P-1 L L0 U0 U Q-1 B = rhs */
+    IntervalMatrix prhs = _LU.permutationP()*rhs;
+    /* L L0 U0 U Q-1 B = prhs */
+    lowSolve (prhs, ImLU_, prec_matrixLU_, matrixLU_);
+    if (prhs.is_empty()) { B.set_empty(); }
+    /* U0 U Q-1 X = prhs */
+    IntervalMatrix qB = _LU.permutationQ().inverse()*B;
+    /* (U0 U) qB = prhs */
+#if 0
+    /* we need _LU.matrix_LU modified for 1st case ? */
+    IntervalMatrix initialLU = _LU.matrixLU();
+    for (Index i=0;i<initialLU.rows() && i<initialLU.cols();i++) {
+        if (std::abs(initialLU(i,i).lb())<this->nonzero) {
+           initialLU(i,i) = initialLU(i,i).lb()<0 ? -this->nonzero :
+		this->nonzero;
+        }
+    }
+#endif
+    /* first case : two successive bwd product */
+#if 0
+    IntervalMatrix UqB = qB;
+    product_up_right(initialLU,UqB);
+    bwd_product_up(prec_matrixLU_, UqB, prhs, false);
+    if (UqB.is_empty()) { B.set_empty(); return; }
+    bwd_product_up(initialLU, qB, UqB, false);
+#else /* second case : one backward product. Don't know which is better */
+    bwd_product_up(matrixLU_, qB, prhs, false);
+    if (qB.is_empty()) { B.set_empty(); return; }
+#endif
+    B &= _LU.permutationQ()*qB;
+}
+
+#if 0
     IntervalMatrix prhs = _LU.permutationP()*rhs;
     Index dim = std::min(matrixLU_.cols(),matrixLU_.rows());
     /* inverse L */
@@ -480,6 +698,7 @@ void IntvFullPivLU::solve(const IntervalMatrix &rhs, IntervalMatrix &B) const {
     }
     B &= _LU.permutationQ()*qB;
 }
+#endif
 
 IntervalMatrix IntvFullPivLU::reconstructed_matrix() const {
     Eigen::FullPivLU<Matrix>::PermutationPType Pi = _LU.permutationP().inverse();

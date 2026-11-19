@@ -10,14 +10,17 @@ Codac provides data structures for handling basic interval sets. These structure
 - ``IntervalMatrix``: represents a matrix where each element is an interval.
 - :ref:`The BoolInterval class <sec-intervals-boolinterval-class>`: represents a Boolean interval.
 
+For C++ applications using other numerical libraries, see
+:ref:`Floating-point rounding and library compatibility <sec-intervals-rounding>`.
+
 
 .. toctree::
    :hidden:
 
    Interval_class.rst
-   .. Vector_class.rst
    IntervalVector_class.rst
    BoolInterval_class.rst
+   rounding.rst
 
 ..    What is an interval? <http://codac.io>
    The Interval class <http://codac.io>

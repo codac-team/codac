@@ -8,6 +8,7 @@
  */
 
 #include <catch2/catch_test_macros.hpp>
+#include <stdexcept>
 #include <codac2_CtcInverse.h>
 #include <codac2_Figure2D.h>
 #include <codac2_Approx.h>
@@ -38,6 +39,79 @@ TEST_CASE("CtcInverse")
     c.contract(a);
     CHECK(a == IntervalVector({{42}}));
   }
+
+  {
+    ScalarVar x;
+    AnalyticFunction f { {x}, x+x-42 };
+    CtcInverse<Interval,Interval> c(f, Interval(0.));
+    Interval a;
+    c.contract(a);
+    CHECK(a == 21);
+  }
+
+  {
+    ScalarVar x;
+    AnalyticFunction f { {x}, x+x-42 };
+    CtcInverse<Interval,Interval> c(f, Interval(0.),false); /* without centered form */
+    Interval a;
+    c.contract(a);
+    CHECK(a == Interval());
+  }
+
+  {
+    ScalarVar x,y,z;
+    AnalyticFunction f { {x,y,z}, {2*x-y,2*y-z,2*z-x} };
+    CtcInverse<IntervalVector,Interval,Interval,Interval> ctc(f, {0.5,0.5,0.5});
+    Interval a(-1,1),b(-1,1),c(-1,1);
+    ctc.contract(a,b,c);
+    CHECK(a == 0.5);
+    CHECK(b == 0.5);
+    CHECK(c == 0.5);
+  }
+
+  {
+    VectorVar x(2);
+    VectorVar y(2);
+    AnalyticFunction f { {x,y}, {x[0]*x[1]+y[0]*y[1],x[0]*y[1]-y[0]*x[1]} };
+    CtcInverse<IntervalVector,IntervalVector,IntervalVector> ctc(f, {1.0,0.5});
+    IntervalVector a { { 0.0, 1.0 }, 1.0 };
+    IntervalVector b { { 0.0, 1.0 }, 1.0 };
+    ctc.contract(a,b);
+    CHECK(a == IntervalVector({0.75,1.0}));
+    CHECK(b == IntervalVector({0.25,1.0}));
+  }
+
+  {
+    MatrixVar x(2,2);
+    VectorVar y(2);
+    AnalyticFunction f { {x,y}, x*y+y };
+    CtcInverse<IntervalVector,IntervalMatrix,IntervalVector> ctc(f, {2.0,2.0});
+    IntervalMatrix a { { 1.0 , -1.0 } , 
+                       { 2.0 , 1.0 } };
+    IntervalVector b = IntervalVector::Constant(2,Interval(-25,15));
+	/* in this specific case, b not centered on 0 works better because
+	   of some drawback with MulOp::bwd */
+    ctc.contract(a,b);
+    CHECK(b == IntervalVector({1.0,0.0}));
+  }
+
+  {
+    MatrixVar x(2,2);
+    ScalarVar y;
+    AnalyticFunction f { {x,y}, x+y*x };
+    CtcInverse<IntervalMatrix,IntervalMatrix,Interval> ctc(f, 
+			{{1.0,2.0},{3.0,4.0}});
+    IntervalMatrix a = IntervalMatrix::Constant(2,2,Interval(-12,10));
+    a(0,0)= Interval(0.5,1.0); /* y \in [0,1] */
+    a(0,1)= Interval(0.5,1.0); /* y \in [1,3] */ 
+    Interval b(-5.0,5.0);
+    ctc.contract(a,b); /* contract b */
+    ctc.contract(a,b); /* contract a */
+    CHECK(a == IntervalMatrix({{0.5,1.0},{1.5,2.0}}));
+    CHECK(b == 1.0);
+  }
+
+
 
   {
     ScalarVar x,y;
@@ -309,4 +383,81 @@ TEST_CASE("Automatic template deduction - Issue #245")
   CHECK(x == IntervalVector({{-1,1},{-1,1}}));
   x = IntervalVector(2); c6.contract(x);
   CHECK(x == IntervalVector({{-1,1},{-1,1}}));
+}
+
+
+TEST_CASE("CtcInverse - matrix input, scalar output")
+{
+  MatrixVar m(2,3);
+  AnalyticFunction f({m}, m(0,1));
+  CtcInverse<Interval,IntervalMatrix> ctc(f, Interval(2));
+
+  IntervalMatrix x = IntervalMatrix::Constant(2,3,Interval(-10,10));
+  ctc.contract(x);
+
+  CHECK(x(0,1) == Interval(2));
+  CHECK(x(1,2) == Interval(-10,10));
+}
+
+TEST_CASE("CtcInverse - matrix input, vector output")
+{
+  MatrixVar m(2,3);
+  AnalyticFunction f({m}, vec(m(0,0),m(1,2)));
+  CtcInverse<IntervalVector,IntervalMatrix> ctc(f, IntervalVector({1,2}));
+
+  IntervalMatrix x = IntervalMatrix::Constant(2,3,Interval(-10,10));
+  ctc.contract(x);
+
+  CHECK(x(0,0) == Interval(1));
+  CHECK(x(1,2) == Interval(2));
+  CHECK(x(0,1) == Interval(-10,10));
+}
+
+TEST_CASE("CtcInverse - matrix input and output")
+{
+  MatrixVar m(2,3);
+  AnalyticFunction f({m}, m);
+  IntervalMatrix y {{1,2,3},{4,5,6}};
+  CtcInverse<IntervalMatrix,IntervalMatrix> ctc(f, y);
+
+  IntervalMatrix x = IntervalMatrix::Constant(2,3,Interval(-10,10));
+  ctc.contract(x);
+
+  CHECK(x == y);
+}
+
+TEST_CASE("CtcInverse - vector input, matrix output")
+{
+  VectorVar v(2);
+  AnalyticFunction f({v}, mat(vec(v[0],v[1]),vec(v[1],v[0])));
+  IntervalMatrix y {{1,2},{2,1}};
+  CtcInverse<IntervalMatrix,IntervalVector> ctc(f, y);
+
+  IntervalVector x {{-10,10},{-10,10}};
+  ctc.contract(x);
+
+  CHECK(x == IntervalVector({1,2}));
+}
+
+TEST_CASE("CtcInverse - matrix without centered form")
+{
+  MatrixVar m(2,3);
+  AnalyticFunction f({m}, m(0,1));
+  CtcInverse<Interval,IntervalMatrix> ctc(f, Interval(2), false);
+
+  IntervalMatrix x = IntervalMatrix::Constant(2,3,Interval(-10,10));
+  ctc.contract(x);
+
+  CHECK(x(0,1) == Interval(2));
+  CHECK(x(1,2) == Interval(-10,10));
+}
+
+TEST_CASE("CtcInverse - invalid matrix output shape")
+{
+  MatrixVar m(2,3);
+  AnalyticFunction f({m}, m);
+  IntervalMatrix y = IntervalMatrix::Constant(3,2,Interval(1));
+
+  // Same number of coefficients, different matrix shape.
+  CHECK_THROWS_AS((CtcInverse<IntervalMatrix,IntervalMatrix>(f,y)), std::invalid_argument);
 }

@@ -7,6 +7,7 @@
  *  \license    GNU Lesser General Public License (LGPL)
  */
 
+#include <algorithm>
 #include <iostream>
 #include "codac2_Polygon.h"
 #include "codac2_geometry.h"
@@ -35,9 +36,15 @@ namespace codac2
 
   Polygon::Polygon(const std::vector<IntervalVector>& v)
     : std::vector<Segment>(
-      [v]
+      [v = std::vector<IntervalVector>(v)]() mutable
       {
         vector<Segment> edges;
+
+        // Remove redundant consecutive vertices before simplifying
+        // colinear points.
+        v.erase(unique(v.begin(),v.end()),v.end());
+        if(v.size() > 1 && v.front() == v.back())
+          v.pop_back();
 
         switch(v.size())
         {
@@ -85,8 +92,15 @@ namespace codac2
               }
             }
 
-            for(size_t i = 0 ; i < v_noaligned.size() ; i++)
-              edges.push_back({ v_noaligned[i], v_noaligned[(i+1)%v_noaligned.size()] });
+            if(v_noaligned.size() == 1)
+              edges = { Segment(v_noaligned[0],v_noaligned[0]) };
+
+            else if(v_noaligned.size() == 2)
+              edges = { Segment(v_noaligned[0],v_noaligned[1]) };
+
+            else
+              for(size_t i = 0 ; i < v_noaligned.size() ; i++)
+                edges.push_back({ v_noaligned[i], v_noaligned[(i+1)%v_noaligned.size()] });
           }
         }
         
@@ -164,12 +178,17 @@ namespace codac2
 
     if(!is_empty())
     {
-      size_t n = this->size();
+      size_t n = this->size(), ring_begin = 0;
 
       for(size_t i = 0 ; i < n ; i++)
+      {
         v.push_back((*this)[i][0]);
 
-      if((*this)[0][0] != (*this)[n-1][1])
+        if(i+1 < n && !(*this)[i][1].intersects((*this)[i+1][0]))
+          ring_begin = i+1;
+      }
+
+      if((*this)[ring_begin][0] != (*this)[n-1][1])
         v.push_back((*this)[n-1][1]);
     }
 
@@ -193,6 +212,9 @@ namespace codac2
   {
     assert_release(p.size() == 2);
 
+    if(p.is_empty())
+      return BoolInterval::EMPTY;
+
     IntervalVector box_hull = box();
     if(!p.intersects(box_hull))
       return BoolInterval::FALSE;
@@ -215,18 +237,20 @@ namespace codac2
     // Odd number of crossing => point is inside
     // Even number of crossing => point is outside
 
+    const auto polygon_vertices = vertices();
     Index i = 0;
     // Some limit cases must be considered, for instance when the
-    // transect crosses exactly one vertex of the polygon, and/or 
+    // transect crosses exactly one vertex of the polygon, and/or
     // when the point to be tested is this very vertex. Below, we
-    // generate a convenient transect avoiding such configuration.
+    // first try the four axis-aligned transects, then oblique ones
+    // if necessary.
 
     do
     {
       retry = false;
 
       // Creating a ray candidate:
-      Segment try_transect = [i,&p]() -> Segment {
+      Segment try_transect = [i,&p,&box_hull,&polygon_vertices]() -> Segment {
         switch(i)
         {
           case 0:
@@ -239,14 +263,30 @@ namespace codac2
             return { {p[0],prev_float(oo)}, p };
           default:
           {
-            assert_release_unreachable("failed to test if the point is contained in polygon");
-            return Segment(IntervalVector(2),IntervalVector(2));
+            const Index k = i-4;
+            assert_release(k <= static_cast<Index>(polygon_vertices.size()) &&
+              "failed to find a vertex-free transect for polygon containment");
+
+            assert_release(
+              !box_hull.is_unbounded() &&
+              "failed to find a vertex-free transect for an unbounded polygon");
+
+            double span = std::max(1.,box_hull.max_diam());
+            double x_out = prev_float(box_hull[0].lb()-span);
+            double dx = p[0].mid()-x_out;
+            double alpha =
+              -1. + 2.*static_cast<double>(k+1)/
+                static_cast<double>(polygon_vertices.size()+2);
+            double y_out = p[1].mid()+alpha*dx;
+
+            return { {x_out,y_out}, p };
           }
         }
       }();
 
-      // The ray may pass through the vertices, we must double counting
-      for(const auto& pi : vertices())
+      // The ray may pass through a vertex, which would make crossing
+      // counting ambiguous.
+      for(const auto& pi : polygon_vertices)
         if(try_transect.contains(pi) != BoolInterval::FALSE)
         {
           retry = true;
@@ -257,7 +297,6 @@ namespace codac2
         transect = try_transect;
 
       i++;
-      assert(i < 10);
     } while(retry);
 
     // Now the number i of crossing can be computed.
@@ -294,25 +333,28 @@ namespace codac2
 
   bool Polygon::operator==(const Polygon& p) const
   {
-    if(is_empty() || p.is_empty())
-      return is_empty() && p.is_empty();
-
-    size_t n = this->size();
-    if(p.size() != n)
+    if(p.size() != this->size())
       return false;
 
-    size_t i; // looking for same reference of first value
-    for(i = 0 ; i < n ; i++)
-      if((*this)[0] == p[i])
-        break;
+    vector<bool> matched(p.size(),false);
 
-    int way = 1;
-    if(n > 1)
-      way = ((*this)[1] == p[(i+1)%n]) ? 1 : -1;
+    for(const auto& e : *this)
+    {
+      bool found = false;
 
-    for(size_t j = 0 ; j < n ; j++)
-      if((*this)[j] != p[(i+way*j+2*n)%n])
+      for(size_t i = 0 ; i < p.size() ; i++)
+      {
+        if(!matched[i] && e == p[i])
+        {
+          matched[i] = true;
+          found = true;
+          break;
+        }
+      }
+
+      if(!found)
         return false;
+    }
 
     return true;
   }

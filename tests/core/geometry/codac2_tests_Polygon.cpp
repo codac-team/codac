@@ -29,6 +29,61 @@ TEST_CASE("Polygon base")
   CHECK(p3 == Polygon({{1,2},{5,1},{3,4}}));
   CHECK(p3 == Polygon({{5,1},{1,2},{3,4}}));
   CHECK(p3 == Polygon({{1,2},{3,4},{5,1}}));
+
+  { // Multiple contours can have independent orientations
+    vector<Segment> edges1 {
+      {{0,0},{1,0}}, {{1,0},{0,1}}, {{0,1},{0,0}},
+      {{3,0},{4,0}}, {{4,0},{3,1}}, {{3,1},{3,0}}
+    };
+
+    vector<Segment> edges2 {
+      {{0,0},{0,1}}, {{0,1},{1,0}}, {{1,0},{0,0}},
+      {{3,0},{4,0}}, {{4,0},{3,1}}, {{3,1},{3,0}}
+    };
+
+    CHECK(Polygon(edges1) == Polygon(edges2));
+
+    auto vertices = Polygon(edges1).vertices();
+    REQUIRE(vertices.size() == 6);
+    CHECK(vertices[0] == IntervalVector({0,0}));
+    CHECK(vertices[1] == IntervalVector({1,0}));
+    CHECK(vertices[2] == IntervalVector({0,1}));
+    CHECK(vertices[3] == IntervalVector({3,0}));
+    CHECK(vertices[4] == IntervalVector({4,0}));
+    CHECK(vertices[5] == IntervalVector({3,1}));
+  }
+
+  { // Same number of edges, but a different polygon
+    vector<Segment> edges1 {
+      {{0,0},{1,0}}, {{1,0},{0,1}}, {{0,1},{0,0}}
+    };
+
+    vector<Segment> edges2 {
+      {{0,0},{1,0}}, {{1,0},{0,2}}, {{0,2},{0,0}}
+    };
+
+    CHECK_FALSE(Polygon(edges1) == Polygon(edges2));
+  }
+
+  { // Fully collinear vertices reduce to one segment
+    Polygon p({{0,0},{1,0},{2,0},{3,0}});
+    Polygon expected({{0,0},{3,0}});
+
+    CHECK(p == expected);
+    REQUIRE(p.edges().size() == 1);
+    CHECK(p.vertices().size() == 2);
+    CHECK(p.contains({1.5,0}) == BoolInterval::TRUE);
+  }
+
+  { // Consecutive duplicate vertices
+    Polygon p({{0,0},{1,0},{1,0},{2,0},{2,1},{0,1}});
+    CHECK(p == Polygon({{0,0},{2,0},{2,1},{0,1}}));
+  }
+
+  { // Repeated duplicates and explicit closing vertex
+    Polygon p({{0,0},{2,0},{2,0},{2,0},{2,1},{0,1},{0,0}});
+    CHECK(p == Polygon({{0,0},{2,0},{2,1},{0,1}}));
+  }
 }
 
 TEST_CASE("Empty polygon")
@@ -36,6 +91,7 @@ TEST_CASE("Empty polygon")
   Polygon p1 = Polygon::empty();
   CHECK(p1.contains(IntervalVector({1,1})) == BoolInterval::FALSE);
   CHECK(p1.contains(IntervalVector(2)) == BoolInterval::FALSE);
+  CHECK(p1.contains(IntervalVector::empty(2)) == BoolInterval::EMPTY);
   CHECK(p1.is_empty());
   CHECK(p1.edges().size() == 0);
   CHECK(p1.vertices().size() == 0);
@@ -44,6 +100,7 @@ TEST_CASE("Empty polygon")
 TEST_CASE("Polygon contains")
 {
   Polygon p1({{3,-1},{3,4},{5,6},{-1,1}});
+  CHECK(p1.contains(IntervalVector::empty(2)) == BoolInterval::EMPTY);
   CHECK(p1.contains({3.1,3}) == BoolInterval::FALSE);
   CHECK(p1.contains({2.9,3}) == BoolInterval::TRUE);
   CHECK(p1.contains({3,3}) == BoolInterval::TRUE);
@@ -131,5 +188,13 @@ TEST_CASE("Polygon contains - limit cases")
     auto i = p1 & p2;
     CHECK(i == ConvexPolygon(IntervalVector({4.5,4.25})));
     CHECK(i.vertices().size() == 1);
+  }
+
+  { // All four axis-aligned transects cross a vertex
+    Polygon p({{0,1},{1,0},{0,-1},{-1,0}});
+    CHECK(p.contains({0,0}) == BoolInterval::TRUE);
+
+    Polygon p_rev({{-1,0},{0,-1},{1,0},{0,1}});
+    CHECK(p_rev.contains({0,0}) == BoolInterval::TRUE);
   }
 }

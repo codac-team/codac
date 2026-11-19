@@ -9,6 +9,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <codac2_Ellipsoid.h>
+#include <codac2_AnalyticFunction.h>
 
 using namespace std;
 using namespace codac2;

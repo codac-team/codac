@@ -102,13 +102,15 @@
                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                       COMMENT "Generating the manual website using Sphinx")
 
-    add_custom_command(
-      TARGET manual POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_directory
-              ${CMAKE_BINARY_DIR}/doc/api/html
-              ${SPHINX_EXTRA_API}
-      COMMENT "Copying generated Doxygen HTML to Sphinx extra_html/api"
-    )
+    if(DOXYGEN_FOUND)
+      add_custom_command(
+        TARGET manual POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_CURRENT_BINARY_DIR}/api/html
+                ${SPHINX_BUILD}/extra_html/api
+        COMMENT "Copying generated Doxygen HTML to Sphinx extra_html/api"
+      )
+    endif()
     
     install(DIRECTORY ${SPHINX_BUILD}/
             DESTINATION share/codac_website

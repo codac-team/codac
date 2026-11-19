@@ -3,7 +3,7 @@
 The Interval class
 ==================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 The ``Interval`` class represents closed and connected subsets of :math:`\mathbb{R}`.
 It is based on the ``gaol::interval`` structure and extends it with many utility methods.
@@ -213,6 +213,8 @@ Dealing with closed intervals, most of the operations can rely on their bounds. 
 
 Note that Codac is built upon a low-level interval library, `GAOL <https://github.com/goualard-f/GAOL>`_, which has been built to provide functionalities for computing arithmetic on intervals, involving basic operations as well as non-linear functions.
 
+For compatibility with other C++ numerical libraries (such as OpenCV), see :ref:`Floating-point rounding and library compatibility <sec-intervals-rounding>`.
+
 All standard arithmetic operations are supported in Codac, both element-wise and with real numbers.
 
 .. tabs::
@@ -256,6 +258,8 @@ For instance, ``x < y`` returns:
 - ``BoolInterval.FALSE`` if :math:`\forall a\in[x],\forall b\in[y],\ a\geqslant b`;
 - ``BoolInterval.UNKNOWN`` otherwise.
 
+
+.. _sec-intervals-class-un-bin-ary:
 
 Unary and binary functions
 --------------------------

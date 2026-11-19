@@ -6,7 +6,7 @@
 C++ installation
 ================
 
-  Main authors: `Fabrice Le Bars <https://webperso.ensta.fr/lebars/>`_, `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main authors: `Fabrice Le Bars <https://webperso.ensta.fr/lebars/>`_, `Simon Rohou <https://www.simon-rohou.fr>`_
 
 This page describes how to install the C++ library on Linux, Windows, and macOS. Follow the steps outlined for your operating system.
 
@@ -100,7 +100,7 @@ Steps
 
    .. warning::
 
-     **GAOL prerequisite:** On some platforms, you might need to install manually `MathLib <https://github.com/lebarsfa/mathlib>`_ and `GAOL <https://github.com/lebarsfa/GAOL>`_ with CMake and `specify where they are <https://ibex-team.github.io/ibex-lib/install-cmake.html#configuration-options>`_ in order to build IBEX successfully and have accurate computations.
+     **GAOL prerequisite:** On some platforms, you might need to install manually `MathLib <https://github.com/codac-team/mathlib>`_ and `GAOL <https://github.com/codac-team/GAOL>`_ with CMake and `specify where they are <https://ibex-team.github.io/ibex-lib/install-cmake.html#configuration-options>`_ in order to build IBEX successfully and have accurate computations.
 
 3. **Install the Codac library**:
 

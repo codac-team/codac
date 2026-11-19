@@ -27,11 +27,62 @@ class TestPolygon(unittest.TestCase):
     self.assertTrue(p3 == Polygon([[5,1],[1,2],[3,4]]))
     self.assertTrue(p3 == Polygon([[1,2],[3,4],[5,1]]))
 
+    # Multiple contours can have independent orientations.
+    edges1 = [
+      Segment([0,0],[1,0]), Segment([1,0],[0,1]), Segment([0,1],[0,0]),
+      Segment([3,0],[4,0]), Segment([4,0],[3,1]), Segment([3,1],[3,0])
+    ]
+
+    edges2 = [
+      Segment([0,0],[0,1]), Segment([0,1],[1,0]), Segment([1,0],[0,0]),
+      Segment([3,0],[4,0]), Segment([4,0],[3,1]), Segment([3,1],[3,0])
+    ]
+
+    self.assertTrue(Polygon(edges1) == Polygon(edges2))
+
+    vertices = Polygon(edges1).vertices()
+    self.assertTrue(len(vertices) == 6)
+    self.assertTrue(vertices[0] == IntervalVector([0,0]))
+    self.assertTrue(vertices[1] == IntervalVector([1,0]))
+    self.assertTrue(vertices[2] == IntervalVector([0,1]))
+    self.assertTrue(vertices[3] == IntervalVector([3,0]))
+    self.assertTrue(vertices[4] == IntervalVector([4,0]))
+    self.assertTrue(vertices[5] == IntervalVector([3,1]))
+
+    # Same number of edges, but a different polygon.
+    edges1 = [
+      Segment([0,0],[1,0]), Segment([1,0],[0,1]), Segment([0,1],[0,0])
+    ]
+
+    edges2 = [
+      Segment([0,0],[1,0]), Segment([1,0],[0,2]), Segment([0,2],[0,0])
+    ]
+
+    self.assertFalse(Polygon(edges1) == Polygon(edges2))
+
+    # Fully collinear vertices reduce to one segment.
+    p = Polygon([[0,0],[1,0],[2,0],[3,0]])
+    expected = Polygon([[0,0],[3,0]])
+
+    self.assertTrue(p == expected)
+    self.assertTrue(len(p.edges()) == 1)
+    self.assertTrue(len(p.vertices()) == 2)
+    self.assertTrue(p.contains([1.5,0]) == BoolInterval.TRUE)
+
+    # Consecutive duplicate vertices.
+    p = Polygon([[0,0],[1,0],[1,0],[2,0],[2,1],[0,1]])
+    self.assertTrue(p == Polygon([[0,0],[2,0],[2,1],[0,1]]))
+
+    # Repeated duplicates and explicit closing vertex.
+    p = Polygon([[0,0],[2,0],[2,0],[2,0],[2,1],[0,1],[0,0]])
+    self.assertTrue(p == Polygon([[0,0],[2,0],[2,1],[0,1]]))
+
   def test_empty_polygon(self):
 
     p1 = Polygon.empty()
     self.assertTrue(p1.contains(IntervalVector([1,1])) == BoolInterval.FALSE)
     self.assertTrue(p1.contains(IntervalVector(2)) == BoolInterval.FALSE)
+    self.assertTrue(p1.contains(IntervalVector.empty(2)) == BoolInterval.EMPTY)
     self.assertTrue(p1.is_empty())
     self.assertTrue(len(p1.edges()) == 0)
     self.assertTrue(len(p1.vertices()) == 0)
@@ -39,6 +90,7 @@ class TestPolygon(unittest.TestCase):
   def test_Polygon(self):
 
     p1 = Polygon([[3,-1],[3,4],[5,6],[-1,1]])
+    self.assertTrue(p1.contains(IntervalVector.empty(2)) == BoolInterval.EMPTY)
     self.assertTrue(p1.contains([3.1,3]) == BoolInterval.FALSE)
     self.assertTrue(p1.contains([2.9,3]) == BoolInterval.TRUE)
     self.assertTrue(p1.contains([3,3]) == BoolInterval.TRUE)
@@ -115,6 +167,13 @@ class TestPolygon(unittest.TestCase):
     i = p1 & p2
     self.assertTrue(i == ConvexPolygon(IntervalVector([4.5,4.25])))
     self.assertTrue(len(i.vertices()) == 1)
+
+    # All four axis-aligned transects cross a vertex.
+    p = Polygon([[0,1],[1,0],[0,-1],[-1,0]])
+    self.assertTrue(p.contains([0,0]) == BoolInterval.TRUE)
+
+    p_rev = Polygon([[-1,0],[0,-1],[1,0],[0,1]])
+    self.assertTrue(p_rev.contains([0,0]) == BoolInterval.TRUE)
 
 if __name__ ==  '__main__':
   unittest.main()

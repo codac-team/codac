@@ -3,7 +3,7 @@
 Polygon and ConvexPolygon
 =========================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 The following classes provide a reliable representation of polygons and convex polygons.
 

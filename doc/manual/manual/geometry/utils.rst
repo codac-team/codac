@@ -3,7 +3,7 @@
 Geometric utilities
 ===================
 
-  Main author: `Simon Rohou <https://www.simon-rohou.fr/research/>`_
+  Main author: `Simon Rohou <https://www.simon-rohou.fr>`_
 
 Alignment and orientation
 -------------------------

@@ -14,6 +14,9 @@
 #include <codac2_Paving.h>
 #include <codac2_Vector.h>
 #include <codac2_Figure3D.h>
+#include <codac2_Ellipsoid.h>
+#include <codac2_Parallelepiped.h>
+#include <codac2_Zonotope.h>
 #include "codac2_py_Figure3D_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_matlab.h"
 
@@ -34,6 +37,10 @@ void export_Figure3D(py::module& m)
   
     .def("name", &Figure3D::name,
       CONST_STRING_REF_FIGURE3D_NAME_CONST)
+
+    .def("set_projection", &Figure3D::set_projection,
+      FIGURE3D_REF_FIGURE3D_SET_PROJECTION_FUNCTION_VECTOR_CONST_VECTOR_REF_,
+      "projection"_a)
 
     .def("draw_axes", &Figure3D::draw_axes,
       VOID_FIGURE3D_DRAW_AXES_DOUBLE_CONST_VECTOR_REF,

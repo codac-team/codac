@@ -65,6 +65,7 @@ Additional methods are provided to handle zonotopes.
 
 - `box()`: gives the bounding box of the zonotope. Returns an :class:`IntervalVector`.
 - `proj(v)`: Projects the zonotope on a given subspace, defined by the vector of indices `v` (:class:`std::vector\<Index\>`). Returns a :class:`Zonotope`.
+- `reduction(o)`: Generate a enclosing :class:`Zonotope` with an order (ratio between the number of generators and the dimension) bounded by `o` (no less than 1). Returns a :class:`Zonotope`.
 
 .. _subsec-zonotope-parallelepiped:
 
@@ -78,3 +79,7 @@ It inherits from the `Zonotope` class, and thus has the same properties and meth
 - `vertices()`: gives the vertices of the parallelepiped. Returns a :class:`std::vector\<Vector\>`.
 - `contains(v)`: checks if the point `v` is contained in the parallelepiped. Returns a :class:`BoolInterval`. **The matrix A must be invertible**
 - `is_superset(x)`: checks if the parallelepiped is a superset of the :class:`IntervalVector` `x`. Returns a :class:`BoolInterval`. **The matrix A must be invertible**
+
+A enclosing parallelepiped can be generated from a zonotope `Z` by the static
+method `reduction(Z)`. The matrix A generated with this method is guaranteed to
+be invertible.

@@ -143,9 +143,10 @@ namespace codac2
          and include L-1 and U-1 in the computation of the cofactor matrix
          */
       Matrix mLU = lu.matrixLU();
+      double threshold=lu.maxPivot()*lu.threshold();
       for (int i=0;i<N;i++) {
-          if (std::fabs(mLU(i,i))<1e-5) { /* FIXME : value of "nonzero" ? */
-             mLU(i,i)=(mLU(i,i)<0.0 ? -1e-5 : 1e-5); 
+          if (std::fabs(mLU(i,i))<threshold) {
+             mLU(i,i)=(mLU(i,i)<0.0 ? -threshold : threshold); 
           }
       }
       IntervalMatrix ImLU 

@@ -77,6 +77,14 @@ namespace codac2
         return l;
       }
 
+      inline double volume(const NodeValue_& node_value) const
+      {
+        double v = 0;
+        for(const auto& bi : this->boxes(node_value))
+          v += bi.volume();
+        return v;
+      }
+
       inline std::list<ConnectedSubset_> connected_subsets(const NodeValue_& node_value) const
       {
         return connected_subsets(IntervalVector(size()), node_value);
