@@ -26,7 +26,7 @@ namespace codac2
   {
     public:
 
-      virtual T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const = 0;
+      virtual const T& fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const = 0;
       virtual void bwd_eval(ValuesMap& v) const = 0;
       virtual std::pair<Index,Index> output_shape() const = 0;
 
@@ -45,6 +45,26 @@ namespace codac2
           auto pt = std::dynamic_pointer_cast<T>(p);
           assert(pt && "Type mismatch in ValuesMap for this ExprID");
           *pt = x;
+          return *pt;
+        }
+      }
+
+
+      const T& init_value(ValuesMap& v, T&& x) const
+      {
+        auto& p = v[unique_id()];
+
+        if(!p)
+        {
+          p = std::make_shared<T>(std::move(x));
+          return *static_cast<T*>(p.get());
+        }
+
+        else
+        {
+          auto pt = std::dynamic_pointer_cast<T>(p);
+          assert(pt && "Type mismatch in ValuesMap for this ExprID");
+          *pt = std::move(x);
           return *pt;
         }
       }
@@ -86,10 +106,10 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<X>...>::replace_arg(old_arg_id, new_expr);
       }
 
-      Y fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
+      const Y& fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
       {
         return std::apply(
-          [this,&v,total_input_size,natural_eval](auto &&... x)
+          [this,&v,total_input_size,natural_eval](auto &&... x) -> const Y&
           {
             if(natural_eval)
               return AnalyticExpr<Y>::init_value(v,
@@ -104,9 +124,9 @@ namespace codac2
 
       void bwd_eval(ValuesMap& v) const override
       {
-        auto y = AnalyticExpr<Y>::value(v);
+        const auto& y = AnalyticExpr<Y>::value(v);
 
-        std::apply([&v,y](auto &&... x)
+        std::apply([&v,&y](auto &&... x)
         {
           C::bwd(y.a, x->value(v).a...);
         }, this->_x);

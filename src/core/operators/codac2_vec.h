@@ -139,32 +139,32 @@ namespace codac2
             replace_scalar_child(x, old_arg_id, new_expr);
         }
 
-        VectorType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
+        const VectorType& fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
         {
           if(natural_eval)
             return this->init_value(v, natural_fwd(v, total_input_size));
 
-          std::vector<ScalarType> vals;
+          std::vector<const ScalarType*> vals;
           vals.reserve(_xs.size());
           bool centered_available = true;
           for(const auto& x : _xs)
           {
-            vals.push_back(x->fwd_eval(v, total_input_size, false));
-            centered_available &= (vals.back().da.size() != 0);
+            vals.push_back(&x->fwd_eval(v, total_input_size, false));
+            centered_available &= (vals.back()->da.size() != 0);
           }
 
           if(!centered_available)
             return this->init_value(v, natural_fwd(v, total_input_size));
 
           const Index n = static_cast<Index>(_xs.size());
-          const Index input_cols = vals.empty() ? total_input_size : vals.front().da.cols();
+          const Index input_cols = vals.empty() ? total_input_size : vals.front()->da.cols();
           IntervalVector m(n), a(n);
           IntervalMatrix da(n, input_cols);
           bool def_domain = true;
 
           for(Index i = 0 ; i < n ; ++i)
           {
-            const auto& xi = vals[static_cast<std::size_t>(i)];
+            const auto& xi = *vals[static_cast<std::size_t>(i)];
             m[i] = xi.m;
             a[i] = xi.a;
             da.row(i) = xi.da;
@@ -232,7 +232,7 @@ namespace codac2
           bool def_domain = true;
           for(Index i = 0 ; i < n ; ++i)
           {
-            auto xi = _xs[static_cast<std::size_t>(i)]->fwd_eval(v, total_input_size, true);
+            const auto& xi = _xs[static_cast<std::size_t>(i)]->fwd_eval(v, total_input_size, true);
             a[i] = xi.a;
             def_domain &= xi.def_domain;
           }

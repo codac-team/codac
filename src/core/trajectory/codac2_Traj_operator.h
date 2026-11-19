@@ -111,7 +111,7 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<ScalarType>>::replace_arg(old_arg_id, new_expr);
       }
       
-      T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
+      const T& fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
       {
         if(natural_eval)
           return AnalyticExpr<T>::init_value(
