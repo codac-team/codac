@@ -69,7 +69,10 @@
     functions/analytic/codac2_py_analytic_variables.cpp
     functions/analytic/codac2_py_AnalyticFunction.h
     functions/analytic/codac2_py_AnalyticExprWrapper.h
-
+   
+    functions/diffinclusions/codac2_py_DiffInclusion.h
+    functions/diffinclusions/codac2_py_DI_Integration.h
+  
     geometry/codac2_py_ConvexPolygon.cpp
     geometry/codac2_py_geometry.cpp
     geometry/codac2_py_Polygon.cpp
@@ -150,6 +153,7 @@
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extensions/sympy/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/functions/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/functions/analytic/
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/functions/diffinclusions/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/graphics/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/matrices/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/paver/
