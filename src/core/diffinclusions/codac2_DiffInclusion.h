@@ -109,7 +109,7 @@ namespace codac2
 		      bool time_dependant=false) : 
 			DiffInclusionBase(time_dependant), _f(f) 
 		 {
-           int x_arg=(time_dependant ? 1 : 0);
+           size_t x_arg=(time_dependant ? 1 : 0);
  	   assert_release(f.args().size() == x_arg+2 && 
 			"DiffInclusion: wrong args size");
 	   /* NdD : I don't understand why output_shape is not
@@ -177,9 +177,9 @@ namespace codac2
              if constexpr(std::is_same_v<X,IntervalVector>
 			&& std::is_same_v<U,IntervalVector>) {
                if (_time_dependant) 
-	 	  return _f.eval_diff(t,x,u);
+	 	  return _f.eval_and_diff(t,x,u);
                else 
-	          return _f.eval_diff(x,u);
+	          return _f.eval_and_diff(x,u);
 	     } else {
                if (_time_dependant) {
 	 	  XType ret = _f.eval_and_diff(t,to_X(x),to_U(u));

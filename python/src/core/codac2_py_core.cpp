@@ -16,12 +16,16 @@
 #include <codac2_IntervalRow.h>
 #include <codac2_math.h>
 #include <codac2_Sep.h>
+#include <codac2_DiffInclusion.h>
+#include <codac2_DI_Integration.h>
 #include "codac2_py_Sep.h"
 #include "codac2_py_AnalyticFunction.h"
 #include "codac2_py_CtcInverse.h"
 #include "codac2_py_MatrixBlock.h"
 #include "codac2_py_Slice.h"
 #include "codac2_py_SlicedTube.h"
+#include "codac2_py_DI_Integration.h"
+#include "codac2_py_DiffInclusion.h"
 
 using namespace codac2;
 namespace py = pybind11;
@@ -132,6 +136,9 @@ void export_pave(py::module& m);
 
 // peibos
 void export_peibos(py::module& m);
+
+// diffinclusions
+void export_DiffInclusion(py::module& m, const std::string& name);
 
 // proj
 void export_qinter(py::module& m);
@@ -323,6 +330,14 @@ PYBIND11_MODULE(_core, m)
 
   // peibos
   export_peibos(m);
+
+  // diffinclusions
+  export_DiffInclusion(m, "DiffInclusion");
+  export_DI_Integration<DiffInclusion<VectorVar,VectorVar>,RS_box>
+		(m, "Integration_Box");
+  export_DI_Integration<DiffInclusion<VectorVar,VectorVar>,RS_zonotope>
+		(m, "Integration_Zonotope");
+
 
   // proj
   export_qinter(m);

@@ -118,8 +118,10 @@ namespace codac2
               if (!result) return { false, current };
   			 /* FIXME : use smaller steps ? */
               current = out_gate2;
-              if (_is->intersect(in_domain,current).is_empty()) 
-  		return { true, IS::empty_DomA() };
+              if (_is->intersect(in_domain,current).is_empty()) {
+		current.set_empty();
+  		return { true, current };
+	      }
               cur_time=nxt_time;
            }
            return { true, current };
