@@ -139,6 +139,25 @@ namespace codac2
        */ 
       Zonotope reduction(double o, bool invert=false) const;
 
+      /** 
+       * \brief In-place intersection of a zonotope and a box. 
+       * Not very precise but may be useful in some case.
+       * 
+       * \param box the box to be intersected 
+       * \return (*this)
+       */
+      Zonotope &operator&=(const IntervalVector &box);
+
+     /** 
+      * \brief Intersection of a zonotope and a box. Not very precise
+      * but may be useful in some case.
+      * 
+      * \param box the box to be intersected 
+      * \return a new zonotope
+      */
+      Zonotope operator&(const IntervalVector &box) const;
+
+
       /**
        * \brief Center of the zonotope
        */
@@ -153,6 +172,7 @@ namespace codac2
        * \brief Flag indicating whether the zonotope is empty
        */
       bool empty_flag = false;
+
   };
 
   /**
@@ -163,4 +183,5 @@ namespace codac2
    * \return The output stream with the zonotope information.
    */
   std::ostream& operator<<(std::ostream& str, const Zonotope& z);
+
 }

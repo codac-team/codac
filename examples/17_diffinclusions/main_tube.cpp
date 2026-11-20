@@ -22,7 +22,7 @@ int main()
       DefaultFigure::plot_tube(tube[0],Color::red(0.1));
       DefaultFigure::plot_tube(tube[1],Color::blue(0.1));
 
-      tube.set(IntervalVector({{0.1,0.2},{-0.3,-0.2}}),Interval(10.0));
+      tube.set(IntervalVector({{0.85,0.9},{0.15,0.2}}),Interval(5.0,5.00));
       integration1.contract_sliced_tube
 		(tube,Interval(-0.03,0.03),TimePropag::FWD_BWD);
 

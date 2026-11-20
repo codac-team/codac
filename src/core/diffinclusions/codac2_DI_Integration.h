@@ -93,7 +93,7 @@ namespace codac2
            std::tie(result,out_gate2) = 
                   this->integration_step(z1,in_domain);
   	 if (result) 
-  	     out_gate = out_gate2; /* FIXME : intersection? */
+  	     out_gate = (out_gate2 & in_domain); /* FIXME : intersection? */
            return result;
       }
   
@@ -187,9 +187,12 @@ namespace codac2
                    sl->codomain() &=
 			_di->to_X(IS::intVect_from_DomainA(current));
 		   if (sl->codomain().is_empty()) empty=true;
+		   current &= _di->from_X(sl->codomain());
+		   if (current.is_empty()) empty=true;
                } else {
                    DomB indomain2(_di->from_X(sl->codomain()));
                    DomA out_gate2;
+                   current &= indomain2;
                    bool result = this->contract_one_step(
   			sl->t0_tf(),
   		        current, indomain2, out_gate2, u, forward);

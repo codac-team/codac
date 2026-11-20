@@ -9,6 +9,7 @@
 
 #include "codac2_Zonotope.h"
 #include "codac2_inversion.h"
+#include "codac2_arith_mul.h"
 
 namespace codac2
 {
@@ -134,10 +135,32 @@ namespace codac2
     return (Z += boxadd);
   } 
 
+  Zonotope &Zonotope::operator&=(const IntervalVector &box) {
+     if (this->is_empty()) return (*this);
+     if (box.is_empty()) { this->set_empty(); return (*this); }
+     if (this->box().is_subset(box)) return (*this);
+     IntervalVector rhs = IntervalVector::constant(A.cols(),{-1,1});
+     IntervalMatrix cpA = this->A;
+     MulOp::bwd(box-this->c,cpA,rhs);
+     if (rhs.is_empty()) { this->set_empty(); return (*this); }
+     Vector delta = this->A*rhs.mid();
+     this->c += delta;
+     for (Index i=0;i<this->A.cols();i++) {
+        this->A.col(i) *= rhs[i].rad();
+     }
+     return (*this);
+  }
+  
+  Zonotope Zonotope::operator& (const IntervalVector &box) const {
+      Zonotope ret(*this);
+      ret  &= box;
+      return ret;
+  }
+
 
   Zonotope Zonotope::reduction(double o, bool invert) const {
      assert_release(o>=1.0 && "Zonotope reduction must give an order >= 1.");
-     if (empty_flag) return (*this);
+     if (this->is_empty()) return (*this);
      Index dim = A.rows();
      if (A.cols() <= dim*o && !invert) return (*this);
      Index newcols = dim*o;
