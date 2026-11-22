@@ -35,7 +35,7 @@ namespace codac2
 			  	        const IntervalVector& x, 
 				        const IntervalVector& u) const =0;
 
-          std::tuple<IntervalVector,IntervalMatrix,IntervalMatrix>
+          inline std::tuple<IntervalVector,IntervalMatrix,IntervalMatrix>
 		split_diff_matrix(const IntervalMatrix &da) const {
              if (_time_dependant) {
 		return {
@@ -105,7 +105,7 @@ namespace codac2
         using U = typename ExprType<UVar>::Type::Domain;
         
 
-        DiffInclusion(const AnalyticFunction<XType>& f, 
+        inline DiffInclusion(const AnalyticFunction<XType>& f, 
 		      bool time_dependant=false) : 
 			DiffInclusionBase(time_dependant), _f(f) 
 		 {
@@ -135,7 +135,7 @@ namespace codac2
          * \param u uncertainties
          */
         template<bool forward=true, bool end_gate=false>
-        X approx_RK4(const Interval &time_step, const X& init, const U& u) {
+        inline X approx_RK4(const Interval &time_step, const X& init, const U& u) {
             return 
 	    to_X(approx_RK4_base(time_step,
 				from_X(init),from_U(u),forward,end_gate));

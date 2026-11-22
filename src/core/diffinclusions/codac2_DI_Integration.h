@@ -30,7 +30,7 @@ namespace codac2
        using DomA = IS::DomainA;
        using DomB = IS::DomainB;
 
-       DI_Integration(const DI& di, int widen_attempts=3, 
+       inline DI_Integration(const DI& di, int widen_attempts=3, 
 		int narrow_attempts=3) : 
 		_di(std::make_unique<DI>(di)), 
 		_is(std::make_unique<IS>(&(*_di))), 
@@ -38,10 +38,10 @@ namespace codac2
 		_narrow_attempts(narrow_attempts) { }
 
        
-       std::unique_ptr<DI> &get_differentialinclusion() {
+       inline std::unique_ptr<DI> &get_differentialinclusion() {
  	   return _is;
        }
-       std::unique_ptr<IS> &get_reachabilitystep() {
+       inline std::unique_ptr<IS> &get_reachabilitystep() {
  	   return _is;
        }
   

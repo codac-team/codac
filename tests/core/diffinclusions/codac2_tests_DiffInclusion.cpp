@@ -9,21 +9,16 @@
 
 #include <iostream>
 #include <catch2/catch_test_macros.hpp>
-#include <codac2_Interval.h>
-#include <codac2_IntervalVector.h>
-#include <codac2_IntervalMatrix.h>
-#include <codac2_AnalyticFunction.h>
 #include <codac2_DiffInclusion.h>
 #include <codac2_ReachabilityStep.h>
 #include <codac2_RS_box.h>
 #include <codac2_DI_Integration.h>
 #include <codac2_Approx.h>
-#include <codac2_math.h>
 
 using namespace std;
 using namespace codac2;
 
-TEST_CASE("AnalyticFunction")
+TEST_CASE("DiffInclusion")
 {
     {
       ScalarVar x;
