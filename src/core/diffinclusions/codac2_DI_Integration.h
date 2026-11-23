@@ -39,7 +39,7 @@ namespace codac2
 
        
        inline std::unique_ptr<DI> &get_differentialinclusion() {
- 	   return _is;
+ 	   return _di;
        }
        inline std::unique_ptr<IS> &get_reachabilitystep() {
  	   return _is;
