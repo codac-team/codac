@@ -696,18 +696,44 @@ namespace codac2
         else if(!t.is_subset(_tdomain->t0_tf()))
           return Interval();
 
-        Interval invert = Interval::empty();
         Interval t_ = t & _tdomain->t0_tf();
-
         assert(!t_.is_empty() && !t_.is_unbounded());
-        for(auto it = _tdomain->tslice(t_.lb()) ;
-          it != _tdomain->end() && it->lb() <= t_.ub() ; it++)
+
+        auto first = _tdomain->tslice(t_.lb());
+        auto last = _tdomain->tslice(t_.ub());
+        
+        // Include the envelope following a gate at the upper temporal bound.
+        auto next = std::next(last);
+        if(next != _tdomain->end() && next->lb() == t_.ub())
+          last = next;
+
+        auto local_invert = [&](auto it) -> Interval
         {
           if(!t_.is_degenerated() && it->is_gate())
-            continue;
-          
-          assert(it != _tdomain->end());
-          invert |= apply_invert(it, t & it->t0_tf());
+            return Interval::empty();
+
+          const Interval local_t = t_ & it->t0_tf();
+          // The two-sided search relies on each result being contained
+          // in its temporal support, including after geometric inversion.
+          return apply_invert(it, local_t) & local_t;
+        };
+
+        // Find the first non-empty local inversion.
+        Interval invert = local_invert(first);
+        while(invert.is_empty() && first != last)
+          invert = local_invert(++first);
+
+        if(invert.is_empty())
+          return invert;
+
+        // Only the last non-empty local inversion can extend the hull.
+        // Do not evaluate the first successful slice a second time.
+        while(last != first)
+        {
+          Interval right = local_invert(last);
+          if(!right.is_empty())
+            return invert | right;
+          --last;
         }
 
         return invert;
