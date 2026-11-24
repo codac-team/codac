@@ -362,7 +362,8 @@ namespace codac2
         assert(it != _tdomain->end());
         T codomain = apply_eval(it, t & *it);
 
-        while(it != std::next(_tdomain->tslice(t.ub())))
+        const auto it_end = std::next(_tdomain->tslice(t.ub()));
+        while(it != it_end)
         {
           if(it->lb() == t.ub()) break;
           codomain |= apply_eval(it, t & *it);
@@ -399,7 +400,6 @@ namespace codac2
         return eval_common(t,
           [this,&v](auto it, const Interval& t_) {
             return this->slice(it)->operator()(t_, *v.slice(it));
-
           });
       }
 
