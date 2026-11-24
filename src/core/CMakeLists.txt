@@ -315,6 +315,7 @@
   target_include_directories(${PROJECT_NAME}-core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/actions
     ${CMAKE_CURRENT_SOURCE_DIR}/contractors
+    ${CMAKE_CURRENT_SOURCE_DIR}/diffinclusions
     ${CMAKE_CURRENT_SOURCE_DIR}/domains
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/ellipsoid
     ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval
