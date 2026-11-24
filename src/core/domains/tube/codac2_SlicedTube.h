@@ -74,7 +74,7 @@ namespace codac2
         for(auto it = _tdomain->begin(); it != _tdomain->end(); ++it)
           it->_slices.insert({
             this,
-            std::make_shared<Slice<T>>(*this, it, f.eval((Interval)*it))
+            std::make_shared<Slice<T>>(*this, it, f.eval(it->t0_tf()))
           });
       }
 
@@ -96,7 +96,7 @@ namespace codac2
         for(auto it = _tdomain->begin(); it != _tdomain->end(); ++it)
           it->_slices.insert({
             this,
-            std::make_shared<Slice<T>>(*this, it, x.eval((Interval)*it))
+            std::make_shared<Slice<T>>(*this, it, x.eval(it->t0_tf()))
           });
       }
 
@@ -116,7 +116,7 @@ namespace codac2
         for(auto it = _tdomain->begin(); it != _tdomain->end(); ++it)
           it->_slices.insert({
             this,
-            std::make_shared<Slice<T>>(*this, it, x((Interval)*it))
+            std::make_shared<Slice<T>>(*this, it, x(it->t0_tf()))
           });
       }
 
@@ -298,11 +298,10 @@ namespace codac2
        */
       inline std::shared_ptr<Slice<T>> slice(std::shared_ptr<TSlice> ptr)
       {
-        // Used in Python binding
-        auto it = std::find_if(_tdomain->begin(), _tdomain->end(),
-                    [&](TSlice& t){ return &t == ptr.get(); });
-        assert(it != _tdomain->end());
-        return slice(it);
+        assert_release(ptr != nullptr);
+        auto s = std::static_pointer_cast<Slice<T>>(ptr->slices().at(this));
+        assert_release(&s->tslice() == ptr.get());
+        return s;
       }
 
       /**
@@ -360,13 +359,13 @@ namespace codac2
 
         auto it = _tdomain->tslice(t.lb());
         assert(it != _tdomain->end());
-        T codomain = apply_eval(it, t & *it);
+        T codomain = apply_eval(it, t & it->t0_tf());
 
         const auto it_end = std::next(_tdomain->tslice(t.ub()));
         while(it != it_end)
         {
           if(it->lb() == t.ub()) break;
-          codomain |= apply_eval(it, t & *it);
+          codomain |= apply_eval(it, t & it->t0_tf());
           it++;
         }
 
@@ -708,7 +707,7 @@ namespace codac2
             continue;
           
           assert(it != _tdomain->end());
-          invert |= apply_invert(it, t & *it);
+          invert |= apply_invert(it, t & it->t0_tf());
         }
 
         return invert;
@@ -741,7 +740,7 @@ namespace codac2
             continue;
 
           assert(it != _tdomain->end());
-          Interval local_invert = apply_invert(it, t & *it);
+          Interval local_invert = apply_invert(it, t & it->t0_tf());
 
           if(local_invert.is_empty() && !invert.is_empty())
           {
