@@ -109,3 +109,5 @@ togglebutton_hint = "Reveal the solution."
 togglebutton_hint_hide = "Hide the solution."
 
 html_extra_path = ['extra_html']
+
+toc_object_entries = False
