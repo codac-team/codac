@@ -81,7 +81,7 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<VectorType>>::replace_arg(old_arg_id, new_expr);
       }
 
-      ScalarType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
+      const ScalarType& fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
       {
         if(natural_eval)
           return AnalyticExpr<ScalarType>::init_value(
@@ -156,7 +156,7 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<MatrixType>>::replace_arg(old_arg_id, new_expr);
       }
 
-      ScalarType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
+      const ScalarType& fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
       {
         if(natural_eval)
           return AnalyticExpr<ScalarType>::init_value(

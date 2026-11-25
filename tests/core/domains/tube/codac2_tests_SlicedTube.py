@@ -301,7 +301,7 @@ class TestSlicedTube(unittest.TestCase):
     t = ScalarVar()
     f = AnalyticFunction([t], 10*cos(t)+t)
     a = SlicedTube(tdomain, f)
-    self.assertTrue(Approx(tdomain.tslice(2.)) == Interval(1.900000000000001, 2.000000000000002))
+    self.assertTrue(Approx(tdomain.tslice(2.).t0_tf()) == Interval(1.900000000000001, 2.000000000000002))
     self.assertTrue(Approx(a(Interval(1,2)),1e-4) == Interval(-2.17496, 7.13757))
 
   def test_specific_detected_bug_from_sampling(self):
@@ -500,11 +500,11 @@ class TestSlicedTube(unittest.TestCase):
     self.assertTrue(x.invert(x.codomain(), v, x.tdomain().t0_tf()) == x.tdomain().t0_tf())
     self.assertTrue(x.invert(Interval(), v, x.tdomain().t0_tf()) == x.tdomain().t0_tf())
     self.assertTrue(x.invert(Interval(0.), v, x.tdomain().t0_tf()) == Interval(0))
-    self.assertTrue(Approx(x.slice(tdomain.tslice(4.5)).invert(Interval(4.25), v.slice(tdomain.tslice(4.5)), tdomain.tslice(4.5)),1e-10) == Interval(9)/2)
+    self.assertTrue(Approx(x.slice(tdomain.tslice(4.5)).invert(Interval(4.25), v.slice(tdomain.tslice(4.5)), tdomain.tslice(4.5).t0_tf()),1e-10) == Interval(9)/2)
     self.assertTrue(x.invert(Interval(17)/4, v, x.tdomain().t0_tf()) == Interval(Interval(9)/2))
     self.assertTrue(Approx(x.invert(Interval(4), v, x.tdomain().t0_tf()),1e-10) == Interval(3,5))
 
-    self.assertTrue(Approx(x.slice(tdomain.tslice(4.5)).invert(Interval(41)/10, v.slice(tdomain.tslice(4.5)), tdomain.tslice(4.5)),1e-10) == ((Interval(21)/5)|(Interval(24)/5)))
+    self.assertTrue(Approx(x.slice(tdomain.tslice(4.5)).invert(Interval(41)/10, v.slice(tdomain.tslice(4.5)), tdomain.tslice(4.5).t0_tf()),1e-10) == ((Interval(21)/5)|(Interval(24)/5)))
 
     self.assertTrue(Approx(x.invert(Interval(41)/10, v, x.tdomain().t0_tf()),1e-10) == ((Interval(21)/5)|(Interval(24)/5)))
     self.assertTrue(x.invert((Interval(7)/2), v, x.tdomain().t0_tf()) == Interval(2,4))
