@@ -22,7 +22,7 @@ namespace codac2
 
   const Interval& SliceBase::t0_tf() const
   {
-    return *_it_tslice;
+    return _it_tslice->t0_tf();
   }
 
   const TSlice& SliceBase::tslice() const

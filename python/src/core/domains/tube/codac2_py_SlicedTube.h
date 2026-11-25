@@ -9,7 +9,9 @@
 
 #pragma once
 
+#include <memory>
 #include <sstream>
+#include <utility>
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
@@ -22,6 +24,9 @@
 #include "codac2_py_SlicedTubeBase_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_SlicedTube_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac2_py_SlicedTube_operations_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
+
+PYBIND11_MAKE_OPAQUE(std::pair<codac2::SlicedTube<codac2::Interval>,codac2::SlicedTube<codac2::Interval>>);
+PYBIND11_MAKE_OPAQUE(std::pair<codac2::SlicedTube<codac2::IntervalVector>,codac2::SlicedTube<codac2::IntervalVector>>);
 
 using namespace std;
 using namespace codac2;
@@ -181,6 +186,27 @@ py::class_<SlicedTube<T>,TubeBase> export_SlicedTube(py::module& m, const std::s
 
   if constexpr(std::is_same_v<T,Interval> || std::is_same_v<T,IntervalVector>)
   {
+    // Keep both tubes in a single C++ object passed by reference to the integrals.
+    using Primitives = std::pair<SlicedTube<T>,SlicedTube<T>>;
+    py::class_<Primitives>(m, (name + "PartialPrimitives").c_str(),
+      "Pair of precomputed lower and upper partial primitive tubes.")
+
+      .def_readonly("first", &Primitives::first, py::return_value_policy::reference_internal)
+
+      .def_readonly("second", &Primitives::second, py::return_value_policy::reference_internal)
+
+      .def("__len__", [](const Primitives&) { return 2; })
+
+      .def("__getitem__", [](Primitives& p, int i) -> SlicedTube<T>&
+          {
+            if(i == 0 || i == -2)
+              return p.first;
+            if(i == 1 || i == -1)
+              return p.second;
+            throw py::index_error();
+          }, py::return_value_policy::reference_internal, "i"_a)
+    ;
+
     exported_slicedtube_class
     
       .def("__call__", [](const SlicedTube<T>& x, const Interval& t, const SlicedTube<T>& v)
@@ -205,6 +231,25 @@ py::class_<SlicedTube<T>,TubeBase> export_SlicedTube(py::module& m, const std::s
       .def("partial_integral", (std::pair<T,T> (SlicedTube<T>::*)(const Interval&,const Interval&) const) &SlicedTube<T>::partial_integral,
         PAIR_TT_SLICEDTUBE_T_PARTIAL_INTEGRAL_CONST_INTERVAL_REF_CONST_INTERVAL_REF_CONST,
         "t1"_a, "t2"_a)
+
+      .def("partial_primitives", &SlicedTube<T>::partial_primitives,
+        PAIR_SLICEDTUBE_TSLICEDTUBE_T_SLICEDTUBE_T_PARTIAL_PRIMITIVES_CONST)
+
+      .def("partial_integral", (std::pair<T,T> (SlicedTube<T>::*)(const Interval&,const Primitives&) const) &SlicedTube<T>::partial_integral,
+        PAIR_TT_SLICEDTUBE_T_PARTIAL_INTEGRAL_CONST_INTERVAL_REF_CONST_PAIR_SLICEDTUBE_TSLICEDTUBE_T_REF_CONST,
+        "t"_a, "primitives"_a)
+
+      .def("partial_integral", (std::pair<T,T> (SlicedTube<T>::*)(const Interval&,const Interval&,const Primitives&) const) &SlicedTube<T>::partial_integral,
+        PAIR_TT_SLICEDTUBE_T_PARTIAL_INTEGRAL_CONST_INTERVAL_REF_CONST_INTERVAL_REF_CONST_PAIR_SLICEDTUBE_TSLICEDTUBE_T_REF_CONST,
+        "t1"_a, "t2"_a, "primitives"_a)
+
+      .def("integral", (T (SlicedTube<T>::*)(const Interval&,const Primitives&) const) &SlicedTube<T>::integral,
+        T_SLICEDTUBE_T_INTEGRAL_CONST_INTERVAL_REF_CONST_PAIR_SLICEDTUBE_TSLICEDTUBE_T_REF_CONST,
+        "t"_a, "primitives"_a)
+
+      .def("integral", (T (SlicedTube<T>::*)(const Interval&,const Interval&,const Primitives&) const) &SlicedTube<T>::integral,
+        T_SLICEDTUBE_T_INTEGRAL_CONST_INTERVAL_REF_CONST_INTERVAL_REF_CONST_PAIR_SLICEDTUBE_TSLICEDTUBE_T_REF_CONST,
+        "t1"_a, "t2"_a, "primitives"_a)
 
       .def("primitive", (SlicedTube<T> (SlicedTube<T>::*)() const) &SlicedTube<T>::primitive,
         SLICEDTUBE_T_SLICEDTUBE_T_PRIMITIVE_CONST)

@@ -250,6 +250,23 @@ TEST_CASE("SlicedTube class - manual")
   }
 
   {
+    auto td = create_tdomain({0,100}, 0.5, true);
+    SlicedTube x(td, Interval(1,2));
+
+    // [slicedtube-partial-primitives-beg]
+    auto p = x.partial_primitives();
+
+    auto y1 = x.integral(20,p);             // integral from 0 to 20
+    auto y2 = x.integral(10,20,p);          // integral from 10 to 20
+    auto q = x.partial_integral({10,20},p); // partial integrals from 0 to an uncertain time in [10,20]
+    // [slicedtube-partial-primitives-end]
+    CHECK(y1 == Interval(20,40));
+    CHECK(y2 == Interval(10,20));
+    CHECK(q.first == Interval(10,20));
+    CHECK(q.second == Interval(20,40));
+  }
+
+  {
     auto td = create_tdomain({0,2});
     SlicedTube x(td, Interval());
 

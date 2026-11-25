@@ -1,5 +1,7 @@
 .. _sec-tubes-slicedtube:
 
+:tocdepth: 2
+
 Sliced tubes
 ============
 
@@ -359,6 +361,70 @@ The computation is reliable even for tubes defined from analytic functions, beca
 
 .. doxygengroup:: codac2_slicedtube_integrals
    :project: codac
+
+
+Precomputing partial primitives
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When several integrals of the same scalar or vector tube are needed, the partial primitives of its lower and upper bounds can be precomputed once with ``partial_primitives()``.
+
+For a tube :math:`[x](\cdot)=[x^-(\cdot),x^+(\cdot)]` defined over :math:`[t_0,t_f]`, these primitives are
+
+.. math::
+
+  p^-(t)=\int_{t_0}^{t}x^-(\tau)d\tau,
+  \qquad
+  p^+(t)=\int_{t_0}^{t}x^+(\tau)d\tau.
+
+The method returns two sliced tubes enclosing these functions and sharing the same :class:`~codac.TDomain` as the original tube. On each non-degenerate slice, the primitives of the slice bounds are affine. Explicit gates enclose the cumulative integrals at the sampling times.
+
+For two time instants :math:`a\leq b`, the integral can then be obtained from differences of the partial primitives:
+
+.. math::
+
+  \int_a^b [x](\tau)d\tau
+  = \left[p^-(b)-p^-(a),\ p^+(b)-p^+(a)\right].
+
+The two differences are evaluated separately using interval arithmetic to obtain a reliable enclosure. For uncertain integration bounds, the ranges of the partial primitives over the corresponding temporal intervals are used instead of their values at individual time instants.
+
+The result of ``partial_primitives()`` can be passed as the last argument to ``integral()`` and ``partial_integral()``, both for integration from the initial time and for integration between two temporal bounds.
+
+.. tabs::
+
+  .. group-tab:: Python
+
+    .. literalinclude:: src.py
+      :language: py
+      :start-after: [slicedtube-partial-primitives-beg]
+      :end-before: [slicedtube-partial-primitives-end]
+      :dedent: 4
+
+  .. group-tab:: C++
+
+    .. literalinclude:: src.cpp
+      :language: c++
+      :start-after: [slicedtube-partial-primitives-beg]
+      :end-before: [slicedtube-partial-primitives-end]
+      :dedent: 4
+
+  .. group-tab:: Matlab
+
+    .. literalinclude:: src.m
+      :language: matlab
+      :start-after: [slicedtube-partial-primitives-beg]
+      :end-before: [slicedtube-partial-primitives-end]
+
+The partial primitive tubes can be accessed with ``p.first`` and ``p.second`` in C++ and Python. In Python, they can also be unpacked with ``p_lb, p_ub = p``. Keep the original pair to pass it to the integration methods.
+
+For a tube made of :math:`N` slices, precomputation requires :math:`O(N)` time and additional storage. Integration between two scalar time instants then requires :math:`O(\log N)` time instead of :math:`O(N)` in the worst case, for a fixed codomain dimension and a fixed number of tubes sharing the temporal domain. The optimization is therefore particularly useful for repeated integrations over a long tube.
+
+.. note::
+
+  The temporal domain must be bounded and non-empty, and the codomains of all non-gate slices must be bounded and non-empty. Explicit gates are recommended for tighter enclosures of the partial primitives at the sampling times. Without gates, the implicit endpoint enclosures may introduce additional overestimation.
+
+.. warning::
+
+  The precomputed primitives are not automatically updated. Recompute them after any modification of the source tube or its temporal partition, including refinements induced by other tubes sharing the same ``TDomain``. Do not modify the primitive tubes while using them for integration.
 
 
 Inflation, extraction, and algebraic helpers

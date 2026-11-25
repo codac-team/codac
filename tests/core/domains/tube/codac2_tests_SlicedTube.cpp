@@ -394,7 +394,7 @@ TEST_CASE("SlicedTube")
     ScalarVar t;
     AnalyticFunction f({t}, 10*cos(t)+t);
     SlicedTube a(tdomain, f);
-    CHECK(Approx((Interval)*tdomain->tslice(2.)) == Interval(1.900000000000001, 2.000000000000002));
+    CHECK(Approx(tdomain->tslice(2.)->t0_tf()) == Interval(1.900000000000001, 2.000000000000002));
     CHECK(Approx(a(Interval(1,2)),1e-4) == Interval(-2.17496, 7.13757));
   }
 
@@ -623,11 +623,11 @@ TEST_CASE("SlicedTube")
     CHECK(x.invert(x.codomain(), v, x.tdomain()->t0_tf()) == x.tdomain()->t0_tf());
     CHECK(x.invert(Interval(), v, x.tdomain()->t0_tf()) == x.tdomain()->t0_tf());
     CHECK(x.invert(Interval(0.), v, x.tdomain()->t0_tf()) == Interval(0));
-    CHECK(Approx(x.slice(tdomain->tslice(4.5))->invert(Interval(4.25), *v.slice(tdomain->tslice(4.5)), *tdomain->tslice(4.5)),1e-10) == Interval(9)/2);
+    CHECK(Approx(x.slice(tdomain->tslice(4.5))->invert(Interval(4.25), *v.slice(tdomain->tslice(4.5)), tdomain->tslice(4.5)->t0_tf()),1e-10) == Interval(9)/2);
     CHECK(x.invert(Interval(17)/4, v, x.tdomain()->t0_tf()) == Interval(Interval(9)/2));
     CHECK(Approx(x.invert(Interval(4), v, x.tdomain()->t0_tf()),1e-10) == Interval(3,5));
 
-    CHECK(Approx(x.slice(tdomain->tslice(4.5))->invert(Interval(41)/10, *v.slice(tdomain->tslice(4.5)), *tdomain->tslice(4.5)),1e-10) == ((Interval(21)/5)|(Interval(24)/5)));
+    CHECK(Approx(x.slice(tdomain->tslice(4.5))->invert(Interval(41)/10, *v.slice(tdomain->tslice(4.5)), tdomain->tslice(4.5)->t0_tf()),1e-10) == ((Interval(21)/5)|(Interval(24)/5)));
 
     CHECK(x.slice(tdomain->tslice(4.5))->polygon_slice(*v.slice(tdomain->tslice(4.5))) == 
       []() {

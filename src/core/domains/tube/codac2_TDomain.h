@@ -10,7 +10,9 @@
 #pragma once
 
 #include <list>
+#include <map>
 #include <memory>
+#include <vector>
 #include "codac2_TSlice.h"
 
 namespace codac2
@@ -32,7 +34,7 @@ namespace codac2
    * This object is shared by all ``SlicedTube`` instances defined on the same
    * temporal partition.
    */
-  class TDomain : public std::list<TSlice>
+  class TDomain : private std::list<TSlice>
   {
     protected:
 
@@ -59,6 +61,36 @@ namespace codac2
       explicit TDomain(const Interval& t0_tf, double dt, bool with_gates = true);
 
     public:
+
+      // Keep the list iterator types and traversal API public, but not its
+      // structural modifiers. Temporal bounds must only be changed by TDomain.
+      using std::list<TSlice>::value_type;
+      using std::list<TSlice>::size_type;
+      using std::list<TSlice>::difference_type;
+      using std::list<TSlice>::reference;
+      using std::list<TSlice>::const_reference;
+      using std::list<TSlice>::iterator;
+      using std::list<TSlice>::const_iterator;
+      using std::list<TSlice>::reverse_iterator;
+      using std::list<TSlice>::const_reverse_iterator;
+      using std::list<TSlice>::begin;
+      using std::list<TSlice>::end;
+      using std::list<TSlice>::cbegin;
+      using std::list<TSlice>::cend;
+      using std::list<TSlice>::rbegin;
+      using std::list<TSlice>::rend;
+      using std::list<TSlice>::crbegin;
+      using std::list<TSlice>::crend;
+      using std::list<TSlice>::front;
+      using std::list<TSlice>::back;
+      using std::list<TSlice>::size;
+      using std::list<TSlice>::empty;
+
+      // Slices and the time index refer to the nodes of this particular list.
+      TDomain(const TDomain&) = delete;
+      TDomain& operator=(const TDomain&) = delete;
+      TDomain(TDomain&&) = delete;
+      TDomain& operator=(TDomain&&) = delete;
 
       /**
        * \brief Returns the global temporal domain \f$[t_0,t_f]\f$
@@ -107,6 +139,8 @@ namespace codac2
        * If \f$t\f$ coincides with an explicit gate, the iterator points to this
        * gate. If \f$t=t_f\f$, the iterator points to the last stored ``TSlice``
        * rather than ``end()``.
+       *
+       * \note Lookup has logarithmic complexity in the number of temporal slices.
        *
        * \param t temporal value
        * \return iterator to the corresponding ``TSlice``; ``end()`` if \f$t\notin[t_0,t_f]\f$
@@ -180,6 +214,15 @@ namespace codac2
        *         ``false`` otherwise
        */
       static bool are_same(const std::shared_ptr<const TDomain>& tdom1, const std::shared_ptr<const TDomain>& tdom2);
+
+    private:
+
+      // One entry per distinct lower bound, pointing to the first TSlice
+      // at that time (the gate, if present).
+      std::map<double,std::list<TSlice>::iterator> _time_index;
+
+      std::list<TSlice>::iterator insert_tslice(std::list<TSlice>::iterator pos, const TSlice& ts);
+      std::list<TSlice>::iterator erase_tslice(std::list<TSlice>::iterator it);
 
     protected:
       

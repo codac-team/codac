@@ -8,6 +8,7 @@
  */
 
 #include <cassert>
+#include <cmath>
 #include <iostream>
 #include "codac2_Interval.h"
 #include "codac2_TDomain.h"
@@ -18,8 +19,9 @@ using namespace std;
 namespace codac2
 {
   TDomain::TDomain(const Interval& t0_tf)
-    : std::list<TSlice>({ TSlice(t0_tf) })
-  { }
+  {
+    insert_tslice(this->end(), TSlice(t0_tf));
+  }
 
   TDomain::TDomain(const Interval& t0_tf, double dt, bool with_gates)
   {
@@ -31,14 +33,14 @@ namespace codac2
     {
       double t_next = std::min(t0_tf.ub(),t+dt);
       if(with_gates)
-        this->push_back(TSlice(t));
-      this->push_back(TSlice({t,t_next}));
+        insert_tslice(this->end(), TSlice(t));
+      insert_tslice(this->end(), TSlice({t,t_next}));
       if(t_next == t0_tf.ub())
         break;
     }
 
     if(with_gates)
-      this->push_back(TSlice(t0_tf.ub()));
+      insert_tslice(this->end(), TSlice(t0_tf.ub()));
   }
 
   Interval TDomain::t0_tf() const
@@ -84,20 +86,56 @@ namespace codac2
     };
   }
 
+  list<TSlice>::iterator TDomain::insert_tslice(list<TSlice>::iterator pos, const TSlice& ts)
+  {
+    auto it = this->insert(pos, ts);
+    if(!it->is_empty())
+    {
+      // If inserted immediately before an existing node with the same
+      // lower bound, the new node takes precedence (e.g. a new gate).
+      if(pos == this->end())
+      {
+        // Appending in temporal order: constant amortized insertion.
+        if(_time_index.empty() || _time_index.rbegin()->first != it->lb())
+          _time_index.emplace_hint(_time_index.end(), it->lb(), it);
+      }
+      else if(pos->lb() == it->lb())
+        _time_index.insert_or_assign(it->lb(), it);
+      else
+        _time_index.try_emplace(it->lb(), it);
+    }
+    return it;
+  }
+
+  list<TSlice>::iterator TDomain::erase_tslice(list<TSlice>::iterator it)
+  {
+    if(!it->is_empty())
+    {
+      auto index_it = _time_index.find(it->lb());
+      if(index_it != _time_index.end() && index_it->second == it)
+      {
+        auto next_it = std::next(it);
+        if(next_it != this->end() && !next_it->is_empty() && next_it->lb() == it->lb())
+          index_it->second = next_it;
+        else
+          _time_index.erase(index_it);
+      }
+    }
+    return this->erase(it);
+  }
+
   list<TSlice>::iterator TDomain::tslice(double t)
   {
-    if(!t0_tf().contains(t))
+    if(_time_index.empty() || std::isnan(t) || !t0_tf().contains(t))
       return this->end();
 
-    list<TSlice>::iterator it;
-    for(it = this->begin(); it != this->end(); ++it)
-    {
-      if((it->is_gate() && it->lb() == t) // gate
-        || (it->lb() <= t && it->ub() > t)) // slice
-        return it;
-    }
+    if(t == t0_tf().ub())
+      return std::prev(this->end());
 
-    it = this->end(); it--;
+    auto it = std::prev(_time_index.upper_bound(t))->second;
+    if(it->is_gate() && it->lb() != t)
+      ++it;
+
     return it;
   }
   
@@ -114,7 +152,7 @@ namespace codac2
         return it;
 
       TSlice ts(*it, Interval(t, t0_tf().lb())); // duplicate with different tdomain
-      it = this->insert(it, ts);
+      it = insert_tslice(it, ts);
       for(auto& [k,s] : it->_slices)
       {
         s->_it_tslice = it;
@@ -136,7 +174,7 @@ namespace codac2
     {
       it = this->end();
       TSlice ts(*std::prev(it), Interval(t0_tf().ub(),t)); // duplicate with different tdomain
-      it = this->insert(it, ts);
+      it = insert_tslice(it, ts);
       for(auto& [k,s] : it->_slices)
       {
         s->_it_tslice = it;
@@ -168,7 +206,7 @@ namespace codac2
 
       // From C++ insert() doc: the container is extended by inserting new elements before the element at the specified position
       ++it; // we will insert the new tslice before the next TSlice [t.ub(),..]
-      it = this->insert(it, ts); // then, it points to the newly inserted element
+      it = insert_tslice(it, ts); // then, it points to the newly inserted element
       for(auto& [k,s] : it->_slices) // adding the new iterator pointer to the new slices
         s->_it_tslice = it;
       
@@ -195,7 +233,7 @@ namespace codac2
     list<TSlice>::iterator it = this->begin();
     while(it != this->end())
     {
-      if(it->is_gate()) this->erase(it++);
+      if(it->is_gate()) it = erase_tslice(it);
       else ++it;
     }
   }
@@ -205,11 +243,11 @@ namespace codac2
     assert_release(new_tdomain.is_subset(t0_tf()));
     sample(new_tdomain.lb());
     sample(new_tdomain.ub());
-    this->remove_if(
-      [&new_tdomain](const TSlice& s)
-      {
-        return !s.intersects(new_tdomain);
-      });
+    for(auto it = this->begin(); it != this->end(); )
+    {
+      if(!it->intersects(new_tdomain)) it = erase_tslice(it);
+      else ++it;
+    }
   }
 
   ostream& operator<<(ostream& os, const TDomain& x)

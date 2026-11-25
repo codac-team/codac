@@ -74,7 +74,7 @@ namespace codac2
         for(auto it = _tdomain->begin(); it != _tdomain->end(); ++it)
           it->_slices.insert({
             this,
-            std::make_shared<Slice<T>>(*this, it, f.eval((Interval)*it))
+            std::make_shared<Slice<T>>(*this, it, f.eval(it->t0_tf()))
           });
       }
 
@@ -96,7 +96,7 @@ namespace codac2
         for(auto it = _tdomain->begin(); it != _tdomain->end(); ++it)
           it->_slices.insert({
             this,
-            std::make_shared<Slice<T>>(*this, it, x.eval((Interval)*it))
+            std::make_shared<Slice<T>>(*this, it, x.eval(it->t0_tf()))
           });
       }
 
@@ -116,7 +116,7 @@ namespace codac2
         for(auto it = _tdomain->begin(); it != _tdomain->end(); ++it)
           it->_slices.insert({
             this,
-            std::make_shared<Slice<T>>(*this, it, x((Interval)*it))
+            std::make_shared<Slice<T>>(*this, it, x(it->t0_tf()))
           });
       }
 
@@ -298,11 +298,10 @@ namespace codac2
        */
       inline std::shared_ptr<Slice<T>> slice(std::shared_ptr<TSlice> ptr)
       {
-        // Used in Python binding
-        auto it = std::find_if(_tdomain->begin(), _tdomain->end(),
-                    [&](TSlice& t){ return &t == ptr.get(); });
-        assert(it != _tdomain->end());
-        return slice(it);
+        assert_release(ptr != nullptr);
+        auto s = std::static_pointer_cast<Slice<T>>(ptr->slices().at(this));
+        assert_release(&s->tslice() == ptr.get());
+        return s;
       }
 
       /**
@@ -360,12 +359,13 @@ namespace codac2
 
         auto it = _tdomain->tslice(t.lb());
         assert(it != _tdomain->end());
-        T codomain = apply_eval(it, t & *it);
+        T codomain = apply_eval(it, t & it->t0_tf());
 
-        while(it != std::next(_tdomain->tslice(t.ub())))
+        const auto it_end = std::next(_tdomain->tslice(t.ub()));
+        while(it != it_end)
         {
           if(it->lb() == t.ub()) break;
-          codomain |= apply_eval(it, t & *it);
+          codomain |= apply_eval(it, t & it->t0_tf());
           it++;
         }
 
@@ -399,7 +399,6 @@ namespace codac2
         return eval_common(t,
           [this,&v](auto it, const Interval& t_) {
             return this->slice(it)->operator()(t_, *v.slice(it));
-
           });
       }
 
@@ -697,18 +696,44 @@ namespace codac2
         else if(!t.is_subset(_tdomain->t0_tf()))
           return Interval();
 
-        Interval invert = Interval::empty();
         Interval t_ = t & _tdomain->t0_tf();
-
         assert(!t_.is_empty() && !t_.is_unbounded());
-        for(auto it = _tdomain->tslice(t_.lb()) ;
-          it != _tdomain->end() && it->lb() <= t_.ub() ; it++)
+
+        auto first = _tdomain->tslice(t_.lb());
+        auto last = _tdomain->tslice(t_.ub());
+        
+        // Include the envelope following a gate at the upper temporal bound.
+        auto next = std::next(last);
+        if(next != _tdomain->end() && next->lb() == t_.ub())
+          last = next;
+
+        auto local_invert = [&](auto it) -> Interval
         {
           if(!t_.is_degenerated() && it->is_gate())
-            continue;
-          
-          assert(it != _tdomain->end());
-          invert |= apply_invert(it, t & *it);
+            return Interval::empty();
+
+          const Interval local_t = t_ & it->t0_tf();
+          // The two-sided search relies on each result being contained
+          // in its temporal support, including after geometric inversion.
+          return apply_invert(it, local_t) & local_t;
+        };
+
+        // Find the first non-empty local inversion.
+        Interval invert = local_invert(first);
+        while(invert.is_empty() && first != last)
+          invert = local_invert(++first);
+
+        if(invert.is_empty())
+          return invert;
+
+        // Only the last non-empty local inversion can extend the hull.
+        // Do not evaluate the first successful slice a second time.
+        while(last != first)
+        {
+          Interval right = local_invert(last);
+          if(!right.is_empty())
+            return invert | right;
+          --last;
         }
 
         return invert;
@@ -741,7 +766,7 @@ namespace codac2
             continue;
 
           assert(it != _tdomain->end());
-          Interval local_invert = apply_invert(it, t & *it);
+          Interval local_invert = apply_invert(it, t & it->t0_tf());
 
           if(local_invert.is_empty() && !invert.is_empty())
           {
@@ -894,6 +919,58 @@ namespace codac2
       // Integral related methods
 
       /**
+       * \ingroup codac2_slicedtube_integrals
+       * \brief Returns a primitive of this tube with zero initial condition.
+       *
+       * This is a shorthand for ``primitive(x0)`` with \f$x_0 = 0\f$.
+       *
+       * In other words, the returned tube encloses solutions of
+       * \f[
+       *   \dot{p}(\cdot) \in [x](\cdot),
+       *   \qquad p(t_0)=0.
+       * \f]
+       *
+       * \return primitive tube with zero initial condition
+       */
+      inline SlicedTube<T> primitive() const
+      {
+        auto x0 = all_reals_value();
+        x0.init(0.);
+        return primitive(x0);
+      }
+
+      /**
+       * \ingroup codac2_slicedtube_integrals
+       * \brief Returns a primitive of this tube with prescribed initial condition
+       *
+       * This method constructs a tube ``p`` on the same temporal domain as this
+       * tube, imposes the initial condition \f$p(t_0)=x_0\f$, and contracts
+       * ``p`` with this tube through the derivative relation using ``CtcDeriv``.
+       *
+       * In other words, the returned tube encloses solutions of
+       * \f[
+       *   \dot{p}(\cdot) \in [x](\cdot),
+       *   \qquad p(t_0)=x_0.
+       * \f]
+       *
+       * \note The current implementation may create an explicit gate at the
+       *       initial time \f$t_0\f$ if it is not already present in the
+       *       temporal partition.
+       *
+       * \param x0 initial condition at \f$t_0\f$
+       * \return primitive tube satisfying the prescribed initial condition
+       */
+      inline SlicedTube<T> primitive(const T& x0) const
+      {
+        auto x = all_reals_value();
+        auto p = SlicedTube<T>(this->tdomain(), x);
+        p.set(x0, this->tdomain()->t0_tf().lb()); // may create an unwanted gate
+        CtcDeriv c;
+        c.contract(p,*this);
+        return p;
+      }
+
+      /**
        * \defgroup codac2_slicedtube_integrals Integration and primitive operations on sliced tubes
        * \brief The following methods are valid for tubes defined for ``Interval`` or
        * ``IntervalVector`` codomains. The returned values are integral enclosures of
@@ -993,56 +1070,135 @@ namespace codac2
       std::pair<T,T> partial_integral(const Interval& t1, const Interval& t2) const;
 
       /**
-       * \ingroup codac2_slicedtube_integrals
-       * \brief Returns a primitive of this tube with zero initial condition.
+       * \brief Returns the primitives of the lower and upper bounds of this tube
+       * \f$[x](\cdot)=[x^-(\cdot),x^+(\cdot)]\f$.
        *
-       * This is a shorthand for ``primitive(x0)`` with \f$x_0 = 0\f$.
-       *
-       * In other words, the returned tube encloses solutions of
+       * The returned pair of tubes \f$([p^-](\cdot),[p^+](\cdot))\f$ encloses
+       * the two functions defined by
        * \f[
-       *   \dot{p}(\cdot) \in [x](\cdot),
-       *   \qquad p(t_0)=0.
+       *   p^-(t)=\int_{t_0}^{t} x^-(s)\,ds,
+       *   \qquad
+       *   p^+(t)=\int_{t_0}^{t} x^+(s)\,ds.
        * \f]
        *
-       * \return primitive tube with zero initial condition
+       * Both tubes share this tube's temporal partition. Their codomains enclose
+       * the ranges of the affine primitives on each slice, and explicit gates
+       * enclose the cumulative integrals at sampling times. The gates of the
+       * source tube have zero duration and do not contribute to the integrals.
+       *
+       * \pre The temporal domain must be non-empty and bounded, and the codomains
+       *      of all non-gate slices must be non-empty and bounded.
+       * \note The source codomains, temporal partition and returned primitives
+       *       must remain unchanged while the primitives are used for integration.
+       *
+       * \return pair of tubes enclosing the lower and upper partial primitives
        */
-      inline SlicedTube<T> primitive() const
-      {
-        auto x0 = all_reals_value();
-        x0.init(0.);
-        return primitive(x0);
-      }
+      std::pair<SlicedTube<T>,SlicedTube<T>> partial_primitives() const;
 
       /**
-       * \ingroup codac2_slicedtube_integrals
-       * \brief Returns a primitive of this tube with prescribed initial condition
+       * \brief Returns an enclosure of the integrals of this tube from \f$t_0\f$ to \f$[t]\f$,
+       * using precomputed partial primitives.
        *
-       * This method constructs a tube ``p`` on the same temporal domain as this
-       * tube, imposes the initial condition \f$p(t_0)=x_0\f$, and contracts
-       * ``p`` with this tube through the derivative relation using ``CtcDeriv``.
-       *
-       * In other words, the returned tube encloses solutions of
+       * This method computes an enclosure of
        * \f[
-       *   \dot{p}(\cdot) \in [x](\cdot),
-       *   \qquad p(t_0)=x_0.
+       *   \left\{ \int_{t_0}^{\tau} [x](s)\,ds \;\middle|\; \tau\in[t] \right\}.
        * \f]
        *
-       * \note The current implementation may create an explicit gate at the
-       *       initial time \f$t_0\f$ if it is not already present in the
-       *       temporal partition.
+       * It is obtained from ``partial_integral(t, primitives)`` by taking the
+       * hull between the lower bound of the lower enclosure and the upper
+       * bound of the upper enclosure.
        *
-       * \param x0 initial condition at \f$t_0\f$
-       * \return primitive tube satisfying the prescribed initial condition
+       * \param t temporal interval \f$[t]\f$
+       * \param primitives pair of tubes returned by ``partial_primitives()`` for this tube
+       * \return enclosure of the integrals of this tube over ``t``
        */
-      inline SlicedTube<T> primitive(const T& x0) const
-      {
-        auto x = all_reals_value();
-        auto p = SlicedTube<T>(this->tdomain(), x);
-        p.set(x0, this->tdomain()->t0_tf().lb()); // may create an unwanted gate
-        CtcDeriv c;
-        c.contract(p,*this);
-        return p;
-      }
+      T integral(const Interval& t,
+        const std::pair<SlicedTube<T>,SlicedTube<T>>& primitives) const;
+
+      /**
+       * \brief Returns an enclosure of the integrals of this tube between the
+       * time intervals \f$[t_1]\f$ and \f$[t_2]\f$, using precomputed partial primitives.
+       *
+       * This method computes an enclosure of
+       * \f[
+       *   \left\{ \int_{\tau_1}^{\tau_2} [x](s)\,ds
+       *   \;\middle|\; \tau_1\in[t_1],\ \tau_2\in[t_2] \right\}.
+       * \f]
+       *
+       * Let \f$([p^-],[p^+])\f$ be the pair of partial integral enclosures
+       * returned by ``partial_integral(t1, t2, primitives)``. The result is
+       * obtained from their bounds according to the direction of integration:
+       * \f[
+       *   \begin{cases}
+       *     [\inf[p^-],\sup[p^+]] & \text{if } \sup[t_1]\leq\inf[t_2],\\
+       *     [\inf[p^+],\sup[p^-]] & \text{if } \sup[t_2]\leq\inf[t_1],\\
+       *     [p^-]\sqcup[p^+] & \text{otherwise}.
+       *   \end{cases}
+       * \f]
+       *
+       * \param t1 first temporal interval \f$[t_1]\f$
+       * \param t2 second temporal interval \f$[t_2]\f$
+       * \param primitives pair of tubes returned by ``partial_primitives()`` for this tube
+       * \return enclosure of the integrals of this tube between ``t1`` and ``t2``
+       */
+      T integral(const Interval& t1, const Interval& t2,
+        const std::pair<SlicedTube<T>,SlicedTube<T>>& primitives) const;
+
+      /**
+       * \brief Returns lower and upper enclosures of the integrals of this tube
+       * \f$[x](\cdot)=[x^-(\cdot),x^+(\cdot)]\f$ from \f$t_0\f$ to \f$[t]\f$,
+       * using precomputed partial primitives.
+       *
+       * This method returns a pair \f$([p^-],[p^+])\f$ such that:
+       * \f[
+       *   [p^-]\supset
+       *        \left\{ \int_{t_0}^{\tau} x^-(s)\,ds
+       *        \;\middle|\; \tau\in[t] \right\}
+       * \f]
+       * and
+       * \f[
+       *   [p^+]\supset
+       *        \left\{ \int_{t_0}^{\tau} x^+(s)\,ds
+       *        \;\middle|\; \tau\in[t] \right\}.
+       * \f]
+       *
+       * The enclosures are obtained by evaluating the precomputed primitives
+       * over \f$[t]\f$, using the affine evolution on each slice.
+       *
+       * \param t temporal interval \f$[t]\f$
+       * \param primitives pair of tubes returned by ``partial_primitives()`` for this tube
+       * \return pair of lower and upper partial integral enclosures over ``t``
+       */
+      std::pair<T,T> partial_integral(const Interval& t,
+        const std::pair<SlicedTube<T>,SlicedTube<T>>& primitives) const;
+
+      /**
+       * \brief Returns lower and upper enclosures of the integrals of this tube
+       * \f$[x](\cdot)=[x^-(\cdot),x^+(\cdot)]\f$ between \f$[t_1]\f$ and \f$[t_2]\f$,
+       * using precomputed partial primitives.
+       *
+       * This method returns a pair obtained by subtracting the partial integral
+       * enclosures at ``t1`` from those at ``t2``. The returned pair \f$([p^-],[p^+])\f$
+       * is such that:
+       * \f[
+       *   [p^-]\supset
+       *        \left\{\int_{\tau_1}^{\tau_2} x^-(s)\,ds
+       *        \;\middle|\; \tau_1\in[t_1],\ \tau_2\in[t_2] \right\}
+       * \f]
+       * and
+       * \f[
+       *   [p^+]\supset
+       *        \left\{\int_{\tau_1}^{\tau_2} x^+(s)\,ds
+       *        \;\middle|\; \tau_1\in[t_1],\ \tau_2\in[t_2] \right\}.
+       * \f]
+       *
+       * \param t1 first temporal interval \f$[t_1]\f$
+       * \param t2 second temporal interval \f$[t_2]\f$
+       * \param primitives pair of tubes returned by ``partial_primitives()`` for this tube
+       * \return pair of lower and upper partial integral enclosures
+       */
+      std::pair<T,T> partial_integral(const Interval& t1, const Interval& t2,
+        const std::pair<SlicedTube<T>,SlicedTube<T>>& primitives) const;
 
       /**
        * \brief Returns the unbounded codomain value associated with ``T``

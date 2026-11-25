@@ -70,7 +70,7 @@ namespace codac2
 
     for (const auto& t_slice: *tdomain)
       if (t_slice.lb() >= solution_curve.t0() && t_slice.ub() <= solution_curve.tf())
-        codac_tube.set(to_codac(solution_curve(to_capd((Interval)t_slice))), t_slice);
+        codac_tube.set(to_codac(solution_curve(to_capd(t_slice.t0_tf()))), t_slice.t0_tf());
 
     codac_tube.set(to_codac(solution_curve(solution_curve.t0())), solution_curve.t0());
     codac_tube.set(to_codac(solution_curve(solution_curve.tf())), solution_curve.tf());

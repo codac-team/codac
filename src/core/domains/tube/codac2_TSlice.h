@@ -11,10 +11,10 @@
 
 #include <map>
 #include <memory>
+#include "codac2_Interval.h"
 
 namespace codac2
 {
-  class Interval;
   class SliceBase;
   class SlicedTubeBase;
 
@@ -23,14 +23,15 @@ namespace codac2
    * \brief Temporal slice shared by sliced tubes.
    *
    * A ``TSlice`` represents a temporal interval of a ``TDomain``.
-   * It inherits from ``Interval`` and may correspond either to:
+   * It privately inherits from ``Interval`` so that only ``TDomain`` can
+   * modify its temporal bounds. It may correspond either to:
    * - a non-degenerate time slice \f$[t_i,t_{i+1}]\f$, or
    * - a degenerate interval \f$[t_i,t_i]\f$, referred to as a gate.
    *
    * For each sliced tube defined on the same temporal partition, this object
    * stores the corresponding ``SliceBase`` instance.
    */
-  class TSlice : public Interval
+  class TSlice : private Interval
   {
     public:
 
@@ -73,10 +74,71 @@ namespace codac2
        */
       const std::map<const SlicedTubeBase*,std::shared_ptr<SliceBase>>& slices() const;
 
-      using Interval::operator==;
+      // Read-only interval interface. Temporal bounds must only be changed
+      // by TDomain to preserve its temporal index.
+      using Interval::operator new;
+      using Interval::operator delete;
+
+      using Interval::lb;
+      using Interval::ub;
+      using Interval::mid;
+      using Interval::rad;
+      using Interval::diam;
+      using Interval::is_empty;
+      using Interval::is_unbounded;
+      using Interval::is_degenerated;
+      using Interval::contains;
+      using Interval::intersects;
+      using Interval::is_subset;
+      using Interval::is_superset;
+
+      /**
+       * \brief Returns a read-only reference to the temporal interval
+       * \return temporal interval of this slice
+       */
+      const Interval& t0_tf() const
+      {
+        return *this;
+      }
+
+      // Keep copy construction for tslices_vector() and list insertion,
+      // but prevent replacing a temporal slice through a mutable iterator.
+      TSlice(const TSlice&) = default;
+      TSlice& operator=(const TSlice&) = delete;
+
+      bool operator==(const Interval& x) const
+      {
+        return Interval::operator==(x);
+      }
+
+      bool operator!=(const Interval& x) const
+      {
+        return !(*this == x);
+      }
+
       bool operator==(const TSlice& x) const
       {
         return Interval::operator==(x);
+      }
+
+      bool operator!=(const TSlice& x) const
+      {
+        return !(*this == x);
+      }
+
+      friend bool operator==(const Interval& x, const TSlice& y)
+      {
+        return y == x;
+      }
+
+      friend bool operator!=(const Interval& x, const TSlice& y)
+      {
+        return !(y == x);
+      }
+
+      friend std::ostream& operator<<(std::ostream& os, const TSlice& x)
+      {
+        return os << x.t0_tf();
       }
 
       ~TSlice() override;
