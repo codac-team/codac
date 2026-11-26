@@ -119,6 +119,7 @@ namespace codac2
 
   inline void PowOp::bwd(const Interval& y, Interval& x1, int x2)
   {
+#if CODAC_GAOL_GUARDS
     // The content of this function comes from the IBEX library.
     // See ibex::Interval (IBEX lib, main author: Gilles Chabert)
     //   https://ibex-lib.readthedocs.io
@@ -133,12 +134,67 @@ namespace codac2
 
     else
       x1 &= root(y, x2);
+#else
+    // nth_root_rel() of GAOL v5, pownRev of IEEE 1788-2015, the reverse of the
+    // integer power x^x2 that pow(x,int) computes (pown of IEEE 1788): the hull
+    // of the x of x1 with x^x2 defined and in y, for every integer x2.
+    //  - x2 >= 1: the same intervals as the code of IBEX above (compared on
+    //    every pair of 41 intervals, for x2 from 1 to 5).
+    //  - x2 = 0: x^0 is 1 for every x, 0 included, so that x1 is kept where y
+    //    holds 1 and emptied elsewhere. The code of IBEX emptied x1 in every
+    //    case, the root of order 0 being the empty set: it lost every solution
+    //    (x1 = [-oo,+oo] and y = [-oo,+oo] gave the empty set).
+    //  - x2 < 0: x^x2 = 1/x^|x2| has no value at 0, which is left out, and y is
+    //    cut at 0 before the roots are taken, where the code of IBEX took the
+    //    inverse of the root of the whole of y, whose hull may span the gap
+    //    between its two parts: for y = [-1,2], x2 = -3 and x1 = [-0.5,0.5],
+    //    GAOL gives the empty set (|x^-3| >= 8 on x1) and IBEX [-0.5,0.5].
+    x1 = gaol::nth_root_rel(y, x2, x1);
+#endif
   }
 
   inline void PowOp::bwd(const Interval& y, Interval& x1, Interval& x2)
   {
+#if CODAC_GAOL_GUARDS
     assert_release(x2.is_degenerated() && "PowOp::bwd(y,x1,x2) (with x1 and x2 intervals) not implemented yet with Gaol");
     assert_release(x2 == (int)(x2.mid()) && "PowOp::bwd(y,x1,x2) (x2 not integer) not implemented yet with Gaol");
     PowOp::bwd(y, x1, (int)(x2.mid()));
+#else
+    // pow(x1,x2) is the power gaol::pow(x1,x2) of GAOL v5 (see PowOp::fwd()),
+    // the hull over the box of x^v, where x^v is
+    //  - for an integer v = n: the integer power x^n, pown of IEEE 1788, which
+    //    is defined for a negative x too, is 1 at n = 0 for every x, 0
+    //    included, and has no value at x = 0 for n < 0;
+    //  - for any other v: the pow of IEEE 1788, x^v = e^(v log x) for x > 0,
+    //    0 for x = 0 and v > 0, and no value elsewhere.
+    // pow_rel() and pow_exponent_rel() of GAOL v5 are its reverses, for the
+    // same x^v: the hull of the bases x of x1 with x^v in y for some v of x2,
+    // then of the exponents v of x2 with x^v in y for some x of the x1 just
+    // contracted. They cover every exponent: a degenerate integer x2 = [n]
+    // gives the reverse of x^n, as bwd(y,x1,int) above, beyond the ints too
+    // (n >= 2^31 or n < -2^31), and the negative bases are kept for the
+    // integers of x2: (-1,3) is a solution of y = [-1] in the box x1 = [-2,2],
+    // x2 = [0.5,3], which x1 = [-1] and x2 = [1,3] hold.
+    //
+    // This needs GAOL 5.0.1 (https://github.com/Jordan08/GAOL/issues/400) or
+    // later: Codac asks for 5.0.2 (CODAC_GAOL_MIN_VERSION, in
+    // scripts/CMakeModules/codac_gaol.cmake). In GAOL 5.0.0, gaol::pow() took
+    // the pow of IEEE 1788 for any exponent but a degenerate integer, which left
+    // out the negative bases of the integers of x2 (gaol::pow([-2,2],[0.5,3])
+    // was [0,8], although (-1)^3 = -1), and pow_rel() and pow_exponent_rel()
+    // reversed the pow of IEEE 1788 only: x1 = [-3,-1] was emptied for y =
+    // [-27,-1] and x2 = [3]. With GAOL 4, Codac only contracted x1 for an x2 [n]
+    // within the ints (the assertions above).
+    x1 = gaol::pow_rel(y, x2, x1);
+    x2 = gaol::pow_exponent_rel(y, x1, x2);
+
+    // No base of x1 with an exponent of x2, or the converse: the box holds no
+    // solution
+    if(x1.is_empty() || x2.is_empty())
+    {
+      x1.set_empty();
+      x2.set_empty();
+    }
+#endif
   }
 }
