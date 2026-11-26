@@ -200,6 +200,23 @@ namespace
           SLICEDTUBE_T_REF_OPERATORMULEQ_SLICEDTUBE_T_REF_CONST_SLICEDTUBE_INTERVAL_REF,
           py::return_value_policy::reference_internal,
           py::is_operator());
+
+      if constexpr(!FOR_MATLAB && std::is_same_v<T,IntervalMatrix>)
+      {
+        pyclass
+          .def("__matmul__", (SlicedTube<T>(*)(const SlicedTube<T>&,const SlicedTube<T>&)) &codac2::operator*,
+            SLICEDTUBE_INTERVALMATRIX_OPERATORMUL_CONST_SLICEDTUBE_INTERVALMATRIX_REF_CONST_SLICEDTUBE_INTERVALMATRIX_REF,
+            py::is_operator())
+
+          .def("__matmul__", (SlicedTube<T>(*)(const SlicedTube<T>&,const T&)) &codac2::operator*,
+            SLICEDTUBE_T_OPERATORMUL_CONST_SLICEDTUBE_T_REF_CONST_Q_REF,
+            py::is_operator())
+
+          .def("__rmatmul__",
+            [](const SlicedTube<T>& x2, const T& x1) { return x1 * x2; },
+            SLICEDTUBE_T_OPERATORMUL_CONST_Q_REF_CONST_SLICEDTUBE_T_REF,
+            py::is_operator());
+      }
     }
   }
 
@@ -406,6 +423,14 @@ void export_SlicedTube_operations(
     .def("__mul__", (SlicedTube<IntervalVector>(*)(const SlicedTube<IntervalMatrix>&,const SlicedTube<IntervalVector>&)) &codac2::operator*,
       SLICEDTUBE_INTERVALVECTOR_OPERATORMUL_CONST_SLICEDTUBE_INTERVALMATRIX_REF_CONST_SLICEDTUBE_INTERVALVECTOR_REF,
       py::is_operator());
+
+  if constexpr(!FOR_MATLAB)
+  {
+    py_SlicedTube_IntervalMatrix
+      .def("__matmul__", (SlicedTube<IntervalVector>(*)(const SlicedTube<IntervalMatrix>&,const SlicedTube<IntervalVector>&)) &codac2::operator*,
+        SLICEDTUBE_INTERVALVECTOR_OPERATORMUL_CONST_SLICEDTUBE_INTERVALMATRIX_REF_CONST_SLICEDTUBE_INTERVALVECTOR_REF,
+        py::is_operator());
+  }
 
   bind_scalar_slicedtube_functions(m);
 

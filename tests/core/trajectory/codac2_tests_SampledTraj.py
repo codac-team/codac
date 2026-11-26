@@ -150,5 +150,26 @@ class TestSampledTraj(unittest.TestCase):
     self.assertTrue(y(4.) == Vector([4.,5.]))
 
 
+    # SampledTraj, matrix products
+
+    A = SampledTraj({ 0.:Matrix([[1,2],[3,4]]), 1.:Matrix([[0,1],[1,0]]) })
+    B = SampledTraj({ 0.:Matrix([[0,1],[1,0]]), 1.:Matrix([[1,2],[3,4]]) })
+    x = SampledTraj({ 0.:Vector([5,6]), 1.:Vector([1,2]) })
+
+    self.assertTrue((A*x)(0.) == Vector([17,39]))
+    self.assertTrue((A*x)(1.) == Vector([2,1]))
+    self.assertTrue((A*B)(0.) == Matrix([[2,1],[4,3]]))
+    self.assertTrue((A*B)(1.) == Matrix([[3,4],[1,2]]))
+    self.assertTrue((Matrix([[0,1],[1,0]])*A)(0.) == Matrix([[3,4],[1,2]]))
+
+    if not FOR_MATLAB: # the @ operator is not available in Matlab
+      self.assertTrue((A@x)(0.) == Vector([17,39]))
+      self.assertTrue((A@x)(1.) == Vector([2,1]))
+      self.assertTrue((A@B)(0.) == Matrix([[2,1],[4,3]]))
+      self.assertTrue((A@B)(1.) == Matrix([[3,4],[1,2]]))
+      self.assertTrue((Matrix([[0,1],[1,0]])@A)(0.) == Matrix([[3,4],[1,2]]))
+      with self.assertRaises(TypeError):
+        x@x
+
 if __name__ ==  '__main__':
   unittest.main()
