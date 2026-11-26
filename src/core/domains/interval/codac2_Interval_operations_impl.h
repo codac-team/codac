@@ -23,6 +23,27 @@ namespace codac2
     return gaol::sqr(x);
   }
 
+  // ---------------------------------------------------------------------------
+  // The elementary functions, whose code depends on the GAOL Codac is built on
+  // ---------------------------------------------------------------------------
+  //
+  // CODAC_GAOL_GUARDS (see codac2_Interval.h) chooses between two versions of
+  // them, as in the block at the end of codac2_Interval_impl.h: the code Codac
+  // had before GAOL v5, with its guards around GAOL 4, unchanged, and the code
+  // that calls GAOL v5 directly.
+#if CODAC_GAOL_GUARDS
+
+  // With the guards, for GAOL 4, the GAOL that IBEX bundles (WITH_IBEX):
+  // gaol::round_upward() after each function, which GAOL 4 may leave rounding
+  // in another direction (see codac2_Interval_impl.h); pow(x,p) empty for an
+  // infinite p; log of an interval without positive numbers empty, where GAOL 4
+  // gives [-oo,-DBL_MAX] for x.ub() == 0; cosh of an unbounded interval made to
+  // reach +oo; asinh computed from nonnegative arguments, by symmetry; the
+  // roots of odd order of negative numbers computed by symmetry too, the
+  // nth_root of GAOL 4 leaving negative numbers out of its domain; atan2
+  // computed by Codac; and sign(), which GAOL 4 does not have, computed by
+  // Codac, a sign of 0 being any of [-1,1].
+
   inline Interval sqrt(const Interval& x)
   {
     Interval y = gaol::sqrt(x);
@@ -261,6 +282,154 @@ namespace codac2
     return y;
   }
 
+  inline Interval sign(const Interval& x)
+  {
+    return x.ub() < 0 ? -1. : x.lb() > 0 ? 1. : Interval(-1.,1.);
+  }
+
+#else
+
+  // Without the guards, for GAOL v5 (https://github.com/Jordan08/GAOL), Codac's
+  // default: GAOL is called directly. GAOL v5 leaves the rounding upward after
+  // each function, handles each of the cases above itself (its nth_root is the
+  // rootn of IEEE 1788, which takes the roots of odd order of negative
+  // numbers), and Codac takes atan2 and sign from it (those of IEEE 1788).
+  //
+  // chi(), after this block, stays Codac's in both versions: the chi() of GAOL
+  // is another function, the degree of symmetry of an interval of Ratschek and
+  // Rokne (a double, a/b or b/a for [a,b]), where Codac's chi(x,y,z) chooses
+  // between y and z after the sign of x.
+
+  inline Interval sqrt(const Interval& x)
+  {
+    return gaol::sqrt(x);
+  }
+
+  inline Interval pow(const Interval& x, int p)
+  {
+    return gaol::pow(x,p);
+  }
+
+  inline Interval pow(const Interval& x, double p)
+  {
+    return gaol::pow(x,p);
+  }
+
+  // gaol::pow(x,p) of GAOL v5 is the hull of x^v over x and p, x^v being the
+  // integer power x^n (pown of IEEE 1788, defined for x < 0 too, 0^0 being 1)
+  // for an integer v = n of p, and the pow of IEEE 1788 for any other v:
+  // pow([-2,2],[0.5,3]) is [-8,8], (-2)^3 being -8, and pow([0],[0,1]) is
+  // [0,1]. GAOL 5.0.0 left the negative bases out for any p but a degenerate
+  // integer, and gave [0,8] and [0] for these, which GAOL 5.0.1 corrected
+  // (https://github.com/Jordan08/GAOL/issues/400): Codac asks for GAOL 5.0.2 or
+  // later (CODAC_GAOL_MIN_VERSION, in scripts/CMakeModules/codac_gaol.cmake).
+  // PowOp::bwd() takes the reverses of this power, pow_rel() and
+  // pow_exponent_rel() of GAOL v5 (see codac2_pow.h).
+  inline Interval pow(const Interval& x, const Interval& p)
+  {
+    return gaol::pow(x,p);
+  }
+
+  inline Interval root(const Interval& x, int p)
+  {
+    Interval y = gaol::nth_root(x, p >= 0 ? p : -p);
+
+    if(p < 0)
+      y = 1.0/y;
+
+    return y;
+  }
+
+  inline Interval exp(const Interval& x)
+  {
+    return gaol::exp(x);
+  }
+
+  inline Interval log(const Interval& x)
+  {
+    return gaol::log(x);
+  }
+
+  inline Interval cos(const Interval& x)
+  {
+    return gaol::cos(x);
+  }
+
+  inline Interval sin(const Interval& x)
+  {
+    return gaol::sin(x);
+  }
+
+  inline Interval tan(const Interval& x)
+  {
+    return gaol::tan(x);
+  }
+
+  inline Interval acos(const Interval& x)
+  {
+    return gaol::acos(x);
+  }
+
+  inline Interval asin(const Interval& x)
+  {
+    return gaol::asin(x);
+  }
+
+  inline Interval atan(const Interval& x)
+  {
+    return gaol::atan(x);
+  }
+
+  inline Interval atan2(const Interval& y, const Interval& x)
+  {
+    return gaol::atan2(y,x);
+  }
+
+  inline Interval cosh(const Interval& x)
+  {
+    return gaol::cosh(x);
+  }
+
+  inline Interval sinh(const Interval& x)
+  {
+    return gaol::sinh(x);
+  }
+
+  inline Interval tanh(const Interval& x)
+  {
+    return gaol::tanh(x);
+  }
+
+  inline Interval acosh(const Interval& x)
+  {
+    return gaol::acosh(x);
+  }
+
+  inline Interval asinh(const Interval& x)
+  {
+    return gaol::asinh(x);
+  }
+
+  inline Interval atanh(const Interval& x)
+  {
+    return gaol::atanh(x);
+  }
+
+  inline Interval sign(const Interval& x)
+  {
+    // The sign of IEEE 1788 (GAOL v5): the hull of the signs of the numbers of
+    // x, -1 below 0, 0 at 0 (and at -0), 1 above, and the empty set for the
+    // empty set. Codac's sign, which WITH_IBEX keeps, gave [-1,1] for every x
+    // containing 0, a sign of 0 being any of [-1,1]: the two differ when 0 is
+    // a bound of x or x itself, sign([0,5]) being [0,1] instead of [-1,1] and
+    // sign([0]) [0] instead of [-1,1], and for the empty set. SignOp::bwd()
+    // (codac2_sign.h) takes the reverse of this sign, sign_rel() of GAOL v5,
+    // which keeps 0 for the sign 0 only.
+    return gaol::sign(x);
+  }
+
+#endif
+
   inline Interval abs(const Interval& x)
   {
     return gaol::abs(x);
@@ -274,11 +443,6 @@ namespace codac2
   inline Interval max(const Interval& x, const Interval& y)
   {
     return gaol::max(x,y);
-  }
-
-  inline Interval sign(const Interval& x)
-  {
-    return x.ub() < 0 ? -1. : x.lb() > 0 ? 1. : Interval(-1.,1.);
   }
 
   inline Interval integer(const Interval& x)

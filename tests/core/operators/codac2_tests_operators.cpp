@@ -331,6 +331,86 @@ TEST_CASE("Interval bwd operations")
   
   x = Interval(-1.57079632679489678, 1.1780972450961728626);
   CHECK(!(tan(x).is_empty()));
+
+#if !CODAC_GAOL_GUARDS
+  // The reverse functions of GAOL v5 that the bwd() of the operators call
+  // (see codac2_Interval.h), in the cases where the code of IBEX that Codac
+  // keeps with GAOL 4 (WITH_IBEX) gave wider intervals or lost solutions
+
+  // floor(1) = 1 and ceil(0) = 0: the closed end of the code of IBEX is left out
+  x = Interval(1);         FloorOp::bwd(Interval(0),x);         CHECK(x == Interval::empty());
+  x = Interval(0);         CeilOp::bwd(Interval(1),x);          CHECK(x == Interval::empty());
+
+  // x^0 = 1 for every x: the code of IBEX emptied x1 for any y
+  x = Interval(-oo,oo);    PowOp::bwd(Interval(-oo,oo),x,0);    CHECK(x == Interval(-oo,oo));
+  x = Interval(-oo,oo);    PowOp::bwd(Interval(2,3),x,0);       CHECK(x == Interval::empty());
+  // |x^-3| >= 8 on [-0.5,0.5], whereas the inverse of the root of [-1,2] spans R
+  x = Interval(-0.5,0.5);  PowOp::bwd(Interval(-1,2),x,-3);     CHECK(x == Interval::empty());
+  // 0^-1 has no value
+  x = Interval(0);         PowOp::bwd(Interval(-oo,oo),x,-1);   CHECK(x == Interval::empty());
+
+  // An exponent that is an interval: pow_rel() and pow_exponent_rel(), where
+  // Codac asserted that the exponent was a degenerate integer
+  {
+    Interval x1(0,10), x2(0.5,3);
+    PowOp::bwd(Interval(4,9),x1,x2);
+    CHECK(Approx(x1) == Interval(std::cbrt(4.),10)); // x1^3 >= 4 and 10^0.954 = 9
+    CHECK(Approx(x2) == Interval(std::log(4.)/std::log(10.),3)); // 10^x2 >= 4
+  }
+  // x^n, n an integer, is the integer power, which has negative bases too:
+  // pow(x1,x2) holds (-2)^3 = -8 and (-2)^2 = 4 on this box, and (-1,1) and
+  // (-1,3) are the solutions of x1^x2 = -1 in it, (-2,3) the only one of
+  // x1^x2 = -8
+  CHECK(PowOp::fwd(Interval(-2,2),Interval(0.5,3)) == Interval(-8,8));
+  CHECK(PowOp::fwd(Interval(-2,-1),Interval(0.5,3)) == Interval(-8,4));
+  {
+    Interval x1(-2,2), x2(0.5,3);
+    PowOp::bwd(Interval(-1),x1,x2);
+    CHECK(x1 == -1.);
+    CHECK(x2 == Interval(1,3));
+  }
+  {
+    Interval x1(-3,3), x2(0.5,3);
+    PowOp::bwd(Interval(-8),x1,x2);
+    CHECK(x1 == -2.);
+    CHECK(x2 == 3.);
+  }
+  // 0^0 is 1, 0^v is 0 for v > 0
+  CHECK(PowOp::fwd(Interval(0),Interval(0,1)) == Interval(0,1));
+  {
+    Interval x1(0), x2(0,1);
+    PowOp::bwd(Interval(1),x1,x2);
+    CHECK(x1 == 0.);
+    CHECK(x2 == 0.);
+  }
+  // A degenerate integer exponent keeps the negative bases
+  {
+    Interval x1(-3,-1), x2(2);
+    PowOp::bwd(Interval(4,9),x1,x2);
+    CHECK(x1 == Interval(-3,-2));
+    CHECK(x2 == 2.);
+  }
+
+  // The sign of IEEE 1788: sign(x) is -1, 0 or 1
+  x = Interval(-2,3);      SignOp::bwd(Interval(0),x);          CHECK(x == 0.);
+  x = Interval(-2,3);      SignOp::bwd(Interval(0.5),x);        CHECK(x == Interval::empty());
+  x = Interval(-2,3);      SignOp::bwd(Interval(-1),x);         CHECK(x == Interval(-2,0));
+  x = Interval(-2.5,-1.5); SignOp::bwd(Interval(0,oo),x);       CHECK(x == Interval::empty());
+
+  // An empty operand empties the other one
+  {
+    Interval x1 = Interval::empty(), x2(-2.5);
+    MaxOp::bwd(Interval(-oo,oo),x1,x2);
+    CHECK(x1.is_empty()); CHECK(x2.is_empty());
+  }
+
+  // atan2(1,0) = pi/2, in a = [1.5,1.6]: the code of IBEX gave the empty set
+  a = Interval(1.5,1.6); y = Interval(1); x = Interval(0);
+  Atan2Op::bwd(a,y,x); CHECK(y == 1.); CHECK(x == 0.);
+  // (0,0) has no angle
+  a = Interval(); y = Interval(0); x = Interval(0);
+  Atan2Op::bwd(a,y,x); CHECK(y.is_empty()); CHECK(x.is_empty());
+#endif
 }
 
 #include <codac2_IntervalMatrix.h>

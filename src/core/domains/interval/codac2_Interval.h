@@ -16,7 +16,47 @@
 
 #include <list>
 #include <array>
+#include <concepts>
+#include <type_traits>
 #include <gaol/gaol_interval.h>
+
+// CODAC_GAOL_GUARDS: whether Codac calls GAOL through the guards it kept around
+// GAOL 4, the one place where Codac chooses between the two interval
+// arithmetics it can be built on. The choice follows the GAOL whose headers are
+// included, so that Codac's libraries and every program including Codac's
+// headers make the same one, with nothing for the build to pass on:
+//
+//  - 0 for GAOL v5 (https://github.com/Jordan08/GAOL), which Codac is built on
+//    by default: GAOL v5 leaves the rounding upward after each operation, gives
+//    the empty set where GAOL 4 gave intervals Codac had to correct (an
+//    infinite double, log of an interval without positive numbers, the
+//    intersection of disjoint intervals), computes unbounded cosh, asinh of
+//    negative numbers and the roots of odd order of negative numbers itself,
+//    and provides rad(), bisect(), inflate(), atan2, sign, the relations
+//    between intervals (subset, interior, disjoint, equal) of IEEE 1788 and the
+//    reverse functions (*_rel) of floor, sign, min, max, sinh, atan2 and of
+//    the powers. Codac calls it directly, and takes from it every function it
+//    provides.
+//  - 1 for GAOL 4, the GAOL that IBEX bundles, which Codac is built on with the
+//    developer option WITH_IBEX (see the top-level CMakeLists.txt): Codac
+//    keeps the guards it had around it before GAOL v5, unchanged, to tell
+//    whether a wrong result comes from GAOL v5.
+//
+// GAOL_MAJOR_VERSION comes from gaol/gaol_configuration.h, which
+// gaol/gaol_interval.h includes: GAOL v5 defines it with every compiler, the
+// GAOL 4 of IBEX defines it as 4, and Frederic Goualard's GAOL 4 does not
+// define it with Visual C++ or MinGW, which gives 1 as well. The functions
+// concerned are in the blocks "#if CODAC_GAOL_GUARDS" at the end of
+// codac2_Interval_impl.h, among the elementary functions of
+// codac2_Interval_operations_impl.h and in the bwd() functions of the
+// operators of src/core/operators whose reverse GAOL v5 provides (atan2, ceil,
+// floor, max, min, pow, sign and sinh), the only places that read it.
+#if defined(GAOL_MAJOR_VERSION) && GAOL_MAJOR_VERSION >= 5
+  #define CODAC_GAOL_GUARDS 0
+#else
+  #define CODAC_GAOL_GUARDS 1
+#endif
+
 #include "codac2_Index.h"
 #include "codac2_Domain.h"
 #include "codac2_assert.h"
@@ -26,6 +66,15 @@
 namespace codac2
 {
   class Interval;
+
+  /**
+   * \brief The integer types that the arithmetic operators of Interval take as
+   * they are (see operator+(const Interval&, T) and the others at the end of
+   * this file): every integer type but bool, as GAOL v5 has them
+   * (gaol_detail::is_integer, in gaol/core/gaol_interval_detail.h).
+   */
+  template<typename T>
+  concept IsIntervalIntegerType = std::integral<T> && !std::is_same_v<std::remove_cv_t<T>,bool>;
 
   template<>
   struct is_interval_based<Interval> : std::true_type {};
@@ -674,6 +723,16 @@ namespace codac2
       _dec_friend_interval2_arithm_op(operator*)
       _dec_friend_interval2_arithm_op(operator/)
 
+      // The arithmetic operators with an integer (see the end of this file)
+      #define _dec_friend_interval2_integer_arithm_op(f) \
+        template<IsIntervalIntegerType T> friend Interval f(T, const Interval&); \
+        template<IsIntervalIntegerType T> friend Interval f(const Interval&, T); \
+
+      _dec_friend_interval2_integer_arithm_op(operator+)
+      _dec_friend_interval2_integer_arithm_op(operator-)
+      _dec_friend_interval2_integer_arithm_op(operator*)
+      _dec_friend_interval2_integer_arithm_op(operator/)
+
       #define _dec_friend_interval2_unary_op(f) \
         friend Interval f(const Interval&); \
 
@@ -730,6 +789,15 @@ namespace codac2
       friend struct ExpOp;
       friend struct LogOp;
       friend struct PowOp;
+      // The bwd() of these operators call the reverse functions of GAOL v5
+      // (floor_rel(), max_rel(), min_rel() and sign_rel()) on the gaol::interval
+      // of their arguments, as the operators above do (CeilOp through the
+      // floor_rel() of the opposites).
+      friend struct CeilOp;
+      friend struct FloorOp;
+      friend struct MaxOp;
+      friend struct MinOp;
+      friend struct SignOp;
       friend struct SinOp;
       friend struct SinhOp;
       friend struct SqrOp;
@@ -931,6 +999,101 @@ namespace codac2
    * \return the division result
    */
   Interval operator/(const Interval& x, const Interval& y);
+
+  // The arithmetic operators with an integer n, in either order. GAOL v5 has
+  // them for gaol::interval (gaol/core/gaol_interval_core.h): it computes with
+  // the tightest interval containing n, where the conversion of n to a double
+  // could give a double that is not n (an integer beyond 2^53). Found for an
+  // Interval too, by argument-dependent lookup since Interval derives from
+  // gaol::interval, they made each expression of an Interval and an integer
+  // ambiguous with the operators of Interval with a double declared above
+  // ("ambiguous overload for 'operator*' (operand types are 'int' and
+  // 'codac2::Interval')", as in 2*x or Interval::pi()/2): the integer is an
+  // exact match for GAOL's, the Interval for Codac's. These templates are an
+  // exact match for both operands, and are chosen. With GAOL v5, they call
+  // GAOL's operators with an integer; with the GAOL 4 of IBEX (WITH_IBEX),
+  // which has none, they convert n to a double, as the implicit conversion did
+  // before (see the block "#if CODAC_GAOL_GUARDS" of codac2_Interval_impl.h).
+
+  /**
+   * \brief Returns \f$[x]+n\f$ with \f$n\in\mathbb{Z}\f$
+   * 
+   * \param x interval value
+   * \param n integer value
+   * \return the addition result
+   */
+  template<IsIntervalIntegerType T>
+  Interval operator+(const Interval& x, T n);
+
+  /**
+   * \brief Returns \f$n+[y]\f$ with \f$n\in\mathbb{Z}\f$
+   * 
+   * \param n integer value
+   * \param y interval value
+   * \return the addition result
+   */
+  template<IsIntervalIntegerType T>
+  Interval operator+(T n, const Interval& y);
+
+  /**
+   * \brief Returns \f$[x]-n\f$ with \f$n\in\mathbb{Z}\f$
+   * 
+   * \param x interval value
+   * \param n integer value
+   * \return the subtraction result
+   */
+  template<IsIntervalIntegerType T>
+  Interval operator-(const Interval& x, T n);
+
+  /**
+   * \brief Returns \f$n-[y]\f$ with \f$n\in\mathbb{Z}\f$
+   * 
+   * \param n integer value
+   * \param y interval value
+   * \return the subtraction result
+   */
+  template<IsIntervalIntegerType T>
+  Interval operator-(T n, const Interval& y);
+
+  /**
+   * \brief Returns \f$[x]\cdot n\f$ with \f$n\in\mathbb{Z}\f$
+   * 
+   * \param x interval value
+   * \param n integer value
+   * \return the multiplication result
+   */
+  template<IsIntervalIntegerType T>
+  Interval operator*(const Interval& x, T n);
+
+  /**
+   * \brief Returns \f$n\cdot[y]\f$ with \f$n\in\mathbb{Z}\f$
+   * 
+   * \param n integer value
+   * \param y interval value
+   * \return the multiplication result
+   */
+  template<IsIntervalIntegerType T>
+  Interval operator*(T n, const Interval& y);
+
+  /**
+   * \brief Returns \f$[x]/n\f$ with \f$n\in\mathbb{Z}\f$
+   * 
+   * \param x interval value
+   * \param n integer value
+   * \return the division result
+   */
+  template<IsIntervalIntegerType T>
+  Interval operator/(const Interval& x, T n);
+
+  /**
+   * \brief Returns \f$n/[y]\f$ with \f$n\in\mathbb{Z}\f$
+   * 
+   * \param n integer value
+   * \param y interval value
+   * \return the division result
+   */
+  template<IsIntervalIntegerType T>
+  Interval operator/(T n, const Interval& y);
 }
 
 #include "codac2_Interval_impl.h"

@@ -17,10 +17,6 @@
   find_package(CODAC REQUIRED)
   message(STATUS "Found Codac version ${CODAC_VERSION}")
 
-# Initializating Ibex
-  
-  ibex_init_common()
-
 # Compilation
 
   if(FAST_RELEASE)
