@@ -82,6 +82,7 @@ namespace codac2
 
   inline void MinOp::bwd(const Interval& y, Interval& x1, Interval& x2)
   {
+#if CODAC_GAOL_GUARDS
     // The content of this function comes from the IBEX library.
     // See ibex::Interval (IBEX lib, main author: Gilles Chabert)
     //   https://ibex-lib.readthedocs.io
@@ -102,5 +103,17 @@ namespace codac2
       x1 = -mx1;
       x2 = -mx2;
     }
+#else
+    // min_rel() of GAOL v5, the reverse of min, max_rel() turned upside down
+    // (see MaxOp::bwd()): min_rel(y,x2,x1) is the hull of the x of x1 with
+    // min(x,v) in y for some v of x2, and x2 is contracted in turn with the x1
+    // just contracted. The code of IBEX above, the reverse of max on the
+    // opposites, gave the same intervals (compared on every triple of 41
+    // intervals).
+    x1 = gaol::min_rel(y, x2, x1);
+    x2 = gaol::min_rel(y, x1, x2);
+    if(x2.is_empty())
+      x1.set_empty();
+#endif
   }
 }

@@ -74,6 +74,7 @@ namespace codac2
 
   inline void FloorOp::bwd(const Interval& y, Interval& x1)
   {
+#if CODAC_GAOL_GUARDS
     // The content of this function comes from the IBEX library.
     // See ibex::Interval (IBEX lib, main author: Gilles Chabert)
     //   https://ibex-lib.readthedocs.io
@@ -92,5 +93,17 @@ namespace codac2
       else
         x1 &= Interval(l,r) + Interval(0,1);
     }
+#else
+    // floor_rel() of GAOL v5, the reverse of floor: the hull of the x of x1
+    // whose floor is in y, the part of x1 in [ceil(y.lb()),floor(y.ub())+1),
+    // and the empty set when y holds no integer or one of y and x1 is empty.
+    // The code of IBEX above computed the same interval, closed at
+    // floor(y.ub())+1, whose floor is not in y: GAOL leaves that end out where
+    // x1 starts there (floor_rel([0],[1]) is empty, where IBEX gave [1]) and
+    // keeps it elsewhere, in the tightest closed enclosure of the set, the
+    // reals just below it being in the set. floor(y.ub())+1 is rounded upward
+    // beyond 2^53, where it is no double.
+    x1 = gaol::floor_rel(y, x1);
+#endif
   }
 }
