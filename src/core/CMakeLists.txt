@@ -331,7 +331,7 @@
     ${CMAKE_CURRENT_SOURCE_DIR}/tools
     ${CMAKE_CURRENT_SOURCE_DIR}/trajectory
   )
-  target_link_libraries(${PROJECT_NAME}-core PUBLIC ${PROJECT_NAME}-eigen Ibex::ibex Threads::Threads) #Eigen3::Eigen
+  target_link_libraries(${PROJECT_NAME}-core PUBLIC ${PROJECT_NAME}-eigen Codac::gaol Threads::Threads) #Eigen3::Eigen
   
 
 ################################################################################
