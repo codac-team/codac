@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include <memory>
 #include "codac2_AnalyticExprWrapper.h"
 #include "codac2_ExprType.h"
 #include "codac2_Wrapper.h"
@@ -54,7 +55,7 @@ namespace codac2
     public:
 
       AnalyticOperationExpr(const TU& x1, const ScalarExpr& x2)
-        : OperationExprBase<AnalyticExpr<ScalarType>>(x2), _x1(x1)
+        : OperationExprBase<AnalyticExpr<ScalarType>>(x2), _x1(std::make_shared<const TU>(x1))
       { }
 
       std::shared_ptr<ExprBase> copy() const
@@ -67,20 +68,20 @@ namespace codac2
         return OperationExprBase<AnalyticExpr<ScalarType>>::replace_arg(old_arg_id, new_expr);
       }
       
-      T fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
+      const T& fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const
       {
         return AnalyticExpr<T>::init_value(
-          v, TubeOp<TU>::fwd(_x1, std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval)));
+          v, TubeOp<TU>::fwd(*_x1, std::get<0>(this->_x)->fwd_eval(v, total_input_size, natural_eval)));
       }
       
       void bwd_eval(ValuesMap& v) const
       {
-        TubeOp<TU>::bwd(_x1, AnalyticExpr<T>::value(v).a, std::get<0>(this->_x)->value(v).a);
+        TubeOp<TU>::bwd(*_x1, AnalyticExpr<T>::value(v).a, std::get<0>(this->_x)->value(v).a);
         std::get<0>(this->_x)->bwd_eval(v);
       }
 
       std::pair<Index,Index> output_shape() const {
-        return _x1.shape();
+        return _x1->shape();
       }
 
       virtual bool belongs_to_args_list(const FunctionArgsList& args) const
@@ -101,6 +102,6 @@ namespace codac2
 
     protected:
 
-      const TU _x1;
+      const std::shared_ptr<const TU> _x1;
   };
 }

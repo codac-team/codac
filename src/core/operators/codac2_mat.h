@@ -156,33 +156,33 @@ namespace codac2
             replace_vector_child(x, old_arg_id, new_expr);
         }
 
-        MatrixType fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
+        const MatrixType& fwd_eval(ValuesMap& v, Index total_input_size, bool natural_eval) const override
         {
           if(natural_eval)
             return this->init_value(v, natural_fwd(v, total_input_size));
 
-          std::vector<VectorType> vals;
+          std::vector<const VectorType*> vals;
           vals.reserve(_xs.size());
           bool centered_available = true;
           for(const auto& x : _xs)
           {
-            vals.push_back(x->fwd_eval(v, total_input_size, false));
-            centered_available &= (vals.back().da.size() != 0);
+            vals.push_back(&x->fwd_eval(v, total_input_size, false));
+            centered_available &= (vals.back()->da.size() != 0);
           }
 
           if(!centered_available)
             return this->init_value(v, natural_fwd(v, total_input_size));
 
           const Index cols = static_cast<Index>(_xs.size());
-          const Index rows = vals.empty() ? 0 : vals.front().a.size();
-          const Index input_cols = vals.empty() ? total_input_size : vals.front().da.cols();
+          const Index rows = vals.empty() ? 0 : vals.front()->a.size();
+          const Index input_cols = vals.empty() ? total_input_size : vals.front()->da.cols();
           IntervalMatrix m(rows, cols), a(rows, cols), da(rows*cols, input_cols);
           bool def_domain = true;
           Index l = 0;
 
           for(Index j = 0 ; j < cols ; ++j)
           {
-            const auto& xj = vals[static_cast<std::size_t>(j)];
+            const auto& xj = *vals[static_cast<std::size_t>(j)];
             m.col(j) = xj.m;
             a.col(j) = xj.a;
             da.middleRows(l, xj.da.rows()) = xj.da;
@@ -258,7 +258,7 @@ namespace codac2
 
           for(Index j = 0 ; j < cols ; ++j)
           {
-            auto xj = _xs[static_cast<std::size_t>(j)]->fwd_eval(v, total_input_size, true);
+            const auto& xj = _xs[static_cast<std::size_t>(j)]->fwd_eval(v, total_input_size, true);
             a.col(j) = xj.a;
             def_domain &= xj.def_domain;
           }

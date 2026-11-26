@@ -228,6 +228,23 @@ class TestTubeManual(unittest.TestCase):
     pass
 
 
+  def test_partial_primitives_manual(test):
+    td = create_tdomain([0,100], 0.5, True)
+    x = SlicedTube(td, Interval(1,2))
+
+    # [slicedtube-partial-primitives-beg]
+    p = x.partial_primitives()
+
+    y1 = x.integral(20,p)             # integral from 0 to 20
+    y2 = x.integral(10,20,p)          # integral from 10 to 20
+    q = x.partial_integral([10,20],p) # partial integrals from 0 to an uncertain time in [10,20]
+    # [slicedtube-partial-primitives-end]
+    test.assertEqual(y1, Interval(20,40))
+    test.assertEqual(y2, Interval(10,20))
+    test.assertEqual(q[0], Interval(10,20))
+    test.assertEqual(q[1], Interval(20,40))
+
+
   def test_Trajectories_manual(test):
     # [traj-sampled-create-beg]
     depth = SampledTraj_Scalar()
