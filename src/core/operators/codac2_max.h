@@ -82,6 +82,7 @@ namespace codac2
 
   inline void MaxOp::bwd(const Interval& y, Interval& x1, Interval& x2)
   {
+#if CODAC_GAOL_GUARDS
     // The content of this function comes from the IBEX library.
     // See ibex::Interval (IBEX lib, main author: Gilles Chabert)
     //   https://ibex-lib.readthedocs.io
@@ -122,5 +123,20 @@ namespace codac2
       if(x2.ub() > y.ub())
         x2 = Interval(x2.lb(),y.ub());
     }
+#else
+    // max_rel() of GAOL v5, the reverse of max: max_rel(y,x2,x1) is the hull of
+    // the x of x1 with max(x,v) in y for some v of x2 (the result, the other
+    // operand, then the operand it contracts), and x2 is contracted in turn
+    // with the x1 just contracted. Each operand is empty when y lies below it,
+    // contracted to y when the other operand lies below y, and to [-oo,y.ub()]
+    // when the other operand meets y. The bounds are those of x1, x2 and y, the
+    // tightest. The code of IBEX above gave the same intervals, but left an
+    // operand as it was when the other one was empty, where GAOL gives the
+    // empty set for both (compared on every triple of 41 intervals).
+    x1 = gaol::max_rel(y, x2, x1);
+    x2 = gaol::max_rel(y, x1, x2);
+    if(x2.is_empty())
+      x1.set_empty();
+#endif
   }
 }

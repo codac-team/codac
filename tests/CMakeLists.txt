@@ -109,7 +109,7 @@ list(APPEND SRC_TESTS # listing files without extension
   core/tools/codac2_tests_serialization
   core/tools/codac2_tests_transformations
   core/tools/codac2_tests_trunc
-  core/tools/ibex/codac2_tests_ibex
+  # core/tools/ibex/codac2_tests_ibex is added below, with WITH_IBEX only
   ../doc/manual/manual/tools/src
   
   core/trajectory/codac2_tests_AnalyticTraj
@@ -153,6 +153,17 @@ if (WITH_CAPD)
   set(CODAC_LIBRARIES ${CODAC_LIBRARIES} ${PROJECT_NAME}-capd capd::capd)
 endif()
 
+# Test of the conversions between Codac and IBEX, with WITH_IBEX only (see the
+# top-level CMakeLists.txt): it includes the headers of IBEX, which Codac is
+# not built with otherwise (the conversions it tests are only compiled when a
+# program includes IBEX before them). IBEX comes with the Codac libraries,
+# through Codac::gaol.
+if (WITH_IBEX)
+  list(APPEND SRC_TESTS
+    core/tools/ibex/codac2_tests_ibex
+  )
+endif()
+
 # IBEX test
 #if (WITH_IBEX)
   #find_package(IBEX REQUIRED)
@@ -169,7 +180,7 @@ foreach(SRC_TEST ${SRC_TESTS})
   add_executable(${TEST_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/${SRC_TEST}.cpp)
   set(CODAC_HEADERS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../include)
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${CODAC_HEADERS_DIR})
-  target_link_libraries(${TEST_NAME} PUBLIC Ibex::ibex ${CODAC_LIBRARIES} PRIVATE Catch2::Catch2WithMain)
+  target_link_libraries(${TEST_NAME} PUBLIC ${CODAC_LIBRARIES} PRIVATE Catch2::Catch2WithMain)
 
   if(WITH_PYTHON AND SRC_TEST MATCHES "extensions/sympy/")
     target_link_libraries(${TEST_NAME} PRIVATE ${PROJECT_NAME}-sympy pybind11::embed)
@@ -180,6 +191,13 @@ foreach(SRC_TEST ${SRC_TESTS})
   # Python test
   if(WITH_PYTHON)
     add_test(NAME ${TEST_NAME}_py COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${SRC_TEST}.py)
+    if(WITH_IBEX)
+      # The C++ tests tell the GAOL Codac is built on from CODAC_GAOL_GUARDS
+      # (codac2_Interval.h); the Python ones, which only see the codac module,
+      # from this variable, for the functions whose results differ between the
+      # two (the sign of 0, see core/functions/analytic/codac2_tests_AnalyticFunction.py)
+      set_tests_properties(${TEST_NAME}_py PROPERTIES ENVIRONMENT "CODAC_GAOL_GUARDS=1")
+    endif()
   endif()
 
 endforeach()
