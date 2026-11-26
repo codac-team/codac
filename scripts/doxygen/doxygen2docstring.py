@@ -27,7 +27,27 @@ def normalize_template_label(str_template_label):
     .replace(" >", "") \
     .replace(">", "")
 
+# Turns the definition text of a declaration into the name of the macro that
+# will carry its docstring. That text comes from doxygen, so anything doxygen
+# words differently from one version to the next has to be removed here, or the
+# macro ends up named differently depending on which doxygen ran and the
+# bindings that spell the name out no longer compile. "typedef" is one of those:
+# older doxygen writes the definition of an alias as "using X = typedef Y"
+# where newer ones write "using X = Y", which gave the bindings a
+# USING_..._EQ_TYPEDEF_... macro on the CentOS manylinux images of
+# .github/workflows/dockercentos.yml where they expected USING_..._EQ_....
 def normalize_label(str_label):
+
+  # Runs of whitespace are collapsed first, because the text below turns every
+  # space into an underscore and doxygen does not word its definitions the same
+  # way from one version to the next: 1.15.0 renders the definition of an alias
+  # with one space more than 1.17.0 does, which alone turned a
+  # USING_..._EQ_... macro into USING_..._EQ__... and stopped the bindings from
+  # compiling on Ubuntu 26.04. Collapsing the underscores afterwards would not
+  # do: plenty of macro names hold a legitimate double underscore, from a
+  # trailing underscore in an identifier followed by _REF or _CONST
+  # (NODEVALUE__REF and its like), and squeezing those would rename them all.
+  str_label = re.sub(r'\s+', ' ', str_label)
 
   str_label = str_label \
     .replace("or<<", "OROUT") \
@@ -35,6 +55,7 @@ def normalize_label(str_label):
 
   return normalize_template_label(str_label) \
     .replace("constexpr ", "") \
+    .replace("typedef ", "") \
     .replace("codac::", "") \
     .replace("codac2::", "") \
     .replace("std::", "") \
@@ -91,7 +112,8 @@ def docstring_varname(memberdef, prefix=''):
 def get_originate_file(m):
 
     location_file = m.find(".//location").get("file").split("/")[-1]
-    return location_file.replace(".h", "_docs.h").replace("codac2_", "codac2_py_")
+    location_stem = os.path.splitext(location_file)[0]
+    return (location_stem + "_docs.h").replace("codac2_", "codac2_py_")
 
 
 if not os.path.exists(sys.argv[1]):
