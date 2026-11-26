@@ -326,9 +326,19 @@ class TestAnalyticFunction(unittest.TestCase):
 
     f = AnalyticFunction([x1], 2*sign(x1+1))
     self.assertTrue(f.eval(0.) == 2.)
-    self.assertTrue(sign(Interval.zero()) == Interval(-1,1))
-    self.assertTrue(sign(Interval(-0,0)) == Interval(-1,1))
-    self.assertTrue(f.eval(-1.) == Interval(-2,2))
+    if os.environ.get("CODAC_GAOL_GUARDS") == "1":
+      # Codac's sign, kept with GAOL 4 (WITH_IBEX, whose tests are run with
+      # CODAC_GAOL_GUARDS=1, see tests/CMakeLists.txt): a sign of 0 is any of [-1,1]
+      self.assertTrue(sign(Interval.zero()) == Interval(-1,1))
+      self.assertTrue(sign(Interval(-0,0)) == Interval(-1,1))
+      self.assertTrue(f.eval(-1.) == Interval(-2,2))
+    else:
+      # The sign of IEEE 1788, which Codac takes from GAOL v5: sign(0) = 0
+      self.assertTrue(sign(Interval.zero()) == 0.)
+      self.assertTrue(sign(Interval(-0,0)) == 0.)
+      self.assertTrue(sign(Interval(0,5)) == Interval(0,1))
+      self.assertTrue(sign(Interval(-5,5)) == Interval(-1,1))
+      self.assertTrue(f.eval(-1.) == 0.)
     self.assertTrue(f.eval(-2.) == -2.)
 
     f = AnalyticFunction([x1], 2*floor(x1))
