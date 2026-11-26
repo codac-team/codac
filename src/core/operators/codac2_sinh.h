@@ -78,6 +78,14 @@ namespace codac2
 
   inline void SinhOp::bwd(const Interval& y, Interval& x1)
   {
+#if CODAC_GAOL_GUARDS
     x1 &= asinh(y);
+#else
+    // asinh_rel() of GAOL v5, the reverse of sinh: the hull of the x of x1
+    // whose sinh is in y. sinh being a bijection of R, it is x1 & asinh(y), the
+    // code above, which gives the same intervals (compared on every pair of 41
+    // intervals); GAOL computes it in one function.
+    x1 = gaol::asinh_rel(y, x1);
+#endif
   }
 }

@@ -84,6 +84,7 @@ namespace codac2
 
   inline void Atan2Op::bwd(const Interval& y, Interval& x1, Interval& x2)
   {
+#if CODAC_GAOL_GUARDS
     // The content of this function comes from the IBEX library.
     // See ibex::Interval (IBEX lib, main author: Gilles Chabert)
     //   https://ibex-lib.readthedocs.io
@@ -152,5 +153,23 @@ namespace codac2
 
     x2 = xres;
     x1 = yres;
+#else
+    // atan2_rel_y() and atan2_rel_x() of GAOL v5, atan2Rev1 and atan2Rev2 of
+    // IEEE 1788-2015: the hull of the ordinates x1, then of the abscissas x2
+    // (with the x1 just contracted), of the points of the box x1 x x2 whose
+    // angle atan2(x1,x2) is in y, the point (0,0), which has no angle, left
+    // out. The angles are those of atan2, in (-pi,pi]: the half-line x1 = 0,
+    // x2 < 0 has the angle pi. The bounds are within 2 doubles of the tightest
+    // ones. The code of IBEX above, compared on 41 x 41 boxes and 27 intervals
+    // of angles, gave the same intervals or wider ones, and lost solutions on
+    // the line x2 = 0: for y = [1.5,1.6], which holds pi/2, x1 = [1] and x2 =
+    // [0], where atan2(1,0) = pi/2, it gave the empty set, x1/x2 being empty
+    // for x2 = [0] and pi/2 being only taken into account when it was the
+    // lower bound of y.
+    x1 = gaol::atan2_rel_y(y, x2, x1);
+    x2 = gaol::atan2_rel_x(y, x1, x2);
+    if(x2.is_empty())
+      x1.set_empty();
+#endif
   }
 }

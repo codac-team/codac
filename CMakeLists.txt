@@ -12,7 +12,15 @@
   #set(CMAKE_C_COMPILER "gcc-7")
   #set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
 
-  project(codac VERSION ${VERSION} LANGUAGES CXX)
+  # C as well as C++: the codac sources are all C++, but GAOL v5 compiles the
+  # elementary functions of CORE-MATH, which are C, into libgaol, and Codac
+  # builds GAOL as a part of itself when no GAOL v5 is installed (FetchContent,
+  # see scripts/CMakeModules/codac_gaol.cmake). CMake wants a language enabled
+  # in the highest directory common to the targets that use it, directly or
+  # through what they link (see enable_language()): the Codac libraries link
+  # libgaol, so C is enabled here rather than by the project() of GAOL, in its
+  # subdirectory.
+  project(codac VERSION ${VERSION} LANGUAGES C CXX)
 
   if(NOT VERSION_ID)
     set(PROJECT_VERSION_FULL ${PROJECT_VERSION})
@@ -119,12 +127,74 @@
 
 
 ################################################################################
-# Looking for IBEX
+# Looking for GAOL
 ################################################################################
 
-  find_package(IBEX REQUIRED)
-  ibex_init_common() # IBEX should have installed this function
-  message(STATUS "Found IBEX version ${IBEX_VERSION}")
+  # GAOL is the interval arithmetic library codac2::Interval is built upon.
+  # Codac used to reach it through IBEX, which bundles a GAOL 4 (and mathlib,
+  # with which GAOL 4 computes its elementary functions), and that was all Codac
+  # needed IBEX for. It is now built on GAOL v5, Jordan Ninin's continuation of
+  # GAOL (https://github.com/Jordan08/GAOL), which Codac finds or builds itself
+  # (scripts/CMakeModules/codac_gaol.cmake, which also says what comes from IBEX
+  # in doing so and who wrote it, and FindGAOL.cmake next to it), and which
+  # Codac calls without the guards GAOL 4 needs (see
+  # src/core/domains/interval/codac2_Interval.h).
+  include(codac_gaol)
+
+  # WITH_IBEX, a developer option, gives back the build Codac had before GAOL
+  # v5: IBEX, found by find_package(IBEX) and set up by ibex_init_common(), the
+  # GAOL 4 it bundles, and Codac's guards around GAOL, which codac2_Interval.h
+  # selects from the version of the GAOL headers it includes. It is there to
+  # tell whether a wrong result comes from GAOL v5: a program built both ways
+  # should compute the same intervals. Nothing of IBEX is looked for, built or
+  # installed without it.
+  option(WITH_IBEX "Build Codac on IBEX and its GAOL 4, with Codac's guards around GAOL, as before GAOL v5 (developer option)" OFF)
+
+  if(WITH_IBEX)
+
+    # As before GAOL v5. CMAKE_CXX_FLAGS is kept as it is before
+    # ibex_init_common(), for what it appends to them to be handed over to the
+    # users of the installed Codac (codac_gaol_from_ibex()).
+    set(_codac_cxx_flags_before_ibex "${CMAKE_CXX_FLAGS}")
+    find_package(IBEX REQUIRED)
+    ibex_init_common() # IBEX should have installed this function
+    message(STATUS "Found IBEX version ${IBEX_VERSION}")
+    codac_gaol_from_ibex("${_codac_cxx_flags_before_ibex}")
+    set(CODAC_PORTABILITY_CXX_FLAGS "")
+
+  else()
+
+    # GAOL v5, found or downloaded and built, as the imported target Codac::gaol:
+    # its include directories, its library, and the flags floating-point
+    # rounding depends on, which ibex_init_common() used to put on the command
+    # line -- without -frounding-math and its companions, the compiler is free
+    # to constant-fold in the wrong rounding mode, and an interval is no longer
+    # a bound -- with those of the instructions libgaol is compiled with
+    # (-mfma). They are GAOL's to say: codac_gaol_find() takes them from the
+    # CMake package of GAOL, from its gaol.pc, or from the GAOL it builds. The
+    # Codac libraries link Codac::gaol PUBLIC, so that every target linking them
+    # is compiled with those flags -- the tests, the examples and the Python
+    # bindings included. ENABLE_FIND_PACKAGE_GAOL OFF downloads GAOL even when
+    # one is installed.
+    option(ENABLE_FIND_PACKAGE_GAOL "Look for an installed GAOL v5 before downloading it" ON)
+    codac_gaol_find()
+
+    # The flags of ibex_init_common() that are not those of interval
+    # arithmetic, where ibex_init_common() put them, in CMAKE_CXX_FLAGS, so that
+    # every target is compiled with them; handed over to consumers with the
+    # others. After codac_gaol_find(): a GAOL built with Codac is not compiled
+    # with them.
+    codac_gaol_portability_flags(CODAC_PORTABILITY_CXX_FLAGS)
+    string(REPLACE ";" " " _codac_portability_cxx_flags "${CODAC_PORTABILITY_CXX_FLAGS}")
+    string(APPEND CMAKE_CXX_FLAGS " ${_codac_portability_cxx_flags}")
+
+  endif()
+
+  # Consumers need those flags as much as this build does: they are handed over
+  # through CODAC_CXX_FLAGS in codac-config.cmake, and through codac.pc (see
+  # src/CMakeLists.txt).
+  string(REPLACE ";" " " _codac_interval_cxx_flags "${CODAC_INTERVAL_CXX_FLAGS}")
+  message(STATUS "Interval arithmetic flags of Codac::gaol, for the users of Codac: ${_codac_interval_cxx_flags}")
 
 
 ################################################################################
