@@ -71,6 +71,7 @@ namespace codac2
 
   inline void CeilOp::bwd(const Interval& y, Interval& x1)
   {
+#if CODAC_GAOL_GUARDS
     // The content of this function comes from the IBEX library.
     // See ibex::Interval (IBEX lib, main author: Gilles Chabert)
     //   https://ibex-lib.readthedocs.io
@@ -89,5 +90,18 @@ namespace codac2
       else
         x1 &= Interval(l,r) + Interval(-1,0);
     }
+#else
+    // GAOL v5 has no reverse of ceil, but ceil(x) = -floor(-x) for every real
+    // x: the x of x1 whose ceil is in y are the opposites of the u of -x1 whose
+    // floor is in -y, which floor_rel() of GAOL v5 gives (see FloorOp::bwd()),
+    // the opposite of an interval being exact. The result is the hull of the
+    // part of x1 in (ceil(y.lb())-1,floor(y.ub())], and the empty set when y
+    // holds no integer or one of y and x1 is empty. The code of IBEX above
+    // computed the same interval, closed at ceil(y.lb())-1, whose ceil is not
+    // in y: GAOL leaves that end out where x1 ends there (the reverse of ceil
+    // for y = [1] and x1 = [0] is empty, where IBEX gave [0]). A zero bound of
+    // the result may be -0, the opposite of +0, which is the same number.
+    x1 = -gaol::floor_rel(-y, -x1);
+#endif
   }
 }
