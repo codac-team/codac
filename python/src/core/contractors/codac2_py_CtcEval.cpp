@@ -39,6 +39,23 @@ void export_contract(py::class_<CtcEval>& exported)
     },
   VOID_CTCEVAL_CONTRACT_INTERVAL_REF_T_REF_SLICEDTUBE_T_REF_CONST_SLICEDTUBE_T_REF_CONST,
   "t"_a, "y"_a, "x"_a, "v"_a);
+
+  exported.def("contract",
+    [](const CtcEval& ctc, Interval& t, T& y, SlicedTube<T>& x, const SlicedTube<T>& v,
+      const std::pair<SlicedTube<T>,SlicedTube<T>>& primitives)
+    -> py::tuple
+    {
+      ctc.contract(t,y,x,v,primitives);
+
+      return py::make_tuple(
+        py::cast(t, py::return_value_policy::reference),
+        py::cast(y, py::return_value_policy::reference),
+        py::cast(x, py::return_value_policy::reference),
+        py::cast(v, py::return_value_policy::reference)
+      );
+    },
+  VOID_CTCEVAL_CONTRACT_INTERVAL_REF_T_REF_SLICEDTUBE_T_REF_CONST_SLICEDTUBE_T_REF_CONST_PAIR_SLICEDTUBE_TSLICEDTUBE_T_REF_CONST,
+  "t"_a, "y"_a, "x"_a, "v"_a, "primitives"_a);
 }
 
 void export_CtcEval(py::module& m)
