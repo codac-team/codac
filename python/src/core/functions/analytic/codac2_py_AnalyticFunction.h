@@ -404,6 +404,70 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
           ) const) &AnalyticFunction<T>::tube_eval,
         AUTO_ANALYTICFUNCTION_T_TUBE_EVAL_CONST_SLICEDTUBE_ARGS_REF_VARIADIC_CONST,
         "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a)
+
+      // All scalar inputs with an explicit evaluation mode
+
+      .def("tube_eval", (SlicedTube<typename T::Domain> (AnalyticFunction<T>::*) (
+            const EvalMode&, const SlicedTube<Interval>&
+          ) const) &AnalyticFunction<T>::tube_eval,
+        AUTO_ANALYTICFUNCTION_T_TUBE_EVAL_CONST_EVALMODE_REF_CONST_SLICEDTUBE_ARGS_REF_VARIADIC_CONST,
+        "m"_a, "x1"_a)
+
+      .def("tube_eval", (SlicedTube<typename T::Domain> (AnalyticFunction<T>::*) (
+            const EvalMode&, const SlicedTube<Interval>&, const SlicedTube<Interval>&
+          ) const) &AnalyticFunction<T>::tube_eval,
+        AUTO_ANALYTICFUNCTION_T_TUBE_EVAL_CONST_EVALMODE_REF_CONST_SLICEDTUBE_ARGS_REF_VARIADIC_CONST,
+        "m"_a, "x1"_a, "x2"_a)
+
+      .def("tube_eval", (SlicedTube<typename T::Domain> (AnalyticFunction<T>::*) (
+            const EvalMode&, const SlicedTube<Interval>&, const SlicedTube<Interval>&, const SlicedTube<Interval>&
+          ) const) &AnalyticFunction<T>::tube_eval,
+        AUTO_ANALYTICFUNCTION_T_TUBE_EVAL_CONST_EVALMODE_REF_CONST_SLICEDTUBE_ARGS_REF_VARIADIC_CONST,
+        "m"_a, "x1"_a, "x2"_a, "x3"_a)
+
+      .def("tube_eval", (SlicedTube<typename T::Domain> (AnalyticFunction<T>::*) (
+            const EvalMode&, const SlicedTube<Interval>&, const SlicedTube<Interval>&, const SlicedTube<Interval>&, const SlicedTube<Interval>&
+          ) const) &AnalyticFunction<T>::tube_eval,
+        AUTO_ANALYTICFUNCTION_T_TUBE_EVAL_CONST_EVALMODE_REF_CONST_SLICEDTUBE_ARGS_REF_VARIADIC_CONST,
+        "m"_a, "x1"_a, "x2"_a, "x3"_a, "x4"_a)
+
+      .def("tube_eval", (SlicedTube<typename T::Domain> (AnalyticFunction<T>::*) (
+            const EvalMode&, const SlicedTube<Interval>&, const SlicedTube<Interval>&, const SlicedTube<Interval>&, const SlicedTube<Interval>&, const SlicedTube<Interval>&
+          ) const) &AnalyticFunction<T>::tube_eval,
+        AUTO_ANALYTICFUNCTION_T_TUBE_EVAL_CONST_EVALMODE_REF_CONST_SLICEDTUBE_ARGS_REF_VARIADIC_CONST,
+        "m"_a, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a)
+
+      // All vector inputs with an explicit evaluation mode
+
+      .def("tube_eval", (SlicedTube<typename T::Domain> (AnalyticFunction<T>::*) (
+            const EvalMode&, const SlicedTube<IntervalVector>&
+          ) const) &AnalyticFunction<T>::tube_eval,
+        AUTO_ANALYTICFUNCTION_T_TUBE_EVAL_CONST_EVALMODE_REF_CONST_SLICEDTUBE_ARGS_REF_VARIADIC_CONST,
+        "m"_a, "x1"_a)
+
+      .def("tube_eval", (SlicedTube<typename T::Domain> (AnalyticFunction<T>::*) (
+            const EvalMode&, const SlicedTube<IntervalVector>&, const SlicedTube<IntervalVector>&
+          ) const) &AnalyticFunction<T>::tube_eval,
+        AUTO_ANALYTICFUNCTION_T_TUBE_EVAL_CONST_EVALMODE_REF_CONST_SLICEDTUBE_ARGS_REF_VARIADIC_CONST,
+        "m"_a, "x1"_a, "x2"_a)
+
+      .def("tube_eval", (SlicedTube<typename T::Domain> (AnalyticFunction<T>::*) (
+            const EvalMode&, const SlicedTube<IntervalVector>&, const SlicedTube<IntervalVector>&, const SlicedTube<IntervalVector>&
+          ) const) &AnalyticFunction<T>::tube_eval,
+        AUTO_ANALYTICFUNCTION_T_TUBE_EVAL_CONST_EVALMODE_REF_CONST_SLICEDTUBE_ARGS_REF_VARIADIC_CONST,
+        "m"_a, "x1"_a, "x2"_a, "x3"_a)
+
+      .def("tube_eval", (SlicedTube<typename T::Domain> (AnalyticFunction<T>::*) (
+            const EvalMode&, const SlicedTube<IntervalVector>&, const SlicedTube<IntervalVector>&, const SlicedTube<IntervalVector>&, const SlicedTube<IntervalVector>&
+          ) const) &AnalyticFunction<T>::tube_eval,
+        AUTO_ANALYTICFUNCTION_T_TUBE_EVAL_CONST_EVALMODE_REF_CONST_SLICEDTUBE_ARGS_REF_VARIADIC_CONST,
+        "m"_a, "x1"_a, "x2"_a, "x3"_a, "x4"_a)
+
+      .def("tube_eval", (SlicedTube<typename T::Domain> (AnalyticFunction<T>::*) (
+            const EvalMode&, const SlicedTube<IntervalVector>&, const SlicedTube<IntervalVector>&, const SlicedTube<IntervalVector>&, const SlicedTube<IntervalVector>&, const SlicedTube<IntervalVector>&
+          ) const) &AnalyticFunction<T>::tube_eval,
+        AUTO_ANALYTICFUNCTION_T_TUBE_EVAL_CONST_EVALMODE_REF_CONST_SLICEDTUBE_ARGS_REF_VARIADIC_CONST,
+        "m"_a, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a)
     ;
   }
 

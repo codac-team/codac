@@ -197,6 +197,12 @@ namespace codac2
       template<typename... Args>
       auto tube_eval(const SlicedTube<Args>&... x) const
       {
+        return tube_eval(EvalMode::DEFAULT,x...);
+      }
+
+      template<typename... Args>
+      auto tube_eval(const EvalMode& m, const SlicedTube<Args>&... x) const
+      {
         auto tdomain = std::get<0>(std::tie(x...)).tdomain();
 
         SlicedTube<typename T::Domain> y(
@@ -204,7 +210,7 @@ namespace codac2
         );
 
         for(auto it = tdomain->begin() ; it != tdomain->end() ; it++)
-          y.slice(it)->codomain() = this->eval(x.slice(it)->codomain()...);
+          y.slice(it)->codomain() = this->eval(m,x.slice(it)->codomain()...);
 
         return y;
       }
