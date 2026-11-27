@@ -6,13 +6,14 @@ Contractors, separators
 .. toctree::
 
   CtcInter <set/ctcinter>
-  SepImage <analytic/sepimage>
   CtcInverse <analytic/ctcinverse>
-  CtcLohner <dynamic/ctclohner>
   CtcDist <geometric/ctcdist>
   CtcPolar <geometric/ctcpolar>
-  CtcVisible <geometric/ctcvisible>
   CtcWrapper <shape/ctcwrapper>
+  CtcEval <dynamic/ctceval>
+  CtcLohner <dynamic/ctclohner>
+  CtcVisible <geometric/ctcvisible>
+  SepImage <analytic/sepimage>
 
 ..   What are contractors? <http://codac.io>
 ..   The Ctc class <http://codac.io>
@@ -127,7 +128,7 @@ Overview of contractors and separators
    * - ``CtcDeriv``
      - —
 
-   * - ``CtcEval``
+   * - :ref:`CtcEval <sec-ctc-dynamic-ctceval>`
      - —
 
    * - ``CtcDelay``
