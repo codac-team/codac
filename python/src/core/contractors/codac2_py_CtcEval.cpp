@@ -16,6 +16,9 @@
 #include "codac2_py_Ctc.h"
 #include "codac2_py_CtcEval_docs.h" // Generated file from Doxygen XML (doxygen2docstring.py):
 
+PYBIND11_MAKE_OPAQUE(std::pair<codac2::SlicedTube<codac2::Interval>,codac2::SlicedTube<codac2::Interval>>);
+PYBIND11_MAKE_OPAQUE(std::pair<codac2::SlicedTube<codac2::IntervalVector>,codac2::SlicedTube<codac2::IntervalVector>>);
+
 using namespace std;
 using namespace codac2;
 namespace py = pybind11;
