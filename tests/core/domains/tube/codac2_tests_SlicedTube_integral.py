@@ -301,6 +301,9 @@ class TestSlicedTube_integral(unittest.TestCase):
     self.assertTrue(Approx(integral(Interval(28.), Interval(33.))) == Interval(17,31))
     self.assertTrue(Approx(integral(Interval(20.), Interval(28.))) == Interval(51,88))
     self.assertTrue(Approx(integral(Interval(17.), Interval(33.))) == Interval(80,143))
+    self.assertTrue(Approx(integral(Interval(33.), Interval(17.))) == Interval(-143,-80))
+    self.assertTrue(Approx(integral(Interval(17,20), Interval(28,33))) == Interval(51,143))
+    self.assertTrue(Approx(integral(Interval(28,33), Interval(17,20))) == Interval(-143,-51))
     self.assertTrue(Approx(integral(Interval(22.5), Interval(23))) == Interval(4.5,6))
     self.assertTrue(Approx(integral(Interval(8.5), Interval(10.5))) == Interval(-18,-9.5))
     self.assertTrue(Approx(integral(Interval(0), Interval(7))) == Interval(-23,13))
@@ -331,6 +334,9 @@ class TestSlicedTube_integral(unittest.TestCase):
     self.assertTrue(Approx(integral(Interval(28.), Interval(33.))) == Interval(17,31))
     self.assertTrue(Approx(integral(Interval(20.), Interval(28.))) == Interval(51,88))
     self.assertTrue(Approx(integral(Interval(17.), Interval(33.))) == Interval(80,143))
+    self.assertTrue(Approx(integral(Interval(33.), Interval(17.))) == Interval(-143,-80))
+    self.assertTrue(Approx(integral(Interval(17,20), Interval(28,33))) == Interval(51,143))
+    self.assertTrue(Approx(integral(Interval(28,33), Interval(17,20))) == Interval(-143,-51))
     self.assertTrue(Approx(integral(Interval(22.5), Interval(23))) == Interval(4.5,6))
     self.assertTrue(Approx(integral(Interval(8.5), Interval(10.5))) == Interval(-18,-9.5))
     self.assertTrue(Approx(integral(Interval(0), Interval(7))) == Interval(-23,13))
@@ -377,6 +383,7 @@ class TestSlicedTube_integral(unittest.TestCase):
     self.assertTrue(Approx(partial_integral(Interval(20), Interval(20))) == (Interval(0.), Interval(0.)))
     self.assertTrue(Approx(partial_integral(Interval(22,23), Interval(24,25))) == (Interval(8,24), Interval(13,37)))
     self.assertTrue(Approx(partial_integral(Interval(17,20), Interval(28,33))) == (Interval(51,80), Interval(88,143)))
+    self.assertTrue(Approx(partial_integral(Interval(28,33), Interval(17,20))) == (Interval(-80,-51), Interval(-143,-88)))
     self.assertTrue(Approx(partial_integral(Interval(0.), Interval(7.))) == (Interval(-23), Interval(13)))
     self.assertTrue(Approx(partial_integral(Interval(2.), Interval(6.))) == (Interval(-19), Interval(4)))
     self.assertTrue(Approx(partial_integral(Interval(0,2), Interval(6,7))) == (Interval(-29,-13), Interval(-2,19)))
@@ -393,6 +400,7 @@ class TestSlicedTube_integral(unittest.TestCase):
     self.assertTrue(Approx(partial_integral(Interval(20), Interval(20))) == (Interval(0.), Interval(0.)))
     self.assertTrue(Approx(partial_integral(Interval(22,23), Interval(24,25))) == (Interval(8,24), Interval(13,37)))
     self.assertTrue(Approx(partial_integral(Interval(17,20), Interval(28,33))) == (Interval(51,80), Interval(88,143)))
+    self.assertTrue(Approx(partial_integral(Interval(28,33), Interval(17,20))) == (Interval(-80,-51), Interval(-143,-88)))
     self.assertTrue(Approx(partial_integral(Interval(0.), Interval(7.))) == (Interval(-23), Interval(13)))
     self.assertTrue(Approx(partial_integral(Interval(2.), Interval(6.))) == (Interval(-19), Interval(4)))
     self.assertTrue(Approx(partial_integral(Interval(0,2), Interval(6,7))) == (Interval(-29,-13), Interval(-2,19)))
@@ -423,8 +431,37 @@ class TestSlicedTube_integral(unittest.TestCase):
       == (Interval(-3.35,-2.3), Interval(1.95,4.7)))
 
 
+  def test_computing_integration_overlapping_interval_bounds(self):
+
+    x = SlicedTube(create_tdomain(Interval(0,4),1.,True),Interval(1,3))
+    integral, partial_integral = self.integration_functions(x)
+
+    self.assertTrue(Approx(integral(Interval(1,3), Interval(2,4))) == Interval(-3,9))
+    self.assertTrue(Approx(integral(Interval(2,4), Interval(1,3))) == Interval(-9,3))
+    self.assertTrue(Approx(integral(Interval(1,3), Interval(1,3))) == Interval(-6,6))
+    self.assertTrue(Approx(integral(Interval(1,2), Interval(2,3))) == Interval(0,6))
+    self.assertTrue(Approx(integral(Interval(2,3), Interval(1,2))) == Interval(-6,0))
+    self.assertTrue(Approx(partial_integral(Interval(1,3), Interval(2,4))) == (Interval(-1,3), Interval(-3,9)))
+    self.assertTrue(Approx(partial_integral(Interval(2,4), Interval(1,3))) == (Interval(-3,1), Interval(-9,3)))
+
 class TestSlicedTube_integral_precomputed(TestSlicedTube_integral):
   precomputed = True
+
+
+class TestSlicedTube_integral_unbounded(unittest.TestCase):
+
+  def test_computing_local_integration_of_an_unbounded_tube(self):
+
+    x = SlicedTube(create_tdomain(Interval(0,3),1.,False),Interval())
+    x.set_ith_slice(Interval(2,3),1)
+    x.set_ith_slice(Interval(4,5),2)
+
+    self.assertEqual(x.integral(Interval(1.), Interval(3.)),Interval(6,8))
+    self.assertEqual(x.integral(Interval(3.), Interval(1.)),Interval(-8,-6))
+    self.assertEqual(x.integral(Interval(2.), Interval(2.)),Interval(0.))
+    self.assertEqual(x.integral(Interval(0.), Interval(0.)),Interval(0.))
+    self.assertTrue(x.integral(Interval(0.), Interval(2.)).is_unbounded())
+    self.assertTrue(x.integral(Interval(2.), Interval(0.)).is_unbounded())
 
 
 if __name__ ==  '__main__':
