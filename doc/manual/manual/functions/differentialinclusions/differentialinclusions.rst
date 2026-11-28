@@ -44,7 +44,7 @@ time steps) from
 
   .. group-tab:: C++
 
-    .. literalinclude:: src1.cpp
+    .. literalinclude:: src.cpp
       :language: c++
       :start-after: [1-beg]
       :end-before: [1-end]
@@ -56,7 +56,7 @@ The next code performs the same integration using ``RS_zonotope``:
 
   .. group-tab:: C++
 
-    .. literalinclude:: src1.cpp
+    .. literalinclude:: src.cpp
       :language: c++
       :start-after: [2-beg]
       :end-before: [2-end]
@@ -70,7 +70,7 @@ that the integration is done on parallelepipeds):
 
   .. group-tab:: C++
 
-    .. literalinclude:: src1.cpp
+    .. literalinclude:: src.cpp
       :language: c++
       :start-after: [3-beg]
       :end-before: [3-end]
@@ -101,10 +101,10 @@ given below:
 
   .. group-tab:: C++
 
-    .. literalinclude:: src2.cpp
+    .. literalinclude:: src.cpp
       :language: c++
-      :start-after: [1-beg]
-      :end-before: [1-end]
+      :start-after: [4-beg]
+      :end-before: [4-end]
       :dedent: 4
 
 The resulting plot is shown below.
