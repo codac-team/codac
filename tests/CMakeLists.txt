@@ -92,6 +92,8 @@ list(APPEND SRC_TESTS # listing files without extension
 
   core/operators/codac2_tests_operators
 
+  core/diffinclusions/codac2_tests_DiffInclusion
+
   core/peibos/codac2_tests_peibos
 
   core/separators/codac2_tests_SepCartProd
