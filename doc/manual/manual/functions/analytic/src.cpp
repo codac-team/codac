@@ -155,6 +155,7 @@ TEST_CASE("AnalyticFunction - manual")
     CHECK(Approx(J2,1e-6) == IntervalMatrix({{{4,12},{2.7725887222,5.5451774445}}}));
     CHECK(J3 == IntervalMatrix({{1,-16,0},{0,0,{-1,0}}}));
 
+    {
     // [10-beg]
     ScalarVar x;
     AnalyticFunction f_analytic({x}, x-x);
@@ -170,6 +171,7 @@ TEST_CASE("AnalyticFunction - manual")
     CHECK(natural == Interval(-2,2));
     CHECK(jacobian == IntervalMatrix({{0}}));
     CHECK(def_domain);
+    }
 
     AnalyticFunction f = f3;
 
