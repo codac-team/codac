@@ -263,6 +263,7 @@ User manual
    * Analytic contractors
       * :ref:`sec-ctc-analytic-ctcinverse`
       * CtcInverseNotIn
+      * :ref:`sec-ctc-analytic-sepimage`
    * Dynamic contractors
       * :ref:`sec-ctc-dynamic-ctclohner`
    * Geometric contractors
@@ -282,10 +283,10 @@ User manual
    * Temporal contractors
       * Using static contractors on tubes
       * CtcDeriv
-      * CtcEval
+      * :ref:`sec-ctc-dynamic-ctceval`
       * CtcDelay
       * CtcLinobs
-      * CtcLohner
+      * :ref:`sec-ctc-dynamic-ctclohner`
       * CtcPicard
       * CtcChain
       * CtcDiffInclusion

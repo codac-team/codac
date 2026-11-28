@@ -1006,8 +1006,10 @@ namespace codac2
        *   \;\middle|\; \tau_1\in[t_1],\ \tau_2\in[t_2] \right\}.
        * \f]
        *
-       * The result is obtained by subtracting the partial integral enclosures at
-       * ``t1`` and ``t2``.
+       * For degenerate time intervals, the integral is evaluated directly on the
+       * non-gate slices between the two dates, with the appropriate sign for
+       * backward integration. Otherwise, partial integral enclosures are
+       * subtracted and combined according to the possible integration directions.
        *
        * \param t1 first temporal interval \f$[t_1]\f$
        * \param t2 second temporal interval \f$[t_2]\f$
@@ -1089,7 +1091,10 @@ namespace codac2
        * \pre The temporal domain must be non-empty and bounded, and the codomains
        *      of all non-gate slices must be non-empty and bounded.
        * \note The source codomains, temporal partition and returned primitives
-       *       must remain unchanged while the primitives are used for integration.
+       *       must remain unchanged while the primitives are used for integration,
+       *       except for temporal refinement by duplication of slices on the shared
+       *       TDomain. Such refinement preserves the enclosures of the partial
+       *       primitives but may reduce their accuracy at the new gates
        *
        * \return pair of tubes enclosing the lower and upper partial primitives
        */

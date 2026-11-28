@@ -344,6 +344,9 @@ TEST_CASE("Computing integration, two interval bounds")
       CHECK(Approx(integral(Interval(28.), Interval(33.))) == Interval(17,31));
       CHECK(Approx(integral(Interval(20.), Interval(28.))) == Interval(51,88));
       CHECK(Approx(integral(Interval(17.), Interval(33.))) == Interval(80,143));
+      CHECK(Approx(integral(Interval(33.), Interval(17.))) == Interval(-143,-80));
+      CHECK(Approx(integral(Interval(17,20), Interval(28,33))) == Interval(51,143));
+      CHECK(Approx(integral(Interval(28,33), Interval(17,20))) == Interval(-143,-51));
       CHECK(Approx(integral(Interval(22.5), Interval(23))) == Interval(4.5,6));
       CHECK(Approx(integral(Interval(8.5), Interval(10.5))) == Interval(-18,-9.5));
       CHECK(Approx(integral(Interval(0), Interval(7))) == Interval(-23,13));
@@ -376,6 +379,9 @@ TEST_CASE("Computing integration, two interval bounds")
       CHECK(Approx(integral(Interval(28.), Interval(33.))) == Interval(17,31));
       CHECK(Approx(integral(Interval(20.), Interval(28.))) == Interval(51,88));
       CHECK(Approx(integral(Interval(17.), Interval(33.))) == Interval(80,143));
+      CHECK(Approx(integral(Interval(33.), Interval(17.))) == Interval(-143,-80));
+      CHECK(Approx(integral(Interval(17,20), Interval(28,33))) == Interval(51,143));
+      CHECK(Approx(integral(Interval(28,33), Interval(17,20))) == Interval(-143,-51));
       CHECK(Approx(integral(Interval(22.5), Interval(23))) == Interval(4.5,6));
       CHECK(Approx(integral(Interval(8.5), Interval(10.5))) == Interval(-18,-9.5));
       CHECK(Approx(integral(Interval(0), Interval(7))) == Interval(-23,13));
@@ -431,6 +437,7 @@ TEST_CASE("Computing partial integration, two interval bounds")
       CHECK(Approx(partial_integral(Interval(20), Interval(20))) == make_pair(Interval(0.), Interval(0.)));
       CHECK(Approx(partial_integral(Interval(22,23), Interval(24,25))) == make_pair(Interval(8,24), Interval(13,37)));
       CHECK(Approx(partial_integral(Interval(17,20), Interval(28,33))) == make_pair(Interval(51,80), Interval(88,143)));
+      CHECK(Approx(partial_integral(Interval(28,33), Interval(17,20))) == make_pair(Interval(-80,-51), Interval(-143,-88)));
       CHECK(Approx(partial_integral(Interval(0.), Interval(7.))) == make_pair(Interval(-23), Interval(13)));
       CHECK(Approx(partial_integral(Interval(2.), Interval(6.))) == make_pair(Interval(-19), Interval(4)));
       CHECK(Approx(partial_integral(Interval(0,2), Interval(6,7))) == make_pair(Interval(-29,-13), Interval(-2,19)));
@@ -449,6 +456,7 @@ TEST_CASE("Computing partial integration, two interval bounds")
       CHECK(Approx(partial_integral(Interval(20), Interval(20))) == make_pair(Interval(0.), Interval(0.)));
       CHECK(Approx(partial_integral(Interval(22,23), Interval(24,25))) == make_pair(Interval(8,24), Interval(13,37)));
       CHECK(Approx(partial_integral(Interval(17,20), Interval(28,33))) == make_pair(Interval(51,80), Interval(88,143)));
+      CHECK(Approx(partial_integral(Interval(28,33), Interval(17,20))) == make_pair(Interval(-80,-51), Interval(-143,-88)));
       CHECK(Approx(partial_integral(Interval(0.), Interval(7.))) == make_pair(Interval(-23), Interval(13)));
       CHECK(Approx(partial_integral(Interval(2.), Interval(6.))) == make_pair(Interval(-19), Interval(4)));
       CHECK(Approx(partial_integral(Interval(0,2), Interval(6,7))) == make_pair(Interval(-29,-13), Interval(-2,19)));
@@ -483,4 +491,34 @@ TEST_CASE("Computing partial integration, two interval bounds")
         == make_pair(Interval(-3.35,-2.3), Interval(1.95,4.7)));
     });
   }
+}
+
+TEST_CASE("Computing integration, overlapping interval bounds")
+{
+  SlicedTube x(create_tdomain({0,4},1.,true),Interval(1,3));
+
+  check_integrals_in_both_modes(x,[&](auto integral, auto partial_integral)
+  {
+    CHECK(Approx(integral(Interval(1,3), Interval(2,4))) == Interval(-3,9));
+    CHECK(Approx(integral(Interval(2,4), Interval(1,3))) == Interval(-9,3));
+    CHECK(Approx(integral(Interval(1,3), Interval(1,3))) == Interval(-6,6));
+    CHECK(Approx(integral(Interval(1,2), Interval(2,3))) == Interval(0,6));
+    CHECK(Approx(integral(Interval(2,3), Interval(1,2))) == Interval(-6,0));
+    CHECK(Approx(partial_integral(Interval(1,3), Interval(2,4))) == make_pair(Interval(-1,3), Interval(-3,9)));
+    CHECK(Approx(partial_integral(Interval(2,4), Interval(1,3))) == make_pair(Interval(-3,1), Interval(-9,3)));
+  });
+}
+
+TEST_CASE("Computing local integration of an unbounded tube")
+{
+  SlicedTube x(create_tdomain({0,3},1.,false),Interval());
+  x.set_ith_slice(Interval(2,3),1);
+  x.set_ith_slice(Interval(4,5),2);
+
+  CHECK(x.integral(Interval(1.), Interval(3.)) == Interval(6,8));
+  CHECK(x.integral(Interval(3.), Interval(1.)) == Interval(-8,-6));
+  CHECK(x.integral(Interval(2.), Interval(2.)) == Interval(0.));
+  CHECK(x.integral(Interval(0.), Interval(0.)) == Interval(0.));
+  CHECK(x.integral(Interval(0.), Interval(2.)).is_unbounded());
+  CHECK(x.integral(Interval(2.), Interval(0.)).is_unbounded());
 }

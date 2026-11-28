@@ -363,6 +363,8 @@ The computation is reliable even for tubes defined from analytic functions, beca
    :project: codac
 
 
+.. _sec-tubes-partial-primitives:
+
 Precomputing partial primitives
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -424,7 +426,7 @@ For a tube made of :math:`N` slices, precomputation requires :math:`O(N)` time a
 
 .. warning::
 
-  The precomputed primitives are not automatically updated. Recompute them after any modification of the source tube or its temporal partition, including refinements induced by other tubes sharing the same ``TDomain``. Do not modify the primitive tubes while using them for integration.
+  The precomputed primitives are not automatically updated. Recompute them if the source envelopes or the temporal extent change. Refinement by duplication of slices on the shared ``TDomain`` preserves the validity of the primitives but may reduce their accuracy at new gates. Do not modify the primitive tubes while using them for integration.
 
 
 Inflation, extraction, and algebraic helpers
