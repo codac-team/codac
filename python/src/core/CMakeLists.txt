@@ -167,9 +167,9 @@
     PRIVATE ${PROJECT_NAME}-core ${PROJECT_NAME}-sympy ${LIBS} Ibex::ibex
   )
 
-  # Copy the generated library in the package folder
-  add_custom_command(TARGET _core POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:_core>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
+  set_target_properties(_core PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
+    RUNTIME_OUTPUT_DIRECTORY "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
   )
 
   # ex: from codac import core
