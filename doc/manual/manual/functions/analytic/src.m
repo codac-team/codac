@@ -126,3 +126,15 @@ y = CosOp().fwd(Interval(0,PI/2)); % y = [0,1]
 x = Interval(0,PI); % prior value of [x]
 CosOp().bwd(Interval(0,0.5), x); % [x] is contracted to [PI/3,PI/2]
 % [9-end]
+
+
+% [10-beg]
+x = ScalarVar();
+f = AnalyticFunction({x}, x-x);
+result = f.eval_analytic(Interval(-1,1));
+
+m = result.m;                    % Midpoint evaluation
+a = result.a;                    % Natural interval evaluation
+da = result.da;                  % Interval Jacobian
+def_domain = result.def_domain;  % Derivative domain validity
+% [10-end]

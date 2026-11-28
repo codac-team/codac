@@ -319,6 +319,40 @@ The ``.diff()`` method can be used in the same way as the ``.eval()`` method.
       :dedent: 0
 
 
+Full analytic evaluation
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``.eval_analytic()`` method provides the midpoint evaluation, natural interval enclosure, interval Jacobian, and derivative-domain validity in a single call.
+
+.. tabs::
+
+  .. group-tab:: Python
+
+    .. literalinclude:: src.py
+      :language: py
+      :start-after: [10-beg]
+      :end-before: [10-end]
+      :dedent: 4
+
+  .. group-tab:: C++
+
+    .. literalinclude:: src.cpp
+      :language: c++
+      :start-after: [10-beg]
+      :end-before: [10-end]
+      :dedent: 4
+
+  .. group-tab:: Matlab
+
+    .. literalinclude:: src.m
+      :language: matlab
+      :start-after: [10-beg]
+      :end-before: [10-end]
+      :dedent: 0
+
+Unlike the default ``.eval()``, ``.eval_analytic().a`` is the natural interval enclosure without intersection with the centered-form evaluation.
+
+
 Symbolic manipulations with SymPy
 ---------------------------------
 

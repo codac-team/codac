@@ -145,6 +145,22 @@ class TestAnalyticFunctionManual(unittest.TestCase):
     test.assertTrue(Approx(J2,1e-8) == IntervalMatrix([[[4,12],[4*math.log(2),8*math.log(2)]]]))
     test.assertTrue(J3 == IntervalMatrix([[1,-16,0],[0,0,[-1,0]]]))
 
+    # [10-beg]
+    x = ScalarVar()
+    f = AnalyticFunction([x], x-x)
+    result = f.eval_analytic(Interval(-1,1))
+
+    m = result.m                    # Midpoint evaluation
+    a = result.a                    # Natural interval evaluation
+    da = result.da                  # Interval Jacobian
+    def_domain = result.def_domain  # Derivative domain validity
+    # [10-end]
+
+    test.assertTrue(m == Interval(0))
+    test.assertTrue(a == Interval(-2,2))
+    test.assertTrue(da == IntervalMatrix([[0]]))
+    test.assertTrue(def_domain)
+
     f = f3
     # [8-beg]
     n = f.input_size()

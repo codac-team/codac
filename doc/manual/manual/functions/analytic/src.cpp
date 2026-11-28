@@ -155,6 +155,22 @@ TEST_CASE("AnalyticFunction - manual")
     CHECK(Approx(J2,1e-6) == IntervalMatrix({{{4,12},{2.7725887222,5.5451774445}}}));
     CHECK(J3 == IntervalMatrix({{1,-16,0},{0,0,{-1,0}}}));
 
+    // [10-beg]
+    ScalarVar x;
+    AnalyticFunction f_analytic({x}, x-x);
+    auto result = f_analytic.eval_analytic(Interval(-1,1));
+
+    auto mid = result.m;                  // Midpoint evaluation
+    auto natural = result.a;              // Natural interval evaluation
+    auto jacobian = result.da;            // Interval Jacobian
+    bool def_domain = result.def_domain;  // Derivative domain validity
+    // [10-end]
+
+    CHECK(mid == Interval(0));
+    CHECK(natural == Interval(-2,2));
+    CHECK(jacobian == IntervalMatrix({{0}}));
+    CHECK(def_domain);
+
     AnalyticFunction f = f3;
 
     // [8-beg]
