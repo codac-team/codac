@@ -182,6 +182,17 @@ inline FunctionArgsList create_FunctionArgsList(const std::vector<py::object>& l
 template<typename T>
 void export_AnalyticFunction(py::module& m, const std::string& export_name)
 {
+  const char* evaluation_name =
+    std::is_same_v<T,ScalarType> ? "AnalyticScalarEvaluation" :
+    std::is_same_v<T,VectorType> ? "AnalyticVectorEvaluation" :
+    "AnalyticMatrixEvaluation";
+
+  py::class_<T>(m, evaluation_name)
+    .def_readonly("m", &T::m)
+    .def_readonly("a", &T::a)
+    .def_readonly("da", &T::da)
+    .def_readonly("def_domain", &T::def_domain);
+
   py::class_<AnalyticFunction<T>, std::shared_ptr<AnalyticFunction<T>> /* due to enable_shared_from_this */>
     exported(m, export_name.c_str(), ANALYTICFUNCTION_MAIN);
   exported
@@ -334,6 +345,7 @@ void export_AnalyticFunction(py::module& m, const std::string& export_name)
   bind_mode_(exported, "eval", eval, T_DOMAIN_ANALYTICFUNCTION_T_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
   bind_(exported, "eval", eval, T_DOMAIN_ANALYTICFUNCTION_T_EVAL_CONST_ARGS_REF_VARIADIC_CONST);
   bind_(exported, "diff", diff, AUTO_ANALYTICFUNCTION_T_DIFF_CONST_ARGS_REF_VARIADIC_CONST);
+  bind_(exported, "eval_analytic", eval_analytic, T_ANALYTICFUNCTION_T_EVAL_ANALYTIC_CONST_ARGS_REF_VARIADIC_CONST);
 
   if constexpr(std::is_same_v<T,ScalarType> || std::is_same_v<T,VectorType>)
   {

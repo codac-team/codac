@@ -93,10 +93,15 @@ namespace codac2
         return eval(x...).mid();
       }
 
-      
+
+      /**
+       * \brief Evaluates the analytic expression and its interval derivatives in a single pass.
+       * \return Analytic value containing the midpoint image (m), natural enclosure (a), interval Jacobian (da), and derivative domain validity (def_domain).
+       */
       template<typename... Args>
-      T eval_and_diff(const Args&... x) const
-      { 
+      T eval_analytic(const Args&... x) const
+      {
+        check_valid_inputs(x...);
         return eval_<false>(x...);
       }
 

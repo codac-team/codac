@@ -18,6 +18,33 @@ def create_f():
 
 class TestAnalyticFunction(unittest.TestCase):
 
+  def test_eval_analytic(self):
+    x = ScalarVar()
+    f = AnalyticFunction([x], x-x)
+    result = f.eval_analytic(Interval(-1,1))
+    self.assertTrue(result.a == Interval(-2,2))
+    self.assertTrue(result.m == Interval(0))
+    self.assertTrue(result.da(0,0) == 0)
+    self.assertTrue(result.def_domain)
+
+    v = VectorVar(2)
+    f = AnalyticFunction([v], vec(v[0],v[0]+v[1]))
+    result = f.eval_analytic(Vector([2,3]))
+    self.assertTrue(result.a == IntervalVector([2,5]))
+    self.assertTrue(result.m == IntervalVector([2,5]))
+    self.assertTrue(result.da(0,0) == 1)
+    self.assertTrue(result.da(0,1) == 0)
+    self.assertTrue(result.da(1,0) == 1)
+    self.assertTrue(result.da(1,1) == 1)
+    self.assertTrue(result.def_domain)
+
+    f = AnalyticFunction([x], mat(vec(+x,3*x),vec(2*x,4*x)))
+    result = f.eval_analytic(Interval(2))
+    self.assertTrue(result.a == IntervalMatrix([[2,4],[6,8]]))
+    self.assertTrue(result.da.rows() == 4)
+    self.assertTrue(result.da.cols() == 1)
+    self.assertTrue(result.def_domain)
+
   def test_AnalyticFunction(self):
 
     def invalid_function():

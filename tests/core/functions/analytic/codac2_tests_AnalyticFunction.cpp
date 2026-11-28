@@ -22,6 +22,43 @@ auto create_f()
   return AnalyticFunction({x}, x*cos(x));
 }
 
+TEST_CASE("AnalyticFunction - eval_analytic")
+{
+  {
+    ScalarVar x;
+    AnalyticFunction f({x}, x-x);
+    auto result = f.eval_analytic(Interval(-1,1));
+    CHECK(result.a == Interval(-2,2));
+    CHECK(result.m == Interval(0));
+    CHECK(result.da(0,0) == 0);
+    CHECK(result.def_domain);
+  }
+
+  {
+    VectorVar v(2);
+    AnalyticFunction f({v}, vec(v[0],v[0]+v[1]));
+    auto result = f.eval_analytic(Vector({2,3}));
+    CHECK(result.a == IntervalVector({2,5}));
+    CHECK(result.m == IntervalVector({2,5}));
+    CHECK(result.da(0,0) == 1);
+    CHECK(result.da(0,1) == 0);
+    CHECK(result.da(1,0) == 1);
+    CHECK(result.da(1,1) == 1);
+    CHECK(result.def_domain);
+  }
+
+  {
+    ScalarVar x;
+    AnalyticFunction f({x}, mat(vec(+x,3*x),vec(2*x,4*x)));
+    auto result = f.eval_analytic(Interval(2));
+    CHECK(result.a == IntervalMatrix({{2,4},{6,8}}));
+    CHECK(result.m == IntervalMatrix({{2,4},{6,8}}));
+    CHECK(result.da.rows() == 4);
+    CHECK(result.da.cols() == 1);
+    CHECK(result.def_domain);
+  }
+}
+
 TEST_CASE("AnalyticFunction")
 {
   std::array<EvalMode,3> modes {

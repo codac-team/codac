@@ -177,19 +177,19 @@ namespace codac2
              if constexpr(std::is_same_v<X,IntervalVector>
 			&& std::is_same_v<U,IntervalVector>) {
                if (_time_dependant) 
-	 	  return _f.eval_and_diff(t,x,u);
+                 return _f.eval_analytic(t,x,u);
                else 
-	          return _f.eval_and_diff(x,u);
+                 return _f.eval_analytic(x,u);
 	     } else {
                if (_time_dependant) {
-	 	  XType ret = _f.eval_and_diff(t,to_X(x),to_U(u));
+                 XType ret = _f.eval_analytic(t,to_X(x),to_U(u));
 	          return { from_X(ret.m), 
 		  	   from_X(ret.a), 
 			   ret.da,
 			   ret.def_domain };
 	       }
                else { 
-	          XType ret = _f.eval_and_diff(to_X(x),to_U(u));
+                 XType ret = _f.eval_analytic(to_X(x),to_U(u));
 	          return { from_X(ret.m), 
 		  	   from_X(ret.a), 
 			   ret.da,
